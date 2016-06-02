@@ -80,7 +80,6 @@ if($acesso)
                                       idTipoComissao,
                                       idTipoComissao,
                                       idTipoComissao,
-                                      IF(exibeSite,"Sim","Não"),
                                       idTipoComissao
                                  FROM tbtipocomissao
                                 WHERE descricao LIKE "%'.$parametro.'%"
@@ -92,7 +91,6 @@ if($acesso)
                                      simbolo,
                                      valsal,
                                      vagas,
-                                     exibeSite,
                                      obs
                                 FROM tbtipocomissao
                                WHERE idTipoComissao = '.$id);
@@ -109,9 +107,11 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Simbolo","Valor","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas","Exibe no Site?"));
-    $objeto->set_width(array(5,20,10,10,10,10,10,10,10));
+    $objeto->set_label(array("id","Cargo","Simbolo","Valor","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas"));
+    $objeto->set_width(array(5,30,10,10,10,10,10,10));
     $objeto->set_align(array("center"));
+    
+    $objeto->set_funcao(array(null,null,null,"formataMoeda"));
 
     $objeto->set_classe(array(null,null,null,null,null,'pessoal',null,'pessoal'));
     $objeto->set_metodo(array(null,null,null,null,null,'get_servidoresCargoComissao',null,'get_cargoComissaoVagasDisponiveis'));
@@ -165,14 +165,9 @@ if($acesso)
                'size' => 10),
         array ('linha' => 2,
                'nome' => 'vagas',
-               'label' => 'Vagas desse cargo na fundação:',
-               'tipo' => 'texto',
-               'size' => 10),
-        array ('linha' => 2,
-               'nome' => 'exibeSite',
-               'label' => 'Servidores com esse cargo é exibido no site:',
-               'tipo' => 'checkbox',
-               'size' => 5),    
+               'label' => 'Vagas:',
+               'tipo' => 'numero',
+               'size' => 10),        
         array ('linha' => 4,
                'nome' => 'obs',
                'label' => 'Observação:',

@@ -112,7 +112,7 @@ if($acesso)
                                        'label' => 'Dias:',
                                        'tipo' => 'numero',
                                        'size' => 5,
-                                       'col' => 3,
+                                       'col' => 2,
                                        'required' => true,
                                        'title' => 'Quantidade em dias das faltas.',
                                        'linha' => 1),    

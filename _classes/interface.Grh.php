@@ -110,7 +110,7 @@ class Grh
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cargo em Comissão');
-        $botao->set_url('cadastroCArgoComissao.php');
+        $botao->set_url('cadastroCargoComissao.php');
         $botao->set_image(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Cargos em Comissão');
         #$botao->set_accesskey('S');
@@ -178,10 +178,13 @@ class Grh
         # Exibe a versão do sistema
         $pessoal = new Pessoal();
         $grid = new Grid();
-        $grid->abreColuna(6);
+        $grid->abreColuna(4);
             p('Usuário : '.$pessoal->get_nome($matriculaUsuário),'grhUsuarioLogado');
         $grid->fechaColuna();
-        $grid->abreColuna(6);        
+        $grid->abreColuna(4);
+            p(BROWSER_NAME." - ".IP,'grhIp');
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
             p('Versão: '.VERSAO,'grhVersao');
         $grid->fechaColuna();
         $grid->fechaGrid();

@@ -14,6 +14,12 @@ p#grhVersao{
     color: #02548b;
 }
 
+p#grhIp{
+    font-size: 11px;
+    text-align: center;
+    color: #02548b;
+}
+
 p#grhUsuarioLogado{
     font-size: 11px;
     text-align: left;

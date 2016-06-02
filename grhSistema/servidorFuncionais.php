@@ -137,7 +137,7 @@ if($acesso)
     $campos = array(array ( 'linha' => 1,
                            'nome' => 'idFuncional',
                            'label' => 'id Funcional:',
-                           'tipo' => 'numero',
+                           'tipo' => 'texto',
                            'autofocus' => true,
                            'size' => 10,
                            'col' => 3,

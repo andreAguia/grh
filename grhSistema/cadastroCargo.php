@@ -177,7 +177,7 @@ if($acesso)
     # Paginação
     $objeto->set_paginacao(true);
     $objeto->set_paginacaoInicial($paginacao);
-    $objeto->set_paginacaoItens(6);
+    $objeto->set_paginacaoItens(16);
 
     ################################################################
     switch ($fase)

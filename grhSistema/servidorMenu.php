@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * Menu de Servidores
+ *  
+ * By Alat
+ */
+
+# Inicia as variáveis que receberão as sessions
+$matricula = null;	  # Reservado para a matrícula do servidor logado
+$matriculaGrh = null;	  # Reservado para a matrícula pesquisada
+
+# Configuração
+include ("_config.php");
+
+# Zera session usadas
+set_session('sessionParametro');	# Zera a session do par�metro de pesquisa da classe modelo1
+set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
+
+# Permissão de Acesso
+$acesso = Verifica::acesso($matricula,13);
+
+if($acesso)
+{    
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
+	
+    # Verifica a fase do programa
+    $fase = get('fase','menu');
+
+    # Começa uma nova página
+    $page = new Page();			
+    $page->iniciaPagina();
+    
+    # Cabeçalho da Página
+    AreaServidor::cabecalho();
+    
+    # Limita o tamanho da tela
+    $grid = new Grid();
+    $grid->abreColuna(12);
+
+    # Cria um menu
+    $menu = new MenuBar();
+
+    # Verifica qual botões ficará inativo
+    switch ($fase)
+    {
+      case "menu" :
+          $classBotao2 = 'disabled button';
+          $classBotao3 = 'button';
+          break;
+
+      case "relatorios" :
+          $classBotao2 = 'button';
+          $classBotao3 = 'disabled button';
+          break;
+    }
+    
+    # Voltar
+    $linkBotao1 = new Link("Voltar",'servidor.php');
+    $linkBotao1->set_class('button');
+    $linkBotao1->set_title('Volta para a página anterior');
+    $linkBotao1->set_accessKey('V');
+    $menu->add_link($linkBotao1,"left");
+
+    # Cadastros
+    $linkBotao2 = new Link("Cadastros","servidorMenu.php");
+    $linkBotao2->set_class($classBotao2);
+    $linkBotao2->set_title('Cadastro dos Servidores');
+    $linkBotao2->set_accessKey('C');
+    $menu->add_link($linkBotao2,"right");
+
+    # Relatórios
+    $linkBotao3 = new Link("Relatorios","servidorMenu.php?fase=relatorios");
+    $linkBotao3->set_class($classBotao3);
+    $linkBotao3->set_title('Relatórios desse servidor');
+    $linkBotao3->set_accessKey('R');
+    $menu->add_link($linkBotao3,"right");
+
+    $menu->show();
+    
+    $grid->fechaColuna();
+    $grid->fechaGrid();
+    
+    # Exibe os dados do Servidor
+    Grh::listaDadosServidor($matriculaGrh);
+    
+    switch ($fase)
+    {	
+        # Exibe o Menu Inicial
+        case "menu" :
+            # monta o menu do servidor
+            Grh::menuServidor($matriculaGrh,$matricula);
+            break;
+
+        ##################################################################	
+
+        case "infoFinanceira" :        
+            # Resumo financeira
+            $pessoal = new Pessoal();
+            $salario = $pessoal->get_salarioBase($matriculaGrh);
+            $trienio = $pessoal->get_trienioValor($matriculaGrh);
+            $comissao = $pessoal->get_salarioCargoComissao($matriculaGrh);
+            $gratificacao = $pessoal->get_gratificacao($matriculaGrh);
+            $cessao = $pessoal->get_salarioCessao($matriculaGrh);
+            $total = $salario+$trienio+$comissao+$gratificacao+$cessao;
+
+            # Abre um fieldset
+            $fieldset = new Fieldset('Resumo Financeiro','fieldsetResumoFinanceiro');
+            $fieldset->abre();
+
+            $conteudo = array(array('Salário:',$salario),
+                              array('Triênio:',$trienio),
+                              array('Cargo em Comissão:',$comissao),
+                              array('Gratificação Especial:',$gratificacao),
+                              array('Salário recebido pelo Órgão de Origem (Cedidos):',$cessao),
+                              array('Total',$total));
+
+            $label = array("Descrição","Valor");
+            $width = array(60,40);
+            $align = array("left","right");
+            $function = array (null,"formataMoeda");
+
+            $formatacaoCondicional = array(array('coluna' => 0,
+                                                 'valor' => 'Total',
+                                                 'operador' => '=',
+                                                 'id' => 'total'));
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo('Resumo Financeiro');
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_cabecalho($label,$width,$align);
+            $tabela->set_funcao($function);
+            #$tabela->set_link($link);
+            $tabela->set_totalRegistro(false);
+            #$tabela->set_idCampo('matricula');
+            $tabela->set_formatacaoCondicional($formatacaoCondicional);
+            $tabela->show();
+
+            $fieldset->fecha();
+
+            # Botão voltar
+            Visual::botaoVoltar('?');
+       break;
+   
+   ##################################################################	
+
+        case "relatorios" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+                titulo('Relatórios');
+                $div = new Div("button");
+                $div->abre();
+                echo '<ul class="menuVertical">';
+                echo '<li><a href="#">Ficha Cadastral</a></li>';
+                echo '<li><a href="#">Capa da Pasta</a></li>';
+                echo '<li><a href="#">Folhas de Processos Arquivadas na Pasta Funcional</a></li>';
+                echo '<li><a href="#">FAF - Formulário de Avaliação Funcional</a></li>';
+                echo '<li><a href="#">Folha de Presença</a></li>';
+                echo '</ul>';
+                $div->fecha();
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+    }
+
+    $page->terminaPagina();
+}
+?>
+

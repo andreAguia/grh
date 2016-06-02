@@ -1,0 +1,111 @@
+/*******************************************
+ * Menu
+ *******************************************/
+p#grhTitulo{
+    font-size: 25px;
+    text-align: center;
+    font-family: tahoma;
+    color: #02548b;
+}
+
+p#grhVersao{
+    font-size: 11px;
+    text-align: right;
+    color: #02548b;
+}
+
+p#grhUsuarioLogado{
+    font-size: 11px;
+    text-align: left;
+    color: #02548b;
+}
+
+/*******************************************
+ * Check up
+ *******************************************/
+
+p#checkupResumo{
+    font-size: 12px;
+    text-align: left;
+    color: #02548b;
+    margin: 0px;
+}
+
+/*******************************************
+ * Documentação
+ *******************************************/
+
+span#numLinhaCodigo{
+    font-size: 10px;
+    color: #C0C0C0;
+}
+
+span#comentario{
+    color: #5da423;
+}
+
+span#palavraChave{
+    color: #0000CC;
+}
+
+span#tagInicial{
+    color: #000;
+    font-weight: bold;
+}
+
+/*******************************************
+ * Cadastro de Publicação de Licenças Prêmio de um servidor
+ *******************************************/
+
+div#divQuadroLicenca{
+    position: fixed;
+    top: 2px;
+    left: 61%;
+    width: 180px;   
+}
+
+/*******************************************
+ * Rotina que lista dados do servidor
+ *******************************************/
+tr#listaDados{
+    background-color: #D7D7D7;
+}
+
+/*******************************************
+ * Cadastro de Lotação e de Plano de cargos
+ *******************************************/
+tr#inativo td{
+    background-color: #FFA07A;
+    padding: 0px;
+}
+
+/*******************************************
+ * Cadastro de Afastamento e Folgas Tre
+ *******************************************/
+
+div#divAfastamentoTre{
+    position: absolute;
+    top: 1%;
+    left: 62%;
+    width: 180px;
+}
+table#tabelaTre td{
+    font-size: 12px;
+    padding: 2px;
+}
+
+tr#trePendente{
+    background-color: #FFA07A;
+    margin: 0px;
+}
+
+/*******************************************
+ * Relatórios
+ *******************************************/
+
+/*******************************************
+ * Relatório AIM
+ *******************************************/
+p#aim{
+    font-size: 12px;
+ }

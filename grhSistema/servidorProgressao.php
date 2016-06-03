@@ -192,7 +192,7 @@ if($acesso)
                                        'col' => 12,
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
-                                       'size' => array(110,10)),
+                                       'size' => array(80,5)),
                                array ( 'nome' => 'matricula',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
@@ -209,7 +209,6 @@ if($acesso)
     #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
-
 
     ################################################################
 

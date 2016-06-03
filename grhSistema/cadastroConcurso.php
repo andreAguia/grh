@@ -173,7 +173,7 @@ if($acesso)
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
-               'size' => array(80,6))));
+               'size' => array(80,5))));
 
     # Matrícula para o Log
     $objeto->set_matricula($matricula);

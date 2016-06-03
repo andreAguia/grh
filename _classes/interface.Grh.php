@@ -481,7 +481,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Resumo Financeiro');
-                $botao->set_url('?fase=infoFinanceira');
+                $botao->set_url('servidorFinanceiro.php');
                 $botao->set_image(PASTA_FIGURAS.'money.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Informações sobre os valores recebidos pelo servidor');                
                 #$botao->set_onClick("abreFechaDiv('divResumo');");
@@ -625,11 +625,11 @@ class Grh
             
             # Férias
             if($ferias)
-                $mensagem = 'Férias';
+                $mensagem = 'Servidor em férias';
 
             # Licenca
             if($licenca)
-                $mensagem = 'Licença '.$pessoal->get_licenca($matriculaServidor);
+                $mensagem = 'Servidor em licença '.$pessoal->get_licenca($matriculaServidor);
 
             # Situação
             if($situacao == "Inativo")
@@ -639,10 +639,9 @@ class Grh
             if($folgaTre)
                 $mensagem = 'Folga TRE';
 
-            $callout = new Callout("warning");
-            $callout->abre();                    
-                p($mensagem);                 
-            $callout->fecha();
+            $alert = new Alert($mensagem);
+            $alert->set_tipo('warning');
+            $alert->show();
         } 
 
         # Verifica pendencia de motorista com carteira vencida no sistema grh
@@ -654,11 +653,11 @@ class Grh
         # Se é motorista estatutário
         if($perfil == 'Estatutário'){
             if($cargo == 'Motorista'){
-                if(Data::jaPassou($dataCarteira)){
-                    $callout = new Callout("alert");
-                    $callout->abre();                    
-                        p($mensagem = 'Motorista com Carteira de Habilitação Vencida !! ('.$dataCarteira.')');                    
-                    $callout->fecha();
+                if(jaPassou($dataCarteira)){
+                    $mensagem = 'Motorista com Carteira de Habilitação Vencida !! ('.$dataCarteira.')';
+                    $alert = new Alert($mensagem);
+                    $alert->set_tipo('warning');
+                    $alert->show();
                 }
             }
         }

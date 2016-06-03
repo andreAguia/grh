@@ -140,7 +140,7 @@ if($acesso)
                                        'label' => 'Descrição do Trabalho Efetuado:',
                                        'tipo' => 'textarea',
                                        'required' => true,
-                                       'size' => array(170,10),                                                                 
+                                       'size' => array(80,5),                                                                 
                                        'title' => 'Descrição do Trabalho Efetuado',
                                        'col' => 12,
                                        'linha' => 2),                               

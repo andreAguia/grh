@@ -59,10 +59,18 @@ if($acesso)
     if(is_null($orderTipo))
         $orderTipo = 'desc';
 
-    # Evita que um servidor que já estaja recebendo gratificação passe a receber outra.
+    # Evita que um servidor que já esteja recebendo gratificação passe a receber outra.
     # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
-    if(is_null($pessoal->get_gratificacaoDtFinal($matriculaGrh)))
+    if(is_null($pessoal->get_gratificacaoDtFinal($matriculaGrh))){
+        # Retira o botão de incluir
         $objeto->set_botaoIncluir(false);
+        
+        # Informa o porquê
+        $mensagem = "Esse servidor ainda está recebendo uma gratificação.<br/>"
+                   ."Somente será permitido a inserção de uma nova gratificação quanfo for informado a data de término da gratificação atual.";
+        $objeto->set_rotinaExtraListar("callout");
+        $objeto->set_rotinaExtraListarParametro($mensagem);
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT dtInicial,
@@ -137,6 +145,7 @@ if($acesso)
                                        'label' => 'Valor:',
                                        'tipo' => 'moeda',
                                        'size' => 20,
+                                       'required' => true,
                                        'col' => 3,
                                        'title' => 'Valor da Gratificação.',
                                        'linha' => 1),
@@ -152,7 +161,7 @@ if($acesso)
                                        'nome' => 'obs',
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
-                                       'size' => array(110,10)),
+                                       'size' => array(80,5)),
                                array ( 'nome' => 'matricula',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
@@ -176,8 +185,7 @@ if($acesso)
         case "gravar" :
             $objeto->$fase($id); 
             break;
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }
 ?>

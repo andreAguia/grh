@@ -160,7 +160,7 @@ if($acesso)
                                        'col' => 12,
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
-                                       'size' => array(80,6)),
+                                       'size' => array(80,5)),
                                array ( 'nome' => 'idPessoa',
                                        'label' => 'idPessoa:',
                                        'tipo' => 'hidden',

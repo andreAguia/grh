@@ -92,58 +92,7 @@ if($acesso)
             # monta o menu do servidor
             Grh::menuServidor($matriculaGrh,$matricula);
             break;
-
-        ##################################################################	
-
-        case "infoFinanceira" :        
-            # Resumo financeira
-            $pessoal = new Pessoal();
-            $salario = $pessoal->get_salarioBase($matriculaGrh);
-            $trienio = $pessoal->get_trienioValor($matriculaGrh);
-            $comissao = $pessoal->get_salarioCargoComissao($matriculaGrh);
-            $gratificacao = $pessoal->get_gratificacao($matriculaGrh);
-            $cessao = $pessoal->get_salarioCessao($matriculaGrh);
-            $total = $salario+$trienio+$comissao+$gratificacao+$cessao;
-
-            # Abre um fieldset
-            $fieldset = new Fieldset('Resumo Financeiro','fieldsetResumoFinanceiro');
-            $fieldset->abre();
-
-            $conteudo = array(array('Salário:',$salario),
-                              array('Triênio:',$trienio),
-                              array('Cargo em Comissão:',$comissao),
-                              array('Gratificação Especial:',$gratificacao),
-                              array('Salário recebido pelo Órgão de Origem (Cedidos):',$cessao),
-                              array('Total',$total));
-
-            $label = array("Descrição","Valor");
-            $width = array(60,40);
-            $align = array("left","right");
-            $function = array (null,"formataMoeda");
-
-            $formatacaoCondicional = array(array('coluna' => 0,
-                                                 'valor' => 'Total',
-                                                 'operador' => '=',
-                                                 'id' => 'total'));
-
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo('Resumo Financeiro');
-            $tabela->set_conteudo($conteudo);
-            $tabela->set_cabecalho($label,$width,$align);
-            $tabela->set_funcao($function);
-            #$tabela->set_link($link);
-            $tabela->set_totalRegistro(false);
-            #$tabela->set_idCampo('matricula');
-            $tabela->set_formatacaoCondicional($formatacaoCondicional);
-            $tabela->show();
-
-            $fieldset->fecha();
-
-            # Botão voltar
-            Visual::botaoVoltar('?');
-       break;
-   
+        
    ##################################################################	
 
         case "relatorios" :

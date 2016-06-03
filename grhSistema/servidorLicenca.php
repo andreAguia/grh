@@ -393,7 +393,7 @@ if($acesso){
                                     'nome' => 'obs',
                                     'label' => 'Observação:',
                                     'tipo' => 'textarea',
-                                    'size' => array(110,10)),
+                                    'size' => array(80,5)),
                             array ( 'nome' => 'matricula',
                                     'label' => 'Matrícula:',
                                     'tipo' => 'hidden',

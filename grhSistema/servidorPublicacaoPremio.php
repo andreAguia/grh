@@ -185,7 +185,7 @@ if($acesso)
                                 'tipo' => 'textarea',
                                 'linha' => 3,
                                 'col' => 12,
-                                'size' => array(110,10)),
+                                'size' => array(80,5)),
                         array ( 'nome' => 'matricula',
                                 'label' => 'Matrícula:',
                                 'tipo' => 'hidden',

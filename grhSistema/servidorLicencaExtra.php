@@ -9,8 +9,7 @@
 $idTpLicenca = $campoValor[0];
 
 # se for licença prêmio ...
-if($idTpLicenca == 6)
-{
+if($idTpLicenca == 6){
     # pega o id da publicação
     $idpublicacaopremio = $campoValor[6];
             

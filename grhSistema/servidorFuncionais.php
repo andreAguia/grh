@@ -272,14 +272,15 @@ if($acesso)
     $objeto->set_matricula($matricula);
 
     ################################################################
-    switch ($fase)
-    {
-        case "editar" :            
-        case "excluir" :	
+
+    switch ($fase){
+        case "editar" :
+            $objeto->$fase($matriculaGrh);  
+            break;
+
         case "gravar" :
-            $objeto->$fase($matriculaGrh);
-            break;	
-    }				
+            $objeto->gravar($matriculaGrh,'servidorFuncionaisExtra.php'); 	
+            break;
+    }
     $page->terminaPagina();
 }
-?>

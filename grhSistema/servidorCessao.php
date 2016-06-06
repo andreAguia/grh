@@ -179,7 +179,7 @@ if($acesso)
                 break;
 
             case "gravar" :
-                $objeto->gravar($id,'servidorCessaoValidacaoExtra.php'); 	
+                $objeto->gravar($id,'servidorCessaoExtra.php'); 	
                 break;
     }									 	 		
 

@@ -159,10 +159,8 @@ if($acesso)
             break;
 
         case "gravar" :
-            $objeto->gravar($id,'servidorFaltasValidacaoExtra.php'); 	
+            $objeto->gravar($id,'servidorFaltasExtra.php'); 	
             break;
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }
-?>

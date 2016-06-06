@@ -166,7 +166,7 @@ if($acesso)
                 break;
 
             case "gravar" :
-                $objeto->gravar($id,'servidorLotacaoValidacaoExtra.php'); 	
+                $objeto->gravar($id,'servidorLotacaoExtra.php'); 	
                 break;
     }									 	 		
 

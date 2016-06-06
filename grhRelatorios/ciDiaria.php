@@ -48,9 +48,14 @@ if($acesso)
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_botaoVoltar(NULL);
     $menuRelatorio->show();
+    
+    # Limita o tamanho da tela
+    $grid = new Grid();
+    $grid->abreColuna(12);
 
     # Cabeçalho do Relatório (com o logotipo)
-    $cabecalho = new Cabecalho(); 
+    $relatorio = new Relatorio();
+    $relatorio->exibeCabecalho(); 
 
     $valor = str_replace('.','',$valor);            // retira o ponto do milhar p/não dar problema na rotina de extenso
     $valor = str_replace(',','.',$valor);           // passa a vírgula dos centavos para ponto (padrão americano)
@@ -82,31 +87,25 @@ if($acesso)
     br(2);
     
     # Assunto
-    $p = new P($assunto,'pDiaria');
-    $p->show();
+    p($assunto,'pDiaria');
     
     # CI
-    $p = new P('CI '.$lotacaoCi.' nº '.$ci,'pDiaria');
-    $p->show();
+    p('CI '.$lotacaoCi.' nº '.$ci,'pDiaria');
     
     # Data
-    $p = new P('Campos dos Goytacazes,'.Data::porExtenso($data),'pDiariaData');
-    $p->show();
+    p('Campos dos Goytacazes,'.porExtenso($data),'pDiariaData');
     br(2);
     
     # Origem
-    $p = new P('De: '.$lotacaoOrigem,'pDiaria');
-    $p->show();
+    p('De: '.$lotacaoOrigem,'pDiaria');
     br();
     
     # Destino
-    $p = new P('Para: '.$lotacaoDestino,'pDiaria');
-    $p->show();
+    p('Para: '.$lotacaoDestino,'pDiaria');
     br(2);
     
     # Texto
-    $p = new P('Encaminhamos o presente Processo referente a diária(s), no valor total de R$ '.$valor.' ('.$extenso.' ), do servidor(a) abaixo relacionado(a), para as providências que fizerem necessárias.','pDiaria');
-    $p->show();
+    p('Encaminhamos o presente Processo referente a diária(s), no valor total de R$ '.$valor.' ('.$extenso.'), do servidor(a) abaixo relacionado(a), para as providências que fizerem necessárias.','pDiaria');
     br(3);
     
     # Tabela
@@ -117,13 +116,13 @@ if($acesso)
     # Matrícula e Nome
     echo '<tr><th>';
     echo 'Matrícula';
-    echo '</th><th>';
-    echo 'Servidor(a)';
-    echo '</th></tr>';
+    echo '</th><td>';
+    echo $row[0];    
+    echo '</td></tr>';
 
-    echo '<tr><td>';
-    echo $row[0];
-    echo '</td><td>';
+    echo '<tr><th>';
+    echo 'Servidor(a)';
+    echo '</th><td>';
     echo $row[1];
     echo '</td></tr>';    
     
@@ -160,16 +159,15 @@ if($acesso)
     br();
     
     # Atenciosamente
-    $p = new P('Atenciosamente','pDiaria');
-    $p->show();
+    p('Atenciosamente','pDiaria');
     br(4);
     
     # Assinatura
-    $p = new P('____________________________________________________','pDiariaAssinatura');
-    $p->show();
-    $p = new P('Gerente','pDiariaAssinatura');
-    $p->show();
+    p('____________________________________________________','pDiariaAssinatura');
+    p('Gerente','pDiariaAssinatura');
 
+    $grid->fechaColuna();
+    $grid->fechaGrid();
     $page->terminaPagina();
 }
 ?>

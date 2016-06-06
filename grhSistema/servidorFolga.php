@@ -143,7 +143,7 @@ if($acesso)
             break;
 
         case "gravar" :
-            $objeto->gravar($id); 	
+            $objeto->gravar($id,"servidorFolgaExtra.php"); 	
             break;
     }									 	 		
 

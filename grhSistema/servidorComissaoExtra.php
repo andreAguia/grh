@@ -5,11 +5,11 @@
  * 
  */
 
-$nomeacao = date_to_php($campoValor[2],'/'); // Data de Nomeação
-$matricula = $campoValor[13];                // Matrícula do servidor
+$nomeacao = $campoValor[2];     // Data de Nomeação
+$matricula = $campoValor[13];   // Matrícula do servidor
 
 $pessoal = new Pessoal();
-$dtAdmissao = $pessoal->get_dtAdmissao($matricula); // Data da Admissão
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
 
 ## Verifica se a data de nomeação é anterior a data de admissão
 if(($nomeacao < $dtAdmissao) AND (!is_null($nomeacao))){

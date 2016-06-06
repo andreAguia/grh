@@ -181,9 +181,12 @@ if($acesso)
         case "" :
         case "listar" :
         case "editar" :			
-        case "excluir" :	
-        case "gravar" :
+        case "excluir" :
             $objeto->$fase($id); 
+            break;
+        
+        case "gravar" :
+            $objeto->$fase($id,"servidorGratificacaoExtra.php"); 
             break;
     }
     $page->terminaPagina();

@@ -115,3 +115,35 @@ tr#trePendente{
 p#aim{
     font-size: 12px;
  }
+ 
+ /*******************************************
+ * CI Diária
+ *******************************************/
+ 
+ p#pDiaria{
+     text-align: justify;
+     font-size: 14px;
+ }
+ 
+ p#pDiariaData{
+     text-align: right;
+     font-size: 14px;
+ }
+ 
+ table#tableDiaria td{
+     border:#000000 solid 1px;
+     border-collapse:collapse;
+     text-align: left;
+ }
+ 
+ table#tableDiaria th {
+     border:#000000 solid 1px;
+     font-size: 16px;
+     text-align: center;
+     border-collapse:collapse;
+ }
+ 
+ p#pDiariaAssinatura{
+     text-align: center;
+     font-size: 14px;
+ }

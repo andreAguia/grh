@@ -174,10 +174,8 @@ if($acesso)
             break;
 
         case "gravar" :
-            $objeto->gravar($id); 	
+            $objeto->gravar($id,"servidorAfastamentoTreExtra.php"); 	
             break;
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }
-?>

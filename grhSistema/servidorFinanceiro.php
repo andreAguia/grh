@@ -31,7 +31,7 @@ if($acesso)
     botaoVoltar('servidorMenu.php');
     
     # Exibe os dados do servidor
-    Grh::listaDadosServidor($matricula);
+    Grh::listaDadosServidor($matriculaGrh);
 
     # Limita o tamanho da tela
     $grid = new Grid();

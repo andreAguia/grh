@@ -209,7 +209,7 @@ if($acesso)
             break;
 
         case "gravar" :
-            $objeto->gravar($id,'servidorAtestadoValidacaoExtra.php');              
+            $objeto->gravar($id,'servidorAtestadoExtra.php');              
             break;
 
     }									 	 		

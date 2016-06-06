@@ -324,8 +324,7 @@ if($acesso)
             break;
 
         case "gravar" :
-            #$objeto->gravar($id,'servidorComissaoValidacaoExtra.php');  Verificar erro
-	    $objeto->gravar($id); 	
+            $objeto->gravar($id,'servidorComissaoExtra.php');
             break;
         
         case "vagas" :

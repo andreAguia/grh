@@ -66,7 +66,7 @@ if($acesso)
         $objeto->set_botaoIncluir(false);
         
         # Informa o porquê
-        $mensagem = "Esse servidor ainda está recebendo uma gratificação.<br/>"
+        $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor ainda está recebendo uma gratificação.<br/>"
                    ."Somente será permitido a inserção de uma nova gratificação quanfo for informado a data de término da gratificação atual.";
         $objeto->set_rotinaExtraListar("callout");
         $objeto->set_rotinaExtraListarParametro($mensagem);

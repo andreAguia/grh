@@ -205,10 +205,7 @@ class Grh
         $grid->abreColuna(12);
         
         # Ocorrencias do servidor
-        Grh::exibeOcorênciaServidor($matricula); 
-        
-        $callout = new Callout('secondary');
-        $callout->abre();
+        Grh::exibeOcorênciaServidor($matricula);
         
         $grid = new Grid();        
         
@@ -508,10 +505,8 @@ class Grh
             $grid->fechaColuna();            
             $grid->fechaGrid();
 	
-        $callout->fecha();    
         $grid->fechaColuna();
-        $grid->fechaGrid();   
-
+        $grid->fechaGrid();
      }     
     
     ###########################################################
@@ -639,9 +634,10 @@ class Grh
             if($folgaTre)
                 $mensagem = 'Folga TRE';
 
-            $alert = new Alert($mensagem);
-            $alert->set_tipo('warning');
-            $alert->show();
+            $callout = new Callout('warning');
+            $callout->abre();
+                p($mensagem);
+            $callout->fecha();
         } 
 
         # Verifica pendencia de motorista com carteira vencida no sistema grh
@@ -655,9 +651,10 @@ class Grh
             if($cargo == 'Motorista'){
                 if(jaPassou($dataCarteira)){
                     $mensagem = 'Motorista com Carteira de Habilitação Vencida !! ('.$dataCarteira.')';
-                    $alert = new Alert($mensagem);
-                    $alert->set_tipo('warning');
-                    $alert->show();
+                    $callout = new Callout('warning');
+                    $callout->abre();
+                        p($mensagem);
+                    $callout->fecha();
                 }
             }
         }

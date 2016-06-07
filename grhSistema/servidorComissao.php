@@ -58,6 +58,18 @@ if($acesso)
 
     if(is_null($orderTipo))
         $orderTipo = 'desc';
+    
+    # Retira o botão de inclusão quando o servidor já tem cargo em comissão em aberto.
+    if(!is_null($pessoal->get_cargoComissao($matriculaGrh))){
+        # Retira o botão de incluir
+        $objeto->set_botaoIncluir(false);
+        
+        # Informa o porquê
+        $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor já tem um cargo em comissão.<br/>"
+                   ."Somente será permitido a inserção de um novo cargo quanfo for informado a data de término do cargo atual.";
+        $objeto->set_rotinaExtraListar("callout");
+        $objeto->set_rotinaExtraListarParametro($mensagem);
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,

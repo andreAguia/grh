@@ -614,9 +614,10 @@ class Grh
         $ferias = $pessoal->emFerias($matriculaServidor);
         $licenca = $pessoal->emLicenca($matriculaServidor);
         $situacao = $pessoal->get_situacao($matriculaServidor);
-        $folgaTre = $pessoal->get_emFolgaTre($matriculaServidor);
+        $folgaTre = $pessoal->emFolgaTre($matriculaServidor);
+        $afastadoTre = $pessoal->emAfastamentoTre($matriculaServidor);
         
-        if(($ferias) OR ($licenca) OR ($folgaTre) OR ($situacao == 'Inativo')){
+        if(($ferias) OR ($licenca) OR ($afastadoTre) OR ($folgaTre) OR ($situacao == 'Inativo')){
             
             # Férias
             if($ferias)
@@ -633,6 +634,10 @@ class Grh
             # Folga TRE
             if($folgaTre)
                 $mensagem = 'Folga TRE';
+            
+            # Afastamento TRE
+            if($afastadoTre)
+                $mensagem = 'Prestando serviço ao TRE';
 
             $callout = new Callout('warning');
             $callout->abre();

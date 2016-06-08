@@ -44,7 +44,7 @@ if($acesso)
     $objeto->set_rotinaExtraParametro($matriculaGrh); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Afastamentos para Serviço Eleitoral (Folgas Concedidas)');
+    $objeto->set_nome('Cadastro de afastamentos para prestar serviço ao TRE');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');

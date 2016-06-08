@@ -145,8 +145,10 @@ class listaServidores
         
         if(count($conteudo) == 0){
             br();
-            $p = new Alert('Nenhum item encontrado !!','center');
-            $p->show();
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
         else
         {

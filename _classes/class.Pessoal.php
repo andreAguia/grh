@@ -1422,6 +1422,32 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
+	 * Método get_trienioDataProximoTrienio
+	 * informa a data do próximo triênio a contar dda última data de triênio recebido
+         * 
+         * somente pega-se a data do triênio Inicial
+	 * 
+	 * @param	string $matricula matricula do servidor
+	 */
+
+	function get_trienioDataProximoTrienio($matricula)
+	{
+		$select = 'SELECT dtInicial
+		             FROM tbtrienio
+		            WHERE matricula = '.$matricula.'
+				 ORDER BY percentual desc';
+		
+		$row = parent::select($select,false);
+                $dataTrienio = date_to_php($row[0]);
+                
+                $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
+		
+		return $dataProximo;
+	}
+	
+	###########################################################
+	
+	/**
 	 * M�todo get_trienioPer�odoAquisitivo
 	 * informa a per�odo Aquisitivo de um trienio de uma matr�cula
 	 * 
@@ -1465,6 +1491,29 @@ class Pessoal extends Bd
 	}
 	
 	###########################################################
+	
+	/**
+	 * Método get_trienioPublicacao
+	 * informa data e página da publicação no DOERJ do triênio vigente (último)
+	 * 
+	 * @param	string $matricula matricula do servidor
+	 */
+
+	function get_trienioPublicacao($matricula)
+	{
+		$select = 'SELECT dtPublicacao,
+		                  pgPublicacao
+		             FROM tbtrienio
+		            WHERE matricula = '.$matricula.'
+				 ORDER BY percentual desc';
+		
+		$row = parent::select($select,false);
+		
+		return date_to_php($row[0]).' - pág.'.$row[1];
+					
+	}
+	
+        ###########################################################
 
 	/**
 	 * M�todo get_nomelotacao
@@ -2845,7 +2894,7 @@ class Pessoal extends Bd
 	
     ##########################################################################################
 
-    function get_emFolgaTre($matricula)
+    function emFolgaTre($matricula)
 
     # Fun��o que informa se a matricula est� folgando (TRE) na data atual
     #
@@ -2855,6 +2904,30 @@ class Pessoal extends Bd
         # Monta o select
         $select = "SELECT idFolga
                      FROM tbfolga
+                    WHERE matricula = '$matricula'
+                      AND current_date() >= data 
+                      AND current_date() <= ADDDATE(data,dias-1)";
+
+        $row = parent::select($select,false);
+        
+        if(is_null($row[0]))
+            return 0;
+        else 
+            return 1;
+    }
+
+    ##########################################################################################
+
+    function emAfastamentoTre($matricula)
+
+    # Função que informa se a matricula está afastada para o (TRE) na data atual
+    #
+    # Par�metro: a matr�cula a ser pesquisada
+
+    {
+        # Monta o select
+        $select = "SELECT idFolgatre
+                     FROM tbfolgatre
                     WHERE matricula = '$matricula'
                       AND current_date() >= data 
                       AND current_date() <= ADDDATE(data,dias-1)";

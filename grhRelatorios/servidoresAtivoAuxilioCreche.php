@@ -84,7 +84,7 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral do Auxílio Creche de Servidores Ativos');
     $relatorio->set_subtitulo('(Servidores que já receberam mais NÂO estão mais recebendo)');
-    $relatorio->set_label(array('Matricula','Servidor','Nome do Filho(a)','Nascimento','Idade','Processo','Término','Documento Exclusão'));
+    $relatorio->set_label(array('Matricula','Id','Servidor','Nome do Filho(a)','Nascimento','Idade','Processo','Término','Documento Exclusão'));
     $relatorio->set_width(array(10,5,20,25,10,5,15,10,10));
     $relatorio->set_align(array("center","center","left","left"));
     $relatorio->set_funcao(array("dv",null,null,null,"date_to_php",null,null,"date_to_php"));

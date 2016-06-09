@@ -107,4 +107,19 @@ Function dv($matricula)
 function get_DadosServidor($matricula){
     Grh::listaDadosServidor($matricula);
 }
+
+###########################################################
+/**
+ * Função que exibe um callout na rotina de dependentes
+ * Esta rotina está aqui porque não consegui fazer com a função callout pois
+ * necessita de id para o jscript
+ */
+
+function exibeColloutDependente($matricula){
+    # Mensagem
+    $callout = new Callout("warning","boxCreche");
+    $callout->abre();
+    p('Deixando a data de término do auxílio creche em branco, o sistema irá calculá-la automáticamente a partir da data de nascimento.');
+    $callout->fecha();
+}
 ###########################################################

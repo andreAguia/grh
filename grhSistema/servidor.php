@@ -56,7 +56,24 @@ if($acesso)
         $grid = new Grid();
         $grid->abreColuna(12);
 
-        botaoVoltar('grh.php');
+        # Cria um menu
+        $menu1 = new MenuBar();
+
+        # Voltar
+        $linkBotao1 = new Link("Voltar","grh.php");
+        $linkBotao1->set_class('button');
+        $linkBotao1->set_title('Voltar a página anterior');
+        $linkBotao1->set_accessKey('V');
+        $menu1->add_link($linkBotao1,"left");
+
+        # Relatórios
+        $linkBotao3 = new Link("Incluir Servidor","servidorInclusao.php");
+        $linkBotao3->set_class('button');
+        $linkBotao3->set_title('Incluir Novo Servidor');
+        $linkBotao3->set_accessKey('I');
+        $menu1->add_link($linkBotao3,"right");
+
+        $menu1->show();
 
         # Parâmetros
         $form = new Form('?fase=listar');

@@ -82,6 +82,9 @@ if($acesso)
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    
+    $objeto->set_rotinaExtraEditar("exibeColloutDependente");
+    $objeto->set_rotinaExtraEditarParametro($matriculaGrh);     
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Dependentes');
@@ -173,6 +176,7 @@ if($acesso)
                                        'required' => true,
                                        'autofocus' => true,
                                        'title' => 'Nome do dependente.',
+                                       'col' => 6,
                                        'linha' => 1),
                                array ( 'nome' => 'dtNasc',
                                        'label' => 'Data de Nascimento:',
@@ -181,13 +185,15 @@ if($acesso)
                                        'maxLength' => 20,
                                        'required' => true,
                                        'title' => 'Data de Nascimento.',
+                                       'col' => 3,
                                        'linha' => 1),
                                array ( 'nome' => 'CPF',
                                        'label' => 'CPF (quando houver):',
                                        'tipo' => 'cpf',
                                        'size' => 20,                                   
                                        'title' => 'CPF do dependente.',
-                                       'linha' => 2),
+                                       'col' => 3,
+                                       'linha' => 1),
                                array ( 'nome' => 'parentesco',
                                        'label' => 'Parentesco:',
                                        'tipo' => 'combo',
@@ -196,13 +202,15 @@ if($acesso)
                                        'onChange' => 'exibeEscondeCampos();',
                                        'size' => 20,                                       
                                        'title' => 'Parentesco do dependente.',
+                                       'col' => 3,
                                        'linha' => 2),
                                array ( 'nome' => 'sexo',
                                        'label' => 'Sexo:',
                                        'tipo' => 'combo',
                                        'array' => array("","M","F"),
                                        'required' => true,
-                                       'size' => 20,                                       
+                                       'size' => 20,
+                                       'col' => 2,
                                        'title' => 'Gênero do dependente.',
                                        'linha' => 2),
                                array ( 'nome' => 'dependente',
@@ -210,7 +218,8 @@ if($acesso)
                                        'tipo' => 'combo',
                                        'array' => array("Não","Sim"),
                                        'required' => true,
-                                       'size' => 20,                                       
+                                       'size' => 20, 
+                                       'col' => 2,
                                        'title' => 'Dependente no Imposto de Renda.',
                                        'linha' => 2),
                                array ( 'nome' => 'auxCreche',
@@ -220,6 +229,7 @@ if($acesso)
                                        'size' => 20,                                       
                                        'title' => 'Dependente tem Auxílio Creche.',
                                        'onChange' => 'exibeEscondeCampos();',
+                                       'col' => 2,
                                        'linha' => 2),
                                array ( 'nome' => 'dtTermino',
                                        'label' => 'Data de Término:',
@@ -227,18 +237,21 @@ if($acesso)
                                        'size' => 12,
                                        'fieldset' => 'Auxílio Creche',
                                        'title' => 'Data de Termino do Auxílio Creche.',
+                                       'col' => 3,
                                        'linha' => 3),
                                array ( 'nome' => 'processo',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 20,                                   
                                        'title' => 'Processo de exclusão do auxílio Creche.',
+                                       'col' => 4,
                                        'linha' => 3),                        	 
                                array ( 'nome' => 'ciExclusao',
                                        'label' => 'Documento de Exclusão:',
                                        'tipo' => 'texto',
                                        'size' => 30,                                   
                                        'title' => 'Documento de Exclusão do auxílio Creche.',
+                                       'col' => 4,
                                        'linha' => 3),
                                 array ('linha' => 4,
                                        'fieldset' => 'fecha',
@@ -271,18 +284,12 @@ if($acesso)
             $objeto->listar();
             break;
 
-        case "editar" :        
-            # Mensagem
-            $div = new Callout("secondary","boxCreche");
-            $div->abre();
-            p('Deixando a data de término do auxílio creche em branco, o sistema irá calculá-la automáticamente a partir da data de nascimento.');
-            $div->fecha();
-            
+        case "editar" : 
             $objeto->editar($id);
             break;            
 
         case "gravar" :
-            $objeto->gravar($id,'servidorDependentesValidacaoExtra.php');
+            $objeto->gravar($id,'servidorDependentesExtra.php');
             break;
 
         case "excluir" :

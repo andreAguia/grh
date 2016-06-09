@@ -61,7 +61,7 @@ class Grh
         titulo('Servidores');
         br(2);
 
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(1);
         $botao = new BotaoGrafico();
         $botao->set_label('Servidores');
         $botao->set_url('servidor.php');

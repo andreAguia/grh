@@ -12,6 +12,6 @@ $pessoal = new Pessoal();
 $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
 
 if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial))){
-    $msgErro.='Você não pode ser cedido antes de ser admitido!!\nA data Inicial está errada !!';
+    $msgErro.='Você não pode ser cedido antes de ser admitido!<br/>A data Inicial está errada!';
     $erro = 1;
 }

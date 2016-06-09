@@ -10,7 +10,7 @@
  */
 if($campoValor[2] == 'Próprio'){
     if($campoValor[3]<>0){
-        $msgErro.='O Atestado do tipo próprio não deve ter o campo parentesco preenchido !!';
+        $msgErro.='O Atestado do tipo próprio não deve ter o campo parentesco preenchido!';
         $erro = 1;
     }
 }
@@ -20,7 +20,7 @@ if($campoValor[2] == 'Próprio'){
  */
 if($campoValor[2] <> 'Próprio'){
     if($campoValor[3] == 0){
-        $msgErro.='Deve-se informar o parentesco !!';
+        $msgErro.='Deve-se informar o parentesco!';
         $erro = 1;
     }
 }
@@ -36,7 +36,7 @@ $pessoal = new Pessoal();
 $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
 
 if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial))){
-    $msgErro.='Você não pode ser lotado antes de ser admitido!!\nA data está errada !!';
+    $msgErro.='Você não pode ser lotado antes de ser admitido!<br/>A data está errada!';
     $erro = 1;
 }
 

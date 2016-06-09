@@ -13,6 +13,6 @@ $dtAdmissao = $campoValor[5];
 $dtExoneracao = $campoValor[10];
 
 if(($dtExoneracao < $dtAdmissao) AND (!is_null($dtExoneracao))){
-    $msgErro.='O servidor não pode ser exonerado antes de ser admitido!!\nA data está errada !!';
+    $msgErro.='O servidor não pode ser exonerado antes de ser admitido!<br/>A data está errada!';
     $erro = 1;
 }

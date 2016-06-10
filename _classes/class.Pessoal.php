@@ -691,27 +691,7 @@ class Pessoal extends Bd
                 
 	}
 	
-	###########################################################
-	
-	/**
-	 * M�todo get_idgrupo
-	 * fornece o idGrupo de um usuario
-	 * 
-	 * @param	string $matricula matricula do servidor
-	 */
-
-	public function get_idGrupo($matricula)
-	{
-		$select = 'SELECT idGrupo
-				     FROM tbfuncionario
-				    WHERE matricula = '.$matricula;
-		
-		$idgrupo = parent::select($select,false);
-				
-		return $idgrupo[0];
-	}
-	
-	###########################################################
+	##########################################################
 	
 	/**
 	 * M�todo get_anoAdmissao

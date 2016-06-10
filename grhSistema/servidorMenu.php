@@ -76,6 +76,15 @@ if($acesso)
     $linkBotao3->set_title('Relatórios desse servidor');
     $linkBotao3->set_accessKey('R');
     $menu->add_link($linkBotao3,"right");
+    
+    if($matricula == GOD){
+    # Excluir
+        $linkBotao4 = new Link("Excluir","servidorExclusao.php");
+        $linkBotao4->set_class('alert button');
+        $linkBotao4->set_title('Excluir Servidor');
+        $linkBotao4->set_accessKey('E');
+        $menu->add_link($linkBotao4,"right");
+    }
 
     $menu->show();
     

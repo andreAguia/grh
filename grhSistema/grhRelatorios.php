@@ -55,7 +55,7 @@ if($acesso)
 
             # Área do Menu
             $grid = new Grid();
-            $grid->abreColuna(4);
+            $grid->abreColuna(5,4);
             
             $divMenu2 = new Div("divMenuRelatorioGrhCategoria");
             $divMenu2->abre();
@@ -93,7 +93,7 @@ if($acesso)
             ##########################################################
             
             # Menu dos Relatórios
-            $grid->abreColuna(8);
+            $grid->abreColuna(7,8);
             
             # Cria uma borda
             $callout = new Callout("success");

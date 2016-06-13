@@ -228,7 +228,7 @@ if($acesso)
     ################################################################
     switch ($fase)
     {
-        case "" :
+        case "" :            
         case "listar" :
             $objeto->listar();
 
@@ -263,20 +263,15 @@ if($acesso)
             $chart->setTitle("");
             $chart->render(PASTA_FIGURAS."/demo3.png");
 
-            $grid = new Grid();
-            $grid->abreColuna(3);
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
+            br(2);
+            $grid = new Grid("center");
+            $grid->abreColuna(12,6);
             
-                echo '<div class="callout secondary">';
                 $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
                 $imagem->show();                
-                echo '</div>';
-                
+                            
             $grid->fechaColuna();
-            $grid->abreColuna(3);
-            $grid->fechaColuna();
-            $grid->fechaGrid();    
+            $grid->fechaGrid();
             break;
 
         case "editar" :
@@ -314,8 +309,6 @@ if($acesso)
             $grid->fechaGrid();
             break;
 
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }
-?>

@@ -56,7 +56,7 @@ class Grh
             
         # Cadastro de Servidores 
         $grid = new Grid();
-        $grid->abreColuna(3);
+        $grid->abreColuna(4,3);
             
         titulo('Servidores');
         br(2);
@@ -76,7 +76,7 @@ class Grh
         ##########################################################
             
         # Tabelas Auxiliares 
-        $grid->abreColuna(5);        
+        $grid->abreColuna(8,5);        
            
         titulo('Tabelas Auxiliares');           
         br(2);
@@ -154,7 +154,7 @@ class Grh
         ##########################################################
             
         # Alertas
-        $grid->abreColuna(4);
+        $grid->abreColuna(0,4);
 
         $divAlertas = new Div("divAlertas");
         $divAlertas->abre();            
@@ -210,7 +210,7 @@ class Grh
         $grid = new Grid();        
         
         # Funcionais 
-        $grid->abreColuna(6);
+        $grid->abreColuna(12,6,3);
             titulo('Funcionais');
             br();     
                 $tamanhoImage = 50;
@@ -299,7 +299,7 @@ class Grh
             $grid->fechaColuna();
             
             # Ocorrências 
-            $grid->abreColuna(6);
+            $grid->abreColuna(12,6,3);
             
             titulo('Ocorrências');
             br();
@@ -372,14 +372,14 @@ class Grh
                 $menu->show();
                 
             $grid->fechaColuna();
-            $grid->fechaGrid();        
+            #$grid->fechaGrid();        
             
-            br();
+           # br();
                                               
-            $grid = new Grid();
+            #$grid = new Grid();
             
             # Pessoais
-            $grid->abreColuna(6);
+            $grid->abreColuna(12,6,3);
             titulo('Pessoais');
             br();
             
@@ -430,7 +430,7 @@ class Grh
             $grid->fechaColuna();
             
             # Financeiro                                    
-            $grid->abreColuna(6);
+            $grid->abreColuna(12,6,3);
                 titulo('Financeiro');
                 br();
             

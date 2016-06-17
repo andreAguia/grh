@@ -438,16 +438,25 @@ if($acesso){
                 $diasDisponiveis = $diasPublicados - $diasFruidos;
                 
                 # Exibe alerta se $diasDisponíveis for negativo
-                if($diasDisponiveis < 0)
-                {
-                    $fieldset = new Fieldset('Atenção');
-                    $fieldset->abre();
+                if($diasDisponiveis < 0){
+                    br(4);
+                    
                     $mensagem = 'Este Servidor tem mais dias fruídos de Licença prêmio do que publicados</br>
                     É necessário cadastrar as publicações de licença prêmio para acertar essa situação.';
 
-                    p($mensagem,'center');
-                    
-                    $fieldset->fecha();
+                    # Limita o tamanho da tela
+                    $grid = new Grid('center');
+                    $grid->abreColuna(6);                  
+
+                    # painel usando o callout
+                    $painel2 = new Callout();
+                    $painel2->set_botaoOk(NULL,"history.go(-1)");
+                    $painel2->abre();
+                        p($mensagem);
+                    $painel2->fecha();
+
+                    $grid->fechaColuna();
+                    $grid->fechaGrid();
                 }
             case "editar" :
                 if($idTpLicenca == 6)
@@ -463,17 +472,24 @@ if($acesso){
                     # Verifica se tem dias publicados e/ou disponíveis         
                     if ((($diasDisponiveis < 1) AND (IS_NULL($id))) OR ($diasPublicados == 0))
                     {
-                        $fieldset = new Fieldset('Atenção');
-                        $fieldset->abre();
+                        br(4);
+                    
                         $mensagem = 'Este Servidor não tem dias disponíveis para solicitar uma licença prêmio.</br>
                         É necessário cadastrar a publicação da licença prêmio antes de lançar a licença no sistema.';
 
-                        $p = new P($mensagem,'center');
-                        $p->show();					
-                        $fieldset->fecha();
-                        
-                        # Botão voltar
-                        Visual::botaoVoltar('?'); 
+                        # Limita o tamanho da tela
+                        $grid = new Grid('center');
+                        $grid->abreColuna(6);                  
+
+                        # painel usando o callout
+                        $painel2 = new Callout();
+                        $painel2->set_botaoOk(NULL,"history.go(-1)");
+                        $painel2->abre();
+                            p($mensagem);
+                        $painel2->fecha();
+
+                        $grid->fechaColuna();
+                        $grid->fechaGrid(); 
                     }
                     else
                         $objeto->$fase($id);

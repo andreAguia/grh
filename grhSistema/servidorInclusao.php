@@ -122,7 +122,7 @@ if($acesso){
             $controle = new Input('cpf','cpf','CPF:',1);
             $controle->set_size(20);            
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $controle->set_required(TRUE);
             $controle->set_autofocus(true);
             $controle->set_title('O CPF do Novo Servidor');

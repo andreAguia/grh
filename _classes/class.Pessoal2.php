@@ -1,6 +1,6 @@
 <?php
 
-class Pessoal extends Bd
+class Pessoal2 extends Bd
 {
     /** 
      * Classe de acesso ao Banco de Dados Pessoal
@@ -19,8 +19,8 @@ class Pessoal extends Bd
     private $servidor = "localhost";
     private $usuario = "intranet";
     private $senha = "txzVHnMdh53ZWX9p";
-    private $banco = "pessoal";
-    #private $banco = "grh";
+    #private $banco = "pessoal";
+    private $banco = "grh";
     private $sgdb = "mysql";
     private $tabela;
     private $idCampo;

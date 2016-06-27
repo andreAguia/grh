@@ -18,7 +18,7 @@ set_session('sessionParametro');	# Zera a session do par�metro de pesquisa da 
 set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idusuario,2);
 
 if($acesso)
 {    
@@ -77,7 +77,7 @@ if($acesso)
     $linkBotao3->set_accessKey('R');
     $menu->add_link($linkBotao3,"right");
     
-    if($matricula == GOD){
+    if(Verifica::acesso($idusuario,1)){
     # Excluir
         $linkBotao4 = new Link("Excluir","servidorExclusao.php");
         $linkBotao4->set_class('alert button');

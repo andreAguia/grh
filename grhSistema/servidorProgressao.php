@@ -13,7 +13,7 @@ $matriculaGrh = null;		  # Reservado para a matrícula pesquisada
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idusuario,2);
 
 if($acesso)
 {  	
@@ -203,7 +203,7 @@ if($acesso)
 
 
     # Matrícula para o Log
-    $objeto->set_matricula($matricula);
+    $objeto->set_idusuario($idusuario);
 
     # Paginação
     #$objeto->set_paginacao(true);

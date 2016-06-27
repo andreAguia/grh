@@ -13,7 +13,7 @@ $matriculaGrh = null;		  # Reservado para a matrícula pesquisada
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idusuario,2);
 
 if($acesso)
 {    

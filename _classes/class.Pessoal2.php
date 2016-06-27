@@ -307,32 +307,7 @@ class Pessoal2 extends Bd
 	}
 	
 	###########################################################
-	
-	/**
-	 * M�todo get_senha
-	 * Informa a senha (criptografada) 
-	 * 
-	 * @param	string $matricula	matricula do servidor
-	 */
-	public function get_senha($matricula)
-        { 
-
-            $select = "SELECT senha_intra		  
-                         FROM tbfuncionario
-                        WHERE matricula = ".$matricula;
-
-            # verifica se a matricula foi informada
-            if(is_null($matricula))
-                return 0;
-            else
-            {
-                $result = parent::select($select,false);
-                return $result[0]; 
-            }
-        }
-	
-	###########################################################
-	
+		
 	/**
 	 * M�todo set_senha
 	 * muda a senha de um usu�rio

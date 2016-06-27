@@ -5,14 +5,14 @@
  * By Alat
  */
 
-# Reservado para a matrícula do servidor logado
-$matricula = null;
+# Reservado para o servidor logado
+$idusuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idusuario,2);
 
 if($acesso)
 {    
@@ -137,7 +137,7 @@ if($acesso)
                'size' => 30)));
 
     # Matrícula para o Log
-    $objeto->set_matricula($matricula);
+    $objeto->set_idusuario($idusuario);
 
     ################################################################
     switch ($fase)

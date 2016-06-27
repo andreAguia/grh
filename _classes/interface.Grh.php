@@ -44,7 +44,7 @@ class Grh
 
 ###########################################################
     
-    public static function menu($matriculaUsuário){
+    public static function menu($idusuario){
 
     /**
      * Exibe o menu inicial do sistema
@@ -176,10 +176,10 @@ class Grh
         $grid->fechaGrid();
         
         # Exibe a versão do sistema
-        $pessoal = new Pessoal();
+        $intra = new Intra();
         $grid = new Grid();
         $grid->abreColuna(4);
-            p('Usuário : '.$pessoal->get_nome($matriculaUsuário),'grhUsuarioLogado');
+            p('Usuário : '.$intra->get_usuario($idusuario),'grhUsuarioLogado');
         $grid->fechaColuna();
         $grid->abreColuna(4);
             p(BROWSER_NAME." - ".IP,'grhIp');

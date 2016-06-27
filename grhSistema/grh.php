@@ -5,14 +5,14 @@
  * By Alat
  */
 
-# Reservado para a matrícula do servidor logado
-$matricula = null;
+# Reservado para o servidor logado
+$idusuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idusuario,2);
 
 if($acesso)
 {    
@@ -68,7 +68,7 @@ if($acesso)
         $menu1->add_link($linkBotao3,"right");
 
         # Exibe o menu administrador
-        if ($matricula == GOD){        
+        if (Verifica::acesso($idusuario,1)){        
             # Botão Administração
             $botao = new Button("Administração");
             $botao->set_title('Faz um checkup no sistema verificando erros');
@@ -90,7 +90,7 @@ if($acesso)
             $pessoal->mudaStatusFeriasConfirmadaFruida();
 
             # monta o menu principal
-            Grh::menu($matricula);
+            Grh::menu($idusuario);
             break;
 
 ##################################################################	

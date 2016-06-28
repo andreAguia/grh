@@ -19,8 +19,8 @@ class Pessoal2 extends Bd
     private $servidor = "localhost";
     private $usuario = "intranet";
     private $senha = "txzVHnMdh53ZWX9p";
-    #private $banco = "pessoal";
-    private $banco = "grh";
+    private $banco = "pessoal";
+    #private $banco = "grh";
     private $sgdb = "mysql";
     private $tabela;
     private $idCampo;
@@ -307,7 +307,32 @@ class Pessoal2 extends Bd
 	}
 	
 	###########################################################
-		
+	
+	/**
+	 * M�todo get_senha
+	 * Informa a senha (criptografada) 
+	 * 
+	 * @param	string $matricula	matricula do servidor
+	 */
+	public function get_senha($matricula)
+        { 
+
+            $select = "SELECT senha_intra		  
+                         FROM tbfuncionario
+                        WHERE matricula = ".$matricula;
+
+            # verifica se a matricula foi informada
+            if(is_null($matricula))
+                return 0;
+            else
+            {
+                $result = parent::select($select,false);
+                return $result[0]; 
+            }
+        }
+	
+	###########################################################
+	
 	/**
 	 * M�todo set_senha
 	 * muda a senha de um usu�rio
@@ -368,95 +393,7 @@ class Pessoal2 extends Bd
 		
 	}
 	
-	###########################################################
-	
-	/**
-	 * Método verificaLogin
-	 * Verifica a senha do servidor
-	 * 
-	 * @param	string $matricula  matricula do servidor
-	 * @param	string $senha  senha a ser verificada com a verdadeira
-	 *
-	 * return	0 -> Login Correto
-	 *		1 -> Matr�cula inv�lida
-	 *              2 -> Matr�cula de Servidor inativo
-	 *		3 -> Matr�cula Inexistente
-	 *		4 -> Usu�rio bloqueado
-	 *		5 -> Usu�rio ou senha errada
-	 *		6 -> Senha Padr�o
-	 *		7 -> Senha Padr�o Bloqueada por inatividade
-	 */
-	
-	
-	public function verificaLogin($matricula,$senha)
-	{	
-		# Verifica se a matr�cula � s� numero
-		if (!is_numeric($matricula))
-			return 1;
-			
-		# Verifica a Situa��o da matr�cula
-		$matSit = $this->get_situacao($matricula);
-		switch ($matSit)
-		{
-			case 1:	// Servidor Inativo
-				return 2;
-			break;
-			
-			case null; // Matr�cula inexistente
-				return 3;
-			break;
-		}
-
-		# Pega a senha da matr�cula no banco de dados					
-		$senhaServidor = $this->get_senha($matricula);
-			
-	  	# Verifica se a senha � nula (Usu�rio Bloqueado)
-		if(is_null($senhaServidor))
-			return 4;
-			
-		# Verifica se a senha � vazia (Usu�rio Bloqueado)
-		if($senhaServidor == "")
-			return 4;
-
-		# Pega quantos foram os dias desde o �ltimo login 		
-		$diasAusentes = $this->get_diasAusentes($matricula);
-		
-		# Pega o Valor da aus�ncia m�xima de um usuario/servidor
-		$config = new Intra();
-		$ausenciaMaxima = $config->get_variavel('ausencia_maxima');
-		$ausenciaPadrao = $config->get_variavel('ausencia_padrao');
-		
-		# Verifica se a aus�ncia � maior que a aus�ncia m�xima
-		if($diasAusentes > $ausenciaMaxima)
-			return 8;
-			
-		# Pega a senha digitada e cripitografa
-		$senha_md5 = md5($senha);
-	  			
-		if($senhaServidor <> $senha_md5)
-	  	return 5;
-		
-		if($senhaServidor == $senha_md5)
-		{
-			if ($senha == SENHA_PADRAO)
-			{
-				if($diasAusentes > $ausenciaPadrao)
-					return 7;
-				else
-				{
-					set_session('intranet',$matricula);	
-					return 6;
-				}
-			}
-			else
-			{
-				set_session('intranet',$matricula);
-				return 0;			
-			}
-	  	}
-	}
-	
-	###########################################################
+	######################################################################################
 	
 	/**
 	 * M�todo get_lotacao

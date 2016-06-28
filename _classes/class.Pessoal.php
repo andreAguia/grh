@@ -19,8 +19,8 @@ class Pessoal extends Bd
     private $servidor = "localhost";
     private $usuario = "intranet";
     private $senha = "txzVHnMdh53ZWX9p";
-    private $banco = "pessoal";
-    #private $banco = "grh";
+    #private $banco = "pessoal";
+    private $banco = "grh";
     private $sgdb = "mysql";
     private $tabela;
     private $idCampo;

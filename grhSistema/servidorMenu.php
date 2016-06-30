@@ -7,8 +7,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;	  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;	  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -18,7 +18,7 @@ set_session('sessionParametro');	# Zera a session do par�metro de pesquisa da 
 set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -77,7 +77,7 @@ if($acesso)
     $linkBotao3->set_accessKey('R');
     $menu->add_link($linkBotao3,"right");
     
-    if(Verifica::acesso($idusuario,1)){
+    if(Verifica::acesso($idUsuario,1)){
     # Excluir
         $linkBotao4 = new Link("Excluir","servidorExclusao.php");
         $linkBotao4->set_class('alert button');
@@ -92,14 +92,14 @@ if($acesso)
     $grid->fechaGrid();
     
     # Exibe os dados do Servidor
-    Grh::listaDadosServidor($matriculaGrh);
+    Grh::listaDadosServidor($idServidorPesquisado);
     
     switch ($fase)
     {	
         # Exibe o Menu Inicial
         case "menu" :
             # monta o menu do servidor
-            Grh::menuServidor($matriculaGrh,$matricula);
+            Grh::menuServidor($idServidorPesquisado);
             break;
         
    ##################################################################	

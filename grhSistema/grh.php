@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -68,7 +68,7 @@ if($acesso)
         $menu1->add_link($linkBotao3,"right");
 
         # Exibe o menu administrador
-        if (Verifica::acesso($idusuario,1)){        
+        if (Verifica::acesso($idUsuario,1)){        
             # Botão Administração
             $botao = new Button("Administração");
             $botao->set_title('Faz um checkup no sistema verificando erros');
@@ -90,7 +90,7 @@ if($acesso)
             $pessoal->mudaStatusFeriasConfirmadaFruida();
 
             # monta o menu principal
-            Grh::menu($idusuario);
+            Grh::menu($idUsuario);
             break;
 
 ##################################################################	

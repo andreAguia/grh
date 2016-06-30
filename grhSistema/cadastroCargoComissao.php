@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -175,7 +175,7 @@ if($acesso)
                'size' => array(80,5))));
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     ################################################################
     switch ($fase)
@@ -206,18 +206,18 @@ if($acesso)
             $servidor = new Pessoal();
             titulo('Servidores da Lotação: '.$servidor->get_nomelotacao($id));
 
-            $select ='SELECT distinct tbfuncionario.matricula, 
+            $select ='SELECT distinct tbservidor.idFuncional, 
                              tbpessoa.nome,
                              tbcomissao.descricao,
                              tbcargo.nome,
-                             tbfuncionario.matricula,
+                             tbservidor.idServidor,
                              tbperfil.nome
-                        FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)                                               
-                                           LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idPerfil)
-                                           LEFT JOIN tbcargo ON (tbfuncionario.idCargo = tbcargo.idCargo)
-                                           LEFT JOIN tbcomissao ON(tbfuncionario.matricula = tbcomissao.matricula)
+                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                               
+                                           LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                           LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                           LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                                 JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbfuncionario.sit = 1
+                       WHERE tbservidor.situacao = 1
                          AND tbcomissao.dtExo is NULL
                          AND tbcomissao.idTipoComissao = '.$id.'
                     ORDER BY comissao, tbpessoa.nome';
@@ -228,10 +228,10 @@ if($acesso)
             $contador = $servidor->count($select); 
 
             # Parametros da tabela
-            $label = array('Matricula','Nome','Descrição','Cargo','Lotação','Perfil');
+            $label = array('idFuncional','Nome','Descrição','Cargo','Lotação','Perfil');
             $width = array(10,20,20,15,20,15);	
             $align = array("center","left");
-            $funcao = array("dv");
+            #$funcao = array("dv");
             $classe = array("","","","","Pessoal");
             $metodo = array("","","","","get_lotacao");
 
@@ -239,7 +239,7 @@ if($acesso)
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_cabecalho($label,$width,$align);
-            $tabela->set_funcao($funcao);
+            #$tabela->set_funcao($funcao);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             #$tabela->set_titulo($titulo);

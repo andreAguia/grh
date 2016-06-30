@@ -6,14 +6,14 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {
@@ -40,7 +40,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Histórico de Lotações');
@@ -54,14 +54,14 @@ if($acesso)
                                      motivo,
                                      idHistLot
                                 FROM tbhistLot
-                          WHERE matricula='.$matriculaGrh.'
+                          WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY data desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT data,
                                      lotacao,
                                      motivo,
-                                     matricula
+                                     idServidor
                                 FROM tbhistLot
                                WHERE idHistLot = '.$id);
 
@@ -71,7 +71,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    #$objeto->set_botaoSalvarGrafico(false);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -86,8 +86,7 @@ if($acesso)
     $objeto->set_function(array ("date_to_php"));
     
     $objeto->set_classe(array (null,"pessoal"));
-    $objeto->set_metodo(array (null,"get_nomelotacao"));
-    
+    $objeto->set_metodo(array (null,"get_nomelotacao"));    
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -108,7 +107,6 @@ if($acesso)
                                  WHERE ativo = "Sim"
                               ORDER BY lotacao');
     array_push($result, array(null,null)); # Adiciona o valor de nulo
-
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'data',
@@ -137,16 +135,16 @@ if($acesso)
                                        'col' => 6,                                   
                                        'title' => 'Motivo da mudança de lotação.',
                                        'linha' => 2),
-                               array ( 'nome' => 'matricula',
-                                       'label' => 'Matrícula:',
+                               array ( 'nome' => 'idServidor',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
-                                       'title' => 'Matrícula',
+                                       'title' => 'idServidor',
                                        'linha' => 4)));
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     # Paginação
     #$objeto->set_paginacao(true);
@@ -168,8 +166,6 @@ if($acesso)
             case "gravar" :
                 $objeto->gravar($id,'servidorLotacaoExtra.php'); 	
                 break;
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }
-?>

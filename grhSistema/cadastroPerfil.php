@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -90,8 +90,6 @@ if($acesso)
     # select do edita
     $objeto->set_selectEdita('SELECT nome,
                                       tipo,
-                                      matIni,
-                                      matFim,
                                       progressao,
                                       trienio,
                                       comissao,
@@ -161,19 +159,7 @@ if($acesso)
                'label' => 'Tipo:',
                'tipo' => 'combo',
                'array' => array("Concursados","Não Concursados"),
-               'size' => 20),
-         array ('linha' => 1,
-               'nome' => 'matIni',
-               'title' => 'Matrícula inicial desse perfil para efeito do sistema atribuir a matrícula automaticamente a um novo servidor.',
-               'label' => 'Matrícula Inicial:',
-               'tipo' => 'texto',
-               'size' => 20),
-        array ('linha' => 1,
-               'nome' => 'matFim',
-               'title' => 'Matrícula Final desse perfil para efeito do sistema atribuir a matrícula automaticamente a um novo servidor.',
-               'label' => 'Matrícula Final:',
-               'tipo' => 'texto',
-               'size' => 20),
+               'size' => 20),         
         array ('linha' => 3,
                'nome' => 'progressao',
                'title' => 'informa se esse perfil tem direito a progressão',
@@ -223,7 +209,7 @@ if($acesso)
                'size' => array(80,5))));
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     ################################################################
     switch ($fase)
@@ -243,9 +229,9 @@ if($acesso)
                 new Color(67, 205, 128)));
 
             # Pega os dados
-            $selectGrafico = 'SELECT tbperfil.nome, count(tbfuncionario.matricula) 
-                                FROM tbfuncionario LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idPerfil)
-                               WHERE tbfuncionario.Sit = 1
+            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.matricula) 
+                                FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                               WHERE tbservidor.situacao = 1
                             GROUP BY tbperfil.nome';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -265,11 +251,9 @@ if($acesso)
 
             br(2);
             $grid = new Grid("center");
-            $grid->abreColuna(12,6);
-            
+            $grid->abreColuna(5);
                 $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
-                $imagem->show();                
-                            
+                $imagem->show();
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;

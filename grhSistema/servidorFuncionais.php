@@ -6,14 +6,14 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -37,16 +37,17 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Pega o perfil do Servidor    
-    $perfilServidor = $pessoal->get_idPerfil($matriculaGrh);
+    $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Dados Funcionais');
 
     # select do edita
     $selectEdita = 'SELECT idFuncional,
+                           matricula,
                            idPerfil,';
 
     # Somente se for estatutário
@@ -58,7 +59,7 @@ if($acesso)
         $selectEdita .= ' idCargo,';
 
     # os demais
-    $selectEdita .= 'sit,
+    $selectEdita .= 'situacao,
                     dtAdmissao,
                     processoAdm,
                     dtPublicAdm,
@@ -70,8 +71,8 @@ if($acesso)
                     pgPublicExo,
                     ciGepagExo,
                     motivo
-            FROM tbfuncionario
-            WHERE matricula = '.$matriculaGrh;
+            FROM tbservidor
+            WHERE idServidor = '.$idServidorPesquisado;
 
 
     $objeto->set_selectEdita($selectEdita);
@@ -93,10 +94,10 @@ if($acesso)
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbfuncionario');
+    $objeto->set_tabela('tbservidor');
 
     # Nome do campo id
-    $objeto->set_idCampo('matricula');
+    $objeto->set_idCampo('idServidor');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -126,10 +127,10 @@ if($acesso)
     array_push($cargo, array(0,null)); 
 
     # Pega os dados da combo situação
-    $situacao = $pessoal->select('SELECT idsit,
-                                       sit
+    $situacao = $pessoal->select('SELECT idsituacao,
+                                       situacao
                                   FROM tbsituacao
-                              ORDER BY sit');
+                              ORDER BY situacao');
 
     array_push($situacao, array(null,null)); 
 
@@ -142,6 +143,14 @@ if($acesso)
                            'size' => 10,
                            'col' => 3,
                            'title' => 'Número da id funcional do servidor.'),
+                  array ( 'linha' => 1,
+                           'nome' => 'matricula',
+                           'label' => 'Matricula:',
+                           'tipo' => 'texto',
+                           'autofocus' => true,
+                           'size' => 10,
+                           'col' => 3,
+                           'title' => 'Matrícula do servidor.'),
                    array ('linha' => 1,
                            'nome' => 'idPerfil',
                            'label' => 'Perfil:',
@@ -149,10 +158,10 @@ if($acesso)
                            'required' => true,
                            'array' => $perfil,
                            'title' => 'Perfil do servidor', 
-                           'col' => 6,
+                           'col' => 3,
                            'size' => 15),
                     array ('linha' => 1,
-                           'nome' => 'sit',
+                           'nome' => 'situacao',
                            'label' => 'Situação:',
                            'tipo' => 'combo',
                            'required' => true,
@@ -271,17 +280,17 @@ if($acesso)
     $objeto->set_campos($campos);
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     ################################################################
 
     switch ($fase){
         case "editar" :
-            $objeto->$fase($matriculaGrh);  
+            $objeto->$fase($idUsuario);  
             break;
 
         case "gravar" :
-            $objeto->gravar($matriculaGrh,'servidorFuncionaisExtra.php'); 	
+            $objeto->gravar($idUsuario,'servidorFuncionaisExtra.php'); 	
             break;
     }
     $page->terminaPagina();

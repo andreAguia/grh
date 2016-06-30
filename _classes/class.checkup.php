@@ -11,7 +11,7 @@ class Checkup
   */
 
 	
-    private $matricula = null;  //informa se será somente para um servidor ou se será para todos
+    private $idServidor = null;  //informa se será somente para um servidor ou se será para todos
     private $lista = true;      //informa se será listagem ou somente contagem dos registros
         
     ###########################################################
@@ -22,10 +22,10 @@ class Checkup
      * Faz um checkup
      */
     
-    public function __construct($lista = true,$matricula = null)
+    public function __construct($lista = true,$idServidor = null)
     {
         $this->lista = $lista;
-        $this->matricula = $matricula;        
+        $this->idServidor = $idServidor;        
     }
     
     ###########################################################
@@ -57,33 +57,34 @@ class Checkup
     public function get_licencaVencendo(){
         $servidor = new Pessoal();
        
-        $select = 'SELECT tbfuncionario.matricula,
+        $select = 'SELECT tbservidor.idFuncional,
                   tbpessoa.nome,
                   tbperfil.nome,
                   tbtipolicenca.nome,
                   tblicenca.dtInicial,
                   tblicenca.numDias,
-                  ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
-             FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tblicenca ON (tbfuncionario.matricula = tblicenca.matricula)
+                  ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                  tbservidor.idServidor
+             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
                                 LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                                LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)
-            WHERE tbfuncionario.Sit = 1
+                                LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+            WHERE tbservidor.situacao = 1
               AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "'.date('Y').'"';
         
-        if(is_null($this->matricula))
+        if(is_null($this->idServidor))
             $select .= 'ORDER BY 7';
         else    ## parei aqui
-            $select .= 'AND matricula = "'.$this->matricula.'" ORDER BY 7';
+            $select .= 'AND idServidor = "'.$this->idServidor.'" ORDER BY 7';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
         $titulo = 'Servidores com Licença Terminando em '.date('Y');
-        $label = array('Matrícula','Nome','Perfil','Licença','Data Inicial','Dias','Data Final');
+        $label = array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final');
         $width = array(10,30,10,20,10,5,10);
-        $funcao = array('dv',null,null,null,"date_to_php",null,"date_to_php");
+        $funcao = array(null,null,null,null,"date_to_php",null,"date_to_php");
         $align = array('center','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -94,7 +95,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -117,47 +118,47 @@ class Checkup
     {
         $servidor = new Pessoal(); 
             
-            $select = '(SELECT DISTINCT tbfuncionario.matricula,
-                  tbfuncionario.idFuncional,  
+            $select = '(SELECT DISTINCT tbservidor.idFuncional,
                   tbpessoa.nome,
-                  tbfuncionario.dtadmissao,
+                  tbservidor.dtadmissao,
                   CONCAT(MAX(tbtrienio.percentual),"%"),
                   MAX(tbtrienio.dtInicial),
-                  DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)
-             FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tbtrienio ON (tbtrienio.matricula = tbfuncionario.matricula)
-            WHERE tbfuncionario.Sit = 1
+                  DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),
+                  tbservidor.idServidor
+             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+            WHERE tbservidor.situacao = 1
               AND idPerfil = 1
-         GROUP BY tbfuncionario.matricula
+         GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = '.date('Y').'
-         ORDER BY 7)
+         ORDER BY 6)
          UNION
-         (SELECT DISTINCT tbfuncionario.matricula,
-                  tbfuncionario.idFuncional,  
+         (SELECT DISTINCT tbservidor.idFuncional,  
                   tbpessoa.nome,
-                  tbfuncionario.dtadmissao,
+                  tbservidor.dtadmissao,
                   "",
                   "",
-                  DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR)
-             FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tbtrienio ON (tbtrienio.matricula = tbfuncionario.matricula)
-            WHERE tbfuncionario.Sit = 1
+                  DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR),
+                  tbservidor.idServidor
+             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                             LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+            WHERE tbservidor.situacao = 1
               AND idPerfil = 1              
-         GROUP BY tbfuncionario.matricula
-         HAVING YEAR (DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR)) = '.date('Y').'
+         GROUP BY tbservidor.idServidor
+         HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = '.date('Y').'
              AND MAX(tbtrienio.dtInicial) IS NULL
-         ORDER BY 7)
-         ORDER BY 7';		
+         ORDER BY 6)
+         ORDER BY 6';		
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('Matrícula','IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio');
-        $width = array(10,10,35,10,10,10,10);
-        $align = array('center','center','left');
+        $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio');
+        $width = array(10,45,10,10,10,10);
+        $align = array('center','left');
         $titulo = 'Servidores com Triênio Vencendo em '.date('Y');
-        $funcao = array(null,null,null,"date_to_php",null,"date_to_php","date_to_php");
+        $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -167,7 +168,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -190,47 +191,47 @@ class Checkup
     {
         $servidor = new Pessoal();
         
-        $select = '(SELECT DISTINCT tbfuncionario.matricula,
-                  tbfuncionario.idFuncional,  
+        $select = '(SELECT DISTINCT tbservidor.idFuncional,  
                   tbpessoa.nome,
-                  tbfuncionario.dtadmissao,
+                  tbservidor.dtadmissao,
                   CONCAT(MAX(tbtrienio.percentual),"%"),
                   MAX(tbtrienio.dtInicial),
-                  DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)
-             FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tbtrienio ON (tbtrienio.matricula = tbfuncionario.matricula)
-            WHERE tbfuncionario.Sit = 1
+                  DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),
+                  tbservidor.idServidor
+             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                             LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+            WHERE tbservidor.situacao = 1
               AND idPerfil = 1
-         GROUP BY tbfuncionario.matricula
+         GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) < '.date('Y').'
-         ORDER BY 7)
+         ORDER BY 6)
          UNION
-         (SELECT DISTINCT tbfuncionario.matricula,
-                  tbfuncionario.idFuncional,  
+         (SELECT DISTINCT tbservidor.idFuncional,  
                   tbpessoa.nome,
-                  tbfuncionario.dtadmissao,
+                  tbservidor.dtadmissao,
                   "",
                   "",
-                  DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR)
-             FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tbtrienio ON (tbtrienio.matricula = tbfuncionario.matricula)
-            WHERE tbfuncionario.Sit = 1
+                  DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR),
+                  tbservidor.idServidor
+             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+            WHERE tbservidor.situacao = 1
               AND idPerfil = 1              
-         GROUP BY tbfuncionario.matricula
-         HAVING YEAR (DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR)) < '.date('Y').'
+         GROUP BY tbservidor.idServidor
+         HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) < '.date('Y').'
              AND MAX(tbtrienio.dtInicial) IS NULL
-         ORDER BY 7)
-         ORDER BY 7';		
+         ORDER BY 6)
+         ORDER BY 6';		
 
     $result = $servidor->select($select);
     $count = $servidor->count($select);
 
     # Cabeçalho da tabela
-    $label = array('Matrícula','IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
-    $width = array(10,10,35,10,10,10,10);
-    $align = array('center','center','left');
+    $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
+    $width = array(10,45,10,10,10,10);
+    $align = array('center','left');
     $titulo = 'Servidores com Triênio Vencido antes de '.date('Y');
-    $funcao = array(null,null,null,"date_to_php",null,"date_to_php","date_to_php");
+    $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
     $linkEditar = 'servidor.php?fase=editar&id=';
 
     # Exibe a tabela
@@ -240,7 +241,7 @@ class Checkup
     $tabela->set_titulo($titulo);
     $tabela->set_funcao($funcao);
     $tabela->set_editar($linkEditar);
-    $tabela->set_idCampo('matricula');
+    $tabela->set_idCampo('idServidor');
     
         if ($count <> 0){
             if($this->lista){
@@ -263,16 +264,17 @@ class Checkup
     {
         $servidor = new Pessoal();
         
-        $select = 'SELECT tbfuncionario.matricula,
+        $select = 'SELECT tbservidor.idFuncional,
                   tbpessoa.nome,
                   tbdependente.nome,
                   tbdependente.dtNasc,
                   dtTermino,
                   ciExclusao,
-                  processo
+                  processo,
+                  tbservidor.idServidor
              FROM tbdependente JOIN tbpessoa ON(tbpessoa.idpessoa = tbdependente.idpessoa)
-                               JOIN tbfuncionario ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-            WHERE tbfuncionario.Sit = 1
+                               JOIN tbservidor ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+            WHERE tbservidor.situacao = 1
               AND YEAR(dtTermino) = "'.date('Y').'"
          ORDER BY dtTermino';
 
@@ -281,10 +283,10 @@ class Checkup
 
         # Cabeçalho da tabela
         $titulo = 'Servidores com o Auxílio Creche vencendo em '.date('Y');
-        $label = array("Matrícula","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo");
+        $label = array("IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo");
         $width = array(10,20,20,10,10,10,15);
-        $funcao = array("dv",null,null,"date_to_php","date_to_php");
-        $align = array('center');
+        $funcao = array(null,null,null,"date_to_php","date_to_php");
+        $align = array('center','left','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -294,7 +296,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -317,14 +319,14 @@ class Checkup
     {
         $servidor = new Pessoal();
 
-        $select = 'SELECT tbfuncionario.matricula,
-                        tbfuncionario.idFuncional,  
+        $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
-                        tbdocumentacao.dtVencMotorista
-                    FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
+                        tbdocumentacao.dtVencMotorista,
+                        tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
-                    WHERE tbfuncionario.Sit = 1
-                    AND tbfuncionario.idcargo = 63
+                    WHERE tbservidor.situacao = 1
+                    AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista < now()
                 ORDER BY tbpessoa.nome';		
 
@@ -332,11 +334,11 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('Matrícula','IdFuncional','Nome','Data da Carteira');
-        $width = array(10,10,65,10);
-        $align = array('center','center','left');
+        $label = array('IdFuncional','Nome','Data da Carteira');
+        $width = array(10,75,10);
+        $align = array('center','left');
         $titulo = 'Motoristas com Carteira de Habilitação Vencida';
-        $funcao = array(null,null,null,"date_to_php");
+        $funcao = array(null,null,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -346,7 +348,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -369,14 +371,14 @@ class Checkup
     {
         $servidor = new Pessoal();
 
-        $select = 'SELECT tbfuncionario.matricula,
-                        tbfuncionario.idFuncional,  
+        $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
-                        tbdocumentacao.dtVencMotorista
-                    FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
+                        tbdocumentacao.dtVencMotorista,
+                  tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
-                    WHERE tbfuncionario.Sit = 1
-                    AND tbfuncionario.idcargo = 63
+                    WHERE tbservidor.situacao = 1
+                    AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista is null
                 ORDER BY tbpessoa.nome';		
 
@@ -384,11 +386,11 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('Matrícula','IdFuncional','Nome','Data da Carteira');
-        $width = array(10,10,65,10);
-        $align = array('center','center','left');
+        $label = array('IdFuncional','Nome','Data da Carteira');
+        $width = array(10,75,10);
+        $align = array('center','left');
         $titulo = 'Motoristas com carteira de habilitação sem data de vencimento cadastrada no sistema';
-        $funcao = array(null,null,null,"date_to_php");
+        $funcao = array(null,null,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -398,7 +400,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -421,13 +423,13 @@ class Checkup
     {
         $servidor = new Pessoal();
 
-        $select = 'SELECT tbfuncionario.matricula,
-                        tbfuncionario.idFuncional,  
-                        tbpessoa.nome
-                    FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
+        $select = 'SELECT tbservidor.idFuncional,  
+                        tbpessoa.nome,
+                  tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
-                    WHERE tbfuncionario.Sit = 1
-                    AND tbfuncionario.idcargo = 63
+                    WHERE tbservidor.situacao = 1
+                    AND tbservidor.idcargo = 63
                     AND (tbdocumentacao.motorista is null OR tbdocumentacao.motorista ="")
                 ORDER BY tbpessoa.nome';		
 
@@ -435,9 +437,9 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('Matrícula','IdFuncional','Nome');
-        $width = array(10,10,75);
-        $align = array('center','center');
+        $label = array('IdFuncional','Nome');
+        $width = array(10,85);
+        $align = array('center');
         $titulo = 'Motorista sem número da carteira de habilitação cadastrada:';
         $funcao = array(null);
         $linkEditar = 'servidor.php?fase=editar&id=';
@@ -449,7 +451,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -472,14 +474,13 @@ class Checkup
     {
         $servidor = new Pessoal();
 
-        $select = 'SELECT tbfuncionario.matricula,
-                        tbfuncionario.idFuncional,  
+        $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
-                        tbfuncionario.matricula
-                    FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                    WHERE tbfuncionario.Sit = 1
-                    AND tbfuncionario.idcargo = 0
-                    AND tbfuncionario.idPerfil = 1
+                        tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                    WHERE tbservidor.situacao = 1
+                    AND tbservidor.idcargo = 0
+                    AND tbservidor.idPerfil = 1
                 ORDER BY tbpessoa.nome';		
 
         $result = $servidor->select($select);
@@ -490,7 +491,8 @@ class Checkup
         $width = array(10,10,30,45);
         $align = array('center','center','left');
         $titulo = 'Servidores estatutários sem cargo cadastrado';
-        $funcao = array(null,null,null,"get_lotacao");
+        $classe = array(null,null,null,"Pessoal");
+        $metodo = array(null,null,null,"get_lotacao");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -498,9 +500,10 @@ class Checkup
         $tabela->set_conteudo($result);
         $tabela->set_cabecalho($label,$width,$align);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
        
         if ($count <> 0){
             if($this->lista){
@@ -523,13 +526,13 @@ class Checkup
     {
         $servidor = new Pessoal();
        
-        $select = 'SELECT tbfuncionario.matricula,
+        $select = 'SELECT tbservidor.idFuncional,
 	                  tbpessoa.nome,
 	                  tbperfil.nome,
 	                  MAX(tbprogressao.dtInicial),
 	                  (SELECT tbclasse.faixa 
                              FROM tbprogressao JOIN tbclasse ON (tbprogressao.idclasse = tbclasse.idclasse)
-                            WHERE tbprogressao.matricula = tbfuncionario.matricula
+                            WHERE tbprogressao.idServidor = tbservidor.idServidor
                             ORDER BY dtinicial DESC LIMIT 1),
                           (SELECT faixa
                              FROM tbclasse LEFT JOIN tbplano ON (tbclasse.idplano = tbplano.idplano)
@@ -537,22 +540,23 @@ class Checkup
                               AND tbclasse.nivel = tbcargo.tpcargo
                          ORDER BY valor DESC LIMIT 1),
 	                  DATE_ADD(MAX(tbprogressao.dtInicial), INTERVAL 2 YEAR),
-                          tbcargo.tpcargo
-                     FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-					LEFT JOIN tbprogressao ON (tbfuncionario.matricula = tbprogressao.matricula)                                
-					LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)					
-                                             JOIN tbcargo on (tbfuncionario.idcargo = tbcargo.idcargo)
-                    WHERE tbfuncionario.Sit = 1
-                    AND tbfuncionario.idPerfil = 1
+                          tbcargo.tpcargo,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+					LEFT JOIN tbprogressao ON (tbservidor.idServidor = tbprogressao.idServidor)                                
+					LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)					
+                                             JOIN tbcargo on (tbservidor.idcargo = tbcargo.idcargo)
+                    WHERE tbservidor.situacao = 1
+                    AND tbservidor.idPerfil = 1
                     AND (SELECT tbclasse.faixa 
                         FROM tbprogressao JOIN tbclasse ON (tbprogressao.idclasse = tbclasse.idclasse)
-                    WHERE tbprogressao.matricula = tbfuncionario.matricula
+                    WHERE tbprogressao.idServidor = tbservidor.idServidor
                     ORDER BY dtinicial DESC LIMIT 1) <> (SELECT faixa
                         FROM tbclasse LEFT JOIN tbplano ON (tbclasse.idplano = tbplano.idplano)
                     WHERE tbplano.planoAtual = 1
                         AND tbclasse.nivel = tbcargo.tpcargo
                     ORDER BY valor DESC LIMIT 1)
-                    GROUP BY tbfuncionario.matricula
+                    GROUP BY tbservidor.idServidor
                     HAVING YEAR (DATE_ADD(MAX(tbprogressao.dtInicial), INTERVAL 2 YEAR)) = '.date('Y').'
                     ORDER BY 7';
 
@@ -563,9 +567,9 @@ class Checkup
 
         # Cabeçalho da tabela
         $titulo = 'Servidores com Direito a Progressão em '.date('Y');
-        $label = array('Matrícula','Nome','Perfil','Última Progressão Cadastrada','Classe em que o Servidor se encontra','Última Classe do Nível do Cargo do Servidor','Com direito a partir de:','Nível do Cargo do Servidor');
+        $label = array('IdFuncional','Nome','Perfil','Última Progressão Cadastrada','Classe em que o Servidor se encontra','Última Classe do Nível do Cargo do Servidor','Com direito a partir de:','Nível do Cargo do Servidor');
         $width = array(10,25,10,10,10,10,10,10);
-        $funcao = array('dv',null,null,"date_to_php",null,null,"date_to_php");
+        $funcao = array(null,null,null,"date_to_php",null,null,"date_to_php");
         $align = array('center','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -576,7 +580,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){
@@ -599,13 +603,13 @@ class Checkup
     {
         $servidor = new Pessoal();
        
-        $select = 'SELECT tbfuncionario.matricula,
+        $select = 'SELECT tbservidor.idFuncional,
 	                  tbpessoa.nome,
 	                  tbperfil.nome,
 	                  MAX(tbprogressao.dtInicial),
 	                  (SELECT tbclasse.faixa 
                              FROM tbprogressao JOIN tbclasse ON (tbprogressao.idclasse = tbclasse.idclasse)
-                            WHERE tbprogressao.matricula = tbfuncionario.matricula
+                            WHERE tbprogressao.idServidor = tbservidor.idServidor
                             ORDER BY dtinicial DESC LIMIT 1),
                           (SELECT faixa
                              FROM tbclasse LEFT JOIN tbplano ON (tbclasse.idplano = tbplano.idplano)
@@ -613,22 +617,23 @@ class Checkup
                               AND tbclasse.nivel = tbcargo.tpcargo
                          ORDER BY valor DESC LIMIT 1),
 	                  DATE_ADD(MAX(tbprogressao.dtInicial), INTERVAL 2 YEAR),
-                          tbcargo.tpcargo
-                     FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-					LEFT JOIN tbprogressao ON (tbfuncionario.matricula = tbprogressao.matricula)                                
-					LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)					
-                                             JOIN tbcargo on (tbfuncionario.idcargo = tbcargo.idcargo)                    
-                    WHERE tbfuncionario.Sit = 1
-                    AND tbfuncionario.idPerfil = 1
+                          tbcargo.tpcargo,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+					LEFT JOIN tbprogressao ON (tbservidor.idServidor = tbprogressao.idServidor)                                
+					LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)					
+                                             JOIN tbcargo on (tbservidor.idcargo = tbcargo.idcargo)                    
+                    WHERE tbservidor.situacao = 1
+                    AND tbservidor.idPerfil = 1
                     AND (SELECT tbclasse.faixa 
                         FROM tbprogressao JOIN tbclasse ON (tbprogressao.idclasse = tbclasse.idclasse)
-                    WHERE tbprogressao.matricula = tbfuncionario.matricula
+                    WHERE tbprogressao.idServidor = tbservidor.idServidor
                     ORDER BY dtinicial DESC LIMIT 1) <> (SELECT faixa
                         FROM tbclasse LEFT JOIN tbplano ON (tbclasse.idplano = tbplano.idplano)
                     WHERE tbplano.planoAtual = 1
                         AND tbclasse.nivel = tbcargo.tpcargo
                     ORDER BY valor DESC LIMIT 1)
-                    GROUP BY tbfuncionario.matricula
+                    GROUP BY tbservidor.idServidor
                     HAVING YEAR (DATE_ADD(MAX(tbprogressao.dtInicial), INTERVAL 2 YEAR)) < '.date('Y').'
                     ORDER BY 7';
 
@@ -639,9 +644,9 @@ class Checkup
 
         # Cabeçalho da tabela
         $titulo = 'Servidores com Direito a Progressão antes de '.date('Y');
-        $label = array('Matrícula','Nome','Perfil','Última Progressão Cadastrada','Classe em que o Servidor se encontra','Última Classe do Nível do Cargo do Servidor','Com direito a partir de:','Nível do Cargo do Servidor');
+        $label = array('IdFuncional','Nome','Perfil','Última Progressão Cadastrada','Classe em que o Servidor se encontra','Última Classe do Nível do Cargo do Servidor','Com direito a partir de:','Nível do Cargo do Servidor');
         $width = array(10,25,10,10,10,10,10,10);
-        $funcao = array('dv',null,null,"date_to_php",null,null,"date_to_php");
+        $funcao = array(null,null,null,"date_to_php",null,null,"date_to_php");
         $align = array('center','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -652,7 +657,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('matricula');
+        $tabela->set_idCampo('idServidor');
         
         if ($count <> 0){
             if($this->lista){

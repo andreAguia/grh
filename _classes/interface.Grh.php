@@ -44,7 +44,7 @@ class Grh
 
 ###########################################################
     
-    public static function menu($idusuario){
+    public static function menu($idUsuario){
 
     /**
      * Exibe o menu inicial do sistema
@@ -179,7 +179,7 @@ class Grh
         $intra = new Intra();
         $grid = new Grid();
         $grid->abreColuna(4);
-            p('Usuário : '.$intra->get_usuario($idusuario),'grhUsuarioLogado');
+            p('Usuário : '.$intra->get_usuario($idUsuario),'grhUsuarioLogado');
         $grid->fechaColuna();
         $grid->abreColuna(4);
             p(BROWSER_NAME." - ".IP,'grhIp');
@@ -192,7 +192,7 @@ class Grh
         
 ##########################################################
 
-    public static function menuServidor($matricula){
+    public static function menuServidor($idServidor){
             
     /**
      * método menuServidor
@@ -205,7 +205,7 @@ class Grh
         $grid->abreColuna(12);
         
         # Ocorrencias do servidor
-        Grh::exibeOcorênciaServidor($matricula);
+        Grh::exibeOcorênciaServidor($idServidor);
         
         $grid = new Grid();        
         
@@ -233,7 +233,7 @@ class Grh
                 $menu->add_item($botao);
                 
                 $pessoa = new Pessoal();
-                $perfil = $pessoa->get_idPerfil($matricula);
+                $perfil = $pessoa->get_idPerfil($idServidor);
                 
                 if ($perfil == 1)   // Ser for estatutário
                 {
@@ -605,17 +605,17 @@ class Grh
      * Div que ressalta situação do servidor (licença, férias, etc)
      */
     
-    public static function exibeOcorênciaServidor($matriculaServidor)
+    public static function exibeOcorênciaServidor($idservidor)
     {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
         # Div que ressalta situação do servidor (licença, férias, etc)
-        $ferias = $pessoal->emFerias($matriculaServidor);
-        $licenca = $pessoal->emLicenca($matriculaServidor);
-        $situacao = $pessoal->get_situacao($matriculaServidor);
-        $folgaTre = $pessoal->emFolgaTre($matriculaServidor);
-        $afastadoTre = $pessoal->emAfastamentoTre($matriculaServidor);
+        $ferias = $pessoal->emFerias($idservidor);
+        $licenca = $pessoal->emLicenca($idservidor);
+        $situacao = $pessoal->get_situacao($idservidor);
+        $folgaTre = $pessoal->emFolgaTre($idservidor);
+        $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
         
         if(($ferias) OR ($licenca) OR ($afastadoTre) OR ($folgaTre) OR ($situacao == 'Inativo')){
             
@@ -625,7 +625,7 @@ class Grh
 
             # Licenca
             if($licenca)
-                $mensagem = 'Servidor em licença '.$pessoal->get_licenca($matriculaServidor);
+                $mensagem = 'Servidor em licença '.$pessoal->get_licenca($idservidor);
 
             # Situação
             if($situacao == "Inativo")
@@ -646,9 +646,9 @@ class Grh
         } 
 
         # Verifica pendencia de motorista com carteira vencida no sistema grh
-        $perfil = $pessoal->get_perfil($matriculaServidor);
-        $cargo = $pessoal->get_cargo($matriculaServidor);
-        $idPessoa = $pessoal->get_idPessoa($matriculaServidor);
+        $perfil = $pessoal->get_perfil($idservidor);
+        $cargo = $pessoal->get_cargo($idservidor);
+        $idPessoa = $pessoal->get_idPessoa($idservidor);
         $dataCarteira = $pessoal->get_dataVencimentoCarteiraMotorista($idPessoa);
 
         # Se é motorista estatutário
@@ -671,37 +671,36 @@ class Grh
     * método listaDadosServidor
     * Exibe os dados principais do servidor logado
     * 
-    * @param    string $matricula -> matricula do servidor
+    * @param    string $idServidor -> idServidor do servidor
     */
-    public static function listaDadosServidor($matricula)
+    public static function listaDadosServidor($idServidor)
     {       
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select ='SELECT tbfuncionario.matricula,
-                         tbfuncionario.idFuncional,
+        $select ='SELECT tbservidor.idFuncional,
                          tbpessoa.nome,
                          tbperfil.nome,
-                         tbfuncionario.matricula,
-                         tbfuncionario.dtAdmissao,
-                         tbfuncionario.matricula,
-                         tbfuncionario.matricula
-                    FROM tbfuncionario LEFT JOIN tbpessoa ON tbfuncionario.idPessoa = tbpessoa.idPessoa
-                                       LEFT JOIN tbsituacao ON tbfuncionario.sit = tbsituacao.idsit
-                                       LEFT JOIN tbperfil ON tbfuncionario.idPerfil = tbperfil.idPerfil
-                   WHERE matricula = '.$matricula;
+                         tbservidor.idServidor,
+                         tbservidor.dtAdmissao,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                       LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                                       LEFT JOIN tbperfil ON tbservidor.idPerfil = tbperfil.idPerfil
+                   WHERE idServidor = '.$idServidor;
 
         $conteudo = $servidor->select($select,true);
 
-        $label = array("Matrícula","Id","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
+        $label = array("Id","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
         #$width = array(8,10,20,10,25,10,25,5);
         #$align = array("center");
-        $function = array("dv",null,null,null,null,"date_to_php");
-        $classe = array(null,null,null,null,"pessoal",null,"pessoal","pessoal");
-        $metodo = array(null,null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao");
+        $function = array(null,null,null,null,"date_to_php");
+        $classe = array(null,null,null,"pessoal",null,"pessoal","pessoal");
+        $metodo = array(null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao");
         
         $formatacaoCondicional = array( array('coluna' => 0,
-                                              'valor' => dv($matricula),
+                                              'valor' => $servidor->get_idFuncional($idServidor),
                                               'operador' => '=',
                                               'id' => 'listaDados'));
 

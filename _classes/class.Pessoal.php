@@ -94,14 +94,14 @@ class Pessoal extends Bd
 	 * M�todo get_gratificacao
 	 * informa gratifica��o de uma matr�cula(se houver)
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	public function get_gratificacao($matricula)
+	public function get_gratificacao($idServidor)
 	{
 		$select = 'SELECT valor
 		             FROM tbgratif
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
                               AND current_date() >= dtInicial 
                               AND (dtFinal is NULL OR current_date() <= dtFinal)';
 		
@@ -117,14 +117,14 @@ class Pessoal extends Bd
 	 * M�todo get_gratificacaoDtFinal
 	 * informa a data de t�rmino da gratifica��o de uma matr�cula(se houver)
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	public function get_gratificacaoDtFinal($matricula)
+	public function get_gratificacaoDtFinal($idServidor)
 	{
             $select = 'SELECT dtFinal
                          FROM tbgratif
-                        WHERE matricula = '.$matricula.'
+                        WHERE idServidor = '.$idServidor.'
                         ORDER BY dtInicial desc';
             $numero = parent::count($select);
             $row = parent::select($select,false);
@@ -148,16 +148,16 @@ class Pessoal extends Bd
 	 * M�todo get_periodoDisponivel
 	 * informa o per�odo dispon�vel de f�rias de um servidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	public function get_periodoDisponivel($matricula)
+	public function get_periodoDisponivel($idServidor)
 	{
 		$select = "SELECT anoExercicio,
 	                  sum(numDias) as dias,
 	                  status
 	             FROM tbferias
-	            WHERE matricula = '$matricula' AND
+	            WHERE idServidor = '$idServidor' AND
                       status <> 'cancelada'
              GROUP BY 1
              ORDER BY 1 DESC
@@ -215,14 +215,14 @@ class Pessoal extends Bd
 	 * M�todo get_salarioBase
 	 * informa o sal�rio base de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	public function get_salarioBase($matricula)
+	public function get_salarioBase($idServidor)
 	{
 		$select = 'SELECT tbclasse.valor
                              FROM tbprogressao, tbclasse
-                             WHERE matricula = '.$matricula.'
+                             WHERE idServidor = '.$idServidor.'
                                AND tbprogressao.idClasse = tbclasse.idClasse
                       ORDER BY valor desc';
 		
@@ -238,18 +238,18 @@ class Pessoal extends Bd
          * M�todo get_salarioTotal
          * informa o sal�rio Total de uma matr�cula
          * 
-         * @param	string $matricula matricula do servidor
+         * @param	string $idServidor idServidor do servidor
          */
 
-        public function get_salarioTotal($matricula)
+        public function get_salarioTotal($idServidor)
         {
 
             # Resumo financeira
-            $salario = $this->get_salarioBase($matricula);
-            $trienio = $this->get_trienioValor($matricula);
-            $comissao = $this->get_salarioCargoComissao($matricula);
-            $gratificacao = $this->get_gratificacao($matricula);
-            $cessao = $this->get_salarioCessao($matricula);
+            $salario = $this->get_salarioBase($idServidor);
+            $trienio = $this->get_trienioValor($idServidor);
+            $comissao = $this->get_salarioCargoComissao($idServidor);
+            $gratificacao = $this->get_gratificacao($idServidor);
+            $cessao = $this->get_salarioCessao($idServidor);
             $total = $salario+$trienio+$comissao+$gratificacao+$cessao;
 
             return $total;
@@ -261,14 +261,14 @@ class Pessoal extends Bd
 	 * M�todo get_salarioCessao
 	 * informa o sal�rio recebido pelo �rg�o de origem de um cedido
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	public function get_salarioCessao($matricula)
+	public function get_salarioCessao($idServidor)
 	{
 		$select = 'SELECT salario
                              FROM tbcedido
-                            WHERE matricula = '.$matricula;
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
 		
@@ -292,10 +292,10 @@ class Pessoal extends Bd
 	
 		$select = 'SELECT concat(date_format(tbpessoa.dtNasc,"%d/%m")," - ",tbpessoa.nome) as nasc,
 					  date_format(tbpessoa.dtNasc,"%d")	
-					   FROM tbpessoa, tbfuncionario
+					   FROM tbpessoa, tbservidor
 					   WHERE month(dtNasc) = '.$mes.' and
-					         tbfuncionario.idPessoa = tbpessoa.idPessoa and
-					         tbfuncionario.Sit = 1
+					         tbservidor.idPessoa = tbpessoa.idPessoa and
+					         tbservidor.situacao = 1
 					   ORDER BY nasc';
 	
 		# conecta com o banco
@@ -312,17 +312,17 @@ class Pessoal extends Bd
 	 * M�todo get_senha
 	 * Informa a senha (criptografada) 
 	 * 
-	 * @param	string $matricula	matricula do servidor
+	 * @param	string $idServidor	idServidor do servidor
 	 */
-	public function get_senha($matricula)
+	public function get_senha($idServidor)
         { 
 
             $select = "SELECT senha_intra		  
-                         FROM tbfuncionario
-                        WHERE matricula = ".$matricula;
+                         FROM tbservidor
+                        WHERE idServidor = ".$idServidor;
 
-            # verifica se a matricula foi informada
-            if(is_null($matricula))
+            # verifica se a idServidor foi informada
+            if(is_null($idServidor))
                 return 0;
             else
             {
@@ -337,17 +337,17 @@ class Pessoal extends Bd
 	 * M�todo set_senha
 	 * muda a senha de um usu�rio
 	 * 
-	 * @param	string 	$matricula 	-> matricula do servidor
+	 * @param	string 	$idServidor 	-> idServidor do servidor
 	 * @param 	string	$senha		-> senha (n�o criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
 	 */
 	public function set_senha($matr,$senha = SENHA_PADRAO,$alert = true)
 	{
 		# Grava a data quando � para senha padr�o (para controle dos 2 dias)
 		if ($senha == SENHA_PADRAO)
-			parent::gravar('ult_acesso',date("Y-m-d H:i:s"),$matr,'tbfuncionario','matricula',false); 
+			parent::gravar('ult_acesso',date("Y-m-d H:i:s"),$matr,'tbservidor','idServidor',false); 
 			
 		$senha = md5($senha);
-		parent::gravar('senha_intra',$senha,$matr,'tbfuncionario','matricula',$alert);
+		parent::gravar('senha_intra',$senha,$matr,'tbservidor','idServidor',$alert);
 	}
 	
 	###########################################################
@@ -356,13 +356,13 @@ class Pessoal extends Bd
 	 * M�todo set_senhaNull
 	 * muda a senha de um usu�rio para null (bloqueia o mesmo)
 	 * 
-	 * @param	string 	$matricula 	-> matricula do servidor
+	 * @param	string 	$idServidor 	-> idServidor do servidor
 	 * @param 	string	$senha		-> senha (n�o criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
 	 */
 	public function set_senhaNull($matr,$alert = true)
 	{
 		$senha = null;
-		parent::gravar('senha_intra',$senha,$matr,'tbfuncionario','matricula',$alert);
+		parent::gravar('senha_intra',$senha,$matr,'tbservidor','idServidor',$alert);
 		
 	}
 	###########################################################
@@ -372,14 +372,14 @@ class Pessoal extends Bd
 	 * Informa, em dias, o per�odo entre a data atual
 	 * e o �ltimo acesso do usu�rio 
 	 *
-	 * @param	string $matricula	matricula do servidor
+	 * @param	string $idServidor	idServidor do servidor
 	 */
-	public function get_diasAusentes($matricula)
+	public function get_diasAusentes($idServidor)
 	{ 
 		
 		$select = "SELECT date_format(ult_acesso,'%d/%m/%Y')		  
-					 FROM tbfuncionario
-		        WHERE matricula = '$matricula'";
+					 FROM tbservidor
+		        WHERE idServidor = '$idServidor'";
 		
 		# Pega o resultado do select
 		$result = parent::select($select,false);
@@ -399,17 +399,17 @@ class Pessoal extends Bd
 	 * M�todo get_lotacao
 	 * Informa a lota��o atual do servidor
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	public function get_lotacao($matricula)
+	public function get_lotacao($idServidor)
 	
 	{
 		$select = 'SELECT  tblotacao.UADM,
                                    tblotacao.DIR,
                                    tblotacao.GER
                               FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                             WHERE tbhistlot.matricula = '.$matricula.'
+                             WHERE tbhistlot.idServidor = '.$idServidor.'
                              ORDER BY data DESC';
 				
 		$row = parent::select($select,false);
@@ -424,17 +424,17 @@ class Pessoal extends Bd
 	 * M�todo get_lotacaoNumServidores
 	 * Informa o n�mero de servidores ativos nessa lota��o
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
 	public function get_lotacaoNumServidores($id)
 	
 	{
-		$select = 'SELECT tbfuncionario.matricula
-                             FROM tbfuncionario LEFT JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+		$select = 'SELECT tbservidor.idServidor
+                             FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                              WHERE tbfuncionario.Sit = 1
-                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)
+                              WHERE tbservidor.situacao = 1
+                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                 AND tbhistlot.lotacao = '.$id;
 				
 		$numero = parent::count($select);
@@ -448,15 +448,15 @@ class Pessoal extends Bd
 	 * M�todo get_idlotacao
 	 * Informa o id da lota��o atual do servidor
 	 *
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  id do servidor
 	 */
 
-	public function get_idlotacao($matricula)
+	public function get_idlotacao($idServidor)
 
 	{
 		$select = 'SELECT  tblotacao.idlotacao
                               FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                             WHERE tbhistlot.matricula = '.$matricula.'
+                             WHERE tbhistlot.idServidor = '.$idServidor.'
                              ORDER BY data DESC';
 
 		$row = parent::select($select,false);
@@ -471,21 +471,21 @@ class Pessoal extends Bd
 	 * Método get_cargo
 	 * Informa o cargo do servidor
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	public function get_cargo($matricula)
+	public function get_cargo($idServidor)
 	
 	{
             # Pega o cargo do servidor
             $select = 'SELECT tbcargo.nome
-                         FROM tbfuncionario LEFT JOIN tbcargo ON (tbfuncionario.idCargo=tbcargo.idCargo)
-                        WHERE matricula = '.$matricula;
+                         FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
+                        WHERE idServidor = '.$idServidor;
 
             $row = parent::select($select,false);
             $cargo = $row[0];
 
-            $comissao = $this->get_cargoComissao($matricula);
+            $comissao = $this->get_cargoComissao($idServidor);
 
             if (is_null($comissao))
                 return $cargo;
@@ -501,16 +501,16 @@ class Pessoal extends Bd
 	 * M�todo get_perfil
 	 * Informa o perfil do servidor
 	 * 
-	 * @param   string $matricula  matricula do servidor
+	 * @param   string $idServidor  idServidor do servidor
 	 */
 
-	public function get_perfil($matricula)
+	public function get_perfil($idServidor)
 	
 	{
 		# Pega o cargo do servidor
 		$select = 'SELECT tbperfil.nome
-                             FROM tbfuncionario LEFT JOIN tbperfil ON (tbfuncionario.idPerfil=tbperfil.idPerfil)
-                            WHERE matricula = '.$matricula;
+                             FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
+                            WHERE idServidor = '.$idServidor;
 					 
 		$row = parent::select($select,false);
 		$perfil = $row[0];
@@ -526,16 +526,16 @@ class Pessoal extends Bd
 	 * M�todo get_idCargo
 	 * Informa o id do cargo do servidor
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	public function get_idCargo($matricula)
+	public function get_idCargo($idServidor)
 	
 	{
 		# Pega o cargo do servidor
 		$select = 'SELECT tbcargo.idCargo
-                             FROM tbfuncionario LEFT JOIN tbcargo ON (tbfuncionario.idCargo=tbcargo.idCargo)
-                            WHERE matricula = '.$matricula;
+                             FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
+                            WHERE idServidor = '.$idServidor;
 					 
 		$row = parent::select($select,false);
 		$idcargo = $row[0];
@@ -547,16 +547,16 @@ class Pessoal extends Bd
 	
 	/**
 	 * M�todo get_idpessoa
-	 * fornece o id_pessoa de uma matricula
+	 * fornece o id_pessoa de uma idServidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	public function get_idPessoa($matricula)
+	public function get_idPessoa($idServidor)
 	{
 		$select = 'SELECT idPessoa
-                             FROM tbfuncionario
-                            WHERE matricula = '.$matricula;
+                             FROM tbservidor
+                            WHERE idServidor = '.$idServidor;
 		
 		$id_pessoa = parent::select($select,false);
 				
@@ -610,14 +610,14 @@ class Pessoal extends Bd
 	 * M�todo get_anoAdmissao
 	 * informa o ano de admiss�o de um servidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_anoAdmissao($matricula)
+	function get_anoAdmissao($idServidor)
 	{
 		$select = 'SELECT YEAR(dtAdmissao)
-				     FROM tbfuncionario
-				    WHERE matricula = '.$matricula;
+				     FROM tbservidor
+				    WHERE idServidor = '.$idServidor;
 		
 		$ano = parent::select($select,false);
 				
@@ -630,14 +630,14 @@ class Pessoal extends Bd
 	 * M�todo get_dtAdmissao
 	 * informa o ano de admiss�o de um servidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_dtAdmissao($matricula)
+	function get_dtAdmissao($idServidor)
 	{
 		$select = 'SELECT dtAdmissao
-                             FROM tbfuncionario
-                            WHERE matricula = '.$matricula;
+                             FROM tbservidor
+                            WHERE idServidor = '.$idServidor;
 		
 		$dt = parent::select($select,false);
 		
@@ -646,20 +646,20 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_idPerfil($matricula)
+	function get_idPerfil($idServidor)
 	
 	/**
 	 * M�todo get_idPerfil
 	 * informa o id do perfil do servidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
 		$select = 'SELECT idPerfil
-                             FROM tbfuncionario
-                            WHERE matricula = '.$matricula;
+                             FROM tbservidor
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
 		
@@ -668,13 +668,13 @@ class Pessoal extends Bd
 	
 	###########################################################
 
-	function get_digito($matricula)
+	function get_digito($idServidor)
 	
 	/**
 	 * M�todo get_digito
 	 * informa o d�gito verificador de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 	
 	{
@@ -682,22 +682,22 @@ class Pessoal extends Bd
 		$ndig = 0;
 		
 		
-		switch (strlen($matricula))
+		switch (strlen($idServidor))
 		{
 		    case 4:
-		        $matricula = "0".$matricula;
+		        $idServidor = "0".$idServidor;
 		        break;
 		    case 3:
-		        $matricula = "00".$matricula;
+		        $idServidor = "00".$idServidor;
 		        break;
 		    case 2:
-		        $matricula = "000".$matricula;
+		        $idServidor = "000".$idServidor;
 		        break;
 		}
 		
 		
 		
-		$npos = substr($matricula,4,1);
+		$npos = substr($idServidor,4,1);
 		$npos = $npos * 2;
 		if ($npos < 10) 
 		   $ndig = $ndig + $npos;
@@ -706,12 +706,12 @@ class Pessoal extends Bd
 		
 		
 		
-		$npos = substr($matricula,3,1);
+		$npos = substr($idServidor,3,1);
 		$ndig = $ndig + $npos;
 		
 		
 		
-		$npos = substr($matricula,2,1);
+		$npos = substr($idServidor,2,1);
 		$npos = $npos * 2;
 		if ($npos < 10)
 		   $ndig = $ndig + $npos;
@@ -720,12 +720,12 @@ class Pessoal extends Bd
 		
 		
 		
-		$npos = substr($matricula,1,1);
+		$npos = substr($idServidor,1,1);
 		$ndig = $ndig + $npos;
 		
 		
 		
-		$npos = substr($matricula,0,1);
+		$npos = substr($idServidor,0,1);
 		$npos = $npos * 2;
 		if ($npos < 10)
 		   $ndig = $ndig + $npos;
@@ -748,9 +748,9 @@ class Pessoal extends Bd
 	
 	##########################################################################################
 
-	function emFerias($matricula)
+	function emFerias($idServidor)
 	
-	# Fun��o que informa se a matricula est� em f�rias na data atual
+	# Fun��o que informa se a idServidor est� em f�rias na data atual
 	#
 	# Par�metro: a matr�cula a ser pesquisada
 	
@@ -758,7 +758,7 @@ class Pessoal extends Bd
             # Monta o select
             $select = "SELECT idFerias 
                          FROM tbferias
-                        WHERE matricula = '$matricula'
+                        WHERE idServidor = '$idServidor'
                           AND current_date() >= dtInicial 
                           AND current_date() <= ADDDATE(dtInicial,numDias-1)
                           AND status <> 'cancelada'";
@@ -773,10 +773,10 @@ class Pessoal extends Bd
 	
 	##########################################################################################
 
-	function emLicenca($matricula)
+	function emLicenca($idServidor)
 	
 	
-	# Fun��o que informa se a matricula est� em licanca na data atual
+	# Fun��o que informa se a idServidor est� em licanca na data atual
 	#
 	# Par�metro: a matr�cula a ser pesquisada
 	
@@ -784,7 +784,7 @@ class Pessoal extends Bd
             # Monta o select
             $select = "SELECT idLicenca 
                          FROM tblicenca
-                        WHERE matricula = '$matricula'
+                        WHERE idServidor = '$idServidor'
                           AND current_date() >= dtInicial 
                           AND current_date() <= ADDDATE(dtInicial,numDias-1)";
 
@@ -798,7 +798,7 @@ class Pessoal extends Bd
 	
 	##########################################################################################
 
-	function get_licenca($matricula)
+	function get_licenca($idServidor)
 	
 	
 	# Fun��o que informa licenca de uma matr�cula
@@ -809,7 +809,7 @@ class Pessoal extends Bd
 		# Monta o select		
 		$select = "SELECT tbTipoLicenca.nome 
 		             FROM tblicenca JOIN tbTipoLicenca ON (tblicenca.idTpLicenca = tbTipoLicenca.idTpLicenca)
-                            WHERE matricula = '$matricula'
+                            WHERE idServidor = '$idServidor'
                               AND current_date() >= dtInicial 
                               AND current_date() <= ADDDATE(dtInicial,numDias-1)";
 				
@@ -1050,14 +1050,14 @@ class Pessoal extends Bd
 	 * M�todo get_situacao
 	 * informa a situa��o (ativo ou inativo) de um servidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_situacao($matricula)
+	function get_situacao($idServidor)
 	{
-		$select = 'SELECT tbsituacao.sit
-                             FROM tbfuncionario LEFT JOIN tbsituacao ON (tbfuncionario.Sit = tbsituacao.idSit)
-                            WHERE matricula = '.$matricula;
+		$select = 'SELECT tbsituacao.situacao
+                             FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                            WHERE idServidor = '.$idServidor;
 		
 		$situacao = parent::select($select,false);
 				
@@ -1075,9 +1075,9 @@ class Pessoal extends Bd
 
 	function get_idPessoaAtiva($idPessoa)
 	{
-		$select = 'SELECT matricula
-                             FROM tbfuncionario
-                            WHERE Sit = 1 AND idPessoa = '.$idPessoa;
+		$select = 'SELECT idServidor
+                             FROM tbservidor
+                            WHERE situacao = 1 AND idPessoa = '.$idPessoa;
 		
 		$situacao = parent::select($select,false);
 				
@@ -1088,18 +1088,18 @@ class Pessoal extends Bd
 	
 	/**
 	 * M�todo get_nome
-	 * fornece o nome de uma matricula
+	 * fornece o nome de uma idServidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_nome($matricula)
+	function get_nome($idServidor)
 	{
 		$select = 'SELECT tbpessoa.nome
-			     FROM tbfuncionario JOIN tbpessoa ON(tbfuncionario.idPessoa = tbpessoa.idPessoa)
-			    WHERE matricula = '.$matricula;
+			     FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+			    WHERE idServidor = '.$idServidor;
 		
-		if($matricula == 0)
+		if($idServidor == 0)
 			$nome[0] = "";
 		else 
 			$nome = parent::select($select,false);
@@ -1112,18 +1112,18 @@ class Pessoal extends Bd
 	
 	/**
 	 * M�todo get_sexo
-	 * informa o sexo de uma matricula
+	 * informa o sexo de uma idServidor
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_sexo($matricula)
+	function get_sexo($idServidor)
 	{
 		$select = 'SELECT tbpessoa.sexo
-			     FROM tbfuncionario JOIN tbpessoa ON(tbfuncionario.idPessoa = tbpessoa.idPessoa)
-			    WHERE matricula = '.$matricula;
+			     FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+			    WHERE idServidor = '.$idServidor;
 		
-		if($matricula == 0)
+		if($idServidor == 0)
 			$nome[0] = "";
 		else 
 			$nome = parent::select($select,false);
@@ -1158,10 +1158,10 @@ class Pessoal extends Bd
 	 * M�todo get_cargoComissao
 	 * Informa o cargo em Comiss�o do Servidor (se tiver)
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	function get_cargoComissao($matricula)
+	function get_cargoComissao($idServidor)
 	
 	{
 		# Pega o id do cargo em comissão (se houver)		 
@@ -1169,7 +1169,7 @@ class Pessoal extends Bd
 			     FROM tbcomissao
 			    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                                OR (dtExo is NULL))
-                            AND matricula = '.$matricula;
+                            AND idServidor = '.$idServidor;
 					
 		$row = parent::select($select,false);
 		$idCargo = $row[0];
@@ -1196,7 +1196,7 @@ class Pessoal extends Bd
 	 * Informa o id e o nome do cargo em Comiss�o do Servidor (se tiver)
          * usado na rotina de Cargo em comiss�o para preencher a combo
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
 	function get_cargoComissaoPorId($id)
@@ -1219,16 +1219,16 @@ class Pessoal extends Bd
 	 * M�todo get_salarioCargoComissao
 	 * Informa o sal�rio de um cargo em Comiss�o do Servidor (se tiver)
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	function get_salarioCargoComissao($matricula)
+	function get_salarioCargoComissao($idServidor)
 	
 	{
 		# Pega o id do cargo em comiss�o (se houver)		 
 		$select = 'SELECT idComissao
 			     FROM tbcomissao
-			    WHERE dtExo is NULL AND matricula = '.$matricula;
+			    WHERE dtExo is NULL AND idServidor = '.$idServidor;
 					
 		$row = parent::select($select,false);
 		$idCargo = $row[0];
@@ -1254,14 +1254,14 @@ class Pessoal extends Bd
 	 * M�todo get_trienioPercentual
 	 * informa o percentual atual do trienio de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioPercentual($matricula)
+	function get_trienioPercentual($idServidor)
 	{
 		$select = 'SELECT percentual
 		             FROM tbtrienio
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
 				 ORDER BY percentual desc';
 		
 		$row = parent::select($select,false);
@@ -1276,13 +1276,13 @@ class Pessoal extends Bd
 	 * M�todo get_trienioValor
 	 * informa o valor atual do trienio de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioValor($matricula)
+	function get_trienioValor($idServidor)
 	{
-		$salario = $this->get_salarioBase($matricula);
-		$percentual = $this->get_trienioPercentual($matricula);
+		$salario = $this->get_salarioBase($idServidor);
+		$percentual = $this->get_trienioPercentual($idServidor);
 		
 		$valor = $salario * ($percentual/100);
 		
@@ -1296,14 +1296,14 @@ class Pessoal extends Bd
 	 * M�todo get_trienioDataInicial
 	 * informa a data Inicial de um trienio de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioDataInicial($matricula)
+	function get_trienioDataInicial($idServidor)
 	{
 		$select = 'SELECT dtInicial
 		             FROM tbtrienio
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
 				 ORDER BY percentual desc';
 		
 		$row = parent::select($select,false);
@@ -1320,14 +1320,14 @@ class Pessoal extends Bd
          * 
          * somente pega-se a data do triênio Inicial
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioDataProximoTrienio($matricula)
+	function get_trienioDataProximoTrienio($idServidor)
 	{
 		$select = 'SELECT dtInicial
 		             FROM tbtrienio
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
 				 ORDER BY percentual desc';
 		
 		$row = parent::select($select,false);
@@ -1344,15 +1344,15 @@ class Pessoal extends Bd
 	 * M�todo get_trienioPer�odoAquisitivo
 	 * informa a per�odo Aquisitivo de um trienio de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioPeriodoAquisitivo($matricula)
+	function get_trienioPeriodoAquisitivo($idServidor)
 	{
 		$select = 'SELECT dtInicioPeriodo,
 		                  dtFimPeriodo
 		             FROM tbtrienio
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
 				 ORDER BY percentual desc';
 		
 		$row = parent::select($select,false);
@@ -1367,14 +1367,14 @@ class Pessoal extends Bd
 	 * M�todo get_trienioNumProcesso
 	 * informa a n� do processo de um trienio de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioNumProcesso($matricula)
+	function get_trienioNumProcesso($idServidor)
 	{
 		$select = 'SELECT numProcesso
 		             FROM tbtrienio
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
 				 ORDER BY percentual desc';
 		
 		$row = parent::select($select,false);
@@ -1389,15 +1389,15 @@ class Pessoal extends Bd
 	 * Método get_trienioPublicacao
 	 * informa data e página da publicação no DOERJ do triênio vigente (último)
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_trienioPublicacao($matricula)
+	function get_trienioPublicacao($idServidor)
 	{
 		$select = 'SELECT dtPublicacao,
 		                  pgPublicacao
 		             FROM tbtrienio
-		            WHERE matricula = '.$matricula.'
+		            WHERE idServidor = '.$idServidor.'
 				 ORDER BY percentual desc';
 		
 		$row = parent::select($select,false);
@@ -1442,9 +1442,9 @@ class Pessoal extends Bd
 	
 	public function get_servidoresCargo($id)
 	{
-            $select = 'SELECT matricula                             
-                         FROM tbfuncionario
-                        WHERE Sit = 1 AND 
+            $select = 'SELECT idServidor                             
+                         FROM tbservidor
+                        WHERE situacao = 1 AND 
                               idCargo = '.$id;
            
             $numero = parent::count($select);
@@ -1461,9 +1461,9 @@ class Pessoal extends Bd
 	
 	public function get_servidoresCargoComissao($id)
 	{
-            $select = 'SELECT tbfuncionario.matricula                             
-                         FROM tbfuncionario JOIN tbcomissao ON (tbfuncionario.matricula = tbcomissao.matricula)
-                        WHERE Sit = 1
+            $select = 'SELECT tbservidor.idServidor                             
+                         FROM tbservidor JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                        WHERE situacao = 1
                           AND dtExo is NULL
                           AND tbcomissao.idTipoComissao = '.$id;
            
@@ -1516,9 +1516,9 @@ class Pessoal extends Bd
 	
 	public function get_servidoresConcurso($id)
 	{
-            $select = 'SELECT matricula                             
-                         FROM tbfuncionario
-                        WHERE Sit = 1 AND 
+            $select = 'SELECT idServidor                             
+                         FROM tbservidor
+                        WHERE situacao = 1 AND 
                               idConcurso = '.$id;
            
             $numero = parent::count($select);
@@ -1535,9 +1535,9 @@ class Pessoal extends Bd
 	
 	public function get_servidoresPerfil($id)
 	{
-            $select = 'SELECT matricula                             
-                         FROM tbfuncionario
-                        WHERE Sit = 1 AND 
+            $select = 'SELECT idServidor                             
+                         FROM tbservidor
+                        WHERE situacao = 1 AND 
                               idPerfil = '.$id;
            
             $numero = parent::count($select);
@@ -1547,59 +1547,19 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresSituacao
+	 * M�todo get_servidoressituacaouacao
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado concurso
 	 */
 	
-	public function get_servidoresSituacao($id)
+	public function get_servidoressituacao($id)
 	{
-            $select = 'SELECT matricula                             
-                         FROM tbfuncionario
-                        WHERE Sit = '.$id;
+            $select = 'SELECT idServidor                             
+                         FROM tbservidor
+                        WHERE situacao = '.$id;
            
             $numero = parent::count($select);
             return $numero;
-	}
-
-	###########################################################
-	
-	/**
-	 * M�todo get_servidoresSite
-	 * 
-	 * Exibe os servidores em cargo em comiss�o para o site da fenorte
-         * 
-         * a lista dos servidores ocupando os cargos em comiss�o que est�o 
-         * marcados para exibi��o no site da Fenorte.
-         * 
-	 */
-	
-	public function get_servidoresSite()
-	{
-              $select = 'SELECT tbpessoa.nome as nome,                              
-                                tbcomissao.descricao as cargo,
-                                tbtipocomissao.idTipoComissao as ordem,
-                                tbtipocomissao.exibeSite as exibicao,
-                                tblotacao.UADM as uadm,
-                                tblotacao.nome as lotacao,
-                                tblotacao.ramais as ramais,
-                                tblotacao.email as email
-                            FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                                JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
-                                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                        LEFT JOIN tbsituacao ON (tbfuncionario.sit = tbsituacao.idSit)
-                                        LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idPerfil)
-                                        LEFT JOIN tbcargo ON (tbfuncionario.idCargo = tbcargo.idCargo)
-                                        LEFT JOIN tbcomissao ON (tbfuncionario.matricula = tbcomissao.matricula)
-                                        LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                            WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)
-                                AND tbcomissao.dtExo is NULL
-                                AND tbtipocomissao.exibeSite
-                                AND tbfuncionario.Sit = 1
-                                ORDER BY tblotacao.UADM,ordem,tbpessoa.nome';
-                        
-            $row = parent::select($select);
-            return $row;
 	}
 
 	###########################################################
@@ -1740,9 +1700,9 @@ class Pessoal extends Bd
 
 	public function get_perfilQuantidade($id)
 	{
-		$select = 'SELECT matricula
-                             FROM tbfuncionario
-                            WHERE Sit = 1
+		$select = 'SELECT idServidor
+                             FROM tbservidor
+                            WHERE situacao = 1
                               AND idPerfil = '.$id;
 		
 		$count = parent::count($select);
@@ -1778,14 +1738,14 @@ class Pessoal extends Bd
 	 * M�todo get_nivelCargo
 	 * Informa o n�vel de escolaridade do cargo de uma matr�cula
          * 
-	 * @param   string $matricula do servidor
+	 * @param   string $idServidor do servidor
 	 */
 
-        public function get_nivelCargo($matricula)
+        public function get_nivelCargo($idServidor)
 	{
             $select = 'SELECT tbcargo.tpCargo
-			 FROM tbcargo JOIN tbfuncionario ON(tbfuncionario.idCargo = tbcargo.idCargo)
-                        WHERE matricula = '.$matricula;
+			 FROM tbcargo JOIN tbservidor ON(tbservidor.idCargo = tbcargo.idCargo)
+                        WHERE idServidor = '.$idServidor;
 		
             $row = parent::select($select,false);
 		
@@ -1794,12 +1754,12 @@ class Pessoal extends Bd
         
         ###########################################################
 	
-        public function get_telefones($matricula)
+        public function get_telefones($idServidor)
         
 	/**	
 	 * Informa os telefones de um servidor
          * 
-	 * @param   string $matricula do servidor
+	 * @param   string $idServidor do servidor
 	 */
 
         
@@ -1807,9 +1767,9 @@ class Pessoal extends Bd
             $select = 'SELECT tbcontatos.numero
 	                 FROM tbcontatos 
                     LEFT JOIN tbpessoa on tbcontatos.idPessoa = tbpessoa.idPessoa
-	            LEFT JOIN tbfuncionario on tbpessoa.idPessoa = tbfuncionario.idPessoa
+	            LEFT JOIN tbservidor on tbpessoa.idPessoa = tbservidor.idPessoa
 	                WHERE tbcontatos.tipo <> "E-mail" 
-                          AND tbfuncionario.matricula = '.$matricula;		
+                          AND tbservidor.idServidor = '.$idServidor;		
 		
             $row = parent::select($select);            
             $numTelefones = parent::count($select)-1;
@@ -1868,20 +1828,20 @@ class Pessoal extends Bd
         
         ###########################################################
 	
-	function get_idDbv($matricula)
+	function get_idDbv($idServidor)
 	
 	/**
 	 *
 	 * informa o id da tabela tddbv
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
 		$select = 'SELECT idDbv
                              FROM tbdbv
-                            WHERE matricula = '.$matricula;
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
                 $count = parent::count($select);
@@ -1894,20 +1854,20 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_dbvAcumulacao($matricula)
+	function get_dbvAcumulacao($idServidor)
 	
 	/**
 	 *
 	 * informa se o servidor tem ou n�o cargo acumulado
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
 		$select = 'SELECT acumulacao
                              FROM tbdbv
-                            WHERE matricula = '.$matricula;
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
                 $count = parent::count($select);
@@ -1920,20 +1880,20 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_dbvAnoBase($matricula)
+	function get_dbvAnoBase($idServidor)
 	
 	/**
 	 *
 	 * informa o ano base da dbv
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
 		$select = 'SELECT anoBase
                              FROM tbdbv
-                            WHERE matricula = '.$matricula;
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
                 $count = parent::count($select);
@@ -1946,19 +1906,19 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_folgasConcedidas($matricula)
+	function get_folgasConcedidas($idServidor)
 	
 	/**
 	 * informa a quantidade de dias de folga que o servidor tem direito
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
 		$select = 'SELECT IFNULL(sum(folgas),0)
-                             FROM tbfolgatre
-                            WHERE matricula = '.$matricula;
+                             FROM tbtrabalhotre
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
                 $count = parent::count($select);
@@ -1971,19 +1931,19 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_folgasFruidas($matricula)
+	function get_folgasFruidas($idServidor)
 	
 	/**
 	 * informa a quantidade de folga que o servidor fruiu (tirou)
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
 		$select = 'SELECT IFNULL(sum(dias), 0)
                              FROM tbfolga
-                            WHERE matricula = '.$matricula;
+                            WHERE idServidor = '.$idServidor;
 		
 		$row = parent::select($select,false);
                 $count = parent::count($select);
@@ -1996,19 +1956,19 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_existeMatricula($matricula)
+	function get_existeMatricula($idServidor)
 	
 	/**
-	 * informa se a matricula informada existe no cadastro
+	 * informa se a idServidor informada existe no cadastro
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
 
 	{
-		$select = 'SELECT matricula
-                             FROM tbfuncionario
-                            WHERE matricula = '.$matricula;		
+		$select = 'SELECT idServidor
+                             FROM tbservidor
+                            WHERE idServidor = '.$idServidor;		
 		
                 $count = parent::count($select);
                 
@@ -2033,16 +1993,16 @@ class Pessoal extends Bd
             $faixa = $this->get_perfilMatricula($perfil);
             
             # pega a �ltima matr�cula utilizada nessa faixa
-            $select = 'SELECT matricula
-                         FROM tbfuncionario
-                        WHERE matricula >= '.$faixa[0].'
-                          AND matricula <= '.$faixa[1].'  
-                     ORDER BY matricula desc';		
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idServidor >= '.$faixa[0].'
+                          AND idServidor <= '.$faixa[1].'  
+                     ORDER BY idServidor desc';		
 
             $row = parent::select($select,false);
             $count = parent::count($select);            
 
-            # se n�o tiver nenhum matricula cadastrada nessa faixa pega-se a matr�cula inicial da faixa                
+            # se n�o tiver nenhum idServidor cadastrada nessa faixa pega-se a matr�cula inicial da faixa                
             if($count == 0)
                 $novaMatricula = $faixa[0];
             else
@@ -2212,17 +2172,17 @@ class Pessoal extends Bd
 	 * M�todo get_ultimoAcesso
 	 * informa a data do �ltimo acesso a �rea do servidor de uma matr�cula
 	 * 
-	 * @param	string $matricula matricula do servidor
+	 * @param	string $idServidor idServidor do servidor
 	 */
 
-	function get_ultimoAcesso($matricula)
+	function get_ultimoAcesso($idServidor)
         {
                 $select = 'SELECT date(ult_acesso)
-                             FROM tbfuncionario
-                            WHERE matricula = '.$matricula;
+                             FROM tbservidor
+                            WHERE idServidor = '.$idServidor;
 
-                # verifica se a matricula foi informada
-                if(is_null($matricula))
+                # verifica se a idServidor foi informada
+                if(is_null($idServidor))
                     $data[0] = "1900-01-01";
                 else
                 {
@@ -2234,18 +2194,18 @@ class Pessoal extends Bd
 	
 	##########################################################################################
 
-	function aniversariante($matricula)
+	function aniversariante($idServidor)
 	
 	
-	# Fun��o que informa se a matricula est� fazendo anivers�rio na data atual
+	# Fun��o que informa se a idServidor est� fazendo anivers�rio na data atual
 	#
 	# Par�metro: a matr�cula a ser pesquisada
 	
 	{
                 # Pega a data de nascimento		
 		$select = "SELECT date_format(tbpessoa.dtNasc,'%d/%m')
-		             FROM tbpessoa JOIN tbfuncionario ON(tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                            WHERE matricula = '$matricula'";
+		             FROM tbpessoa JOIN tbservidor ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+                            WHERE idServidor = '$idServidor'";
 				
 		$row = parent::select($select,false);
                 
@@ -2379,12 +2339,12 @@ class Pessoal extends Bd
 
     ########################################################### 
 
-    function get_licencaPremioNumDiasPublicadaPorMatricula($matricula)
+    function get_licencaPremioNumDiasPublicadaPorMatricula($idServidor)
 
     /**
      * informa o n�mero de dias publicados para licen�a pr�mio
      * 
-     * @param	string $matricula matricula do servidor
+     * @param	string $idServidor idServidor do servidor
      */
 
     {
@@ -2392,7 +2352,7 @@ class Pessoal extends Bd
         # Pega quantos dias foram publicados
         $select = 'SELECT SUM(numDias) 
                      FROM tbpublicacaopremio 
-                    WHERE matricula = '.$matricula;
+                    WHERE idServidor = '.$idServidor;
 
         $row = parent::select($select,false);     
 
@@ -2477,12 +2437,12 @@ class Pessoal extends Bd
 
     ###########################################################    
     
-    function get_licencaPremioNumDiasFruidos($matricula)
+    function get_licencaPremioNumDiasFruidos($idServidor)
 
     /**
      * informa a quantidade de dias de Licen�a Pr�mio que o servidor j� fruiu
      * 
-     * @param	string $matricula matricula do servidor
+     * @param	string $idServidor idServidor do servidor
      */
 
     {
@@ -2491,7 +2451,7 @@ class Pessoal extends Bd
         $select = 'SELECT SUM(numDias) 
                      FROM tblicenca 
                     WHERE idTpLicenca = 6
-                    AND matricula = '.$matricula;
+                    AND idServidor = '.$idServidor;
 
         $row = parent::select($select,false);   // Total de dias tirados de licen�a premioa
 
@@ -2503,22 +2463,22 @@ class Pessoal extends Bd
 
     ##########################################################################################
 
-    function get_licencaPremioPublicacao($matricula)
+    function get_licencaPremioPublicacao($idServidor)
 
-    # Fun��o que informa as publica��es para licen�a pr�mio de uma matricula
+    # Fun��o que informa as publica��es para licen�a pr�mio de uma idServidor
     #
-    # Par�metro: matricula do servidor
+    # Par�metro: idServidor do servidor
 
     {
         # valida par�metro
-        if(is_null($matricula))
+        if(is_null($idServidor))
             return false;
 
-        # Pega as publica��es de licen�a pr�mio dessa matricula
+        # Pega as publica��es de licen�a pr�mio dessa idServidor
         $select = 'SELECT idPublicacaoPremio,
                           CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Periodo Aquisitivo (",date_format(dtInicioPeriodo,"%d/%m/%Y"),"-",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
                      FROM tbpublicacaopremio
-                    WHERE matricula = '.$matricula.'
+                    WHERE idServidor = '.$idServidor.'
                         ORDER BY dtPublicacao';            
 
         $row = parent::select($select);
@@ -2531,11 +2491,11 @@ class Pessoal extends Bd
 
     ##########################################################################################
 
-    function get_licencaPremioPublicacaoDisponivel($matricula)
+    function get_licencaPremioPublicacaoDisponivel($idServidor)
 
-    # Fun��o que informa a publica��o com dias dispon�veis para licen�a pr�mio de uma matricula
+    # Fun��o que informa a publica��o com dias dispon�veis para licen�a pr�mio de uma idServidor
     #
-    # Par�metro: matricula do servidor
+    # Par�metro: idServidor do servidor
 
     {
         # vari�veis
@@ -2543,14 +2503,14 @@ class Pessoal extends Bd
         $diasDisponiveis = null;        // guarda a quantidade de dias disponiveis pela publica��o
 
         # valida par�metro
-        if(is_null($matricula))
+        if(is_null($idServidor))
             return false;
 
-        # Pega as publica��es de licen�a pr�mio dessa matricula
+        # Pega as publica��es de licen�a pr�mio dessa idServidor
         $select = 'SELECT idPublicacaoPremio,
                           CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Periodo Aquisitivo (",date_format(dtInicioPeriodo,"%d/%m/%Y"),"-",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
                      FROM tbpublicacaopremio
-                    WHERE matricula = '.$matricula.'
+                    WHERE idServidor = '.$idServidor.'
                         ORDER BY dtInicioPeriodo'; 
 
         $row = parent::select($select);
@@ -2576,7 +2536,7 @@ class Pessoal extends Bd
     function get_licencaPremioDadosPublicacao($idpublicacaopremio)
 
     # Fun��o que informa, de uma s� vez, v�rios dados de uma 
-    # publica��o de licen�a pr�mio de uma matricula para grava��o
+    # publica��o de licen�a pr�mio de uma idServidor para grava��o
     # na rotina extra de cadastro de licen�a
     #
     # Par�metro: id da publica��o
@@ -2626,22 +2586,22 @@ class Pessoal extends Bd
 
     ##########################################################################################
 
-    function get_licencaPremioNumProcesso($matricula)
+    function get_licencaPremioNumProcesso($idServidor)
 
     # Fun��o que informa o N�mero do processo da �ltima publica��o
     # para sugerir para o pr�ximo cadastro de publica��es
     #
-    # Par�metro: matricula do servidor
+    # Par�metro: idServidor do servidor
 
     {
         # valida par�metro
-        if(is_null($matricula))
+        if(is_null($idServidor))
             return false;
 
-        # Pega as publica��es de licen�a pr�mio dessa matricula
+        # Pega as publica��es de licen�a pr�mio dessa idServidor
         $select = 'SELECT processo
                      FROM tbpublicacaopremio
-                    WHERE matricula = '.$matricula.'
+                    WHERE idServidor = '.$idServidor.'
                  ORDER BY dtPublicacao DESC';            
 
         $row = parent::select($select,false);
@@ -2664,7 +2624,7 @@ class Pessoal extends Bd
         if(is_null($idProcesso))
             return false;
 
-        # Pega as publica��es de licen�a pr�mio dessa matricula
+        # Pega as publica��es de licen�a pr�mio dessa idServidor
         $select = 'SELECT processo
                      FROM tbpublicacaopremio
                     WHERE idPublicacaoPremio = '.$idProcesso;            
@@ -2698,7 +2658,7 @@ class Pessoal extends Bd
                               dtPublicacao,
                               pgPublicacao,
                               obs,
-                              matricula                              
+                              idServidor                              
                          FROM tblicenca
                         WHERE idLicenca = '.$idLicenca;
 
@@ -2787,9 +2747,9 @@ class Pessoal extends Bd
 	
     ##########################################################################################
 
-    function emFolgaTre($matricula)
+    function emFolgaTre($idServidor)
 
-    # Fun��o que informa se a matricula est� folgando (TRE) na data atual
+    # Fun��o que informa se a idServidor est� folgando (TRE) na data atual
     #
     # Par�metro: a matr�cula a ser pesquisada
 
@@ -2797,7 +2757,7 @@ class Pessoal extends Bd
         # Monta o select
         $select = "SELECT idFolga
                      FROM tbfolga
-                    WHERE matricula = '$matricula'
+                    WHERE idServidor = '$idServidor'
                       AND current_date() >= data 
                       AND current_date() <= ADDDATE(data,dias-1)";
 
@@ -2811,17 +2771,17 @@ class Pessoal extends Bd
 
     ##########################################################################################
 
-    function emAfastamentoTre($matricula)
+    function emAfastamentoTre($idServidor)
 
-    # Função que informa se a matricula está afastada para o (TRE) na data atual
+    # Função que informa se a idServidor está afastada para o (TRE) na data atual
     #
     # Par�metro: a matr�cula a ser pesquisada
 
     {
         # Monta o select
-        $select = "SELECT idFolgatre
-                     FROM tbfolgatre
-                    WHERE matricula = '$matricula'
+        $select = "SELECT idTrabalhoTre
+                     FROM tbtrabalhotre
+                    WHERE idServidor = '$idServidor'
                       AND current_date() >= data 
                       AND current_date() <= ADDDATE(data,dias-1)";
 
@@ -2840,16 +2800,16 @@ class Pessoal extends Bd
 	 * M�todo get_idFuncional
 	 * Informa a idFuncional de um servidor
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	public function get_idFuncional($matricula)
+	public function get_idFuncional($idServidor)
 	
 	{
             # Pega o cargo do servidor
             $select = 'SELECT idFuncional
-                         FROM tbfuncionario
-                        WHERE matricula = '.$matricula;
+                         FROM tbservidor
+                        WHERE idServidor = '.$idServidor;
 
             $row = parent::select($select,false);
             
@@ -2864,16 +2824,16 @@ class Pessoal extends Bd
 	 * M�todo get_idServidor
 	 * Informa a idServidor de uma matrícula
 	 * 
-	 * @param	string $matricula  matricula do servidor
+	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	public function get_idServidor($matricula)
+	public function get_idServidor($idServidor)
 	
 	{
             # Pega o cargo do servidor
             $select = 'SELECT idServidor
                          FROM tbservidor
-                        WHERE matricula = '.$matricula;
+                        WHERE idServidor = '.$idServidor;
 
             $row = parent::select($select,false);
             
@@ -2887,15 +2847,15 @@ class Pessoal extends Bd
      * Método get_tipoSenha
      * Informa o tipo da senha (padrão/bloqueada/Ok) 
      * 
-     * @param	string $matricula	matricula do servidor
+     * @param	string $idServidor	idServidor do servidor
      */
 
-    function get_tipoSenha($matricula)
+    function get_tipoSenha($idServidor)
     { 
 
         $select = "SELECT senha_intra		  
-                     FROM tbfuncionario
-                    WHERE matricula = ".$matricula;
+                     FROM tbservidor
+                    WHERE idServidor = ".$idServidor;
         
         $pessoal = new Pessoal();
         $row = parent::select($select,false);

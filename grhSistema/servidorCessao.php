@@ -6,14 +6,14 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -37,7 +37,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Cessão');
@@ -53,7 +53,7 @@ if($acesso)
                                      CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
                                      idHistCessao
                                 FROM tbhistcessao
-                          WHERE matricula='.$matriculaGrh.'
+                          WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY dtInicio desc');
 
     # select do edita
@@ -64,7 +64,7 @@ if($acesso)
                                      dtPublicacao,
                                      pgPublicacao,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbhistcessao
                                WHERE idHistCessao = '.$id);
 
@@ -151,15 +151,15 @@ if($acesso)
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
-                               array ( 'nome' => 'matricula',
-                                       'label' => 'Matrícula:',
+                               array ( 'nome' => 'idServidor',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
-                                       'title' => 'Matrícula',
+                                       'title' => 'idServidor',
                                        'linha' => 3)));
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     # Paginação
     #$objeto->set_paginacao(true);
@@ -171,17 +171,16 @@ if($acesso)
 
     switch ($fase)
     {
-            case "" :
-            case "listar" :
-            case "editar" :			
-            case "excluir" :
-                $objeto->$fase($id); 
-                break;
+        case "" :
+        case "listar" :
+        case "editar" :			
+        case "excluir" :
+            $objeto->$fase($id); 
+            break;
 
-            case "gravar" :
-                $objeto->gravar($id,'servidorCessaoExtra.php'); 	
-                break;
-    }									 	 		
-
+        case "gravar" :
+            $objeto->gravar($id,'servidorCessaoExtra.php'); 	
+            break;
+    }
     $page->terminaPagina();
 }

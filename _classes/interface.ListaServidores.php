@@ -83,32 +83,33 @@ class listaServidores
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select ='SELECT tbfuncionario.matricula,
-                         tbfuncionario.idFuncional,
+        $select ='SELECT tbservidor.idFuncional,
+                         tbservidor.matricula,
                          tbpessoa.nome,
                          CONCAT(COALESCE(tbcargo.nome,"")," ",COALESCE(
-                         (SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.matricula = tbfuncionario.matricula),"")),
+                         (SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.idServidor = tbservidor.idServidor),"")),
                          concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
                          tbperfil.nome,
-                         tbfuncionario.dtAdmissao,
-                         tbsituacao.Sit
-                    FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                            JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+                         tbservidor.dtAdmissao,
+                         tbsituacao.situacao,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                            JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                    LEFT JOIN tbsituacao ON (tbfuncionario.sit = tbsituacao.idSit)
-                                    LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbcargo ON (tbfuncionario.idCargo = tbcargo.idCargo)
-                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)';
+                                    LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                                    LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                    LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
         
         # Matrícula, nome ou id
         if(!is_null($this->matNomeId))
             $select .= ' AND ((tbpessoa.nome LIKE "%'.$this->matNomeId.'%")
-                   OR (tbfuncionario.matricula LIKE "%'.$this->matNomeId.'%")
-		   OR (tbfuncionario.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
+                   OR (tbservidor.matricula LIKE "%'.$this->matNomeId.'%")
+		   OR (tbservidor.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
                 
         # situação
         if(!is_null($this->situacao))
-            $select .= ' AND (tbsituacao.idSit = "'.$this->situacao.'")';
+            $select .= ' AND (tbsituacao.idsituacao = "'.$this->situacao.'")';
         
         # perfil
         if(!is_null($this->perfil))
@@ -120,11 +121,11 @@ class listaServidores
         
         # cargo em comissão
         if(!is_null($this->cargoComissao))
-            $select .= ' AND ((SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.matricula = tbfuncionario.matricula) = "'.$this->cargoComissao.'")';    
+            $select .= ' AND ((SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.idServidor = tbservidor.idServidor) = "'.$this->cargoComissao.'")';    
             
         # concurso
         if(!is_null($this->concurso))
-            $select .= ' AND (tbfuncionario.idConcurso = "'.$this->concurso.'")'; 
+            $select .= ' AND (tbservidor.idConcurso = "'.$this->concurso.'")'; 
         
         # lotacao
         if(!is_null($this->lotacao))
@@ -136,10 +137,10 @@ class listaServidores
         #echo $select;
         $conteudo = $servidor->select($select,true);
 
-        $label = array("Matrícula","IDFuncional","Servidor","Cargo","Lotação","Perfil","Admissão","Situação");
+        $label = array("IDFuncional","Matrícula","Servidor","Cargo","Lotação","Perfil","Admissão","situação");
         $width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left");
-        $function = array ("dv",null,null,null,null,null,"date_to_php");
+        $function = array (null,"dv",null,null,null,null,"date_to_php");
         
         titulo($this->nomeLista);
         
@@ -160,7 +161,7 @@ class listaServidores
             #$tabela->set_titulo($this->nomeLista);
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
-            $tabela->set_idCampo('matricula');
+            $tabela->set_idCampo('idServidor');
             $tabela->set_editar('servidor.php?fase=editar&id=');
             
             if(!is_null($this->matNomeId))

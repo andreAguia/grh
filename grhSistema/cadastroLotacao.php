@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -154,8 +154,8 @@ if($acesso)
     $responsavel = new Pessoal();
     $result = $responsavel->select('SELECT matricula, 
                                            nome
-                                      FROM tbfuncionario LEFT JOIN tbpessoa USING (idPessoa)
-                                     WHERE tbfuncionario.Sit = 1
+                                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     WHERE tbservidor.situacao = 1
                                   ORDER BY nome');
 
     # Campos para o formulario
@@ -211,7 +211,7 @@ if($acesso)
                'size' => array(80,5))));
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     ################################################################
     switch ($fase)

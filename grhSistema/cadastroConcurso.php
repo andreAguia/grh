@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -181,7 +181,7 @@ if($acesso)
                'size' => array(80,5))));
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     ################################################################
     switch ($fase)
@@ -202,10 +202,10 @@ if($acesso)
                 new Color(67, 205, 128)));
 
             # Pega os dados
-            $selectGrafico = 'SELECT anoBase, count(tbfuncionario.matricula) 
-                                FROM tbfuncionario LEFT JOIN tbconcurso ON (tbfuncionario.idConcurso = tbconcurso.idConcurso)
-                               WHERE tbfuncionario.Sit = 1
-                                 AND tbfuncionario.idPerfil = 1
+            $selectGrafico = 'SELECT anoBase, count(tbservidor.idServidor) 
+                                FROM tbservidor LEFT JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
+                               WHERE tbservidor.situacao = 1
+                                 AND tbservidor.idPerfil = 1
                             GROUP BY anoBase';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -219,18 +219,10 @@ if($acesso)
             $chart->setTitle("");
             $chart->render(PASTA_FIGURAS."/demo3.png");
 
-            $grid = new Grid();
-            $grid->abreColuna(3);
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
-            
-                echo '<div class="callout secondary">';
+            $grid = new Grid("center");
+            $grid->abreColuna(5);
                 $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
-                $imagem->show();                
-                echo '</div>';
-                
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
+                $imagem->show(); 
             $grid->fechaColuna();
             $grid->fechaGrid();    
             break;

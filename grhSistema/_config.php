@@ -98,8 +98,8 @@ if((CHAMADOR == 'areaServidor.php') OR (CHAMADOR == 'grh.php'))
 }
 
 # carrega as session
-$idusuario = get_session('idusuario');	      # Matr�cula do Servidor Logado
-$matriculaGrh = get_session('matriculaGrh');  # Matr�cula do Servidor Editado na pesquisa do sistema do GRH	
+$idUsuario = get_session('idUsuario');                       # Servidor Logado
+$idServidorPesquisado = get_session('idServidorPesquisado'); # Servidor Editado na pesquisa do sistema do GRH	
 
 # Define se usa o input type data do html5 ou se usa o javascript
 # Se usar o html 5 o controle não trabalha com formato brasileiro

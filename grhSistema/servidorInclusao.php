@@ -12,7 +12,7 @@ $matricula = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso){    
     # Conecta ao Banco de Dados

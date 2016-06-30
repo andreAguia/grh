@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -69,17 +69,17 @@ if($acesso)
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idsit,sit,obs,idsit,
-                                      idsit
+    $objeto->set_selectLista ('SELECT idsituacao,situacao,obs,idsituacao,
+                                      idsituacao
                                  FROM tbsituacao
-                                WHERE sit LIKE "%'.$parametro.'%"
+                                WHERE situacao LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT sit,
+    $objeto->set_selectEdita('SELECT situacao,
                                      obs
                                 FROM tbsituacao
-                               WHERE idsit = '.$id);
+                               WHERE idsituacao = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -107,7 +107,7 @@ if($acesso)
     $objeto->set_tabela('tbsituacao');
 
     # Nome do campo id
-    $objeto->set_idCampo('idsit');
+    $objeto->set_idCampo('idsituacao');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -115,7 +115,7 @@ if($acesso)
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'sit',
+               'nome' => 'situacao',
                'label' => 'Situação:',
                'tipo' => 'texto',
                'required' => true,
@@ -128,7 +128,7 @@ if($acesso)
                'size' => array(80,5))));
 
     # Matrícula para o Log
-    $objeto->set_idusuario($idusuario);
+    $objeto->set_idUsuario($idUsuario);
 
     ################################################################
     switch ($fase)

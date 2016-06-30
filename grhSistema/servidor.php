@@ -6,13 +6,13 @@
  */
 
 # Reservado para o servidor logado
-$idusuario = null;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idusuario,2);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -90,7 +90,7 @@ if($acesso)
             $form->add_item($controle);
 
             # Situação
-            $result = $pessoal->select('SELECT idsit, sit
+            $result = $pessoal->select('SELECT idsituacao, situacao
                                           FROM tbsituacao                                
                                       ORDER BY 1');
             array_unshift($result,array('*','-- Todos --'));
@@ -202,11 +202,9 @@ if($acesso)
         case "editar" :
             br(8);
             mensagemAguarde();
-            set_session('matriculaGrh',$id);
+            set_session('idServidorPesquisado',$id);
             loadPage('servidorMenu.php');
             break; 
     }
-
     $page->terminaPagina();
 }
-?>

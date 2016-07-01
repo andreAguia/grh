@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -41,7 +41,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
     
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Suspensões de Servidor');
@@ -64,7 +64,7 @@ if($acesso)
                                      CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),                                 
                                      idSuspensao
                                 FROM tbsuspensao
-                               WHERE matricula = '.$matriculaGrh.'
+                               WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -74,7 +74,7 @@ if($acesso)
                                      dtPublicacao,
                                      pgPublicacao,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbaverbacao
                                WHERE idAverbacao = '.$id);
     ####### Parei Aqui /########
@@ -159,10 +159,10 @@ if($acesso)
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 5)));
@@ -191,8 +191,6 @@ if($acesso)
         case "gravar" :
             $objeto->$fase($id,"servidorSuspensaoExtra.php");
             break;
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }
-?>

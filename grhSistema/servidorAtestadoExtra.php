@@ -11,10 +11,10 @@
  */
 
 $dtInicial = $campoValor[0];
-$matricula = $campoValor[7];
+$idServidor = $campoValor[7];
 
 $pessoal = new Pessoal();
-$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 
 if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial))){
     $msgErro.='Você não pode ter atestado antes de ser admitido!<br/>A data está errada!';

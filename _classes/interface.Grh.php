@@ -535,7 +535,7 @@ class Grh
                             array('Disponíveis',$diasDisponiveis));
             $estatistica = new Tabela();
             $estatistica->set_conteudo($tabela);
-            $estatistica->set_label(array("Licença Prêmio","Dias"));
+            $estatistica->set_label(array("",""));
             $estatistica->set_align(array("center"));
             $estatistica->set_width(array(60,40));
             $estatistica->set_totalRegistro(false);
@@ -582,11 +582,8 @@ class Grh
             $tabela->set_align(array("left"));
             $tabela->set_classe(array(null,null,null,'pessoal','pessoal'));
             $tabela->set_metodo(array(null,null,null,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
+            
             $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
-                                                            'valor' => 0,
-                                                            'operador' => '=',
-                                                            'id' => 'comissaoSemVagas'),
-                                                      array('coluna' => 4,
                                                             'valor' => 0,
                                                             'operador' => '>',
                                                             'id' => 'comissaoComVagas'),

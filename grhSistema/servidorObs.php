@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -34,15 +34,15 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     #$objeto->set_nome('');
 
     # select do edita
     $objeto->set_selectEdita('SELECT obs
-                                FROM tbfuncionario
-                               WHERE matricula = '.$matriculaGrh);
+                                FROM tbservidor
+                               WHERE idServidor = '.$idServidorPesquisado);
 
 
     # Caminhos
@@ -62,10 +62,10 @@ if($acesso)
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbfuncionario');
+    $objeto->set_tabela('tbservidor');
 
     # Nome do campo id
-    $objeto->set_idCampo('matricula');
+    $objeto->set_idCampo('idServidor');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -88,7 +88,7 @@ if($acesso)
         case "editar" :            
         case "excluir" :	
         case "gravar" :
-            $objeto->$fase($matriculaGrh);
+            $objeto->$fase($idServidorPesquisado);
             break;	
     }									 	 		
 

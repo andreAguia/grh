@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -24,8 +24,8 @@ if($acesso)
     $fase = get('fase','editar');
     
     # Pega dados dessa matrícula
-    $idPessoa = $pessoal->get_idPessoa($matriculaGrh);
-    $idCargo = $pessoal->get_idCargo($matriculaGrh);
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+    $idCargo = $pessoal->get_idCargo($idServidorPesquisado);
 
     # Começa uma nova página
     $page = new Page();			
@@ -41,7 +41,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Documentação');

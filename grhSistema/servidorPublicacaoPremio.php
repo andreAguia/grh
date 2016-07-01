@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -53,7 +53,7 @@ if($acesso)
     
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Publicação de Licença Prêmio no DOERJ');
@@ -78,7 +78,7 @@ if($acesso)
                                       idPublicacaoPremio,
                                       idPublicacaoPremio
                                  FROM tbpublicacaoPremio
-                                 WHERE matricula = '.$matriculaGrh.'
+                                 WHERE idServidor = '.$idServidorPesquisado.'
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -89,7 +89,7 @@ if($acesso)
                                      dtFimPeriodo,
                                      numDias,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbpublicacaoPremio
                                WHERE idpublicacaoPremio = '.$id);
 
@@ -148,7 +148,7 @@ if($acesso)
                         array ( 'nome' => 'processo',
                                 'label' => 'Processo:',
                                 'tipo' => 'texto',
-                                'padrao' => $pessoal->get_licencaPremioNumProcesso($matriculaGrh),
+                                'padrao' => $pessoal->get_licencaPremioNumProcesso($idServidorPesquisado),
                                 'size' => 30,
                                 'col' => 4,
                                 'required' => true,
@@ -186,10 +186,10 @@ if($acesso)
                                 'linha' => 3,
                                 'col' => 12,
                                 'size' => array(80,5)),
-                        array ( 'nome' => 'matricula',
+                        array ( 'nome' => 'idServidor',
                                 'label' => 'Matrícula:',
                                 'tipo' => 'hidden',
-                                'padrao' => $matriculaGrh,
+                                'padrao' => $idServidorPesquisado,
                                 'size' => 5,
                                 'title' => 'Matrícula',
                                 'linha' => 6)));
@@ -203,7 +203,7 @@ if($acesso)
             case "" :
             case "listar" : 
                 # Exibe quadro de licença prêmio
-                Grh::quadroLicencaPremio($matriculaGrh);
+                Grh::quadroLicencaPremio($idServidorPesquisado);
 
                 $objeto->listar();
                 break;

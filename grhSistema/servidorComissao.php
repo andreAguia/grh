@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -44,7 +44,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Cargos em Comissão');
@@ -60,7 +60,7 @@ if($acesso)
         $orderTipo = 'desc';
     
     # Retira o botão de inclusão quando o servidor já tem cargo em comissão em aberto.
-    if(!is_null($pessoal->get_cargoComissao($matriculaGrh))){
+    if(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){
         # Retira o botão de incluir
         $objeto->set_botaoIncluir(false);
         
@@ -79,7 +79,7 @@ if($acesso)
                                      idComissao
                                 FROM tbcomissao, tbtipocomissao
                                WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
-                                 AND matricula = '.$matriculaGrh.'
+                                 AND idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -96,7 +96,7 @@ if($acesso)
                                      pgPublicExo,
                                      ciGepagExo,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbcomissao
                                WHERE idComissao = '.$id);
 
@@ -256,10 +256,10 @@ if($acesso)
                                        'tipo' => 'textarea',
                                        'fieldset' => 'fecha',
                                        'size' => array(80,5)),                                   
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 7)));
@@ -306,7 +306,7 @@ if($acesso)
                     $msg->set_page('?');
                     $msg->show();
                 }
-                elseif(!is_null($pessoal->get_cargoComissao($matriculaGrh)))  // se o servidor já possui cargo
+                elseif(!is_null($pessoal->get_cargoComissao($idservidorPesquisado)))  // se o servidor já possui cargo
                 {
                     Visual::botaoVoltar('?');
                     br(2);

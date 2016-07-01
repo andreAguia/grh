@@ -38,28 +38,6 @@ p#checkupResumo{
 }
 
 /*******************************************
- * Documentação
- *******************************************/
-
-span#numLinhaCodigo{
-    font-size: 10px;
-    color: #C0C0C0;
-}
-
-span#comentario{
-    color: #5da423;
-}
-
-span#palavraChave{
-    color: #0000CC;
-}
-
-span#tagInicial{
-    color: #000;
-    font-weight: bold;
-}
-
-/*******************************************
  * Cadastro de Publicação de Licenças Prêmio de um servidor
  *******************************************/
 
@@ -67,7 +45,7 @@ div#divQuadroLicenca{
     position: fixed;
     top: 2px;
     left: 61%;
-    width: 180px;   
+    width: 200px;   
 }
 
 /*******************************************
@@ -103,6 +81,22 @@ table#tabelaTre td{
 tr#trePendente{
     background-color: #FFA07A;
     margin: 0px;
+}
+
+/*******************************************
+ * Cadastro de Cargo Em comissão dos servidores
+ *******************************************/ 
+ 
+ tr#comissaoSemVagas{
+     background-color:#6699ff;
+}
+
+tr#comissaoComVagas{
+    background-color:#66ff66;
+}
+
+tr#comissaoVagasNegativas{
+    background-color:ff6666;
 }
 
 /*******************************************

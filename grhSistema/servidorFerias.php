@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -44,7 +44,7 @@ if($acesso)
     
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Histórico de Férias');
@@ -64,7 +64,7 @@ if($acesso)
                                      idFerias,
                                      idFerias
                                 FROM tbferias
-                               WHERE matricula='.$matriculaGrh.'
+                               WHERE idServidor='.$idServidorPesquisado.'
                             ORDER BY dtInicial desc');
 
     # select do edita
@@ -76,7 +76,7 @@ if($acesso)
                                      documento,
                                      folha,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbferias
                                WHERE idFerias = '.$id);
 
@@ -180,10 +180,10 @@ if($acesso)
                                         'label' => 'Observação:',
                                         'tipo' => 'textarea',
                                         'size' => array(80,5)),
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 6)));
@@ -215,10 +215,10 @@ if($acesso)
                 $id = get('id');
 
                 # pega os dados do servidor
-                $nome = $pessoal->get_nome($matriculaGrh);
-                $cargo = $pessoal->get_cargo($matriculaGrh);
-                $perfil = $pessoal->get_perfil($matriculaGrh);
-                $lotacao = $pessoal->get_lotacao($matriculaGrh);
+                $nome = $pessoal->get_nome($idServidorPesquisado);
+                $cargo = $pessoal->get_cargo($idServidorPesquisado);
+                $perfil = $pessoal->get_perfil($idServidorPesquisado);
+                $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
 
                 # Select das férias
                 $select = "SELECT periodo,
@@ -235,7 +235,7 @@ if($acesso)
                 $row = urlencode(serialize($row));  // Prepara para ser enviado por get
 
                 # preenche outro array com o restante dos dados
-                $servidor = array($nome,$cargo,$perfil,$lotacao,$matriculaGrh);
+                $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
                 $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
 
                 loadPage('../grhRelatorios/solicitacaoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
@@ -251,10 +251,10 @@ if($acesso)
                 $pessoal->mudaStatusFeriasSolicitadaConfirmada($id);
 
                 # pega os dados do servidor
-                $nome = $pessoal->get_nome($matriculaGrh);
-                $cargo = $pessoal->get_cargo($matriculaGrh);
-                $perfil = $pessoal->get_perfil($matriculaGrh);
-                $lotacao = $pessoal->get_lotacao($matriculaGrh);
+                $nome = $pessoal->get_nome($idServidorPesquisado);
+                $cargo = $pessoal->get_cargo($idServidorPesquisado);
+                $perfil = $pessoal->get_perfil($idServidorPesquisado);
+                $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
 
                 # Select das férias
                 $select = "SELECT periodo,
@@ -271,7 +271,7 @@ if($acesso)
                 $row = urlencode(serialize($row));  // Prepara para ser enviado por get
 
                 # preenche outro array com o restante dos dados
-                $servidor = array($nome,$cargo,$perfil,$lotacao,$matriculaGrh);
+                $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
                 $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
 
                 loadPage('../relatorios/avisoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get

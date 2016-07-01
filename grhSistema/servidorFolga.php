@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -40,7 +40,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de folgas fruídas por ter prestado serviço ao TRE');
@@ -54,13 +54,13 @@ if($acesso)
                                      dias,
                                      idFolga
                                 FROM tbfolga
-                          WHERE matricula='.$matriculaGrh.'
+                          WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY data desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT data,
                                      dias,
-                                     matricula
+                                     idServidor
                                 FROM tbfolga
                                WHERE idFolga = '.$id);
 
@@ -113,10 +113,10 @@ if($acesso)
                                        'required' => true,
                                        'title' => 'Quantidade de dias folgados.',
                                        'linha' => 1),
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 4)));
@@ -137,7 +137,7 @@ if($acesso)
         case "" :
         case "listar" :
         case "editar" :
-            Grh::listaFolgasTre($matriculaGrh);
+            Grh::listaFolgasTre($idServidorPesquisado);
         case "excluir" :
             $objeto->$fase($id);  
             break;

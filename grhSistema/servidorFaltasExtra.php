@@ -6,10 +6,10 @@
  */
 
 $dtInicial = $campoValor[0];
-$matricula = $campoValor[4];
+$idServidor = $campoValor[4];
 
 $pessoal = new Pessoal();
-$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 
 if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial)))
 {

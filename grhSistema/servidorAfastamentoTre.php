@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -41,7 +41,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de afastamentos para prestar serviço ao TRE');
@@ -56,9 +56,9 @@ if($acesso)
                                      folgas,
                                      descricao,
                                      documento,
-                                     idfolgatre
-                                FROM tbfolgatre
-                          WHERE matricula='.$matriculaGrh.'
+                                     idTrabalhoTre
+                                FROM tbtrabalhotre
+                          WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY data desc');
 
     # select do edita
@@ -67,9 +67,9 @@ if($acesso)
                                      folgas,
                                      documento,
                                      descricao,
-                                     matricula
-                                FROM tbfolgatre
-                               WHERE idfolgatre = '.$id);
+                                     idServidor
+                                FROM tbtrabalhotre
+                               WHERE idTrabalhoTre = '.$id);
 
     # ordem da lista
     #$objeto->set_orderCampo($orderCampo);
@@ -95,10 +95,10 @@ if($acesso)
     $objeto->set_classBd('pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbfolgatre');
+    $objeto->set_tabela('tbtrabalhotre');
 
     # Nome do campo id
-    $objeto->set_idCampo('idfolgatre');
+    $objeto->set_idCampo('idTrabalhoTre');
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
@@ -144,10 +144,10 @@ if($acesso)
                                        'title' => 'Descrição do Trabalho Efetuado',
                                        'col' => 12,
                                        'linha' => 2),                               
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 4)));
@@ -168,7 +168,7 @@ if($acesso)
         case "" :
         case "listar" :
         case "editar" :
-            Grh::listaFolgasTre($matriculaGrh);
+            Grh::listaFolgasTre($idServidorPesquisado);
         case "excluir" :
             $objeto->$fase($id);  
             break;

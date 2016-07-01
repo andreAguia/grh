@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -45,7 +45,7 @@ if($acesso){
     }
 
     # Verifica se o Servidor tem direito a licença
-    $idPerfil = $pessoal->get_idPerfil($matriculaGrh);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
     if ($pessoal->get_perfilLicenca($idPerfil) == "Não")
     {
@@ -63,7 +63,7 @@ if($acesso){
         
         # Exibe os dados do Servidor
         $objeto->set_rotinaExtra(array("get_DadosServidor"));
-        $objeto->set_rotinaExtraParametro(array($matriculaGrh)); 
+        $objeto->set_rotinaExtraParametro(array($idServidorPesquisado)); 
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome('Histórico de Licenças');
@@ -84,7 +84,7 @@ if($acesso){
                                      tbtipolicenca.nome,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                               WHERE matricula='.$matriculaGrh.'
+                               WHERE idServidor='.$idServidorPesquisado.'
                             ORDER BY tblicenca.dtInicial');
         
         # link para editar
@@ -137,7 +137,7 @@ if($acesso){
                 $selectEdita .= 'dtPericia,num_Bim,';
 
             # o resto do select
-            $selectEdita .= 'obs,matricula FROM tblicenca WHERE idLicenca = '.$id;
+            $selectEdita .= 'obs,idServidor FROM tblicenca WHERE idLicenca = '.$id;
 
             $objeto->set_selectEdita($selectEdita);
         }
@@ -252,7 +252,7 @@ if($acesso){
                     $diaPublicacao = null;                    
 
                     # pega a primeira publicação disponível dessa matrícula
-                    $diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($matriculaGrh);
+                    $diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
 
                     # pega quantos dias estão disponíveis
                     if (!is_null($diaPublicacao))
@@ -325,9 +325,9 @@ if($acesso){
                     # Preenche a combo do DOERJ
                     # Se for inclusão
                     if(is_null($id))
-                        $result2 = $pessoal->get_licencaPremioPublicacaoDisponivel($matriculaGrh);
+                        $result2 = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
                     else
-                        $result2 = $pessoal->get_licencaPremioPublicacao($matriculaGrh);
+                        $result2 = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
 
                     # Adiciona o valor nulo
                     #if(!is_null($result2))
@@ -394,10 +394,10 @@ if($acesso){
                                     'label' => 'Observação:',
                                     'tipo' => 'textarea',
                                     'size' => array(80,5)),
-                            array ( 'nome' => 'matricula',
+                            array ( 'nome' => 'idServidor',
                                     'label' => 'Matrícula:',
                                     'tipo' => 'hidden',
-                                    'padrao' => $matriculaGrh,
+                                    'padrao' => $idServidorPesquisado,
                                     'size' => 5,
                                     'title' => 'Matrícula',
                                     'linha' => 8));
@@ -430,11 +430,11 @@ if($acesso){
             case "" :
             case "listar" :
                 # Exibe quadro de licença prêmio
-                #Grh::quadroLicencaPremio($matriculaGrh);
+                #Grh::quadroLicencaPremio($idServidorPesquisado);
                 
                 # pega os dados para o alerta
-                $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($matriculaGrh);
-                $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($matriculaGrh);
+                $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
+                $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
                 $diasDisponiveis = $diasPublicados - $diasFruidos;
                 
                 # Exibe alerta se $diasDisponíveis for negativo
@@ -462,11 +462,11 @@ if($acesso){
                 if($idTpLicenca == 6)
                 {                
                     # Exibe quadro de licença prêmio
-                    Grh::quadroLicencaPremio($matriculaGrh);
+                    Grh::quadroLicencaPremio($idServidorPesquisado);
 
                     # pega os dados para critica abaixo
-                    $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($matriculaGrh);
-                    $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($matriculaGrh);
+                    $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
+                    $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
                     $diasDisponiveis = $diasPublicados - $diasFruidos;
 
                     # Verifica se tem dias publicados e/ou disponíveis         
@@ -568,7 +568,7 @@ if($acesso){
                 else
                 {
                      # Verifica se a licença tem limitação por genero (sexo)
-                    $sexo = $pessoal->get_sexo($matriculaGrh);
+                    $sexo = $pessoal->get_sexo($idServidorPesquisado);
                     $limite = $pessoal->get_licencaSexo($idTpLicenca);
 
                     if(($limite <> 'Todos') AND ($limite <> $sexo))

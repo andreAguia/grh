@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -31,18 +31,18 @@ if($acesso)
     botaoVoltar('servidorMenu.php');
     
     # Exibe os dados do servidor
-    Grh::listaDadosServidor($matriculaGrh);
+    Grh::listaDadosServidor($idServidorPesquisado);
 
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
     
     # Pega os dados financeiros
-    $salario = $pessoal->get_salarioBase($matriculaGrh);
-    $trienio = $pessoal->get_trienioValor($matriculaGrh);
-    $comissao = $pessoal->get_salarioCargoComissao($matriculaGrh);
-    $gratificacao = $pessoal->get_gratificacao($matriculaGrh);
-    $cessao = $pessoal->get_salarioCessao($matriculaGrh);
+    $salario = $pessoal->get_salarioBase($idServidorPesquisado);
+    $trienio = $pessoal->get_trienioValor($idServidorPesquisado);
+    $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);
+    $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);
+    $cessao = $pessoal->get_salarioCessao($idServidorPesquisado);
     $total = $salario+$trienio+$comissao+$gratificacao+$cessao;
 
     # Dados da tabela
@@ -76,7 +76,7 @@ if($acesso)
     $tabela->set_funcao($function);
     #$tabela->set_link($link);
     $tabela->set_totalRegistro(false);
-    #$tabela->set_idCampo('matricula');
+    #$tabela->set_idCampo('idServidor');
     $tabela->set_formatacaoCondicional($formatacaoCondicional);
     $tabela->show();
     

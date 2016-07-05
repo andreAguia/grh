@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -41,7 +41,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Progressões e Enquadramentos do Servidor');
@@ -66,7 +66,7 @@ if($acesso)
                                      tbprogressao.idProgressao
                                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
                                                   JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
-                               WHERE matricula = '.$matriculaGrh.'
+                               WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -78,7 +78,7 @@ if($acesso)
                                      dtPublicacao,
                                      pgPublicacao,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbprogressao
                                WHERE idProgressao = '.$id);
 
@@ -123,7 +123,7 @@ if($acesso)
     array_push($result1, array(null,null)); # Adiciona o valor de nulo
 
     # Pega os dados da combo classe
-    $nivel = $lista->get_nivelCargo($matriculaGrh);
+    $nivel = $lista->get_nivelCargo($idServidorPesquisado);
     $result2 = $lista->select('SELECT idClasse,
                                       concat("R$ ",Valor," ( ",tbplano.numdecreto," - ",faixa," )") as classe 
                                 FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
@@ -193,10 +193,10 @@ if($acesso)
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 8)));

@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -44,12 +44,12 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh);
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
     
     # Pega os dados do último percentual
-    $ultimoPercentual = $pessoal->get_trienioPercentual($matriculaGrh);
-    $ultimoTrienio = $pessoal->get_trienioDataInicial($matriculaGrh);
-    $dataAdmissao = $pessoal->get_dtAdmissao($matriculaGrh);
+    $ultimoPercentual = $pessoal->get_trienioPercentual($idServidorPesquisado);
+    $ultimoTrienio = $pessoal->get_trienioDataInicial($idServidorPesquisado);
+    $dataAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
     if(is_null($ultimoTrienio))
         $proximoTrienio = addAnos($dataAdmissao, 3);
     else
@@ -82,7 +82,7 @@ if($acesso)
                                      documento,
                                      idTrienio
                                 FROM tbtrienio
-                               WHERE matricula = '.$matriculaGrh.'
+                               WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -95,7 +95,7 @@ if($acesso)
                                      dtPublicacao,
                                      pgPublicacao,
                                      obs,
-                                     matricula
+                                     idServidor
                                 FROM tbtrienio
                                WHERE idTrienio = '.$id);
 
@@ -224,10 +224,10 @@ if($acesso)
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 5)));

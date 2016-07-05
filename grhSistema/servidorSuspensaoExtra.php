@@ -6,10 +6,10 @@
  */
 
 $dtInicial = $campoValor[0];
-$matricula = $campoValor[6];
+$idServidor = $campoValor[6];
 
 $pessoal = new Pessoal();
-$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 
 if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial))){
     $msgErro.='A data Inicial não pode ser antes de ser admitido!<br/>A data está errada!';

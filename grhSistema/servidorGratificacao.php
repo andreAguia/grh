@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -44,7 +44,7 @@ if($acesso)
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($matriculaGrh); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Gratificações Especiais do Servidor');
@@ -61,7 +61,7 @@ if($acesso)
 
     # Evita que um servidor que já esteja recebendo gratificação passe a receber outra.
     # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
-    if(is_null($pessoal->get_gratificacaoDtFinal($matriculaGrh))){
+    if(is_null($pessoal->get_gratificacaoDtFinal($idServidorPesquisado))){
         # Retira o botão de incluir
         $objeto->set_botaoIncluir(false);
         
@@ -77,9 +77,9 @@ if($acesso)
                                      dtFinal,
                                      valor,
                                      processo,
-                                     idGratif
-                                FROM tbgratif
-                               WHERE matricula = '.$matriculaGrh.'
+                                     idGratificacao
+                                FROM tbgratificacao
+                               WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -88,9 +88,9 @@ if($acesso)
                                      valor,
                                      processo,
                                      obs,
-                                     matricula
-                                FROM tbgratif
-                               WHERE idGratif = '.$id);
+                                     idServidor
+                                FROM tbgratificacao
+                               WHERE idGratificacao = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -116,10 +116,10 @@ if($acesso)
     $objeto->set_classBd('pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbgratif');
+    $objeto->set_tabela('tbgratificacao');
 
     # Nome do campo id
-    $objeto->set_idCampo('idGratif');
+    $objeto->set_idCampo('idGratificacao');
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
@@ -162,10 +162,10 @@ if($acesso)
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
-                               array ( 'nome' => 'matricula',
+                               array ( 'nome' => 'idServidor',
                                        'label' => 'Matrícula:',
                                        'tipo' => 'hidden',
-                                       'padrao' => $matriculaGrh,
+                                       'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 5)));

@@ -100,7 +100,7 @@ class Pessoal extends Bd
 	public function get_gratificacao($idServidor)
 	{
 		$select = 'SELECT valor
-		             FROM tbgratif
+		             FROM tbGratificacao
 		            WHERE idServidor = '.$idServidor.'
                               AND current_date() >= dtInicial 
                               AND (dtFinal is NULL OR current_date() <= dtFinal)';
@@ -123,7 +123,7 @@ class Pessoal extends Bd
 	public function get_gratificacaoDtFinal($idServidor)
 	{
             $select = 'SELECT dtFinal
-                         FROM tbgratif
+                         FROM tbGratificacao
                         WHERE idServidor = '.$idServidor.'
                         ORDER BY dtInicial desc';
             $numero = parent::count($select);
@@ -306,51 +306,7 @@ class Pessoal extends Bd
 		return $result; 
 	}
 	
-	###########################################################
 	
-	/**
-	 * M�todo get_senha
-	 * Informa a senha (criptografada) 
-	 * 
-	 * @param	string $idServidor	idServidor do servidor
-	 */
-	public function get_senha($idServidor)
-        { 
-
-            $select = "SELECT senha_intra		  
-                         FROM tbservidor
-                        WHERE idServidor = ".$idServidor;
-
-            # verifica se a idServidor foi informada
-            if(is_null($idServidor))
-                return 0;
-            else
-            {
-                $result = parent::select($select,false);
-                return $result[0]; 
-            }
-        }
-	
-	###########################################################
-	
-	/**
-	 * M�todo set_senha
-	 * muda a senha de um usu�rio
-	 * 
-	 * @param	string 	$idServidor 	-> idServidor do servidor
-	 * @param 	string	$senha		-> senha (n�o criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
-	 */
-	public function set_senha($matr,$senha = SENHA_PADRAO,$alert = true)
-	{
-		# Grava a data quando � para senha padr�o (para controle dos 2 dias)
-		if ($senha == SENHA_PADRAO)
-			parent::gravar('ult_acesso',date("Y-m-d H:i:s"),$matr,'tbservidor','idServidor',false); 
-			
-		$senha = md5($senha);
-		parent::gravar('senha_intra',$senha,$matr,'tbservidor','idServidor',$alert);
-	}
-	
-	###########################################################
 	
 	/**
 	 * M�todo set_senhaNull
@@ -2817,30 +2773,7 @@ class Pessoal extends Bd
 			
 	}
 		
-    ###########################################################
-
-	
-	/**
-	 * M�todo get_idServidor
-	 * Informa a idServidor de uma matrícula
-	 * 
-	 * @param	string $idServidor  idServidor do servidor
-	 */
-
-	public function get_idServidor($idServidor)
-	
-	{
-            # Pega o cargo do servidor
-            $select = 'SELECT idServidor
-                         FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
-
-            $row = parent::select($select,false);
-            
-            return $row[0];
-			
-	}
-		
+    		
 ###########################################################
 	
     /**

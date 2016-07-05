@@ -6,10 +6,10 @@
  */
 
 $nomeacao = $campoValor[2];     // Data de Nomeação
-$matricula = $campoValor[13];   // Matrícula do servidor
+$idServidor = $campoValor[13];   // Matrícula do servidor
 
 $pessoal = new Pessoal();
-$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($matricula));
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 
 ## Verifica se a data de nomeação é anterior a data de admissão
 if(($nomeacao < $dtAdmissao) AND (!is_null($nomeacao))){

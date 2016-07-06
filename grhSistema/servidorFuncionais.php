@@ -286,11 +286,11 @@ if($acesso)
 
     switch ($fase){
         case "editar" :
-            $objeto->$fase($idUsuario);  
+            $objeto->$fase($idServidorPesquisado);  
             break;
 
         case "gravar" :
-            $objeto->gravar($idUsuario,'servidorFuncionaisExtra.php'); 	
+            $objeto->gravar($idServidorPesquisado,'servidorFuncionaisExtra.php'); 	
             break;
     }
     $page->terminaPagina();

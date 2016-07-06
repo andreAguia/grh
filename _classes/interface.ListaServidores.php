@@ -63,11 +63,11 @@ class listaServidores
         }
 
         # Se for Get, retorna o valor da propriedade
-        #if (substr($metodo, 0, 3) == 'get')
-        #{
-        #    $var = substr($metodo, 4);
-        #    return $this->$var;
-        #}
+        if (substr($metodo, 0, 3) == 'get')
+        {
+            $var = substr($metodo, 4);
+            return $this->$var;
+        }
     }
     
     ###########################################################

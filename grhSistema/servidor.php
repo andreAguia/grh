@@ -19,6 +19,9 @@ if($acesso)
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    
+    # Verifica se foi pesquisado
+    $pesquisado = get('pesquisado',FALSE);        
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -76,7 +79,7 @@ if($acesso)
         $menu1->show();
 
         # Parâmetros
-        $form = new Form('?fase=listar');
+        $form = new Form('?fase=listar&pesquisado=TRUE');
 
             # Nome ou Matrícula
             $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
@@ -190,8 +193,8 @@ if($acesso)
             if($parametroSituacao <> "*")
                 $lista->set_situacao($parametroSituacao);
 
-            $lista->show();	
-
+            $lista->show();
+            
         $grid->fechaColuna();
         $grid->fechaGrid();
         break;

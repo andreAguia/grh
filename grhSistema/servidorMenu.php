@@ -78,12 +78,19 @@ if($acesso)
     $menu->add_link($linkBotao3,"right");
     
     if(Verifica::acesso($idUsuario,1)){
-    # Excluir
-        $linkBotao4 = new Link("Excluir","servidorExclusao.php");
-        $linkBotao4->set_class('alert button');
-        $linkBotao4->set_title('Excluir Servidor');
-        $linkBotao4->set_accessKey('E');
+        # Histórico
+        $linkBotao4 = new Link("Histórico","../../admin/adminSistema/historico.php?idServidor=".$idServidorPesquisado);
+        $linkBotao4->set_class('button');
+        $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');
+        $linkBotao4->set_accessKey('H');
         $menu->add_link($linkBotao4,"right");
+        
+        # Excluir
+        $linkBotao5 = new Link("Excluir","servidorExclusao.php");
+        $linkBotao5->set_class('alert button');
+        $linkBotao5->set_title('Excluir Servidor');
+        $linkBotao5->set_accessKey('E');
+        $menu->add_link($linkBotao5,"right");
     }
 
     $menu->show();

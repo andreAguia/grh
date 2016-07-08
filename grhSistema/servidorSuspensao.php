@@ -168,15 +168,10 @@ if($acesso)
                                        'linha' => 5)));
 
 
-    # Matrícula para o Log
+    # Log
     $objeto->set_idUsuario($idUsuario);
-
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
-
-
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
+    
     ################################################################
 
     switch ($fase)

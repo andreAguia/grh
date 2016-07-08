@@ -194,8 +194,9 @@ if($acesso)
                                 'title' => 'Matrícula',
                                 'linha' => 6)));
 
-    # Matrícula para o Log
+    # Log
     $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
     switch ($fase)

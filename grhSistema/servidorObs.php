@@ -79,8 +79,9 @@ if($acesso)
                                'tipo' => 'textarea',
                                'size' => array(255,20))));
 
-    # Matrícula para o Log
+    # Log
     $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
     switch ($fase)

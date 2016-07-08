@@ -7,14 +7,14 @@
  * By Alat
  */
 
-# Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
+# Servidor logado 
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    

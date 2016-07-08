@@ -119,8 +119,9 @@ if($acesso)
                                'col' => 12,
                                'size' => array(80,5))));
 
-    # Matrícula para o Log
+    # Log
     $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
     switch ($fase)

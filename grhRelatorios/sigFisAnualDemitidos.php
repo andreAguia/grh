@@ -5,14 +5,14 @@
  * By Alat
  */
 
-## Reservado para a matrícula do servidor logado
-$matricula = null;
+# Servidor logado 
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    

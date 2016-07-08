@@ -405,8 +405,9 @@ if($acesso){
             $objeto->set_campos($campos);
         }
 
-        # Matrícula para o Log
+        # Log
         $objeto->set_idUsuario($idUsuario);
+        $objeto->set_idServidorPesquisado($idServidorPesquisado);
         
         # Botão AIM
         $botaoRegra = new Button("Emite AIM");

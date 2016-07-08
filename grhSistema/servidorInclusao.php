@@ -248,7 +248,7 @@ if($acesso){
                 $controle->set_size(50);
                 $controle->set_col(6);
                 $controle->set_linha(1);
-                #$controle->set_required(TRUE);
+                $controle->set_required(TRUE);
                 if(!is_null($nome)){
                     $controle->set_valor($nome);
                     $controle->set_readonly(true);                    
@@ -412,8 +412,7 @@ if($acesso){
                         $msgErro.='Essa matrícula já está em uso!\n';
                         $erro = 1;
                     }
-                }
-                
+                }                
                 
                 # Verifica se a lotação foi digitada
                 if(empty($lotacao)){

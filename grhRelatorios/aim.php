@@ -8,14 +8,14 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -218,7 +218,7 @@ if($acesso)
                 $cabecalho->exibeCabecalho();
 
                 # Pega os dados do servidor
-                $select = 'SELECT tbfuncionario.matricula,
+                $select = 'SELECT tbservidor.idFuncional,
                                   tbpessoa.nome,
                                   tbcargo.nome,
                                   tbpessoa.endereco,
@@ -228,10 +228,10 @@ if($acesso)
                                   tbpessoa.UF,
                                   tbpessoa.cep,
                                   tbpessoa.idPessoa
-                             FROM tbfuncionario 
-                        LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                        LEFT JOIN tbcargo ON (tbfuncionario.idCargo = tbcargo.idCargo)
-                            WHERE matricula = '.$matriculaGrh;
+                             FROM tbservidor 
+                        LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                        LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                            WHERE idServidor = '.$idServidorPesquisado;
 
                 # conecta
                 $pessoal = new Pessoal();
@@ -263,10 +263,10 @@ if($acesso)
                 $grid->abreColuna($col0);
                 $grid->fechaColuna();
                 $grid->abreColuna($col1);
-                    p("Matrícula:","aim");
+                    p("idFuncional:","aim");
                 $grid->fechaColuna();
                 $grid->abreColuna($col2);
-                    p(dv($row[0]),"aim");
+                    p($row[0],"aim");
                 $grid->fechaColuna();
                 $grid->fechaGrid();  
 
@@ -278,7 +278,7 @@ if($acesso)
                     p("Nome:","aim");
                 $grid->fechaColuna();
                 $grid->abreColuna($col2);
-                    p(dv($row[1]),"aim");
+                    p($row[1],"aim");
                 $grid->fechaColuna();
                 $grid->fechaGrid(); 
 
@@ -290,7 +290,7 @@ if($acesso)
                     p("Cargo:","aim");
                 $grid->fechaColuna();
                 $grid->abreColuna($col2);
-                    p(dv($row[2]),"aim");
+                    p($row[2],"aim");
                 $grid->fechaColuna();
                 $grid->fechaGrid(); 
                 
@@ -389,7 +389,7 @@ if($acesso)
                     p("Telefones:","aim");
                 $grid->fechaColuna();
                 $grid->abreColuna($col2);
-                    p($pessoal->get_telefones($matriculaGrh),"aim");
+                    p($pessoal->get_telefones($idServidorPesquisado),"aim");
                 $grid->fechaColuna();
                 $grid->fechaGrid();
 
@@ -438,6 +438,11 @@ if($acesso)
                 # Assinatura da Chefia Imediata
                 p('__________________________________','center',"aim");
                 p('Chefia Imediata','center',"aim");
+                
+                # Log
+                $atividade = "Emitiu Aim de ".$pessoal->get_nome($idServidorPesquisado)." (idServidor: $idServidorPesquisado)";
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario,$data,$atividade,null,null,4);
             }else{
                 alert($msgErro);
                 back(1);

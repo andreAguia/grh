@@ -264,8 +264,9 @@ if($acesso)
                                        'title' => 'Matrícula',
                                        'linha' => 7)));
 
-    # Matrícula para o Log
+    # Log
     $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
     
     # Botão Extra
     $botaoVagas = new Button("Vagas","?fase=vagas");

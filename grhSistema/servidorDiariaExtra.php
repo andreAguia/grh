@@ -38,7 +38,7 @@ if(!is_null($dataCi)) // verifica se a data foi preenchida pois o calculo depend
     }
     elseif(!is_numeric($numCi))   // verifica se é número
     {
-        $msgErro.='O Campo número de Ci somente aceita números!';
+        $msgErro.='O Campo número de Ci somente aceita números!\n';
         $erro = 1;
     }
     else // quando o número for digitado ou quando for edit
@@ -58,7 +58,7 @@ if(!is_null($dataCi)) // verifica se a data foi preenchida pois o calculo depend
 
         if($existeCi > 0)   // verifica se já existe uma ci com esse número
         {
-            $msgErro.='Já existe uma Ci com esse número!';
+            $msgErro.='Já existe uma Ci com esse número\!\n';
             $erro = 1;
         }
     }

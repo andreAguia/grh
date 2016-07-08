@@ -5,8 +5,8 @@
  * By Alat
  */
 
-# Reservado para a matrícula do servidor logado
-$matricula = null;
+# Reservado para o servidor logado
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -21,20 +21,6 @@ if($acesso){
 	
     # Verifica a fase do programa
     $fase = get('fase','incluir');
-
-    # pega o id (se tiver)
-    $id = soNumeros(get('id'));
-    
-    $parametroNomeMat = retiraAspas(post('parametroNomeMat'));
-    $parametroCargo = post('parametroCargo','*');
-    $parametroCargoComissao = post('parametroCargoComissao','*');
-    $parametroLotacao = post('parametroLotacao','*');
-    $parametroPerfil = post('parametroPerfil','*');
-    $parametroSituacao = post('parametroSituacao','1');
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
 
     # Insere jscript extra da inclusão de servidor que oculta campos de acordo com o perfil
     $jscript = "<script language='JavaScript' >
@@ -112,7 +98,7 @@ if($acesso){
             # Exibe o nº da página
             $div = new Div("right");
             $div->abre();
-            badge("1","warning");
+                badge("1","warning");
             $div->fecha();
             
             # Inicia o formulário
@@ -123,7 +109,7 @@ if($acesso){
             $controle->set_size(20);            
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_autofocus(true);
             $controle->set_title('O CPF do Novo Servidor');
             $form->add_item($controle);
@@ -163,14 +149,14 @@ if($acesso){
             $valida = new Valida();
 
             # Verifica se o CPF foi digitado
-            if ($valida->vazio($cpf)){
-                $msgErro.='Você tem que digitar o CPF!<br/>';
+            if (empty($cpf)){
+                $msgErro.='Você tem que digitar o CPF!\n';
                 $erro = 1;
             }
 
             # Verifica validade do CPF
             if (!$valida->cpf($cpf)){
-                $msgErro.='CPF inválido!<br/>';
+                $msgErro.='CPF inválido!\n';
                 $erro = 1;
             }
 
@@ -180,33 +166,15 @@ if($acesso){
             if(!is_null($idPessoa)){
                 # Servidor ativo
                 if(!is_null($pessoal->get_idPessoaAtiva($idPessoa))){
-                    $msgErro.='Funcionário com matrícula ativa! Não pode ser incluído em outra matrícula!<br/>';
+                    $msgErro.='Funcionário com matrícula ativa! Não pode ser incluído em outra matrícula!\n';
                     $erro = 1;
                 }
             }
 
             # Verifia se houve erro 
             if ($erro == 1){
-                br(2);
-                # Limita o tamanho da tela
-                $grid = new Grid();
-                $grid->abreColuna(3);
-
-                $grid->fechaColuna();
-                $grid->abreColuna(6);
-
-                # painel usando o callout
-                $painel2 = new Callout();
-                $painel2->set_botaoOk(NULL,"history.go(-1)");
-                $painel2->abre();
-                    p($msgErro);
-                $painel2->fecha();
-
-                $grid->fechaColuna();
-                $grid->abreColuna(3);
-
-                $grid->fechaColuna();
-                $grid->fechaGrid();
+                alert($msgErro);
+                back(1);
             }else{
                 set_session('sessionCpf',$cpf);
                 loadPage('?fase=incluir2');
@@ -280,7 +248,7 @@ if($acesso){
                 $controle->set_size(50);
                 $controle->set_col(6);
                 $controle->set_linha(1);
-                $controle->set_required(TRUE);
+                #$controle->set_required(TRUE);
                 if(!is_null($nome)){
                     $controle->set_valor($nome);
                     $controle->set_readonly(true);                    
@@ -315,12 +283,12 @@ if($acesso){
                 #$p->show();
                 #$form->add_item($p);
 
-                # Matrícula
-                $controle = new Input('matricula','texto','Matrícula: (sem o dígito verificador)',1);
+                # IdFuncional
+                $controle = new Input('idFuncional','texto','IdFuncional:',1);
                 $controle->set_size(20);            
                 $controle->set_linha(2);
                 $controle->set_col(3);                
-                $controle->set_title('A matrícula do servidor.');
+                $controle->set_title('A IdFuncional do servidor.');
                 $form->add_item($controle);
 
                  # Lotação               
@@ -375,7 +343,15 @@ if($acesso){
                 $controle->set_title('O Cargo do Servidor.');
                 $controle->set_col(6);
                 $controle->set_array($cargo);
-                $form->add_item($controle);      
+                $form->add_item($controle); 
+                
+                # Matrícula
+                $controle = new Input('matricula','texto','Matrícula: (sem o dígito verificador)',1);
+                $controle->set_size(20);            
+                $controle->set_linha(3);
+                $controle->set_col(3);                
+                $controle->set_title('A matrícula do servidor.');
+                $form->add_item($controle);
 
                 # submit
                 $controle = new Input('submit','submit');
@@ -407,6 +383,7 @@ if($acesso){
                 $nome = post('nome'); 
                 $perfil = post('perfil'); 
                 $matricula = post('matricula'); 
+                $idFuncional = post('idFuncional'); 
                 $lotacao = post('lotacao');
                 $dtAdmissao = post('dtAdmissao');
                 $pisPasep = post('pisPasep');
@@ -418,37 +395,35 @@ if($acesso){
                 $valida = new Valida();
 
                 # Verifica se o Nome foi digitado
-                if ($valida->vazio($nome)){
-                    $msgErro.='Você tem que informar o Nome do Servidor!<br/>';
+                if(empty($nome)){
+                    $msgErro.='Você tem que informar o Nome do Servidor!\n';
                     $erro = 1;
                 }
 
                 # Verifica se o Perfil foi digitado
-                if ($valida->vazio($perfil)){
-                    $msgErro.='Você tem que informar o Perfil do Servidor!<br/>';
+                if(empty($perfil)){
+                    $msgErro.='Você tem que informar o Perfil do Servidor!\n';
                     $erro = 1;
-                }else{    # verificações da matrícula             
-                    if((is_null($matricula)) OR ($matricula == "")){
-                        # Gera uma nova matrícula
-                        $matricula = $pessoal->get_novaMatricula($perfil);                
-                    }
-
-                    # Verifica se a matrícula já existe
+                }
+                
+                # Verifica se a matrícula já existe
+                if(!empty($matricula)){
                     if($pessoal->get_existeMatricula($matricula)){
-                        $msgErro.='Essa matrícula já está em uso!<br/>';
+                        $msgErro.='Essa matrícula já está em uso!\n';
                         $erro = 1;
                     }
                 }
-
+                
+                
                 # Verifica se a lotação foi digitada
-                if ($valida->vazio($lotacao)){
-                    $msgErro.='Você tem que informar a Lotação do Servidor!<br/>';
+                if(empty($lotacao)){
+                    $msgErro.='Você tem que informar a Lotação do Servidor!\n';
                     $erro = 1;
                 }
 
                 # Verifica se a Admissão foi digitada
-                if ($valida->vazio($dtAdmissao)){
-                    $msgErro.='Você tem que informar a Data de Admissão do Servidor!<br/>';
+               if(empty($dtAdmissao)){
+                    $msgErro.='Você tem que informar a Data de Admissão do Servidor!\n';
                     $erro = 1;
                 }
 
@@ -456,14 +431,14 @@ if($acesso){
                 if(is_null($idPessoa)){ // Verifica se a pessoa está cadastrada
                     # Verifica se o Pis foi digitado 
                     if ($valida->vazio($pisPasep)){
-                        $msgErro.='Você tem que informar o Pis/Pasep do Servidor!<br/>';
+                        $msgErro.='Você tem que informar o Pis/Pasep do Servidor!\n';
                         $erro = 1;
                     }
 
                     # Verifica se o pis já existe
-                    $idPessoaDuplicataPis = $pessoal->get_idpessoaPis($pisPasep);                
+                    $idPessoaDuplicataPis = $pessoal->get_idPessoaPis($pisPasep);                
                     if(!is_null($idPessoaDuplicataPis)){
-                        $msgErro.='Esse Pis/Pasep já está cadastrado para o servidor: '.$pessoal->get_nomeidPessoa($idPessoaDuplicataPis).'!<br/>';
+                        $msgErro.='Esse Pis/Pasep já está cadastrado para o servidor: '.$pessoal->get_nomeidPessoa($idPessoaDuplicataPis).'!\n';
                         $erro = 1;
                     }
 
@@ -476,8 +451,8 @@ if($acesso){
                 }
 
                 # Verifica se o Cargo foi digitado
-                if (($perfil == 1) AND ($valida->vazio($cargo))){
-                    $msgErro.='Você tem que informar o Cargo do Servidor!<br/>';
+                if (($perfil == 1) AND (empty($cargo))){
+                    $msgErro.='Você tem que informar o Cargo do Servidor!\n';
                     $erro = 1;
                 }
                 
@@ -488,34 +463,16 @@ if($acesso){
                 
                 # verifica a validade da data de admissao
                 if (!validaData($dtAdmissao)){
-                    $msgErro.='A data de admissão não é válida!<br/>';
+                    $msgErro.='A data de admissão não é válida!\n';
                     $erro = 1;
                 }else{
                     $dtAdmissao = date_to_bd($dtAdmissao);
-                }
-
+                }               
+                
                 # Verifia se houve erro 
                 if ($erro == 1){
-                    br(2);
-                    # Limita o tamanho da tela
-                    $grid = new Grid();
-                    $grid->abreColuna(3);
-
-                    $grid->fechaColuna();
-                    $grid->abreColuna(6);
-
-                    # painel usando o callout
-                    $painel2 = new Callout();
-                    $painel2->set_botaoOk(NULL,"history.go(-1)");
-                    $painel2->abre();
-                        p($msgErro);
-                    $painel2->fecha();
-
-                    $grid->fechaColuna();
-                    $grid->abreColuna(3);
-
-                    $grid->fechaColuna();
-                    $grid->fechaGrid();
+                    alert($msgErro);
+                    back(1);
                 }else{
                     # Grava os dados
 
@@ -550,22 +507,25 @@ if($acesso){
 
                     ###################################
 
-                    # Grava na tbfuncionario
+                    # Grava na tbservidor
                     # dados
-                    $campos = array('matricula','idPerfil','idPessoa','idCargo','dtAdmissao','Sit');
-                    $valor = array($matricula,$perfil,$idPessoa,$cargo,$dtAdmissao,1);
+                    $campos = array('matricula','idPerfil','idPessoa','idCargo','dtAdmissao','situacao','idFuncional');
+                    $valor = array($matricula,$perfil,$idPessoa,$cargo,$dtAdmissao,1,$idFuncional);
                     $idValor = null;
-                    $tabela = 'tbfuncionario';
+                    $tabela = 'tbservidor';
 
                     # gravação
                     $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                    
+                    # pega o id
+                    $idServidor = $pessoal->get_lastId();
 
                     ###################################
 
                     # Grava na tbhistlot
                     # dados
-                    $campos = array('matricula','lotacao','data','motivo');
-                    $valor = array($matricula,$lotacao,$dtAdmissao,'Lotação Inicial');
+                    $campos = array('idServidor','lotacao','data','motivo');
+                    $valor = array($idServidor,$lotacao,$dtAdmissao,'Lotação Inicial');
                     $idValor = null;
                     $tabela = 'tbhistlot';
 
@@ -582,8 +542,8 @@ if($acesso){
                         $plano = $pessoal->get_idPlanoAtual();      // plano de carcos atual
                         $classe = $pessoal->get_classeInicial($plano,$nivel);  // primeiro salário desse nível                
 
-                        $campos = array('matricula','idTpProgressao','dtInicial','idClasse');
-                        $valor = array($matricula,1,$dtAdmissao,$classe);
+                        $campos = array('idServidor','idTpProgressao','dtInicial','idClasse');
+                        $valor = array($idServidor,1,$dtAdmissao,$classe);
                         $idValor = null;
                         $tabela = 'tbprogressao';
 
@@ -596,8 +556,8 @@ if($acesso){
                     # Grava na tbCedido
                     if($perfil == 2) // somente cedidos
                     {
-                        $campos = array('matricula');
-                        $valor = array($matricula);
+                        $campos = array('idServidor');
+                        $valor = array($idServidor);
                         $idValor = null;
                         $tabela = 'tbcedido';
 
@@ -607,9 +567,10 @@ if($acesso){
                     ###################################
 
                     # Carrega a página do servidor criado
-                    set_session('matriculaGrh',$matricula);
+                    set_session('idServidorPesquisado',$idServidor);
                     loadPage('servidorMenu.php');
-                }  
+                }
+                   
                 break;
 
     }									 	 		

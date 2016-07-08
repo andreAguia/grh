@@ -542,13 +542,13 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_idpessoaPis
+	 * M�todo get_idPessoaPis
 	 * fornece o id_pessoa de um PisF
 	 * 
 	 * @param	string $pis do servidor
 	 */
 
-	public function get_idpessoaPis($pis)
+	public function get_idPessoaPis($pis)
 	{
 		$select = 'SELECT idPessoa
                              FROM tbdocumentacao
@@ -1912,26 +1912,26 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_existeMatricula($idServidor)
+	function get_existeMatricula($matricula)
 	
 	/**
 	 * informa se a idServidor informada existe no cadastro
 	 * 
-	 * @param	string $idServidor idServidor do servidor
+	 * @param	string $matricula A matrícula do servidor
 	 */
 
 
 	{
-		$select = 'SELECT idServidor
-                             FROM tbservidor
-                            WHERE idServidor = '.$idServidor;		
-		
-                $count = parent::count($select);
-                
-                if($count == 0)
-                    return false;
-                else
-                    return true;
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE matricula = '.$matricula;		
+
+            $count = parent::count($select);
+
+            if($count == 0)
+                return false;
+            else
+                return true;
 	}
 	
 	###########################################################
@@ -2814,5 +2814,29 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
+	
+	/**
+	 * M�todo get_idServidor
+	 * Informa a idServidor de uma matrícula
+	 * 
+	 * @param	string $matricula  matricula do servidor
+	 */
+
+	public function get_idServidor($matricula)
+	
+	{
+            # Pega o cargo do servidor
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE matricula = '.$matricula;
+
+            $row = parent::select($select,false);
+            
+            return $row[0];
+			
+	}
+		
+###########################################################
 }
 ?>

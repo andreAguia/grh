@@ -23,7 +23,7 @@ if($campoValor[3] == 2)
         if ($campoValor[7] > date_to_bd($dataLimite))
         {
             $erro = 1;
-            $msgErro .= 'A data de término está alem da data limite!n';
+            $msgErro .= 'A data de término está alem da data limite!\n';
         }
     }
 }

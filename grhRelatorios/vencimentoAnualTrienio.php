@@ -31,39 +31,37 @@ if($acesso)
 
     ######
     
-    $select = '(SELECT tbfuncionario.matricula,
-                      tbfuncionario.idFuncional,  
+    $select = '(SELECT tbservidor.idFuncional,  
                       tbpessoa.nome,
-                      tbfuncionario.dtadmissao,
+                      tbservidor.dtadmissao,
                       CONCAT(MAX(tbtrienio.percentual),"%"),
                       MAX(tbtrienio.dtInicial),
                       DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),
                       month(DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR))
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbtrienio ON (tbtrienio.matricula = tbfuncionario.matricula)
-                WHERE tbfuncionario.Sit = 1
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                    LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+                WHERE tbservidor.situacao = 1
                   AND idPerfil = 1              
-                GROUP BY tbfuncionario.matricula
+                GROUP BY tbservidor.idServidor
                HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = "'.$relatorioAno.'"
-             ORDER BY tbfuncionario.matricula)
+             ORDER BY tbpessoa.nome)
              UNION
-             (SELECT  tbfuncionario.matricula,
-                      tbfuncionario.idFuncional,  
+             (SELECT  tbservidor.idFuncional,  
                       tbpessoa.nome,
-                      tbfuncionario.dtadmissao,
+                      tbservidor.dtadmissao,
                       "",
                       "",
-                      DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR),
-                      month(DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR))
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbtrienio ON (tbtrienio.matricula = tbfuncionario.matricula)
-                WHERE tbfuncionario.Sit = 1
+                      DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR),
+                      month(DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR))
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                    LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+                WHERE tbservidor.situacao = 1
                   AND idPerfil = 1              
-             GROUP BY tbfuncionario.matricula
-             HAVING YEAR (DATE_ADD(tbfuncionario.dtadmissao, INTERVAL 3 YEAR)) = "'.$relatorioAno.'"
+             GROUP BY tbservidor.idServidor
+             HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = "'.$relatorioAno.'"
                  AND MAX(tbtrienio.dtInicial) IS NULL
-             ORDER BY tbfuncionario.matricula)
-             ORDER BY 8,3';		
+             ORDER BY tbpessoa.nome)
+             ORDER BY 6,2';		
 
 
     $result = $pessoal->select($select);
@@ -72,13 +70,13 @@ if($acesso)
     $relatorio->set_titulo('Relatório Anual de Vencimento de Triênios - '.$relatorioAno);
     $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
 
-    $relatorio->set_label(array('Matrícula','IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio','Mês'));
-    $relatorio->set_width(array(10,10,40,10,5,10,10));
-    $relatorio->set_align(array('center','center','left'));
-    $relatorio->set_funcao(array("dv",null,null,"date_to_php",null,"date_to_php","date_to_php","get_nomeMes"));
+    $relatorio->set_label(array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio','Mês'));
+    $relatorio->set_width(array(10,50,10,10,10,10));
+    $relatorio->set_align(array('center','left'));
+    $relatorio->set_funcao(array(null,null,"date_to_php",null,"date_to_php","date_to_php","get_nomeMes"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(7);
+    $relatorio->set_numGrupo(6);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_zebrado(true);
     #$relatorio->set_bordaInterna(true);

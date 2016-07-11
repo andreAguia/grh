@@ -31,19 +31,18 @@ if($acesso)
 
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
 
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       tbtipolicenca.nome,
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tblicenca ON (tbfuncionario.matricula = tblicenca.matricula)
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                    LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
                                     LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                                    LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)
-                WHERE tbfuncionario.Sit = 1
+                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                WHERE tbservidor.situacao = 1
                   AND (("'.$data.'" BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                    OR  ("'.$data.'" < dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))
@@ -56,10 +55,10 @@ if($acesso)
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Licença');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','Perfil','Licença','Data Inicial','Dias','Data Final'));
-    $relatorio->set_width(array(6,5,25,10,20,10,5,10));
-    $relatorio->set_align(array('center','center','left'));
-    $relatorio->set_funcao(array('dv',null,null,null,null,"date_to_php",null,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final'));
+    $relatorio->set_width(array(10,30,10,25,10,5,10));
+    $relatorio->set_align(array('center','left'));
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php",null,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

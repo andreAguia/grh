@@ -27,20 +27,19 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idfuncional,
+    $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,                 
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
                      tbperfil.nome
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                   LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idperfil)
-               WHERE tbfuncionario.Sit = 1 
-            ORDER BY tbfuncionario.matricula';
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                   LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idperfil)
+               WHERE tbservidor.situacao = 1 
+            ORDER BY 9,2';
 
     $result = $servidor->select($select);
 
@@ -48,21 +47,20 @@ if($acesso)
     $relatorio->set_titulo('Relatório Geral Financeiro');
     $relatorio->set_subtitulo('Agrupado por Perfil - Ordenados por Matricula');
 
-    $relatorio->set_label(array('Matricula','Id','Nome','Salário','Triênio','Comissão','Gratificação Especial','Salário Cedidos','Total','Perfil'));
-    $relatorio->set_width(array(10,5,25,10,10,10,10,10,10,0));
-    $relatorio->set_align(array("center","center","left","right","right","right","right","right","right"));
-    $relatorio->set_funcao(array("dv",null,null,"formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda"));
+    $relatorio->set_label(array('IdFuncional','Nome','Salário','Triênio','Comissão','Gratificação Especial','Salário Cedidos','Total','Perfil'));
+    $relatorio->set_width(array(10,30,10,10,10,10,10,10,0));
+    $relatorio->set_align(array("center","left","right","right","right","right","right","right"));
+    $relatorio->set_funcao(array(null,null,"formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda"));
 
-    $classe = array("","","","pessoal","pessoal","pessoal","pessoal","pessoal","pessoal");
-    $metodo = array("","","","get_salarioBase","get_trienioValor","get_salarioCargoComissao","get_gratificacao","get_salarioCessao","get_salarioTotal");
+    $classe = array("","","pessoal","pessoal","pessoal","pessoal","pessoal","pessoal");
+    $metodo = array("","","get_salarioBase","get_trienioValor","get_salarioCargoComissao","get_gratificacao","get_salarioCessao","get_salarioTotal");
 
     $relatorio->set_classe($classe);
     $relatorio->set_metodo($metodo);
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(9);
+    $relatorio->set_numGrupo(8);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();
 }
-?>

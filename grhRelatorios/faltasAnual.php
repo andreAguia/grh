@@ -28,17 +28,16 @@ if($acesso)
 
     ######
 
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       tbfaltas.data,
                       tbfaltas.numDias,
                       ADDDATE(data,numDias-1)
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbfaltas ON (tbfuncionario.matricula = tbfaltas.matricula)                                
-                                    LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)
-                WHERE tbfuncionario.Sit = 1
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                    LEFT JOIN tbfaltas ON (tbservidor.idServidor = tbfaltas.idServidor)                                
+                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                WHERE tbservidor.situacao = 1
                   AND ((YEAR(tbfaltas.data)='.$anoBase.') OR (YEAR(ADDDATE(tbfaltas.data,tbfaltas.numDias-1))='.$anoBase.'))
              ORDER BY data desc';		
 
@@ -49,10 +48,10 @@ if($acesso)
     $relatorio->set_tituloLinha2($anoBase);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Falta');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','Perfil','Data Inicial','Dias','Data Final'));
-    $relatorio->set_width(array(10,5,25,20,10,10,10));
-    $relatorio->set_align(array("center","center","left"));
-    $relatorio->set_funcao(array('dv',null,null,null,"date_to_php",null,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Data Inicial','Dias','Data Final'));
+    $relatorio->set_width(array(10,40,20,10,10,10));
+    $relatorio->set_align(array("center","left"));
+    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
@@ -77,4 +76,3 @@ if($acesso)
 
     $page->terminaPagina();
 }
-?>

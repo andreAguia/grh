@@ -32,8 +32,7 @@ if($acesso)
     $mesBase = post('mesBase',date('m'));
     $data = $anoBase.'-'.$mesBase.'-01';
 
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idFuncional,
+    $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      CONCAT(substring(tblotacao.UADM,1,3),"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
                      tbferias.anoExercicio,
@@ -41,12 +40,12 @@ if($acesso)
                      CONCAT(tbferias.numDias,"(",tbferias.periodo,")"),
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y")as dtf,
                      tbferias.status
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa=tbpessoa.idPessoa)
-                                        JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                        JOIN tbferias on (tbfuncionario.matricula = tbferias.matricula)
-               WHERE tbfuncionario.sit = 1
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)
+                                        JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
+               WHERE tbservidor.situacao = 1
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND (tbferias.status = "fruída" OR tbferias.status = "solicitada" OR tbferias.status = "confirmada")
                  AND (("'.$data.'" BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                   OR  (LAST_DAY("'.$data.'") BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
@@ -59,10 +58,10 @@ if($acesso)
     $relatorio->set_titulo('Relatório Mensal de Servidores em Férias');
     $relatorio->set_tituloLinha2(get_nomeMes($mesBase).' / '.$anoBase);
     $relatorio->set_subtitulo('Ordenados pela data inicial das Férias');
-    $relatorio->set_label(array('Matrícula','Id','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Status'));
-    $relatorio->set_width(array(5,8,27,20,5,9,8,9,10));
-    $relatorio->set_align(array("center","center","left","left"));
-    $relatorio->set_funcao(array("dv",null,null,null,null,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Status'));
+    $relatorio->set_width(array(10,30,20,5,10,5,10,10));
+    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(8);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
@@ -94,4 +93,3 @@ if($acesso)
 
     $page->terminaPagina();
 }
-?>

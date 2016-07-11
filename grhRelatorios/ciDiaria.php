@@ -8,8 +8,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$matricula = null;		  # Reservado para a matrícula do servidor logado
-$matriculaGrh = null;		  # Reservado para a matrícula pesquisada
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
 
 # nome das lotações
 $lotacaoOrigem = "Gerência de Recursos Humanos e Pagamento - DPAF/GRH";
@@ -20,7 +20,7 @@ $lotacaoCi = 'FENORTE/DPAF/GRHPAG';
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($matricula,13);
+$acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
@@ -66,7 +66,7 @@ if($acesso)
     $valor = str_replace('*',',',$valor);           // passa o * para vírgula dos centavos
 
     # Pega os dados do servidor
-    $select = 'SELECT tbfuncionario.matricula,
+    $select = 'SELECT tbservidor.idServidor,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.endereco,
@@ -77,10 +77,10 @@ if($acesso)
                       tbpessoa.cep,
                       tbpessoa.agencia,
                       tbpessoa.conta
-             FROM tbfuncionario
-             JOIN tbpessoa on (tbfuncionario.idPessoa = tbpessoa.idPessoa)
+             FROM tbservidor
+             JOIN tbpessoa on (tbservidor.idPessoa = tbpessoa.idPessoa)
              JOIN tbdocumentacao on (tbpessoa.idPessoa = tbdocumentacao.idpessoa)
-        WHERE tbfuncionario.matricula = '.$matriculaGrh;
+        WHERE tbservidor.idServidor = '.$idServidorPesquisado;
     
     $row = $pessoal->select($select,false); 
     
@@ -170,4 +170,3 @@ if($acesso)
     $grid->fechaGrid();
     $page->terminaPagina();
 }
-?>

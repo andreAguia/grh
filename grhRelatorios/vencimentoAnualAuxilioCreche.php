@@ -29,8 +29,7 @@ if($acesso)
 
     ######
     
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbdependente.nome,
                       tbdependente.dtNasc,
@@ -39,9 +38,9 @@ if($acesso)
                       processo,
                       MONTH(dtTermino)
                  FROM tbdependente JOIN tbpessoa ON(tbpessoa.idpessoa = tbdependente.idpessoa)
-                                   JOIN tbfuncionario ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
+                                   JOIN tbservidor ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                 WHERE YEAR(dtTermino) = "'.$relatorioAno.'"
-                  AND tbfuncionario.sit = 1     
+                  AND tbservidor.situacao = 1     
              ORDER BY dtTermino';
 
     $result = $pessoal->select($select);
@@ -52,13 +51,13 @@ if($acesso)
     $relatorio->set_tituloLinha3($relatorioAno);
     $relatorio->set_subtitulo('Ordenado por Data de Término do Auxílio Creche');
 
-    $relatorio->set_label(array("Matrícula","Id","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo","Mês"));
-    $relatorio->set_width(array(10,5,20,20,10,10,10,14));
-    $relatorio->set_align(array("center","center","left","left"));
-    $relatorio->set_funcao(array("dv",null,null,null,"date_to_php","date_to_php",null,null,"get_nomeMes"));
+    $relatorio->set_label(array("IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo","Mês"));
+    $relatorio->set_width(array(5,22,22,10,10,13,18));
+    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_funcao(array(null,null,null,"date_to_php","date_to_php",null,null,"get_nomeMes"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(8);
+    $relatorio->set_numGrupo(7);
     $relatorio->set_botaoVoltar(false);
     #$relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);

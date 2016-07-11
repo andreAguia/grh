@@ -27,18 +27,18 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.idfuncional,
+    $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula,
-                     tbfuncionario.matricula					
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)								   	    
-               WHERE tbfuncionario.Sit = 1
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor					
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)								   	    
+               WHERE tbservidor.situacao = 1
                  AND idperfil = 1
             ORDER BY nome';
 
@@ -49,7 +49,7 @@ if($acesso)
     $relatorio->set_titulo('Relatório Geral de Triênio');
     $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
 
-    $relatorio->set_label(array('Id','Nome','Salário','Triênio','%','a Partir de','Período Aquisitivo','Próximo Triênio','Processo','Publicação'));
+    $relatorio->set_label(array('Id Funcional','Nome','Salário','Triênio','%','a Partir de','Período Aquisitivo','Próximo Triênio','Processo','Publicação'));
     $relatorio->set_width(array(5,20,10,10,5,10,10,10,10,10));
     $relatorio->set_align(array("center","left"));
     $relatorio->set_funcao(array(null,null,'formataMoeda','formataMoeda'));

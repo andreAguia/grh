@@ -27,13 +27,12 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idFuncional,
+    $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbfuncionario.matricula,
+                     tbservidor.idServidor,
                      "[","]"
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-               WHERE tbfuncionario.Sit = 1
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+               WHERE tbservidor.situacao = 1
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -41,13 +40,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Check');
-    $relatorio->set_label(array('Matricula','Id','Nome','Lotação','',''));
-    $relatorio->set_width(array(10,15,40,25,5,5));
-    $relatorio->set_align(array("center","center","left","left","right"));
-    $relatorio->set_funcao(array("dv"));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','',''));
+    $relatorio->set_width(array(10,40,30,10,10));
+    $relatorio->set_align(array("center","left","left","right"));
     
-    $relatorio->set_classe(array(null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,"get_lotacao"));
+    $relatorio->set_classe(array(null,null,"pessoal"));
+    $relatorio->set_metodo(array(null,null,"get_lotacao"));
     $relatorio->set_zebrado(FALSE);
     $relatorio->set_bordaInterna(TRUE);
     

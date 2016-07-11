@@ -30,8 +30,7 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idfuncional,
+    $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      CONCAT(substring(tblotacao.UADM,1,3),"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
                      tbferias.anoExercicio,
@@ -39,12 +38,12 @@ if($acesso)
                      CONCAT(tbferias.numDias,"(",tbferias.periodo,")"),
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y")as dtf,
                      tbferias.folha
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa=tbpessoa.idPessoa)
-                                        JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                        JOIN tbferias on (tbfuncionario.matricula = tbferias.matricula)
-               WHERE tbfuncionario.sit = 1
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)             
+                                        JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
+               WHERE tbservidor.situacao = 1
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)             
                  AND year(tbferias.dtInicial) = '.$anoBase.'
                  AND (status = "solicitada" OR status = "confirmada") 
                  AND (month(tbferias.dtInicial)= 2 
@@ -63,10 +62,10 @@ if($acesso)
     $relatorio->set_tituloLinha2('Fevereiro a Agosto / '.$anoBase);
     $relatorio->set_subtitulo('Confirmadas e Solicitadas - Ordenados pela Data Inicial');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha'));
-    $relatorio->set_width(array(5,5,30,20,5,9,8,9,10));
-    $relatorio->set_align(array("center","center","left","left"));
-    $relatorio->set_funcao(array("dv",null,null,null,null,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha'));
+    $relatorio->set_width(array(10,30,20,5,9,8,9,10));
+    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(8);
@@ -89,4 +88,3 @@ if($acesso)
 
     $page->terminaPagina();
 }
-?>

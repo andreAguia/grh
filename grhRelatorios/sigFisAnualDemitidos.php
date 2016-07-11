@@ -28,22 +28,21 @@ if($acesso)
 
     ###### Relatório 1
     
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.dtNasc,
-                      tbfuncionario.matricula,
+                      tbservidor.idServidor,
                       tbperfil.nome,
-                      tbfuncionario.dtAdmissao,
-                      tbfuncionario.dtDemissao,
-                      tbfuncionario.dtPublicExo,
-                      MONTH(tbfuncionario.dtDemissao)
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)                                
-                                    LEFT JOIN tbperfil ON(tbfuncionario.idPerfil = tbperfil.idPerfil)
+                      tbservidor.dtAdmissao,
+                      tbservidor.dtDemissao,
+                      tbservidor.dtPublicExo,
+                      MONTH(tbservidor.dtDemissao)
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
+                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                     LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
-                WHERE YEAR(tbfuncionario.dtDemissao) = "'.$relatorioAno.'"
-             ORDER BY MONTH(tbfuncionario.dtDemissao), dtDemissao';		
+                WHERE YEAR(tbservidor.dtDemissao) = "'.$relatorioAno.'"
+             ORDER BY MONTH(tbservidor.dtDemissao), dtDemissao';		
 
 
     $result = $servidor->select($select);
@@ -53,16 +52,16 @@ if($acesso)
     $relatorio->set_tituloLinha2('Demitidos da Fenorte');
     $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Mês'));
-    $relatorio->set_width(array(7,5,28,10,10,20,8,10,10,10));
-    $relatorio->set_align(array('center','center','left'));
-    $relatorio->set_funcao(array('dv',null,null,null,"date_to_php",null,null,"date_to_php","date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Mês'));
+    $relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+    $relatorio->set_align(array('center','left'));
+    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,null,"date_to_php","date_to_php","date_to_php","get_NomeMes"));
     
-    $relatorio->set_classe(array(null,null,null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,null,null,"get_cargo"));
+    $relatorio->set_classe(array(null,null,null,null,"pessoal"));
+    $relatorio->set_metodo(array(null,null,null,null,"get_cargo"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(10);
+    $relatorio->set_numGrupo(9);
     $relatorio->set_botaoVoltar(false);
     #$relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
@@ -84,8 +83,7 @@ if($acesso)
     $relatorio->show();
 
     ###### Relatório 2
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.dtNasc,
@@ -94,10 +92,10 @@ if($acesso)
                       tbcomissao.dtExo,
                       tbcomissao.dtPublicExo,
                       MONTH(tbcomissao.dtExo)
-                 FROM tbfuncionario JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)                                
-                                    JOIN tbperfil ON(tbfuncionario.idPerfil = tbperfil.idPerfil)
+                 FROM tbservidor JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
+                                    JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                     JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
-                                    LEFT JOIN tbcomissao ON (tbfuncionario.matricula = tbcomissao.matricula)
+                                    LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                     JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
                 WHERE YEAR(tbcomissao.dtExo) = "'.$relatorioAno.'"
              ORDER BY MONTH(tbcomissao.dtExo), tbcomissao.dtExo';		
@@ -110,13 +108,13 @@ if($acesso)
     $relatorio->set_tituloLinha2('Exonerados em um Cargo em Comissao');
     $relatorio->set_subtitulo('Ordenado pela Data de Exoneração');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','CPF','Nascimento','Cargo','Perfil','Exoneração','Publicação','Mês'));
-    $relatorio->set_width(array(7,5,28,10,10,20,8,10,10));
-    $relatorio->set_align(array('center','center','left'));
-    $relatorio->set_funcao(array('dv',null,null,null,"date_to_php",null,null,"date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Exoneração','Publicação','Mês'));
+    $relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+    $relatorio->set_align(array('center','left'));
+    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,null,"date_to_php","date_to_php","get_NomeMes"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(9);
+    $relatorio->set_numGrupo(8);
     $relatorio->set_botaoVoltar(false);
     #$relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);

@@ -5,7 +5,7 @@
  * By Alat
  */
 
-## Servidor logado 
+# Servidor logado 
 $idUsuario = null;
 
 # Configuração
@@ -30,8 +30,7 @@ if($acesso)
     ######
 
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       tbatestado.dtInicio,
@@ -40,10 +39,10 @@ if($acesso)
                       tbatestado.nome_medico,
                       tbatestado.especi_medico,
                       tbatestado.tipo
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbatestado ON (tbfuncionario.matricula = tbatestado.matricula)                                
-                                    LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)
-                WHERE tbfuncionario.Sit = 1
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                 LEFT JOIN tbatestado ON (tbservidor.idServidor = tbatestado.idServidor)                                
+                                 LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
+                WHERE tbservidor.situacao = 1
                   AND (("'.$data.'" BETWEEN dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
                    OR  ("'.$data.'" < dtInicio AND LAST_DAY("'.$data.'") > ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)))
@@ -57,10 +56,10 @@ if($acesso)
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordenado pela Data Inicial do Atestado');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','Perfil','Data Inicial','Dias','Data Final','Médico','Especialidade','Tipo'));
-    $relatorio->set_width(array(8,5,15,10,10,5,10,10,10,10));
-    $relatorio->set_align(array('center','center','left'));
-    $relatorio->set_funcao(array('dv',null,null,null,"date_to_php",null,"date_to_php"));
+    $relatorio->set_label(array('Id','Nome','Perfil','Data Inicial','Dias','Data Final','Médico','Especialidade','Tipo'));
+    $relatorio->set_width(array(5,20,10,10,5,10,15,15,10));
+    $relatorio->set_align(array('center','left'));
+    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

@@ -28,8 +28,7 @@ if($acesso)
 
     ######
     
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       tbtipolicenca.nome,
@@ -37,13 +36,13 @@ if($acesso)
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                       MONTH(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tblicenca ON (tbfuncionario.matricula = tblicenca.matricula)
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                    LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
                                     LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                                    LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)
-                WHERE tbfuncionario.Sit = 1
+                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                WHERE tbservidor.situacao = 1
                   AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioAno.'   
-             ORDER BY 8';
+             ORDER BY 7';
 
     $result = $pessoal->select($select);
 
@@ -52,13 +51,13 @@ if($acesso)
     $relatorio->set_tituloLinha2($relatorioAno);
     $relatorio->set_subtitulo('Ordem de Data de Término da Licença');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','Perfil','Licença','Data Inicial','Dias','Data Final','Mês'));
-    $relatorio->set_width(array(6,5,25,10,20,10,5,10));
-    $relatorio->set_align(array('center','center','left'));
-    $relatorio->set_funcao(array('dv',null,null,null,null,"date_to_php",null,"date_to_php","get_nomeMes"));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final','Mês'));
+    $relatorio->set_width(array(10,30,10,25,10,5,10));
+    $relatorio->set_align(array('center','left'));
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php",null,"date_to_php","get_nomeMes"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(8);
+    $relatorio->set_numGrupo(7);
     $relatorio->set_botaoVoltar(false);
     #$relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);

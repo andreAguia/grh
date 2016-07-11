@@ -27,21 +27,19 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idFuncional,
+    $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbfuncionario.matricula,
+                     tbservidor.idServidor,
                      concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
                      tbperfil.nome,
-                     tbfuncionario.dtAdmissao,
-                     tbfuncionario.matricula
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                        JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+                     tbservidor.dtAdmissao,
+                     tbservidor.idServidor
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                   LEFT JOIN tbsituacao ON (tbfuncionario.sit = tbsituacao.idSit)
-                                   LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idPerfil)
-               WHERE tbfuncionario.Sit = 1
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)
+                                   LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+               WHERE tbservidor.situacao = 1
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
             ORDER BY lotacao, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -49,16 +47,16 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
-    $relatorio->set_label(array('Matricula','Id','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
-    $relatorio->set_width(array(8,10,30,30,0,10,10,8));
-    $relatorio->set_align(array("center","center","left","left"));
-    $relatorio->set_funcao(array("dv",null,null,null,null,null,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
+    $relatorio->set_width(array(10,30,30,0,10,10,10));
+    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
     
-    $relatorio->set_classe(array(null,null,null,"pessoal",null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,"get_Cargo",null,null,null,"get_Situacao"));
+    $relatorio->set_classe(array(null,null,"pessoal",null,null,null,"pessoal"));
+    $relatorio->set_metodo(array(null,null,"get_Cargo",null,null,null,"get_Situacao"));
     
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(4);
+    $relatorio->set_numGrupo(3);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

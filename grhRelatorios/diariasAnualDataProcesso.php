@@ -33,7 +33,7 @@ if($acesso)
     $select ='SELECT processo,
                      dataProcesso,
                      CONCAT(numeroCi,"/",YEAR(dataCi)),
-                     matricula,
+                     idServidor,
                      origem,
                      destino,
                      dataSaida,
@@ -52,7 +52,7 @@ if($acesso)
     $relatorio->set_subtitulo('Ordenados por Número da CI');
 
     $relatorio->set_label(array('Processo','Data','CI','Servidor','Origem','Destino','Saída','Chegada','Valor'));
-    $relatorio->set_width(array(20,10,10,10,10,10,10,10,10));
+    $relatorio->set_width(array(20,8,8,20,10,10,8,8,8));
     $relatorio->set_align(array("center","center","center","left"));
     $relatorio->set_funcao(array(null,"date_to_php",null,null,null,null,"date_to_php","date_to_php","formataMoeda"));
     $relatorio->set_classe(array(null,null,null,"Pessoal"));

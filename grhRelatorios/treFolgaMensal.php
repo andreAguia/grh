@@ -31,16 +31,16 @@ if($acesso)
     
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
 
-    $select = 'SELECT tbfuncionario.matricula,
+    $select = 'SELECT tbservidor.idServidor,
                       tbpessoa.nome,
                       tbperfil.nome,
                       data,                                    
                       dias,
                       ADDDATE(data,dias-1)
-                 FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbfolga ON (tbfuncionario.matricula = tbfolga.matricula)                                
-                                    LEFT JOIN tbperfil ON(tbfuncionario.idPerfil=tbperfil.idPerfil)
-                WHERE tbfuncionario.Sit = 1
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                    LEFT JOIN tbfolga ON (tbservidor.idServidor = tbfolga.idServidor)                                
+                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                WHERE tbservidor.situacao = 1
                   AND (("'.$data.'" BETWEEN data AND ADDDATE(data,dias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN data AND ADDDATE(data,dias-1))
                    OR  ("'.$data.'" < data AND LAST_DAY("'.$data.'") > ADDDATE(data,dias-1)))
@@ -54,10 +54,10 @@ if($acesso)
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordem de Data Inicial da Folga');
 
-    $relatorio->set_label(array('Matrícula','Nome','Perfil','Data Inicial','Dias','Data Final'));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Data Inicial','Dias','Data Final'));
     $relatorio->set_width(array(10,30,20,10,10,10));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array('dv',null,null,"date_to_php",null,"date_to_php"));
+    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

@@ -29,30 +29,29 @@ if($acesso)
     $anoBase = post('anoBase',date('Y'));
     
     # Relatório 1
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idFuncional,
+    $select = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       SUM(tbferias.numDias),
-                      tbfuncionario.matricula
-                 FROM tbferias JOIN tbfuncionario USING (matricula)
+                      tbservidor.idServidor
+                 FROM tbferias JOIN tbservidor USING (idServidor)
                                JOIN tbpessoa USING (idPessoa)
-                WHERE tbfuncionario.Sit=1                   
+                WHERE tbservidor.situacao = 1                   
                   AND anoExercicio = '.$anoBase.'
                   AND tbferias.status <> "cancelada"
-                  GROUP BY 3
-                  ORDER BY 4,1';
+                  GROUP BY 2
+                  ORDER BY 3,1';
     /*
-    $select = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idFuncional,
+    $select = 'SELECT tbservidor.idServidor,
+                      tbservidor.idFuncional,
                       tbpessoa.nome,
                       0,
-                      tbfuncionario.matricula
-                 FROM tbfuncionario JOIN tbpessoa USING (idpessoa)
-                WHERE tbfuncionario.Sit=1
-                  AND tbfuncionario.matricula NOT IN(
-               SELECT tbfuncionario.matricula
-                 FROM tbfuncionario JOIN tbferias ON (tbferias.matricula = tbfuncionario.matricula)
-                WHERE tbfuncionario.Sit=1                   
+                      tbservidor.idServidor
+                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
+                WHERE tbservidor.situacao = 1
+                  AND tbservidor.idServidor NOT IN(
+               SELECT tbservidor.idServidor
+                 FROM tbservidor JOIN tbferias ON (tbferias.idServidor = tbservidor.idServidor)
+                WHERE tbservidor.situacao = 1                   
                   AND anoExercicio = '.$anoBase.'
                   AND tbferias.status <> "cancelada")
                   ORDER BY 3';
@@ -63,14 +62,13 @@ if($acesso)
     $relatorio->set_titulo('Total de Férias Fruídas, Confirmadas ou Solicitadas');
     $relatorio->set_tituloLinha2('Exercício: '.$anoBase);
     $relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
-    $relatorio->set_label(array("Matrícula","Id Funcional","Nome","Dias de férias","Lotação"));
-    $relatorio->set_width(array(10,10,35,10,35));
-    $relatorio->set_align(array("center","center","left",null,"left"));
-    $relatorio->set_funcao(array("dv"));
-    $relatorio->set_classe(array(null,null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,null,"get_lotacao"));
+    $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
+    $relatorio->set_width(array(10,45,10,35));
+    $relatorio->set_align(array("center","left",null,"left"));
+    $relatorio->set_classe(array(null,null,null,"pessoal"));
+    $relatorio->set_metodo(array(null,null,null,"get_lotacao"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(3);
+    $relatorio->set_numGrupo(2);
     $relatorio->set_dataImpressao(false);
 
     $relatorio->set_formCampos(array(
@@ -89,20 +87,19 @@ if($acesso)
 
     ### Relatório 2
 
-    $select2 = 'SELECT tbfuncionario.matricula,
-                      tbfuncionario.idFuncional,
+    $select2 = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       "Férias Não Solicitadas",
-                      tbfuncionario.matricula
-                 FROM tbfuncionario JOIN tbpessoa USING (idpessoa)
-                WHERE tbfuncionario.Sit=1
-                  AND tbfuncionario.matricula NOT IN(
-               SELECT tbfuncionario.matricula
-                 FROM tbfuncionario JOIN tbferias ON (tbferias.matricula = tbfuncionario.matricula)
-                WHERE tbfuncionario.Sit=1                   
+                      tbservidor.idServidor
+                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
+                WHERE tbservidor.situacao = 1
+                  AND tbservidor.idServidor NOT IN(
+               SELECT tbservidor.idServidor
+                 FROM tbservidor JOIN tbferias ON (tbferias.idServidor = tbservidor.idServidor)
+                WHERE tbservidor.situacao = 1                   
                   AND anoExercicio = '.$anoBase.'
                   AND tbferias.status <> "cancelada")
-                  ORDER BY 3';
+                  ORDER BY 2';
 
     $result2 = $servidor->select($select2);
 
@@ -110,16 +107,15 @@ if($acesso)
     $relatorio2->set_titulo('');
     #$relatorio->set_tituloLinha2('Exercício: '.$anoBase);
     #$relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
-    $relatorio2->set_label(array("Matrícula","Id Funcional","Nome","Dias de férias","Lotação"));
-    $relatorio2->set_width(array(10,10,35,10,35));
-    $relatorio2->set_align(array("center","center","left",null,"left"));
-    $relatorio2->set_funcao(array("dv"));
-    $relatorio2->set_classe(array(null,null,null,null,"pessoal"));
-    $relatorio2->set_metodo(array(null,null,null,null,"get_lotacao"));
+    $relatorio2->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
+    $relatorio2->set_width(array(10,45,10,35));
+    $relatorio2->set_align(array("center","left",null,"left"));
+    $relatorio2->set_classe(array(null,null,null,"pessoal"));
+    $relatorio2->set_metodo(array(null,null,null,"get_lotacao"));
     $relatorio2->set_conteudo($result2);
     $relatorio2->set_cabecalhoRelatorio(false);
     $relatorio2->set_menuRelatorio(false);
-    $relatorio2->set_numGrupo(3);
+    $relatorio2->set_numGrupo(2);
     $relatorio2->set_log(false);
     $relatorio2->show();
 

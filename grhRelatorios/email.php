@@ -27,14 +27,13 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,        
-                     tbfuncionario.idfuncional,
+    $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      tbcontatos.numero
                 FROM tbcontatos inner join tbpessoa USING (idpessoa)
-          INNER JOIN tbfuncionario USING (idpessoa)
+          INNER JOIN tbservidor USING (idpessoa)
                WHERE tbcontatos.tipo = "E-mail"
-                 AND tbfuncionario.Sit = 1
+                 AND tbservidor.situacao = 1
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -42,10 +41,9 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de E-mail dos Servidores Ativos');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('Matricula','Id','Nome','E-Mail'));
-    $relatorio->set_width(array(10,10,40,40));
-    $relatorio->set_align(array("center","center","left","left"));
-    $relatorio->set_funcao(array("dv"));
+    $relatorio->set_label(array('IdFuncional','Nome','E-Mail'));
+    $relatorio->set_width(array(10,40,50));
+    $relatorio->set_align(array("center","left","left"));
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

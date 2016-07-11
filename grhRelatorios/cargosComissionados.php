@@ -28,19 +28,17 @@ if($acesso)
     ######
 
     $servidor = new Pessoal();
-    $select ='SELECT distinct tbfuncionario.matricula,
-                     tbfuncionario.idFuncional,
+    $select ='SELECT distinct tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbcomissao.descricao,
                      concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao," (",tbtipocomissao.vagas," vaga(s))") comissao,
-                     tbfuncionario.matricula,                 
+                     tbservidor.idServidor,                 
                      tbperfil.nome
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)                                               
-                                   LEFT JOIN tbsituacao ON (tbfuncionario.Sit = tbsituacao.idSit)
-                                   LEFT JOIN tbperfil ON (tbfuncionario.idPerfil = tbperfil.idPerfil)
-                                   LEFT JOIN tbcomissao ON(tbfuncionario.matricula = tbcomissao.matricula)
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa) 
+                                   LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                   LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                         JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-              WHERE tbfuncionario.sit = 1
+              WHERE tbservidor.situacao = 1
                 AND tbcomissao.dtExo is NULL
            ORDER BY comissao, tbpessoa.nome';
 
@@ -49,14 +47,13 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('Matricula','Id','Nome','Descrição','Cargo','Lotação','Perfil'));
-    $relatorio->set_width(array(10,10,25,20,0,25,5));
-    $relatorio->set_align(array("center","center","left","left","left","left"));
-    $relatorio->set_funcao(array("dv"));
-    $relatorio->set_classe(array(null,null,null,null,null,"Pessoal"));
-    $relatorio->set_metodo(array(null,null,null,null,null,"get_Lotacao"));
+    $relatorio->set_label(array('IdFuncional','Nome','Descrição','Cargo','Lotação','Perfil'));
+    $relatorio->set_width(array(10,30,20,0,25,10));
+    $relatorio->set_align(array("center","left","left","left","left"));
+    $relatorio->set_classe(array(null,null,null,null,"Pessoal"));
+    $relatorio->set_metodo(array(null,null,null,null,"get_Lotacao"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(4);
+    $relatorio->set_numGrupo(3);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

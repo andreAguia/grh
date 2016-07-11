@@ -31,7 +31,7 @@ if($acesso)
     $anoBase = post('anoBase',date('Y'));
 
     $select ='SELECT CONCAT(numeroCi,"/",YEAR(dataCi)),
-                                     matricula,
+                                     idServidor,
                                      origem,
                                      destino,
                                      dataSaida,

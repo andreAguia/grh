@@ -79,7 +79,6 @@ if($acesso)
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença','?fase=licenca','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','SigFis','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
@@ -136,7 +135,7 @@ if($acesso)
         case "cedidos";
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Cedidos','#','');
-            $menu->add_item('linkWindow','Relatório de Estatutários Ativos Cedidos a outros Órgãos (Em todos os Tempos) - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosDaFenorte.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários Ativos Cedidos a outros Órgãos (Em todos os Tempos) - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosDaUenf.php');
 
             $menu->show();
             break;
@@ -278,18 +277,8 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Anual de Servidores Demitidos e Exonerados','../grhRelatorios/sigFisAnualDemitidos.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Nomeados','../grhRelatorios/sigFisAnualNomeados.php'); 
             $menu->show();
-            break;    
-
-        ######################################
-
-         case "outros";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Outros','#','');            
-            $menu->add_item('linkWindow','Relatório Servidores que entregaram o DBV','../grhRelatorios/servidorDbv.php');
-
-            $menu->show();
-            break;    
-
+            break; 
+        
         ######################################
 
          case "estatutarios";

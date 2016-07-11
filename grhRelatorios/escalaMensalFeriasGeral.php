@@ -31,8 +31,7 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idfuncional,
+    $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      CONCAT(substring(tblotacao.UADM,1,3),"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
                      tbferias.anoExercicio,
@@ -42,12 +41,12 @@ if($acesso)
                      tbferias.folha,
                      IF(retornoAvisoFerias,"Sim","Não"),
                      status
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa=tbpessoa.idPessoa)
-                                        JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                        JOIN tbferias on (tbfuncionario.matricula = tbferias.matricula)
-               WHERE tbfuncionario.sit = 1
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)             
+                                        JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
+               WHERE tbservidor.situacao = 1
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)             
                  AND year(tbferias.dtInicial) = '.$anoBase.'
                  AND month(tbferias.dtInicial)="'.$mesBase.'"
             ORDER BY status, month(tbferias.dtInicial), tbpessoa.nome';
@@ -59,13 +58,13 @@ if($acesso)
     $relatorio->set_tituloLinha2(get_nomeMes($mesBase).' / '.$anoBase);
     $relatorio->set_subtitulo('Ordenados pela Nome do Servidor');
 
-    $relatorio->set_label(array('Matrícula','Id','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha','Aviso de Férias','Status'));
-    $relatorio->set_width(array(5,5,25,20,5,7,7,7,10,10));
-    $relatorio->set_align(array("center","center","left"));
-    $relatorio->set_funcao(array("dv",null,null,null,null,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha','Aviso de Férias','Status'));
+    $relatorio->set_width(array(10,25,20,5,7,7,7,10,10));
+    $relatorio->set_align(array("center","left"));
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(10);
+    $relatorio->set_numGrupo(9);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
 
     $relatorio->set_formCampos(array(

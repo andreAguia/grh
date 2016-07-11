@@ -27,21 +27,20 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbfuncionario.matricula,
-                     tbfuncionario.idFuncional,
+    $select ='SELECT distinct tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbfuncionario.matricula,
+                     tbservidor.idServidor,
                      concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,                 
-                     tbfuncionario.dtAdmissao,
+                     tbservidor.dtAdmissao,
                      CONCAT(tbconcurso.anoBase," - ",tbconcurso.regime," - ",tbconcurso.orgExecutor) as aa
-                FROM tbfuncionario LEFT JOIN tbpessoa ON (tbfuncionario.idPessoa = tbpessoa.idPessoa)
-                                   LEFT JOIN tbcargo ON (tbfuncionario.idCargo = tbcargo.idCargo)
-                                        JOIN tbhistlot ON (tbfuncionario.matricula = tbhistlot.matricula)
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                   LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                   LEFT JOIN tbsituacao ON (tbfuncionario.Sit = tbsituacao.idSit)
-                                   LEFT JOIN tbconcurso ON (tbfuncionario.idConcurso = tbconcurso.idConcurso)
-                WHERE tbfuncionario.sit = 1 AND tbfuncionario.idPerfil = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.matricula = tbfuncionario.matricula)
+                                   LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                   LEFT JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
+                WHERE tbservidor.situacao = 1 AND tbservidor.idPerfil = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
              ORDER BY tbconcurso.anoBase, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -50,15 +49,15 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Estatutários');
     $relatorio->set_subtitulo('Agrupados por Concurso - Ordenados pelo Nome do Servidor');
 
-    $relatorio->set_label(array('Matricula','Id','Nome','Cargo','Lotação','Admissão',''));
-    $relatorio->set_width(array(10,10,30,20,20,10));
-    $relatorio->set_align(array("center","center","left","left","left"));
-    $relatorio->set_funcao(array("dv",null,null,null,null,"date_to_php"));
-    $relatorio->set_classe(array(null,null,null,"Pessoal"));
-    $relatorio->set_metodo(array(null,null,null,"get_cargo"));    
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Admissão',''));
+    $relatorio->set_width(array(10,30,20,30,10));
+    $relatorio->set_align(array("center","left","left","left"));
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
+    $relatorio->set_classe(array(null,null,"Pessoal"));
+    $relatorio->set_metodo(array(null,null,"get_cargo"));    
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(6);
+    $relatorio->set_numGrupo(5);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

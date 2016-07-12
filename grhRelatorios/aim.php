@@ -440,9 +440,9 @@ if($acesso)
                 p('Chefia Imediata','center',"aim");
                 
                 # Log
-                $atividade = "Emitiu Aim de ".$pessoal->get_nome($idServidorPesquisado)." (idServidor: $idServidorPesquisado)";
+                $atividade = "Emitiu Aim de ".$pessoal->get_nome($idServidorPesquisado);
                 $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario,$data,$atividade,null,null,4);
+                $intra->registraLog($idUsuario,$data,$atividade,null,null,4,$idServidorPesquisado);
             }else{
                 alert($msgErro);
                 back(1);

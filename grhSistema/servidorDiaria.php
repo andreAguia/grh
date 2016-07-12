@@ -54,7 +54,7 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT iddiaria,
+    $objeto->set_selectLista('SELECT idDiaria,
                                 CONCAT("CI Diária nº ",numeroCi,"/",YEAR(dataCi)),
                                 origem,
                                  destino,
@@ -120,9 +120,9 @@ if($acesso)
     $objeto->set_formLabelTipo(1);
 
     # Pega os dados da combo assundo de CI
-    $result = $pessoal->select('SELECT codigo, 
-                                       descricao
-                                  FROM intra.tbupo
+    $result = $intra->select('SELECT codigo, 
+                                     concat(Upper(substr(descricao, 1,1)), lower(substr(descricao, 2,length(descricao))))   
+                                  FROM tbupo
                                  WHERE descricao LIKE "%diaria%"
                               ORDER BY descricao');
 
@@ -178,7 +178,7 @@ if($acesso)
                                        'col' => 3,
                                        'size' => 20,
                                        'title' => 'Data da CI.',
-                                       'formFieldset' => 'Dados da CI',
+                                       'fieldset' => 'Dados da CI',
                                        'linha' => 3),
                                array ( 'nome' => 'numeroCi',
                                        'label' => 'Número:',
@@ -190,8 +190,8 @@ if($acesso)
                                array ( 'nome' => 'assuntoCi',                                   
                                        'label' => 'Assunto:',
                                        'required' => true,
-                                       'tipo' => 'combo',
-                                       'size' => 30,
+                                       'tipo' => 'texto',
+                                       'size' => 50,
                                        'col' => 6,
                                        'title' => 'Assunto.',
                                        'array' => $result,
@@ -201,14 +201,14 @@ if($acesso)
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'col' => 12,
-                                       'formFieldset' => 'fecha',
+                                       'fieldset' => 'fecha',
                                        'size' => array(80,5)),                                   
                                array ( 'nome' => 'idServidor',
-                                       'label' => 'Matrícula:',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,
-                                       'title' => 'Matrícula',
+                                       'title' => 'idServidor',
                                        'linha' => 5)));
 
 
@@ -251,6 +251,12 @@ if($acesso)
         case 'diaria':
             $id = get('id');
             loadPage('../grhRelatorios/ciDiaria.php?id='.$id,'_blank');
+            
+            # Log
+            $atividade = "Emitiu CI de Diária de ".$pessoal->get_nome($idServidorPesquisado);
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario,$data,$atividade,null,null,4,$idServidorPesquisado);
+            
             loadPage('?');            
             break;
     }

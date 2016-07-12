@@ -244,7 +244,6 @@ if($acesso)
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 
-
     ################################################################
 
     switch ($fase)

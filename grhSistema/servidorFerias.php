@@ -17,7 +17,8 @@ $acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso)
 {    
-    # Conecta ao Banco de Dados   
+    # Conecta ao Banco de Dados
+    $intra = new Intra();
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
@@ -116,6 +117,9 @@ if($acesso)
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
+    
+    # Pega o ano atual
+    $anoAtual = (date('Y'));
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'anoExercicio',
@@ -123,6 +127,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 7,
                                        'col' => 2,
+                                       'padrao' => $anoAtual,
                                        'required' => true,
                                        'autofocus' => true,
                                        'title' => 'Ano de Exercício das Férias.',
@@ -240,6 +245,12 @@ if($acesso)
                 $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
 
                 loadPage('../grhRelatorios/solicitacaoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
+                
+                # Log
+                $atividade = "Emitiu Solicitação de Férias de ".$pessoal->get_nome($idServidorPesquisado);
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario,$data,$atividade,null,null,4,$idServidorPesquisado);
+    
                 loadPage('?');
                 break;
 

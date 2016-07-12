@@ -40,7 +40,7 @@ if($acesso)
 
     $data = $dados[0];
     $ci = $dados[1];
-    $assunto = $intra->get_codigoAssuntoPorId($dados[2]);
+    $assunto = $dados[2];
     $valor = $dados[3];        
 
     ## Monta o Relatório 
@@ -66,7 +66,7 @@ if($acesso)
     $valor = str_replace('*',',',$valor);           // passa o * para vírgula dos centavos
 
     # Pega os dados do servidor
-    $select = 'SELECT tbservidor.idServidor,
+    $select = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.endereco,
@@ -115,7 +115,7 @@ if($acesso)
    
     # Matrícula e Nome
     echo '<tr><th>';
-    echo 'Matrícula';
+    echo 'IdFuncional';
     echo '</th><td>';
     echo $row[0];    
     echo '</td></tr>';

@@ -228,7 +228,7 @@ if($acesso){
             
             # Mensagem
             br();
-            callout($mensagem,'warning');
+            callout($mensagem);
             
             $form = new Form('?fase=validaDados','novoServidor');
             
@@ -502,6 +502,9 @@ if($acesso){
 
                         # gravação
                         $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                        
+                         # pega o id
+                         $idDocumentacao = $pessoal->get_lastId();
                     }
 
                     ###################################
@@ -518,6 +521,21 @@ if($acesso){
                     
                     # pega o id
                     $idServidor = $pessoal->get_lastId();
+                    
+                    # Grava no Log
+                    $data = date("Y-m-d H:i:s");
+                    
+                    # tbservidor
+                    $atividade = "Inclusão de servidor:[idPerfil]->".$perfil." [idPessoa]->".$idPessoa." [idCargo]->".$cargo." [dtAdmissao]->".$dtAdmissao;
+                    $intra->registraLog($idUsuario,$data,$atividade,$tabela,$idServidor,1,$idServidor);
+                    
+                    # tbpessoa
+                    $atividade = "Inclusão de servidor:[nome]->".$nome;
+                    $intra->registraLog($idUsuario,$data,$atividade,'tbpessoa',$idPessoa,1,$idServidor);
+                    
+                    # tbdocumentacao 
+                    $atividade = "Inclusão de servidor:[CPF]->".$cpf." [pisPasep]->".$pisPasep." [idPessoa]->".$cargo." [dtAdmissao]->".$dtAdmissao;
+                    $intra->registraLog($idUsuario,$data,$atividade,'tbdocumentacao',$idDocumentacao,1,$idServidor);
 
                     ###################################
 
@@ -530,6 +548,10 @@ if($acesso){
 
                     # gravação
                     $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                    
+                    # Grava no Log
+                    $atividade = "Lotação Inicial:[lotacao]->".$lotacao." [data]->".$dtAdmissao;
+                    $intra->registraLog($idUsuario,$data,$atividade,$tabela,$idServidor,1,$idServidor);
 
                     ###################################
 
@@ -548,6 +570,10 @@ if($acesso){
 
                         # gravação
                         $pessoal->gravar($campos,$valor,$idValor,$tabela);
+                        
+                        # Grava no Log
+                        $atividade = "Salário Inicial:[dtInicial]->".$dtAdmissao." [idClasse]->".$classe;
+                        $intra->registraLog($idUsuario,$data,$atividade,$tabela,$idServidor,1,$idServidor);
                     }
                     
                     ###################################

@@ -300,24 +300,13 @@ if($acesso)
                 br(2);              
                 # Verifica se o número de vagas é 0
                 if($quantidadeCargos == 0){
-                    $msg = new Alert('Não há vagas disponíveis. Todas as vagas estão ocupadas. <br>'
-                                   . 'Primeiro faça a exoneração para depois fazer a nomeação.','center');
-                    $msg->set_tipo('alert');
-                    $msg->set_title('Informação do Sistema');
-                    $msg->set_page('?');
-                    $msg->show();
-                }
-                elseif(!is_null($pessoal->get_cargoComissao($idservidorPesquisado)))  // se o servidor já possui cargo
-                {
-                    Visual::botaoVoltar('?');
-                    br(2);
-                    $box = new Box('alert');
-                    $box->abre();        
-                        $p = new P('Esse servidor já ocupa um cargo em comissão na data de hoje.<br/>
-                                    Somente é permitido nomeação de servidor que não esteja ocupando cargo em comissão.','pQuantidadeCargos');
-                        $p->show();
-                        #Grh::quadroVagasCargoComissao();
-                    $box->fecha();
+                    $msg = 'Não há vagas disponíveis nos cargos em Comissão.\nTodas as vagas estão ocupadas.';
+                    alert($msg);
+                    back(1);
+                }elseif(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){  // se o servidor já possui cargo
+                    $msg = 'Esse servidor já ocupa um cargo em comissão na data de hoje.\nSomente é permitido nomeação de servidor que não esteja ocupando cargo em comissão.';
+                    alert($msg);
+                    back(1);
                 }                    
                 else 
                     $objeto->editar();

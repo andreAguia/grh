@@ -163,11 +163,27 @@ class Grh
             mensagemAguarde();
         $divAlertas->fecha();
         
+        # Mais detalhes
+        $linkBotao3 = new Link("Saiba mais","?fase=alertas");
+        $linkBotao3->set_class('small secondary button');
+        $linkBotao3->set_title('Informa os servidores que geraram os alertas');
+        $linkBotao3->set_accessKey('S');
+       
+        #$menu1->add_link($linkBotao3,"right");
+        br();
+        $grid2 = new Grid('center');
+        $grid2->abreColuna(4);        
+             $linkBotao3->show();       
+        $grid2->fechaColuna();
+        $grid2->fechaGrid();
+        
         $grid->fechaColuna();
         $grid->fechaGrid();
         
         br();
-        
+                
+        ##########################################################
+       
         # Exibe faixa azul
         $grid = new Grid();
         $grid->abreColuna(12);        
@@ -187,7 +203,79 @@ class Grh
         $grid->abreColuna(4);
             p('Versão: '.VERSAO,'grhVersao');
         $grid->fechaColuna();
-        $grid->fechaGrid();
+        $grid->fechaGrid();        
+                
+        ##########################################################
+            
+        # Tabelas Secundárias
+        $acesso = Verifica::acesso($idUsuario,1);
+        if ($acesso){
+            $grid = new Grid("center");
+            $grid->abreColuna(12,6);
+            
+            $tamanhoImage = 50;
+            
+            $fieldset = new Fieldset('Tabelas Secundárias');
+            $fieldset->abre();
+
+            $menu = new MenuGrafico(6);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Banco');
+                $botao->set_url("cadastroBanco.php");
+                #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
+                $botao->set_image(PASTA_FIGURAS.'banco.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Bancos');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Escolaridade');
+                $botao->set_url("cadastroEscolaridade.php");
+                $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Escolaridades');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Estado Civil');
+                $botao->set_url("cadastroEstadoCivil.php");
+                $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Estado Civil');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Parentesco');
+                $botao->set_url("cadastroParentesco.php");
+                $botao->set_image(PASTA_FIGURAS.'parentesco.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Parentesco');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Situação');
+                $botao->set_url("cadastroSituacao.php");
+                $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Situação');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Progressão');
+                $botao->set_url("cadastroProgressao.php");
+                $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Tipos de Progressões');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $menu->show();
+
+
+            $fieldset->fecha();            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+        }
     }
         
 ##########################################################
@@ -207,10 +295,14 @@ class Grh
         # Ocorrencias do servidor
         Grh::exibeOcorênciaServidor($idServidor);
         
-        $grid = new Grid();        
+        # Divide o menu dos relatórios
+        $grid3 = new Grid();
+        $grid3->abreColuna(12,9);
+        
+        $grid2 = new Grid();        
         
         # Funcionais 
-        $grid->abreColuna(12,6,3);
+        $grid2->abreColuna(12,6);
             titulo('Funcionais');
             br();     
                 $tamanhoImage = 50;
@@ -296,10 +388,10 @@ class Grh
                 
                 $menu->show();
             
-            $grid->fechaColuna();
+            $grid2->fechaColuna();
             
             # Ocorrências 
-            $grid->abreColuna(12,6,3);
+            $grid2->abreColuna(12,6);
             
             titulo('Ocorrências');
             br();
@@ -371,15 +463,10 @@ class Grh
                 
                 $menu->show();
                 
-            $grid->fechaColuna();
-            #$grid->fechaGrid();        
-            
-           # br();
-                                              
-            #$grid = new Grid();
+            $grid2->fechaColuna();
             
             # Pessoais
-            $grid->abreColuna(12,6,3);
+            $grid2->abreColuna(12,6);
             titulo('Pessoais');
             br();
             
@@ -427,10 +514,10 @@ class Grh
                 
                 $menu->show();
                 br();
-            $grid->fechaColuna();
+            $grid2->fechaColuna();
             
             # Financeiro                                    
-            $grid->abreColuna(12,6,3);
+            $grid2->abreColuna(12,6);
                 titulo('Financeiro');
                 br();
             
@@ -502,8 +589,25 @@ class Grh
 
                 $menu->show();
                 br();
-            $grid->fechaColuna();            
-            $grid->fechaGrid();
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            # Relatórios
+            $grid3->fechaColuna();
+            $grid3->abreColuna(12,3);
+            
+            titulo('Relatórios');
+            br();
+                echo '<ul class="menuVertical">';
+                echo '<li><a href="#">Ficha Cadastral</a></li>';
+                echo '<li><a href="#">Capa da Pasta</a></li>';
+                echo '<li><a href="#">Folhas de Processos Arquivadas na Pasta Funcional</a></li>';
+                echo '<li><a href="#">FAF - Formulário de Avaliação Funcional</a></li>';
+                echo '<li><a href="#">Folha de Presença</a></li>';
+                echo '</ul>';
+                
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
 	
         $grid->fechaColuna();
         $grid->fechaGrid();

@@ -60,20 +60,19 @@ if($acesso)
         $linkBotao3->set_accessKey('R');
         $menu1->add_link($linkBotao3,"right");
         
-        # Alertas
-        $linkBotao3 = new Link("Checkup","?fase=alertas");
+        # Área do Servidor
+        $linkBotao3 = new Link("Área do Servidor","../../admin/adminSistema/areaServidor.php");
         $linkBotao3->set_class('button');
-        $linkBotao3->set_title('Detalhes dos alertas');
-        $linkBotao3->set_accessKey('C');
+        $linkBotao3->set_title('Área do Servidor');
         $menu1->add_link($linkBotao3,"right");
 
         # Exibe o menu administrador
         if (Verifica::acesso($idUsuario,1)){        
             # Botão Administração
             $botao = new Button("Administração");
+            $botao->set_class('secondary button');
             $botao->set_title('Faz um checkup no sistema verificando erros');
             $botao->set_url("../../admin/adminSistema/administracao.php");
-            $botao->set_accessKey('A');
             $menu1->add_link($botao,"right");
         }
 
@@ -91,13 +90,6 @@ if($acesso)
 
             # monta o menu principal
             Grh::menu($idUsuario);
-            break;
-
-##################################################################	
-
-        case "relatorios" :
-            abreDiv('divAguarde');
-            loadPage('relatorios.php');        
             break;
 
 ##################################################################	
@@ -120,7 +112,7 @@ if($acesso)
             $grid->abreColuna(12);
 
             # Exibe o título
-            titulo('Checkup do Sistema');
+            titulo('Alertas do Sistema');
             br();
             
             # executa o checkup

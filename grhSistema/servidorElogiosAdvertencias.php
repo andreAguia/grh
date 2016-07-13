@@ -126,7 +126,7 @@ if($acesso)
                                        'title' => 'Descrição do Elogio ou Advertência.',
                                        'linha' => 2),
                                array ( 'nome' => 'idServidor',
-                                       'label' => 'Matrícula:',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,

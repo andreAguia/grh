@@ -58,7 +58,7 @@ if($acesso)
     $objeto->set_botaoSalvarGrafico(false);
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('../../admin/adminSistema/administracao.php');
+    $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');

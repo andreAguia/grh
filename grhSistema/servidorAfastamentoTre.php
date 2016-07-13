@@ -145,7 +145,7 @@ if($acesso)
                                        'col' => 12,
                                        'linha' => 2),                               
                                array ( 'nome' => 'idServidor',
-                                       'label' => 'Matrícula:',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,

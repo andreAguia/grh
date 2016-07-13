@@ -114,7 +114,7 @@ if($acesso)
                                        'title' => 'Quantidade de dias folgados.',
                                        'linha' => 1),
                                array ( 'nome' => 'idServidor',
-                                       'label' => 'Matrícula:',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,

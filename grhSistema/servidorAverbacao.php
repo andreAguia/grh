@@ -227,7 +227,7 @@ if($acesso)
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
                                array ( 'nome' => 'idServidor',
-                                       'label' => 'Matrícula:',
+                                       'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,

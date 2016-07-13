@@ -187,7 +187,7 @@ if($acesso)
                                 'col' => 12,
                                 'size' => array(80,5)),
                         array ( 'nome' => 'idServidor',
-                                'label' => 'Matrícula:',
+                                'label' => 'idServidor:',
                                 'tipo' => 'hidden',
                                 'padrao' => $idServidorPesquisado,
                                 'size' => 5,

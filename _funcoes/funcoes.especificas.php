@@ -6,22 +6,6 @@
  */
 
 ###########################################################
-/**
- * Função que retorna o nome do servidor
- * 
- * Obs esta função só existe para ser usada nas tabelas (pois, no framework atual, 
- * somente funções pode ser usada em uma tabela) na verdade ela somente chama a classe
- */
-
-function get_Nome($matricula)
-{	
-	
-	$servidor = new Pessoal();
-	$nome  = $servidor->get_nome($matricula);
-	
-	return $nome;
-}
-###########################################################
 
 # Função que gera o dígito verificador de uma matrícula
 #
@@ -96,30 +80,3 @@ Function dv($matricula)
 	
 	return $matricula.'-'.$ndig;
 }
-
-###########################################################
-/**
- * Função que retorna uma tabela com os dados do servidor
- * 
- * Obs esta função só existe para ser usada na classe modelo
- */
-
-function get_DadosServidor($matricula){
-    Grh::listaDadosServidor($matricula);
-}
-
-###########################################################
-/**
- * Função que exibe um callout na rotina de dependentes
- * Esta rotina está aqui porque não consegui fazer com a função callout pois
- * necessita de id para o jscript
- */
-
-function exibeColloutDependente($matricula){
-    # Mensagem
-    $callout = new Callout("warning","boxCreche");
-    $callout->abre();
-    p('Deixando a data de término do auxílio creche em branco, o sistema irá calculá-la automáticamente a partir da data de nascimento.');
-    $callout->fecha();
-}
-###########################################################

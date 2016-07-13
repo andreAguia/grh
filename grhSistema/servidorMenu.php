@@ -41,20 +41,6 @@ if($acesso)
 
     # Cria um menu
     $menu = new MenuBar();
-
-    # Verifica qual botões ficará inativo
-    switch ($fase)
-    {
-      case "menu" :
-          $classBotao2 = 'disabled button';
-          $classBotao3 = 'button';
-          break;
-
-      case "relatorios" :
-          $classBotao2 = 'button';
-          $classBotao3 = 'disabled button';
-          break;
-    }
     
     # Voltar
     $linkBotao1 = new Link("Voltar",'servidor.php');
@@ -63,16 +49,9 @@ if($acesso)
     $linkBotao1->set_accessKey('V');
     $menu->add_link($linkBotao1,"left");
 
-    # Cadastros
-    $linkBotao2 = new Link("Cadastros","servidorMenu.php");
-    $linkBotao2->set_class($classBotao2);
-    $linkBotao2->set_title('Cadastro dos Servidores');
-    $linkBotao2->set_accessKey('C');
-    $menu->add_link($linkBotao2,"right");
-
     # Relatórios
     $linkBotao3 = new Link("Relatorios","servidorMenu.php?fase=relatorios");
-    $linkBotao3->set_class($classBotao3);
+    $linkBotao3->set_class('button');
     $linkBotao3->set_title('Relatórios desse servidor');
     $linkBotao3->set_accessKey('R');
     $menu->add_link($linkBotao3,"right");

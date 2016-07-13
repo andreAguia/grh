@@ -55,7 +55,7 @@ if($acesso)
     $objeto->set_nome('Parentesco');
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('../../admin/adminSistema/administracao.php');
+    $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');

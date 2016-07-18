@@ -15,7 +15,7 @@ define("AUTOR","Alat");                                          # Autor do sist
 
 # Classes
 define("PASTA_CLASSES_GERAIS","../../_framework/_classesGerais/");  # Classes Gerais
-define("PASTA_CLASSES_ADMIN","../../admin/_classes/");             # Classes do sistema de Administração 
+define("PASTA_CLASSES_ADMIN","../../areaServidor/_classes/");       # Classes do sistema de Administração 
 define("PASTA_CLASSES","../_classes/");                             # Classes Específicas
 
 # Funções

@@ -156,12 +156,6 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
-
-
     ################################################################
 
     switch ($fase)

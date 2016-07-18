@@ -18,6 +18,7 @@ if($acesso)
 {    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
 	
     # Verifica a fase do programa
     $fase = get('fase','menu');
@@ -47,7 +48,7 @@ if($acesso)
         $menu1 = new MenuBar();
 
         # Voltar
-        $linkBotao1 = new Link("Sair","../../admin/adminSistema/login.php");
+        $linkBotao1 = new Link("Sair","../../areaServidor/sistema/login.php");
         $linkBotao1->set_class('button');
         $linkBotao1->set_title('Sair do Sistema');
         $linkBotao1->set_accessKey('S');
@@ -61,20 +62,10 @@ if($acesso)
         $menu1->add_link($linkBotao3,"right");
         
         # Área do Servidor
-        $linkBotao3 = new Link("Área do Servidor","../../admin/adminSistema/areaServidor.php");
+        $linkBotao3 = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkBotao3->set_class('button');
         $linkBotao3->set_title('Área do Servidor');
         $menu1->add_link($linkBotao3,"right");
-
-        # Exibe o menu administrador
-        if (Verifica::acesso($idUsuario,1)){        
-            # Botão Administração
-            $botao = new Button("Administração");
-            $botao->set_class('secondary button');
-            $botao->set_title('Faz um checkup no sistema verificando erros');
-            $botao->set_url("../../admin/adminSistema/administracao.php");
-            $menu1->add_link($botao,"right");
-        }
 
         $menu1->show();
 
@@ -118,6 +109,11 @@ if($acesso)
             # executa o checkup
             $checkup = New Checkup();
             $checkup->get_all();
+            
+            # Grava no log a atividade
+            $data = date("Y-m-d H:i:s");
+            $atividade = 'Visualizou os Alertas do Sistema';
+            $intra->registraLog($idUsuario,$data,$atividade,null,null,4);
             
             $grid->fechaColuna();
             $grid->fechaGrid();

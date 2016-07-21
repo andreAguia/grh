@@ -28,7 +28,7 @@ if($acesso)
     
     # Verifica a paginacão
     $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);	
+    set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -177,7 +177,6 @@ if($acesso)
     # Paginação
     $objeto->set_paginacao(true);
     $objeto->set_paginacaoInicial($paginacao);
-    $objeto->set_paginacaoItens(16);
 
     ################################################################
     switch ($fase)

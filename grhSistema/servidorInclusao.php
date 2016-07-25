@@ -305,7 +305,7 @@ if($acesso){
                 $controle->set_linha(2);
                 $controle->set_col(6);
                 $controle->set_required(TRUE);                
-                $controle->set_title('A Loteção do Servidor.');
+                $controle->set_title('A Lotação do Servidor.');
                 $controle->set_array($lotacao);
                 $form->add_item($controle);
 
@@ -602,4 +602,3 @@ if($acesso){
 
     $page->terminaPagina();
 }
-?>

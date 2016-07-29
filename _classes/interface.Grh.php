@@ -211,14 +211,14 @@ class Grh
         $acesso = Verifica::acesso($idUsuario,1);
         if ($acesso){
             $grid = new Grid("center");
-            $grid->abreColuna(12,6);
+            $grid->abreColuna(12,8);
             
             $tamanhoImage = 50;
             
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico(6);
+            $menu = new MenuGrafico(8);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -262,10 +262,26 @@ class Grh
                 $menu->add_item($botao);
 
                 $botao = new BotaoGrafico();
-                $botao->set_label('Progressão');
+                $botao->set_label('Tipos de Progressão');
                 $botao->set_url("cadastroProgressao.php");
                 $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Tipos de Progressões');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Nacionalidade');
+                $botao->set_url("cadastroNacionalidade.php");
+                $botao->set_image(PASTA_FIGURAS.'nacionalidade.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Nacionalidades');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('País');
+                $botao->set_url("cadastroPais.php");
+                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Paises');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
 
@@ -295,322 +311,300 @@ class Grh
         # Ocorrencias do servidor
         Grh::exibeOcorênciaServidor($idServidor);
         
-        # Divide o menu dos relatórios
-        $grid3 = new Grid();
-        $grid3->abreColuna(12,9);
+        $grid->fechaColuna();
+        $grid->fechaGrid();
         
+        # Divide a tela        
         $grid2 = new Grid();        
         
         # Funcionais 
-        $grid2->abreColuna(12,6);
+        $grid2->abreColuna(12,6);        
             titulo('Funcionais');
             br();     
-                $tamanhoImage = 50;
-                $menu = new MenuGrafico(3);
+            $tamanhoImage = 50;
+            
+            $menu = new MenuGrafico(3);
+            $botao = new BotaoGrafico();
+            $botao->set_label('Funcionais');
+            $botao->set_url('servidorFuncionais.php');
+            $botao->set_image(PASTA_FIGURAS.'funcional.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Dados Funcionais do Servidor');
+            #$botao->set_accessKey('F');
+            $menu->add_item($botao);
 
+            $botao = new BotaoGrafico();
+            $botao->set_label('Lotação');
+            $botao->set_url('servidorLotacao.php');
+            $botao->set_image(PASTA_FIGURAS.'lotacao.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Histórico da Lotação do Servidor');
+            #$botao->set_accessKey('L');
+            $menu->add_item($botao);
+
+            $pessoa = new Pessoal();
+            $perfil = $pessoa->get_idPerfil($idServidor);
+
+            if ($perfil == 1)   // Ser for estatutário
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Funcionais');
-                $botao->set_url('servidorFuncionais.php');
-                $botao->set_image(PASTA_FIGURAS.'funcional.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Dados Funcionais do Servidor');
-                #$botao->set_accessKey('F');
+                $botao->set_label('Cessão');
+                $botao->set_url('servidorCessao.php');
+                $botao->set_image(PASTA_FIGURAS.'cessao.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Histórico de Cessões do Servidor');
+                #$botao->set_accessKey('C');
                 $menu->add_item($botao);
-                
+            }
+            elseif($perfil == 2) // se for cedido
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Lotação');
-                $botao->set_url('servidorLotacao.php');
-                $botao->set_image(PASTA_FIGURAS.'lotacao.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Histórico da Lotação do Servidor');
-                #$botao->set_accessKey('L');
+                $botao->set_label('Cessão');
+                $botao->set_url('servidorCessaoCedido.php');
+                $botao->set_image(PASTA_FIGURAS.'cessao.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Dados da Cessão do Servidor');
+                #$botao->set_accessKey('C');
                 $menu->add_item($botao);
-                
-                $pessoa = new Pessoal();
-                $perfil = $pessoa->get_idPerfil($idServidor);
-                
-                if ($perfil == 1)   // Ser for estatutário
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Cessão');
-                    $botao->set_url('servidorCessao.php');
-                    $botao->set_image(PASTA_FIGURAS.'cessao.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Histórico de Cessões do Servidor');
-                    #$botao->set_accessKey('C');
-                    $menu->add_item($botao);
-                }
-                elseif($perfil == 2) // se for cedido
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Cessão');
-                    $botao->set_url('servidorCessaoCedido.php');
-                    $botao->set_image(PASTA_FIGURAS.'cessao.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Dados da Cessão do Servidor');
-                    #$botao->set_accessKey('C');
-                    $menu->add_item($botao);
-                }
-                
-                if($pessoa->get_perfilComissao($perfil) == "Sim")
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Cargo em Comissão');
-                    $botao->set_url('servidorComissao.php');
-                    $botao->set_image(PASTA_FIGURAS.'comissao.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Histórico dos Cargos em Comissão do Servidor');                
-                    #$botao->set_accessKey('i');
-                    $menu->add_item($botao);
-                }
-                
-                if ($perfil == 1)   // Ser for estatutário
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Tempo de Serviço Averbado');
-                    $botao->set_url('servidorAverbacao.php');
-                    $botao->set_image(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Cadastro de Tempo de Serviço Averbado');                
-                    #$botao->set_accessKey('i');
-                    $menu->add_item($botao);
-                }
-                
+            }
+
+            if($pessoa->get_perfilComissao($perfil) == "Sim")
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Elogios / Advertências');
-                $botao->set_url('servidorElogiosAdvertencias.php');
-                $botao->set_image(PASTA_FIGURAS.'ocorrencia.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Elogios e Advertências do Servidor');                
+                $botao->set_label('Cargo em Comissão');
+                $botao->set_url('servidorComissao.php');
+                $botao->set_image(PASTA_FIGURAS.'comissao.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Histórico dos Cargos em Comissão do Servidor');                
                 #$botao->set_accessKey('i');
                 $menu->add_item($botao);
-                
+            }
+
+            if ($perfil == 1)   // Ser for estatutário
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Observações');
-                $botao->set_url('servidorObs.php');
-                $botao->set_image(PASTA_FIGURAS.'obs.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Observações Gerais do Servidor');                
+                $botao->set_label('Tempo de Serviço Averbado');
+                $botao->set_url('servidorAverbacao.php');
+                $botao->set_image(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Tempo de Serviço Averbado');                
                 #$botao->set_accessKey('i');
                 $menu->add_item($botao);
-                
-                $menu->show();
-            
-            $grid2->fechaColuna();
-            
-            # Ocorrências 
-            $grid2->abreColuna(12,6);
-            
-            titulo('Ocorrências');
-            br();
-            
-            $menu = new MenuGrafico(3); 
-                
-                if($pessoa->get_perfilFerias($perfil) == "Sim")
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Férias');
-                    $botao->set_url('servidorFerias.php');
-                    $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Cadastro das Férias do Servidor');
-                    #$botao->set_accessKey('r');
-                    $menu->add_item($botao);
-                }
-                
-                if($pessoa->get_perfilLicenca($perfil) == "Sim")
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Licença');
-                    $botao->set_url('servidorLicenca.php');
-                    $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Cadastro de Licenças do Servidor');
-                    #$botao->set_accessKey('i');
-                    #$botao->set_beta(true);
-                    $menu->add_item($botao);
-                }
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Atestados');
-                $botao->set_url('servidorAtestado.php');
-                $botao->set_image(PASTA_FIGURAS.'atestado.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Atestados do Servidor');                
-                #$botao->set_accessKey('i');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Faltas');
-                $botao->set_url('servidorFaltas.php');
-                $botao->set_image(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Faltas do Servidor');                
-                #$botao->set_accessKey('i');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('TRE - Afastamentos');
-                $botao->set_url('servidorAfastamentoTre.php');
-                $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de dias afastados do trabalho para prestar serviços ao TRE');                
-                #$botao->set_accessKey('i');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('TRE - Folgas Recebidas');
-                $botao->set_url('servidorFolga.php');
-                $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de folgas recebidas por ter trabalhado no TRE');                
-                #$botao->set_accessKey('i');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Suspensão');
-                $botao->set_url('servidorSuspensao.php');
-                $botao->set_image(PASTA_FIGURAS.'suspensao.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Suspensões de um servidor');                
-                #$botao->set_accessKey('i');
-                $menu->add_item($botao);
-                
-                $menu->show();
-                
-            $grid2->fechaColuna();
-            
-            # Pessoais
-            $grid2->abreColuna(12,6);
+            }
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Elogios / Advertências');
+            $botao->set_url('servidorElogiosAdvertencias.php');
+            $botao->set_image(PASTA_FIGURAS.'ocorrencia.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Elogios e Advertências do Servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Observações');
+            $botao->set_url('servidorObs.php');
+            $botao->set_image(PASTA_FIGURAS.'obs.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Observações Gerais do Servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $menu->show();
+
+        $grid2->fechaColuna();
+
+        # Pessoais 
+        $grid2->abreColuna(12,6);        
             titulo('Pessoais');
             br();
+
+            $menu = new MenuGrafico(3);
+            $botao = new BotaoGrafico();
+            $botao->set_label('Pessoais');
+            $botao->set_url('servidorPessoais.php');
+            $botao->set_image(PASTA_FIGURAS.'pessoais.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Dados Pessoais do Servidor');
+            #$botao->set_accessKey('P');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Telefones & Emails');
+            $botao->set_url('servidorTelefones.php');
+            $botao->set_image(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Dados dos Contatos do Servidor');
+            #$botao->set_accessKey('T');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Documentos');
+            $botao->set_url('servidorDocumentos.php');
+            $botao->set_image(PASTA_FIGURAS.'documento.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro da Documentação do Servidor');
+            #$botao->set_accessKey('D');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Formação');
+            $botao->set_url('servidorFormacao.php');
+            $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Formação Escolar do Servidor');
+            #$botao->set_accessKey('o');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Dependentes');
+            $botao->set_url('servidorDependentes.php');
+            $botao->set_image(PASTA_FIGURAS.'dependente.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro dos Dependentes do Servidor');
+            #$botao->set_accessKey('e');
+            $menu->add_item($botao);
+
+            $menu->show();
+            br();
             
-            $menu = new MenuGrafico(3); 
+        $grid2->fechaColuna();
 
-                $botao = new BotaoGrafico();
-                $botao->set_label('Pessoais');
-                $botao->set_url('servidorPessoais.php');
-                $botao->set_image(PASTA_FIGURAS.'pessoais.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Dados Pessoais do Servidor');
-                #$botao->set_accessKey('P');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Telefones & Emails');
-                $botao->set_url('servidorTelefones.php');
-                $botao->set_image(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Dados dos Contatos do Servidor');
-                #$botao->set_accessKey('T');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Documentos');
-                $botao->set_url('servidorDocumentos.php');
-                $botao->set_image(PASTA_FIGURAS.'documento.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro da Documentação do Servidor');
-                #$botao->set_accessKey('D');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Formação');
-                $botao->set_url('servidorFormacao.php');
-                $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Formação Escolar do Servidor');
-                #$botao->set_accessKey('o');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Dependentes');
-                $botao->set_url('servidorDependentes.php');
-                $botao->set_image(PASTA_FIGURAS.'dependente.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro dos Dependentes do Servidor');
-                #$botao->set_accessKey('e');
-                $menu->add_item($botao);
-                
-                $menu->show();
-                br();
-            $grid2->fechaColuna();
-            
-            # Financeiro                                    
-            $grid2->abreColuna(12,6);
-                titulo('Financeiro');
-                br();
-            
-                $menu = new MenuGrafico(3);
-                if($pessoa->get_perfilProgressao($perfil) == "Sim")
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Progressão e Enquadramento');
-                    $botao->set_url('servidorProgressao.php');
-                    $botao->set_image(PASTA_FIGURAS.'salario.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Cadastro de Progressões e Enquadramentos do Servidor');                
-                    #$botao->set_accessKey('i');
-                    $menu->add_item($botao);
-                }
+        # Ocorrências
+        $grid2->abreColuna(12,6);
+            titulo('Ocorrências');
+            br();
 
-                if($pessoa->get_perfilTrienio($perfil) == "Sim")
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Triênio');
-                    $botao->set_url('servidorTrienio.php');
-                    $botao->set_image(PASTA_FIGURAS.'trienio.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Histórico de Triênios do Servidor');                
-                    #$botao->set_accessKey('i');
-                    $menu->add_item($botao);
-                }
-
-                if($pessoa->get_perfilGratificacao($perfil) == "Sim")
-                {
-                    $botao = new BotaoGrafico();
-                    $botao->set_label('Gratificação Especial');
-                    $botao->set_url('servidorGratificacao.php');
-                    $botao->set_image(PASTA_FIGURAS.'gratificacao.jpg',$tamanhoImage,$tamanhoImage);
-                    $botao->set_title('Histórico das Gratificações Especiais do Servidor');                
-                    #$botao->set_accessKey('i');
-                    $menu->add_item($botao);
-                }
-
+            $menu = new MenuGrafico(3);
+            if($pessoa->get_perfilFerias($perfil) == "Sim")
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Dados Bancários');
-                $botao->set_url('servidorBancario.php');
-                $botao->set_image(PASTA_FIGURAS.'banco.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro dos dados bancários do Servidor');                
+                $botao->set_label('Férias');
+                $botao->set_url('servidorFerias.php');
+                $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro das Férias do Servidor');
+                #$botao->set_accessKey('r');
+                $menu->add_item($botao);
+            }
+
+            if($pessoa->get_perfilLicenca($perfil) == "Sim")
+            {
+                $botao = new BotaoGrafico();
+                $botao->set_label('Licença');
+                $botao->set_url('servidorLicenca.php');
+                $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Licenças do Servidor');
+                #$botao->set_accessKey('i');
+                #$botao->set_beta(true);
+                $menu->add_item($botao);
+            }
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Atestados');
+            $botao->set_url('servidorAtestado.php');
+            $botao->set_image(PASTA_FIGURAS.'atestado.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Atestados do Servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Faltas');
+            $botao->set_url('servidorFaltas.php');
+            $botao->set_image(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Faltas do Servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('TRE - Afastamentos');
+            $botao->set_url('servidorAfastamentoTre.php');
+            $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de dias afastados do trabalho para prestar serviços ao TRE');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('TRE - Folgas Recebidas');
+            $botao->set_url('servidorFolga.php');
+            $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de folgas recebidas por ter trabalhado no TRE');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Suspensão');
+            $botao->set_url('servidorSuspensao.php');
+            $botao->set_image(PASTA_FIGURAS.'suspensao.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Suspensões de um servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $menu->show();
+        
+        $grid2->fechaColuna();
+
+        # Financeiro                                    
+        $grid2->abreColuna(12,6);
+            titulo('Financeiro');
+            br();
+
+            $menu = new MenuGrafico(3);
+            if($pessoa->get_perfilProgressao($perfil) == "Sim")
+            {
+                $botao = new BotaoGrafico();
+                $botao->set_label('Progressão e Enquadramento');
+                $botao->set_url('servidorProgressao.php');
+                $botao->set_image(PASTA_FIGURAS.'salario.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Progressões e Enquadramentos do Servidor');                
                 #$botao->set_accessKey('i');
                 $menu->add_item($botao);
+            }
 
+            if($pessoa->get_perfilTrienio($perfil) == "Sim")
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Resumo Financeiro');
-                $botao->set_url('servidorFinanceiro.php');
-                $botao->set_image(PASTA_FIGURAS.'money.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Informações sobre os valores recebidos pelo servidor');                
-                #$botao->set_onClick("abreFechaDiv('divResumo');");
+                $botao->set_label('Triênio');
+                $botao->set_url('servidorTrienio.php');
+                $botao->set_image(PASTA_FIGURAS.'trienio.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Histórico de Triênios do Servidor');                
+                #$botao->set_accessKey('i');
                 $menu->add_item($botao);
+            }
 
-                # Declaração de Bens e Valores
-                #$botao = new BotaoGrafico();
-                #$botao->set_label('DBV - Declaração de Bens e Valores');
-                #$botao->set_url('servidorDbvControle.php');
-                #$botao->set_image(PASTA_FIGURAS.'bens.png',$tamanhoImage,$tamanhoImage);
-                #$botao->set_title('DBV - Declaração de Bens e Valores');
-                #$menu->add_item($botao);
-
-                # Diarias
+            if($pessoa->get_perfilGratificacao($perfil) == "Sim")
+            {
                 $botao = new BotaoGrafico();
-                $botao->set_label('Diárias');
-                $botao->set_url('servidorDiaria.php');
-                $botao->set_image(PASTA_FIGURAS.'diaria.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Controle de Diárias');
+                $botao->set_label('Gratificação Especial');
+                $botao->set_url('servidorGratificacao.php');
+                $botao->set_image(PASTA_FIGURAS.'gratificacao.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Histórico das Gratificações Especiais do Servidor');                
+                #$botao->set_accessKey('i');
                 $menu->add_item($botao);
+            }
 
-                $menu->show();
-                br();
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-            
-            # Relatórios
-            $grid3->fechaColuna();
-            $grid3->abreColuna(12,3);
-            
-            titulo('Relatórios');
+            $botao = new BotaoGrafico();
+            $botao->set_label('Dados Bancários');
+            $botao->set_url('servidorBancario.php');
+            $botao->set_image(PASTA_FIGURAS.'banco.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro dos dados bancários do Servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Resumo Financeiro');
+            $botao->set_url('servidorFinanceiro.php');
+            $botao->set_image(PASTA_FIGURAS.'money.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Informações sobre os valores recebidos pelo servidor');                
+            #$botao->set_onClick("abreFechaDiv('divResumo');");
+            $menu->add_item($botao);
+
+            # Declaração de Bens e Valores
+            #$botao = new BotaoGrafico();
+            #$botao->set_label('DBV - Declaração de Bens e Valores');
+            #$botao->set_url('servidorDbvControle.php');
+            #$botao->set_image(PASTA_FIGURAS.'bens.png',$tamanhoImage,$tamanhoImage);
+            #$botao->set_title('DBV - Declaração de Bens e Valores');
+            #$menu->add_item($botao);
+
+            # Diarias
+            $botao = new BotaoGrafico();
+            $botao->set_label('Diárias');
+            $botao->set_url('servidorDiaria.php');
+            $botao->set_image(PASTA_FIGURAS.'diaria.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Controle de Diárias');
+            $menu->add_item($botao);
+
+            $menu->show();
             br();
-                echo '<ul class="menuVertical">';
-                echo '<li><a href="#">Ficha Cadastral</a></li>';
-                echo '<li><a href="#">Capa da Pasta</a></li>';
-                echo '<li><a href="#">Folhas de Processos Arquivadas na Pasta Funcional</a></li>';
-                echo '<li><a href="#">FAF - Formulário de Avaliação Funcional</a></li>';
-                echo '<li><a href="#">Folha de Presença</a></li>';
-                echo '</ul>';
-                
-            $grid3->fechaColuna();
-            $grid3->fechaGrid();
-	
-        $grid->fechaColuna();
-        $grid->fechaGrid();
+        $grid2->fechaColuna();
+        $grid2->fechaGrid();
      }     
     
     ###########################################################

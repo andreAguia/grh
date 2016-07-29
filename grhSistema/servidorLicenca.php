@@ -408,13 +408,6 @@ if($acesso){
         # Log
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
-        
-        # Botão AIM
-        $botaoRegra = new Button("Emite AIM");
-        $botaoRegra->set_title("Emite a Apresentação para Inspeção Médica");
-        $botaoRegra->set_target('_blank');
-        $botaoRegra->set_url('../grhRelatorios/aim.php');
-        $botaoRegra->set_accessKey('E');
 
         # Publicação de Licença Prêmio
         $botaoLegenda = new Button("Licença Prêmio");
@@ -422,7 +415,7 @@ if($acesso){
         $botaoLegenda->set_url('servidorPublicacaoPremio.php');  
         $botaoLegenda->set_accessKey('L');
 
-        $objeto->set_botaoListar(array($botaoRegra,$botaoLegenda));
+        $objeto->set_botaoListar(array($botaoLegenda));
 
         ################################################################
 

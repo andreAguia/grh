@@ -2838,5 +2838,23 @@ class Pessoal extends Bd
 	}
 		
 ###########################################################
+	
+	function get_numLotacaoAtiva()
+	
+	/**
+	 * informa o número de Lotações ativas
+	 */
+
+
+	{
+            $select = 'SELECT idLotacao
+                         FROM tblotacao
+                        WHERE ativo = "Sim"';		
+
+            $count = parent::count($select);
+
+            return $count;
+	}
+	
+	###########################################################
 }
-?>

@@ -48,10 +48,11 @@ if($acesso)
     # select do edita
     $objeto->set_selectEdita('SELECT nome,
                                      dtNasc,
+                                     sexo,
                                      naturalidade,
                                      nacionalidade,
+                                     paisOrigem,
                                      estCiv,
-                                     sexo,
                                      endereco,
                                      complemento,
                                      bairro,
@@ -94,8 +95,23 @@ if($acesso)
                                        estciv
                                   FROM tbestciv
                               ORDER BY estciv');
+    array_push($estadoCivil, array(null,null)); # Adiciona o valor de nulo
+    
+    # Pega os dados da combo de nacionalidade
+    $nacionalidade = $pessoal->select('SELECT idNacionalidade,
+                                       nacionalidade
+                                  FROM tbnacionalidade
+                              ORDER BY idNacionalidade');
+    array_push($nacionalidade, array(null,null)); # Adiciona o valor de nulo
+    
+    # Pega os dados da combo de país de origem
+    $paisOrigem = $pessoal->select('SELECT idPais,
+                                       pais
+                                  FROM tbpais
+                              ORDER BY idPais');
+    array_push($paisOrigem, array(null,null)); # Adiciona o valor de nulo
 
-    array_push($estadoCivil, array(null,null)); 
+     
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -106,7 +122,7 @@ if($acesso)
                                'required' => true,
                                'autofocus' => true,
                                'title' => 'Nome do servidor',
-                               'col' => 9,
+                               'col' => 6,
                                'size' => 50),
                        array ( 'linha' => 1,
                                'nome' => 'dtNasc',
@@ -114,7 +130,16 @@ if($acesso)
                                'tipo' => 'data',                           
                                'size' => 20,
                                'col' => 3,
-                               'title' => 'Data de Nascimento.'),                           
+                               'title' => 'Data de Nascimento.'),
+                        array ('linha' => 1,
+                               'nome' => 'sexo',
+                               'label' => 'Sexo:',
+                               'tipo' => 'combo',
+                               'array' => array("Masculino","Feminino"),
+                               'title' => 'Sexo do Servidor',
+                               'required' => true,
+                               'col' => 3,
+                               'size' => 15),
                         array ('linha' => 3,
                                'nome' => 'naturalidade',
                                'label' => 'Naturalidade:',
@@ -125,10 +150,19 @@ if($acesso)
                         array ('linha' => 3,
                                'nome' => 'nacionalidade',
                                'label' => 'Nacionalidade:',
-                               'tipo' => 'texto',                          
+                               'tipo' => 'combo',
+                               'array' => $nacionalidade,                        
                                'title' => 'Nacionalidade do Servido',                           
                                'col' => 3,
                                'size' => 30),
+                        array ('linha' => 3,
+                               'nome' => 'paisOrigem',
+                               'label' => 'País de Origem:',
+                               'tipo' => 'combo',
+                               'array' => $paisOrigem,
+                               'title' => 'País de Origem do Servidor',
+                               'col' => 3,
+                               'size' => 15),
                         array ('linha' => 3,
                                'nome' => 'estCiv',
                                'label' => 'Estado Civil:',
@@ -136,16 +170,7 @@ if($acesso)
                                'array' => $estadoCivil,
                                'title' => 'Estado Civil do Servidor',
                                'col' => 3,
-                               'size' => 15),
-                        array ('linha' => 3,
-                               'nome' => 'sexo',
-                               'label' => 'Sexo:',
-                               'tipo' => 'combo',
-                               'array' => array("Masculino","Feminino"),
-                               'title' => 'Sexo do Servidor',
-                               'required' => true,
-                               'col' => 3,
-                               'size' => 15),
+                               'size' => 15),                        
                         array ('linha' => 5,
                                'nome' => 'endereco',
                                'label' => 'Endereço:',

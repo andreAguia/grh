@@ -274,8 +274,8 @@ if($acesso)
                                'nome' => 'motivo',
                                'label' => 'Motivo da Exoneração:',
                                'tipo' => 'texto',
-                               'size' => 50,
-                               'col' => 6,
+                               'size' => 100,
+                               'col' => 12,
                                'title' => 'Motivo da Exoneração.')    
                                 );
 

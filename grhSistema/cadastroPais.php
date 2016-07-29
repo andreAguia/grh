@@ -52,7 +52,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Estado Civil');
+    $objeto->set_nome('País');
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -72,17 +72,16 @@ if($acesso)
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idestciv,estciv,obs,
-                                      idestciv
-                                 FROM tbestciv
-                                WHERE estciv LIKE "%'.$parametro.'%"
+    $objeto->set_selectLista ('SELECT idPais,pais,
+                                      idPais
+                                 FROM tbpais
+                                WHERE pais LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT estciv,
-                                     obs
-                                FROM tbestciv
-                               WHERE idestciv = '.$id);
+    $objeto->set_selectEdita('SELECT pais
+                                FROM tbpais
+                               WHERE idPais = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -96,18 +95,18 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Estado Civil","Obs"));
-    $objeto->set_width(array(5,40,45));
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_label(array("Id","País"));
+    $objeto->set_width(array(10,80));
+    $objeto->set_align(array("center","left"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbestciv');
+    $objeto->set_tabela('tbpais');
 
     # Nome do campo id
-    $objeto->set_idCampo('idestciv');
+    $objeto->set_idCampo('idPais');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -118,19 +117,13 @@ if($acesso)
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'estciv',
-               'label' => 'Estado Civil:',
+               'nome' => 'pais',
+               'label' => 'País:',
                'tipo' => 'texto',
                'required' => true,
                'autofocus' => true,
-               'col' => 6, 
-               'size' => 40),
-        array ('linha' => 2,
-               'nome' => 'obs',
-               'label' => 'Observação:',
-               'tipo' => 'textarea',
-                'col' => 12, 
-               'size' => array(80,5))));
+               'col' => 6,
+               'size' => 60)));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);

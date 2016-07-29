@@ -19,12 +19,19 @@ if($acesso)
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    
+    # Pega o número de Lotações ativas para a paginação
+    $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));    
+    $id = soNumeros(get('id'));
+    
+    # Verifica a paginacão
+    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
+    set_session('sessionPaginacao',$paginacao);    
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -61,23 +68,23 @@ if($acesso)
     $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
-    #$objeto->set_parametroLabel('Pesquisar');
-    #$objeto->set_parametroValue($parametro);
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # ordenação
     if(is_null($orderCampo))
-         $orderCampo = "8 desc, 1 asc, 2 asc, 3";
+        $orderCampo = "8 desc, 3 asc, 4 asc, 5";
 
     if(is_null($orderTipo))
         $orderTipo = 'asc';
 
     # select da lista
     $objeto->set_selectLista ('SELECT idLotacao,
+                                      codigo,
                                       UADM,
                                       DIR,
                                       GER,
-                                      nome,                                  
-                                      CONCAT(ramais," ",email),
+                                      nome,
                                       idLotacao,                                  
                                       ativo,
                                       idLotacao,
@@ -91,13 +98,14 @@ if($acesso)
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT UADM,
+    $objeto->set_selectEdita('SELECT codigo,
+                                     UADM,
                                      DIR,
                                      GER,
-                                     nome,                                 
+                                     nome,
+                                     ativo,                                 
                                      ramais,
                                      email,
-                                     ativo,
                                      obs
                                 FROM tblotacao
                                WHERE idLotacao = '.$id);
@@ -114,9 +122,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","UADM","Diretoria","Gerência","Nome","Ramal","Servidores","Lotação Ativa?","Ver"));
-    $objeto->set_width(array(5,10,10,15,20,20,5,5,5));
-    $objeto->set_align(array("center"));
+    $objeto->set_label(array("id","Código","Unid.Adm.","Diretoria","Gerência","Nome","Servidores","Lotação Ativa?","Ver"));
+    $objeto->set_width(array(5,8,8,8,8,43,5,5,5));
+    $objeto->set_align(array("center","center","center","center","center","left"));
 
     $objeto->set_classe(array(null,null,null,null,null,null,"pessoal"));
     $objeto->set_metodo(array(null,null,null,null,null,null,"get_lotacaoNumServidores"));
@@ -161,49 +169,63 @@ if($acesso)
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'UADM',
-               'label' => 'Unidade Administrativa:',
+               'col' => 3,
+               'nome' => 'codigo',
+               'label' => 'Código:',
                'tipo' => 'texto',
                'autofocus' => true,
+               'size' => 15),               
+        array ('linha' => 1,
+               'col' => 3,
+               'nome' => 'UADM',
+               'label' => 'Unidade Administrativa:',
+               'tipo' => 'combo',
+               'array' => array('UENF','FENORTE'),
                'size' => 15),
         array ('linha' => 1,
+               'col' => 3,
                'nome' => 'DIR',
-               'label' => 'Diretoria:',
+               'label' => 'Sigla da Diretoria:',
                'title' => 'Sigla da Diretoria',
                'tipo' => 'texto',
                'size' => 15),
         array ('linha' => 1,
+               'col' => 3,
                'nome' => 'GER',
-               'label' => 'Gerência:',
+               'label' => 'Sigla da Gerência:',
                'title' => 'Sigla da Gerência',
                'tipo' => 'texto',
                'size' => 15),
-        array ('linha' => 1,
+        array ('linha' => 2,
+               'col' => 10,
                'nome' => 'nome',
                'label' => 'Nome completo da lotação:',
                'title' => 'Nome completo da lotação sem siglas',
                'tipo' => 'texto',
-               'size' => 50),    
-        array ('linha' => 2,
-               'nome' => 'ramais',
-               'label' => 'Ramais:',
-               'title' => 'Número dos telefones/ramais/faxes da lotação',
-               'tipo' => 'texto',
                'size' => 100),
-        array ('linha' => 3,
-               'nome' => 'email',
-               'label' => 'Email:',
-               'title' => 'Email do Setor',
-               'tipo' => 'texto',
-               'size' => 50),
-        array ('linha' => 3,
+        array ('linha' => 2,
+               'col' => 2,
                'nome' => 'ativo',
                'label' => 'Ativo:',
                'title' => 'Se a lotação está ativa e permite movimentações',
                'tipo' => 'combo',
                'array' => array('Sim','Não'),
                'padrao' => 'Sim',
-               'size' => 10),   
+               'size' => 10),
+        array ('linha' => 3,
+               'col' => 6,
+               'nome' => 'ramais',
+               'label' => 'Ramais:',
+               'title' => 'Número dos telefones/ramais/faxes da lotação',
+               'tipo' => 'texto',
+               'size' => 100),
+        array ('linha' => 3,
+               'col' => 6,
+               'nome' => 'email',
+               'label' => 'Email:',
+               'title' => 'Email do Setor',
+               'tipo' => 'texto',
+               'size' => 50),           
         array ('linha' => 5,
                'nome' => 'obs',
                'label' => 'Observação:',
@@ -212,6 +234,11 @@ if($acesso)
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Paginação
+    $objeto->set_paginacao(true);
+    $objeto->set_paginacaoInicial($paginacao);
+    $objeto->set_paginacaoItens($numLotacaoAtiva);
 
     ################################################################
     switch ($fase)

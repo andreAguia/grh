@@ -286,6 +286,7 @@ if($acesso)
             $menu->add_item('titulo','Estatutários','#','');
             $menu->add_item('linkWindow','Estatutários Ativos com Assinatura','../grhRelatorios/estatutariosAtivosAssinatura.php');
             $menu->add_item('linkWindow','Estatutários Agrupados pelo Cargo','../grhRelatorios/estatutariosCargo.php'); 
+            $menu->add_item('linkWindow','Estatutários Com CPF e Data de Nascimento','../grhRelatorios/estatutariosCpfNascimento.php'); 
 
             $menu->show();
             break;  

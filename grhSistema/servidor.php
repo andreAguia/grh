@@ -141,7 +141,7 @@ if($acesso)
             $form->add_item($controle);
 
             # Lotação
-            $result = $pessoal->select('SELECT idlotacao, concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao
+            $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
                                           FROM tblotacao                                
                                       ORDER BY ativo desc,lotacao');
             array_unshift($result,array('*','-- Todos --'));

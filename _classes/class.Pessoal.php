@@ -388,7 +388,7 @@ class Pessoal extends Bd
 	{
 		$select = 'SELECT tbservidor.idServidor
                              FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                  JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                               WHERE tbservidor.situacao = 1
                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                 AND tbhistlot.lotacao = '.$id;

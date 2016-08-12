@@ -95,6 +95,7 @@ if($acesso)
                                    OR GER LIKE "%'.$parametro.'%"
                                    OR nome LIKE "%'.$parametro.'%"
                                    OR ramais LIKE "%'.$parametro.'%"
+                                   OR idLotacao LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita

@@ -29,31 +29,32 @@ if($acesso)
     
     $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
+                     tbservidor.idServidor,
                      tbhistcessao.orgao,
                      tbhistcessao.dtInicio,
-                     tbhistcessao.dtFim,
-                     year(dtInicio),
-                     tbservidor.idServidor
+                     tbhistcessao.dtFim
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                    RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
                WHERE tbservidor.idPerfil = 1
+                 AND situacao = 1 
+                 AND ((tbhistcessao.dtFim is NULL) OR (tbhistcessao.dtFim > CURDATE()))
              ORDER BY year(dtInicio), month(dtInicio), nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Estatutários da Fenorte Cedidos a outros Órgãos');
+    $relatorio->set_titulo('Relatório de Estatutários Cedidos');
     $relatorio->set_subtitulo('Agrupados pelo Ano de Cessão');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Órgão','Início','Término','Ano','Situação'));
-    $relatorio->set_width(array(10,30,30,10,10,0,10));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Órgão','Início','Término'));
+    $relatorio->set_width(array(10,30,20,20,10,10));
     $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_funcao(array(null,null,null,"date_to_php","date_to_php"));
-    $relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
-    $relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));  
+    $relatorio->set_funcao(array(null,null,null,null,"date_to_php","date_to_php"));
+    $relatorio->set_classe(array(null,null,"Pessoal"));
+    $relatorio->set_metodo(array(null,null,"get_Cargo"));  
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(5);
+    #$relatorio->set_numGrupo(5);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

@@ -83,7 +83,8 @@ if($acesso)
                                  FROM tbconcurso JOIN tbplano USING (idPlano)
                                 WHERE anobase LIKE "%'.$parametro.'%"
                                    OR regime LIKE "%'.$parametro.'%"
-                                   OR orgExecutor LIKE "%'.$parametro.'%"    
+                                   OR orgExecutor LIKE "%'.$parametro.'%"
+                                   OR idConcurso LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita

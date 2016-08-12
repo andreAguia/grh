@@ -56,7 +56,7 @@ class Grh
             
         # Cadastro de Servidores 
         $grid = new Grid();
-        $grid->abreColuna(4,3);
+        $grid->abreColuna(12,4,3);
             
         titulo('Servidores');
         br(2);
@@ -76,7 +76,7 @@ class Grh
         ##########################################################
             
         # Tabelas Auxiliares 
-        $grid->abreColuna(8,5);        
+        $grid->abreColuna(12,8,5);        
            
         titulo('Tabelas Auxiliares');           
         br(2);
@@ -154,7 +154,7 @@ class Grh
         ##########################################################
             
         # Alertas
-        $grid->abreColuna(0,4);
+        $grid->abreColuna(12,12,4);
 
         $divAlertas = new Div("divAlertas");
         $divAlertas->abre();            
@@ -218,7 +218,7 @@ class Grh
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico(8);
+            $menu = new MenuGrafico(4);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -405,7 +405,6 @@ class Grh
             $menu->show();
 
         $grid2->fechaColuna();
-
         # Pessoais 
         $grid2->abreColuna(12,6);        
             titulo('Pessoais');
@@ -456,7 +455,7 @@ class Grh
             br();
             
         $grid2->fechaColuna();
-
+        
         # Ocorrências
         $grid2->abreColuna(12,6);
             titulo('Ocorrências');
@@ -605,6 +604,30 @@ class Grh
             br();
         $grid2->fechaColuna();
         $grid2->fechaGrid();
+        
+        ##########################################################
+       
+        # Exibe faixa azul
+        br();
+        $grid = new Grid();
+        $grid->abreColuna(12);        
+            titulo();        
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+        
+        # Exibe a versão do sistema
+        $intra = new Intra();
+        $grid = new Grid();
+        $grid->abreColuna(4);
+            p('(Servidor: '.$idServidor.' Pessoa: '.$pessoa->get_idPessoa($idServidor).")",'grhUsuarioLogado');
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+            p(BROWSER_NAME." - ".IP,'grhIp');
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+            p('Versão: '.VERSAO,'grhVersao');
+        $grid->fechaColuna();
+        $grid->fechaGrid();        
      }     
     
     ###########################################################

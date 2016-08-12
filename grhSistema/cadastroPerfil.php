@@ -85,6 +85,7 @@ if($acesso)
                                       idPerfil
                                  FROM tbperfil
                                 WHERE nome LIKE "%'.$parametro.'%"
+                                   OR idPerfil LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -152,7 +153,7 @@ if($acesso)
                'label' => 'Nome:',
                'tipo' => 'texto',
                'autofocus' => true, 
-               'size' => 30),
+               'size' => 50),
          array ('linha' => 1,
                'nome' => 'tipo',
                'title' => 'Tipo do Perfil',

@@ -24,17 +24,30 @@ if($acesso)
     $pesquisado = get('pesquisado',FALSE);        
 	
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
-    $parametroNomeMat = retiraAspas(post('parametroNomeMat'));
-    $parametroCargo = post('parametroCargo','*');
-    $parametroCargoComissao = post('parametroCargoComissao','*');
-    $parametroLotacao = post('parametroLotacao','*');
-    $parametroPerfil = post('parametroPerfil','*');
-    $parametroSituacao = post('parametroSituacao','1');
+    # Pega os parâmetros
+    $parametroNomeMat = retiraAspas(post('parametroNomeMat',get_session('parametroNomeMat')));
+    $parametroCargo = post('parametroCargo',get_session('parametroCargo','*'));
+    $parametroCargoComissao = post('parametroCargoComissao',get_session('parametroCargoComissao','*'));
+    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
+    $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
+    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
+    
+    # Joga os parâmetros par as sessions
+    set_session('parametroNomeMat',$parametroNomeMat);
+    set_session('parametroCargo',$parametroCargo);
+    set_session('parametroCargoComissao',$parametroCargoComissao);
+    set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroPerfil',$parametroPerfil);
+    set_session('parametroSituacao',$parametroSituacao);
+    
+    # Verifica a paginacão
+    $paginacao = get('paginacao',get_session('parametroPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
+    set_session('parametroPaginacao',$paginacao);  
 
     # Ordem da tabela
     $orderCampo = get('orderCampo');
@@ -53,7 +66,13 @@ if($acesso)
     {
         # Lista os Servidores
         case "" :
-        case "listar" :
+            br(10);
+            mensagemAguarde();
+            br();
+            loadPage('?fase=pesquisar');
+            break;
+        
+        case "pesquisar" :
             
         # Cadastro de Servidores 
         $grid = new Grid();
@@ -79,7 +98,7 @@ if($acesso)
         $menu1->show();
 
         # Parâmetros
-        $form = new Form('?fase=listar&pesquisado=TRUE');
+        $form = new Form('?pesquisado=TRUE');
 
             # Nome ou Matrícula
             $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
@@ -153,7 +172,7 @@ if($acesso)
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
-            $controle->set_col(7);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             # Perfil
@@ -169,7 +188,7 @@ if($acesso)
             $controle->set_valor($parametroPerfil);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
-            $controle->set_col(2);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -192,6 +211,11 @@ if($acesso)
 
             if($parametroSituacao <> "*")
                 $lista->set_situacao($parametroSituacao);
+            
+            # Paginação
+            $lista->set_paginacao(true);
+            $lista->set_paginacaoInicial($paginacao);
+            $lista->set_paginacaoItens(12);
 
             $lista->show();
             

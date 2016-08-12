@@ -72,7 +72,8 @@ if($acesso)
             $orderTipo = 'idPlano desc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idPlano,numDecreto,
+    $objeto->set_selectLista ('SELECT idPlano,
+                                      numDecreto,
                                       dtDecreto,
                                       dtPublicacao,
                                       pgPublicacao,
@@ -83,6 +84,7 @@ if($acesso)
                                       idPlano
                                  FROM tbplano
                                 WHERE numDecreto LIKE "%'.$parametro.'%"
+                                   OR idPlano LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita

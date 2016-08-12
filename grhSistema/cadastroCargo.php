@@ -85,6 +85,7 @@ if($acesso)
                                       idCargo
                                  FROM tbcargo JOIN tbplano USING (idPlano)
                                 WHERE nome LIKE "%'.$parametro.'%"
+                                   OR idCargo LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita

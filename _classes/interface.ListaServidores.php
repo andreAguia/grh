@@ -10,10 +10,11 @@
 class listaServidores
 {    
     
-    private $nomeLista = null;  # Nome da lista que aparece no fieldset
+    # Título
+    private $nomeLista = null;  # Nome da lista que aparece no título
     
+    # Parâmetros de Pesquisa
     private $matNomeId = null;  # Busca por matricula nome ou id em um só campos
-    
     private $cargo = null;
     private $cargoComissao = null;
     private $perfil = null;
@@ -21,8 +22,12 @@ class listaServidores
     private $situacao = null;
     private $lotacao = null;
     
-    private $fieldset = true;
-    private $titulo = false;
+    # Parâmetros da paginação da listagem
+    private $paginacao = false;			# Flag que indica se terá ou não paginação na lista
+    private $paginacaoItens = 15;		# Quantidade de registros por página. 
+    private $paginacaoInicial = 0;		# A paginação inicial
+    private $pagina = 1;			# Página atual
+    private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
     
     ###########################################################
                 
@@ -88,7 +93,7 @@ class listaServidores
                          tbpessoa.nome,
                          CONCAT(COALESCE(tbcargo.nome,"")," ",COALESCE(
                          (SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.idServidor = tbservidor.idServidor),"")),
-                         concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
+                         concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                          tbperfil.nome,
                          tbservidor.dtAdmissao,
                          tbsituacao.situacao,
@@ -134,17 +139,126 @@ class listaServidores
         # ordenação
         $select .= ' ORDER BY tbpessoa.nome';
         
-        #echo $select;
+        # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,true);
+        $totalRegistros = count($conteudo);
+        
+        # Verifica a necessidade de paginação pelo número de registro
+        if($this->paginacaoItens >= $totalRegistros){
+            $this->paginacao = FALSE;
+        }
+        
+        # Verifica se página Inicial que veio por session deverá ser atualizada para 0
+        if($this->paginacaoInicial > $totalRegistros){
+            $this->paginacaoInicial = 0;
+        }
+                
+        # Calculos da paginaçao
+        $texto = null;
+        if($this->paginacao)
+        {
+            # Calcula o total de páginas
+            $totalPaginas = ceil($totalRegistros/$this->paginacaoItens);
 
-        $label = array("IDFuncional","Matrícula","Servidor","Cargo","Lotação","Perfil","Admissão","situação");
+            # Calcula o número da página
+            $this->pagina = ceil($this->paginacaoInicial/$this->paginacaoItens)+1;
+
+            # Calcula o item inicial e final da página
+            $itemFinal = $this->pagina * $this->paginacaoItens;
+            $itemInicial = $itemFinal - $this->paginacaoItens+1;
+
+            if ($itemFinal > $totalRegistros)
+            $itemFinal = $totalRegistros;
+
+            # Texto do fieldset
+            $texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
+        
+            # Acrescenta a sql
+            $select.=' LIMIT '.$this->paginacaoInicial.','.$this->paginacaoItens;
+
+            # Botôes de Navegação das páginas 
+            $proximo = $this->paginacaoInicial + $this->paginacaoItens;
+            $anterior = $this->paginacaoInicial - $this->paginacaoItens;            
+        }
+        
+        # Botões de paginação
+        if($this->paginacao){
+            # Começa os botões de navegação
+            $div = new Div("paginacao");
+            $div->abre();            
+            echo'<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
+
+            # Botão Página Anterior
+            if($this->pagina == 1){
+                echo '<li class="pagination-previous disabled"><span class="show-for-sr">page</span></li>';
+            }else{
+                echo '<li class="pagination-previous"><a href="?paginacao='.$anterior.'" aria-label="Página anterior"></a></li>';
+            }
+
+            # Links para a página
+            for($pag = 1;$pag <= $totalPaginas; $pag++){
+                if($pag == $this->pagina){
+                    echo '<li class="current"><span class="show-for-sr">Página Atual</span> '.$pag.'</li>';
+                }else{
+                    $link = $this->paginacaoItens * ($pag-1);
+                
+                    if($totalPaginas > $this->quantidadeMaxLinks){
+                        switch ($pag) {
+                            case 1:
+                            case 2:    
+                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
+                                break;
+                            case 3:
+                                if($this->pagina == 2){
+                                    echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';  
+                                }else{
+                                    echo '<li>...<li>';
+                                }
+                                break;
+                            case $this->pagina-1:
+                            case $this->pagina+1:    
+                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a><li>';
+                                break;
+                            case $totalPaginas-2:
+                                if($this->pagina == $this->pagina-4){
+                                    echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';  
+                                }else{
+                                    echo '<li>...<li>';
+                                }
+                                break;
+                            case $totalPaginas-1:
+                            case $totalPaginas:
+                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
+                                break;
+                        }                                
+                    }else{
+                        echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
+                    }
+                }
+            }
+
+            # Botão Próxima Página
+            if($this->pagina < $totalPaginas){
+                echo '<li class="pagination-next"><a href="?paginacao='.$proximo.'" aria-label="Próxima página"><span class="show-for-sr">page</span></a></li>';
+            }else{
+                echo '<li class="pagination-next disabled"><span class="show-for-sr">page</span></li>';
+            }
+            echo '</ul>';
+            $div->fecha();
+        }       
+
+        # Dados da Tabela
+        $label = array("IDFuncional","Matrícula","Servidor","Cargo","Lotação","Perfil","Admissão","Situação");
         $width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left");
         $function = array (null,"dv",null,null,null,null,"date_to_php");
         
+        # Pega a lista com o limit da tabulação
         titulo($this->nomeLista);
         
-        if(count($conteudo) == 0){
+        $conteudo = $servidor->select($select,true);
+        
+        if($totalRegistros == 0){
             br();
             $callout = new Callout();
             $callout->abre();
@@ -163,6 +277,9 @@ class listaServidores
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('servidor.php?fase=editar&id=');
+            
+            if ($this->paginacao)
+                $tabela->set_footTexto($texto.' ('.$itemInicial.' a '.$itemFinal.' de '.$totalRegistros.' Registros)');
             
             if(!is_null($this->matNomeId))
                 $tabela->set_textoRessaltado($this->matNomeId);

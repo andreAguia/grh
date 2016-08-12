@@ -30,7 +30,7 @@ if($acesso)
     $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
-                     concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
+                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
                      tbperfil.nome,
                      tbdocumentacao.cpf
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)

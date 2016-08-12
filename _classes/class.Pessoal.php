@@ -528,14 +528,14 @@ class Pessoal extends Bd
 	 * @param	string $cpf cpf do servidor
 	 */
 
-	public function get_idpessoaCPF($cpf)
+	public function get_idPessoaCPF($cpf)
 	{
 		$select = 'SELECT idPessoa
                              FROM tbdocumentacao
                             WHERE cpf = "'.$cpf.'"';
 		
 		$idPessoa = parent::select($select,false);
-				
+                
 		return $idPessoa[0];                
 	}
 	

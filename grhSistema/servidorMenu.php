@@ -20,8 +20,7 @@ set_session('sessionPaginacao');	# Zera a session de pagina��o da classe mod
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
@@ -84,6 +83,9 @@ if($acesso)
     {	
         # Exibe o Menu Inicial
         case "menu" :
+            # Ocorrencias do servidor
+            Grh::exibeOcorênciaServidor($idServidorPesquisado);
+            
             # monta o menu do servidor
             Grh::menuServidor($idServidorPesquisado);
             break;

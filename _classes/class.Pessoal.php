@@ -64,7 +64,7 @@ class Pessoal extends Bd
 	/**
 	 * M�todo Gravar
 	 */
-	public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = TRUE){
+	public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = FALSE){
             
             if(is_null($tabela))
                 $tabela = $this->tabela;
@@ -1004,7 +1004,7 @@ class Pessoal extends Bd
 	
 	/**
 	 * M�todo get_situacao
-	 * informa a situa��o (ativo ou inativo) de um servidor
+	 * informa a situa��o de um servidor
 	 * 
 	 * @param	string $idServidor idServidor do servidor
 	 */
@@ -1018,6 +1018,46 @@ class Pessoal extends Bd
 		$situacao = parent::select($select,false);
 				
 		return $situacao[0];
+	}
+	
+	###########################################################
+	
+	/**
+	 * M�todo get_idSituacao
+	 * informa a idsitua��o de um servidor
+	 * 
+	 * @param	string $idServidor idServidor do servidor
+	 */
+
+	function get_idSituacao($idServidor)
+	{
+		$select = 'SELECT idsituacao
+                             FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                            WHERE idServidor = '.$idServidor;
+		
+		$situacao = parent::select($select,false);
+				
+		return $situacao[0];
+	}
+	
+	###########################################################
+	
+	/**
+	 * M�todo get_motivo
+	 * informa o motivo de saída de um servidor
+	 * 
+	 * @param	string $idServidor idServidor do servidor
+	 */
+
+	function get_motivo($idServidor)
+	{
+		$select = 'SELECT tbmotivo.motivo
+                             FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
+                            WHERE idServidor = '.$idServidor;
+		
+		$motivo = parent::select($select,false);
+				
+		return $motivo[0];
 	}
 	
 	###########################################################

@@ -67,7 +67,7 @@ class Grh
         $botao->set_url('servidor.php');
         $botao->set_image(PASTA_FIGURAS.'servidores.png',180,180);
         $botao->set_title('Cadastro de Servidores');
-        #$botao->set_accesskey('S');
+        $botao->set_accesskey('S');
         $menu->add_item($botao);
 
         $menu->show();
@@ -89,7 +89,7 @@ class Grh
         $botao->set_url('cadastroCargo.php');
         $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Cargos');
-        #$botao->set_accesskey('P');
+        $botao->set_accesskey('C');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -97,7 +97,7 @@ class Grh
         $botao->set_url('cadastroPerfil.php');
         $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Perfil');
-        #$botao->set_accesskey('S');
+        $botao->set_accesskey('P');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -105,7 +105,7 @@ class Grh
         $botao->set_url('cadastroLotacao.php');
         $botao->set_image(PASTA_FIGURAS.'lotacao.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Lotação');
-        #$botao->set_accesskey('S');
+        $botao->set_accesskey('L');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -113,7 +113,7 @@ class Grh
         $botao->set_url('cadastroCargoComissao.php');
         $botao->set_image(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Cargos em Comissão');
-        #$botao->set_accesskey('S');
+        $botao->set_accesskey('G');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -121,7 +121,7 @@ class Grh
         $botao->set_url('cadastroConcurso.php');
         $botao->set_image(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Concursos');
-        #$botao->set_accesskey('S');
+        $botao->set_accesskey('O');
         $menu->add_item($botao);   
 
         $botao = new BotaoGrafico();
@@ -129,7 +129,7 @@ class Grh
         $botao->set_url('cadastroLicenca.php');
         $botao->set_image(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
-        #$botao->set_accesskey('W');
+        $botao->set_accesskey('T');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -137,7 +137,7 @@ class Grh
         $botao->set_url('cadastroPlanoCargos.php');
         $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Plano de Cargos');
-        #$botao->set_accesskey('S');
+        $botao->set_accesskey('A');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -145,7 +145,7 @@ class Grh
         $botao->set_url('cadastroTabelaSalarial.php');
         $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
-        #$botao->set_accesskey('W');
+        $botao->set_accesskey('B');
         $menu->add_item($botao);
 
         $menu->show();
@@ -167,7 +167,7 @@ class Grh
         $linkBotao3 = new Link("Saiba mais","?fase=alertas");
         $linkBotao3->set_class('small secondary button');
         $linkBotao3->set_title('Informa os servidores que geraram os alertas');
-        $linkBotao3->set_accessKey('S');
+        $linkBotao3->set_accessKey('M');
        
         #$menu1->add_link($linkBotao3,"right");
         br();
@@ -218,7 +218,7 @@ class Grh
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico(4);
+            $menu = new MenuGrafico(5);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -258,6 +258,14 @@ class Grh
                 $botao->set_url("cadastroSituacao.php");
                 $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Situação');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Motidos de Saída');
+                $botao->set_url("cadastroMotivo.php");
+                $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Motivos de Saída do Servidor da Instituição');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
 
@@ -308,8 +316,7 @@ class Grh
         $grid = new Grid();
         $grid->abreColuna(12);
         
-        # Ocorrencias do servidor
-        Grh::exibeOcorênciaServidor($idServidor);
+        
         
         $grid->fechaColuna();
         $grid->fechaGrid();
@@ -731,36 +738,49 @@ class Grh
         # Div que ressalta situação do servidor (licença, férias, etc)
         $ferias = $pessoal->emFerias($idservidor);
         $licenca = $pessoal->emLicenca($idservidor);
-        $situacao = $pessoal->get_situacao($idservidor);
+        $situacao = $pessoal->get_idSituacao($idservidor);
         $folgaTre = $pessoal->emFolgaTre($idservidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
-        
-        if(($ferias) OR ($licenca) OR ($afastadoTre) OR ($folgaTre) OR ($situacao == 'Inativo')){
+        echo $licenca;
+        if(($ferias) OR ($licenca) OR ($afastadoTre) OR ($folgaTre) OR ($situacao <> 1)){
             
             # Férias
-            if($ferias)
+            if($ferias){
                 $mensagem = 'Servidor em férias';
+            }
 
             # Licenca
-            if($licenca)
+            if($licenca){
                 $mensagem = 'Servidor em licença '.$pessoal->get_licenca($idservidor);
-
+            }
+            
             # Situação
-            if($situacao == "Inativo")
-                $mensagem = 'Servidor Inativo';
+            if($situacao <> 1){
+                $mensagem = $pessoal->get_motivo($idservidor);
+            }
             
             # Folga TRE
-            if($folgaTre)
+            if($folgaTre){
                 $mensagem = 'Folga TRE';
+            }
             
             # Afastamento TRE
-            if($afastadoTre)
+            if($afastadoTre){
                 $mensagem = 'Prestando serviço ao TRE';
+            }
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
 
+            # Exibe a mensagem
             $callout = new Callout('warning');
             $callout->abre();
                 p($mensagem);
             $callout->fecha();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();  
         } 
 
         # Verifica pendencia de motorista com carteira vencida no sistema grh
@@ -774,10 +794,18 @@ class Grh
             if($cargo == 'Motorista'){
                 if(jaPassou($dataCarteira)){
                     $mensagem = 'Motorista com Carteira de Habilitação Vencida !! ('.$dataCarteira.')';
+                    
+                    $grid = new Grid();
+                    $grid->abreColuna(12);
+
+                    # Exibe a mensagem
                     $callout = new Callout('warning');
                     $callout->abre();
                         p($mensagem);
                     $callout->fecha();
+
+                    $grid->fechaColuna();
+                    $grid->fechaGrid();  
                 }
             }
         }

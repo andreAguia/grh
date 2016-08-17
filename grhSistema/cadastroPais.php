@@ -66,20 +66,23 @@ if($acesso)
 
     # ordenaç?o
     if(is_null($orderCampo))
-            $orderCampo = "1";
+            $orderCampo = "2";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idPais,pais,
-                                      idPais
+    $objeto->set_selectLista ('SELECT idPais,
+                                      pais,
+                                      continente
                                  FROM tbpais
                                 WHERE pais LIKE "%'.$parametro.'%"
+                                   OR continente LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT pais
+    $objeto->set_selectEdita('SELECT pais,
+                                     continente
                                 FROM tbpais
                                WHERE idPais = '.$id);
 
@@ -95,9 +98,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","País"));
-    $objeto->set_width(array(10,80));
-    $objeto->set_align(array("center","left"));
+    $objeto->set_label(array("Id","País","Continente"));
+    $objeto->set_width(array(10,40,40));
+    $objeto->set_align(array("center","left","left"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -123,7 +126,14 @@ if($acesso)
                'required' => true,
                'autofocus' => true,
                'col' => 6,
-               'size' => 60)));
+               'size' => 60),
+        array ('linha' => 2,
+               'nome' => 'continente',
+               'title' => 'Continente do País',
+               'label' => 'Continente:',
+               'tipo' => 'combo',
+               'array' => array("---","América do Sul","América Central","América do Norte","Europa","África","Ásia","Oceania"),
+               'size' => 10)));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);

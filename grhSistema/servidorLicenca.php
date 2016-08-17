@@ -66,7 +66,7 @@ if($acesso){
         $objeto->set_rotinaExtraParametro(array($idServidorPesquisado)); 
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-        $objeto->set_nome('Histórico de Licenças');
+        $objeto->set_nome('Licenças');
 
         # botão de voltar da lista
         $objeto->set_voltarLista('servidorMenu.php');
@@ -184,7 +184,7 @@ if($acesso){
                                 'array' => $result,                      
                                 'readonly' => true,
                                 'autofocus' => true,
-                                'col' => 7,
+                                'col' => 6,
                                 'title' => 'Tipo de Licença.',
                                 'linha' => 1));
 
@@ -229,7 +229,7 @@ if($acesso){
                                        'required' => true,
                                        'size' => 20,
                                        'col' => 3,
-                                       'title' => 'Data do início da exibição da notícia.',
+                                       'title' => 'Data do início.',
                                        'linha' => 3));
             
             # Número de dias
@@ -295,7 +295,7 @@ if($acesso){
                                        'array' => $array,
                                        'size' => 5,
                                        'required' => true,
-                                       'title' => 'Dias.',
+                                       'title' => 'Número de dias da licença.',
                                        'col' => 2,
                                        'linha' => 3));
 
@@ -310,7 +310,8 @@ if($acesso){
                 array_push($campos,array ( 'nome' => 'processo',
                                            'label' => 'Processo:',
                                            'tipo' => 'processo',
-                                           'size' => 30,                                           
+                                           'size' => 30,
+                                           'col' => 6,
                                            'padrao' => $valor,
                                            'title' => 'Número do Processo',
                                            'linha' => 4));
@@ -337,10 +338,12 @@ if($acesso){
                     array_push($campos,array('nome' => 'idpublicacaoPremio',
                                              'label' => 'Publicação no DOERJ:',
                                              'tipo' => 'combo',
+                                             'size' => 30,
+                                             'col' => 6,
                                              'array' => $result2,
                                              'required' => true,
                                              'title' => 'Data da Publicação no DOERJ.',
-                                             'linha' => 5));
+                                             'linha' => 4));
                 }
 
                 # oculta controle se for licença premio para pegar os dados da publicaçao
@@ -379,11 +382,13 @@ if($acesso){
                                         'tipo' => 'data',
                                         'size' => 20,
                                         'title' => 'Data da Perícia.',
+                                        'col' => 3,
                                         'linha' => 6),
                                 array ( 'nome' => 'num_Bim',
                                         'label' => 'Número da Bim:',
                                         'tipo' => 'texto',
-                                        'size' => 30,                         
+                                        'size' => 30,
+                                        'col' => 2,
                                         'title' => 'Número da Bim',
                                         'linha' => 6));   
             }

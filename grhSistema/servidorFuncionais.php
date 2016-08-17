@@ -70,7 +70,8 @@ if($acesso)
                     dtPublicExo,
                     pgPublicExo,
                     ciGepagExo,
-                    motivo
+                    motivo,
+                    motivoDetalhe
             FROM tbservidor
             WHERE idServidor = '.$idServidorPesquisado;
 
@@ -133,6 +134,14 @@ if($acesso)
                               ORDER BY situacao');
 
     array_push($situacao, array(null,null)); 
+    
+    # Pega os dados da combo motivo de Saída do servidor
+    $motivo = $pessoal->select('SELECT idmotivo,
+                                       motivo
+                                  FROM tbmotivo
+                              ORDER BY motivo');
+
+    array_push($motivo, array(null,null)); 
 
     # Campos para o formulario
     $campos = array(array ( 'linha' => 1,
@@ -237,25 +246,25 @@ if($acesso)
                                'title' => 'Documento informando a admissão.'),
                       array ( 'linha' => 4,
                                'nome' => 'dtDemissao',
-                               'label' => 'Data de Exoneração:',
+                               'label' => 'Data da Saída:',
                                'tipo' => 'data',
                                'col' => 3,
-                               'fieldset' => 'Dados da Demissão',
+                               'fieldset' => 'Dados da Saída do Servidor',
                                'size' => 20,
-                               'title' => 'Data de Exoneração.'),
+                               'title' => 'Data da Saída do Servidor.'),
                        array ( 'linha' => 4,
                                'nome' => 'processoExo',
-                               'label' => 'Processo de Exoneração:',
+                               'label' => 'Processo:',
                                'tipo' => 'texto',
                                'size' => 25,
                                'col' => 3,
-                               'title' => 'Número do processo de Exoneração.'),
+                               'title' => 'Número do processo.'),
                        array ( 'linha' => 4,
                                'nome' => 'dtPublicExo',
                                'label' => 'Data da Publicação:',
                                'tipo' => 'data',
                                'size' => 20,
-                               'title' => 'Data da Publicação da Exoneração no DOERJ.'),
+                               'title' => 'Data da Publicação no DOERJ.'),
                        array ( 'linha' => 4,
                                'nome' => 'pgPublicExo',
                                'label' => 'Pág.:',
@@ -269,14 +278,22 @@ if($acesso)
                                'tipo' => 'texto',
                                'size' => 30,
                                'col' => 2,
-                               'title' => 'Documento informando a exoneração'),
+                               'title' => 'Documento informando a saída do servidor'),
                        array ( 'linha' => 5,
                                'nome' => 'motivo',
-                               'label' => 'Motivo da Exoneração:',
+                               'label' => 'Motivo:',
+                               'tipo' => 'combo',
+                               'array' => $motivo,
+                               'col' => 4,
+                               'size' => 30,
+                               'title' => 'Motivo da Saida do Servidor.'),    
+                       array ( 'linha' => 5,
+                               'nome' => 'motivoDetalhe',
+                               'label' => 'Motivo Detalhado:',
                                'tipo' => 'texto',
                                'size' => 100,
-                               'col' => 12,
-                               'title' => 'Motivo da Exoneração.')    
+                               'col' => 8,
+                               'title' => 'Motivo detalhado da Saida do Servidor.')    
                                 );
 
     $objeto->set_campos($campos);

@@ -80,7 +80,8 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?');
+    #$objeto->set_linkListar('?');
+    $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -139,19 +140,19 @@ if($acesso)
     $motivo = $pessoal->select('SELECT idmotivo,
                                        motivo
                                   FROM tbmotivo
-                              ORDER BY motivo');
+                              ORDER BY idmotivo');
 
     array_push($motivo, array(null,null)); 
 
     # Campos para o formulario
-    $campos = array(array ( 'linha' => 1,
+    $campos = array(array( 'linha' => 1,
                            'nome' => 'idFuncional',
                            'label' => 'id Funcional:',
                            'tipo' => 'texto',
                            'autofocus' => true,
                            'size' => 10,
                            'unique'=> true,
-                           'col' => 3,
+                           'col' => 2,
                            'title' => 'Número da id funcional do servidor.'),
                   array ( 'linha' => 1,
                            'nome' => 'matricula',
@@ -160,7 +161,7 @@ if($acesso)
                            'autofocus' => true,
                            'size' => 10,
                            'unique'=> true,
-                           'col' => 3,
+                           'col' => 1,
                            'title' => 'Matrícula do servidor.'),
                    array ('linha' => 1,
                            'nome' => 'idPerfil',
@@ -170,44 +171,41 @@ if($acesso)
                            'array' => $perfil,
                            'title' => 'Perfil do servidor', 
                            'col' => 3,
-                           'size' => 15),
-                    array ('linha' => 1,
-                           'nome' => 'situacao',
-                           'label' => 'Situação:',
-                           'tipo' => 'combo',
-                           'required' => true,
-                           'array' => $situacao,
-                           'title' => 'Concurso', 
-                           'col' => 3,
                            'size' => 15));
 
     # Somente se for estatutário
     if ($perfilServidor == 1)
     {
-        array_push($campos, array ('linha' => 2,
+        array_push($campos, array ('linha' => 1,
                                    'nome' => 'idConcurso',
                                    'label' => 'Concurso:',
                                    'tipo' => 'combo',
                                    'array' => $concurso,
                                    'title' => 'Concurso',
-                                   'col' => 6,
+                                   'col' => 2,
                                    'size' => 15));
     }
     # Somente se for estatutário ou cedido
     if (($perfilServidor == 1) || ($perfilServidor == 2))
     {
-         array_push($campos, array ('linha' => 2,
+         array_push($campos, array ('linha' => 1,
                                     'nome' => 'idCargo',
                                     'label' => 'Cargo:',
                                     'tipo' => 'combo',
                                     'array' => $cargo,
                                     'title' => 'Cargo',
-                                    'col' => 6,
+                                    'col' => 4,
                                     'size' => 15));
     }
 
     # os demais
-    array_push($campos,array ( 'linha' => 3,
+    array_push($campos, array ('linha' => 1,
+                               'nome' => 'situacao',
+                               'label' => 'Situação:',
+                               'tipo' => 'hidden',
+                               'title' => 'Concurso',                           
+                               'size' => 15),
+                       array ( 'linha' => 3,
                                'nome' => 'dtAdmissao',
                                'label' => 'Data de Admissão:',
                                'tipo' => 'data',
@@ -284,7 +282,7 @@ if($acesso)
                                'label' => 'Motivo:',
                                'tipo' => 'combo',
                                'array' => $motivo,
-                               'col' => 4,
+                               'col' => 5,
                                'size' => 30,
                                'title' => 'Motivo da Saida do Servidor.'),    
                        array ( 'linha' => 5,
@@ -292,7 +290,7 @@ if($acesso)
                                'label' => 'Motivo Detalhado:',
                                'tipo' => 'texto',
                                'size' => 100,
-                               'col' => 8,
+                               'col' => 7,
                                'title' => 'Motivo detalhado da Saida do Servidor.')    
                                 );
 
@@ -314,4 +312,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

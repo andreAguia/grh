@@ -68,7 +68,8 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?');
+    #$objeto->set_linkListar('?');
+    $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -253,4 +254,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

@@ -113,7 +113,7 @@ class Grh
         $botao->set_url('cadastroCargoComissao.php');
         $botao->set_image(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Cargos em Comissão');
-        $botao->set_accesskey('G');
+        $botao->set_accesskey('g');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -121,7 +121,7 @@ class Grh
         $botao->set_url('cadastroConcurso.php');
         $botao->set_image(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Concursos');
-        $botao->set_accesskey('O');
+        $botao->set_accesskey('o');
         $menu->add_item($botao);   
 
         $botao = new BotaoGrafico();
@@ -137,7 +137,7 @@ class Grh
         $botao->set_url('cadastroPlanoCargos.php');
         $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Plano de Cargos');
-        $botao->set_accesskey('A');
+        $botao->set_accesskey('a');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -145,7 +145,7 @@ class Grh
         $botao->set_url('cadastroTabelaSalarial.php');
         $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
-        $botao->set_accesskey('B');
+        $botao->set_accesskey('b');
         $menu->add_item($botao);
 
         $menu->show();
@@ -262,7 +262,7 @@ class Grh
                 $menu->add_item($botao);
                 
                 $botao = new BotaoGrafico();
-                $botao->set_label('Motidos de Saída');
+                $botao->set_label('Motivos de Saída');
                 $botao->set_url("cadastroMotivo.php");
                 $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Motivos de Saída do Servidor da Instituição');
@@ -336,7 +336,7 @@ class Grh
             $botao->set_url('servidorFuncionais.php');
             $botao->set_image(PASTA_FIGURAS.'funcional.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Dados Funcionais do Servidor');
-            #$botao->set_accessKey('F');
+            $botao->set_accessKey('F');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
@@ -344,7 +344,7 @@ class Grh
             $botao->set_url('servidorLotacao.php');
             $botao->set_image(PASTA_FIGURAS.'lotacao.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Histórico da Lotação do Servidor');
-            #$botao->set_accessKey('L');
+            $botao->set_accessKey('o');
             $menu->add_item($botao);
 
             $pessoa = new Pessoal();
@@ -357,7 +357,7 @@ class Grh
                 $botao->set_url('servidorCessao.php');
                 $botao->set_image(PASTA_FIGURAS.'cessao.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Histórico de Cessões do Servidor');
-                #$botao->set_accessKey('C');
+                $botao->set_accessKey('C');
                 $menu->add_item($botao);
             }
             elseif($perfil == 2) // se for cedido
@@ -367,7 +367,7 @@ class Grh
                 $botao->set_url('servidorCessaoCedido.php');
                 $botao->set_image(PASTA_FIGURAS.'cessao.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Dados da Cessão do Servidor');
-                #$botao->set_accessKey('C');
+                $botao->set_accessKey('C');
                 $menu->add_item($botao);
             }
 
@@ -378,7 +378,7 @@ class Grh
                 $botao->set_url('servidorComissao.php');
                 $botao->set_image(PASTA_FIGURAS.'comissao.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Histórico dos Cargos em Comissão do Servidor');                
-                #$botao->set_accessKey('i');
+                $botao->set_accessKey('a');
                 $menu->add_item($botao);
             }
 
@@ -389,7 +389,7 @@ class Grh
                 $botao->set_url('servidorAverbacao.php');
                 $botao->set_image(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Tempo de Serviço Averbado');                
-                #$botao->set_accessKey('i');
+                $botao->set_accessKey('T');
                 $menu->add_item($botao);
             }
 
@@ -398,7 +398,7 @@ class Grh
             $botao->set_url('servidorElogiosAdvertencias.php');
             $botao->set_image(PASTA_FIGURAS.'ocorrencia.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Elogios e Advertências do Servidor');                
-            #$botao->set_accessKey('i');
+            $botao->set_accessKey('E');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
@@ -406,7 +406,7 @@ class Grh
             $botao->set_url('servidorObs.php');
             $botao->set_image(PASTA_FIGURAS.'obs.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Observações Gerais do Servidor');                
-            #$botao->set_accessKey('i');
+            $botao->set_accessKey('b');
             $menu->add_item($botao);
 
             $menu->show();
@@ -423,7 +423,7 @@ class Grh
             $botao->set_url('servidorPessoais.php');
             $botao->set_image(PASTA_FIGURAS.'pessoais.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Dados Pessoais do Servidor');
-            #$botao->set_accessKey('P');
+            $botao->set_accessKey('P');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
@@ -431,7 +431,7 @@ class Grh
             $botao->set_url('servidorTelefones.php');
             $botao->set_image(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Dados dos Contatos do Servidor');
-            #$botao->set_accessKey('T');
+            $botao->set_accessKey('n');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
@@ -439,7 +439,7 @@ class Grh
             $botao->set_url('servidorDocumentos.php');
             $botao->set_image(PASTA_FIGURAS.'documento.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro da Documentação do Servidor');
-            #$botao->set_accessKey('D');
+            $botao->set_accessKey('D');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
@@ -447,7 +447,7 @@ class Grh
             $botao->set_url('servidorFormacao.php');
             $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Formação Escolar do Servidor');
-            #$botao->set_accessKey('o');
+            $botao->set_accessKey('m');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
@@ -455,7 +455,7 @@ class Grh
             $botao->set_url('servidorDependentes.php');
             $botao->set_image(PASTA_FIGURAS.'dependente.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro dos Dependentes do Servidor');
-            #$botao->set_accessKey('e');
+            $botao->set_accessKey('s');
             $menu->add_item($botao);
 
             $menu->show();
@@ -476,7 +476,7 @@ class Grh
                 $botao->set_url('servidorFerias.php');
                 $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro das Férias do Servidor');
-                #$botao->set_accessKey('r');
+                $botao->set_accessKey('i');
                 $menu->add_item($botao);
             }
 
@@ -487,8 +487,7 @@ class Grh
                 $botao->set_url('servidorLicenca.php');
                 $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Licenças do Servidor');
-                #$botao->set_accessKey('i');
-                #$botao->set_beta(true);
+                $botao->set_accessKey('L');
                 $menu->add_item($botao);
             }
 
@@ -529,7 +528,7 @@ class Grh
             $botao->set_url('servidorSuspensao.php');
             $botao->set_image(PASTA_FIGURAS.'suspensao.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Suspensões de um servidor');                
-            #$botao->set_accessKey('i');
+            $botao->set_accessKey('u');
             $menu->add_item($botao);
 
             $menu->show();
@@ -549,7 +548,7 @@ class Grh
                 $botao->set_url('servidorProgressao.php');
                 $botao->set_image(PASTA_FIGURAS.'salario.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Progressões e Enquadramentos do Servidor');                
-                #$botao->set_accessKey('i');
+                $botao->set_accessKey('q');
                 $menu->add_item($botao);
             }
 
@@ -571,7 +570,7 @@ class Grh
                 $botao->set_url('servidorGratificacao.php');
                 $botao->set_image(PASTA_FIGURAS.'gratificacao.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Histórico das Gratificações Especiais do Servidor');                
-                #$botao->set_accessKey('i');
+                $botao->set_accessKey('G');
                 $menu->add_item($botao);
             }
 
@@ -741,7 +740,7 @@ class Grh
         $situacao = $pessoal->get_idSituacao($idservidor);
         $folgaTre = $pessoal->emFolgaTre($idservidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
-        echo $licenca;
+        
         if(($ferias) OR ($licenca) OR ($afastadoTre) OR ($folgaTre) OR ($situacao <> 1)){
             
             # Férias

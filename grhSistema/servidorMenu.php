@@ -67,7 +67,7 @@ if($acesso){
         $linkBotao5 = new Link("Excluir","servidorExclusao.php");
         $linkBotao5->set_class('alert button');
         $linkBotao5->set_title('Excluir Servidor');
-        $linkBotao5->set_accessKey('E');
+        $linkBotao5->set_accessKey('x');
         $menu->add_link($linkBotao5,"right");
     }
 
@@ -114,6 +114,6 @@ if($acesso){
     }
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>
-

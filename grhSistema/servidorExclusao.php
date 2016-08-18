@@ -41,11 +41,13 @@ if($acesso)
     $grid = new Grid('center');
     $grid->abreColuna(5);
     
-    callout("Rorina em manutenção !!");
+    callout("Rorina ainda não Implementada !!");
     
     # Fecha o grid
     $grid->fechaColuna();
     $grid->fechaGrid();
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

@@ -71,6 +71,7 @@ if($acesso)
                     pgPublicExo,
                     ciGepagExo,
                     motivo,
+                    tipoAposentadoria,
                     motivoDetalhe
             FROM tbservidor
             WHERE idServidor = '.$idServidorPesquisado;
@@ -282,15 +283,23 @@ if($acesso)
                                'label' => 'Motivo:',
                                'tipo' => 'combo',
                                'array' => $motivo,
-                               'col' => 5,
+                               'col' => 4,
                                'size' => 30,
-                               'title' => 'Motivo da Saida do Servidor.'),    
+                               'title' => 'Motivo da Saida do Servidor.'),
+                       array  ('linha' => 5,
+                               'nome' => 'tipoAposentadoria',
+                               'label' => 'Tipo:',
+                               'tipo' => 'combo',
+                               'array' => array("","Integral","Proporcional"),
+                               'title' => 'Tipo de Aposentadoria', 
+                               'col' => 2,
+                               'size' => 15),
                        array ( 'linha' => 5,
                                'nome' => 'motivoDetalhe',
                                'label' => 'Motivo Detalhado:',
                                'tipo' => 'texto',
                                'size' => 100,
-                               'col' => 7,
+                               'col' => 6,
                                'title' => 'Motivo detalhado da Saida do Servidor.')    
                                 );
 

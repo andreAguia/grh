@@ -207,6 +207,46 @@ if($acesso)
                 Grh::quadroLicencaPremio($idServidorPesquisado);
 
                 $objeto->listar();
+                
+                # Exibe as licenças prêmio
+                $select = 'SELECT tbtipolicenca.nome,
+                                     dtPublicacao,
+                                     pgPublicacao,
+                                     dtInicial,
+                                     numdias,
+                                     ADDDATE(dtInicial,numDias-1),
+                                     tblicenca.processo,
+                                     dtInicioPeriodo,
+                                     dtFimPeriodo                                     
+                                FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                               WHERE tblicenca.idTpLicenca = 6 AND idServidor='.$idServidorPesquisado.'
+                            ORDER BY tblicenca.dtInicial';
+
+                $result = $pessoal->select($select);
+                $count = $pessoal->count($select);
+
+                # Cabeçalho da tabela
+                $titulo = 'Licenças Prêmio';
+                $label = array("Licença","Publicação","Pag.","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término");
+                $width = array(13,10,6,10,6,10,15,15,15);
+                $funcao = array(null,'date_to_php',null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php');
+                $align = array('center');
+
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($result);
+                $tabela->set_cabecalho($label,$width,$align);
+                $tabela->set_titulo($titulo);
+                $tabela->set_funcao($funcao);
+                
+                # Limita o tamanho da tela
+                $grid = new Grid();
+                $grid->abreColuna(12);
+    
+                $tabela->show();
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();   
                 break;
 
             case "editar" :	

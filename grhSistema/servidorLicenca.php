@@ -81,7 +81,6 @@ if($acesso){
                                      dtFimPeriodo,
                                      dtPublicacao,
                                      pgPublicacao,
-                                     tbtipolicenca.nome,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE idServidor='.$idServidorPesquisado.'
@@ -95,7 +94,7 @@ if($acesso){
         $botao1->set_image(PASTA_FIGURAS_GERAIS.'bullet_edit.png',20,20);
 
         # Coloca o objeto link na tabela
-        $objeto->set_link(array("","","","","","","","","",$botao1));
+        #$objeto->set_link(array("","","","","","","","","",$botao1));
         
 	# Codigo abaixo não permite edição de licenças prêmio
         # No cadastro de licenças, a licença prêmio não permite edições.
@@ -103,8 +102,8 @@ if($acesso){
         # exclui-se o lançamento e inclui-se um novo lançamento.
         # Isso devido ao calculo em conjunto com o cadastro de publicação
         # que somente é feito quando da inclusão.
-        $objeto->set_linkCondicional(array("","","","","","","","","","prêmio"));
-        $objeto->set_linkCondicionalOperador('<>');
+        #$objeto->set_linkCondicional(array("","","","","","","","","","prêmio"));
+        #$objeto->set_linkCondicionalOperador('<>');
     
         ### select do edita
         if(($fase == 'editar') or ($fase == 'gravar'))
@@ -146,17 +145,17 @@ if($acesso){
         $objeto->set_botaoSalvarGrafico(false);
 
         # Caminhos
-        #$objeto->set_linkEditar('?fase=editar');
+        $objeto->set_linkEditar('?fase=editar');    // Comentar caso não queira edição de licença prêmio
         $objeto->set_linkExcluir('?fase=excluir');
         $objeto->set_linkGravar('?fase=gravar');
         $objeto->set_linkListar('?fase=listar');
         $objeto->set_linkIncluir('?fase=incluir');
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag.","Editar"));
-        $objeto->set_width(array(15,8,5,8,14,10,10,10,5,5));	
+        $objeto->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag."));
+        $objeto->set_width(array(15,8,5,8,14,10,10,10,5));	
         $objeto->set_align(array("center"));
-        $objeto->set_function(array (null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_function(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
         $objeto->set_numeroOrdem(true);
     
         # Classe do banco de dados

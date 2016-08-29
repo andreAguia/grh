@@ -82,7 +82,7 @@ class Grh
         br(2);
 
         $tamanhoImage = 70;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico();
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cargos');
@@ -218,8 +218,17 @@ class Grh
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico(5);
+            $menu = new MenuGrafico();
 
+                $botao = new BotaoGrafico();
+                $botao->set_label('Tipos de Cargo');
+                $botao->set_url("cadastroTipoCargo.php");
+                #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
+                $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Tipos de Cargo');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
                 $botao->set_url("cadastroBanco.php");
@@ -311,15 +320,6 @@ class Grh
      * 
      * Exibe o menu do servidor - o que aparece quando se seleciona um servidor 
      */
-        
-        # Menu Servidor
-        $grid = new Grid();
-        $grid->abreColuna(12);
-        
-        
-        
-        $grid->fechaColuna();
-        $grid->fechaGrid();
         
         # Divide a tela        
         $grid2 = new Grid();        

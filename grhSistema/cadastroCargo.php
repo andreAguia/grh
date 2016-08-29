@@ -77,20 +77,21 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista ('SELECT idCargo,
+                                      tbtipocargo.cargo,
                                       nome,
-                                      tpCargo,
                                       tbplano.numDecreto,                                  
                                       idCargo,
                                       idCargo,
                                       idCargo
-                                 FROM tbcargo JOIN tbplano USING (idPlano)
+                                 FROM tbcargo LEFT JOIN tbplano USING (idPlano)
+                                              LEFT JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE nome LIKE "%'.$parametro.'%"
                                    OR idCargo LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nome,
-                                     tpCargo,
+    $objeto->set_selectEdita('SELECT idtipocargo,
+                                     nome,
                                      idPlano,
                                      obs
                                 FROM tbcargo
@@ -108,9 +109,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Tipo","Plano de Cargos","Servidores","Ver"));
-    $objeto->set_width(array(5,30,20,20,10,10));
-    $objeto->set_align(array("center"));
+    $objeto->set_label(array("id","Tipo","Cargo","Plano de Cargos","Servidores","Ver"));
+    $objeto->set_width(array(5,20,30,20,10,10));
+    $objeto->set_align(array("center","center","left"));
 
     $objeto->set_classe(array(null,null,null,null,"Pessoal"));
     $objeto->set_metodo(array(null,null,null,null,"get_servidoresCargo"));
@@ -137,34 +138,40 @@ if($acesso)
     $objeto->set_formlabelTipo(1);
 
     # Pega os dados da combo de Plano e Cargos
-    $tabela = new Pessoal();
-    $result = $tabela->select('SELECT idPlano, 
+    $result1 = $pessoal->select('SELECT idPlano, 
                                       numDecreto
                                   FROM tbplano
                               ORDER BY numDecreto');
+    
+    # Pega os dados da combo de Tipos de Cargos
+    $result2 = $pessoal->select('SELECT idTipoCargo, 
+                                      cargo
+                                  FROM tbtipocargo
+                              ORDER BY idTipoCargo');
+    array_push($result2, array(null,null)); 
 
     # Campos para o formulario
-    $objeto->set_campos(array(
-        array ('linha' => 1,
-               'nome' => 'nome',
+    $objeto->set_campos(array(        
+         array ('linha' => 1,
+               'nome' => 'idtipocargo',
                'label' => 'Cargo:',
-               'tipo' => 'texto',
+               'tipo' => 'combo',
                'autofocus' => true,
                'required' => true,
-               'size' => 50),
-         array ('linha' => 1,
-               'nome' => 'tpCargo',
-               'label' => 'Nível do Cargo:',
-               'tipo' => 'combo',
-               'required' => true,
-               'array' => array("Superior","Médio","Fundamental","Elementar"),
+               'array' => $result2,
                'size' => 30),
+        array ('linha' => 1,
+               'nome' => 'nome',
+               'label' => 'Função:',
+               'tipo' => 'texto',               
+               'required' => true,
+               'size' => 50),
         array ('linha' => 1,
                'nome' => 'idPlano',
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
                'required' => true,
-               'array' => $result,
+               'array' => $result1,
                'size' => 30),
         array ('linha' => 4,
                'nome' => 'obs',
@@ -210,8 +217,7 @@ if($acesso)
             $grid->abreColuna(12);
         
             # Titulo
-            $servidor = new Pessoal();
-            titulo('Servidores com o Cargo: '.$servidor->get_nomeCargo($id));
+            titulo('Servidores com o Cargo: '.$pessoal->get_nomeCargo($id));
             br();
         
             # Lista de Servidores Ativos

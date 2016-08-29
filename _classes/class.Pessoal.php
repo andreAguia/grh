@@ -2131,7 +2131,7 @@ class Pessoal extends Bd
                     return $id;
                 else
                 {
-                    $select = 'SELECT  nome
+                    $select = 'SELECT nome
                                  FROM tbcargo
                                 WHERE idCargo = '.$id;
 

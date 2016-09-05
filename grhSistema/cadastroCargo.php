@@ -70,14 +70,17 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "3 asc, 2";
+            $orderCampo = " 2 asc, 3 asc, 4 asc, 5 asc, 6";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
 
     # select da lista
     $objeto->set_selectLista ('SELECT idCargo,
+                                      grupo,
                                       tbtipocargo.cargo,
+                                      classe,
+                                      area,
                                       nome,
                                       tbplano.numDecreto,                                  
                                       idCargo,
@@ -90,9 +93,13 @@ if($acesso)
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idtipocargo,
+    $objeto->set_selectEdita('SELECT grupo,
+                                     idtipocargo,
+                                     classe,
+                                     area,
                                      nome,
                                      idPlano,
+                                     atribuicoes,
                                      obs
                                 FROM tbcargo
                                WHERE idCargo = '.$id);
@@ -109,12 +116,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Tipo","Cargo","Plano de Cargos","Servidores","Ver"));
-    $objeto->set_width(array(5,20,30,20,10,10));
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_label(array("id","Grupo","Tipo","Classe","Área","Cargo","Plano de Cargos","Servidores","Ver"));
+    $objeto->set_width(array(5,10,15,15,15,20,10,5,5));
+    $objeto->set_align(array("center","center","center","center","center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,"get_servidoresCargo"));
+    $objeto->set_classe(array(null,null,null,null,null,null,null,"Pessoal"));
+    $objeto->set_metodo(array(null,null,null,null,null,null,null,"get_servidoresCargo"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -123,7 +130,7 @@ if($acesso)
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","",$botao));
+    $objeto->set_link(array("","","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -147,26 +154,52 @@ if($acesso)
     $result2 = $pessoal->select('SELECT idTipoCargo, 
                                       cargo
                                   FROM tbtipocargo
-                              ORDER BY idTipoCargo');
-    array_push($result2, array(null,null)); 
+                              ORDER BY idTipoCargo desc');
+    array_push($result2, array(null,null));
 
     # Campos para o formulario
-    $objeto->set_campos(array(        
-         array ('linha' => 1,
+    $objeto->set_campos(array(
+        array ('linha' => 1,
+               'col' => 3,
+               'nome' => 'grupo',
+               'label' => 'Grupo:',
+               'autofocus' => true,
+               'tipo' => 'combo',
+               'required' => true,
+               'array' => array(NULL,"Nível Elementar","Nível Fundamental","Nível Médio","Nível Superior","Doutorado",),              
+               'required' => true,
+               'size' => 30),
+         array('linha' => 1,
+               'col' => 5,
                'nome' => 'idtipocargo',
                'label' => 'Cargo:',
-               'tipo' => 'combo',
-               'autofocus' => true,
+               'tipo' => 'combo',               
                'required' => true,
                'array' => $result2,
                'size' => 30),
         array ('linha' => 1,
+               'col' => 4,
+               'nome' => 'classe',
+               'label' => 'Classe:',
+               'tipo' => 'texto',               
+               'required' => true,
+               'size' => 50),
+        array ('linha' => 2,
+               'col' => 4,
+               'nome' => 'area',
+               'label' => 'Área:',
+               'tipo' => 'texto',               
+               'required' => true,
+               'size' => 50),
+        array ('linha' => 2,
+               'col' => 5,
                'nome' => 'nome',
                'label' => 'Função:',
                'tipo' => 'texto',               
                'required' => true,
                'size' => 50),
-        array ('linha' => 1,
+        array ('linha' => 2,
+               'col' => 3,
                'nome' => 'idPlano',
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
@@ -174,10 +207,17 @@ if($acesso)
                'array' => $result1,
                'size' => 30),
         array ('linha' => 4,
+               'col' => 8,
+               'nome' => 'atribuicoes',
+               'label' => 'Atribuições do Cargo:',
+               'tipo' => 'textarea',
+               'size' => array(40,15)),
+        array ('linha' => 4,
+               'col' => 4,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
-               'size' => array(80,5))));
+               'size' => array(40,15))));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -228,7 +268,8 @@ if($acesso)
 
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos');
-            $lista->set_situacao(2);
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_cargo($id);
             $lista->show();
             

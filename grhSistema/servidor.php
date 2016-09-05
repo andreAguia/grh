@@ -128,9 +128,10 @@ if($acesso)
             $form->add_item($controle);
 
             # Cargos
-            $result = $pessoal->select('SELECT tbcargo.idCargo, tbcargo.nome
-                                          FROM tbcargo                                
-                                 ORDER BY 1');
+            $result = $pessoal->select('SELECT tbcargo.idCargo,
+                                               concat(tbtipocargo.cargo," - ",tbcargo.nome)
+                                          FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)                              
+                                      ORDER BY 2,1');
             array_unshift($result,array('*','-- Todos --'));
 
             $controle = new Input('parametroCargo','combo','Cargo:',1);

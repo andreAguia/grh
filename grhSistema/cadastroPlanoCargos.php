@@ -64,9 +64,9 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
+    # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "planoAtual desc,";
+            $orderCampo = "dtDecreto desc,";
 
     if(is_null($orderTipo))
             $orderTipo = 'idPlano desc';

@@ -434,20 +434,27 @@ class Pessoal extends Bd
 	
 	{
             # Pega o cargo do servidor
-            $select = 'SELECT tbcargo.nome
-                         FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
+            $select = 'SELECT tbtipocargo.cargo,
+                              tbcargo.nome
+                         FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE idServidor = '.$idServidor;
 
             $row = parent::select($select,false);
-            $cargo = $row[0];
-
+            
+            $tipoCargo = $row[0];
+            $nomeCargo = $row[1];            
             $comissao = $this->get_cargoComissao($idServidor);
-
-            if (is_null($comissao))
-                return $cargo;
-            else
-                return $cargo.' ('.$comissao.')';
-			
+            
+            if(is_null($nomeCargo)){
+                return '('.$comissao.')';                
+            }else{
+                if(is_null($comissao)){
+                    return $tipoCargo.' - '.$nomeCargo;
+                }else{
+                    return $tipoCargo.' - '.$nomeCargo.' ('.$comissao.')'; 
+                }
+            }			
 	}
 		
 	###########################################################

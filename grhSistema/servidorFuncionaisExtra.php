@@ -82,39 +82,33 @@ if(($situacao <> 1) AND ((is_null($dtSaida)) OR (is_null($motivo)))){
 if(!is_null($motivo)){
     switch ($perfil){
         case 1 :    // Estatutários
-            if(($motivo == 8) OR ($motivo == 9) OR ($motivo == 11) OR ($motivo == 14))
+            if(($motivo == 7) OR ($motivo == 8) OR ($motivo == 10) OR ($motivo == 12))
                 $erro = 1;   
                 $msgErro.='Um servidor estatutário não pode sair da instituição por esse motivo!\n';
             break;
         
         case 2 :    // Cedidos
-            if(($motivo <> 2) AND ($motivo <> 14))
+            if(($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 12) AND ($motivo <> 13))
                 $erro = 1;   
                 $msgErro.='Um servidor cedido não pode sair da instituição por esse motivo!\n';
             break;
             
         case 3 :    // Convidado
-            if(($motivo <> 1) AND ($motivo <> 2) AND ($motivo <> 12) AND ($motivo <> 13))
+            if(($motivo <> 1) AND ($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 13))
                 $erro = 1;   
                 $msgErro.='Um servidor convidado não pode sair da instituição por esse motivo!\n';
             break; 
             
         case 4 :    // Celetista
-            if(($motivo == 1) OR ($motivo == 7) OR ($motivo == 8) OR ($motivo == 9) OR ($motivo == 14))
+            if(($motivo == 1) OR ($motivo == 4) OR ($motivo == 7) OR ($motivo == 8) OR ($motivo == 12))
                 $erro = 1;   
                 $msgErro.='Um servidor celetista não pode sair da instituição por esse motivo!\n';
-            break;  
-            
-        case 5 :    // Contrato Nulo
-            if(($motivo <> 2) AND ($motivo <> 8) AND ($motivo <> 9) AND ($motivo <> 12) AND ($motivo <> 13))
-                $erro = 1;   
-                $msgErro.='Um servidor contrato nulo não pode sair da instituição por esse motivo!\n';
-            break;    
+            break;
             
         case 5 :    // Contrato Nulo
         case 6 :    // Contrato Administrativo
         case 7 :    // Professor Visitante    
-            if(($motivo <> 2) AND ($motivo <> 8) AND ($motivo <> 9) AND ($motivo <> 12) AND ($motivo <> 13))
+            if(($motivo <> 2) AND ($motivo <> 7) AND ($motivo <> 8) AND ($motivo <> 11) AND ($motivo <> 13))
                 $erro = 1;   
                 $msgErro.='Um servidor contratado não pode sair da instituição por esse motivo!\n';
             break;        
@@ -135,28 +129,27 @@ if((!is_null($motivo)) AND (!is_null($dtSaida))){
         case 3 :
         case 4 :
         case 5 :
-        case 6 :
-        case 7 :    
+        case 6 :  
             $novaSituacao = 2;
             break;
         
-        case 8 :
-        case 9 :    
+        case 7 :
+        case 8 :    
             $novaSituacao = 3;
             break;
         
+        case 9 :
         case 10 :
-        case 11 :
-        case 12 :    
+        case 11 :    
             $novaSituacao = 4;
+            break;
+        
+        case 12 :
+            $novaSituacao = 6;
             break;
         
         case 13 :
             $novaSituacao = 0;
-            break;
-        
-        case 14 :
-            $novaSituacao = 6;
             break;
     }
     

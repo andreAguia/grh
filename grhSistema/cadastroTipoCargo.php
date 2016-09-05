@@ -97,8 +97,8 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Id","Cargo","Nível","Obs"));
-    $objeto->set_width(array(5,30,20,45));
-    $objeto->set_align(array("center","left","left"));
+    $objeto->set_width(array(5,30,15,45));
+    $objeto->set_align(array("center","left"));
 
     #$objeto->set_classe(array(null,null,null,"Pessoal"));
     #$objeto->set_metodo(array(null,null,null,"get_servidoresSituacao"));

@@ -286,7 +286,8 @@ if($acesso)
 
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos');
-            $lista->set_situacao(2);
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_perfil($id);            
             $lista->show();
             

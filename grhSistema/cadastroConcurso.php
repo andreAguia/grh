@@ -256,7 +256,8 @@ if($acesso)
 
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos com esse Concurso');
-            $lista->set_situacao(2);
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_concurso($id);            
             $lista->show();
             

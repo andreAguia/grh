@@ -27,11 +27,12 @@ if($acesso)
 
     ######
     
-    $select ='SELECT tbcargo.nome, 
-                     tbcargo.tpCargo,
-                     tbplano.numDecreto
-                FROM tbcargo LEFT JOIN tbplano ON (tbcargo.idPlano = tbplano.idPlano)
-           ORDER BY tbcargo.tpCargo, tbcargo.nome';
+    $select ='SELECT tbtipocargo.cargo,
+                     classe,
+                     area,
+                     nome
+                FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+            ORDER BY 1,2,3';
 
     $result = $pessoal->select($select);
 
@@ -39,12 +40,12 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Cargos');
     $relatorio->set_subtitulo('Agrupados por Nível - Ordenados pelo Nome do Cargo');
 
-    $relatorio->set_label(array('Cargo','Tipo','Plano de Cargos'));
-    $relatorio->set_width(array(60,20,20));
-    $relatorio->set_align(array("center"));
+    $relatorio->set_label(array("Tipo","Classe","Área","Cargo"));
+    $relatorio->set_width(array(0,33,33,34));
+    $relatorio->set_align(array(null,"left","left","left"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(1);
+    $relatorio->set_numGrupo(0);
     $relatorio->show();
 
     $page->terminaPagina();

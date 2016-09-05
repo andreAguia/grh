@@ -20,6 +20,7 @@ class listaServidores
     private $perfil = null;
     private $concurso = null;
     private $situacao = null;
+    private $situacaoSinal = "=";
     private $lotacao = null;
     
     # Parâmetros da paginação da listagem
@@ -91,16 +92,15 @@ class listaServidores
         $select ='SELECT tbservidor.idFuncional,
                          tbservidor.matricula,
                          tbpessoa.nome,
-                         CONCAT(COALESCE(tbcargo.nome,"")," ",COALESCE(
-                         (SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.idServidor = tbservidor.idServidor),"")),
+                         tbservidor.idServidor,
                          concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                          tbperfil.nome,
                          tbservidor.dtAdmissao,
                          tbsituacao.situacao,
                          tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                            JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                                     LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
@@ -114,7 +114,7 @@ class listaServidores
                 
         # situação
         if(!is_null($this->situacao))
-            $select .= ' AND (tbsituacao.idsituacao = "'.$this->situacao.'")';
+            $select .= ' AND (tbsituacao.idsituacao '.$this->situacaoSinal.' "'.$this->situacao.'")';
         
         # perfil
         if(!is_null($this->perfil))
@@ -252,6 +252,8 @@ class listaServidores
         $width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left");
         $function = array (null,"dv",null,null,null,null,"date_to_php");
+        $classe = array(null,null,null,"pessoal");
+        $metodo = array(null,null,null,"get_Cargo");
         
         # Pega a lista com o limit da tabulação
         titulo($this->nomeLista);
@@ -273,6 +275,8 @@ class listaServidores
             $tabela->set_conteudo($conteudo);
             $tabela->set_cabecalho($label,$width,$align);
             #$tabela->set_titulo($this->nomeLista);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');

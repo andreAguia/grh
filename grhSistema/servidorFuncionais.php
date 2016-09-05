@@ -123,9 +123,9 @@ if($acesso)
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
-                                       nome
-                                  FROM tbcargo
-                              ORDER BY nome');
+                                       concat(tbtipocargo.cargo," - ",nome)
+                                  FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                              ORDER BY tbtipocargo.cargo,nome');
 
     array_push($cargo, array(0,null)); 
 

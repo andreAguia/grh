@@ -90,6 +90,10 @@ if($acesso)
                                               LEFT JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE nome LIKE "%'.$parametro.'%"
                                    OR idCargo LIKE "%'.$parametro.'%" 
+                                   OR grupo LIKE "%'.$parametro.'%" 
+                                   OR tbtipocargo.cargo LIKE "%'.$parametro.'%"
+                                   OR classe LIKE "%'.$parametro.'%"
+                                   OR area LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita

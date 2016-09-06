@@ -248,7 +248,7 @@ class listaServidores
         }       
 
         # Dados da Tabela
-        $label = array("IDFuncional","Matrícula","Servidor","Cargo","Lotação","Perfil","Admissão","Situação");
+        $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
         $width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left");
         $function = array (null,"dv",null,null,null,null,"date_to_php");

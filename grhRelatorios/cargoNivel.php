@@ -32,7 +32,7 @@ if($acesso)
                      area,
                      nome
                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-            ORDER BY 1,2,3';
+            ORDER BY 1,2,3,4';
 
     $result = $pessoal->select($select);
 

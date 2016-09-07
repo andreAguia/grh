@@ -102,9 +102,8 @@ if($acesso)
 
     # Pega os dados da combo lotacao
     $result = $pessoal->select('SELECT idlotacao, 
-                                       concat(UADM,"-",DIR,"-",GER) as lotacao
+                                       concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
                                   FROM tblotacao
-                                 WHERE ativo = "Sim"
                               ORDER BY lotacao');
     array_push($result, array(null,null)); # Adiciona o valor de nulo
 
@@ -163,4 +162,6 @@ if($acesso)
                 break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

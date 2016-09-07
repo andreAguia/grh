@@ -123,11 +123,13 @@ if($acesso)
                'tipo' => 'texto',
                'required' => true,
                'autofocus' => true,
+               'col' => 6, 
                'size' => 40),
         array ('linha' => 2,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
+                'col' => 12, 
                'size' => array(80,5))));
 
     # Matrícula para o Log
@@ -149,5 +151,6 @@ if($acesso)
     }									 	 		
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>

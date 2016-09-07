@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Banco
+ * Cadastro de Estado Civil
  *  
  * By Alat
  */
@@ -24,7 +24,7 @@ if($acesso)
     $fase = get('fase','listar');
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));
+    $id = soNumeros(get('id'));    
 
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -52,34 +52,39 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Banco');
+    $objeto->set_nome('País');
 
-    # Botão de voltar da lista
+    # botão salvar
+    $objeto->set_botaoSalvarGrafico(false);
+
+    # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenação
+    # ordenaç?o
     if(is_null($orderCampo))
-            $orderCampo = "1";
+            $orderCampo = "2";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idbanco,banco,obs,
-                                      idbanco
-                                 FROM tbbanco
-                                WHERE banco LIKE "%'.$parametro.'%"
+    $objeto->set_selectLista ('SELECT idPais,
+                                      pais,
+                                      continente
+                                 FROM tbpais
+                                WHERE pais LIKE "%'.$parametro.'%"
+                                   OR continente LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT banco,
-                                     obs
-                                FROM tbbanco
-                               WHERE idbanco = '.$id);
+    $objeto->set_selectEdita('SELECT pais,
+                                     continente
+                                FROM tbpais
+                               WHERE idPais = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -93,36 +98,42 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Banco","Obs"));
-    $objeto->set_width(array(5,40,45));
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_label(array("Id","País","Continente"));
+    $objeto->set_width(array(10,40,40));
+    $objeto->set_align(array("center","left","left"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbbanco');
+    $objeto->set_tabela('tbpais');
 
     # Nome do campo id
-    $objeto->set_idCampo('idbanco');
+    $objeto->set_idCampo('idPais');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
 
+    # Foco do form
+    $objeto->set_formFocus('estciv');
+
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'banco',
-               'label' => 'Banco:',
+               'nome' => 'pais',
+               'label' => 'País:',
                'tipo' => 'texto',
                'required' => true,
                'autofocus' => true,
-               'size' => 30),
+               'col' => 6,
+               'size' => 60),
         array ('linha' => 2,
-               'nome' => 'obs',
-               'label' => 'Observação:',
-               'tipo' => 'textarea',
-               'size' => array(80,5))));
+               'nome' => 'continente',
+               'title' => 'Continente do País',
+               'label' => 'Continente:',
+               'tipo' => 'combo',
+               'array' => array("---","América do Sul","América Central","América do Norte","Europa","África","Ásia","Oceania"),
+               'size' => 10)));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);

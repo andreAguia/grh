@@ -84,17 +84,21 @@ setlocale (LC_CTYPE, 'pt_BR');
 # Servidor logado
 if((CHAMADOR == 'areaServidor.php') OR (CHAMADOR == 'grh.php'))
 {    
-    set_session('sessionParametro');	# Zera a session do par�metro de pesquisa da classe modelo1
+    set_session('sessionParametro');	# Zera a session do parâmetro de pesquisa da classe modelo
     set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
-    set_session('sessionMovimento');	# Zera a session que guarda o chamador de um movimento
-    set_session('sessionProcesso');     # Zera a session de edi��o de processo (cadastro de processo)
-    set_session('sessionOrigem');       # Zera a session de origem do cadastro de computadores
-    set_session('sessionProjeto');      # Zera a session do Projeto do cadastro de ToDoList
-    set_session('sessionAim');          # Zera a session da emiss�o de Aim
     set_session('sessionLicenca');      # Zera a session do tipo de licen�a
     set_session('sessionDiariaMes');    # Zera a session do Pesquisa M�s Cadastro de di�rias daa �rea do Servidor
     set_session('sessionDiariaAno');    # Zera a session do Pesquisa Ano Cadastro de di�rias daa �rea do Servidor
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
+    
+    # Zera os parâmetros da pesquisa da classe listaServidores
+    set_session('parametroNomeMat');
+    set_session('parametroCargo');
+    set_session('parametroCargoComissao');
+    set_session('parametroLotacao');
+    set_session('parametroPerfil');
+    set_session('parametroSituacao');
+    set_session('parametroPaginacao');
 }
 
 # carrega as session

@@ -135,7 +135,8 @@ if($acesso)
         case "cedidos";
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Cedidos','#','');
-            $menu->add_item('linkWindow','Relatório de Estatutários Ativos Cedidos a outros Órgãos (Em todos os Tempos) - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosDaUenf.php');
+            $menu->add_item('linkWindow','Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosHistorico.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários Cedidos','../grhRelatorios/estatutariosCedidos.php');
 
             $menu->show();
             break;
@@ -229,7 +230,9 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoCpf.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Assinatura','../grhRelatorios/geralServidoresAtivosAssinatura.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Check','../grhRelatorios/geralServidoresAtivosCheck.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores - Agrupados por Lotação','../grhRelatorios/geralServidoresLotacao.php');
             $menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
+            $menu->add_item('linkWindow','Relatório de Aniversariantes - Agrupados por Lotação','../grhRelatorios/aniversariantesLotacao.php');
             
             $menu->show();
             break;    
@@ -243,6 +246,7 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');
             $menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');
             $menu->add_item('linkWindow','Relatório Anual de Licença Prêmio','../grhRelatorios/licencaPremioAnual.php');
+            $menu->add_item('linkWindow','Relatório de Licença Prêmio','../grhRelatorios/licencaPremio.php');
             $menu->show();
             break;    
 
@@ -286,6 +290,7 @@ if($acesso)
             $menu->add_item('titulo','Estatutários','#','');
             $menu->add_item('linkWindow','Estatutários Ativos com Assinatura','../grhRelatorios/estatutariosAtivosAssinatura.php');
             $menu->add_item('linkWindow','Estatutários Agrupados pelo Cargo','../grhRelatorios/estatutariosCargo.php'); 
+            $menu->add_item('linkWindow','Estatutários Com CPF e Data de Nascimento','../grhRelatorios/estatutariosCpfNascimento.php'); 
 
             $menu->show();
             break;  
@@ -312,4 +317,6 @@ if($acesso)
     }
     
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

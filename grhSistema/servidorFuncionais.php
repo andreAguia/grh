@@ -70,7 +70,9 @@ if($acesso)
                     dtPublicExo,
                     pgPublicExo,
                     ciGepagExo,
-                    motivo
+                    motivo,
+                    tipoAposentadoria,
+                    motivoDetalhe
             FROM tbservidor
             WHERE idServidor = '.$idServidorPesquisado;
 
@@ -79,7 +81,8 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?');
+    #$objeto->set_linkListar('?');
+    $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -120,9 +123,9 @@ if($acesso)
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
-                                       nome
-                                  FROM tbcargo
-                              ORDER BY nome');
+                                       concat(tbtipocargo.cargo," - ",nome)
+                                  FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                              ORDER BY tbtipocargo.cargo,nome');
 
     array_push($cargo, array(0,null)); 
 
@@ -133,16 +136,24 @@ if($acesso)
                               ORDER BY situacao');
 
     array_push($situacao, array(null,null)); 
+    
+    # Pega os dados da combo motivo de Saída do servidor
+    $motivo = $pessoal->select('SELECT idmotivo,
+                                       motivo
+                                  FROM tbmotivo
+                              ORDER BY idmotivo');
+
+    array_push($motivo, array(null,null)); 
 
     # Campos para o formulario
-    $campos = array(array ( 'linha' => 1,
+    $campos = array(array( 'linha' => 1,
                            'nome' => 'idFuncional',
                            'label' => 'id Funcional:',
                            'tipo' => 'texto',
                            'autofocus' => true,
                            'size' => 10,
                            'unique'=> true,
-                           'col' => 3,
+                           'col' => 2,
                            'title' => 'Número da id funcional do servidor.'),
                   array ( 'linha' => 1,
                            'nome' => 'matricula',
@@ -151,7 +162,7 @@ if($acesso)
                            'autofocus' => true,
                            'size' => 10,
                            'unique'=> true,
-                           'col' => 3,
+                           'col' => 1,
                            'title' => 'Matrícula do servidor.'),
                    array ('linha' => 1,
                            'nome' => 'idPerfil',
@@ -161,44 +172,41 @@ if($acesso)
                            'array' => $perfil,
                            'title' => 'Perfil do servidor', 
                            'col' => 3,
-                           'size' => 15),
-                    array ('linha' => 1,
-                           'nome' => 'situacao',
-                           'label' => 'Situação:',
-                           'tipo' => 'combo',
-                           'required' => true,
-                           'array' => $situacao,
-                           'title' => 'Concurso', 
-                           'col' => 3,
                            'size' => 15));
 
     # Somente se for estatutário
     if ($perfilServidor == 1)
     {
-        array_push($campos, array ('linha' => 2,
+        array_push($campos, array ('linha' => 1,
                                    'nome' => 'idConcurso',
                                    'label' => 'Concurso:',
                                    'tipo' => 'combo',
                                    'array' => $concurso,
                                    'title' => 'Concurso',
-                                   'col' => 6,
+                                   'col' => 2,
                                    'size' => 15));
     }
     # Somente se for estatutário ou cedido
     if (($perfilServidor == 1) || ($perfilServidor == 2))
     {
-         array_push($campos, array ('linha' => 2,
+         array_push($campos, array ('linha' => 1,
                                     'nome' => 'idCargo',
                                     'label' => 'Cargo:',
                                     'tipo' => 'combo',
                                     'array' => $cargo,
                                     'title' => 'Cargo',
-                                    'col' => 6,
+                                    'col' => 4,
                                     'size' => 15));
     }
 
     # os demais
-    array_push($campos,array ( 'linha' => 3,
+    array_push($campos, array ('linha' => 1,
+                               'nome' => 'situacao',
+                               'label' => 'Situação:',
+                               'tipo' => 'hidden',
+                               'title' => 'Concurso',                           
+                               'size' => 15),
+                       array ( 'linha' => 3,
                                'nome' => 'dtAdmissao',
                                'label' => 'Data de Admissão:',
                                'tipo' => 'data',
@@ -237,25 +245,25 @@ if($acesso)
                                'title' => 'Documento informando a admissão.'),
                       array ( 'linha' => 4,
                                'nome' => 'dtDemissao',
-                               'label' => 'Data de Exoneração:',
+                               'label' => 'Data da Saída:',
                                'tipo' => 'data',
                                'col' => 3,
-                               'fieldset' => 'Dados da Demissão',
+                               'fieldset' => 'Dados da Saída do Servidor',
                                'size' => 20,
-                               'title' => 'Data de Exoneração.'),
+                               'title' => 'Data da Saída do Servidor.'),
                        array ( 'linha' => 4,
                                'nome' => 'processoExo',
-                               'label' => 'Processo de Exoneração:',
+                               'label' => 'Processo:',
                                'tipo' => 'texto',
                                'size' => 25,
                                'col' => 3,
-                               'title' => 'Número do processo de Exoneração.'),
+                               'title' => 'Número do processo.'),
                        array ( 'linha' => 4,
                                'nome' => 'dtPublicExo',
                                'label' => 'Data da Publicação:',
                                'tipo' => 'data',
                                'size' => 20,
-                               'title' => 'Data da Publicação da Exoneração no DOERJ.'),
+                               'title' => 'Data da Publicação no DOERJ.'),
                        array ( 'linha' => 4,
                                'nome' => 'pgPublicExo',
                                'label' => 'Pág.:',
@@ -269,14 +277,30 @@ if($acesso)
                                'tipo' => 'texto',
                                'size' => 30,
                                'col' => 2,
-                               'title' => 'Documento informando a exoneração'),
+                               'title' => 'Documento informando a saída do servidor'),
                        array ( 'linha' => 5,
                                'nome' => 'motivo',
-                               'label' => 'Motivo da Exoneração:',
+                               'label' => 'Motivo:',
+                               'tipo' => 'combo',
+                               'array' => $motivo,
+                               'col' => 4,
+                               'size' => 30,
+                               'title' => 'Motivo da Saida do Servidor.'),
+                       array  ('linha' => 5,
+                               'nome' => 'tipoAposentadoria',
+                               'label' => 'Tipo:',
+                               'tipo' => 'combo',
+                               'array' => array("","Integral","Proporcional"),
+                               'title' => 'Tipo de Aposentadoria', 
+                               'col' => 2,
+                               'size' => 15),
+                       array ( 'linha' => 5,
+                               'nome' => 'motivoDetalhe',
+                               'label' => 'Motivo Detalhado:',
                                'tipo' => 'texto',
-                               'size' => 50,
+                               'size' => 100,
                                'col' => 6,
-                               'title' => 'Motivo da Exoneração.')    
+                               'title' => 'Motivo detalhado da Saida do Servidor.')    
                                 );
 
     $objeto->set_campos($campos);
@@ -297,4 +321,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

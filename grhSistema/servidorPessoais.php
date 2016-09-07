@@ -48,10 +48,12 @@ if($acesso)
     # select do edita
     $objeto->set_selectEdita('SELECT nome,
                                      dtNasc,
+                                     sexo,
+                                     estCiv,
                                      naturalidade,
                                      nacionalidade,
-                                     estCiv,
-                                     sexo,
+                                     paisOrigem,
+                                     anoChegada,
                                      endereco,
                                      complemento,
                                      bairro,
@@ -66,7 +68,8 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?');
+    #$objeto->set_linkListar('?');
+    $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -94,8 +97,23 @@ if($acesso)
                                        estciv
                                   FROM tbestciv
                               ORDER BY estciv');
+    array_push($estadoCivil, array(null,null)); # Adiciona o valor de nulo
+    
+    # Pega os dados da combo de nacionalidade
+    $nacionalidade = $pessoal->select('SELECT idNacionalidade,
+                                       nacionalidade
+                                  FROM tbnacionalidade
+                              ORDER BY idNacionalidade');
+    array_push($nacionalidade, array(null,null)); # Adiciona o valor de nulo
+    
+    # Pega os dados da combo de país de origem
+    $paisOrigem = $pessoal->select('SELECT idPais,
+                                       pais
+                                  FROM tbpais
+                              ORDER BY idPais');
+    array_push($paisOrigem, array(null,null)); # Adiciona o valor de nulo
 
-    array_push($estadoCivil, array(null,null)); 
+     
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -106,46 +124,62 @@ if($acesso)
                                'required' => true,
                                'autofocus' => true,
                                'title' => 'Nome do servidor',
-                               'col' => 9,
+                               'col' => 5,
                                'size' => 50),
                        array ( 'linha' => 1,
                                'nome' => 'dtNasc',
                                'label' => 'Data de Nascimento:',
                                'tipo' => 'data',                           
                                'size' => 20,
-                               'col' => 3,
-                               'title' => 'Data de Nascimento.'),                           
-                        array ('linha' => 3,
-                               'nome' => 'naturalidade',
-                               'label' => 'Naturalidade:',
-                               'tipo' => 'texto',
-                               'col' => 3,
-                               'title' => 'Servidor natural da cidade de',                           
-                               'size' => 30),
-                        array ('linha' => 3,
-                               'nome' => 'nacionalidade',
-                               'label' => 'Nacionalidade:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Nacionalidade do Servido',                           
-                               'col' => 3,
-                               'size' => 30),
-                        array ('linha' => 3,
-                               'nome' => 'estCiv',
-                               'label' => 'Estado Civil:',
-                               'tipo' => 'combo',
-                               'array' => $estadoCivil,
-                               'title' => 'Estado Civil do Servidor',
-                               'col' => 3,
-                               'size' => 15),
-                        array ('linha' => 3,
+                               'col' => 2,
+                               'title' => 'Data de Nascimento.'),
+                        array ('linha' => 1,
                                'nome' => 'sexo',
                                'label' => 'Sexo:',
                                'tipo' => 'combo',
                                'array' => array("Masculino","Feminino"),
                                'title' => 'Sexo do Servidor',
                                'required' => true,
+                               'col' => 2,
+                               'size' => 15),
+                        array ('linha' => 1,
+                               'nome' => 'estCiv',
+                               'label' => 'Estado Civil:',
+                               'tipo' => 'combo',
+                               'array' => $estadoCivil,
+                               'title' => 'Estado Civil do Servidor',
+                               'col' => 3,
+                               'size' => 15),        
+                        array ('linha' => 2,
+                               'nome' => 'naturalidade',
+                               'label' => 'Naturalidade:',
+                               'tipo' => 'texto',
+                               'col' => 3,
+                               'title' => 'Servidor natural da cidade de',                           
+                               'size' => 30),
+                        array ('linha' => 2,
+                               'nome' => 'nacionalidade',
+                               'label' => 'Nacionalidade:',
+                               'tipo' => 'combo',
+                               'array' => $nacionalidade,                        
+                               'title' => 'Nacionalidade do Servido',                           
+                               'col' => 3,
+                               'size' => 30),
+                        array ('linha' => 2,
+                               'nome' => 'paisOrigem',
+                               'label' => 'País de Origem:',
+                               'tipo' => 'combo',
+                               'array' => $paisOrigem,
+                               'title' => 'País de Origem do Servidor',
                                'col' => 3,
                                'size' => 15),
+                        array ('linha' => 2,
+                               'nome' => 'anoChegada',
+                               'label' => 'Ano de Chegada:',
+                               'tipo' => 'texto',
+                               'title' => 'Ano de chegada ao Brasil',
+                               'col' => 3,
+                               'size' => 5),                                        
                         array ('linha' => 5,
                                'nome' => 'endereco',
                                'label' => 'Endereço:',
@@ -166,13 +200,13 @@ if($acesso)
                                'label' => 'Bairro:',
                                'tipo' => 'texto',                          
                                'title' => 'Bairro',
-                               'col' => 5,
+                               'col' => 4,
                                'size' => 50),
                         array ('linha' => 6,
                                'nome' => 'cidade',
                                'label' => 'Cidade:',
                                'tipo' => 'texto',
-                               'col' => 5,
+                               'col' => 4,
                                'title' => 'Cidade do endereço',                           
                                'size' => 50),
                         array ('linha' => 6,
@@ -182,12 +216,12 @@ if($acesso)
                                'title' => 'UF',
                                'col' => 2,
                                'size' => 3),
-                        array ('linha' => 7,
+                        array ('linha' => 6,
                                'nome' => 'cep',
                                'label' => 'Cep:',
                                'tipo' => 'cep',                          
                                'title' => 'Cep',
-                               'col' => 3,
+                               'col' => 2,
                                'size' => 10),
                         array ('linha' => 8,
                                'nome' => 'nomePai',
@@ -220,4 +254,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

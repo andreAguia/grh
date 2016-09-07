@@ -66,7 +66,7 @@ if($acesso){
         $objeto->set_rotinaExtraParametro(array($idServidorPesquisado)); 
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-        $objeto->set_nome('Histórico de Licenças');
+        $objeto->set_nome('Licenças');
 
         # botão de voltar da lista
         $objeto->set_voltarLista('servidorMenu.php');
@@ -81,7 +81,6 @@ if($acesso){
                                      dtFimPeriodo,
                                      dtPublicacao,
                                      pgPublicacao,
-                                     tbtipolicenca.nome,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE idServidor='.$idServidorPesquisado.'
@@ -95,7 +94,7 @@ if($acesso){
         $botao1->set_image(PASTA_FIGURAS_GERAIS.'bullet_edit.png',20,20);
 
         # Coloca o objeto link na tabela
-        $objeto->set_link(array("","","","","","","","","",$botao1));
+        #$objeto->set_link(array("","","","","","","","","",$botao1));
         
 	# Codigo abaixo não permite edição de licenças prêmio
         # No cadastro de licenças, a licença prêmio não permite edições.
@@ -103,8 +102,8 @@ if($acesso){
         # exclui-se o lançamento e inclui-se um novo lançamento.
         # Isso devido ao calculo em conjunto com o cadastro de publicação
         # que somente é feito quando da inclusão.
-        $objeto->set_linkCondicional(array("","","","","","","","","","prêmio"));
-        $objeto->set_linkCondicionalOperador('<>');
+        #$objeto->set_linkCondicional(array("","","","","","","","","","prêmio"));
+        #$objeto->set_linkCondicionalOperador('<>');
     
         ### select do edita
         if(($fase == 'editar') or ($fase == 'gravar'))
@@ -146,17 +145,17 @@ if($acesso){
         $objeto->set_botaoSalvarGrafico(false);
 
         # Caminhos
-        #$objeto->set_linkEditar('?fase=editar');
+        $objeto->set_linkEditar('?fase=editar');    // Comentar caso não queira edição de licença prêmio
         $objeto->set_linkExcluir('?fase=excluir');
         $objeto->set_linkGravar('?fase=gravar');
         $objeto->set_linkListar('?fase=listar');
         $objeto->set_linkIncluir('?fase=incluir');
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag.","Editar"));
-        $objeto->set_width(array(15,8,5,8,14,10,10,10,5,5));	
+        $objeto->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag."));
+        $objeto->set_width(array(15,8,5,8,14,10,10,10,5));	
         $objeto->set_align(array("center"));
-        $objeto->set_function(array (null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_function(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
         $objeto->set_numeroOrdem(true);
     
         # Classe do banco de dados
@@ -184,7 +183,7 @@ if($acesso){
                                 'array' => $result,                      
                                 'readonly' => true,
                                 'autofocus' => true,
-                                'col' => 7,
+                                'col' => 6,
                                 'title' => 'Tipo de Licença.',
                                 'linha' => 1));
 
@@ -229,7 +228,7 @@ if($acesso){
                                        'required' => true,
                                        'size' => 20,
                                        'col' => 3,
-                                       'title' => 'Data do início da exibição da notícia.',
+                                       'title' => 'Data do início.',
                                        'linha' => 3));
             
             # Número de dias
@@ -295,7 +294,7 @@ if($acesso){
                                        'array' => $array,
                                        'size' => 5,
                                        'required' => true,
-                                       'title' => 'Dias.',
+                                       'title' => 'Número de dias da licença.',
                                        'col' => 2,
                                        'linha' => 3));
 
@@ -310,7 +309,8 @@ if($acesso){
                 array_push($campos,array ( 'nome' => 'processo',
                                            'label' => 'Processo:',
                                            'tipo' => 'processo',
-                                           'size' => 30,                                           
+                                           'size' => 30,
+                                           'col' => 6,
                                            'padrao' => $valor,
                                            'title' => 'Número do Processo',
                                            'linha' => 4));
@@ -337,10 +337,12 @@ if($acesso){
                     array_push($campos,array('nome' => 'idpublicacaoPremio',
                                              'label' => 'Publicação no DOERJ:',
                                              'tipo' => 'combo',
+                                             'size' => 30,
+                                             'col' => 6,
                                              'array' => $result2,
                                              'required' => true,
                                              'title' => 'Data da Publicação no DOERJ.',
-                                             'linha' => 5));
+                                             'linha' => 4));
                 }
 
                 # oculta controle se for licença premio para pegar os dados da publicaçao
@@ -379,11 +381,13 @@ if($acesso){
                                         'tipo' => 'data',
                                         'size' => 20,
                                         'title' => 'Data da Perícia.',
+                                        'col' => 3,
                                         'linha' => 6),
                                 array ( 'nome' => 'num_Bim',
                                         'label' => 'Número da Bim:',
                                         'tipo' => 'texto',
-                                        'size' => 30,                         
+                                        'size' => 30,
+                                        'col' => 2,
                                         'title' => 'Número da Bim',
                                         'linha' => 6));   
             }
@@ -408,13 +412,6 @@ if($acesso){
         # Log
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
-        
-        # Botão AIM
-        $botaoRegra = new Button("Emite AIM");
-        $botaoRegra->set_title("Emite a Apresentação para Inspeção Médica");
-        $botaoRegra->set_target('_blank');
-        $botaoRegra->set_url('../grhRelatorios/aim.php');
-        $botaoRegra->set_accessKey('E');
 
         # Publicação de Licença Prêmio
         $botaoLegenda = new Button("Licença Prêmio");
@@ -422,7 +419,7 @@ if($acesso){
         $botaoLegenda->set_url('servidorPublicacaoPremio.php');  
         $botaoLegenda->set_accessKey('L');
 
-        $objeto->set_botaoListar(array($botaoRegra,$botaoLegenda));
+        $objeto->set_botaoListar(array($botaoLegenda));
 
         ################################################################
 
@@ -574,5 +571,6 @@ if($acesso){
         }			 	 		
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>

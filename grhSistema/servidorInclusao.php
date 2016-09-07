@@ -161,7 +161,7 @@ if($acesso){
             }
 
             # Verifica se o CPF já está cadastrado
-            $idPessoa = $pessoal->get_idpessoaCPF($cpf);
+            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
             if(!is_null($idPessoa)){
                 # Servidor ativo
@@ -198,7 +198,7 @@ if($acesso){
             $pis = null;
 
             # Verifica se o CPF já está cadastrado
-            $idPessoa = $pessoal->get_idpessoaCPF($cpf);
+            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
             # pega o nome e o pis da pessoa (caso ja esteja cadastrado)
             if(!is_null($idPessoa)){
@@ -305,7 +305,7 @@ if($acesso){
                 $controle->set_linha(2);
                 $controle->set_col(6);
                 $controle->set_required(TRUE);                
-                $controle->set_title('A Loteção do Servidor.');
+                $controle->set_title('A Lotação do Servidor.');
                 $controle->set_array($lotacao);
                 $form->add_item($controle);
 
@@ -389,7 +389,7 @@ if($acesso){
                 $pisPasep = post('pisPasep');
                 $cargo = post('cargo'); 
                 $classe = null;
-                $idPessoa = $pessoal->get_idpessoaCPF($cpf);
+                $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
                 # Instancia um objeto de validação
                 $valida = new Valida();
@@ -601,5 +601,6 @@ if($acesso){
     }									 	 		
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>

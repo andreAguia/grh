@@ -84,4 +84,6 @@ if($acesso)
     $grid->fechaGrid();
     
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

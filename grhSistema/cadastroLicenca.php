@@ -84,6 +84,7 @@ if($acesso)
                                       idTpLicenca
                                  FROM tbtipolicenca
                                 WHERE nome LIKE "%'.$parametro.'%"
+                                   OR idTpLicenca LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -218,4 +219,6 @@ if($acesso)
     }									 	 		
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

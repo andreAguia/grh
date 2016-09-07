@@ -84,6 +84,7 @@ if($acesso)
                                  FROM tbtipocomissao
                                 WHERE descricao LIKE "%'.$parametro.'%"
                                    OR simbolo LIKE "%'.$parametro.'%" 
+                                   OR idTipoComissao LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -251,4 +252,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

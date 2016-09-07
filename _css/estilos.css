@@ -26,6 +26,10 @@ p#grhUsuarioLogado{
     color: #02548b;
 }
 
+div#RelServidor{
+    display :none;
+}
+
 /*******************************************
  * Check up
  *******************************************/

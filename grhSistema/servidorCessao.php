@@ -184,4 +184,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

@@ -83,7 +83,8 @@ if($acesso)
                                  FROM tbconcurso JOIN tbplano USING (idPlano)
                                 WHERE anobase LIKE "%'.$parametro.'%"
                                    OR regime LIKE "%'.$parametro.'%"
-                                   OR orgExecutor LIKE "%'.$parametro.'%"    
+                                   OR orgExecutor LIKE "%'.$parametro.'%"
+                                   OR idConcurso LIKE "%'.$parametro.'%" 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -255,7 +256,8 @@ if($acesso)
 
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos com esse Concurso');
-            $lista->set_situacao(2);
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_concurso($id);            
             $lista->show();
             
@@ -264,4 +266,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

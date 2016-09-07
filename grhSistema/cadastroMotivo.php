@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Banco
+ * Cadastro de Motivo de Saída do Servidor da Instituição
  *  
  * By Alat
  */
@@ -52,7 +52,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Banco');
+    $objeto->set_nome('Motivo de Saída do Servidor');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -61,7 +61,7 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenação
+    # ordenaç?o
     if(is_null($orderCampo))
             $orderCampo = "1";
 
@@ -69,17 +69,18 @@ if($acesso)
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idbanco,banco,obs,
-                                      idbanco
-                                 FROM tbbanco
-                                WHERE banco LIKE "%'.$parametro.'%"
+    $objeto->set_selectLista ('SELECT idmotivo,
+                                      motivo,
+                                      obs
+                                 FROM tbmotivo
+                                WHERE motivo LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT banco,
+    $objeto->set_selectEdita('SELECT motivo,
                                      obs
-                                FROM tbbanco
-                               WHERE idbanco = '.$id);
+                                FROM tbmotivo
+                               WHERE idmotivo = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -88,23 +89,26 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkExcluir('?fase=excluir');
+    #$objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Banco","Obs"));
-    $objeto->set_width(array(5,40,45));
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_label(array("Id","Motivo","Obs"));
+    $objeto->set_width(array(5,35,50));
+    $objeto->set_align(array("center","left","left"));
+
+    #$objeto->set_classe(array(null,null,null,"Pessoal"));
+    #$objeto->set_metodo(array(null,null,null,"get_servidoresSituacao"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbbanco');
+    $objeto->set_tabela('tbmotivo');
 
     # Nome do campo id
-    $objeto->set_idCampo('idbanco');
+    $objeto->set_idCampo('idmotivo');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -112,16 +116,18 @@ if($acesso)
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'banco',
-               'label' => 'Banco:',
+               'nome' => 'motivo',
+               'label' => 'Motivo:',
                'tipo' => 'texto',
                'required' => true,
                'autofocus' => true,
-               'size' => 30),
+               'col' => 12,
+               'size' => 50),
         array ('linha' => 2,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
+               'col' => 12,
                'size' => array(80,5))));
 
     # Matrícula para o Log

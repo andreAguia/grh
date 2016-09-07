@@ -28,7 +28,7 @@ if($acesso)
     
     # Verifica a paginacão
     $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);	
+    set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -70,27 +70,40 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "3 asc, 2";
+            $orderCampo = " 2 asc, 3 asc, 4 asc, 5 asc, 6";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
 
     # select da lista
     $objeto->set_selectLista ('SELECT idCargo,
+                                      grupo,
+                                      tbtipocargo.cargo,
+                                      classe,
+                                      area,
                                       nome,
-                                      tpCargo,
                                       tbplano.numDecreto,                                  
                                       idCargo,
                                       idCargo,
                                       idCargo
-                                 FROM tbcargo JOIN tbplano USING (idPlano)
+                                 FROM tbcargo LEFT JOIN tbplano USING (idPlano)
+                                              LEFT JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE nome LIKE "%'.$parametro.'%"
+                                   OR idCargo LIKE "%'.$parametro.'%" 
+                                   OR grupo LIKE "%'.$parametro.'%" 
+                                   OR tbtipocargo.cargo LIKE "%'.$parametro.'%"
+                                   OR classe LIKE "%'.$parametro.'%"
+                                   OR area LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nome,
-                                     tpCargo,
+    $objeto->set_selectEdita('SELECT grupo,
+                                     idtipocargo,
+                                     classe,
+                                     area,
+                                     nome,
                                      idPlano,
+                                     atribuicoes,
                                      obs
                                 FROM tbcargo
                                WHERE idCargo = '.$id);
@@ -107,12 +120,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Tipo","Plano de Cargos","Servidores","Ver"));
-    $objeto->set_width(array(5,30,20,20,10,10));
-    $objeto->set_align(array("center"));
+    $objeto->set_label(array("id","Grupo","Cargo","Classe","Área","Função","Plano de Cargos","Servidores","Ver"));
+    $objeto->set_width(array(5,10,15,15,15,20,10,5,5));
+    $objeto->set_align(array("center","center","center","center","center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,"get_servidoresCargo"));
+    $objeto->set_classe(array(null,null,null,null,null,null,null,"Pessoal"));
+    $objeto->set_metodo(array(null,null,null,null,null,null,null,"get_servidoresCargo"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -121,7 +134,7 @@ if($acesso)
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","",$botao));
+    $objeto->set_link(array("","","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -136,40 +149,79 @@ if($acesso)
     $objeto->set_formlabelTipo(1);
 
     # Pega os dados da combo de Plano e Cargos
-    $tabela = new Pessoal();
-    $result = $tabela->select('SELECT idPlano, 
+    $result1 = $pessoal->select('SELECT idPlano, 
                                       numDecreto
                                   FROM tbplano
                               ORDER BY numDecreto');
+    
+    # Pega os dados da combo de Tipos de Cargos
+    $result2 = $pessoal->select('SELECT idTipoCargo, 
+                                      cargo
+                                  FROM tbtipocargo
+                              ORDER BY idTipoCargo desc');
+    array_push($result2, array(null,null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'nome',
-               'label' => 'Cargo:',
-               'tipo' => 'texto',
+               'col' => 3,
+               'nome' => 'grupo',
+               'label' => 'Grupo:',
                'autofocus' => true,
-               'required' => true,
-               'size' => 50),
-         array ('linha' => 1,
-               'nome' => 'tpCargo',
-               'label' => 'Nível do Cargo:',
                'tipo' => 'combo',
                'required' => true,
-               'array' => array("Superior","Médio","Fundamental","Elementar"),
+               'array' => array(NULL,"Nível Elementar","Nível Fundamental","Nível Médio","Nível Superior","Doutorado",),              
+               'required' => true,
+               'size' => 30),
+         array('linha' => 1,
+               'col' => 5,
+               'nome' => 'idtipocargo',
+               'label' => 'Cargo:',
+               'tipo' => 'combo',               
+               'required' => true,
+               'array' => $result2,
                'size' => 30),
         array ('linha' => 1,
+               'col' => 4,
+               'nome' => 'classe',
+               'label' => 'Classe:',
+               'tipo' => 'texto',               
+               'required' => true,
+               'size' => 50),
+        array ('linha' => 2,
+               'col' => 4,
+               'nome' => 'area',
+               'label' => 'Área:',
+               'tipo' => 'texto',               
+               'required' => true,
+               'size' => 50),
+        array ('linha' => 2,
+               'col' => 5,
+               'nome' => 'nome',
+               'label' => 'Função:',
+               'tipo' => 'texto',               
+               'required' => true,
+               'size' => 50),
+        array ('linha' => 2,
+               'col' => 3,
                'nome' => 'idPlano',
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
                'required' => true,
-               'array' => $result,
+               'array' => $result1,
                'size' => 30),
         array ('linha' => 4,
+               'col' => 8,
+               'nome' => 'atribuicoes',
+               'label' => 'Atribuições do Cargo:',
+               'tipo' => 'textarea',
+               'size' => array(40,15)),
+        array ('linha' => 4,
+               'col' => 4,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
-               'size' => array(80,5))));
+               'size' => array(40,15))));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -177,7 +229,6 @@ if($acesso)
     # Paginação
     $objeto->set_paginacao(true);
     $objeto->set_paginacaoInicial($paginacao);
-    $objeto->set_paginacaoItens(16);
 
     ################################################################
     switch ($fase)
@@ -210,8 +261,7 @@ if($acesso)
             $grid->abreColuna(12);
         
             # Titulo
-            $servidor = new Pessoal();
-            titulo('Servidores com o Cargo: '.$servidor->get_nomeCargo($id));
+            titulo('Servidores com o Cargo: '.$pessoal->get_nomeCargo($id));
             br();
         
             # Lista de Servidores Ativos
@@ -222,7 +272,8 @@ if($acesso)
 
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos');
-            $lista->set_situacao(2);
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_cargo($id);
             $lista->show();
             
@@ -231,4 +282,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }

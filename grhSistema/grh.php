@@ -51,7 +51,8 @@ if($acesso)
         $linkBotao1 = new Link("Sair","../../areaServidor/sistema/login.php");
         $linkBotao1->set_class('button');
         $linkBotao1->set_title('Sair do Sistema');
-        $linkBotao1->set_accessKey('S');
+        $linkBotao1->set_confirma('Tem certeza que deseja sair do sistema?');
+        $linkBotao1->set_accessKey('i');
         $menu1->add_link($linkBotao1,"left");
 
         # Relatórios
@@ -121,5 +122,6 @@ if($acesso)
     }
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-

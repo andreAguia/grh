@@ -20,8 +20,7 @@ set_session('sessionPaginacao');	# Zera a session de pagina��o da classe mod
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
@@ -50,8 +49,9 @@ if($acesso)
     $menu->add_link($linkBotao1,"left");
 
     # Relatórios
-    $linkBotao3 = new Link("Relatorios","servidorMenu.php?fase=relatorios");
+    $linkBotao3 = new Link("Relatorios");
     $linkBotao3->set_class('button');
+    $linkBotao3->set_onClick("abreFechaDivId('RelServidor');");
     $linkBotao3->set_title('Relatórios desse servidor');
     $linkBotao3->set_accessKey('R');
     $menu->add_link($linkBotao3,"right");
@@ -60,7 +60,7 @@ if($acesso)
         # Histórico
         $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);
         $linkBotao4->set_class('button');
-        $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');
+        $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');        
         $linkBotao4->set_accessKey('H');
         $menu->add_link($linkBotao4,"right");
         
@@ -68,7 +68,7 @@ if($acesso)
         $linkBotao5 = new Link("Excluir","servidorExclusao.php");
         $linkBotao5->set_class('alert button');
         $linkBotao5->set_title('Excluir Servidor');
-        $linkBotao5->set_accessKey('E');
+        $linkBotao5->set_accessKey('x');
         $menu->add_link($linkBotao5,"right");
     }
 
@@ -77,6 +77,59 @@ if($acesso)
     $grid->fechaColuna();
     $grid->fechaGrid();
     
+    # Menu Relatório    
+    $div = new Div("RelServidor");
+    $div->abre();
+    
+    $grid = new Grid("right");
+    $grid->abreColuna(6);
+    
+    echo '<nav aria-label="You are here:" role="navigation">';
+    echo '<ul class="breadcrumbs">';
+    
+    # Ficha Cadastral
+    echo '<li>';
+    $link = new Link("Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
+    $link->set_title("Exibe a ficha cadastral do servidor");
+    $link->set_janela(TRUE);    
+    $link->show();
+    echo '</li>';
+    
+    # Capa da Pasta
+    echo '<li>';
+    $link = new Link("Capa da Pasta","../grhRelatorios/capaPasta.php");
+    $link->set_title("Exibe a Capa da pasta");
+    #$link->set_class("disabled");
+    $link->set_janela(TRUE);    
+    $link->show();
+    echo '</li>';
+    
+    # Ficha de Avaliação Funcional
+    echo '<li>';
+    $link = new Link("FAF","#");
+    $link->set_title("Exibe a ficha de avaliação funcional");
+    $link->set_class("disabled");
+    #$link->set_janela(TRUE);    
+    $link->show();
+    echo '</li>';
+    
+    # Folha de Presença
+    echo '<li>';
+    $link = new Link("Folha de Presença","#");
+    $link->set_title("Exibe a folha de presença do Servidor");
+    $link->set_class("disabled");
+    #$link->set_janela(TRUE);    
+    $link->show();
+    echo '</li>';
+    
+    echo '</ul>';
+    echo '</nav>';
+    
+    $grid->fechaColuna();
+    $grid->fechaGrid();
+    $div->fecha();
+    
+    
     # Exibe os dados do Servidor
     Grh::listaDadosServidor($idServidorPesquisado);
     
@@ -84,34 +137,22 @@ if($acesso)
     {	
         # Exibe o Menu Inicial
         case "menu" :
+            
+            # Ocorrencias do servidor
+            Grh::exibeOcorênciaServidor($idServidorPesquisado);
+            
             # monta o menu do servidor
             Grh::menuServidor($idServidorPesquisado);
+            
+            
             break;
         
    ##################################################################	
-
-        case "relatorios" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-                titulo('Relatórios');
-                $div = new Div("button");
-                $div->abre();
-                echo '<ul class="menuVertical">';
-                echo '<li><a href="#">Ficha Cadastral</a></li>';
-                echo '<li><a href="#">Capa da Pasta</a></li>';
-                echo '<li><a href="#">Folhas de Processos Arquivadas na Pasta Funcional</a></li>';
-                echo '<li><a href="#">FAF - Formulário de Avaliação Funcional</a></li>';
-                echo '<li><a href="#">Folha de Presença</a></li>';
-                echo '</ul>';
-                $div->fecha();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
+     
 
     }
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>
-

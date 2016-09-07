@@ -64,15 +64,16 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
+    # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "planoAtual desc,";
+            $orderCampo = "dtDecreto desc,";
 
     if(is_null($orderTipo))
             $orderTipo = 'idPlano desc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idPlano,numDecreto,
+    $objeto->set_selectLista ('SELECT idPlano,
+                                      numDecreto,
                                       dtDecreto,
                                       dtPublicacao,
                                       pgPublicacao,
@@ -83,6 +84,7 @@ if($acesso)
                                       idPlano
                                  FROM tbplano
                                 WHERE numDecreto LIKE "%'.$parametro.'%"
+                                   OR idPlano LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -192,5 +194,6 @@ if($acesso)
     }									 	 		
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>

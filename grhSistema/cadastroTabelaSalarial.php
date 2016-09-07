@@ -80,6 +80,7 @@ if($acesso)
                                       idClasse
                                  FROM tbclasse JOIN tbplano USING (idPlano)
                                 WHERE nivel LIKE "%'.$parametro.'%"
+                                   OR idClasse LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -181,5 +182,6 @@ if($acesso)
     }									 	 		
 
     $page->terminaPagina();
+}else{
+    loadPage("../../areaServidor/sistema/login.php");
 }
-?>

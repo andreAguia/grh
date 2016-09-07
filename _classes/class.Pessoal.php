@@ -64,7 +64,7 @@ class Pessoal extends Bd
 	/**
 	 * M�todo Gravar
 	 */
-	public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = TRUE){
+	public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = FALSE){
             
             if(is_null($tabela))
                 $tabela = $this->tabela;
@@ -388,7 +388,7 @@ class Pessoal extends Bd
 	{
 		$select = 'SELECT tbservidor.idServidor
                              FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                  JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                               WHERE tbservidor.situacao = 1
                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                 AND tbhistlot.lotacao = '.$id;
@@ -434,20 +434,27 @@ class Pessoal extends Bd
 	
 	{
             # Pega o cargo do servidor
-            $select = 'SELECT tbcargo.nome
-                         FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
+            $select = 'SELECT tbtipocargo.cargo,
+                              tbcargo.nome
+                         FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE idServidor = '.$idServidor;
 
             $row = parent::select($select,false);
-            $cargo = $row[0];
-
+            
+            $tipoCargo = $row[0];
+            $nomeCargo = $row[1];            
             $comissao = $this->get_cargoComissao($idServidor);
-
-            if (is_null($comissao))
-                return $cargo;
-            else
-                return $cargo.' ('.$comissao.')';
-			
+            
+            if(is_null($nomeCargo)){
+                return '('.$comissao.')';                
+            }else{
+                if(is_null($comissao)){
+                    return $tipoCargo.' - '.$nomeCargo;
+                }else{
+                    return $tipoCargo.' - '.$nomeCargo.' ('.$comissao.')'; 
+                }
+            }			
 	}
 		
 	###########################################################
@@ -528,14 +535,14 @@ class Pessoal extends Bd
 	 * @param	string $cpf cpf do servidor
 	 */
 
-	public function get_idpessoaCPF($cpf)
+	public function get_idPessoaCPF($cpf)
 	{
 		$select = 'SELECT idPessoa
                              FROM tbdocumentacao
                             WHERE cpf = "'.$cpf.'"';
 		
 		$idPessoa = parent::select($select,false);
-				
+                
 		return $idPessoa[0];                
 	}
 	
@@ -1004,7 +1011,7 @@ class Pessoal extends Bd
 	
 	/**
 	 * M�todo get_situacao
-	 * informa a situa��o (ativo ou inativo) de um servidor
+	 * informa a situa��o de um servidor
 	 * 
 	 * @param	string $idServidor idServidor do servidor
 	 */
@@ -1018,6 +1025,46 @@ class Pessoal extends Bd
 		$situacao = parent::select($select,false);
 				
 		return $situacao[0];
+	}
+	
+	###########################################################
+	
+	/**
+	 * M�todo get_idSituacao
+	 * informa a idsitua��o de um servidor
+	 * 
+	 * @param	string $idServidor idServidor do servidor
+	 */
+
+	function get_idSituacao($idServidor)
+	{
+		$select = 'SELECT idsituacao
+                             FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                            WHERE idServidor = '.$idServidor;
+		
+		$situacao = parent::select($select,false);
+				
+		return $situacao[0];
+	}
+	
+	###########################################################
+	
+	/**
+	 * M�todo get_motivo
+	 * informa o motivo de saída de um servidor
+	 * 
+	 * @param	string $idServidor idServidor do servidor
+	 */
+
+	function get_motivo($idServidor)
+	{
+		$select = 'SELECT tbmotivo.motivo
+                             FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
+                            WHERE idServidor = '.$idServidor;
+		
+		$motivo = parent::select($select,false);
+				
+		return $motivo[0];
 	}
 	
 	###########################################################
@@ -2091,7 +2138,7 @@ class Pessoal extends Bd
                     return $id;
                 else
                 {
-                    $select = 'SELECT  nome
+                    $select = 'SELECT nome
                                  FROM tbcargo
                                 WHERE idCargo = '.$id;
 
@@ -2838,5 +2885,23 @@ class Pessoal extends Bd
 	}
 		
 ###########################################################
+	
+	function get_numLotacaoAtiva()
+	
+	/**
+	 * informa o número de Lotações ativas
+	 */
+
+
+	{
+            $select = 'SELECT idLotacao
+                         FROM tblotacao
+                        WHERE ativo = "Sim"';		
+
+            $count = parent::count($select);
+
+            return $count;
+	}
+	
+	###########################################################
 }
-?>

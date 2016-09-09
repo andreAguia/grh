@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Cargos em COmissão
+ * Cadastro de Cargos em Comissão
  *  
  * By Alat
  */
@@ -66,7 +66,7 @@ if($acesso)
 
     # ordenaç?o
     if(is_null($orderCampo))
-            $orderCampo = "3";
+            $orderCampo = "9 desc, 3";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
@@ -76,11 +76,11 @@ if($acesso)
                                       descricao,
                                       simbolo,
                                       valsal,
-                                      vagas,                                  
+                                      vagas,
                                       idTipoComissao,
                                       idTipoComissao,
                                       idTipoComissao,
-                                      idTipoComissao
+                                      IF(ativo = 0, "Não", "Sim") as ativo
                                  FROM tbtipocomissao
                                 WHERE descricao LIKE "%'.$parametro.'%"
                                    OR simbolo LIKE "%'.$parametro.'%" 
@@ -92,6 +92,7 @@ if($acesso)
                                      simbolo,
                                      valsal,
                                      vagas,
+                                     ativo,
                                      obs
                                 FROM tbtipocomissao
                                WHERE idTipoComissao = '.$id);
@@ -108,12 +109,17 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Simbolo","Valor","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas"));
-    $objeto->set_width(array(5,30,10,10,10,10,10,10));
+    $objeto->set_label(array("id","Cargo","Simbolo","Valor","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas","Cargo Ativo?"));
+    $objeto->set_width(array(5,20,10,10,10,10,10,10,10));
     $objeto->set_align(array("center"));
     
+    $objeto->set_formatacaoCondicional(array(
+                                        array('coluna' => 8,
+                                              'valor' => "Não",
+                                              'operador' => '=',
+                                              'id' => 'inativo')));
+    
     $objeto->set_funcao(array(null,null,null,"formataMoeda"));
-
     $objeto->set_classe(array(null,null,null,null,null,'pessoal',null,'pessoal'));
     $objeto->set_metodo(array(null,null,null,null,null,'get_servidoresCargoComissao',null,'get_cargoComissaoVagasDisponiveis'));
 
@@ -149,27 +155,40 @@ if($acesso)
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
+               'col' => 5,
                'nome' => 'descricao',
                'label' => 'Cargo em Comissão:',
                'tipo' => 'texto',
                'autofocus' => true,
-               'size' => 30),
-         array ('linha' => 2,
+               'size' => 50),
+         array ('linha' => 1,
+                'col' => 3,
                'nome' => 'simbolo',
                'label' => 'Símbolo:',
                'tipo' => 'texto',
                'size' => 10),
-        array ('linha' => 2,
+        array ('linha' => 1,
+               'col' => 2,
                'nome' => 'valsal',
                'label' => 'Valor do Salário:',
-               'tipo' => 'texto',
+               'tipo' => 'moeda',
                'size' => 10),
-        array ('linha' => 2,
+        array ('linha' => 1,
+               'col' => 1,
                'nome' => 'vagas',
                'label' => 'Vagas:',
                'tipo' => 'numero',
+               'size' => 10),
+        array ('linha' => 1,
+               'col' => 1,
+               'nome' => 'ativo',
+               'title' => 'Informa se o cargo está ativo',
+               'label' => 'Ativo:',
+               'tipo' => 'combo',
+               'padrao' => 1,
+               'array' => array(array(0,"Não"),array(1,"Sim")),
                'size' => 10),        
-        array ('linha' => 4,
+        array ('linha' => 3,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',

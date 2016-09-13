@@ -111,7 +111,7 @@ if($acesso)
                                             Escolaridade
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
-    array_push($result, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($result, array(null,null)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'escolaridade',

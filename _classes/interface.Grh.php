@@ -60,12 +60,14 @@ class Grh
             
         titulo('Servidores');
         br(2);
-
+        
+        $tamanhoImage = 180;
         $menu = new MenuGrafico(1);
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Servidores');
         $botao->set_url('servidor.php');
-        $botao->set_image(PASTA_FIGURAS.'servidores.png',180,180);
+        $botao->set_image(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Servidores');
         $botao->set_accesskey('S');
         $menu->add_item($botao);
@@ -81,17 +83,9 @@ class Grh
         titulo('Tabelas Auxiliares');           
         br(2);
 
-        $tamanhoImage = 70;
+        $tamanhoImage = 60;
         $menu = new MenuGrafico();
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Cargos');
-        $botao->set_url('cadastroCargo.php');
-        $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Cargos');
-        $botao->set_accesskey('C');
-        $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
         $botao->set_url('cadastroPerfil.php');
@@ -107,7 +101,15 @@ class Grh
         $botao->set_title('Cadastro de Lotação');
         $botao->set_accesskey('L');
         $menu->add_item($botao);
-
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Cargo e Função');
+        $botao->set_url('cadastroCargo.php');
+        $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Funções');
+        $botao->set_accesskey('C');
+        $menu->add_item($botao);
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Cargo em Comissão');
         $botao->set_url('cadastroCargoComissao.php');
@@ -133,15 +135,15 @@ class Grh
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Plano de Cargos');
+        $botao->set_label('PDV');
         $botao->set_url('cadastroPlanoCargos.php');
         $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Plano de Cargos');
-        $botao->set_accesskey('a');
+        $botao->set_title('Cadastro de Plano de Cargos e Vencimantos');
+        $botao->set_accesskey('D');
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
-        $botao->set_label('Tabela Salarial (Classe & Padrão)');
+        $botao->set_label('Tabela Salarial');
         $botao->set_url('cadastroTabelaSalarial.php');
         $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
@@ -150,11 +152,11 @@ class Grh
 
         $menu->show();
         $grid->fechaColuna();
-        
+                        
         ##########################################################
             
         # Alertas
-        $grid->abreColuna(12,12,4);
+        $grid->abreColuna(12,6,4);
 
         $divAlertas = new Div("divAlertas");
         $divAlertas->abre();            
@@ -172,7 +174,7 @@ class Grh
         #$menu1->add_link($linkBotao3,"right");
         br();
         $grid2 = new Grid('center');
-        $grid2->abreColuna(4);        
+        $grid2->abreColuna(5);        
              $linkBotao3->show();       
         $grid2->fechaColuna();
         $grid2->fechaGrid();
@@ -218,16 +220,7 @@ class Grh
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico();
-
-                $botao = new BotaoGrafico();
-                $botao->set_label('Tipos de Cargo');
-                $botao->set_url("cadastroTipoCargo.php");
-                #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
-                $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Tipos de Cargo');
-                #$botao->set_accesskey('S');
-                $menu->add_item($botao);
+            $menu = new MenuGrafico();   
                 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');

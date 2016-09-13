@@ -36,8 +36,7 @@ if($acesso){
     $idTpLicenca = post('idTpLicenca');
 
     # Pega o idTpLicenca
-    if($fase == 'editar') 
-    {
+    if($fase == 'editar') {
         if(is_null($id))
             $idTpLicenca = get_session('sessionLicenca');
         else

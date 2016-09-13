@@ -111,7 +111,7 @@ if($acesso)
                                   FROM tbperfil
                               ORDER BY nome');
 
-    array_push($perfil, array(null,null)); 
+    array_unshift($perfil, array(null,null)); 
 
     # Pega os dados da combo concurso
     $concurso = $pessoal->select('SELECT idconcurso,
@@ -119,7 +119,7 @@ if($acesso)
                                   FROM tbconcurso
                               ORDER BY nome');
 
-    array_push($concurso, array(null,null)); 
+    array_unshift($concurso, array(null,null)); 
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
@@ -127,7 +127,7 @@ if($acesso)
                                   FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
                               ORDER BY tbtipocargo.cargo,nome');
 
-    array_push($cargo, array(0,null)); 
+    array_unshift($cargo, array(0,null)); 
 
     # Pega os dados da combo situação
     $situacao = $pessoal->select('SELECT idsituacao,
@@ -135,7 +135,7 @@ if($acesso)
                                   FROM tbsituacao
                               ORDER BY situacao');
 
-    array_push($situacao, array(null,null)); 
+    array_unshift($situacao, array(null,null)); 
     
     # Pega os dados da combo motivo de Saída do servidor
     $motivo = $pessoal->select('SELECT idmotivo,
@@ -143,7 +143,7 @@ if($acesso)
                                   FROM tbmotivo
                               ORDER BY idmotivo');
 
-    array_push($motivo, array(null,null)); 
+    array_unshift($motivo, array(null,null)); 
 
     # Campos para o formulario
     $campos = array(array( 'linha' => 1,

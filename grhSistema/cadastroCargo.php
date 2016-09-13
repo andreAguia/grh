@@ -56,7 +56,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos');	
+    $objeto->set_nome('Cargos e Funções');	
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -77,10 +77,8 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista ('SELECT idCargo,
-                                      grupo,
                                       tbtipocargo.cargo,
-                                      classe,
-                                      area,
+                                      tbarea.area,
                                       nome,
                                       tbplano.numDecreto,                                  
                                       idCargo,
@@ -88,19 +86,16 @@ if($acesso)
                                       idCargo
                                  FROM tbcargo LEFT JOIN tbplano USING (idPlano)
                                               LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                              LEFT JOIN tbarea USING (idarea)
                                 WHERE nome LIKE "%'.$parametro.'%"
                                    OR idCargo LIKE "%'.$parametro.'%" 
-                                   OR grupo LIKE "%'.$parametro.'%" 
+                                   OR tbarea.area LIKE "%'.$parametro.'%" 
                                    OR tbtipocargo.cargo LIKE "%'.$parametro.'%"
-                                   OR classe LIKE "%'.$parametro.'%"
-                                   OR area LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT grupo,
-                                     idtipocargo,
-                                     classe,
-                                     area,
+    $objeto->set_selectEdita('SELECT idtipocargo,
+                                     idarea,
                                      nome,
                                      idPlano,
                                      atribuicoes,
@@ -120,12 +115,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Grupo","Cargo","Classe","Área","Função","Plano de Cargos","Servidores","Ver"));
-    $objeto->set_width(array(5,10,15,15,15,20,10,5,5));
-    $objeto->set_align(array("center","center","center","center","center","left"));
+    $objeto->set_label(array("id","Cargo","Área","Função","Plano de Cargos","Servidores","Ver"));
+    $objeto->set_width(array(5,20,25,25,10,5,5));
+    $objeto->set_align(array("center","center","center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,null,null,null,"get_servidoresCargo"));
+    $objeto->set_classe(array(null,null,null,null,null,"Pessoal"));
+    $objeto->set_metodo(array(null,null,null,null,null,"get_servidoresCargo"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -134,7 +129,7 @@ if($acesso)
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","","","",$botao));
+    $objeto->set_link(array("","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -156,25 +151,22 @@ if($acesso)
     
     # Pega os dados da combo de Tipos de Cargos
     $result2 = $pessoal->select('SELECT idTipoCargo, 
-                                      cargo
-                                  FROM tbtipocargo
-                              ORDER BY idTipoCargo desc');
+                                        cargo
+                                   FROM tbtipocargo
+                               ORDER BY idTipoCargo desc');
     array_push($result2, array(null,null));
+    
+    # Pega os dados da combo de Área
+    $result3 = $pessoal->select('SELECT idArea,
+                                        CONCAT(tbtipocargo.cargo," - ",area)
+                                  FROM tbarea JOIN tbtipocargo USING (idTipoCargo)
+                              ORDER BY idarea desc');
+    array_push($result3, array(null,null));
 
     # Campos para o formulario
-    $objeto->set_campos(array(
-        array ('linha' => 1,
-               'col' => 3,
-               'nome' => 'grupo',
-               'label' => 'Grupo:',
-               'autofocus' => true,
-               'tipo' => 'combo',
-               'required' => true,
-               'array' => array(NULL,"Nível Elementar","Nível Fundamental","Nível Médio","Nível Superior","Doutorado",),              
-               'required' => true,
-               'size' => 30),
+    $objeto->set_campos(array(        
          array('linha' => 1,
-               'col' => 5,
+               'col' => 6,
                'nome' => 'idtipocargo',
                'label' => 'Cargo:',
                'tipo' => 'combo',               
@@ -182,28 +174,23 @@ if($acesso)
                'array' => $result2,
                'size' => 30),
         array ('linha' => 1,
-               'col' => 4,
-               'nome' => 'classe',
-               'label' => 'Classe:',
-               'tipo' => 'texto',               
-               'required' => true,
-               'size' => 50),
-        array ('linha' => 2,
-               'col' => 4,
-               'nome' => 'area',
+               'col' => 6,
+               'nome' => 'idarea',
                'label' => 'Área:',
-               'tipo' => 'texto',               
+               'tipo' => 'combo',               
+               'required' => true,
+               'array' => $result3,      
                'required' => true,
                'size' => 50),
         array ('linha' => 2,
-               'col' => 5,
+               'col' => 8,
                'nome' => 'nome',
                'label' => 'Função:',
                'tipo' => 'texto',               
                'required' => true,
                'size' => 50),
         array ('linha' => 2,
-               'col' => 3,
+               'col' => 4,
                'nome' => 'idPlano',
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
@@ -229,6 +216,20 @@ if($acesso)
     # Paginação
     $objeto->set_paginacao(true);
     $objeto->set_paginacaoInicial($paginacao);
+    
+    # Cadastro de Cargos
+    $botaoCargo = new Button("Cargos");
+    $botaoCargo->set_title("Acessa o Cadastro de Cargos");
+    $botaoCargo->set_url('cadastroTipoCargo.php');  
+    #$botaoCargo->set_accessKey('L');
+    
+    # Cadastro de Áreas
+    $botaoArea = new Button("Áreas");
+    $botaoArea->set_title("Acessa o Cadastro de Áreas");
+    $botaoArea->set_url('cadastroArea.php');  
+    #$botaoArea->set_accessKey('L');
+
+    $objeto->set_botaoListar(array($botaoCargo,$botaoArea));
 
     ################################################################
     switch ($fase)

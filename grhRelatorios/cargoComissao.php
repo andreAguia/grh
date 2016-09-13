@@ -27,39 +27,29 @@ if($acesso)
 
     ######
 
-    $select ='SELECT CASE substring(simbolo,1,1)
-                        WHEN "F" THEN "FENORTE"
-                        WHEN "P" THEN "TECNORTE"
-                     END,
-                     descricao,
+    $select ='SELECT descricao,
                      simbolo,
                      valsal,
                      vagas
                 FROM tbtipocomissao
+                WHERE ativo = 1
            ORDER BY simbolo';
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Cargos em Comissão');
-    $relatorio->set_subtitulo('Agrupados por Instituição');
+    #$relatorio->set_subtitulo('Agrupados por Instituição');
 
-    $relatorio->set_label(array('','Cargo','Símbolo','Valor','Vagas'));
-    $relatorio->set_width(array(0,50,20,20,10));
+    $relatorio->set_label(array('Cargo','Símbolo','Valor','Vagas'));
+    $relatorio->set_width(array(50,20,20,10));
     $relatorio->set_align(array("center"));
-    $relatorio->set_funcao(array(null,null,null,'formataMoeda'));
+    $relatorio->set_funcao(array(null,null,'formataMoeda'));
     
-    $relatorio->set_colunaSomatorio(4);
+    $relatorio->set_colunaSomatorio(3);
     $relatorio->set_textoSomatorio('Total de Vagas:');
 
-    $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(0);
-    
-    $relatorio->set_colunaSomatorio(4);
-    #$relatorio->set_funcaoSomatorio('formataMoeda');
-    $relatorio->set_textoSomatorio('Total de Vagas:');
-    #$relatorio->set_exibeSomatorioGeral(false);
-    
+    $relatorio->set_conteudo($result);    
     $relatorio->show();
 
     $page->terminaPagina();

@@ -124,7 +124,7 @@ if($acesso)
             $menu->add_item('titulo','Cargos','#','');
             $menu->add_item('linkWindow','Relatório de Cargos - Agrupados por Nível','../grhRelatorios/cargoNivel.php');
             $menu->add_item('linkWindow','Relatório de Estatutários - Agrupados por Cargo','../grhRelatorios/estatutariosCargo.php');
-            $menu->add_item('linkWindow','Relatório dos Cargos em Comissão - Agrupados por Instituição','../grhRelatorios/cargoComissao.php');
+            $menu->add_item('linkWindow','Relatório dos Cargos em Comissão','../grhRelatorios/cargoComissao.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo','../grhRelatorios/cargosComissionados.php');
 
             $menu->show();

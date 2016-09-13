@@ -105,7 +105,7 @@ if($acesso)
                                        concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
                                   FROM tblotacao
                               ORDER BY lotacao');
-    array_push($result, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($result, array(null,null)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'data',

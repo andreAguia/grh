@@ -29,20 +29,21 @@ if($acesso)
     
     $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbcargo.nome,
-                     concat(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
+                     CONCAT(tbtipocargo.cargo," - ",tbcargo.nome),
+                     CONCAT(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                   LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
-                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                   LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                                   LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                LEFT JOIN tbtipocargo ON (tbcargo.idtipocargo = tbtipocargo.idtipocargo)
+                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                 WHERE tbservidor.situacao = 1 AND tbservidor.idPerfil = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-             ORDER BY tbcargo.nome, tbpessoa.nome';
+             ORDER BY tbtipocargo.cargo, tbcargo.nome, tbpessoa.nome';
 
     $result = $servidor->select($select);
 

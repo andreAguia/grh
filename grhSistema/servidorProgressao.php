@@ -117,18 +117,18 @@ if($acesso)
     # Pega os dados da combo prograssao
     $lista = new Pessoal();
     $result1 = $lista->select('SELECT idTpProgressao, 
-                                     nome
-                                FROM tbtipoprogressao
-                            ORDER BY nome');
+                                      nome
+                                 FROM tbtipoprogressao
+                             ORDER BY nome');
     array_push($result1, array(null,null)); # Adiciona o valor de nulo
 
     # Pega os dados da combo classe
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
     $result2 = $lista->select('SELECT idClasse,
                                       concat("R$ ",Valor," ( ",tbplano.numdecreto," - ",faixa," )") as classe 
-                                FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
-                               WHERE nivel = "'.$nivel.'" 
-                                  ORDER BY numdecreto,nivel,classe');
+                                 FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
+                                WHERE nivel = "'.$nivel.'" 
+                             ORDER BY numdecreto,nivel,classe');
     array_push($result2, array(null,null)); # Adiciona o valor de nulo
 
     # Campos para o formulario

@@ -38,7 +38,7 @@ class Pessoal extends Bd
 ###########################################################
 	
 	/**
-	 * M�todo set_tabela
+	 * Método set_tabela
 	 * 
 	 * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que ser� utilizada
 	 */
@@ -50,7 +50,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo set_idCampo
+	 * Método set_idCampo
 	 * 
 	 * @param  	$idCampo)	-> Nome do campo chave da tabela
 	 */
@@ -62,7 +62,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo Gravar
+	 * Método Gravar
 	 */
 	public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = FALSE){
             
@@ -78,7 +78,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo Excluir
+	 * Método Excluir
 	 */
 	public function excluir($idValor = NULL,$tabela = NULL,$idCampo = 'id'){
             
@@ -91,7 +91,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_gratificacao
+	 * Método get_gratificacao
 	 * informa gratifica��o de uma matr�cula(se houver)
 	 * 
 	 * @param	string $idServidor idServidor do servidor
@@ -114,7 +114,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_gratificacaoDtFinal
+	 * Método get_gratificacaoDtFinal
 	 * informa a data de t�rmino da gratifica��o de uma matr�cula(se houver)
 	 * 
 	 * @param	string $idServidor idServidor do servidor
@@ -1438,7 +1438,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresCargo
+	 * Método get_servidoresCargo
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado cargo
 	 */
@@ -1449,6 +1449,25 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE situacao = 1 AND 
                               idCargo = '.$id;
+           
+            $numero = parent::count($select);
+            return $numero;
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_servidoresTipoCargo
+	 * 
+	 * Exibe o número de servidores ativos em um determinado tipo de cargo
+	 */
+	
+	public function get_servidoresTipoCargo($id)
+	{
+            $select = 'SELECT idServidor                             
+                         FROM tbservidor JOIN tbcargo USING (idCargo)
+                        WHERE situacao = 1 AND 
+                              tbcargo.idTipoCargo = '.$id;
            
             $numero = parent::count($select);
             return $numero;
@@ -1477,7 +1496,7 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_cargoComissaoVagas
+	 * Método get_cargoComissaoVagas
 	 * 
 	 * Exibe o n�mero de vagas em um determinado cargo em comissao
 	 */
@@ -1495,9 +1514,9 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_cargoComissaoVagas
+	 * Método get_cargoComissaoVagas
 	 * 
-	 * Exibe o n�mero de vagas n�o ocupadas em um determinado cargo em comissao
+	 * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
 	 */
 	
 	public function get_cargoComissaoVagasDisponiveis($id)
@@ -1746,8 +1765,9 @@ class Pessoal extends Bd
 
         public function get_nivelCargo($idServidor)
 	{
-            $select = 'SELECT tbcargo.tpCargo
-			 FROM tbcargo JOIN tbservidor ON(tbservidor.idCargo = tbcargo.idCargo)
+            $select = 'SELECT tbtipocargo.nivel
+                         FROM tbservidor JOIN tbcargo USING (idCargo)
+                                         JOIN tbtipocargo USING (idTipoCargo)
                         WHERE idServidor = '.$idServidor;
 		
             $row = parent::select($select,false);
@@ -2903,5 +2923,59 @@ class Pessoal extends Bd
             return $count;
 	}
 	
+	###########################################################
+        
+	/**
+	 * Método get_TipoCargoVagas
+	 * 
+	 * Exibe o n�mero de vagas em um determinado cargo em comissao
+	 */
+	
+	public function get_TipoCargoVagas($id)
+	{
+            $select = 'SELECT vagas                             
+                         FROM tbtipocargo 
+                        WHERE idTipoCargo = '.$id;
+           
+            $row = parent::select($select,false);		
+            return $row[0];
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_tipoCargoVagasDisponiveis
+	 * 
+	 * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
+	 */
+	
+	public function get_tipoCargoVagasDisponiveis($id)
+	{
+            $vagas = $this->get_TipoCargoVagas($id);
+            $ocupadas = $this->get_servidoresTipoCargo($id);
+            $disponiveis = $vagas - $ocupadas;
+           
+            return $disponiveis;
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_servidoresArea
+	 * 
+	 * Exibe o número de servidores ativos em uma determinada area
+	 */
+	
+	public function get_servidoresArea($id)
+	{
+            $select = 'SELECT idServidor                             
+                         FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                        WHERE situacao = 1 AND 
+                              tbcargo.idArea = '.$id;
+           
+            $numero = parent::count($select);
+            return $numero;
+	}
+
 	###########################################################
 }

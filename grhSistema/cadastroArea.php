@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Tipos de Cargos
+ * Cadastro de Área
  *  
  * By Alat
  */
@@ -25,7 +25,11 @@ if($acesso)
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-
+    
+    # Verifica a paginacão
+    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
+    set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
+    
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
@@ -42,7 +46,7 @@ if($acesso)
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
-
+    
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
@@ -52,16 +56,19 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Tipos de Cargos');
+    $objeto->set_nome('Área');	
 
-    # Botão de voltar da lista
+    # botão salvar
+    $objeto->set_botaoSalvarGrafico(false);
+
+    # botão de voltar da lista
     $objeto->set_voltarLista('cadastroCargo.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
+    # ordenação
     if(is_null($orderCampo))
             $orderCampo = "1";
 
@@ -69,24 +76,21 @@ if($acesso)
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idTipoCargo,
-                                      cargo,
-                                      nivel,
-                                      vagas,
-                                      idTipoCargo,
-                                      idTipoCargo,
-                                      obs
-                                 FROM tbtipocargo
-                                WHERE cargo LIKE "%'.$parametro.'%"
+    $objeto->set_selectLista ('SELECT idarea,
+                                      tbtipocargo.cargo,
+                                      area,
+                                      idarea
+                                 FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                WHERE area LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT cargo,
-                                     nivel,
-                                     vagas,
+    $objeto->set_selectEdita('SELECT area,
+                                     idTipoCargo,
+                                     descricao,
                                      obs
-                                FROM tbtipocargo
-                               WHERE idTipoCargo = '.$id);
+                                FROM tbarea
+                               WHERE idarea = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -100,58 +104,78 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Cargo","Nível","Vagas","Servidores Ativos","Vagas Disponíveis","Obs"));
-    $objeto->set_width(array(5,20,15,10,10,10,25));
-    $objeto->set_align(array("center","left"));
+    $objeto->set_label(array("id","Cargo","Area","Servidores Ativos"));
+    $objeto->set_width(array(5,20,60,10));
+    $objeto->set_align(array("center","center","left","center"));
 
-    $objeto->set_classe(array(null,null,null,null,'pessoal','pessoal'));
-    $objeto->set_metodo(array(null,null,null,null,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
+    $objeto->set_classe(array(null,null,null,"Pessoal"));
+    $objeto->set_metodo(array(null,null,null,"get_servidoresArea"));
+
+    # Botão de exibição dos servidores
+    $botao = new BotaoGrafico();
+    $botao->set_label('');    
+    $botao->set_url('?fase=listaServidores&id=');    
+    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+
+    # Coloca o objeto link na tabela			
+    #$objeto->set_link(array("","","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbtipocargo');
+    $objeto->set_tabela('tbarea');
 
     # Nome do campo id
-    $objeto->set_idCampo('idTipoCargo');
+    $objeto->set_idCampo('idarea');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Pega os dados da combo de Tipos de Cargos
+    $result2 = $pessoal->select('SELECT idTipoCargo, 
+                                      cargo
+                                  FROM tbtipocargo
+                              ORDER BY idTipoCargo desc');
+    array_unshift($result2, array(null,null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array ('linha' => 1,
-               'nome' => 'cargo',
-               'label' => 'Cargo:',
+        array  ('linha' => 1,
+               'col' => 6,
+               'nome' => 'area',
+               'label' => 'Área:',
                'tipo' => 'texto',
-               'required' => true,
                'autofocus' => true,
-               'col' => 7,
-               'size' => 50),
-        array ('linha' => 1,
-               'nome' => 'nivel',
-               'label' => 'Nível do Cargo:',
-               'tipo' => 'combo',
                'required' => true,
-               'array' => array(NULL,"Doutorado","Superior","Médio","Fundamental","Elementar"),
-               'col' => 3,
+               'size' => 50),
+        array('linha' => 1,
+               'col' => 6,
+               'nome' => 'idTipoCargo',
+               'label' => 'Cargo:',
+               'tipo' => 'combo',               
+               'required' => true,
+               'array' => $result2,
                'size' => 30),
-        array ('linha' => 1,
-               'col' => 2,
-               'nome' => 'vagas',
-               'label' => 'Vagas:',
-               'tipo' => 'numero',
-               'size' => 10),
         array ('linha' => 2,
+               'col' => 6,
+               'nome' => 'descricao',
+               'label' => 'Descrição:',
+               'tipo' => 'textarea',
+               'size' => array(40,15)),
+        array ('linha' => 2,
+               'col' => 6,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
-               'col' => 12,
-               'size' => array(80,5))));
+               'size' => array(40,15))));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Paginação
+    $objeto->set_paginacao(true);
+    $objeto->set_paginacaoInicial($paginacao);
 
     ################################################################
     switch ($fase)
@@ -160,14 +184,12 @@ if($acesso)
         case "listar" :
             $objeto->listar();
             break;
-
-        case "editar" :	
+        case "editar" :
         case "excluir" :	
-        case "gravar" :
+        case "gravar" :		
             $objeto->$fase($id);
             break;
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }else{
     loadPage("../../areaServidor/sistema/login.php");

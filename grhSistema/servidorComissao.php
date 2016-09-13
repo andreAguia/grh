@@ -155,7 +155,7 @@ if($acesso)
     }           
      
     $quantidadeCargos = count($novaLista);          // pega a quantidade de cargos vagos
-    array_push($novaLista, array(null,null));       // adiciona o valor de nulo
+    array_unshift($novaLista, array(null,null));       // adiciona o valor de nulo
         
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',

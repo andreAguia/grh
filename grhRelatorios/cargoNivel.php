@@ -28,11 +28,11 @@ if($acesso)
     ######
     
     $select ='SELECT tbtipocargo.cargo,
-                     classe,
-                     area,
+                     tbarea.area,
                      nome
                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-            ORDER BY 1,2,3,4';
+                             LEFT JOIN tbarea USING (idarea)
+            ORDER BY 1,2,3';
 
     $result = $pessoal->select($select);
 
@@ -40,9 +40,9 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Cargos');
     $relatorio->set_subtitulo('Agrupados por Nível - Ordenados pelo Nome do Cargo');
 
-    $relatorio->set_label(array("Tipo","Classe","Área","Cargo"));
-    $relatorio->set_width(array(0,33,33,34));
-    $relatorio->set_align(array(null,"left","left","left"));
+    $relatorio->set_label(array("Cargo","Área","Função"));
+    $relatorio->set_width(array(0,40,60));
+    $relatorio->set_align(array(null,"left","left"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);

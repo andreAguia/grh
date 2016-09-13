@@ -86,6 +86,9 @@ class listaServidores
      */	
     public function show()
     {
+        # Pega o time inicial
+        $time_start = microtime(true);
+        
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -289,6 +292,13 @@ class listaServidores
                 $tabela->set_textoRessaltado($this->matNomeId);
             
             $tabela->show();
+            
+            # Pega o time final
+            $time_end = microtime(true);
+            
+            # Calcula e exibe o tempo
+            $time = $time_end - $time_start;
+            p(number_format($time, 4, '.', ',')." segundos","right","f10");
         }
     }
 }

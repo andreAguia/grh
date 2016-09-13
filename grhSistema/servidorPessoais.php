@@ -97,21 +97,21 @@ if($acesso)
                                        estciv
                                   FROM tbestciv
                               ORDER BY estciv');
-    array_push($estadoCivil, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($estadoCivil, array(null,null)); # Adiciona o valor de nulo
     
     # Pega os dados da combo de nacionalidade
     $nacionalidade = $pessoal->select('SELECT idNacionalidade,
                                        nacionalidade
                                   FROM tbnacionalidade
                               ORDER BY idNacionalidade');
-    array_push($nacionalidade, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($nacionalidade, array(null,null)); # Adiciona o valor de nulo
     
     # Pega os dados da combo de país de origem
     $paisOrigem = $pessoal->select('SELECT idPais,
                                        pais
                                   FROM tbpais
                               ORDER BY idPais');
-    array_push($paisOrigem, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($paisOrigem, array(null,null)); # Adiciona o valor de nulo
 
      
 

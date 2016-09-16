@@ -256,13 +256,70 @@ if($acesso)
             break;
 
         case "listaServidores" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
             # Botão voltar
-            botaoVoltar('?');
+            $btnVoltar = new Button("Voltar","?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar,"left");
+
+            # Relatórios
+            $btnRel = new Link("Relatorios");
+            $btnRel->set_class('button');
+            $btnRel->set_onClick("abreFechaDivId('RelServidor');");
+            $btnRel->set_title('Relatórios desse servidor');
+            $btnRel->set_accessKey('R');
+            $menu->add_link($btnRel,"right");
+             
+            $menu->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            # Menu Relatório    
+            $div = new Div("RelServidor");
+            $div->abre();
+
+            $grid = new Grid("right");
+            $grid->abreColuna(3);
+
+            echo '<nav aria-label="You are here:" role="navigation">';
+            echo '<ul class="breadcrumbs">';
+
+            # Servidores
+            echo '<li>';
+            $link = new Link("Servidores","../grhRelatorios/lotacaoServidoresAtivos.php?lotacao=".$id);
+            $link->set_title("Exibe a Lista de Servidores");
+            $link->set_janela(TRUE);    
+            $link->show();
+            echo '</li>';
+
+            # Aniversariantes
+            echo '<li>';
+            $link = new Link("Aniversariantes","../grhRelatorios/lotacaoAniversariantes.php?lotacao=".$id);
+            $link->set_title("Exibe a Lista de aniversariantes deste setor");
+            #$link->set_class("disabled");
+            $link->set_janela(TRUE);    
+            $link->show();
+            echo '</li>';
+
+            echo '</ul>';
+            echo '</nav>';
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            $div->fecha();
             
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-
+            
             # Titulo
             titulo('Servidores da Lotação: '.$pessoal->get_nomelotacao($id));
             br();

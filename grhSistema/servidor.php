@@ -88,13 +88,6 @@ if($acesso)
         $linkBotao1->set_accessKey('V');
         $menu1->add_link($linkBotao1,"left");
 
-        # Relatórios
-        $linkBotao3 = new Link("Incluir Servidor","servidorInclusao.php");
-        $linkBotao3->set_class('button');
-        $linkBotao3->set_title('Incluir Novo Servidor');
-        $linkBotao3->set_accessKey('I');
-        $menu1->add_link($linkBotao3,"right");
-
         $menu1->show();
 
         # Parâmetros

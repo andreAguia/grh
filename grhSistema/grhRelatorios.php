@@ -79,6 +79,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença','?fase=licenca','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','SigFis','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
@@ -123,7 +124,7 @@ if($acesso)
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Cargos','#','');
             $menu->add_item('linkWindow','Relatório de Cargos - Agrupados por Nível','../grhRelatorios/cargoNivel.php');
-            $menu->add_item('linkWindow','Relatório de Estatutários - Agrupados por Cargo','../grhRelatorios/estatutariosCargo.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários','../grhRelatorios/cargoEstatutarios.php');
             $menu->add_item('linkWindow','Relatório dos Cargos em Comissão','../grhRelatorios/cargoComissao.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo','../grhRelatorios/cargosComissionados.php');
 
@@ -232,8 +233,6 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Check','../grhRelatorios/geralServidoresAtivosCheck.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores - Agrupados por Lotação','../grhRelatorios/geralServidoresLotacao.php');
             $menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
-            $menu->add_item('linkWindow','Relatório de Aniversariantes - Agrupados por Lotação','../grhRelatorios/aniversariantesLotacao.php');
-            
             $menu->show();
             break;    
 
@@ -247,6 +246,16 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');
             $menu->add_item('linkWindow','Relatório Anual de Licença Prêmio','../grhRelatorios/licencaPremioAnual.php');
             $menu->add_item('linkWindow','Relatório de Licença Prêmio','../grhRelatorios/licencaPremio.php');
+            $menu->show();
+            break;    
+
+        ######################################
+
+        case "lotacao";
+            $menu = new Menu('menuInicial');
+            $menu->add_item('titulo','Lotação','#','');
+            $menu->add_item('linkWindow','Relatório de Aniversariantes','../grhRelatorios/lotacaoAniversariantes.php');
+            $menu->add_item('linkWindow','Relatório de Servidores Ativos','../grhRelatorios/lotacaoServidoresAtivos.php');
             $menu->show();
             break;    
 

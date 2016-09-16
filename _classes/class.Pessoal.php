@@ -1436,6 +1436,32 @@ class Pessoal extends Bd
 	}
 
 	###########################################################
+
+	/**
+	 * M�todo get_nomeCOmpletolotacao
+	 * Informa o nome da COmpleto lota��o a partir do id
+	 *
+	 * @param	string $id  id da lota��o
+	 */
+
+	public function get_nomeCompletolotacao($id)
+
+	{
+		if (!is_numeric($id))
+                    return $id;
+                else
+                {
+                    $select = 'SELECT nome
+                                 FROM tblotacao
+                                WHERE idLotacao = '.$id;
+
+                    $row = parent::select($select,false);
+                    return $row[0];
+                }
+
+	}
+
+	###########################################################
 	
 	/**
 	 * Método get_servidoresCargo

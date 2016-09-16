@@ -26,32 +26,41 @@ if($acesso)
     $page->iniciaPagina();
     
     # Pega os parâmetros dos relatórios
-    $lotacao = post('lotacao');
+    $lotacao = get('lotacao',post('lotacao'));
 
     ######
     
-    $select ='SELECT DATE_FORMAT(tbpessoa.dtNasc,"%d/%m"),
+    $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                FROM tbpessoa LEFT JOIN tbservidor ON (tbpessoa.idPessoa = tbservidor.idPessoa)
-                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     tbservidor.idServidor,
+                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
+                     tbperfil.nome,
+                     tbservidor.dtAdmissao,
+                     tbservidor.idServidor
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                   LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                WHERE tbservidor.situacao = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND idlotacao="'.$lotacao.'"
-            ORDER BY tblotacao.UADM, tblotacao.DIR, tblotacao.GER, month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
+            ORDER BY lotacao, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Aniversariantes');
-    $relatorio->set_label(array('Data','Nome'));
-    $relatorio->set_width(array(10,90));
-    $relatorio->set_align(array("center","left"));
-    #$relatorio->set_funcao(array("date_to_php"));
+    $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
+    $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
+    $relatorio->set_width(array(10,30,30,0,10,10,10));
+    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
+    
+    $relatorio->set_classe(array(null,null,"pessoal",null,null,null,"pessoal"));
+    $relatorio->set_metodo(array(null,null,"get_Cargo",null,null,null,"get_Situacao"));
     
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(2);
+    $relatorio->set_numGrupo(3);
     
     $listaLotacao = $servidor->select('SELECT idlotacao, concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
                                           FROM tblotacao

@@ -254,13 +254,61 @@ if($acesso)
             break;
 
         case "listaServidores" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
             # Botão voltar
-            botaoVoltar('?');
+            $btnVoltar = new Button("Voltar","?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar,"left");
+
+            # Relatórios
+            $btnRel = new Link("Relatorios");
+            $btnRel->set_class('button');
+            $btnRel->set_onClick("abreFechaDivId('RelServidor');");
+            $btnRel->set_title('Relatórios desse servidor');
+            $btnRel->set_accessKey('R');
+            $menu->add_link($btnRel,"right");
+             
+            $menu->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            # Menu Relatório    
+            $div = new Div("RelServidor");
+            $div->abre();
+
+            $grid = new Grid("right");
+            $grid->abreColuna(3);
+
+            echo '<nav aria-label="You are here:" role="navigation">';
+            echo '<ul class="breadcrumbs">';
+
+            # Servidor
+            echo '<li>';
+            $link = new Link("Estatutários Ativos","../grhRelatorios/cargoEstatutarios.php?cargo=".$id);
+            $link->set_title("Exibe a lista de servidores estatutários com esse cargo");
+            $link->set_janela(TRUE);    
+            $link->show();
+            echo '</li>';
+
+            echo '</ul>';
+            echo '</nav>';
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            $div->fecha();
             
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-        
+            
             # Titulo
             titulo('Servidores com o Cargo: '.$pessoal->get_nomeCargo($id));
             br();

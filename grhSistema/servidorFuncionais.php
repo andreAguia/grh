@@ -123,9 +123,10 @@ if($acesso)
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
-                                       concat(tbtipocargo.cargo," - ",nome)
+                                       concat(tbtipocargo.cargo," - ",tbarea.area," - ",nome)
                                   FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                              ORDER BY tbtipocargo.cargo,nome');
+                                               LEFT JOIN tbarea USING (idarea)
+                              ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
     array_unshift($cargo, array(0,null)); 
 
@@ -162,7 +163,7 @@ if($acesso)
                            'autofocus' => true,
                            'size' => 10,
                            'unique'=> true,
-                           'col' => 1,
+                           'col' => 2,
                            'title' => 'Matrícula do servidor.'),
                    array ('linha' => 1,
                            'nome' => 'idPerfil',
@@ -183,24 +184,25 @@ if($acesso)
                                    'tipo' => 'combo',
                                    'array' => $concurso,
                                    'title' => 'Concurso',
-                                   'col' => 2,
+                                   'col' => 3,
                                    'size' => 15));
     }
+            
     # Somente se for estatutário ou cedido
     if (($perfilServidor == 1) || ($perfilServidor == 2))
     {
-         array_push($campos, array ('linha' => 1,
+         array_push($campos, array ('linha' => 2,
                                     'nome' => 'idCargo',
-                                    'label' => 'Cargo:',
+                                    'label' => 'Cargo / Área / Função:',
                                     'tipo' => 'combo',
                                     'array' => $cargo,
                                     'title' => 'Cargo',
-                                    'col' => 4,
+                                    'col' => 12,
                                     'size' => 15));
     }
 
     # os demais
-    array_push($campos, array ('linha' => 1,
+    array_push($campos, array ('linha' => 2,
                                'nome' => 'situacao',
                                'label' => 'Situação:',
                                'tipo' => 'hidden',

@@ -48,31 +48,62 @@ if($acesso)
         $menu1 = new MenuBar();
 
         # Voltar
-        $linkBotao1 = new Link("Sair","../../areaServidor/sistema/login.php");
-        $linkBotao1->set_class('button');
-        $linkBotao1->set_title('Sair do Sistema');
-        $linkBotao1->set_confirma('Tem certeza que deseja sair do sistema?');
-        $linkBotao1->set_accessKey('i');
-        $menu1->add_link($linkBotao1,"left");
+        $linkVoltar = new Link("Sair","../../areaServidor/sistema/login.php");
+        $linkVoltar->set_class('button');
+        $linkVoltar->set_title('Sair do Sistema');
+        $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
+        $linkVoltar->set_accessKey('i');
+        $menu1->add_link($linkVoltar,"left");
 
         # Relatórios
-        $linkBotao3 = new Link("Relatorios","grhRelatorios.php");
-        $linkBotao3->set_class('button');
-        $linkBotao3->set_title('Relatórios dos Sistema');
-        $linkBotao3->set_accessKey('R');
-        $menu1->add_link($linkBotao3,"right");
+        $linkRel = new Link("Relatorios","grhRelatorios.php");
+        $linkRel->set_class('button');
+        $linkRel->set_title('Relatórios dos Sistema');
+        $linkRel->set_accessKey('R');
+        $menu1->add_link($linkRel,"right");
         
         # Área do Servidor
-        $linkBotao3 = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
-        $linkBotao3->set_class('button');
-        $linkBotao3->set_title('Área do Servidor');
-        $menu1->add_link($linkBotao3,"right");
+        $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
+        $linkArea->set_class('button');
+        $linkArea->set_title('Área do Servidor');
+        $menu1->add_link($linkArea,"right");        
+        
+        # Sobre
+        $linkSobre = new Link("Sobre");
+        $linkSobre->set_class('success button');
+        $linkSobre->set_title('Exibe informações do Sistema');
+        $linkSobre->set_onClick("abreFechaDivId('divSobre');");
+        $menu1->add_link($linkSobre,"right");
 
         $menu1->show();
 
         $grid->fechaColuna();
         $grid->fechaGrid();
     }
+    
+##################################################################
+    
+    # Sobre
+    $div = new Div("divSobre");
+    $div->abre();
+    
+    $painel2 = new Callout();
+    $painel2->set_title('Painel com tipo primary');
+    #$painel2->set_botaoFechar(TRUE);
+    $painel2->abre();
+   
+    p(SISTEMA,'grhTitulo');
+    p('Versão: '.VERSAO.'<br/>Atualizado em: '.ATUALIZACAO,'grhVersao');
+    
+    p(SETOR,'grhSetor');
+    p('Desenvolvedor: '.AUTOR.'<br/>'.EMAILAUTOR,'grhAutor');
+   
+    $painel2 ->fecha();
+    $div->fecha();
+    
+##################################################################
+    
+    # Menu
     switch ($fase)
     {	
         # Exibe o Menu Inicial

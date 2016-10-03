@@ -92,4 +92,15 @@ function get_DadosServidor($idServidor){
     Grh::listaDadosServidor($idServidor);
 }
 
+##########################################################
+/**
+ * Função que formata as atribuições de um cargo
+ * 
+ */
+
+function formataAtribuicao($texto){
+    $novoTexto = str_replace(";", ";<br/>", $texto);
+    return $novoTexto;
+}
+
 ###########################################################

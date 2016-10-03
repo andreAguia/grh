@@ -10,13 +10,13 @@ p#grhTitulo{
 
 p#grhVersao{
     font-size: 11px;
-    text-align: right;
+    text-align: center;
     color: #02548b;
 }
 
 p#grhIp{
     font-size: 11px;
-    text-align: center;
+    text-align: right;
     color: #02548b;
 }
 
@@ -28,6 +28,13 @@ p#grhUsuarioLogado{
 
 div#RelServidor{
     display :none;
+}
+
+div#divGaveta{
+    position: absolute;
+    top: 2%;
+    left: 93%;
+    width: 8px;
 }
 
 /*******************************************
@@ -104,6 +111,32 @@ tr#comissaoVagasNegativas{
 }
 
 /*******************************************
+ * Div Sobre
+ *******************************************/
+
+div#divSobre{
+    display: none;
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    width: 40%;
+}
+
+p#grhAutor{
+    font-size: 14px;
+    text-align: center;
+    font-family: tahoma;
+    color: #02548b;
+}
+
+p#grhSetor{
+    font-size: 16px;
+    text-align: center;
+    font-family: tahoma;
+    color: #02548b;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 
@@ -145,3 +178,43 @@ p#aim{
      text-align: center;
      font-size: 14px;
  }
+ 
+ /*******************************************
+ * Folha de Presença
+ *******************************************/
+ 
+ table#tableFolhaPresenca {
+     border: 1px solid black;
+     color: #000000;
+     border-collapse:collapse;
+     width: 100%;
+ }
+ 
+ table#tableFolhaPresenca th{
+     color: #000000;
+     font-size: 12px;
+     text-align: center;
+     border: 1px solid black;
+     height: 20px;
+ }
+ 
+ table#tableFolhaPresenca td{
+     color: #000000;
+     font-size: 12px;
+     text-align: center;
+     border: 1px solid black;
+     height: 20px;
+ }
+ 
+ table#tableFolhaPresenca2 td{
+     color: #000000;
+     font-size: 12px;
+     text-align: center;
+     height: 20px;
+ }
+ 
+ p#pFolhaPresencaRodape{
+     color: #000000;
+     text-align: left;
+     font-size: 10px;     
+  }

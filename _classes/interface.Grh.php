@@ -200,10 +200,10 @@ class Grh
             p('Usuário : '.$intra->get_usuario($idUsuario),'grhUsuarioLogado');
         $grid->fechaColuna();
         $grid->abreColuna(4);
-            p(BROWSER_NAME." - ".IP,'grhIp');
+            p('Versão: '.VERSAO,'grhVersao');
         $grid->fechaColuna();
         $grid->abreColuna(4);
-            p('Versão: '.VERSAO,'grhVersao');
+            p(BROWSER_NAME." - ".IP,'grhIp');
         $grid->fechaColuna();
         $grid->fechaGrid();        
                 
@@ -220,7 +220,7 @@ class Grh
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico();   
+            $menu = new MenuGrafico(6);   
                 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -400,6 +400,14 @@ class Grh
             $botao->set_image(PASTA_FIGURAS.'obs.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Observações Gerais do Servidor');                
             $botao->set_accessKey('b');
+            $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Arquivo');
+            $botao->set_url('servidorArquivo.php');
+            $botao->set_image(PASTA_FIGURAS.'arquivo.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Posição Física das Pastas Funcionais');                
+            #$botao->set_accessKey('b');
             $menu->add_item($botao);
 
             $menu->show();
@@ -614,17 +622,22 @@ class Grh
         $grid->fechaColuna();
         $grid->fechaGrid();
         
-        # Exibe a versão do sistema
         $intra = new Intra();
         $grid = new Grid();
+        
+        # Exibe os ids (pessoa e servidor)
         $grid->abreColuna(4);
             p('(Servidor: '.$idServidor.' Pessoa: '.$pessoa->get_idPessoa($idServidor).")",'grhUsuarioLogado');
         $grid->fechaColuna();
-        $grid->abreColuna(4);
-            p(BROWSER_NAME." - ".IP,'grhIp');
-        $grid->fechaColuna();
+        
+        # Exibe a versão do Sistema
         $grid->abreColuna(4);
             p('Versão: '.VERSAO,'grhVersao');
+        $grid->fechaColuna();
+        
+        # Exibe informações do Browser
+        $grid->abreColuna(4);
+            p(BROWSER_NAME." - ".IP,'grhIp');
         $grid->fechaColuna();
         $grid->fechaGrid();        
      }     

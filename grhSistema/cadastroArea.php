@@ -74,15 +74,17 @@ if($acesso)
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
-
+        
     # select da lista
-    $objeto->set_selectLista ('SELECT idarea,
-                                      tbtipocargo.cargo,
-                                      area,
-                                      idarea
-                                 FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                WHERE area LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+    $select = "SELECT idarea,
+                        tbtipocargo.cargo,
+                        area,
+                        idarea
+                   FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
+                  WHERE area LIKE '%$parametro%'
+               ORDER BY $orderCampo $orderTipo";
+    
+    $objeto->set_selectLista($select);
 
     # select do edita
     $objeto->set_selectEdita('SELECT area,
@@ -118,7 +120,7 @@ if($acesso)
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
-    #$objeto->set_link(array("","","","","","","","",$botao));
+    $objeto->set_link(array("","","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

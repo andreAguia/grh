@@ -446,15 +446,16 @@ class Pessoal extends Bd
             $nomeCargo = $row[1];            
             $comissao = $this->get_cargoComissao($idServidor);
             
-            if(is_null($nomeCargo)){
-                return '('.$comissao.')';                
-            }else{
-                if(is_null($comissao)){
-                    return $tipoCargo.' - '.$nomeCargo;
-                }else{
-                    return $tipoCargo.' - '.$nomeCargo.' ('.$comissao.')'; 
-                }
-            }			
+            $retorno = null;
+            
+            if(!empty($nomeCargo)){
+                $retorno = $tipoCargo.' - '.$nomeCargo;              
+            }
+            
+            if(!empty($comissao)){
+                 $retorno .= ' ('.$comissao.')'; 
+            }
+            return $retorno;
 	}
 		
 	###########################################################
@@ -1418,19 +1419,21 @@ class Pessoal extends Bd
 	 * @param	string $id  id da lota��o
 	 */
 
-	public function get_nomelotacao($id)
+	public function get_nomeLotacao($idLotacao)
 
 	{
-		if (!is_numeric($id))
-                    return $id;
+		if (!is_numeric($idLotacao))
+                    return $idLotacao;
                 else
                 {
-                    $select = 'SELECT  concat(UADM,"-",DIR,"-",GER) as lotacao
+                    $select = 'SELECT UADM,
+                                      DIR,
+                                      GER
                                  FROM tblotacao
-                                WHERE idLotacao = '.$id;
+                                WHERE idLotacao = '.$idLotacao;
 
-                    $row = parent::select($select,false);
-                    return $row[0];
+                    $row = parent::select($select,false);		
+                    return $row[0].'-'.$row[1].'-'.$row[2];
                 }
 
 	}
@@ -1444,7 +1447,7 @@ class Pessoal extends Bd
 	 * @param	string $id  id da lota��o
 	 */
 
-	public function get_nomeCompletolotacao($id)
+	public function get_nomeCompletoLotacao($id)
 
 	{
 		if (!is_numeric($id))
@@ -2191,6 +2194,32 @@ class Pessoal extends Bd
                     $row = parent::select($select,false);
                     return $row[0];
                 }
+
+	}
+
+	###########################################################
+
+	/**
+	 * Método get_nomeArea
+	 * Informa o nome da área a partir do id
+	 *
+	 * @param	string $id  id do cargo
+	 */
+
+	public function get_nomeArea($id)
+
+	{
+            if (!is_numeric($id))
+                return $id;
+            else
+            {
+                $select = 'SELECT area
+                             FROM tbarea
+                            WHERE idArea = '.$id;
+
+                $row = parent::select($select,false);
+                return $row[0];
+            }
 
 	}
 
@@ -3001,6 +3030,89 @@ class Pessoal extends Bd
            
             $numero = parent::count($select);
             return $numero;
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_arquivoGaveta
+	 * 
+	 * Informa o Arquivo e gaveta, físicos, onde se encontra a pasta do servidor
+	 */
+	
+	public function get_arquivoGaveta($idServidor)
+	{
+            $select = 'SELECT arquivo,gaveta                             
+                         FROM tbservidor
+                        WHERE idservidor = '.$idServidor;
+           
+             $row = parent::select($select,false);
+             return $row[0].$row[1];
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_nomeSituacao
+	 * 
+	 * Informa o nome de um idsituacao
+	 */
+	
+	public function get_nomeSituacao($idsituacao)
+	{
+            $select = 'SELECT situacao                            
+                         FROM tbsituacao
+                        WHERE idsituacao = '.$idsituacao;
+           
+             $row = parent::select($select,false);
+             return $row[0];
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_nomePerfil
+	 * 
+	 * Informa o nome de um idperfil
+	 */
+	
+	public function get_nomePerfil($idperfil)
+	{
+            $select = 'SELECT nome                            
+                         FROM tbperfil
+                        WHERE idperfil = '.$idperfil;
+           
+             $row = parent::select($select,false);
+             return $row[0];
+	}
+
+	###########################################################
+
+	/**
+	 * M�todo get_nomeCompletoCargo
+	 * Informa o nome do cargo a partir do id
+	 *
+	 * @param	string $id  id do cargo
+	 */
+
+	public function get_nomeCompletoCargo($id)
+
+	{
+		if (!is_numeric($id))
+                    return $id;
+                else
+                {
+                    $select = 'SELECT tbtipocargo.cargo,
+                                      tbarea.area,
+                                      tbcargo.nome
+                                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                              LEFT JOIN tbarea USING (idarea)
+                                WHERE idCargo = '.$id;
+
+                    $row = parent::select($select,false);
+                    return $row[0]." - ".$row[1]." - ".$row[2];
+                }
+
 	}
 
 	###########################################################

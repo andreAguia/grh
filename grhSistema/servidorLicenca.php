@@ -413,12 +413,18 @@ if($acesso){
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
         # Publicação de Licença Prêmio
-        $botaoLegenda = new Button("Licença Prêmio");
-        $botaoLegenda->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
-        $botaoLegenda->set_url('servidorPublicacaoPremio.php');  
-        $botaoLegenda->set_accessKey('L');
+        $botaoPremio = new Button("Licença Prêmio");
+        $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
+        $botaoPremio->set_url('servidorPublicacaoPremio.php');  
+        $botaoPremio->set_accessKey('L');
+        
+        # Relatório
+        $botaoRel = new Button("Imprimir");
+        $botaoRel->set_title("Imprimir essa Listagem");
+        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_accessKey('I');
 
-        $objeto->set_botaoListar(array($botaoLegenda));
+        $objeto->set_botaoListar(array($botaoPremio,$botaoRel));
 
         ################################################################
 

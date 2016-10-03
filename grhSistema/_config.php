@@ -6,12 +6,14 @@
  */
 
 # Sobre o Sistema Intranet
-define("VERSAO","1.0 UENF");                                     # Versão do Sistema 								
-define("ATUALIZACAO","25/01/2016");                              # Última Atualização
+define("VERSAO","1.0");                                     # Versão do Sistema 								
+define("ATUALIZACAO","27/09/2016");                              # Última Atualização
 define("SISTEMA","Sistema de Gestão de Pessoas");                # Nome do sistema
 define("DESCRICAO","Sistema da Gerência de Recursos Humanos");   # Descrição do sistema
 define("PALAVRAS_CHAVE","Uenf,GRH");                             # Palavras chave para sites de busca
-define("AUTOR","Alat");                                          # Autor do sistema
+define("AUTOR","André Luis Águia Tavares");                      # Autor do sistema
+define("EMAILAUTOR","alat@uenf.br");                             # Email do Autor do sistema
+define("SETOR","GRH - Gerência de Recursos Humanos");            # Setor
 
 # Classes
 define("PASTA_CLASSES_GERAIS","../../_framework/_classesGerais/");  # Classes Gerais
@@ -98,7 +100,10 @@ if((CHAMADOR == 'areaServidor.php') OR (CHAMADOR == 'grh.php'))
     set_session('parametroLotacao');
     set_session('parametroPerfil');
     set_session('parametroSituacao');
-    set_session('parametroPaginacao');
+    set_session('parametroPaginacao');    
+    set_session('sessionSelect');                      // Select para gerar relatório
+    set_session('sessionTítulo');                      // Título do relatório
+    set_session('sessionSubTítulo');                   // SubTítulo do relatório
 }
 
 # carrega as session

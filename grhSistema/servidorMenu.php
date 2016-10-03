@@ -50,7 +50,7 @@ if($acesso){
 
     # Relatórios
     $linkBotao3 = new Link("Relatorios");
-    $linkBotao3->set_class('button');
+    $linkBotao3->set_class('button');    
     $linkBotao3->set_onClick("abreFechaDivId('RelServidor');");
     $linkBotao3->set_title('Relatórios desse servidor');
     $linkBotao3->set_accessKey('R');
@@ -115,10 +115,10 @@ if($acesso){
     
     # Folha de Presença
     echo '<li>';
-    $link = new Link("Folha de Presença","#");
+    $link = new Link("Folha de Presença","../grhRelatorios/folhaPresenca.php");
     $link->set_title("Exibe a folha de presença do Servidor");
-    $link->set_class("disabled");
-    #$link->set_janela(TRUE);    
+    #$link->set_class("disabled");
+    $link->set_janela(TRUE);    
     $link->show();
     echo '</li>';
     
@@ -129,6 +129,14 @@ if($acesso){
     $grid->fechaGrid();
     $div->fecha();
     
+    # Exibe o arquivo e gaveta físicos da pasta do servidor
+    $arquivoGaveta = $pessoal->get_arquivoGaveta($idServidorPesquisado);
+    if(!is_null($arquivoGaveta)){
+        $divGaveta = new Div("divGaveta");
+        $divGaveta->abre();
+        p($arquivoGaveta,"f18");
+        $divGaveta->fecha();
+    }
     
     # Exibe os dados do Servidor
     Grh::listaDadosServidor($idServidorPesquisado);
@@ -143,13 +151,9 @@ if($acesso){
             
             # monta o menu do servidor
             Grh::menuServidor($idServidorPesquisado);
-            
-            
             break;
         
    ##################################################################	
-     
-
     }
 
     $page->terminaPagina();

@@ -83,8 +83,8 @@ if($acesso)
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
     
-    $objeto->set_rotinaExtraEditar("exibeColloutDependente");
-    $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);     
+    #$objeto->set_rotinaExtraEditar("exibeColloutDependente");
+    #$objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);     
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Dependentes');

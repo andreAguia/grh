@@ -321,7 +321,7 @@ if($acesso)
             $grid->abreColuna(12);
             
             # Titulo
-            titulo('Servidores da Lotação: '.$pessoal->get_nomelotacao($id));
+            titulo('Servidores da Lotação: '.$pessoal->get_nomeLotacao($id));
             br();
             
             # Lista de Servidores Ativos

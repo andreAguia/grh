@@ -81,8 +81,8 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Data","Lotação","Motivo"));
-    $objeto->set_width(array(15,35,40));	
-    $objeto->set_align(array("center"));
+    $objeto->set_width(array(10,30,50));	
+    $objeto->set_align(array("center","left","left"));
     $objeto->set_function(array ("date_to_php"));
     
     $objeto->set_classe(array (null,"pessoal"));
@@ -101,10 +101,17 @@ if($acesso)
     $objeto->set_formLabelTipo(1);
 
     # Pega os dados da combo lotacao
-    $result = $pessoal->select('SELECT idlotacao, 
-                                       concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
-                                  FROM tblotacao
-                              ORDER BY lotacao');
+    $selectLotacao = 'SELECT idlotacao, 
+                             concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+                        FROM tblotacao';
+    
+    if(is_null($id)){
+        $selectLotacao .= ' WHERE ativo = "Sim"';
+    }
+                       
+    $selectLotacao .= ' ORDER BY lotacao';
+    
+    $result = $pessoal->select($selectLotacao);
     array_unshift($result, array(null,null)); # Adiciona o valor de nulo
 
     # Campos para o formulario
@@ -130,8 +137,8 @@ if($acesso)
                                array ( 'nome' => 'motivo',
                                        'label' => 'Motivo:',
                                        'tipo' => 'texto',
-                                       'size' => 50,
-                                       'col' => 6,                                   
+                                       'size' => 100,
+                                       'col' => 12,                                   
                                        'title' => 'Motivo da mudança de lotação.',
                                        'linha' => 2),
                                array ( 'nome' => 'idServidor',

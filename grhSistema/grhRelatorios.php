@@ -194,6 +194,7 @@ if($acesso)
         case "ferias";
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Férias','#','');
+            $menu->add_item('linkWindow','Escala Anual de Férias UENF','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');
@@ -298,6 +299,7 @@ if($acesso)
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Estatutários','#','');
             $menu->add_item('linkWindow','Estatutários Ativos com Assinatura','../grhRelatorios/estatutariosAtivosAssinatura.php');
+            $menu->add_item('linkWindow','Estatutários Agrupados pela Lotação','../grhRelatorios/estatutariosLotacao.php'); 
             $menu->add_item('linkWindow','Estatutários Agrupados pelo Cargo','../grhRelatorios/estatutariosCargo.php'); 
             $menu->add_item('linkWindow','Estatutários Com CPF e Data de Nascimento','../grhRelatorios/estatutariosCpfNascimento.php'); 
 

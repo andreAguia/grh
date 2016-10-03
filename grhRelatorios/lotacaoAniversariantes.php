@@ -52,8 +52,8 @@ if($acesso)
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Aniversariantes');
-    $relatorio->set_subtitulo($servidor->get_nomeCompletolotacao($lotacao));
-    $relatorio->set_tituloLinha2($servidor->get_nomelotacao($lotacao));
+    $relatorio->set_subtitulo($servidor->get_nomeCompletoLotacao($lotacao));
+    $relatorio->set_tituloLinha2($servidor->get_nomeLotacao($lotacao));
     $relatorio->set_label(array('Data','Nome'));
     $relatorio->set_width(array(10,90));
     $relatorio->set_align(array("center","left"));

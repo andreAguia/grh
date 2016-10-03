@@ -21,7 +21,7 @@ class listaServidores
     private $concurso = null;
     private $situacao = null;
     private $situacaoSinal = "=";
-    private $lotacao = null;
+    private $lotacao = null;    
     
     # Parâmetros da paginação da listagem
     private $paginacao = false;			# Flag que indica se terá ou não paginação na lista
@@ -29,6 +29,11 @@ class listaServidores
     private $paginacaoInicial = 0;		# A paginação inicial
     private $pagina = 1;			# Página atual
     private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
+    
+    # Parâmetros do relatório
+    private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
+    private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
+    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
     
     ###########################################################
                 
@@ -110,35 +115,62 @@ class listaServidores
                 WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
         
         # Matrícula, nome ou id
-        if(!is_null($this->matNomeId))
-            $select .= ' AND ((tbpessoa.nome LIKE "%'.$this->matNomeId.'%")
-                   OR (tbservidor.matricula LIKE "%'.$this->matNomeId.'%")
-		   OR (tbservidor.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
-                
+        if(!is_null($this->matNomeId)){
+            if(is_numeric($this->matNomeId)){
+                $select .= ' AND ((';
+            }else{
+                $select .= ' AND (';
+            }
+                        
+            $select .= 'tbpessoa.nome LIKE "%'.$this->matNomeId.'%")';
+            
+            if(is_numeric($this->matNomeId)){
+                $select .= ' OR (tbservidor.matricula LIKE "%'.$this->matNomeId.'%")
+		             OR (tbservidor.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
+            }
+            $this->subTitulo .= "pesquisa: ".$this->matNomeId."<br/>";
+        }    
         # situação
-        if(!is_null($this->situacao))
+        if(!is_null($this->situacao)){
             $select .= ' AND (tbsituacao.idsituacao '.$this->situacaoSinal.' "'.$this->situacao.'")';
+            
+            if($this->situacao == 6){
+                $this->titulo .= " em ".$servidor->get_nomeSituacao($this->situacao);
+            }else{
+                $this->titulo .= $servidor->get_nomeSituacao($this->situacao)."s";
+            }
+        }
         
         # perfil
-        if(!is_null($this->perfil))
+        if(!is_null($this->perfil)){
             $select .= ' AND (tbperfil.idperfil = "'.$this->perfil.'")';
+            $this->subTitulo .= "perfil: ".$servidor->get_nomePerfil($this->perfil)."<br/>";
+        }
         
         # cargo
-        if(!is_null($this->cargo))
+        if(!is_null($this->cargo)){
             $select .= ' AND (tbcargo.idcargo = "'.$this->cargo.'")';
+            $this->subTitulo .= "cargo: ".$servidor->get_nomeCompletoCargo($this->cargo)."<br/>";
+        }
         
         # cargo em comissão
-        if(!is_null($this->cargoComissao))
+        if(!is_null($this->cargoComissao)){
             $select .= ' AND ((SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.idServidor = tbservidor.idServidor) = "'.$this->cargoComissao.'")';    
-            
+            $this->subTitulo .= "cargo em comissão: ".$this->cargoComissao."<br/>";
+        }
+        
         # concurso
-        if(!is_null($this->concurso))
+        if(!is_null($this->concurso)){
             $select .= ' AND (tbservidor.idConcurso = "'.$this->concurso.'")'; 
+            $this->subTitulo .= "concurso: ". $this->concurso."<br/>";
+        }
         
         # lotacao
-        if(!is_null($this->lotacao))
+        if(!is_null($this->lotacao)){
             $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
-
+            $this->subTitulo .= "lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
+        }
+        
         # ordenação
         $select .= ' ORDER BY tbpessoa.nome';
         
@@ -261,6 +293,10 @@ class listaServidores
         # Pega a lista com o limit da tabulação
         titulo($this->nomeLista);
         
+        # Passa o select para a variavel da classe para podes ser usada no relatório
+        $this->select = $select;
+        
+        # Executa o select
         $conteudo = $servidor->select($select,true);
         
         if($totalRegistros == 0){
@@ -300,5 +336,39 @@ class listaServidores
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',')." segundos","right","f10");
         }
+    }
+    
+    ###########################################################
+   
+    /**
+     * Método relatorio
+     * 
+     * Exibe a lista
+     *
+     */	
+    public function relatorio($select,$titulo,$subTitulo)
+    {
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        # Pega a quantidade de itens da lista
+        $conteudo = $servidor->select($select,true);
+        $totalRegistros = count($conteudo);
+                
+        # Relatório
+        $relatorio = new Relatorio();
+        $relatorio->set_titulo("Relatório de Servidores ".$titulo);
+        $relatorio->set_subtitulo($subTitulo);
+
+        $relatorio->set_label(array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação"));
+        $relatorio->set_width(array(5,5,15,16,15,8,8,5,5));
+        $relatorio->set_align(array("center","center","left"));
+        $relatorio->set_funcao(array(null,"dv",null,null,null,null,"date_to_php"));
+        $relatorio->set_classe(array(null,null,null,"pessoal"));
+        $relatorio->set_metodo(array(null,null,null,"get_Cargo"));
+        $relatorio->set_subTotal(FALSE);
+
+        $relatorio->set_conteudo($conteudo);    
+        $relatorio->show();
     }
 }

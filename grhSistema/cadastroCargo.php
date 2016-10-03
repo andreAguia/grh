@@ -125,7 +125,7 @@ if($acesso)
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
     $botao->set_label('');    
-    $botao->set_url('?fase=listaServidores&id=');    
+    $botao->set_url('?fase=aguarde&id=');   
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
@@ -252,6 +252,13 @@ if($acesso)
         case "gravar" :		
             $objeto->$fase($id);
             break;
+        
+        case "aguarde" :
+            br(10);
+            mensagemAguarde();
+            br();
+            loadPage('?fase=listaServidores&id='.$id);
+            break;
 
         case "listaServidores" :
             # Limita o tamanho da tela
@@ -277,6 +284,7 @@ if($acesso)
              
             $menu->show();
             
+            # Limita o tamanho da tela
             $grid->fechaColuna();
             $grid->fechaGrid();
             
@@ -290,7 +298,15 @@ if($acesso)
             echo '<nav aria-label="You are here:" role="navigation">';
             echo '<ul class="breadcrumbs">';
 
-            # Servidor
+            # Mapa do Cargo
+            echo '<li>';
+            $link = new Link("Mapa do Cargo","../grhRelatorios/mapaCargo.php?cargo=".$id);
+            $link->set_title("Exibe o mapa do cargo");
+            $link->set_janela(TRUE);    
+            $link->show();
+            echo '</li>';
+            
+            # Servidores Ativos
             echo '<li>';
             $link = new Link("Estatutários Ativos","../grhRelatorios/cargoEstatutarios.php?cargo=".$id);
             $link->set_title("Exibe a lista de servidores estatutários com esse cargo");
@@ -313,18 +329,34 @@ if($acesso)
             titulo('Servidores com o Cargo: '.$pessoal->get_nomeCargo($id));
             br();
         
+             # Links da tab
+            echo '<ul class="tabs" data-tabs id="example-tabs">';
+            echo '<li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Servidores Ativos</a></li>';
+            echo '<li class="tabs-title"><a href="#panel2">Servidores Inativos</a></li>';
+            echo '</ul>';
+            
+            # Conteúdo
+            echo '<div class="tabs-content" data-tabs-content="example-tabs">';
+            echo '<div class="tabs-panel is-active" id="panel1">';
+            
             # Lista de Servidores Ativos
             $lista = new listaServidores('Servidores Ativos');       
             $lista->set_situacao(1);
             $lista->set_cargo($id);
             $lista->show();
 
+            echo '</div>';
+            echo '<div class="tabs-panel" id="panel2">';
+           
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos');
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
             $lista->set_cargo($id);
             $lista->show();
+            
+            echo '</div>';
+            echo '</div>';
             
             $grid->fechaColuna();
             $grid->fechaGrid();

@@ -224,7 +224,7 @@ if($acesso)
 
             # Titulo
             $servidor = new Pessoal();
-            titulo('Servidores da Lotação: '.$servidor->get_nomelotacao($id));
+            titulo('Servidores da Lotação: '.$servidor->get_nomeLotacao($id));
 
             $select ='SELECT distinct tbservidor.idFuncional, 
                              tbpessoa.nome,

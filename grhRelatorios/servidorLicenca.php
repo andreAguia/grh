@@ -54,7 +54,7 @@ if($acesso)
     $relatorio->show();
     
     ######
-    br(2);
+    br();
 
     $select = "SELECT tbtipolicenca.nome,
                     dtInicial,
@@ -68,19 +68,57 @@ if($acesso)
                     idLicenca
                FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
               WHERE idServidor=$idServidorPesquisado
-           ORDER BY tblicenca.dtInicial";
+           ORDER BY tblicenca.dtInicial desc";
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();   
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(false);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_subtitulo("Todas as Licenças");
     $relatorio->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag."));
     $relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
 
+    $relatorio->set_conteudo($result);
+    #$relatorio->set_numGrupo(2);
+    $relatorio->set_botaoVoltar(false);
+    $relatorio->show();
+    
+    ######
+    br();
+
+    $select = "SELECT dtPublicacao,
+                      pgPublicacao,
+                      dtInicioPeriodo,
+                      dtFimPeriodo,                                  
+                      processo,
+                      numDias,
+                      idPublicacaoPremio,
+                      idPublicacaoPremio
+                 FROM tbpublicacaoPremio
+                WHERE idServidor = $idServidorPesquisado
+             ORDER BY dtPublicacao desc";
+
+    $result = $pessoal->select($select);
+
+    $relatorio = new Relatorio();   
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_subtitulo("Publicação de Licenças Prêmio");
+    $relatorio->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
+    $relatorio->set_width(array(10,5,14,14,20,8,8,8));
+    $relatorio->set_align(array('center'));    
+    $relatorio->set_classe(array(null,null,null,null,null,null,'Pessoal','Pessoal'));
+    $relatorio->set_metodo(array(null,null,null,null,null,null,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
+    $relatorio->set_funcao(array('date_to_php',null,'date_to_php','date_to_php',null));
+    
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);

@@ -71,6 +71,7 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista ('SELECT idTipoCargo,
                                       cargo,
+                                      sigla,
                                       nivel,
                                       vagas,
                                       idTipoCargo,
@@ -82,6 +83,7 @@ if($acesso)
 
     # select do edita
     $objeto->set_selectEdita('SELECT cargo,
+                                     sigla,
                                      nivel,
                                      vagas,
                                      obs
@@ -100,12 +102,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Cargo","Nível","Vagas","Servidores Ativos","Vagas Disponíveis","Obs"));
-    $objeto->set_width(array(5,20,15,10,10,10,25));
+    $objeto->set_label(array("Id","Cargo","Sigla","Nível","Vagas","Servidores Ativos","Vagas Disponíveis","Obs"));
+    $objeto->set_width(array(5,20,10,15,10,10,10,15));
     $objeto->set_align(array("center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,'pessoal','pessoal'));
-    $objeto->set_metodo(array(null,null,null,null,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
+    $objeto->set_classe(array(null,null,null,null,null,'pessoal','pessoal'));
+    $objeto->set_metodo(array(null,null,null,null,null,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -127,7 +129,13 @@ if($acesso)
                'tipo' => 'texto',
                'required' => true,
                'autofocus' => true,
-               'col' => 7,
+               'col' => 5,
+               'size' => 50),
+        array ('linha' => 1,
+               'nome' => 'sigla',
+               'label' => 'Sigla:',
+               'tipo' => 'texto',
+               'col' => 2,
                'size' => 50),
         array ('linha' => 1,
                'nome' => 'nivel',
@@ -152,12 +160,62 @@ if($acesso)
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Relatório
+    $botaoGra = new Button("Gráfico");
+    $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
+    $botaoGra->set_onClick("abreFechaDivId('divGrafico');");
+    $botaoGra->set_accessKey('G');
+
+    $objeto->set_botaoListar(array($botaoGra));
 
     ################################################################
     switch ($fase)
     {
-        case "" :
+        case "" :            
         case "listar" :
+            $div = new Div("divGrafico");
+            $div->abre();
+    
+            # Gráfico Estatístico
+            $pessoal = new Pessoal();
+            
+            titulo('Servidores por Perfil');
+
+            # Gráfico de pizza
+            $chart = new PieChart(500,500);
+            $chart->getPlot()->getPalette()->setPieColor(array(
+                new Color(30, 144, 255),
+                new Color(255, 130, 71),
+                new Color(67, 205, 128)));
+
+            # Pega os dados
+            $selectGrafico = 'SELECT tbtipocargo.sigla, count(tbservidor.matricula) 
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                            GROUP BY tbtipocargo.cargo';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            $dataSet = new XYDataSet();
+            foreach ($servidores as $valor)
+            {
+                $dataSet->addPoint(new Point($valor[0]." (".$valor[1].")", $valor[1]));
+            }
+            #$dataSet->addPoint(new Point("Estatutário (".$estatutários.")", $estatutários));
+            #$dataSet->addPoint(new Point("Cedidos (".$cedido.")", $cedido));
+            #$dataSet->addPoint(new Point("Convidados (".$convidado.")", $convidado));
+            $chart->setDataSet($dataSet);
+
+            $chart->setTitle("");
+            $chart->render(PASTA_FIGURAS."/demo3.png");
+
+            $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
+            $imagem->show();
+            
+            $div->fecha();
+            
             $objeto->listar();
             break;
 

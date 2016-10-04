@@ -25,7 +25,11 @@ if($acesso)
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-
+    
+    # Verifica a paginacão
+    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
+    set_session('sessionPaginacao',$paginacao);    
+    
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
@@ -196,6 +200,14 @@ if($acesso)
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Pega o número de Lotações ativas para a paginação
+    $numCargoComissaoAtivo = $pessoal->get_numCargoComissaoAtivo();
+    
+    # Paginação
+    $objeto->set_paginacao(true);
+    $objeto->set_paginacaoInicial($paginacao);
+    $objeto->set_paginacaoItens($numCargoComissaoAtivo);
 
     ################################################################
     switch ($fase)

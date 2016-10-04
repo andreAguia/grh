@@ -211,16 +211,27 @@ if($acesso)
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Relatório
+    $botaoGra = new Button("Gráfico");
+    $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
+    $botaoGra->set_onClick("abreFechaDivId('divGrafico');");
+    $botaoGra->set_accessKey('G');
+
+    $objeto->set_botaoListar(array($botaoGra));
 
     ################################################################
     switch ($fase)
     {
         case "" :            
         case "listar" :
-            $objeto->listar();
-
+            $div = new Div("divGrafico");
+            $div->abre();
+    
             # Gráfico Estatístico
             $pessoal = new Pessoal();
+            
+            titulo('Servidores por Perfil');
 
             # Gráfico de pizza
             $chart = new PieChart(500,500);
@@ -250,13 +261,12 @@ if($acesso)
             $chart->setTitle("");
             $chart->render(PASTA_FIGURAS."/demo3.png");
 
-            br(2);
-            $grid = new Grid("center");
-            $grid->abreColuna(5);
-                $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
-                $imagem->show();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+            $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
+            $imagem->show();
+            
+            $div->fecha();
+            
+            $objeto->listar();
             break;
 
         case "editar" :

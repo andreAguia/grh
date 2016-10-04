@@ -20,9 +20,6 @@ if($acesso)
     $intra = new Intra();
     $pessoal = new Pessoal();
     
-    # Pega o número de Lotações ativas para a paginação
-    $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
-	
     # Verifica a fase do programa
     $fase = get('fase','listar');
 
@@ -236,6 +233,17 @@ if($acesso)
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
     
+    # Grafico
+    $botaoGra = new Button("Gráfico");
+    $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
+    $botaoGra->set_onClick("abreFechaDivId('divGrafico');");
+    $botaoGra->set_accessKey('G');
+
+    $objeto->set_botaoListar(array($botaoGra));    
+    
+    # Pega o número de Lotações ativas para a paginação
+    $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
+	
     # Paginação
     $objeto->set_paginacao(true);
     $objeto->set_paginacaoInicial($paginacao);
@@ -244,8 +252,51 @@ if($acesso)
     ################################################################
     switch ($fase)
     {
-        case "" :
+        case "" :            
         case "listar" :
+            $div = new Div("divGrafico");
+            $div->abre();
+    
+            # Gráfico Estatístico
+            $pessoal = new Pessoal();
+            
+            titulo('Servidores por Diretoria');
+
+            # Gráfico de pizza
+            $chart = new PieChart(500,500);
+            $chart->getPlot()->getPalette()->setPieColor(array(
+                new Color(30, 144, 255),
+                new Color(255, 130, 71),
+                new Color(67, 205, 128)));
+
+            # Pega os dados
+            $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.matricula) 
+                                FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                 AND situacao = 1 
+                            GROUP BY tblotacao.dir';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            $dataSet = new XYDataSet();
+            foreach ($servidores as $valor)
+            {
+                $dataSet->addPoint(new Point($valor[0]." (".$valor[1].")", $valor[1]));
+            }
+            #$dataSet->addPoint(new Point("Estatutário (".$estatutários.")", $estatutários));
+            #$dataSet->addPoint(new Point("Cedidos (".$cedido.")", $cedido));
+            #$dataSet->addPoint(new Point("Convidados (".$convidado.")", $convidado));
+            $chart->setDataSet($dataSet);
+
+            $chart->setTitle("");
+            $chart->render(PASTA_FIGURAS."/demo3.png");
+
+            $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
+            $imagem->show();
+            
+            $div->fecha();
+            
             $objeto->listar();
             break;
 

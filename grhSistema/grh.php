@@ -88,7 +88,7 @@ if($acesso)
     $div->abre();
     
     $painel2 = new Callout();
-    $painel2->set_title('Painel com tipo primary');
+    $painel2->set_title('Sobre o Sistema');
     #$painel2->set_botaoFechar(TRUE);
     $painel2->abre();
    

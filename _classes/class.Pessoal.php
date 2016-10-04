@@ -434,7 +434,8 @@ class Pessoal extends Bd
 	
 	{
             # Pega o cargo do servidor
-            $select = 'SELECT tbtipocargo.cargo,
+            $select = 'SELECT tbtipocargo.idTipoCargo,
+                              tbtipocargo.sigla,
                               tbcargo.nome
                          FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
@@ -442,14 +443,27 @@ class Pessoal extends Bd
 
             $row = parent::select($select,false);
             
-            $tipoCargo = $row[0];
-            $nomeCargo = $row[1];            
+            if(($row[0] == 1)OR($row[0] == 2)){ // Se é professor
+                $tipoCargo = NULL;
+            }else{
+                $tipoCargo = $row[1];      
+            }
+            
+            $nomeCargo = $row[2];
             $comissao = $this->get_cargoComissao($idServidor);
             
             $retorno = null;
             
+            if(!empty($tipoCargo)){
+                $retorno = $tipoCargo;             
+            }
+            
             if(!empty($nomeCargo)){
-                $retorno = $tipoCargo.' - '.$nomeCargo;              
+                if(!empty($tipoCargo)){
+                    $retorno .= ' - '.$nomeCargo;
+                }else{
+                    $retorno = $nomeCargo;
+                }
             }
             
             if(!empty($comissao)){
@@ -2959,7 +2973,27 @@ class Pessoal extends Bd
 			
 	}
 		
-###########################################################
+    ###########################################################
+	
+	function get_numCargoComissaoAtivo()
+	
+	/**
+	 * informa o número de Lotações ativas
+	 */
+
+
+	{
+            $select = 'SELECT idTipoComissao
+                         FROM tbtipocomissao
+                        WHERE ativo';		
+
+            $count = parent::count($select);
+
+            return $count;
+	}
+	
+	###########################################################
+        
 	
 	function get_numLotacaoAtiva()
 	

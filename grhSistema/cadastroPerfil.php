@@ -114,7 +114,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Servidores","Ver"));
-    $objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
+    #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
     $objeto->set_align(array("center"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 

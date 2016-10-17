@@ -51,7 +51,7 @@ if($acesso)
 
     ################################################################
 
-    # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
+    # Nome do Modelo
     $objeto->set_nome('Banco');
 
     # Botão de voltar da lista

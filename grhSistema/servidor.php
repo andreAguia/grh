@@ -35,7 +35,10 @@ if($acesso)
     $parametroCargoComissao = post('parametroCargoComissao',get_session('parametroCargoComissao','*'));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
     $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
-    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1)); 
+    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
+    
+    # Agrupamento do Relatório
+    $agrupamentoEscolhido = post('agrupamento',0);
     
     # Session do Relatório
     $select = get_session('sessionSelect');
@@ -93,15 +96,21 @@ if($acesso)
             $linkBotao1->set_title('Voltar a página anterior');
             $linkBotao1->set_accessKey('V');
             $menu1->add_link($linkBotao1,"left");
-
+            
             # Relatórios
-            $linkBotao3 = new Link("Imprimir");
+            $linkBotao3 = new Link("Relatório");
             $linkBotao3->set_class('button');        
             $linkBotao3->set_title('Relatório dessa pesquisa');
             $linkBotao3->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $linkBotao3->set_accessKey('I');
+            $linkBotao3->set_accessKey('R');
             $menu1->add_link($linkBotao3,"right");
-
+            
+            # Novo Servidor
+            $linkBotao2 = new Link("Incluir Novo Servidor","servidorInclusao.php");
+            $linkBotao2->set_class('button success');        
+            $linkBotao2->set_title('Incluir Novo Servidor');            
+            $linkBotao2->set_accessKey('I');
+            $menu1->add_link($linkBotao2,"right");
             $menu1->show();
 
             # Parâmetros
@@ -273,7 +282,7 @@ if($acesso)
         # Cria um relatório com a seleção atual
         case "relatorio" :
             $lista = new listaServidores('Servidores');
-            $lista->relatorio($select,$titulo,$subTitulo);
+            $lista->relatorio($select,$titulo,$subTitulo,$agrupamentoEscolhido);
             break; 
     }
     $page->terminaPagina();

@@ -127,18 +127,18 @@ class Grh
         $menu->add_item($botao);   
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Tipos de Licenças');
+        $botao->set_label('Licenças e Afastamentos');
         $botao->set_url('cadastroLicenca.php');
         $botao->set_image(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
-        $botao->set_accesskey('T');
+        #$botao->set_accesskey('T');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('PDV');
         $botao->set_url('cadastroPlanoCargos.php');
         $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Plano de Cargos e Vencimantos');
+        $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
         $botao->set_accesskey('D');
         $menu->add_item($botao);
         
@@ -844,7 +844,7 @@ class Grh
         $conteudo = $servidor->select($select,true);
 
         $label = array("Id","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
-        #$width = array(8,10,20,10,25,10,25,5);
+        $width = array(8,10,20,10,25,10,25,5);
         #$align = array("center");
         $function = array(null,null,null,null,"date_to_php");
         $classe = array(null,null,null,"pessoal",null,"pessoal","pessoal");
@@ -859,6 +859,7 @@ class Grh
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
         $tabela->set_label($label);
+        #$tabela->set_width($width);
         $tabela->set_funcao($function);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);

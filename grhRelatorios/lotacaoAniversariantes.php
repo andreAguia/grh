@@ -65,7 +65,7 @@ if($acesso)
     if($exibeCombo){
         $listaLotacao = $servidor->select('SELECT idlotacao, concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
-                                           WHERE tblotacao.ativo = "Sim"   
+                                           WHERE tblotacao.ativo  
                                           ORDER BY ativo desc,lotacao');
         array_unshift($listaLotacao,array('*','-- Selecione a Lotação --'));
 

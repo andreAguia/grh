@@ -121,7 +121,7 @@ if($acesso)
                                        'label' => 'Órgão Cessionário:',
                                        'tipo' => 'texto',
                                        'required' => true,
-                                       'size' => 50,
+                                       'size' => 100,
                                        'col' => 6,
                                        'title' => 'O órgão cessionário',
                                        'linha' => 1),

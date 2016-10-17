@@ -33,8 +33,7 @@ class listaServidores
     # Parâmetros do relatório
     private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
     private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
-    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
-    
+    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa    
     ###########################################################
                 
     /**
@@ -112,6 +111,7 @@ class listaServidores
                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                                     LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                    LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                 WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
         
         # Matrícula, nome ou id
@@ -346,10 +346,20 @@ class listaServidores
      * Exibe a lista
      *
      */	
-    public function relatorio($select,$titulo,$subTitulo)
+    public function relatorio($select,$titulo,$subTitulo,$agrupamento = null)
     {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
+        
+        # Coloca o agrupamento no select
+        if($agrupamento <> 0){
+            $select = str_replace("ORDER BY", "ORDER BY ".$agrupamento.", ", $select); 
+        }
+        
+        # Tipo de agrupamento
+        $arrayAgrupamento = array(array(0,"Sem Agrupamento"),
+                             array(5,"Lotação"),
+                             array(6,"Perfil"));
 
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,true);
@@ -366,7 +376,30 @@ class listaServidores
         $relatorio->set_funcao(array(null,"dv",null,null,null,null,"date_to_php"));
         $relatorio->set_classe(array(null,null,null,"pessoal"));
         $relatorio->set_metodo(array(null,null,null,"get_Cargo"));
-        $relatorio->set_subTotal(FALSE);
+        
+        # Agrupamento
+        if($agrupamento <> 0){
+            $relatorio->set_subTotal(TRUE);
+            $relatorio->set_numGrupo($agrupamento-1);
+        }else{
+            $relatorio->set_subTotal(FALSE);
+        }
+        
+        
+        $relatorio->set_formCampos(array(
+                               array ('nome' => 'agrupamento',
+                                      'label' => 'Agrupamanto:',
+                                      'tipo' => 'combo',
+                                      'array' => $arrayAgrupamento,
+                                      'size' => 20,
+                                      'title' => 'Ano',
+                                      'padrao' => $agrupamento,
+                                      'onChange' => 'formPadrao.submit();',
+                                      'col' => 6,
+                                      'linha' => 1)));
+
+    $relatorio->set_formFocus('agrupamento');
+    $relatorio->set_formLink('servidor.php?fase=relatorio');
 
         $relatorio->set_conteudo($conteudo);    
         $relatorio->show();

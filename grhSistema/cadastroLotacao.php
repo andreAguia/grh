@@ -83,7 +83,7 @@ if($acesso)
                                       GER,
                                       nome,
                                       idLotacao,                                  
-                                      ativo,
+                                      if(ativo = 0,"Não","Sim"),
                                       idLotacao,
                                       idLotacao
                                  FROM tblotacao
@@ -207,7 +207,7 @@ if($acesso)
                'label' => 'Ativo:',
                'title' => 'Se a lotação está ativa e permite movimentações',
                'tipo' => 'combo',
-               'array' => array('Sim','Não'),
+               'array' => array(array(1,'Sim'),array(0,'Não')),
                'padrao' => 'Sim',
                'size' => 10),
         array ('linha' => 3,
@@ -238,8 +238,20 @@ if($acesso)
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_onClick("abreFechaDivId('divGrafico');");
     $botaoGra->set_accessKey('G');
+    
+    # Relatório
+    $botaoRel = new Button("Relatório");
+    $botaoRel->set_title("Exibe Relatório das Lotações Ativas");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/lotacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_accessKey('R');
+    
+    # Organograma
+    $botaoOrg = new Button("Organograma");
+    $botaoOrg->set_title("Exibe o Organograma da UENF");
+    $botaoOrg->set_onClick("window.open('../_img/organograma.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1000,height=700');");
+    $botaoOrg->set_accessKey('O');
 
-    $objeto->set_botaoListar(array($botaoGra));    
+    $objeto->set_botaoListar(array($botaoGra,$botaoRel,$botaoOrg));    
     
     # Pega o número de Lotações ativas para a paginação
     $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
@@ -274,7 +286,8 @@ if($acesso)
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                 AND situacao = 1 
+                                 AND situacao = 1
+                                 AND ativo
                             GROUP BY tblotacao.dir';
 
             $servidores = $pessoal->select($selectGrafico);

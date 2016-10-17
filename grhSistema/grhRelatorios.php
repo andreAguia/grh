@@ -136,8 +136,10 @@ if($acesso)
         case "cedidos";
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Cedidos','#','');
-            $menu->add_item('linkWindow','Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosHistorico.php');
             $menu->add_item('linkWindow','Relatório de Estatutários Cedidos','../grhRelatorios/estatutariosCedidos.php');
+            $menu->add_item('linkWindow','Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosHistorico.php');            
+            $menu->add_item('linkWindow','Relatório de Estatutários Cedidos - Agrupados por Órgão','../grhRelatorios/estatutariosCedidosOrgao.php');
+            $menu->add_item('linkWindow','Escala Anual de Férias - Servidores Técnicos Estatutários Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
 
             $menu->show();
             break;
@@ -195,6 +197,7 @@ if($acesso)
             $menu = new Menu('menuInicial');
             $menu->add_item('titulo','Férias','#','');
             $menu->add_item('linkWindow','Escala Anual de Férias UENF','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php');
+            $menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');

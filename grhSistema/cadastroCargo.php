@@ -116,7 +116,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("id","Cargo","Área","Função","Plano de Cargos","Servidores","Ver"));
-    $objeto->set_width(array(5,20,25,25,10,5,5));
+    #$objeto->set_width(array(5,20,25,25,10,5,5));
     $objeto->set_align(array("center","center","center","left"));
 
     $objeto->set_classe(array(null,null,null,null,null,"Pessoal"));

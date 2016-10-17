@@ -1113,17 +1113,20 @@ class Pessoal extends Bd
 
 	function get_nome($idServidor)
 	{
-		$select = 'SELECT tbpessoa.nome
-			     FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-			    WHERE idServidor = '.$idServidor;
+		if(is_numeric($idServidor)){
+                    $select = 'SELECT tbpessoa.nome
+			         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+			        WHERE idServidor = '.$idServidor;
 		
-		if($idServidor == 0)
+                    if($idServidor == 0){
 			$nome[0] = "";
-		else 
+                    }else{ 
 			$nome = parent::select($select,false);
-
-	
-		return $nome[0];
+                    }
+                    return $nome[0];
+                }else{
+                    return $idServidor;
+                }
 	}
 	
 	###########################################################
@@ -3005,7 +3008,7 @@ class Pessoal extends Bd
 	{
             $select = 'SELECT idLotacao
                          FROM tblotacao
-                        WHERE ativo = "Sim"';		
+                        WHERE ativo';		
 
             $count = parent::count($select);
 

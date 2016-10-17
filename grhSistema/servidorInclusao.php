@@ -293,10 +293,10 @@ if($acesso){
 
                  # Lotação               
                 $lotacao = $pessoal->select('SELECT idlotacao, 
-                                   concat(UADM,"-",DIR,"-",GER) as lotacao
-                              FROM tblotacao
-                             WHERE ativo = "Sim"
-                          ORDER BY lotacao');
+                                                    concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+                                               FROM tblotacao
+                                              WHERE ativo
+                                           ORDER BY lotacao');
 
                 array_push($lotacao, array(null,null)); # Adiciona o valor de nulo
 

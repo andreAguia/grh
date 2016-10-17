@@ -52,7 +52,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Tipos de Licença');
+    $objeto->set_nome('Licenças e Afastamentos');
 
     # botão salvar
     $objeto->set_botaoSalvarGrafico(false);
@@ -80,7 +80,6 @@ if($acesso)
                                       processo,                                  
                                       dtPeriodo,
                                       limite_sexo,
-                                      documentacao,
                                       idTpLicenca
                                  FROM tbtipolicenca
                                 WHERE nome LIKE "%'.$parametro.'%"
@@ -113,8 +112,8 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Licença","Período (em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Permitido ao sexo","Documentação"));
-    $objeto->set_width(array(5,20,7,7,7,7,7,7,28));
+    $objeto->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Permitido ao sexo"));
+    $objeto->set_width(array(5,38,7,10,10,10,10,10));
     $objeto->set_align(array("center","left","center","center","center","center","center","center","left"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
@@ -138,18 +137,21 @@ if($acesso)
                'label' => 'Nome da Licença:',
                'tipo' => 'texto',
                'autofocus' => true,
-               'size' => 40),
+               'col' => 6,
+               'size' => 100),
         array ('linha' => 1,
                'nome' => 'lei',
                'title' => 'Lei',
                'label' => 'Lei:',
                'tipo' => 'texto',
-               'size' => 40),
+               'col' => 4,
+               'size' => 80),
          array ('linha' => 1,
                'nome' => 'periodo',
                'title' => 'Período (em dias) da Licença',
-               'label' => 'Período (em dias) da Licença:',
+               'label' => 'Período (em dias):',
                'tipo' => 'texto',
+               'col' => 2,
                'size' => 10),
         array ('linha' => 4,
                'nome' => 'pericia',

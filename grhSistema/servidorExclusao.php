@@ -117,15 +117,15 @@ if($acesso)
             # Log
             $intra->registraLog($idUsuario,$data,$atividade,$nomeTabela,$idServidor,3,$idServidor);
             
+            #####################################################
+            # Tabelas vinculadas pelo idservidor
+            #####################################################
             $tabelas = array("tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbfaltas","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaoPremio","tbsuspensao","tbtrabalhoTre","tbtrienio");
             $idCampo = array("idAtestado","idAverbacao","idCedido","idComissao","idDiaria","idElogio","idFaltas","idFerias","idFolga","idGratificacao","idHistCessao","idhistlot","idLicenca","idProgressao","idPublicacaoPremio","idSuspensao","idTrabalhoTre","idTrienio");
             
             # Apaga os dados das tabelas
             $numTabelas = count($tabelas);
             
-            #####################################################
-            # outras tabelas
-            #####################################################
             for ($item = 0; $item < $numTabelas; $item++) {
                 $atividade = "Exclusão dos dados do Servidor: $nomeServidor da tabela $tabelas[$item]";            
             
@@ -133,6 +133,42 @@ if($acesso)
                 $select = "SELECT $idCampo[$item]
                              FROM $tabelas[$item]
                             WHERE idServidor = $idServidor";		
+
+                $result = $pessoal->select($select);
+                $totalRegistros = count($result);
+
+                # Dados da tabela
+                $pessoal->set_tabela($tabelas[$item]);
+                $pessoal->set_idCampo($idCampo[$item]);
+
+                # Percorre apagando cada id
+                if($totalRegistros > 0){
+                    foreach ($result as $linha){
+                        # Apaga
+                        $pessoal->excluir($linha[0]);
+
+                        # Log
+                        $intra->registraLog($idUsuario,$data,$atividade,$tabelas[$item],$linha[0],3,$idServidor);
+                    }
+                }            
+            }
+            
+            #####################################################
+            # Tabelas vinculadas pelo idpessoa
+            #####################################################
+            $tabelas = array("tbpessoa","tbdependente","tbdocumentacao","tbformacao");
+            $idCampo = array("idpessoa","idDependente","iddocumentacao","idformacao");
+            
+            # Apaga os dados das tabelas
+            $numTabelas = count($tabelas);
+            
+            for ($item = 0; $item < $numTabelas; $item++) {
+                $atividade = "Exclusão dos dados do Servidor: $nomeServidor da tabela $tabelas[$item]";            
+            
+                # Verifica se tem dados desse servidor
+                $select = "SELECT $idCampo[$item]
+                             FROM $tabelas[$item]
+                            WHERE idPessoa = $idPessoa";		
 
                 $result = $pessoal->select($select);
                 $totalRegistros = count($result);

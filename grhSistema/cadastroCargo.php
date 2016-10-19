@@ -331,8 +331,8 @@ if($acesso)
         
              # Links da tab
             echo '<ul class="tabs" data-tabs id="example-tabs">';
-            echo '<li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Servidores Ativos</a></li>';
-            echo '<li class="tabs-title"><a href="#panel2">Servidores Inativos</a></li>';
+            echo '<li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Ativos</a></li>';
+            echo '<li class="tabs-title"><a href="#panel2">Inativos</a></li>';
             echo '</ul>';
             
             # Conteúdo

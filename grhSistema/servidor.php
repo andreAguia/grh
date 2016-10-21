@@ -20,8 +20,8 @@ if($acesso)
     $intra = new Intra();
     $pessoal = new Pessoal();
     
-    # Verifica se foi pesquisado
-    $pesquisado = get('pesquisado',FALSE);        
+    # Inicia a flag que informa se houve alguma pesquisa
+    $pesquisado = FALSE;        
 	
     # Verifica a fase do programa
     $fase = get('fase');
@@ -36,6 +36,16 @@ if($acesso)
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
     $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
     $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
+    
+    # Altera o valor da flag quando há uma pesquisa
+    if((!Valida::vazio($parametroNomeMat)) OR 
+       ($parametroCargo <> '*') OR
+       ($parametroCargoComissao <> '*') OR
+       ($parametroLotacao <> '*') OR
+       ($parametroPerfil <> '*') OR
+       ($parametroPerfil <> '*')){
+        $pesquisado = TRUE; 
+    }
     
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento',0);
@@ -98,12 +108,14 @@ if($acesso)
             $menu1->add_link($linkBotao1,"left");
             
             # Relatórios
-            $linkBotao3 = new Link("Relatório");
-            $linkBotao3->set_class('button');        
-            $linkBotao3->set_title('Relatório dessa pesquisa');
-            $linkBotao3->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $linkBotao3->set_accessKey('R');
-            $menu1->add_link($linkBotao3,"right");
+            if($pesquisado){
+                $linkBotao3 = new Link("Relatório");
+                $linkBotao3->set_class('button');        
+                $linkBotao3->set_title('Relatório dessa pesquisa');
+                $linkBotao3->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+                $linkBotao3->set_accessKey('R');
+                $menu1->add_link($linkBotao3,"right");
+            }
             
             # Novo Servidor
             $linkBotao2 = new Link("Incluir Novo Servidor","servidorInclusao.php");
@@ -114,7 +126,7 @@ if($acesso)
             $menu1->show();
 
             # Parâmetros
-            $form = new Form('?pesquisado=TRUE');
+            $form = new Form('?');
 
                 # Nome ou Matrícula
                 $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
@@ -240,7 +252,17 @@ if($acesso)
                 $lista->set_paginacao(true);
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(12);
-                $lista->show();
+                
+                # Exibe a lista somente se tiver pesquisa
+                if($pesquisado){
+                    $lista->show();
+                }else{
+                    br(2);
+                    $callout = new Callout();
+                    $callout->abre();
+                        p('Informe os critérios para a pesquisa','center');
+                    $callout->fecha();
+                }
                 
                 # Pega o select atualizado
                 $select = $lista->get_select();

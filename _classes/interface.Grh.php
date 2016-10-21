@@ -266,7 +266,7 @@ class Grh
                 $botao = new BotaoGrafico();
                 $botao->set_label('Motivos de Saída');
                 $botao->set_url("cadastroMotivo.php");
-                $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_image(PASTA_FIGURAS.'saida.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Motivos de Saída do Servidor da Instituição');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);

@@ -103,7 +103,7 @@ if($acesso)
                                         WHEN "F" THEN "Feminino"
                                         WHEN "M" THEN "Masculino"
                                      end,
-                                     YEAR(CURDATE( )) - YEAR(dtNasc) - IF(RIGHT(CURDATE( ),5) < RIGHT(dtNasc,5),1,0),
+                                     TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),
                                      dependente,
                                      auxCreche,
                                      dtTermino,

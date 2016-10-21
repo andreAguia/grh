@@ -106,7 +106,7 @@ if($acesso)
                         FROM tblotacao';
     
     if(is_null($id)){
-        $selectLotacao .= ' WHERE ativo = "Sim"';
+        $selectLotacao .= ' WHERE ativo';
     }
                        
     $selectLotacao .= ' ORDER BY lotacao';

@@ -328,25 +328,12 @@ if($acesso)
             # Titulo
             titulo('Servidores com o Cargo: '.$pessoal->get_nomeCargo($id));
             br();
-        
-             # Links da tab
-            echo '<ul class="tabs" data-tabs id="example-tabs">';
-            echo '<li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Ativos</a></li>';
-            echo '<li class="tabs-title"><a href="#panel2">Inativos</a></li>';
-            echo '</ul>';
-            
-            # Conteúdo
-            echo '<div class="tabs-content" data-tabs-content="example-tabs">';
-            echo '<div class="tabs-panel is-active" id="panel1">';
             
             # Lista de Servidores Ativos
             $lista = new listaServidores('Servidores Ativos');       
             $lista->set_situacao(1);
             $lista->set_cargo($id);
             $lista->show();
-
-            echo '</div>';
-            echo '<div class="tabs-panel" id="panel2">';
            
             # Lista de Servidores Inativos
             $lista = new listaServidores('Servidores Inativos');
@@ -354,9 +341,6 @@ if($acesso)
             $lista->set_situacaoSinal("<>");
             $lista->set_cargo($id);
             $lista->show();
-            
-            echo '</div>';
-            echo '</div>';
             
             $grid->fechaColuna();
             $grid->fechaGrid();

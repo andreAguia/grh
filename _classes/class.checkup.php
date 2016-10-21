@@ -439,7 +439,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome');
         $width = array(10,85);
-        $align = array('center');
+        $align = array('center','left');
         $titulo = 'Motorista sem número da carteira de habilitação cadastrada:';
         $funcao = array(null);
         $linkEditar = 'servidor.php?fase=editar&id=';
@@ -487,12 +487,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('Matrícula','IdFuncional','Nome','Lotação');
-        $width = array(10,10,30,45);
-        $align = array('center','center','left');
+        $label = array('IdFuncional','Nome','Lotação');
+        $width = array(10,40,45);
+        $align = array('center','left');
         $titulo = 'Servidores estatutários sem cargo cadastrado';
-        $classe = array(null,null,null,"Pessoal");
-        $metodo = array(null,null,null,"get_lotacao");
+        $classe = array(null,null,"Pessoal");
+        $metodo = array(null,null,"get_lotacao");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -502,6 +502,118 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                $tabela->show();
+            }else{
+                p($count.' '.$titulo,"checkupResumo");
+            }
+        }
+    }
+    ###########################################################
+    
+     /**
+     * Método get_servidorCom74
+     * 
+     * Servidor estatutário que faz 75 anos este ano (Preparar aposentadoria compulsória)
+     */
+    
+    public function get_servidorCom74()
+    {
+        $servidor = new Pessoal();
+
+        $select = 'SELECT tbservidor.idFuncional,  
+                          tbpessoa.nome,
+                          dtNasc,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE tbservidor.situacao = 1
+                    AND YEAR(CURDATE()) - YEAR(tbpessoa.dtNasc) = 75
+                    AND idPerfil = 1
+                ORDER BY tbpessoa.nome';		
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
+        $width = array(10,30,10,5,20,20);
+        $align = array('center','left','center','center','left','left');
+        $titulo = 'Servidores estatutários que faz 75 anos este ano - (Preparar aposentadoria compulsória)';
+        $classe = array(null,null,null,null,"Pessoal","Pessoal");
+        $metodo = array(null,null,null,null,"get_lotacao","get_cargo");
+        $funcao = array(null,null,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_funcao($funcao);
+        $tabela->set_metodo($metodo);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                $tabela->show();
+            }else{
+                p($count.' '.$titulo,"checkupResumo");
+            }
+        }
+    }
+    ###########################################################
+    
+     /**
+     * Método get_servidorComMais74
+     * 
+     * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
+     */
+    
+    public function get_servidorComMais75()
+    {
+        $servidor = new Pessoal();
+
+        $select = 'SELECT tbservidor.idFuncional,  
+                          tbpessoa.nome,
+                          dtNasc,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor                          
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE tbservidor.situacao = 1
+                    AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) >= 75 
+                    AND idPerfil = 1
+                ORDER BY tbpessoa.nome';		
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
+        $width = array(10,30,10,5,20,20);
+        $align = array('center','left','center','center','left','left');
+        $titulo = 'Servidores estatutários com 75 anos ou mais - (Aposentar Compulsoriamente)';
+        $classe = array(null,null,null,null,"Pessoal","Pessoal");
+        $metodo = array(null,null,null,null,"get_lotacao","get_cargo");
+        $funcao = array(null,null,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        

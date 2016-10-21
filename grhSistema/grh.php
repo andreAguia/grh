@@ -24,13 +24,13 @@ if($acesso)
     $fase = get('fase','menu');
 		
     # Define a senha padrão de acordo com o que está nas variáveis
-    #define("SENHA_PADRAO",$config->get_variavel('senha_padrao'));
+    #define("SENHA_PADRAO",$config->get_variavel('senha_padrao'));    
 
     # Começa uma nova página
     $page = new Page();
     $page->set_bodyOnLoad("ajaxLoadPage('grh.php?fase=resumoAlertas','divAlertas',null);");
     $page->iniciaPagina();
-
+    
     # Cabeçalho da Página
     if($fase <> 'resumoAlertas'){  
         AreaServidor::cabecalho();

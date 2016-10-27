@@ -153,6 +153,9 @@ function __autoload($classe)
     if (file_exists(PASTA_CLASSES_GERAIS."/rel.{$classe}.php")){
         include_once PASTA_CLASSES_GERAIS."/rel.{$classe}.php"; 
     }
+    
+    if (file_exists(PASTA_CLASSES_GERAIS."/bd.{$classe}.php"))
+        include_once PASTA_CLASSES_GERAIS."/bd.{$classe}.php";   
 
     # Verifica se existe a classe nas classes específicas
     if (file_exists(PASTA_CLASSES."/class.{$classe}.php")){

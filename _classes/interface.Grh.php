@@ -830,6 +830,7 @@ class Grh
         $servidor = new Pessoal();
 
         $select ='SELECT tbservidor.idFuncional,
+                         tbservidor.matricula,
                          tbpessoa.nome,
                          tbperfil.nome,
                          tbservidor.idServidor,
@@ -843,12 +844,12 @@ class Grh
 
         $conteudo = $servidor->select($select,true);
 
-        $label = array("Id","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
-        $width = array(8,10,20,10,25,10,25,5);
+        $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
+        $width = array(8,10,10,20,10,20,10,20,5);
         #$align = array("center");
-        $function = array(null,null,null,null,"date_to_php");
-        $classe = array(null,null,null,"pessoal",null,"pessoal","pessoal");
-        $metodo = array(null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao");
+        $function = array(null,"dv",null,null,null,"date_to_php");
+        $classe = array(null,null,null,null,"pessoal",null,"pessoal","pessoal");
+        $metodo = array(null,null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao");
         
         $formatacaoCondicional = array( array('coluna' => 0,
                                               'valor' => $servidor->get_idFuncional($idServidor),

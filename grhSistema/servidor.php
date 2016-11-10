@@ -19,9 +19,6 @@ if($acesso)
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    
-    # Inicia a flag que informa se houve alguma pesquisa
-    $pesquisado = FALSE;        
 	
     # Verifica a fase do programa
     $fase = get('fase');
@@ -36,16 +33,6 @@ if($acesso)
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
     $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
     $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
-    
-    # Altera o valor da flag quando há uma pesquisa
-    if((!Valida::vazio($parametroNomeMat)) OR 
-       ($parametroCargo <> '*') OR
-       ($parametroCargoComissao <> '*') OR
-       ($parametroLotacao <> '*') OR
-       ($parametroPerfil <> '*') OR
-       ($parametroPerfil <> '*')){
-        $pesquisado = TRUE; 
-    }
     
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento',0);
@@ -108,15 +95,13 @@ if($acesso)
             $menu1->add_link($linkBotao1,"left");
             
             # Relatórios
-            if($pesquisado){
-                $linkBotao3 = new Link("Relatório");
-                $linkBotao3->set_class('button');        
-                $linkBotao3->set_title('Relatório dessa pesquisa');
-                $linkBotao3->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-                $linkBotao3->set_accessKey('R');
-                $menu1->add_link($linkBotao3,"right");
-            }
-            
+            $linkBotao3 = new Link("Relatório");
+            $linkBotao3->set_class('button');        
+            $linkBotao3->set_title('Relatório dessa pesquisa');
+            $linkBotao3->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $linkBotao3->set_accessKey('R');
+            $menu1->add_link($linkBotao3,"right");
+                        
             # Novo Servidor
             $linkBotao2 = new Link("Incluir Novo Servidor","servidorInclusao.php");
             $linkBotao2->set_class('button success');        
@@ -173,9 +158,10 @@ if($acesso)
                 $form->add_item($controle);
 
                 # Cargos em Comissão
-                $result = $pessoal->select('SELECT tbtipocomissao.descricao,tbtipocomissao.descricao
-                                              FROM tbtipocomissao                                
-                                          ORDER BY 1');
+                $result = $pessoal->select('SELECT tbtipocomissao.descricao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                                              FROM tbtipocomissao
+                                              WHERE ativo
+                                          ORDER BY tbtipocomissao.simbolo');
                 array_unshift($result,array('*','-- Todos --'));
 
                 $controle = new Input('parametroCargoComissao','combo','Cargo em Comissão:',1);
@@ -185,12 +171,13 @@ if($acesso)
                 $controle->set_valor($parametroCargoComissao);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(2);
-                $controle->set_col(3);
+                $controle->set_col(4);
                 $form->add_item($controle);
 
                 # Lotação
-                $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao                                
+                $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo
                                           ORDER BY ativo desc,lotacao');
                 array_unshift($result,array('*','-- Todos --'));
 
@@ -201,7 +188,7 @@ if($acesso)
                 $controle->set_valor($parametroLotacao);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(2);
-                $controle->set_col(6);
+                $controle->set_col(5);
                 $form->add_item($controle);
 
                 # Perfil
@@ -219,6 +206,15 @@ if($acesso)
                 $controle->set_linha(2);
                 $controle->set_col(3);
                 $form->add_item($controle);
+                
+                # submit
+                #$controle = new Input('submit','submit');
+                #$controle->set_valor('Pesquisar');
+                #$controle->set_size(20);
+                #$controle->set_accessKey('P');
+                #$controle->set_linha(3);
+                #$controle->set_col(2);
+                #$form->add_item($controle);
 
                 $form->show();
 
@@ -253,16 +249,7 @@ if($acesso)
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(12);
                 
-                # Exibe a lista somente se tiver pesquisa
-                if($pesquisado){
-                    $lista->show();
-                }else{
-                    br(2);
-                    $callout = new Callout();
-                    $callout->abre();
-                        p('Informe os critérios para a pesquisa','center');
-                    $callout->fecha();
-                }
+                $lista->show();
                 
                 # Pega o select atualizado
                 $select = $lista->get_select();

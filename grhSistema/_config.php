@@ -6,8 +6,8 @@
  */
 
 # Sobre o Sistema Intranet
-define("VERSAO","1.0");                                     # Versão do Sistema 								
-define("ATUALIZACAO","27/09/2016");                              # Última Atualização
+define("VERSAO","1.0.1");                                     # Versão do Sistema 								
+define("ATUALIZACAO","18/11/2016");                              # Última Atualização
 define("SISTEMA","Sistema de Gestão de Pessoas");                # Nome do sistema
 define("DESCRICAO","Sistema da Gerência de Recursos Humanos");   # Descrição do sistema
 define("PALAVRAS_CHAVE","Uenf,GRH");                             # Palavras chave para sites de busca

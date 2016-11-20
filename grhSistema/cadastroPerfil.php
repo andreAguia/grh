@@ -218,7 +218,8 @@ if($acesso)
     # Relatório
     $botaoGra = new Button("Gráfico");
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
-    $botaoGra->set_onClick("abreFechaDivId('divGrafico');");
+    #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
+    $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_accessKey('G');
 
     $objeto->set_botaoListar(array($botaoGra));
@@ -228,46 +229,6 @@ if($acesso)
     {
         case "" :            
         case "listar" :
-            $div = new Div("divGrafico");
-            $div->abre();
-    
-            # Gráfico Estatístico
-            $pessoal = new Pessoal();
-            
-            titulo('Servidores por Perfil');
-
-            # Gráfico de pizza
-            $chart = new PieChart(500,500);
-            $chart->getPlot()->getPalette()->setPieColor(array(
-                new Color(30, 144, 255),
-                new Color(255, 130, 71),
-                new Color(67, 205, 128)));
-
-            # Pega os dados
-            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.matricula) 
-                                FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                               WHERE tbservidor.situacao = 1
-                            GROUP BY tbperfil.nome';
-
-            $servidores = $pessoal->select($selectGrafico);
-
-            $dataSet = new XYDataSet();
-            foreach ($servidores as $valor){
-                $dataSet->addPoint(new Point($valor[0]." (".$valor[1].")", $valor[1]));
-            }
-            #$dataSet->addPoint(new Point("Estatutário (".$estatutários.")", $estatutários));
-            #$dataSet->addPoint(new Point("Cedidos (".$cedido.")", $cedido));
-            #$dataSet->addPoint(new Point("Convidados (".$convidado.")", $convidado));
-            $chart->setDataSet($dataSet);
-
-            $chart->setTitle("");
-            $chart->render(PASTA_FIGURAS."/demo3.png");
-
-            $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
-            $imagem->show();
-            
-            $div->fecha();
-            
             $objeto->listar();
             break;
 
@@ -313,7 +274,57 @@ if($acesso)
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+        case "grafico" :
+             # Botão voltar
+            botaoVoltar('?');
+            
+            # Exibe o Título
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+            
+            titulo('Servidores por Perfil');
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid(); 
+             
+            # Limita o tamanho do gráfico
+            $grid = new Grid("center");
+            $grid->abreColuna(7);
 
+            # Gráfico de pizza
+            $chart = new PieChart(500,500);
+            $chart->getPlot()->getPalette()->setPieColor(array(
+                new Color(30, 144, 255),
+                new Color(255, 130, 71),
+                new Color(67, 205, 128)));
+
+            # Pega os dados
+            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.matricula) 
+                                FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                               WHERE tbservidor.situacao = 1
+                            GROUP BY tbperfil.nome';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            $dataSet = new XYDataSet();
+            foreach ($servidores as $valor){
+                $dataSet->addPoint(new Point($valor[0]." (".$valor[1].")", $valor[1]));
+            }
+            #$dataSet->addPoint(new Point("Estatutário (".$estatutários.")", $estatutários));
+            #$dataSet->addPoint(new Point("Cedidos (".$cedido.")", $cedido));
+            #$dataSet->addPoint(new Point("Convidados (".$convidado.")", $convidado));
+            $chart->setDataSet($dataSet);
+
+            $chart->setTitle("");
+            $chart->render(PASTA_FIGURAS."/demo3.png");
+
+            $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
+            $imagem->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
     }
     $page->terminaPagina();
 }else{

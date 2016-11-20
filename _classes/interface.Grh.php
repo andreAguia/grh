@@ -84,7 +84,7 @@ class Grh
         br(2);
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico();
+        $menu = new MenuGrafico(4);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
@@ -213,14 +213,14 @@ class Grh
         $acesso = Verifica::acesso($idUsuario,1);
         if ($acesso){
             $grid = new Grid("center");
-            $grid->abreColuna(12,8);
+            $grid->abreColuna(12,10);
             
             $tamanhoImage = 50;
             
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico(6);   
+            $menu = new MenuGrafico(9);   
                 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');

@@ -649,11 +649,11 @@ class Grh
      * Exibe um quadro informativo da licença Prêmio de um servidor
      */
     
-     public static function quadroLicencaPremio($matricula)
+     public static function quadroLicencaPremio($idServidor)
     {
         $servidor = new Pessoal();
-        $diasPublicados = $servidor->get_licencaPremioNumDiasPublicadaPorMatricula($matricula);
-        $diasFruidos = $servidor->get_licencaPremioNumDiasFruidos($matricula);
+        $diasPublicados = $servidor->get_licencaPremioNumDiasPublicadaPorMatricula($idServidor);
+        $diasFruidos = $servidor->get_licencaPremioNumDiasFruidos($idServidor);
         $diasDisponiveis = $diasPublicados - $diasFruidos;        
         
         # Div do numero de serviços
@@ -923,6 +923,67 @@ class Grh
             $tabela->show();
 
         $div->fecha();
+    }
+    
+    ###########################################################
+    
+    /**
+     * método listaDadosServidorRelatório
+     * Exibe os dados principais do servidor para relatório
+     * 
+     * @param string $idServidor NULL idServidor do servidor
+     * @param string $titulo     NULL O título do relatório 
+     * @param string $cabecalho  TRUE Se exibirá o início do relatório (menu, cabecalho, etc) 
+    */
+    
+    public static function listaDadosServidorRelatorio($idServidor,$titulo = NULL,$cabecalho = TRUE){ 
+        
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+        
+        # Dados do Servidor
+        $select ='SELECT tbservidor.idFuncional,
+                         tbpessoa.nome,
+                         tbperfil.nome,
+                         tbservidor.idServidor,
+                         tbservidor.dtAdmissao,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                       LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                                       LEFT JOIN tbperfil ON tbservidor.idPerfil = tbperfil.idPerfil
+                   WHERE idServidor = '.$idServidor;
+
+        $result = $pessoal->select($select);   
+
+        $relatorio = new Relatorio();
+        $relatorio->set_titulo($titulo);
+        $relatorio->set_label(array("Id","Servidor","Perfil","Cargo","Admissão","Lotação","Situação"));
+        $relatorio->set_width(array(8,20,10,20,10,20,5));
+        $relatorio->set_funcao(array(null,null,null,null,"date_to_php"));        
+        $relatorio->set_classe(array(null,null,null,"pessoal",null,"pessoal","pessoal"));
+        $relatorio->set_metodo(array(null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao"));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_zebrado(false);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_brHr(0);
+        $relatorio->set_linhaFinal(TRUE);
+        
+        # Verifica se exibe ou não o início do cabeçalho
+        # Utilizado para quando os dados doservidor é a primeira coisa a ser
+        # exibida no relatório. Se não for esconde o cabeçalho, menu etc
+        if(!$cabecalho){
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+        }
+        
+        $relatorio->show();
+        
+        
     }
 
 }

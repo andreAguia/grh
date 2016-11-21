@@ -193,6 +193,14 @@ if($acesso)
                                 'size' => 5,
                                 'title' => 'Matrícula',
                                 'linha' => 6)));
+    
+    # Relatório
+    $botaoRel = new Button("Imprimir");
+    $botaoRel->set_title("Imprimir essa Listagem");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_accessKey('I');
+
+    $objeto->set_botaoListar(array($botaoRel));  
 
     # Log
     $objeto->set_idUsuario($idUsuario);

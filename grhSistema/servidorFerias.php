@@ -65,7 +65,7 @@ if($acesso)
                                      idFerias,
                                      idFerias
                                 FROM tbferias
-                               WHERE idServidor='.$idServidorPesquisado.'
+                               WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY dtInicial desc');
 
     # select do edita
@@ -193,12 +193,20 @@ if($acesso)
                                        'title' => 'Matrícula',
                                        'linha' => 6)));
 
+    # Relatório
+    $botaoRel = new Button("Imprimir");
+    $botaoRel->set_title("Imprimir essa Listagem");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_accessKey('I');
+    
+    $objeto->set_botaoListar(array($botaoRel));
+        
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    $objeto->set_paginacao(true);
+    $objeto->set_paginacao(false);
     $objeto->set_paginacaoInicial($paginacao);
     $objeto->set_paginacaoItens(6);
 

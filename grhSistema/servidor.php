@@ -74,7 +74,7 @@ if($acesso)
         # Lista os Servidores
         case "" :
             br(10);
-            mensagemAguarde();
+            aguarde();
             br();
             loadPage('?fase=pesquisar');
             break;
@@ -281,7 +281,7 @@ if($acesso)
         # Chama o menu do Servidor que se quer editar
         case "editar" :
             br(8);
-            mensagemAguarde();
+            aguarde();
             set_session('idServidorPesquisado',$id);
             loadPage('servidorMenu.php');
             break; 

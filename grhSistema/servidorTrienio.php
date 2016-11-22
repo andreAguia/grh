@@ -114,7 +114,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("a partir de","%","Início do Período Aquisitivo","Término do Período Aquisitivo","Processo","DOERJ","Documento"));
+    $objeto->set_label(array("a partir de","%","P.Aq.Início","P.Aq.Fim","Processo","DOERJ","Documento"));
     $objeto->set_width(array(10,5,10,10,20,15,20));	
     $objeto->set_align(array("center"));
     $objeto->set_function(array ("date_to_php",null,"date_to_php","date_to_php"));
@@ -232,6 +232,14 @@ if($acesso)
                                        'title' => 'Matrícula',
                                        'linha' => 5)));
 
+    # Relatório
+    $botaoRel = new Button("Relatório");
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Triênios");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorTrienio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_accessKey('R');
+    
+    $objeto->set_botaoListar(array($botaoRel));
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

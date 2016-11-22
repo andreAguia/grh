@@ -27,20 +27,20 @@ if($acesso)
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Triênios');
     
     br();
-    $select = "SELECT anoExercicio,
-                        status,
-                        dtInicial,
-                        numDias,
-                        periodo,
-                        ADDDATE(dtInicial,numDias-1),
-                        documento,
-                        folha
-                   FROM tbferias
-                  WHERE idServidor = $idServidorPesquisado
-               ORDER BY dtInicial desc";
+    $select = "SELECT dtInicial,
+                      percentual,
+                      dtInicioPeriodo,
+                      dtFimPeriodo,
+                      numProcesso,
+                      concat(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
+                      documento,
+                      idTrienio
+                 FROM tbtrienio
+                WHERE idServidor = $idServidorPesquisado
+             ORDER BY 2 desc";
 
     $result = $pessoal->select($select);
 
@@ -49,10 +49,11 @@ if($acesso)
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
-    $relatorio->set_width(array(10,10,10,5,8,10,15));
+    #$relatorio->set_subtitulo("Todas as Licenças");
+    $relatorio->set_label(array("a partir de","%","P.Aq.Início","P.Aq.Fim","Processo","DOERJ","Documento"));
+    $relatorio->set_width(array(10,5,10,10,20,25,20));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
+    $relatorio->set_funcao(array ("date_to_php",null,"date_to_php","date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

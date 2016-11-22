@@ -240,7 +240,7 @@ if($acesso)
         
         case "aguarde" :
             br(10);
-            mensagemAguarde();
+            aguarde();
             br();
             loadPage('?fase=listaServidores&id='.$id);
             break;

@@ -79,7 +79,14 @@ if($acesso)
                                'label' => 'Observações do Servidor',
                                'tipo' => 'textarea',
                                'size' => array(255,20))));
-
+    # Relatório
+    $botaoRel = new Button("Relatório");
+    $botaoRel->set_title("Imprimir Relatório de Observações do Servidor");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorObs.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_accessKey('R');
+    
+    $objeto->set_botaoEditarExtra(array($botaoRel));
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -92,8 +99,7 @@ if($acesso)
         case "gravar" :
             $objeto->$fase($idServidorPesquisado);
             break;	
-    }									 	 		
-
+    }
     $page->terminaPagina();
 }else{
     loadPage("../../areaServidor/sistema/login.php");

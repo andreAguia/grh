@@ -162,7 +162,7 @@ class Grh
         $divAlertas->abre();            
             titulo('Alertas');
             br(2);
-            mensagemAguarde();
+            aguarde();
         $divAlertas->fecha();
         
         # Mais detalhes

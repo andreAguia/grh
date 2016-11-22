@@ -202,6 +202,14 @@ if($acesso)
                                        'linha' => 8)));
 
 
+    # Relatório
+    $botaoRel = new Button("Relatório");
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Progressões e Enquadramentos");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorProgressao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_accessKey('R');
+    
+    $objeto->set_botaoListar(array($botaoRel));
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

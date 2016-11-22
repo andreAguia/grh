@@ -27,20 +27,20 @@ if($acesso)
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Progressões e Enquadramentos');
     
     br();
-    $select = "SELECT anoExercicio,
-                        status,
-                        dtInicial,
-                        numDias,
-                        periodo,
-                        ADDDATE(dtInicial,numDias-1),
-                        documento,
-                        folha
-                   FROM tbferias
-                  WHERE idServidor = $idServidorPesquisado
-               ORDER BY dtInicial desc";
+    $select = "SELECT tbprogressao.dtInicial,
+                      tbtipoprogressao.nome,
+                      CONCAT(tbclasse.faixa,' - ',tbclasse.valor) as vv,
+                      numProcesso,
+                      CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
+                      documento,
+                      tbprogressao.idProgressao
+                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
+                                   JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
+                WHERE idServidor = $idServidorPesquisado
+             ORDER BY tbprogressao.dtInicial desc";
 
     $result = $pessoal->select($select);
 
@@ -49,10 +49,10 @@ if($acesso)
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
-    $relatorio->set_width(array(10,10,10,5,8,10,15));
+    $relatorio->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
+    $relatorio->set_width(array(10,25,15,18,17,15));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
+    $relatorio->set_funcao(array ('date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

@@ -58,7 +58,6 @@ session_cache_limiter('private');
 
 # Funçõess gerais	
 include_once (PASTA_FUNCOES_GERAIS."funcoes.gerais.php");
-include_once (PASTA_FUNCOES_GERAIS."funcoes.data.php");
 include_once (PASTA_FUNCOES."funcoes.especificas.php");
 
 # Framework gráfico 

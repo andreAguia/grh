@@ -419,10 +419,10 @@ if($acesso){
         $botaoPremio->set_accessKey('L');
         
         # Relatório
-        $botaoRel = new Button("Imprimir");
+        $botaoRel = new Button("Relatório");
         $botaoRel->set_title("Imprimir essa Listagem");
         $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-        $botaoRel->set_accessKey('I');
+        $botaoRel->set_accessKey('R');
 
         $objeto->set_botaoListar(array($botaoPremio,$botaoRel));
 

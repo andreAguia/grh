@@ -92,7 +92,7 @@ if($acesso)
             $idPessoa = $pessoal->get_idPessoa($idServidor);
             
             br(4);
-            mensagemAguarde();            
+            aguarde();            
             br();
             p("Excluindo ...","center");
             

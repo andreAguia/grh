@@ -194,10 +194,10 @@ if($acesso)
                                        'linha' => 6)));
 
     # Relatório
-    $botaoRel = new Button("Imprimir");
-    $botaoRel->set_title("Imprimir essa Listagem");
+    $botaoRel = new Button("Relatório");
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Férias");
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $botaoRel->set_accessKey('I');
+    $botaoRel->set_accessKey('R');
     
     $objeto->set_botaoListar(array($botaoRel));
         

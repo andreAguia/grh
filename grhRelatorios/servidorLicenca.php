@@ -27,7 +27,7 @@ if($acesso)
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Relatório de Licenças');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Licenças');
     
     br();
     $select = "SELECT tbtipolicenca.nome,

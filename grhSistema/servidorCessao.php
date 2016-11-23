@@ -86,7 +86,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Data Término","Órgão Cessionário","Processo","Publicação no DOERJ"));
     $objeto->set_width(array(10,10,30,20,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

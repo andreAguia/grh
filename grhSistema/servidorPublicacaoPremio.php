@@ -108,7 +108,7 @@ if($acesso)
     $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
     $objeto->set_width(array(10,5,14,14,20,8,8,8));
     $objeto->set_align(array("center"));
-    $objeto->set_function(array('date_to_php',null,'date_to_php','date_to_php',null));
+    $objeto->set_funcao(array('date_to_php',null,'date_to_php','date_to_php',null));
     $objeto->set_classe(array(null,null,null,null,null,null,'Pessoal','Pessoal'));
     $objeto->set_metodo(array(null,null,null,null,null,null,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
     $objeto->set_numeroOrdem(true);
@@ -200,7 +200,7 @@ if($acesso)
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     $botaoRel->set_accessKey('R');
 
-    $objeto->set_botaoListar(array($botaoRel));  
+    $objeto->set_botaoListarExtra(array($botaoRel));  
 
     # Log
     $objeto->set_idUsuario($idUsuario);

@@ -229,7 +229,7 @@ if($acesso)
     $botaoArea->set_url('cadastroArea.php');  
     #$botaoArea->set_accessKey('L');
 
-    $objeto->set_botaoListar(array($botaoCargo,$botaoArea));
+    $objeto->set_botaoListarExtra(array($botaoCargo,$botaoArea));
 
     ################################################################
     switch ($fase)

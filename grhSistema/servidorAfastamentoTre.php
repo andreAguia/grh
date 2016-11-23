@@ -89,7 +89,7 @@ if($acesso)
     $objeto->set_label(array("Data Inícial do Trabalho","Dias Trabalhados","Data de Término do Trabalho","Folgas Concedidas","Descrição do Trabalho Efetuado","Documento"));
     $objeto->set_width(array(10,10,10,10,30,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php",null,"date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",null,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

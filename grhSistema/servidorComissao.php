@@ -118,7 +118,7 @@ if($acesso)
     $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
     $objeto->set_width(array(30,40,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array (null,null,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -272,7 +272,7 @@ if($acesso)
     $botaoVagas = new Button("Vagas","?fase=vagas");
     $botaoVagas->set_title('Exibe a disponibilidade dos cargos em comissão');
     $botaoVagas->set_accessKey('V');
-    $objeto->add_botaoListar($botaoVagas);
+    $objeto->set_botaoListarExtra(array($botaoVagas));
     
 
     # Paginação

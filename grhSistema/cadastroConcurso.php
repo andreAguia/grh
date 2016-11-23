@@ -184,13 +184,17 @@ if($acesso)
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
     
-    # Relatório
-    $botaoGra = new Button("Gráfico");
+    # Imagem
+    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+    
+    # Grafico
+    $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
-    $botaoGra->set_accessKey('G');
+    $botaoGra->set_imagem($imagem1);
+    #$botaoGra->set_accessKey('G');
 
-    $objeto->set_botaoListar(array($botaoGra));
+    $objeto->set_botaoListarExtra(array($botaoGra));
 
     ################################################################
     switch ($fase)

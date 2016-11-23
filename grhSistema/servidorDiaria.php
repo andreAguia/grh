@@ -99,7 +99,7 @@ if($acesso)
     $objeto->set_label(array("id","CI","Origem","Destino","Saída","Chegada","Valor","Emitir CI"));
     $objeto->set_width(array(4,11,20,20,10,10,8,8));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array (null,null,null,null,"date_to_php","date_to_php","formataMoeda"));
+    $objeto->set_funcao(array (null,null,null,null,"date_to_php","date_to_php","formataMoeda"));
 
     # Link do CI
     $botao = new BotaoGrafico();

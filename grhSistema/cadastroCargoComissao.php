@@ -113,7 +113,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Simbolo","Valor","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas","Cargo Ativo?"));
+    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas","Cargo Ativo?"));
     $objeto->set_width(array(5,20,10,10,10,10,10,10,10));
     $objeto->set_align(array("center"));
     

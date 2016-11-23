@@ -215,14 +215,17 @@ if($acesso)
     # Tira o zebrado
     #$objeto->set_zebrado(FALSE);
     
-    # Relatório
-    $botaoGra = new Button("Gráfico");
+    # Imagem
+    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+            
+    $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
     $botaoGra->set_url("?fase=grafico");
-    $botaoGra->set_accessKey('G');
+    $botaoGra->set_imagem($imagem);
+    #$botaoGra->set_accessKey('G');
 
-    $objeto->set_botaoListar(array($botaoGra));
+    $objeto->set_botaoListarExtra(array($botaoGra));
 
     ################################################################
     switch ($fase)

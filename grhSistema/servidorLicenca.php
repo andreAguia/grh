@@ -154,7 +154,7 @@ if($acesso){
         $objeto->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag."));
         $objeto->set_width(array(15,8,5,8,14,10,10,10,5));	
         $objeto->set_align(array("center"));
-        $objeto->set_function(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_funcao(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
         $objeto->set_numeroOrdem(true);
     
         # Classe do banco de dados
@@ -424,7 +424,7 @@ if($acesso){
         $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         $botaoRel->set_accessKey('R');
 
-        $objeto->set_botaoListar(array($botaoPremio,$botaoRel));
+        $objeto->set_botaoListarExtra(array($botaoPremio,$botaoRel));
 
         ################################################################
 

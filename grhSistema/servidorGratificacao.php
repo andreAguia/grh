@@ -110,7 +110,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Data Final","Valor","Processo"));
     $objeto->set_width(array(20,20,20,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php","date_to_php","formataMoeda"));
+    $objeto->set_funcao(array ("date_to_php","date_to_php","formataMoeda"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

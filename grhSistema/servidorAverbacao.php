@@ -119,7 +119,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
     $objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

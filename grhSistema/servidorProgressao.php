@@ -100,7 +100,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
     $objeto->set_width(array(10,20,15,15,15,15));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php"));
+    $objeto->set_funcao(array ("date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -208,7 +208,7 @@ if($acesso)
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorProgressao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     $botaoRel->set_accessKey('R');
     
-    $objeto->set_botaoListar(array($botaoRel));
+    $objeto->set_botaoListarExtra(array($botaoRel));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

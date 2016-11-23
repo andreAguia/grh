@@ -146,7 +146,7 @@ if($acesso)
     $objeto->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
     $objeto->set_width(array(20,10,10,10,10,10,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array (null,"date_to_php",null,null,null,null,null,"date_to_php"));
+    $objeto->set_funcao(array (null,"date_to_php",null,null,null,null,null,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

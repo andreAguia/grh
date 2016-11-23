@@ -689,11 +689,13 @@ class Grh
     {        
         $select = 'SELECT descricao,
                           simbolo,
-                          vagas,                                  
+                          valsal,
+                          vagas,                               
                           idTipoComissao,
                           idTipoComissao
                      FROM tbtipocomissao
-                     ORDER BY 2 asc';        
+                    WHERE ativo
+                    ORDER BY 2 asc';        
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();        
@@ -710,20 +712,12 @@ class Grh
             # Monta a tabela
             $tabela = new tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(array("Cargo","Simbolo","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
-            $tabela->set_width(array(30,20,15,15,15));
-            $tabela->set_align(array("left"));
+            $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
+            $tabela->set_width(array(30,20,15,15,10,10));
+            $tabela->set_align(array("center"));
+            $tabela->set_funcao(array(null,null,"formataMoeda"));
             $tabela->set_classe(array(null,null,null,'pessoal','pessoal'));
             $tabela->set_metodo(array(null,null,null,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
-            
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
-                                                            'valor' => 0,
-                                                            'operador' => '>',
-                                                            'id' => 'comissaoComVagas'),
-                                                      array('coluna' => 4,
-                                                            'valor' => 0,
-                                                            'operador' => '<',
-                                                            'id' => 'comissaoVagasNegativas')));
             $tabela->show();
         }
     }	

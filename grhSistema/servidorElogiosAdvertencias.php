@@ -83,7 +83,7 @@ if($acesso)
     $objeto->set_label(array("Data","Tipo","Descrição"));
     $objeto->set_width(array(10,10,70));	
     $objeto->set_align(array("center","center","left"));
-    $objeto->set_function(array ("date_to_php"));
+    $objeto->set_funcao(array ("date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

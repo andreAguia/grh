@@ -106,7 +106,7 @@ if($acesso)
     $objeto->set_label(array("id","Plano","Nível","Faixa","Valor"));
     $objeto->set_width(array(5,22,22,22,22));
     $objeto->set_align(array("center"));
-    $objeto->set_function(array(null,null,null,null,"formataMoeda"));
+    $objeto->set_funcao(array(null,null,null,null,"formataMoeda"));
 
     $planoAtual = $pessoal->get_numDecretoPlanoAtual();
 

@@ -117,7 +117,7 @@ if($acesso)
     $objeto->set_label(array("a partir de","%","P.Aq.Início","P.Aq.Fim","Processo","DOERJ","Documento"));
     $objeto->set_width(array(10,5,10,10,20,15,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php",null,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",null,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -238,7 +238,7 @@ if($acesso)
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorTrienio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     $botaoRel->set_accessKey('R');
     
-    $objeto->set_botaoListar(array($botaoRel));
+    $objeto->set_botaoListarExtra(array($botaoRel));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

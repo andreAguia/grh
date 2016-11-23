@@ -83,7 +83,7 @@ if($acesso)
     $objeto->set_label(array("Data","Lotação","Motivo"));
     $objeto->set_width(array(10,30,50));	
     $objeto->set_align(array("center","left","left"));
-    $objeto->set_function(array ("date_to_php"));
+    $objeto->set_funcao(array ("date_to_php"));
     
     $objeto->set_classe(array (null,"pessoal"));
     $objeto->set_metodo(array (null,"get_nomelotacao"));    

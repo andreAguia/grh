@@ -232,26 +232,32 @@ if($acesso)
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
-    
+       
     # Grafico
-    $botaoGra = new Button("Gráfico");
+    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+    $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
-    $botaoGra->set_accessKey('G');
+    $botaoGra->set_imagem($imagem1);
+    #$botaoGra->set_accessKey('G');
     
     # Relatório
-    $botaoRel = new Button("Relatório");
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório das Lotações Ativas");
     $botaoRel->set_onClick("window.open('../grhRelatorios/lotacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $botaoRel->set_accessKey('R');
+    $botaoRel->set_imagem($imagem2);
+    #$botaoRel->set_accessKey('R');
     
     # Organograma
-    $botaoOrg = new Button("Organograma");
+    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',null,15,15);
+    $botaoOrg = new Button();
     $botaoOrg->set_title("Exibe o Organograma da UENF");
+    $botaoOrg->set_imagem($imagem3);
     $botaoOrg->set_onClick("window.open('../_img/organograma.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1000,height=700');");
-    $botaoOrg->set_accessKey('O');
+    #$botaoOrg->set_accessKey('O');
 
-    $objeto->set_botaoListar(array($botaoGra,$botaoRel,$botaoOrg));    
+    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel,$botaoOrg));    
     
     # Pega o número de Lotações ativas para a paginação
     $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();

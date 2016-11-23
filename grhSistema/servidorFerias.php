@@ -94,7 +94,7 @@ if($acesso)
     $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha","Solicitação de Férias"));
     $objeto->set_width(array(10,10,10,5,8,10,15,12,8));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array (null,null,'date_to_php',null,null,'date_to_php'));
+    $objeto->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
 
     # Botão da solicitação de férias
     $botao1 = new BotaoGrafico();
@@ -199,7 +199,7 @@ if($acesso)
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     $botaoRel->set_accessKey('R');
     
-    $objeto->set_botaoListar(array($botaoRel));
+    $objeto->set_botaoListarExtra(array($botaoRel));
         
     # Log
     $objeto->set_idUsuario($idUsuario);

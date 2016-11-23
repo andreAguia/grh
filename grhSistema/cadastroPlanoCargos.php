@@ -112,7 +112,7 @@ if($acesso)
     $objeto->set_label(array("id","Decreto / Lei","Data do Decreto / Lei","Publicação no DOERJ","Página no DOERJ","Plano Atual"));
     $objeto->set_width(array(10,25,20,20,10,10));
     $objeto->set_align(array("center"));
-    $objeto->set_function(array (null,null,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
 
     $objeto->set_formatacaoCondicional(array(
                                              array('coluna' => 5,

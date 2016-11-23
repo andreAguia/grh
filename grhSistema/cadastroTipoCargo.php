@@ -167,7 +167,7 @@ if($acesso)
     $botaoGra->set_onClick("abreFechaDivId('divGrafico');");
     $botaoGra->set_accessKey('G');
 
-    $objeto->set_botaoListar(array($botaoGra));
+    $objeto->set_botaoListarExtra(array($botaoGra));
 
     ################################################################
     switch ($fase)

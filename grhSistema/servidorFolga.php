@@ -82,7 +82,7 @@ if($acesso)
     $objeto->set_label(array("Data do Início da Folga","Data do Término da Folga","Dias Folgados"));
     $objeto->set_width(array(30,30,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_function(array ("date_to_php","date_to_php",null));
+    $objeto->set_funcao(array ("date_to_php","date_to_php",null));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

@@ -59,7 +59,7 @@ if($acesso)
 
     $valor = str_replace('.','',$valor);            // retira o ponto do milhar p/não dar problema na rotina de extenso
     $valor = str_replace(',','.',$valor);           // passa a vírgula dos centavos para ponto (padrão americano)
-    $extenso = extenso($valor);                     // pega o extenso
+    $extenso = moedaExtenso($valor);                // pega o extenso
     $valor = number_format($valor, 2, '.', ',');    // passa para o formato de moeda (padrão americano)
     $valor = str_replace('.','*',$valor);           // passa o ponto (dos centavos) para *
     $valor = str_replace(',','.',$valor);           // passa a vírgula (do milhar) para ponto (do milhar)
@@ -93,7 +93,7 @@ if($acesso)
     p('CI '.$lotacaoCi.' nº '.$ci,'pDiaria');
     
     # Data
-    p('Campos dos Goytacazes,'.porExtenso($data),'pDiariaData');
+    p('Campos dos Goytacazes,'.dataExtenso($data),'pDiariaData');
     br(2);
     
     # Origem

@@ -208,6 +208,16 @@ if($acesso)
     $objeto->set_paginacao(true);
     $objeto->set_paginacaoInicial($paginacao);
     $objeto->set_paginacaoItens($numCargoComissaoAtivo);
+    
+    # Relatório
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_title("Exibe Relatório os Perfis");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_imagem($imagem2);
+    #$botaoRel->set_accessKey('R');
+
+    $objeto->set_botaoListarExtra(array($botaoRel));
 
     ################################################################
     switch ($fase)

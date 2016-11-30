@@ -43,7 +43,7 @@ if($acesso)
 
     $relatorio->set_label(array('Cargo','Símbolo','Valor','Vagas'));
     $relatorio->set_width(array(50,20,20,10));
-    $relatorio->set_align(array("center"));
+    $relatorio->set_align(array("left"));
     $relatorio->set_funcao(array(null,null,'formataMoeda'));
     
     $relatorio->set_colunaSomatorio(3);

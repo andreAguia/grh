@@ -93,7 +93,7 @@ if($acesso)
 
     $pdf->SetX(30);
     $pdf->Cell(50,5,"Gozo das férias:",0,0,'L');
-    $pdf->Cell(100,5,"De ".porExtenso($row[2])." a ".porExtenso($row[4]),0,1,'L');
+    $pdf->Cell(100,5,"De ".dataExtenso($row[2])." a ".dataExtenso($row[4]),0,1,'L');
 
     $ypos += 20;
     $pdf->SetY($ypos);
@@ -101,7 +101,7 @@ if($acesso)
 
     $ypos += 20;
     $pdf->SetXY(30,$ypos);
-    $pdf->Cell(190,7,"Campos dos Goytacazes, ".porExtenso(date("d/m/Y")),0,1,'L');
+    $pdf->Cell(190,7,"Campos dos Goytacazes, ".dataExtenso(date("d/m/Y")),0,1,'L');
 
     $ypos += 20;
     $pdf->SetXY(30,$ypos);

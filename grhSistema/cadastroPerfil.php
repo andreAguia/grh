@@ -215,17 +215,24 @@ if($acesso)
     # Tira o zebrado
     #$objeto->set_zebrado(FALSE);
     
-    # Imagem
-    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
-            
+    # Gráfico
+    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);            
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
     #$botaoGra->set_accessKey('G');
+    
+    # Relatório
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_title("Exibe Relatório os Perfis");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/perfil.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_imagem($imagem2);
+    #$botaoRel->set_accessKey('R');
 
-    $objeto->set_botaoListarExtra(array($botaoGra));
+    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel));
 
     ################################################################
     switch ($fase)

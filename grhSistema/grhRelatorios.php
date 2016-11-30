@@ -65,8 +65,8 @@ if($acesso)
             $callout->abre();
 
                 # Menu de tipos de relatórios
-                $menu = new Menu('menuInicial');
-                $menu->add_item('titulo','Categorias de Relatórios','#','');
+                $menu = new Menu();
+                $menu->add_item('titulo','Categorias de Relatórios');
                 $menu->add_item('linkAjax','Atestado','?fase=atestado','','','divMenuRelatorioGrh');  
                 $menu->add_item('linkAjax','Cargos','?fase=cargos','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cedidos','?fase=cedidos','','','divMenuRelatorioGrh'); 
@@ -121,8 +121,8 @@ if($acesso)
         ######################################
 
         case "cargos";        
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Cargos','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Cargos');
             $menu->add_item('linkWindow','Relatório de Cargos - Agrupados por Nível','../grhRelatorios/cargoNivel.php');
             $menu->add_item('linkWindow','Relatório de Estatutários','../grhRelatorios/cargoEstatutarios.php');
             $menu->add_item('linkWindow','Relatório dos Cargos em Comissão','../grhRelatorios/cargoComissao.php');
@@ -134,8 +134,8 @@ if($acesso)
         ######################################
 
         case "cedidos";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Cedidos','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Cedidos');
             $menu->add_item('linkWindow','Relatório de Estatutários Cedidos','../grhRelatorios/estatutariosCedidos.php');
             $menu->add_item('linkWindow','Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão','../grhRelatorios/estatutariosCedidosHistorico.php');            
             $menu->add_item('linkWindow','Relatório de Estatutários Cedidos - Agrupados por Órgão','../grhRelatorios/estatutariosCedidosOrgao.php');
@@ -147,8 +147,8 @@ if($acesso)
         ######################################
 
         case "concursos";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Concursos','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Concursos');
             $menu->add_item('linkWindow','Relatório de Estatutários Ativos - Agrupados por Concurso','../grhRelatorios/estatutariosConcurso.php');
 
             $menu->show();
@@ -157,8 +157,8 @@ if($acesso)
         ######################################
 
         case "dependentes";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Dependentes','#','');        
+            $menu = new Menu();
+            $menu->add_item('titulo','Dependentes');        
             $menu->add_item('linkWindow','Relatório Geral de Auxílio Creche','../grhRelatorios/servidoresAtivoAuxilioCreche.php');
             $menu->add_item('linkWindow','Relatório Servidores Ativos com Dependente (Filhos)','../grhRelatorios/servidoresAtivoComFilhos.php');
             $menu->add_item('linkWindow','Relatório Mensal de Vencimento de Auxilio Creche','../grhRelatorios/vencimentoMensalAuxilioCreche.php');
@@ -170,8 +170,8 @@ if($acesso)
         ######################################
     
         case "diarias";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Diárias','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Diárias');
             $menu->add_item('linkWindow','Relatório Mensal pela Data do Processo','../grhRelatorios/diariasMensalDataProcesso.php');
             $menu->add_item('linkWindow','Relatório Anual pela Data do Processo','../grhRelatorios/diariasAnualDataProcesso.php');
             $menu->add_item('linkWindow','Relatório Mensal por Data de Saída','../grhRelatorios/diariasMensal.php');
@@ -183,8 +183,8 @@ if($acesso)
         ######################################
 
         case "tre";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','TRE','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','TRE');
             $menu->add_item('linkWindow','Relatório Mensal de Afastamentos para Serviço Eleitoral (TRE)','../grhRelatorios/treAfastamentoMensal.php'); 
             $menu->add_item('linkWindow','Relatório Mensal de Folgas Fruídas (TRE)','../grhRelatorios/treFolgaMensal.php'); 
 
@@ -194,8 +194,8 @@ if($acesso)
         ######################################
 
         case "ferias";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Férias','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Férias');
             $menu->add_item('linkWindow','Escala Anual de Férias UENF','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php');
             $menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             $menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
@@ -217,8 +217,8 @@ if($acesso)
         ######################################
 
          case "trienio";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Triênio','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Triênio');
             $menu->add_item('linkWindow','Relatório Geral de Triênio','../grhRelatorios/geralTrienio.php');
             $menu->add_item('linkWindow','Relatório Mensal de Vencimento de Triênios','../grhRelatorios/vencimentoMensalTrienio.php');
             $menu->add_item('linkWindow','Relatório Anual de Vencimento de Triênios','../grhRelatorios/vencimentoAnualTrienio.php');
@@ -229,8 +229,8 @@ if($acesso)
         ######################################
 
         case "geral";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Geral','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Geral');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoLotacao.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoCpf.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Assinatura','../grhRelatorios/geralServidoresAtivosAssinatura.php');
@@ -243,8 +243,8 @@ if($acesso)
         ######################################
 
         case "licenca";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Licença','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Licença');
             $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença','../grhRelatorios/licencaMensal.php');
             $menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');
             $menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');
@@ -256,8 +256,8 @@ if($acesso)
         ######################################
 
         case "lotacao";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Lotação','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Lotação');
             $menu->add_item('linkWindow','Relatório de Aniversariantes','../grhRelatorios/lotacaoAniversariantes.php');
             $menu->add_item('linkWindow','Relatório de Servidores Ativos','../grhRelatorios/lotacaoServidoresAtivos.php');
             $menu->show();
@@ -266,8 +266,8 @@ if($acesso)
         ######################################
 
         case "atestado";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Atestado','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Atestado');
             $menu->add_item('linkWindow','Relatório Mensal de Servidores com Atestado','../grhRelatorios/atestadoMensal.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores com Atestado','../grhRelatorios/atestadoAnual.php'); 
 
@@ -277,8 +277,8 @@ if($acesso)
         ######################################
 
          case "faltas";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Faltas','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Faltas');
             $menu->add_item('linkWindow','Relatório Mensal de Faltas','../grhRelatorios/faltasMensal.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Faltas','../grhRelatorios/faltasAnual.php'); 
 
@@ -288,8 +288,8 @@ if($acesso)
         ######################################
 
          case "sigFis";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','SigFis','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','SigFis');
             $menu->add_item('linkWindow','Relatório Anual de Servidores Admitidos','../grhRelatorios/sigFisAnualAdmitidos.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Demitidos e Exonerados','../grhRelatorios/sigFisAnualDemitidos.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Nomeados','../grhRelatorios/sigFisAnualNomeados.php'); 
@@ -299,8 +299,8 @@ if($acesso)
         ######################################
 
          case "estatutarios";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Estatutários','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Estatutários');
             $menu->add_item('linkWindow','Estatutários Ativos com Assinatura','../grhRelatorios/estatutariosAtivosAssinatura.php');
             $menu->add_item('linkWindow','Estatutários Agrupados pela Lotação','../grhRelatorios/estatutariosLotacao.php'); 
             $menu->add_item('linkWindow','Estatutários Agrupados pelo Cargo','../grhRelatorios/estatutariosCargo.php'); 
@@ -312,8 +312,8 @@ if($acesso)
         ######################################
 
          case "financeiro";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Financeiro','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Financeiro');
             $menu->add_item('linkWindow','Financeiro','../grhRelatorios/financeiro.php'); 
 
             $menu->show();
@@ -322,8 +322,8 @@ if($acesso)
         ######################################
 
          case "contatos";
-            $menu = new Menu('menuInicial');
-            $menu->add_item('titulo','Contatos','#','');
+            $menu = new Menu();
+            $menu->add_item('titulo','Contatos');
             $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php'); 
 
             $menu->show();

@@ -220,7 +220,7 @@ class Grh
             $fieldset = new Fieldset('Tabelas Secundárias');
             $fieldset->abre();
 
-            $menu = new MenuGrafico(9);   
+            $menu = new MenuGrafico(10);   
                 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -292,6 +292,15 @@ class Grh
                 $botao->set_url("cadastroPais.php");
                 $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Paises');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Estatuto');
+                $botao->set_target('_blank');
+                $botao->set_url("http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1");
+                $botao->set_image(PASTA_FIGURAS.'brasao.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Estatuto dos Servidores Estaduais');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
 
@@ -466,7 +475,7 @@ class Grh
         
         # Ocorrências
         $grid2->abreColuna(12,6);
-            titulo('Ocorrências');
+            titulo('Afastamentos');
             br();
 
             $menu = new MenuGrafico(3);

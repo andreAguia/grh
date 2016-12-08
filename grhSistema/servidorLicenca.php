@@ -65,7 +65,7 @@ if($acesso){
         $objeto->set_rotinaExtraParametro(array($idServidorPesquisado)); 
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-        $objeto->set_nome('Licenças');
+        $objeto->set_nome('Afastamentos e Licenças');
 
         # botão de voltar da lista
         $objeto->set_voltarLista('servidorMenu.php');
@@ -176,14 +176,14 @@ if($acesso){
 
             # Campos para o formulario
             $campos = array(array( 'nome' => 'idTpLicenca',
-                                'label' => 'Tipo de Licença:',
+                                'label' => 'Tipo:',
                                 'tipo' => 'combo',
                                 'size' => 20,
                                 'array' => $result,                      
                                 'readonly' => true,
                                 'autofocus' => true,
                                 'col' => 6,
-                                'title' => 'Tipo de Licença.',
+                                'title' => 'Tipo do Adastamento/Licença.',
                                 'linha' => 1));
 
             # Período (se esse tipo de licença tiver período aquisitivo)
@@ -293,7 +293,7 @@ if($acesso){
                                        'array' => $array,
                                        'size' => 5,
                                        'required' => true,
-                                       'title' => 'Número de dias da licença.',
+                                       'title' => 'Número de dias.',
                                        'col' => 2,
                                        'linha' => 3));
 

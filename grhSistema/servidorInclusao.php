@@ -143,10 +143,7 @@ if($acesso){
             $msgErro = null; 	// repositório de mensagens de erro        
 
             # Pega os valores digitados
-            $cpf = post('cpf');        
-
-            # Instancia um objeto de validação
-            $valida = new Valida();
+            $cpf = post('cpf');
 
             # Verifica se o CPF foi digitado
             if (empty($cpf)){
@@ -155,7 +152,7 @@ if($acesso){
             }
 
             # Verifica validade do CPF
-            if (!$valida->cpf($cpf)){
+            if (!validaCpf($cpf)){
                 $msgErro.='CPF inválido!\n';
                 $erro = 1;
             }
@@ -391,9 +388,6 @@ if($acesso){
                 $classe = null;
                 $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
-                # Instancia um objeto de validação
-                $valida = new Valida();
-
                 # Verifica se o Nome foi digitado
                 if(empty($nome)){
                     $msgErro.='Você tem que informar o Nome do Servidor!\n';
@@ -429,7 +423,7 @@ if($acesso){
                 # Verifica o Pis              
                 if(is_null($idPessoa)){ // Verifica se a pessoa está cadastrada
                     # Verifica se o Pis foi digitado 
-                    if ($valida->vazio($pisPasep)){
+                    if (vazio($pisPasep)){
                         $msgErro.='Você tem que informar o Pis/Pasep do Servidor!\n';
                         $erro = 1;
                     }

@@ -45,7 +45,7 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Tipos de Licença');
+    $relatorio->set_titulo('Relatório de Tipos de Afastamentos e Licenças');
     $relatorio->set_bordaInterna(TRUE);
     $relatorio->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Permitido ao sexo"));
     $relatorio->set_width(array(5,35,10,10,10,10,10,10));

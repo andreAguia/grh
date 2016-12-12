@@ -322,7 +322,7 @@ class listaServidores
             $tabela->set_editar('servidor.php?fase=editar&id=');
             
             if ($this->paginacao)
-                $tabela->set_footTexto($texto.' ('.$itemInicial.' a '.$itemFinal.' de '.$totalRegistros.' Registros)');
+                $tabela->set_rodape($texto.' ('.$itemInicial.' a '.$itemFinal.' de '.$totalRegistros.' Registros)');
             
             if(!is_null($this->matNomeId))
                 $tabela->set_textoRessaltado($this->matNomeId);

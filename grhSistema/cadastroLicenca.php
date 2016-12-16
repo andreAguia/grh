@@ -66,7 +66,7 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "2";
+            $orderCampo = "1";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
@@ -112,7 +112,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Permitido ao sexo"));
+    $objeto->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero"));
     $objeto->set_width(array(5,38,7,10,10,10,10,10));
     $objeto->set_align(array("center","left","center","center","center","center","center","center","left"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
@@ -133,8 +133,8 @@ if($acesso)
     $objeto->set_campos(array(
         array ('linha' => 1,
                'nome' => 'nome',
-               'title' => 'Nome do Afastamento',
-               'label' => 'Nome do Afastamento:',
+               'title' => 'Nome do Afastamento ou Licença',
+               'label' => 'Nome do Afastamento ou Licença',
                'tipo' => 'texto',
                'autofocus' => true,
                'col' => 6,

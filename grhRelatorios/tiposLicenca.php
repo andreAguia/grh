@@ -47,7 +47,7 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Tipos de Afastamentos e Licenças');
     $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Permitido ao sexo"));
+    $relatorio->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero"));
     $relatorio->set_width(array(5,35,10,10,10,10,10,10));
     $relatorio->set_align(array("center","left"));
     $relatorio->set_conteudo($result);

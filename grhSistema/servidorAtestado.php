@@ -48,7 +48,7 @@ if($acesso)
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Atestados Médicos do Servidor');
+    $objeto->set_nome('Cadastro de Faltas Abonadas (Atestados Médicos) do Servidor');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');

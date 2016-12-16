@@ -62,6 +62,12 @@ if($acesso)
         $linkRel->set_accessKey('R');
         $menu1->add_link($linkRel,"right");
         
+        # Estatística
+        $linkArea = new Link("Estatística","estatistica.php");
+        $linkArea->set_class('button');
+        $linkArea->set_title('Informaçãoes estatísticas');
+        #$menu1->add_link($linkArea,"right");      
+        
         # Área do Servidor
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');

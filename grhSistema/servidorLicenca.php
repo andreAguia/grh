@@ -37,24 +37,22 @@ if($acesso){
 
     # Pega o idTpLicenca
     if($fase == 'editar') {
-        if(is_null($id))
+        if(is_null($id)){
             $idTpLicenca = get_session('sessionLicenca');
-        else
-            $idTpLicenca = $pessoal->get_tipoLicenca($id);   
+        }else{
+            $idTpLicenca = $pessoal->get_tipoLicenca($id);
+        }
     }
 
     # Verifica se o Servidor tem direito a licença
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
-    if ($pessoal->get_perfilLicenca($idPerfil) == "Não")
-    {
+    if ($pessoal->get_perfilLicenca($idPerfil) == "Não"){
         $mensagem = 'Esse servidor está em um perfil que não pode ter licença !!';
         $alert = new Alert($mensagem) ;
         $alert->show();
         loadPage('servidorMenu.php');
-    }
-    else
-    {
+    }else{
         # Abre um novo objeto Modelo
         $objeto = new Modelo();
 
@@ -72,6 +70,11 @@ if($acesso){
 
         # select da lista
         $objeto->set_selectLista('SELECT tbtipolicenca.nome,
+                                     CASE tipo
+                                            WHEN 1 THEN "Inicial"
+                                            WHEN 2 THEN "Prorrogação"
+                                            end,
+                                     IF(alta = 1,"Alta",NULL),
                                      dtInicial,
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
@@ -79,11 +82,10 @@ if($acesso){
                                      dtInicioPeriodo,
                                      dtFimPeriodo,
                                      dtPublicacao,
-                                     pgPublicacao,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE idServidor='.$idServidorPesquisado.'
-                            ORDER BY tblicenca.dtInicial');
+                            ORDER BY tblicenca.dtInicial desc');
         
         # link para editar
         $botao1 = new BotaoGrafico();
@@ -105,35 +107,40 @@ if($acesso){
         #$objeto->set_linkCondicionalOperador('<>');
     
         ### select do edita
-        if(($fase == 'editar') or ($fase == 'gravar'))
-        {            
+        if(($fase == 'editar') or ($fase == 'gravar')){            
             $selectEdita = 'SELECT idTpLicenca,';
+            
+            # campos tipo e alta
+            if($idTpLicenca == 1){
+                $selectEdita .= 'tipo,alta,';
+            }
 
             # período aquisitivo
-            if($pessoal->get_licencaPeriodo($idTpLicenca) == "Sim")
+            if($pessoal->get_licencaPeriodo($idTpLicenca) == "Sim"){
                 $selectEdita .= 'dtInicioPeriodo,dtFimPeriodo,';
+            }
 
             # data inicial e numero de dias
             $selectEdita .= 'dtInicial,numDias,';
 
             # processo
-            if($pessoal->get_licencaProcesso($idTpLicenca) == "Sim")
+            if($pessoal->get_licencaProcesso($idTpLicenca) == "Sim"){
                 $selectEdita .= 'processo,';
-
-            # publicação no DOERJ
-            if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim")
-            {
-                if($idTpLicenca == 6)
-                    $selectEdita .= 'idpublicacaoPremio,';
-
-                $selectEdita .= 'dtPublicacao,pgPublicacao,';
             }
 
-
+            # publicação no DOERJ
+            if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim"){
+                if($idTpLicenca == 6){
+                    $selectEdita .= 'idpublicacaoPremio,';
+                }
+                $selectEdita .= 'dtPublicacao,pgPublicacao,';
+            }
+            
             # perícia
-            if($pessoal->get_licencaPericia($idTpLicenca) == "Sim")
+            if($pessoal->get_licencaPericia($idTpLicenca) == "Sim"){
                 $selectEdita .= 'dtPericia,num_Bim,';
-
+            }
+            
             # o resto do select
             $selectEdita .= 'obs,idServidor FROM tblicenca WHERE idLicenca = '.$id;
 
@@ -151,11 +158,12 @@ if($acesso){
         $objeto->set_linkIncluir('?fase=incluir');
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término","Publicação","Pag."));
-        $objeto->set_width(array(15,8,5,8,14,10,10,10,5));	
+        $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","P.Aq. Início","P.Aq. Término","Publicação"));
+        #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("center"));
-        $objeto->set_funcao(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_funcao(array(null,null,null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
         $objeto->set_numeroOrdem(true);
+        $objeto->set_numeroOrdemTipo("d");
     
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
@@ -169,36 +177,54 @@ if($acesso){
         # Tipo de label do formulário
         $objeto->set_formLabelTipo(1);
 
-        if(($fase == 'editar') or ($fase == 'gravar'))
-        {
+        if(($fase == 'editar') or ($fase == 'gravar')){
             # preenche a combo idTpLicenca
             $result = array(array($idTpLicenca,$pessoal->get_licencaNome($idTpLicenca)));
 
             # Campos para o formulario
             $campos = array(array( 'nome' => 'idTpLicenca',
-                                'label' => 'Tipo:',
+                                'label' => 'Tipo de Afastamento ou Licença:',
                                 'tipo' => 'combo',
                                 'size' => 20,
                                 'array' => $result,                      
-                                'readonly' => true,
-                                'autofocus' => true,
+                                'readonly' => TRUE,
+                                'autofocus' => TRUE,
                                 'col' => 6,
                                 'title' => 'Tipo do Adastamento/Licença.',
                                 'linha' => 1));
 
+            # Verifica se é licença Médica e exibe os campos de tipo(Inicial/Prorrogação) e (Com ou Sem Alta)
+            if($idTpLicenca == 1){
+             array_push($campos,array ( 'nome' => 'tipo',
+                                        'label' => 'Tipo:',
+                                        'tipo' => 'combo',
+                                        'size' => 20,
+                                        'required' => TRUE,
+                                        'array' => array(array(NULL,""),
+                                                         array(1,"Inicial"),
+                                                         array(2,"Prorrogação")),
+                                        'col' => 2,
+                                        'linha' => 1),
+                                array ( 'nome' => 'alta',
+                                        'label' => 'Alta:',
+                                        'tipo' => 'combo',
+                                        'required' => TRUE,
+                                        'size' => 20,
+                                        'array' => array(array(2,"Não"),
+                                                         array(1,"Sim")),
+                                        'col' => 2,
+                                        'linha' => 1));   
+            }
+            
             # Período (se esse tipo de licença tiver período aquisitivo)
-            if($pessoal->get_licencaPeriodo($idTpLicenca) == "Sim")
-            {
+            if($pessoal->get_licencaPeriodo($idTpLicenca) == "Sim"){
                 # oculta controle se for licença premio para pegar os dados da publicaçao
-                if($idTpLicenca == 6)
-                {
+                if($idTpLicenca == 6){
                     $tipo = 'hidden';
-                    $notnull = false;
-                }
-                else
-                {
+                    $notnull = FALSE;
+                }else{
                     $tipo = 'data';
-                    $notnull = true;
+                    $notnull = TRUE;
                 }    
             
                 array_push($campos,array ( 'nome' => 'dtInicioPeriodo',
@@ -224,7 +250,7 @@ if($acesso){
             array_push($campos,array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data do início.',
@@ -233,28 +259,28 @@ if($acesso){
             # Número de dias
             $dias = $pessoal->get_licencaDias($idTpLicenca);    // verifica se tem valor fixo de dias
             
-            if(!is_null($dias))
+            if(!is_null($dias)){
                 $valor = $dias;
-            else
-                $valor = null;
+            }else{
+                $valor = NULL;
+            }
             
             # muda o tipo do controle quando é licença premio
-            if($idTpLicenca == 6)
-            {
+            if($idTpLicenca == 6){
                 # verifica se é inclusão
-                if(is_null($id))
-                {
+                if(is_null($id)){
                     # variáveis
-                    $diasDisponiveis = null;
-                    $array = null;
-                    $diaPublicacao = null;                    
+                    $diasDisponiveis = NULL;
+                    $array = NULL;
+                    $diaPublicacao = NULL;                    
 
                     # pega a primeira publicação disponível dessa matrícula
                     $diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
 
                     # pega quantos dias estão disponíveis
-                    if (!is_null($diaPublicacao))
+                    if (!is_null($diaPublicacao)){
                         $diasDisponiveis = $pessoal->get_licencaPremioNumDiasDisponiveisPorId($diaPublicacao[0][0]);
+                    }
 
                     $tipo = 'combo';
 
@@ -271,18 +297,13 @@ if($acesso){
                             $array = array(30);
                             break;                        
                     }                  
-                }
-                else
-                {
+                }else{
                     $tipo = 'combo';
                     $array = array(90,60,30);                   
                 }
-
-            }
-            else
-            {
+            }else{
                 $tipo = 'numero';
-                $array = null;
+                $array = NULL;
             }
             
             # monta o controle
@@ -298,12 +319,12 @@ if($acesso){
                                        'linha' => 3));
 
             # Verifica se essa licença necessita processo
-            if($pessoal->get_licencaProcesso($idTpLicenca) == "Sim")
-            {
-                if(($idTpLicenca == 6) AND (is_null($id)))
+            if($pessoal->get_licencaProcesso($idTpLicenca) == "Sim"){
+                if(($idTpLicenca == 6) AND (is_null($id))){
                     $valor = $pessoal->get_licencaPremioNumProcessoPorId($diaPublicacao[0][0]);
-                else
-                    $valor = null;
+                }else{
+                    $valor = NULL;
+                }
                 
                 array_push($campos,array ( 'nome' => 'processo',
                                            'label' => 'Processo:',
@@ -316,17 +337,16 @@ if($acesso){
             }
 
             # Verifica la se essa licença necessita Publicação
-            if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim")
-            {
+            if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim"){
                 # Data Inicial ou Publicação(para licença Prêmio)
-                if($idTpLicenca == 6)
-                {                
+                if($idTpLicenca == 6){                
                     # Preenche a combo do DOERJ
                     # Se for inclusão
-                    if(is_null($id))
+                    if(is_null($id)){
                         $result2 = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
-                    else
+                    }else{
                         $result2 = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
+                    }
 
                     # Adiciona o valor nulo
                     #if(!is_null($result2))
@@ -345,13 +365,10 @@ if($acesso){
                 }
 
                 # oculta controle se for licença premio para pegar os dados da publicaçao
-                if($idTpLicenca == 6)
-                {
+                if($idTpLicenca == 6){
                     $tipo1 = 'hidden';
                     $tipo2 = 'hidden';
-                }
-                else
-                {
+                }else{
                     $tipo1 = 'data';
                     $tipo2 = 'texto';
                 }
@@ -373,8 +390,7 @@ if($acesso){
             }
             
             # Verifica se essa licença necessita de perícia
-            if($pessoal->get_licencaPericia($idTpLicenca) == "Sim")
-            {
+            if($pessoal->get_licencaPericia($idTpLicenca) == "Sim"){
                 array_push($campos,array ( 'nome' => 'dtPericia',
                                         'label' => 'Data da Perícia:',
                                         'tipo' => 'data',
@@ -449,8 +465,7 @@ if($acesso){
                     back(1);
                 }
             case "editar" :
-                if($idTpLicenca == 6)
-                {                
+                if($idTpLicenca == 6){                
                     # Exibe quadro de licença prêmio
                     Grh::quadroLicencaPremio($idServidorPesquisado);
 
@@ -460,19 +475,18 @@ if($acesso){
                     $diasDisponiveis = $diasPublicados - $diasFruidos;
 
                     # Verifica se tem dias publicados e/ou disponíveis         
-                    if ((($diasDisponiveis < 1) AND (IS_NULL($id))) OR ($diasPublicados == 0))
-                    {
+                    if ((($diasDisponiveis < 1) AND (IS_NULL($id))) OR ($diasPublicados == 0)){
                         $mensagem = 'Este Servidor não tem dias disponíveis para solicitar uma licença prêmio.</br>
                         É necessário cadastrar a publicação da licença prêmio antes de lançar a licença no sistema.';
 
                         alert($mensagem);
                         back(1);
-                    }
-                    else
+                    }else{
                         $objeto->$fase($id);
-                }
-                else
+                    }
+                }else{
                     $objeto->$fase($id);
+                }
                 break;
             
             case "excluir" :       
@@ -492,7 +506,7 @@ if($acesso){
                 $grid->abreColuna(12);
         
                 # Formulário de inclusão
-                $fieldset = new Fieldset('Incluir Licença','login');               
+                $fieldset = new Fieldset('Incluir Afastamento ou Licença','login');               
                 $fieldset->abre();
 
                 # Pega os dados da combo licenca
@@ -508,11 +522,11 @@ if($acesso){
                     br();
 
                     # Tipo de Licença
-                    $controle = new Input('idTpLicenca','combo','Tipo de Licença',1);
+                    $controle = new Input('idTpLicenca','combo','Tipo de Afastamento ou Licença',1);
                     $controle->set_size(20);
                     $controle->set_required(true);
                     $controle->set_autofocus(true);
-                    $controle->set_title('O Tipo da Licença');
+                    $controle->set_title('O tipo do Afastamento ou Licença');
                     $controle->set_array($result);
                     $controle->set_linha(1);
                     $form->add_item($controle);
@@ -537,33 +551,25 @@ if($acesso){
                 $msgErro = '';
 
                 # Verifica se foi digitado o tipo de licença
-                if($idTpLicenca == 'Inicial')
-                {
+                if($idTpLicenca == 'Inicial'){
                     $msgErro.='Você deve informar o tipo de licença!!';
                     $erro = 1;
-                }
-                else
-                {
-                     # Verifica se a licença tem limitação por genero (sexo)
+                }else{
+                    # Verifica se a licença tem limitação por genero (sexo)
                     $sexo = $pessoal->get_sexo($idServidorPesquisado);
                     $limite = $pessoal->get_licencaSexo($idTpLicenca);
 
-                    if(($limite <> 'Todos') AND ($limite <> $sexo))
-                    {
+                    if(($limite <> 'Todos') AND ($limite <> $sexo)){
                         $msgErro.='Esse tipo de licença não é permitido para servidores desse sexo!!';
                         $erro = 1;
                     }
                 }
 
-                if ($erro == 0)
-                {
+                if ($erro == 0){
                     set_session('sessionLicenca',$idTpLicenca);
                     loadPage('?fase=editar');
-                }
-                else
-                {
+                }else{
                     alert($msgErro);
-
                     back(1);
                 }		
                 break;

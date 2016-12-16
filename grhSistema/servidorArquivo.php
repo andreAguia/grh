@@ -40,7 +40,7 @@ if($acesso)
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Dados Bancários');
+    $objeto->set_nome('Arquivo e Gaveta onde está fisicamente a pasta do servidor no GRH');
 
     # select do edita
     $objeto->set_selectEdita('SELECT arquivo,

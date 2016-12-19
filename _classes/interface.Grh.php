@@ -199,105 +199,24 @@ class Grh
         
         $grid->fechaColuna();
         $grid->abreColuna(12,12,8);
-            
-        $tamanhoImage = 50;
-        titulo('Tabelas Secundárias'); 
-        br();
         
-        $menu = new MenuGrafico(5);   
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Banco');
-            $botao->set_url("cadastroBanco.php");
-            #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
-            $botao->set_image(PASTA_FIGURAS.'banco.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Bancos');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Escolaridade');
-            $botao->set_url("cadastroEscolaridade.php");
-            $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Escolaridades');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Estado Civil');
-            $botao->set_url("cadastroEstadoCivil.php");
-            $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Estado Civil');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Parentesco');
-            $botao->set_url("cadastroParentesco.php");
-            $botao->set_image(PASTA_FIGURAS.'parentesco.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Parentesco');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Situação');
-            $botao->set_url("cadastroSituacao.php");
-            $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Situação');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Motivos de Saída');
-            $botao->set_url("cadastroMotivo.php");
-            $botao->set_image(PASTA_FIGURAS.'saida.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Motivos de Saída do Servidor da Instituição');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Tipos de Progressão');
-            $botao->set_url("cadastroProgressao.php");
-            $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Tipos de Progressões');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Nacionalidade');
-            $botao->set_url("cadastroNacionalidade.php");
-            $botao->set_image(PASTA_FIGURAS.'nacionalidade.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Nacionalidades');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('País');
-            $botao->set_url("cadastroPais.php");
-            $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Paises');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-
-            $menu->show();
-            br();
-        $grid->fechaColuna();
-        $grid->abreColuna(12,12);
             titulo('Links Externos');
             br();
             
-            $menu = new MenuGrafico(5);
+            $menu = new MenuGrafico(3);
+            $largura = 120;
+            $altura = 50;
 
             $botao = new BotaoGrafico();
             #$botao->set_label(SISTEMA_GRH);
             $botao->set_title('Portal do Sistema Integrado de Gestao de Recursos Humanos do Estado do Rio de Janeiro');
-            $botao->set_image(PASTA_FIGURAS."sigrh.png",150,50);      
+            $botao->set_image(PASTA_FIGURAS."sigrh.png",$largura,$altura);      
             $botao->set_url("http://www.entradasigrhn.rj.gov.br/");
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
             $botao->set_label("");
-            $botao->set_image(PASTA_FIGURAS."do.png",150,50);
+            $botao->set_image(PASTA_FIGURAS."do.png",$largura,$altura);  
             $botao->set_url("http://www.imprensaoficial.rj.gov.br/portal/modules/profile/user.php?xoops_redirect=/portal/modules/content/index.php?id=21");
             $botao->set_title("Imprensa Oficial do Estado do Rio de Janeiro");
             $menu->add_item($botao);
@@ -305,27 +224,113 @@ class Grh
             $botao = new BotaoGrafico();
             #$botao->set_label(SISTEMA_GRH);
             $botao->set_title('Portal do Processo Digital');
-            $botao->set_image(PASTA_FIGURAS."processoDigital.png",150,50);      
+            $botao->set_image(PASTA_FIGURAS."processoDigital.png",$largura,$altura);     
             $botao->set_url("https://www.processodigital.rj.gov.br/");
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();
             #$botao->set_label(SISTEMA_GRH);
             $botao->set_title('Site da UENF');
-            $botao->set_image(PASTA_FIGURAS."uenf.jpg",150,50);      
+            $botao->set_image(PASTA_FIGURAS."uenf.jpg",$largura,$altura);       
             $botao->set_url("http://www.uenf.br/portal/index.php/br/");
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();
             #$botao->set_label(SISTEMA_GRH);
             $botao->set_title('Site da GRH');
-            $botao->set_image(PASTA_FIGURAS."GRH.png",150,50);      
+            $botao->set_image(PASTA_FIGURAS."GRH.png",$largura,$altura);  
             $botao->set_url("http://uenf.br/dga/grh/");
             $menu->add_item($botao);
 
             $menu->show();
-            
+        
         $grid->fechaColuna();
+        if(Verifica::acesso($idUsuario,1)){
+            $grid->abreColuna(12,12);            
+
+                $tamanhoImage = 50;
+                titulo('Tabelas Secundárias'); 
+                br();
+
+                $menu = new MenuGrafico(9);   
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Banco');
+                $botao->set_url("cadastroBanco.php");
+                #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
+                $botao->set_image(PASTA_FIGURAS.'banco.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Bancos');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Escolaridade');
+                $botao->set_url("cadastroEscolaridade.php");
+                $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Escolaridades');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Estado Civil');
+                $botao->set_url("cadastroEstadoCivil.php");
+                $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Estado Civil');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Parentesco');
+                $botao->set_url("cadastroParentesco.php");
+                $botao->set_image(PASTA_FIGURAS.'parentesco.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Parentesco');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Situação');
+                $botao->set_url("cadastroSituacao.php");
+                $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Situação');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Motivos de Saída');
+                $botao->set_url("cadastroMotivo.php");
+                $botao->set_image(PASTA_FIGURAS.'saida.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Motivos de Saída do Servidor da Instituição');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Tipos de Progressão');
+                $botao->set_url("cadastroProgressao.php");
+                $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Tipos de Progressões');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('Nacionalidade');
+                $botao->set_url("cadastroNacionalidade.php");
+                $botao->set_image(PASTA_FIGURAS.'nacionalidade.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Nacionalidades');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $botao = new BotaoGrafico();
+                $botao->set_label('País');
+                $botao->set_url("cadastroPais.php");
+                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Paises');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+
+                $menu->show();
+
+            $grid->fechaColuna();
+        }
         $grid->fechaGrid();
         br();    
         ##########################################################

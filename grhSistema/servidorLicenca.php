@@ -160,7 +160,7 @@ if($acesso){
         # Parametros da tabela
         $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","P.Aq. Início","P.Aq. Término","Publicação"));
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
-        $objeto->set_align(array("center"));
+        $objeto->set_align(array("left"));
         $objeto->set_funcao(array(null,null,null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");

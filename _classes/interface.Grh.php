@@ -562,7 +562,7 @@ class Grh
             $botao->set_image(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Faltas do Servidor');                
             #$botao->set_accessKey('i');
-            $menu->add_item($botao);
+            #$menu->add_item($botao);
 
             $botao = new BotaoGrafico();
             $botao->set_label('TRE - Afastamentos');

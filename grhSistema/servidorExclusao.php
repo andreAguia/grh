@@ -120,8 +120,8 @@ if($acesso)
             #####################################################
             # Tabelas vinculadas pelo idservidor
             #####################################################
-            $tabelas = array("tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbfaltas","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaoPremio","tbsuspensao","tbtrabalhoTre","tbtrienio");
-            $idCampo = array("idAtestado","idAverbacao","idCedido","idComissao","idDiaria","idElogio","idFaltas","idFerias","idFolga","idGratificacao","idHistCessao","idhistlot","idLicenca","idProgressao","idPublicacaoPremio","idSuspensao","idTrabalhoTre","idTrienio");
+            $tabelas = array("tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaoPremio","tbtrabalhoTre","tbtrienio");
+            $idCampo = array("idAtestado","idAverbacao","idCedido","idComissao","idDiaria","idElogio","idFerias","idFolga","idGratificacao","idHistCessao","idhistlot","idLicenca","idProgressao","idPublicacaoPremio","idTrabalhoTre","idTrienio");
             
             # Apaga os dados das tabelas
             $numTabelas = count($tabelas);

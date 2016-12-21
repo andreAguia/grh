@@ -31,20 +31,21 @@ if($acesso)
     $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      tbfaltas.data,
-                      tbfaltas.numDias,
-                      ADDDATE(data,numDias-1)
-                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbfaltas ON (tbservidor.idServidor = tbfaltas.idServidor)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                      tblicenca.dtInicial,
+                      tblicenca.numDias,
+                      ADDDATE(dtInicial,numDias-1)
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tblicenca USING (idServidor)                                
+                                 LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
-                  AND ((YEAR(tbfaltas.data)='.$anoBase.') OR (YEAR(ADDDATE(tbfaltas.data,tbfaltas.numDias-1))='.$anoBase.'))
-             ORDER BY data desc';		
+                  AND ((YEAR(tblicenca.dtInicial)='.$anoBase.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))='.$anoBase.'))
+                  AND tblicenca.idTpLicenca = 25     
+             ORDER BY dtInicial desc';		
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Faltas de Servidores');
+    $relatorio->set_titulo('Relatório Anual de Faltas de Servidores Ativos');
     $relatorio->set_tituloLinha2($anoBase);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Falta');
 

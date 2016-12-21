@@ -33,7 +33,6 @@ $postProgressao = post('progressao');
 $postGratificacao = post('gratificacao');
 $postAverbacao = post('averbacao');
 $postDiaria = post('diaria');
-$postFalta = post('falta');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -183,15 +182,6 @@ if($acesso)
                      'onChange' => 'formPadrao.submit();',
                      'col' => 3,
                      'linha' => 3),
-              array ('nome' => 'falta',
-                     'label' => 'Faltas',
-                     'tipo' => 'simnao',
-                     'size' => 1,
-                     'title' => 'Exibe o Histórico de Faltas',
-                     'valor' => $postFalta,
-                     'onChange' => 'formPadrao.submit();',
-                     'col' => 3,
-                     'linha' => 3),
               array ('nome' => 'averbacao',
                      'label' => 'Tempo de Serviço',
                      'tipo' => 'simnao',
@@ -201,7 +191,7 @@ if($acesso)
                      'onChange' => 'formPadrao.submit();',
                      'formFieldset' => 'fecha',
                      'col' => 3,
-                     'linha' => 4)));
+                     'linha' => 3)));
 
     $relatorio->set_formFocus('contatos');		
     $relatorio->set_formLink('?');
@@ -934,12 +924,12 @@ if($acesso)
     }
 
     /*
-     * Histórico de Licença
+     * Histórico de Afastamentos 
      */
     
     if($postLicenca)
     {
-        $fieldset = new Fieldset('Histórico de Licenças','fieldsetRelatorio');
+        $fieldset = new Fieldset('Histórico de Afastamentos, Faltas e Licenças','fieldsetRelatorio');
         $fieldset->abre();
 
         $select = 'SELECT tbtipolicenca.nome,
@@ -960,7 +950,7 @@ if($acesso)
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Licença','Início','Dias','Término','Perícia','Bim','Processo','DOERJ','Pág.'));
+        $relatorio->set_label(array('Tipo','Início','Dias','Término','Perícia','Bim','Processo','DOERJ','Pág.'));
         $relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
         $relatorio->set_funcao(array(null,'date_to_php',null,'date_to_php','date_to_php',null,null,'date_to_php'));
         $relatorio->set_align(array('left','center'));
@@ -982,7 +972,7 @@ if($acesso)
     }    
     
     /*
-     *Tempo de Serviço Averbado
+     * Tempo de Serviço Averbado
      */
 
     if($postAverbacao)
@@ -1084,52 +1074,8 @@ if($acesso)
         $relatorio->show();
 
         $fieldset->fecha();
-    } 
+    }
     
-     /*
-     * Histórico de Faltas
-     */
-
-    if($postFalta)
-    {
-        $fieldset = new Fieldset('Histórico de Faltas','fieldsetRelatorio');
-        $fieldset->abre();
-
-        $select = 'SELECT data,
-                          numDias,
-                          ADDDATE(data,numDias-1),
-                          documento,
-                          processo
-                     FROM tbfaltas
-                    WHERE idServidor='.$idFicha.'
-          ORDER BY data desc';
-
-        $result = $pessoal->select($select);
-
-        $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
-        #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array("Data Inicial","Dias","Data Final","Documento","Processo"));
-        $relatorio->set_width(array(15,5,15,40,30));
-        $relatorio->set_funcao(array("date_to_php",null,"date_to_php"));
-        $relatorio->set_align(array("center","center","center","left"));
-        $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
-        $relatorio->show();
-
-        $fieldset->fecha();
-    }   
-
     # Data da Impressão
     p('Emitido em: '.date('d/m/Y - H:i:s')." (".$idUsuario.")",'pRelatorioDataImpressao');
     

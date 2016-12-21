@@ -34,17 +34,18 @@ if($acesso)
     $select = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      tbfaltas.data,
-                      tbfaltas.numDias,
-                      ADDDATE(data,numDias-1)
-                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbfaltas ON (tbservidor.idServidor = tbfaltas.idServidor)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                      tblicenca.dtInicial,
+                      tblicenca.numDias,
+                      ADDDATE(dtInicial,numDias-1)
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tblicenca USING (idServidor)                                
+                                 LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
-                  AND (("'.$data.'" BETWEEN data AND ADDDATE(data,numDias-1))
-                   OR  (LAST_DAY("'.$data.'") BETWEEN data AND ADDDATE(data,numDias-1))
-                   OR  ("'.$data.'" < data AND LAST_DAY("'.$data.'") > ADDDATE(data,numDias-1)))
-             ORDER BY data desc';		
+                  AND tblicenca.idTpLicenca = 25   
+                  AND (("'.$data.'" BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1))
+                   OR  (LAST_DAY("'.$data.'") BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1))
+                   OR  ("'.$data.'" < dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(dtInicial,numDias-1)))                       
+             ORDER BY dtInicial desc';		
 
     $result = $pessoal->select($select);
 

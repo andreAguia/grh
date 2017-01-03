@@ -184,7 +184,7 @@ class Grh
         br();        
         ##########################################################
             
-        # Tabelas Secundárias
+        # Legislação
         #$grid = new Grid();
         $grid->abreColuna(12,6,4);
 
@@ -199,6 +199,8 @@ class Grh
         
         $grid->fechaColuna();
         $grid->abreColuna(12,12,8);
+        
+        ##########################################################
         
             titulo('Links Externos');
             br();

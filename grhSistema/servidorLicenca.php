@@ -458,9 +458,9 @@ if($acesso){
                 
                 # Exibe alerta se $diasDisponíveis for negativo
                 if($diasDisponiveis < 0){                    
-                    $mensagem = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados. É necessário cadastrar as publicações de licença prêmio para acertar essa situação.";
-                    #alert($mensagem);
-                    callout($mensagem,"alert");
+                    $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                    $objeto->set_rotinaExtraListar("callout");
+                    $objeto->set_rotinaExtraListarParametro($mensagem1);
                 }
                 
             case "editar" :
@@ -475,9 +475,8 @@ if($acesso){
 
                     # Verifica se tem dias publicados e/ou disponíveis         
                     if ((($diasDisponiveis < 1) AND (IS_NULL($id))) OR ($diasPublicados == 0)){
-                        $mensagem = 'Este Servidor não tem dias disponíveis para solicitar uma licença prêmio. É necessário cadastrar a publicação da licença prêmio antes de lançar a licença no sistema.';
-
-                        alert($mensagem);
+                        $mensagem2 = 'Este Servidor não tem dias disponíveis para solicitar uma licença prêmio. É necessário cadastrar a publicação da licença prêmio antes de lançar a licença no sistema.';
+                        alert($mensagem2);
                         back(1);
                     }else{
                         $objeto->$fase($id);

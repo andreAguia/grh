@@ -24,10 +24,9 @@ if($acesso)
     $fase = get('fase','listar');
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -213,6 +212,18 @@ if($acesso)
             case "listar" : 
                 # Exibe quadro de licença prêmio
                 Grh::quadroLicencaPremio($idServidorPesquisado);
+                
+                # pega os dados para o alerta
+                $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
+                $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
+                $diasDisponiveis = $diasPublicados - $diasFruidos;
+                
+                # Exibe alerta se $diasDisponíveis for negativo
+                if($diasDisponiveis < 0){                    
+                    $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                    $objeto->set_rotinaExtraListar("callout");
+                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                }
 
                 $objeto->listar();
                 

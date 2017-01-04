@@ -501,10 +501,8 @@ if($acesso){
                 # Limita o tamanho da tela
                 $grid = new Grid();
                 $grid->abreColuna(12);
-        
-                # Formulário de inclusão
-                $fieldset = new Fieldset('Incluir Afastamento ou Licença','login');               
-                $fieldset->abre();
+                
+                titulo("Inclusão de novo afastamento");
 
                 # Pega os dados da combo licenca
                 $result = $pessoal->select('SELECT idTpLicenca,nome
@@ -535,9 +533,7 @@ if($acesso){
                     $controle->set_linha(2);
                     $form->add_item($controle);
 
-                $form->show();	
-
-                $fieldset->fecha();
+                $form->show();
                 
                 $grid->fechaColuna();
                 $grid->fechaGrid();

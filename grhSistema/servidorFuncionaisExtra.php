@@ -149,7 +149,11 @@ if((!is_null($motivo)) AND (!is_null($dtSaida))){
             break;
         
         case 13 :
-            $novaSituacao = 0;
+            $novaSituacao = 3;
+            break;
+        
+        case 14 :
+            $novaSituacao = 3;
             break;
     }
     

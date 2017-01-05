@@ -159,6 +159,9 @@ if($acesso)
             $tabelas = array("tbpessoa","tbdependente","tbdocumentacao","tbformacao");
             $idCampo = array("idpessoa","idDependente","iddocumentacao","idformacao");
             
+            # Verifica se o servidor tem outra matricula
+            ###parei aqui
+            
             # Apaga os dados das tabelas
             $numTabelas = count($tabelas);
             

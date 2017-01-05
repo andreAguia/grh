@@ -94,7 +94,7 @@ if(!is_null($motivo)){
             break;
             
         case 3 :    // Convidado
-            if(($motivo <> 1) AND ($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 13))
+            if(($motivo <> 1) AND ($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 13) AND ($motivo <> 14))
                 $erro = 1;   
                 $msgErro.='Um servidor convidado não pode sair da instituição por esse motivo!\n';
             break; 

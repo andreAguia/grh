@@ -91,6 +91,9 @@ if($acesso)
             $idServidor = $idServidorPesquisado;
             $idPessoa = $pessoal->get_idPessoa($idServidor);
             
+            # Verifica se o servidor tem mais de uma inscrição (matrícula)
+            $numIdservidor = $pessoal->get_numIdservidor($idPessoa);
+            
             br(4);
             aguarde();            
             br();
@@ -160,7 +163,7 @@ if($acesso)
             $idCampo = array("idpessoa","idDependente","iddocumentacao","idformacao");
             
             # Verifica se o servidor tem outra matricula
-            ###parei aqui
+            if($numIdservidor == 1){
             
             # Apaga os dados das tabelas
             $numTabelas = count($tabelas);
@@ -190,6 +193,7 @@ if($acesso)
                         $intra->registraLog($idUsuario,$data,$atividade,$tabelas[$item],$linha[0],3,$idServidor);
                     }
                 }            
+            }
             }
                    
             ########################################################

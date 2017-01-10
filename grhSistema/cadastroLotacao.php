@@ -44,7 +44,8 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -361,29 +362,13 @@ if($acesso)
             break;
         
         case "grafico" :
-             # Botão voltar
+            # Botão voltar
             botaoVoltar('?');
             
             # Exibe o Título
-            $grid = new Grid("center");
+            $grid = new Grid();
             $grid->abreColuna(12);
             
-            titulo('Servidores por Diretoria');
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid(); 
-             
-            # Limita o tamanho do gráfico
-            $grid = new Grid("center");
-            $grid->abreColuna(7);
-
-            # Gráfico de pizza
-            $chart = new PieChart(500,500);
-            $chart->getPlot()->getPalette()->setPieColor(array(
-                new Color(30, 144, 255),
-                new Color(255, 130, 71),
-                new Color(67, 205, 128)));
-
             # Pega os dados
             $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.matricula) 
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -395,21 +380,29 @@ if($acesso)
 
             $servidores = $pessoal->select($selectGrafico);
 
-            $dataSet = new XYDataSet();
-            foreach ($servidores as $valor)
-            {
-                $dataSet->addPoint(new Point($valor[0]." (".$valor[1].")", $valor[1]));
-            }
-            #$dataSet->addPoint(new Point("Estatutário (".$estatutários.")", $estatutários));
-            #$dataSet->addPoint(new Point("Cedidos (".$cedido.")", $cedido));
-            #$dataSet->addPoint(new Point("Convidados (".$convidado.")", $convidado));
-            $chart->setDataSet($dataSet);
+            
+            titulo('Servidores por Lotação');
+            
+            $grid3 = new Grid();
+            $grid3->abreColuna(4);
+            br();
 
-            $chart->setTitle("");
-            $chart->render(PASTA_FIGURAS."/demo3.png");
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Lotação","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));    
+            $tabela->show();
 
-            $imagem = new Imagem(PASTA_FIGURAS.'demo3.png','Servidores da Fenorte','100%','100%');
-            $imagem->show();
+            $grid3->fechaColuna();
+            $grid3->abreColuna(8);
+
+            $chart = new Chart("Pie",$servidores);
+            $chart->show();
+
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

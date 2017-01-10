@@ -22,6 +22,7 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase');
+    $diretoria = get('diretoria');
     
     # Começa uma nova página
     $page = new Page();
@@ -36,7 +37,7 @@ if($acesso)
     $grid1->abreColuna(12);
     
     # Cria um menu
-        $menu1 = new MenuBar();
+    $menu1 = new MenuBar();
 
     # Voltar
     $linkVoltar = new Link("Voltar","grh.php");
@@ -68,9 +69,6 @@ if($acesso)
 
     $menu1->show();
     
-    titulo("Estatística");
-    br();
-    
     # Dados do gráfico
     $largura = 800;
     $altura = 400;
@@ -80,6 +78,8 @@ if($acesso)
     switch ($fase)
     {
         case "":
+            titulo("Servidores por Perfil");
+            
             $grid2 = new Grid();
             $grid2->abreColuna(4);
             
@@ -95,7 +95,6 @@ if($acesso)
             
             # Exemplo de tabela simples
             $tabela = new Tabela();
-            $tabela->set_titulo("Servidores por Perfil");
             $tabela->set_conteudo($servidores);
             $tabela->set_label(array("Perfil","Servidores"));
             $tabela->set_width(array(80,20));
@@ -105,43 +104,8 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->abreColuna(8);
             
-            echo "<script type='text/javascript'>
-                  google.charts.load('current', {packages:['corechart']});
-                  google.charts.setOnLoadCallback(drawChart);
-              function drawChart() {
-                var data = google.visualization.arrayToDataTable([";
-            $contador = 0;
-            echo "['Perfil', 'Número de Servidores'],";
-            foreach ($servidores as $item){
-                echo "['".$item[0]."',".$item[1]."]";
-                if($contador < $numServidores-1){
-                    echo ",";
-                }
-                $contador++;
-            }
-            
-            echo "]);";
-            
-            
-            #      ['Task', 'Hours per Day'],
-            #      ['Work',     11],
-            #      ['Eat',      2],
-            #      ['Commute',  2],
-            #      ['Watch TV', 2],
-            #      ['Sleep',    7]
-            #    ]);
-
-            echo "var options = {
-                  title: '',
-                  is3D: true,
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-                chart.draw(data, options);
-              }
-            </script>";
-          
-            echo '<div id="piechart_3d" style="width: '.$largura.'px; height: '.$altura.'px;"></div>';
+            $chart = new Chart("Pie",$servidores);
+            $chart->show();
             
             $grid2->fechaColuna();
             $grid2->fechaGrid();
@@ -153,10 +117,12 @@ if($acesso)
             
             case "lotacao":
             $grid2 = new Grid();
-            $grid2->abreColuna(4);
+            $grid2->abreColuna(12);
+            
+            titulo("Servidores por Lotação");
             
             # Pega os dados
-            $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.matricula) 
+            $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.matricula)
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
@@ -168,134 +134,139 @@ if($acesso)
             $servidores = $pessoal->select($selectGrafico);
             $numServidores = $pessoal->count($selectGrafico);
             
-            # Exemplo de tabela simples
-            $tabela = new Tabela();
-            $tabela->set_titulo("Servidores por Lotação (Diretoria)");
-            $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Lotação","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->show();
+            # Cria um menu
+            $menu2 = new MenuBar();
             
-            $grid2->fechaColuna();
-            $grid2->abreColuna(8);
-            
-            echo "<script type='text/javascript'>
-                  google.charts.load('current', {packages:['corechart']});
-                  google.charts.setOnLoadCallback(drawChart);
-              function drawChart() {
-                var data = google.visualization.arrayToDataTable([";
-            $contador = 0;
-            echo "['Perfil', 'Número de Servidores'],";
-            foreach ($servidores as $item){
-                echo "['".$item[0]."',".$item[1]."]";
-                if($contador < $numServidores-1){
-                    echo ",";
+            $botao = new Button("Todos","?fase=lotacao");
+            $botao->set_class('button secondary');
+            $botao->set_title("Todos");
+            if(is_null($diretoria)){
+                   $botao->set_disabled(TRUE);
                 }
-                $contador++;
+            $menu2->add_link($botao,"right");
+                
+            foreach ($servidores as $item){
+                $botao = new Button($item[0],"?fase=lotacao&diretoria=".$item[0]);
+                $botao->set_class('button secondary');
+                $botao->set_title($item[0]);
+                if($diretoria == $item[0]){
+                   $botao->set_disabled(TRUE);
+                }
+                
+                $menu2->add_link($botao,"right");
             }
-            
-            echo "]);";
-            
-            
-            #      ['Task', 'Hours per Day'],
-            #      ['Work',     11],
-            #      ['Eat',      2],
-            #      ['Commute',  2],
-            #      ['Watch TV', 2],
-            #      ['Sleep',    7]
-            #    ]);
-
-            echo "var options = {
-                  title: '',
-                  is3D: true,
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-                chart.draw(data, options);
-              }
-            </script>";
-          
-            echo '<div id="piechart_3d" style="width: '.$largura.'px; height: '.$altura.'px;"></div>';
-            
+            $menu2->show();
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             
-            hr();
-            break;
+            switch ($diretoria)
+            {
+                case "":
+                    $grid2 = new Grid();
+                    $grid2->abreColuna(4);
+
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($servidores);
+                    $tabela->set_label(array("Diretoria","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));    
+                    $tabela->show();
+
+                    $grid2->fechaColuna();
+                    $grid2->abreColuna(8);
+
+                    $chart = new Chart("Pie",$servidores);
+                    #$chart->set_tresd(TRUE);
+                    $chart->show();
+
+                    $grid2->fechaColuna();
+                    $grid2->fechaGrid();
+                    break;
             
+            ##############################################
+            
+                default:
+                    
+                    $grid2 = new Grid();
+                    $grid2->abreColuna(4);
+
+                    # Pega os dados
+                    $selectGrafico2 = 'SELECT tblotacao.ger, count(tbservidor.matricula),tblotacao.nome
+                                        FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                       WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                         AND situacao = 1
+                                         AND ativo
+                                         AND tblotacao.dir="'.$diretoria.'" 
+                                    GROUP BY tblotacao.ger
+                                    ORDER BY 2 DESC ';
+
+                    $servidores2 = $pessoal->select($selectGrafico2);
+
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_titulo($diretoria);
+                    $tabela->set_conteudo($servidores2);
+                    $tabela->set_label(array("Gerência","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->show(); 
+
+                    $grid2->fechaColuna();
+                    $grid2->abreColuna(8);
+
+                    # Gráfico
+                    $chart2 = new Chart("Pie",$servidores2);
+                    $chart2->set_idDiv($item[0]);
+                    #$chart2->set_pieHole(TRUE);
+                    #$chart2->set_legend(FALSE);
+                    $chart2->set_tamanho(700,400);
+                    $chart2->show();
+
+                    $grid2->fechaColuna();
+                    $grid2->fechaGrid();
+                    break;
+            }
+            break;
+        
             #########################################
             
             case "cargo":
-            $grid2 = new Grid();
-            $grid2->abreColuna(4);
-            
-            # Pega os dados
-            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.matricula) 
-                                FROM tbservidor JOIN tbcargo USING (idCargo)
-                                                JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                            GROUP BY tbtipocargo.cargo
-                            ORDER BY 2 DESC ';
+                titulo("Servidores por Cargo");
+                $grid2 = new Grid();
+                $grid2->abreColuna(4);
 
-            $servidores = $pessoal->select($selectGrafico);
-            $numServidores = $pessoal->count($selectGrafico);
-            
-            # Exemplo de tabela simples
-            $tabela = new Tabela();
-            $tabela->set_titulo("Servidores por Cargo");
-            $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Cargo","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->show();
-            
-            $grid2->fechaColuna();
-            $grid2->abreColuna(8);
-            
-            echo "<script type='text/javascript'>
-                  google.charts.load('current', {packages:['corechart']});
-                  google.charts.setOnLoadCallback(drawChart);
-              function drawChart() {
-                var data = google.visualization.arrayToDataTable([";
-            $contador = 0;
-            echo "['Perfil', 'Número de Servidores'],";
-            foreach ($servidores as $item){
-                echo "['".$item[0]."',".$item[1]."]";
-                if($contador < $numServidores-1){
-                    echo ",";
-                }
-                $contador++;
-            }
-            
-            echo "]);";
-            
-            
-            #      ['Task', 'Hours per Day'],
-            #      ['Work',     11],
-            #      ['Eat',      2],
-            #      ['Commute',  2],
-            #      ['Watch TV', 2],
-            #      ['Sleep',    7]
-            #    ]);
+                # Pega os dados
+                $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.matricula) 
+                                    FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                    JOIN tbtipocargo USING (idTipoCargo)
+                                   WHERE tbservidor.situacao = 1
+                                GROUP BY tbtipocargo.cargo
+                                ORDER BY 2 DESC ';
 
-            echo "var options = {
-                  title: '',
-                  is3D: true,
-                };
+                $servidores = $pessoal->select($selectGrafico);
+                $numServidores = $pessoal->count($selectGrafico);
 
-                var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
-                chart.draw(data, options);
-              }
-            </script>";
-          
-            echo '<div id="piechart_3d" style="width: '.$largura.'px; height: '.$altura.'px;"></div>';
-            
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-            
-            hr();
-            break;
+                # Exemplo de tabela simples
+                $tabela = new Tabela();
+                $tabela->set_conteudo($servidores);
+                $tabela->set_label(array("Cargo","Servidores"));
+                $tabela->set_width(array(80,20));
+                $tabela->set_align(array("left","center"));
+                $tabela->show();
+
+                $grid2->fechaColuna();
+                $grid2->abreColuna(8);
+
+                $chart = new Chart("Pie",$servidores);
+                $chart->show();
+
+                $grid2->fechaColuna();
+                $grid2->fechaGrid();
+
+                hr();
+                break;
     }
     
     # Fecha o grid

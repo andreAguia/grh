@@ -3153,4 +3153,24 @@ class Pessoal extends Bd
 	}
 
 	###########################################################
+	
+	/**
+	 * Método get_numIdservidor
+	 * fornece o número de idservidores de um idpessoa
+	 * 
+	 * @param	string $idPessoa idPessoa do servidor
+	 */
+
+	public function get_numIdservidor($idPessoa)
+	{
+		$select = 'SELECT idservidor
+                             FROM tbservidor
+                            WHERE idpessoa = '.$idPessoa;
+		
+		$numIdservidor = parent::count($select);
+				
+		return $numIdservidor;
+	}
+	
+	###########################################################
 }

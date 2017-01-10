@@ -61,7 +61,7 @@ include_once (PASTA_FUNCOES_GERAIS."funcoes.gerais.php");
 include_once (PASTA_FUNCOES."funcoes.especificas.php");
 
 # Framework gráfico 
-include ('../../_framework/_outros/libchart/classes/libchart.php');
+#include ('../../_framework/_outros/libchart/classes/libchart.php');
 
 # Dados do Browser
 $browser = get_BrowserName();

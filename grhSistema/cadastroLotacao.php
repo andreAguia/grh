@@ -257,8 +257,16 @@ if($acesso)
     $botaoOrg->set_imagem($imagem3);
     $botaoOrg->set_onClick("window.open('../_img/organograma.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1000,height=700');");
     #$botaoOrg->set_accessKey('O');
+    
+    # Organograma2
+    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',null,15,15);
+    $botaoOrga = new Button();
+    $botaoOrga->set_title("Exibe o Organograma2 da UENF");
+    $botaoOrga->set_imagem($imagem3);
+    $botaoOrga->set_url("?fase=organograma");
+    #$botaoOrg->set_accessKey('O');
 
-    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel,$botaoOrg));    
+    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel,$botaoOrg,$botaoOrga));    
     
     # Pega o número de Lotações ativas para a paginação
     $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
@@ -403,6 +411,49 @@ if($acesso)
 
             $grid3->fechaColuna();
             $grid3->fechaGrid();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "organograma" :
+            # Botão voltar
+            botaoVoltar('?');
+            
+            # Exibe o Título
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Pega os dados
+            $selectGrafico = 'SELECT UADM,'
+                    . '              DIR,'
+                    . '              GER,'
+                    . '              nome'        
+                    . '             FROM tblotacao'
+                    . '       WHERE ativo'
+                    . '       ORDER BY 1,2,3';
+            
+            $servidores = $pessoal->select($selectGrafico);
+            
+            # Novo array transformado para o gráfico
+            $organograma = array(array("UENF","","Universidade do Norte Fluminense"));
+            
+            
+            # Trata os dados para o organograma
+            foreach ($servidores as $item){
+               if($item[2]=="SECR"){
+                   array_push($organograma,array($item[1],"UENF",$item[3]));
+               }else{
+                   array_push($organograma,array($item[2],$item[1],$item[3]));
+               }
+            }
+
+            
+            
+            titulo('Servidores por Lotação');
+                        
+            $chart = new Organograma($organograma);
+            $chart->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

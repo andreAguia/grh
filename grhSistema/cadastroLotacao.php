@@ -424,33 +424,43 @@ if($acesso)
             $grid = new Grid();
             $grid->abreColuna(12);
             
-            # Pega os dados
-            $selectGrafico = 'SELECT UADM,'
-                    . '              DIR,'
-                    . '              GER,'
-                    . '              nome'        
-                    . '             FROM tblotacao'
-                    . '       WHERE ativo'
-                    . '       ORDER BY 1,2,3';
+            # Cria o array a ser usado no organograma
+            $organograma = array();
             
-            $servidores = $pessoal->select($selectGrafico);
+            # Unidade Administrativa
+            $uadmSelect = 'SELECT DISTINCT UADM FROM tblotacao WHERE ativo ORDER BY 1';
+            $uadm = $pessoal->select($uadmSelect);
             
-            # Novo array transformado para o gráfico
-            $organograma = array(array("UENF","","Universidade do Norte Fluminense"));
+            foreach ($uadm as $item){
+                $organograma[] = array($item[0]," "," ");
+            }
             
+            # Diretoria
+            $dirSelect = 'SELECT DISTINCT DIR,UADM FROM tblotacao WHERE ativo ORDER BY 1';
+            $dir = $pessoal->select($dirSelect);
+            
+            foreach ($dir as $item){
+                $organograma[] = array($item[0],$item[1],"");
+            }
+            
+            # Lotações
+            $lotacaoSelect = 'SELECT DIR, GER, nome FROM tblotacao WHERE ativo ORDER BY 1,2';            
+            $lotacao = $pessoal->select($lotacaoSelect);
             
             # Trata os dados para o organograma
-            foreach ($servidores as $item){
-               if($item[2]=="SECR"){
-                   array_push($organograma,array($item[1],"UENF",$item[3]));
-               }else{
-                   array_push($organograma,array($item[2],$item[1],$item[3]));
-               }
+            foreach ($lotacao as $item){
+                $organograma[] = array($item[1],$item[0],$item[2]);
             }
-
             
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($organograma);
+            $tabela->set_label(array("Item0","Item1","Item2"));
+            $tabela->set_width(array(33,33,33));
+            $tabela->set_align(array("center"));    
+            $tabela->show();
             
-            titulo('Servidores por Lotação');
+            titulo('Organograma');
                         
             $chart = new Organograma($organograma);
             $chart->show();

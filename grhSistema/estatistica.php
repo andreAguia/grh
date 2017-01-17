@@ -23,6 +23,7 @@ if($acesso)
     # Verifica a fase do programa
     $fase = get('fase');
     $diretoria = get('diretoria');
+    $grafico = get('grafico');
     
     # Começa uma nova página
     $page = new Page();
@@ -184,9 +185,41 @@ if($acesso)
                     $grid2->fechaGrid();
                     break;
             
-            ##############################################
+                ##############################################
             
-                default:
+                default: 
+                    $grid2 = new Grid();
+                    $grid2->abreColuna(12);
+                    
+                    # Cria um menu
+                    $menu3 = new MenuBar();
+
+                    # Grafico
+                    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+                    $botaoGra = new Button();
+                    $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
+                    $botaoGra->set_url("?fase=lotacao&diretoria=$diretoria");
+                    $botaoGra->set_imagem($imagem1);
+                    if($grafico == ""){
+                        $botaoGra->set_disabled(TRUE);
+                    }
+                    $menu3->add_link($botaoGra,"right");
+                    
+                    # Organograma
+                    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',null,15,15);
+                    $botaoOrg = new Button();                    
+                    $botaoOrg->set_title("Exibe o Organograma da UENF");
+                    $botaoOrg->set_imagem($imagem3);
+                    $botaoOrg->set_url("?fase=lotacao&diretoria=$diretoria&grafico=org");
+                    if($grafico == "org"){
+                        $botaoOrg->set_disabled(TRUE);
+                    }
+                    $menu3->add_link($botaoOrg,"right");
+                    
+                    $menu3->show();
+                    
+                    $grid2->fechaColuna();
+                    $grid2->fechaGrid();
                     
                     $grid2 = new Grid();
                     $grid2->abreColuna(4);
@@ -215,14 +248,19 @@ if($acesso)
 
                     $grid2->fechaColuna();
                     $grid2->abreColuna(8);
-
-                    # Gráfico
-                    $chart2 = new Chart("Pie",$servidores2);
-                    $chart2->set_idDiv($item[0]);
-                    #$chart2->set_pieHole(TRUE);
-                    #$chart2->set_legend(FALSE);
-                    $chart2->set_tamanho(700,400);
-                    $chart2->show();
+                    
+                    if($grafico == "org"){
+                        $org = new OrganogramaUenf($diretoria);
+                        $org->set_ignore("SECR");
+                        $org->show();
+                    }else{
+                        $chart2 = new Chart("Pie",$servidores2);
+                        $chart2->set_idDiv($item[0]);
+                        #$chart2->set_pieHole(TRUE);
+                        #$chart2->set_legend(FALSE);
+                        $chart2->set_tamanho(700,400);
+                        $chart2->show();
+                    }
 
                     $grid2->fechaColuna();
                     $grid2->fechaGrid();

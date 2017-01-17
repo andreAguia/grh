@@ -44,12 +44,18 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();
-    $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
-    $page->iniciaPagina();
+    if($fase <> "organograma"){
+        $page = new Page();
+        $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
+        $page->iniciaPagina();
+    }else{
+        echo '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>';
+    }
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "organograma"){
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -417,60 +423,15 @@ if($acesso)
             break;
         
         case "organograma" :
-            # Botão voltar
-            botaoVoltar('?');
             
-            # Exibe o Título
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            
-            # Cria o array a ser usado no organograma
-            $organograma = array();
-            
-            # Unidade Administrativa
-            $uadmSelect = 'SELECT DISTINCT UADM FROM tblotacao WHERE ativo ORDER BY 1';
-            $uadm = $pessoal->select($uadmSelect);
-            
-            foreach ($uadm as $item){
-                $organograma[] = array($item[0]," "," ");
-            }
-            
-            # Diretoria
-            $dirSelect = 'SELECT DISTINCT DIR,UADM FROM tblotacao WHERE ativo ORDER BY 1';
-            $dir = $pessoal->select($dirSelect);
-            
-            foreach ($dir as $item){
-                $organograma[] = array($item[0],$item[1],"");
-            }
-            
-            # Lotações
-            $lotacaoSelect = 'SELECT DIR, GER, nome FROM tblotacao WHERE ativo ORDER BY 1,2';            
-            $lotacao = $pessoal->select($lotacaoSelect);
-            
-            # Trata os dados para o organograma
-            foreach ($lotacao as $item){
-                $organograma[] = array($item[1],$item[0],$item[2]);
-            }
-            
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($organograma);
-            $tabela->set_label(array("Item0","Item1","Item2"));
-            $tabela->set_width(array(33,33,33));
-            $tabela->set_align(array("center"));    
-            $tabela->show();
-            
-            titulo('Organograma');
-                        
-            $chart = new Organograma($organograma);
-            $chart->show();
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+            $org = new OrganogramaUenf("CCTA");
+            $org->show();
             break;
     }									 	 		
 
-    $page->terminaPagina();
+    if($fase <> "organograma"){
+        $page->terminaPagina();
+    }
 }else{
     loadPage("../../areaServidor/sistema/login.php");
 }

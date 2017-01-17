@@ -127,6 +127,7 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório de Estatutários','../grhRelatorios/cargoEstatutarios.php');
             $menu->add_item('linkWindow','Relatório dos Cargos em Comissão','../grhRelatorios/cargoComissao.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo','../grhRelatorios/cargosComissionados.php');
+            $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Histórico','../grhRelatorios/cargosComissionadosHistorico.php');
 
             $menu->show();
             break;

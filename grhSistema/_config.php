@@ -5,15 +5,15 @@
  * By Alat
  */
 
-# Sobre o Sistema Intranet
-define("VERSAO","1.0.02");                                     # Versão do Sistema 								
-define("ATUALIZACAO","21/12/2016");                              # Última Atualização
-define("SISTEMA","Sistema de Gestão de Pessoas");                # Nome do sistema
-define("DESCRICAO","Sistema da Gerência de Recursos Humanos");   # Descrição do sistema
-define("PALAVRAS_CHAVE","Uenf,GRH");                             # Palavras chave para sites de busca
-define("AUTOR","André Luis Águia Tavares");                      # Autor do sistema
-define("EMAILAUTOR","alat@uenf.br");                             # Email do Autor do sistema
-define("SETOR","GRH - Gerência de Recursos Humanos");            # Setor
+# Sobre o Sistema
+define("VERSAO","1.0.02 UENF");                                # Versão do Sistema 								
+define("ATUALIZACAO","19/01/2017");                            # Última Atualização
+define("SISTEMA","Sistema de Gestão de Pessoas");              # Nome do sistema
+define("DESCRICAO","Sistema da Gerência de Recursos Humanos"); # Descrição do sistema
+define("PALAVRAS_CHAVE","Uenf,GRH");                           # Palavras chave para sites de busca
+define("AUTOR","André Luis Águia Tavares");                    # Autor do sistema
+define("EMAILAUTOR","alat@uenf.br");                           # Email do Autor do sistema
+define("SETOR","GRH - Gerência de Recursos Humanos");          # Setor
 
 # Classes
 define("PASTA_CLASSES_GERAIS","../../_framework/_classesGerais/");  # Classes Gerais

@@ -134,9 +134,9 @@ if($acesso)
 
     # Pega os dados da combo tipo de Comissão
     $result = $pessoal->select('SELECT idTipoComissao,
-                                       CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao
-                                  FROM tbtipocomissao 
-                              ORDER BY comissao');    
+                                       CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
+                                  FROM tbtipocomissao WHERE ativo
+                              ORDER BY simbolo');    
     
     # Verifica cada cargo se tem vagas disponíveis se não tem retira do array
     $novaLista = array();

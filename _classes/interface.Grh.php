@@ -880,18 +880,27 @@ class Grh
                          tbservidor.idServidor,
                          tbservidor.dtAdmissao,
                          tbservidor.idServidor,
-                         tbservidor.idServidor
+                         tbservidor.idServidor,
+                         tbservidor.dtDemissao
                     FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
                                        LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
                                        LEFT JOIN tbperfil ON tbservidor.idPerfil = tbperfil.idPerfil
                    WHERE idServidor = '.$idServidor;
 
         $conteudo = $servidor->select($select,true);
-
-        $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
-        $width = array(8,10,10,20,10,20,10,20,5);
+        
+        # Pega a situação
+        $situacao = $servidor->get_situacao($idServidor);
+        
+        if ($situacao == "Ativo"){
+            $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
+            $function = array(null,"dv",null,null,null,"date_to_php");
+        }else{
+            $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação","Saída");
+            $function = array(null,"dv",null,null,null,"date_to_php",null,null,"date_to_php");
+        }
         #$align = array("center");
-        $function = array(null,"dv",null,null,null,"date_to_php");
+        
         $classe = array(null,null,null,null,"pessoal",null,"pessoal","pessoal");
         $metodo = array(null,null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao");
         
@@ -904,7 +913,6 @@ class Grh
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
         $tabela->set_label($label);
-        #$tabela->set_width($width);
         $tabela->set_funcao($function);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);

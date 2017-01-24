@@ -39,7 +39,7 @@ if($acesso)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                 WHERE tbtipocomissao.ativo                     
-           ORDER BY 7, 4';
+           ORDER BY 7, 6, 4';
 
     $result = $servidor->select($select);
 

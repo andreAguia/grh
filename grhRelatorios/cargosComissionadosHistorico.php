@@ -29,6 +29,7 @@ if($acesso)
 
     $servidor = new Pessoal();
     $select ='SELECT distinct tbservidor.idFuncional,
+                     tbservidor.matricula,
                      tbpessoa.nome,
                      tbcomissao.dtNom,
                      tbcomissao.dtExo,
@@ -45,12 +46,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados pelo Símbolo - Ordenados Cronologicamente');
-    $relatorio->set_label(array('IdFuncional','Nome','Nomeação','Exoneração','Descrição'));
-    $relatorio->set_width(array(15,30,15,15,25,0));
-    $relatorio->set_align(array("center","left","center","center","left"));
-    $relatorio->set_funcao(array(null,null,"date_to_php","date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição'));
+    $relatorio->set_width(array(15,10,25,15,15,20,0));
+    $relatorio->set_align(array("center","center","left","center","center","left"));
+    $relatorio->set_funcao(array(null,"dv",null,"date_to_php","date_to_php"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(5);
+    $relatorio->set_numGrupo(6);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

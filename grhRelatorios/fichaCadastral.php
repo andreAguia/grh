@@ -70,6 +70,7 @@ if($acesso)
     $relatorio->set_titulo('Ficha Cadastral');
     $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Perfil','Situação'));
     $relatorio->set_width(array(15,10,40,15,20));
+    $relatorio->set_funcao(array(null,"dv"));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);

@@ -271,7 +271,7 @@ if($acesso)
     # Botão Extra
     $botaoVagas = new Button("Vagas","?fase=vagas");
     $botaoVagas->set_title('Exibe a disponibilidade dos cargos em comissão');
-    $botaoVagas->set_accessKey('V');
+    $botaoVagas->set_accessKey('g');
     $objeto->set_botaoListarExtra(array($botaoVagas));
     
 

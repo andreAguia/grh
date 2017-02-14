@@ -2214,6 +2214,31 @@ class Pessoal extends Bd
 
 	}
 
+	##########################################################
+
+	/**
+	 * M�todo get_nomeCargoComissao
+	 * Informa o nome do cargo em comissao a partir do id
+	 *
+	 * @param	string $id  id do cargo
+	 */
+
+	public function get_nomeCargoComissao($id)
+
+	{
+            if (!is_numeric($id))
+                return $id;
+            else
+            {
+               $select ='SELECT tbtipocomissao.descricao 
+                                FROM tbtipocomissao 
+                               WHERE idTipoComissao = '.$id;
+
+                $row = parent::select($select,false);
+                return $row[0];
+            }
+	}
+
 	###########################################################
 
 	/**

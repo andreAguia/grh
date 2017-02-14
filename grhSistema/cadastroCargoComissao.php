@@ -246,7 +246,7 @@ if($acesso)
 
             # Titulo
             $servidor = new Pessoal();
-            titulo('Servidores da Lotação: '.$servidor->get_nomeLotacao($id));
+            titulo('Servidores ocupando o cargo: '.$servidor->get_nomeCargoComissao($id));
 
             $select ='SELECT distinct tbservidor.idFuncional, 
                              tbpessoa.nome,
@@ -271,8 +271,8 @@ if($acesso)
 
             # Parametros da tabela
             $label = array('idFuncional','Nome','Descrição','Cargo','Lotação','Perfil');
-            $width = array(10,20,20,15,20,15);	
-            $align = array("center","left");
+            #$width = array(10,20,20,15,20,15);	
+            $align = array("center","left","left");
             #$funcao = array("dv");
             $classe = array("","","","","Pessoal");
             $metodo = array("","","","","get_lotacao");
@@ -280,7 +280,8 @@ if($acesso)
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_cabecalho($label,$width,$align);
+            $tabela->set_label($label);
+            $tabela->set_align($align);
             #$tabela->set_funcao($funcao);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);

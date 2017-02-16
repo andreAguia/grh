@@ -117,7 +117,7 @@ if($acesso)
     # Parametros da tabela
     $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
     $objeto->set_width(array(30,40,10,10));	
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("left","left","center"));
     $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
 
     # Classe do banco de dados

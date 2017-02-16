@@ -34,7 +34,7 @@ if($acesso)
                      tbcomissao.dtNom,
                      tbcomissao.dtExo,
                      tbcomissao.descricao,
-                     tbtipocomissao.simbolo
+                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)

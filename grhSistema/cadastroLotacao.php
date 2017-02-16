@@ -127,7 +127,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Código","Unid.Adm.","Diretoria","Gerência","Nome","Servidores","Lotação Ativa?","Ver"));
+    $objeto->set_label(array("id","Código","Unid.Adm.","Diretoria","Gerência","Nome","Servidores","Ativa","Ver"));
     $objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center","center","center","center","center","left"));
 
@@ -272,7 +272,7 @@ if($acesso)
     $botaoOrga->set_url("?fase=organograma");
     #$botaoOrg->set_accessKey('O');
 
-    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel,$botaoOrg,$botaoOrga));    
+    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel,$botaoOrg));    
     
     # Pega o número de Lotações ativas para a paginação
     $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();

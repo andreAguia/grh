@@ -46,7 +46,7 @@ if($acesso)
     
     $relatorio->set_classe(array(null,null,"pessoal"));
     $relatorio->set_metodo(array(null,null,"get_lotacao"));
-    $relatorio->set_zebrado(FALSE);
+    
     $relatorio->set_bordaInterna(TRUE);
     
     $relatorio->set_conteudo($result);

@@ -73,6 +73,7 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
+                                     protempore,
                                      tbcomissao.descricao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
@@ -85,6 +86,7 @@ if($acesso)
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
                                      descricao,
+                                     protempore,
                                      dtNom,
                                      numProcNom,
                                      dtPublicNom,
@@ -115,10 +117,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
-    $objeto->set_width(array(30,40,10,10));	
-    $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
+    $objeto->set_label(array("Cargo","Pro Tempore","Descrição","Data de Nomeação","Data de Exoneração"));
+    #$objeto->set_width(array(30,5,40,10,10));	
+    $objeto->set_align(array("left","center","left","center"));
+    $objeto->set_funcao(array (null,null,null,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -166,15 +168,24 @@ if($acesso)
                                        'array' => $novaLista,
                                        'size' => 20,
                                        'col' => 4,
-                                       'title' => 'período de férias',
+                                       'title' => 'Tipo dp Cargo em Comissão',
                                        'linha' => 1),
                                array ( 'nome' => 'descricao',                                   
                                        'label' => 'Descrição:',
                                        'tipo' => 'texto',
                                        'required' => true,
                                        'size' => 80,
-                                       'col' => 8,
+                                       'col' => 6,
                                        'title' => 'Descrição do Cargo.',
+                                       'linha' => 1),
+                               array ( 'nome' => 'protempore',
+                                       'label' => 'Pro Tempore:',
+                                       'tipo' => 'combo',
+                                       'array' => array(array(0,"Não"),array(1,"Sim")),
+                                       'required' => true,
+                                       'size' => 20,
+                                       'col' => 2,
+                                       'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
                                        'linha' => 1),
                                array ( 'nome' => 'dtNom',
                                        'label' => 'Data da Nomeação:',

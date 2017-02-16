@@ -63,8 +63,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(9);
     $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_zebrado(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_dataImpressao(false);
     #$relatorio->set_totalRegistro(false);
     $relatorio->set_formCampos(array(
@@ -116,8 +114,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(8);
     $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_zebrado(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_log(false);

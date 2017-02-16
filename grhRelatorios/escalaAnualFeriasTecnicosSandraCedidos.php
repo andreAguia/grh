@@ -59,7 +59,6 @@ if($acesso)
     $relatorio->set_numGrupo(7);
     
     $relatorio->set_conteudo($result);
-    $relatorio->set_zebrado(false);
     $relatorio->set_dataImpressao(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_subTotal(false);    

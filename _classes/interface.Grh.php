@@ -917,7 +917,6 @@ class Grh
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
         $tabela->set_totalRegistro(false);
-        $tabela->set_zebrado(true);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
         
         # Limita o tamanho da tela
@@ -1017,7 +1016,6 @@ class Grh
         $relatorio->set_metodo(array(null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao"));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        $relatorio->set_zebrado(false);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);

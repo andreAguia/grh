@@ -75,7 +75,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     #$relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -229,7 +228,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -267,7 +265,6 @@ if($acesso)
     $relatorio->set_conteudo($conteudo);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -315,7 +312,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(false);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
@@ -359,7 +355,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -396,7 +391,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -437,7 +431,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -470,7 +463,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -511,7 +503,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(false);
     #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -550,7 +541,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
@@ -599,7 +589,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -642,7 +631,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -684,7 +672,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -731,7 +718,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -777,7 +763,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -821,7 +806,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -864,7 +848,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -910,7 +893,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -958,7 +940,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -1015,7 +996,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -1063,7 +1043,6 @@ if($acesso)
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_zebrado(true);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);

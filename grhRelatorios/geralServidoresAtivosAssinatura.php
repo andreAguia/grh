@@ -47,7 +47,7 @@ if($acesso)
     $relatorio->set_metodo(array(null,null,"get_lotacao"));
     
     $relatorio->set_conteudo($result);
-    $relatorio->set_zebrado(false);
+    
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

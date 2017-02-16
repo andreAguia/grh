@@ -209,12 +209,6 @@ if($acesso)
                'label' => 'Observação:',
                'tipo' => 'textarea',
                'size' => array(80,5))));
-
-    # Matrícula para o Log
-    $objeto->set_idUsuario($idUsuario);
-    
-    # Tira o zebrado
-    #$objeto->set_zebrado(FALSE);
     
     # Gráfico
     $imagem = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);            

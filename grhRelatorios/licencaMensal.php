@@ -63,7 +63,7 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_zebrado(false);
+    
     #$relatorio->set_bordaInterna(true);
     #$relatorio->set_cabecalho(false);
     $relatorio->set_formCampos(array(

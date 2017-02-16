@@ -40,7 +40,6 @@ if($acesso)
     $relatorio->set_width(array(100));
     $relatorio->set_align(array("left"));   
     
-    $relatorio->set_zebrado(FALSE);
     $relatorio->set_bordaInterna(TRUE);
     
     $relatorio->set_conteudo($result);

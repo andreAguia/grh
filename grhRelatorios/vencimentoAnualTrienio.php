@@ -78,9 +78,6 @@ if($acesso)
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
     $relatorio->set_botaoVoltar(false);
-    $relatorio->set_zebrado(true);
-    #$relatorio->set_bordaInterna(true);
-    #$relatorio->set_cabecalho(false);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'ano',
                          'label' => 'Ano:',

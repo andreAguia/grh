@@ -62,8 +62,7 @@ if($acesso)
     $relatorio->set_conteudo($result);
     $relatorio->set_linhaNomeColuna(false);
     #$relatorio->set_logDetalhe('Servidor: '.$pessoal->get_nome($matriculaGrh).' ('.$matriculaGrh.')');
-    $relatorio->set_zebrado(false);
-
+    
     $relatorio->set_formCampos(array(
                                array ('nome' => 'anoBase',
                                       'label' => 'Ano:',

@@ -73,8 +73,7 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
-                                     protempore,
-                                     tbcomissao.descricao,
+                                     concat(tbcomissao.descricao," ",if(protempore = 1,"<span class=\'label success\'>pro tempore</span>","-")) as descCargo,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao
@@ -117,10 +116,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Pro Tempore","Descrição","Data de Nomeação","Data de Exoneração"));
-    #$objeto->set_width(array(30,5,40,10,10));	
-    $objeto->set_align(array("left","center","left","center"));
-    $objeto->set_funcao(array (null,null,null,"date_to_php","date_to_php"));
+    $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
+    #$objeto->set_width(array(30,45,10,10));	
+    $objeto->set_align(array("left","left","center"));
+    $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

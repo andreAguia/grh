@@ -30,7 +30,7 @@ if($acesso)
     $servidor = new Pessoal();
     $select ='SELECT distinct tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbcomissao.descricao,
+                     concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
                      concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao," (",tbtipocomissao.vagas," vaga(s))") comissao,
                      tbservidor.idServidor,                 
                      tbperfil.nome
@@ -48,7 +48,7 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional','Nome','Descrição','Cargo','Lotação','Perfil'));
-    $relatorio->set_width(array(10,30,20,0,25,10));
+    #$relatorio->set_width(array(10,30,20,0,25,10));
     $relatorio->set_align(array("center","left","left","left","left"));
     $relatorio->set_classe(array(null,null,null,null,"Pessoal"));
     $relatorio->set_metodo(array(null,null,null,null,"get_Lotacao"));

@@ -73,7 +73,7 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
-                                     concat(tbcomissao.descricao," ",if(protempore = 1,"<span class=\'label success\'>pro tempore</span>","-")) as descCargo,
+                                     concat(tbcomissao.descricao," ",if(protempore = 1,"<span class=\'label success\'>pro tempore</span>","")) as descCargo,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao

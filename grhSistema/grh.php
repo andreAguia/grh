@@ -56,23 +56,26 @@ if($acesso)
         $menu1->add_link($linkVoltar,"left");
 
         # Relatórios
-        $linkRel = new Link("Relatorios","grhRelatorios.php");
-        $linkRel->set_class('button');
-        $linkRel->set_title('Relatórios dos Sistema');
-        $linkRel->set_accessKey('R');
-        $menu1->add_link($linkRel,"right");
+        $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+        $botaoRel = new Button();
+        $botaoRel->set_url("grhRelatorios.php");
+        $botaoRel->set_title("Relatórios dos Sistema");
+        $botaoRel->set_imagem($imagem1);
+        $menu1->add_link($botaoRel,"right");
+        
+        # Usuário
+        $imagem2 = new Imagem(PASTA_FIGURAS.'user.png',null,15,15);
+        $botaoUsu = new Button();
+        $botaoUsu->set_url("../../areaServidor/sistema/perfilUsuario.php");
+        $botaoUsu->set_title("Configurações do perfil do usuário");
+        $botaoUsu->set_imagem($imagem2);
+        $menu1->add_link($botaoUsu,"right");
         
         # Área do Servidor
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');
         $linkArea->set_title('Área do Servidor');
         $menu1->add_link($linkArea,"right");
-
-        # Estatística
-        $linkArea = new Link("Estatística","estatistica.php");
-        $linkArea->set_class('success button');
-        $linkArea->set_title('Informaçãoes estatísticas');
-        $menu1->add_link($linkArea,"right");            
         
         # Sobre
         $linkSobre = new Link("Sobre");

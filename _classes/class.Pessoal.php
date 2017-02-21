@@ -2319,7 +2319,7 @@ class Pessoal extends Bd
 	
 	# Fun��o que informa se a idServidor est� fazendo anivers�rio na data atual
 	#
-	# Par�metro: a matr�cula a ser pesquisada
+	# Parâmetro: a matrícula a ser pesquisada
 	
 	{
                 # Pega a data de nascimento		
@@ -2332,7 +2332,7 @@ class Pessoal extends Bd
                 # Divide a data 
                 $data = explode('/',$row[0]); 
                 $d = $data[0];   // dia
-                $m = $data[1];   // m�s
+                $m = $data[1];   // mês
                 
                 # Verifica se � hoje o anivers�rio
                 if ((intval(date('d')) == intval($d)) AND (intval(date('m')) == intval($m)))

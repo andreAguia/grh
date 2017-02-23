@@ -22,6 +22,7 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    $subFase = get('subFase',1);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -273,77 +274,81 @@ if($acesso)
             $btnVoltar->set_title('Volta para a página anterior');
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar,"left");
+            
+            # Servidores Ativos
+            if($subFase == 1){ 
+                $linkAtivo = new Link("Ativos","#");
+                $linkAtivo->set_class('button disabled');
+            }else{
+                $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
+                $linkAtivo->set_class('button');
+            }
+            $linkAtivo->set_title('Exibe os servidores ativos');
+            $menu->add_link($linkAtivo,"right");
 
-            # Relatórios
-            $btnRel = new Link("Relatorios");
-            $btnRel->set_class('button');
-            $btnRel->set_onClick("abreFechaDivId('RelServidor');");
-            $btnRel->set_title('Relatórios desse servidor');
-            $btnRel->set_accessKey('R');
-            $menu->add_link($btnRel,"right");
+            # Servidores Inativos
+            if($subFase == 1){ 
+                $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
+                $linkInativo->set_class('button');
+            }else{
+                $linkInativo = new Link("Inativos","#");
+                $linkInativo->set_class('button disabled');
+            }
+            $linkInativo->set_title('Exibe os servidores inativos');
+            $menu->add_link($linkInativo,"right");
+            
+            # Mapa do Cargo
+            $imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Mapa do Cargo");
+            $botaoRel->set_onClick("window.open('../grhRelatorios/mapaCargo.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem1);
+            $menu->add_link($botaoRel,"right");
+            
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
              
             $menu->show();
             
-            # Limita o tamanho da tela
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            
-            # Menu Relatório    
-            $div = new Div("RelServidor");
-            $div->abre();
-
-            $grid = new Grid("right");
-            $grid->abreColuna(3);
-
-            echo '<nav aria-label="You are here:" role="navigation">';
-            echo '<ul class="breadcrumbs">';
-
-            # Mapa do Cargo
-            echo '<li>';
-            $link = new Link("Mapa do Cargo","../grhRelatorios/mapaCargo.php?cargo=".$id);
-            $link->set_title("Exibe o mapa do cargo");
-            $link->set_janela(TRUE);    
-            $link->show();
-            echo '</li>';
-            
-            # Servidores Ativos
-            echo '<li>';
-            $link = new Link("Estatutários Ativos","../grhRelatorios/cargoEstatutarios.php?cargo=".$id);
-            $link->set_title("Exibe a lista de servidores estatutários com esse cargo");
-            $link->set_janela(TRUE);    
-            $link->show();
-            echo '</li>';
-
-            echo '</ul>';
-            echo '</nav>';
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            $div->fecha();
-            
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            
-            # Titulo
-            titulo('Servidores com o Cargo: '.$pessoal->get_nomeCargo($id));
-            br();
-            
-            # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores Ativos');       
-            $lista->set_situacao(1);
-            $lista->set_cargo($id);
-            $lista->show();
-           
-            # Lista de Servidores Inativos
-            $lista = new listaServidores('Servidores Inativos');
-            $lista->set_situacao(1);
-            $lista->set_situacaoSinal("<>");
-            $lista->set_cargo($id);
-            $lista->show();
+            if($subFase == 1){   
+                # Lista de Servidores Ativos
+                $lista = new listaServidores('Servidores Ativos - Cargo: '.$pessoal->get_nomeCargo($id));       
+                $lista->set_situacao(1);
+                $lista->set_cargo($id);
+                $lista->showTabela();
+            }else{   
+                # Lista de Servidores Inativos
+                $lista = new listaServidores('Servidores Inativos - Cargo: '.$pessoal->get_nomeCargo($id));       
+                $lista->set_situacao(1);
+                $lista->set_situacaoSinal("<>");
+                $lista->set_cargo($id);
+                $lista->showTabela();
+            }
             
             $grid->fechaColuna();
             $grid->fechaGrid();
+            break;
+            
+        case "relatorio" :
+            if($subFase == 1){   
+                # Lista de Servidores Ativos
+                $lista = new listaServidores('Servidores Ativos');       
+                $lista->set_situacao(1);
+                $lista->set_cargo($id);
+                $lista->showRelatorio();
+            }else{   
+                # Lista de Servidores Inativos
+                $lista = new listaServidores('Servidores Inativos');       
+                $lista->set_situacao(1);
+                $lista->set_situacaoSinal("<>");
+                $lista->set_cargo($id);
+                $lista->showRelatorio();
+            }
             break;
     }
     $page->terminaPagina();

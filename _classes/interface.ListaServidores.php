@@ -38,7 +38,6 @@ class listaServidores
     private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
     
     # Parâmetros do relatório
-    private $relatorio = FALSE;     // Exibe ou não o botão para relatório
     private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
     private $selectPaginacao = NULL;  // Guarda o texto acrescido ao select quando se tem paginação
     private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
@@ -404,7 +403,9 @@ class listaServidores
         # Relatório
         $relatorio = new Relatorio();
         $relatorio->set_titulo("Relatório de ".$this->nomeLista);
-        #$relatorio->set_subtitulo($subTitulo);
+        if(!is_null($this->subTitulo)){
+            $relatorio->set_subtitulo($this->subTitulo);
+        }
 
         $relatorio->set_label($label);
         #$relatorio->set_width($width);

@@ -84,6 +84,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Censo','?fase=censo','','','divMenuRelatorioGrh'); 
                 $menu->show();
             $callout->fecha();
             $divMenu2->fecha();
@@ -327,6 +328,16 @@ if($acesso)
             $menu = new Menu();
             $menu->add_item('titulo','Contatos');
             $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php'); 
+
+            $menu->show();
+            break;
+        
+        ######################################
+
+         case "censo";
+            $menu = new Menu();
+            $menu->add_item('titulo','Censo');
+            $menu->add_item('linkWindow','Relatório de Docentes da Universidade','../grhRelatorios/censoDocentes.php'); 
 
             $menu->show();
             break;

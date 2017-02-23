@@ -52,7 +52,7 @@ if($acesso)
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
-    $relatorio->set_width(array(10,30,30,0,10,10,10));
+    #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center","left","left"));
     $relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
     

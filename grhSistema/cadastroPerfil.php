@@ -262,25 +262,27 @@ if($acesso)
             # Voltar
             $linkVoltar = new Link("Voltar","?");
             $linkVoltar->set_class('button');
-            $linkVoltar->set_title('Voltar');
+            $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
             $menu1->add_link($linkVoltar,"left");
 
             # Servidores Ativos
-            $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
             if($subFase == 1){ 
+                $linkAtivo = new Link("Ativos","#");
                 $linkAtivo->set_class('button disabled');
             }else{
+                $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
                 $linkAtivo->set_class('button');
             }
             $linkAtivo->set_title('Exibe os servidores ativos');
             $menu1->add_link($linkAtivo,"right");
 
             # Servidores Inativos
-            $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
             if($subFase == 1){ 
+                $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
                 $linkInativo->set_class('button');
             }else{
+                $linkInativo = new Link("Inativos","#");
                 $linkInativo->set_class('button disabled');
             }
             $linkInativo->set_title('Exibe os servidores inativos');
@@ -296,21 +298,18 @@ if($acesso)
 
             $menu1->show();
             
-            # Titulo
             $servidor = new Pessoal();
-            titulo('Servidores '.$servidor->get_perfilNome($id).'s');
-            br();
             
             if($subFase == 1){           
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores Ativos');
+                $lista = new listaServidores('Servidores Ativos - Perfil: '.$pessoal->get_perfilNome($id));
                 $lista->set_situacao(1);
                 $lista->set_perfil($id);   
                 $lista->set_relatorio(TRUE);   
                 $lista->showTabela();
             }else{            
                 # Lista de Servidores Inativos
-                $lista = new listaServidores('Servidores Inativos');
+                $lista = new listaServidores('Servidores Inativos - Perfil: '.$pessoal->get_perfilNome($id));
                 $lista->set_situacao(1);
                 $lista->set_situacaoSinal("<>");
                 $lista->set_perfil($id);            

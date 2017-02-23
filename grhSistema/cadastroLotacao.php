@@ -311,12 +311,12 @@ if($acesso)
             $menu->add_link($btnVoltar,"left");
 
             # Relatórios
-            $btnRel = new Link("Relatorios");
-            $btnRel->set_class('button');
-            $btnRel->set_onClick("abreFechaDivId('RelServidor');");
-            $btnRel->set_title('Relatórios desse servidor');
-            $btnRel->set_accessKey('R');
-            $menu->add_link($btnRel,"right");
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_onClick("abreFechaDivId('RelServidor');");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
              
             $menu->show();
             
@@ -369,7 +369,7 @@ if($acesso)
             $lista = new listaServidores('Servidores Ativos');
             $lista->set_situacao(1);
             $lista->set_lotacao($id);            
-            $lista->show();
+            $lista->showTabela();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

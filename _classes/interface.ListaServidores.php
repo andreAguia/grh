@@ -23,6 +23,13 @@ class listaServidores
     private $situacaoSinal = "=";
     private $lotacao = null;    
     
+    # Parâmetro de edição
+    private $permiteEditar = TRUE;          # Indica se terá botão para acessar informções dos servidores
+    
+    # Outros
+    private $totReg = 0;     # total de registros encontrados
+    private $time_start = 0; # Contador de segundos gastos na pesquisa
+    
     # Parâmetros da paginação da listagem
     private $paginacao = false;			# Flag que indica se terá ou não paginação na lista
     private $paginacaoItens = 15;		# Quantidade de registros por página. 
@@ -31,9 +38,12 @@ class listaServidores
     private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
     
     # Parâmetros do relatório
+    private $relatorio = FALSE;     // Exibe ou não o botão para relatório
     private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
+    private $selectPaginacao = NULL;  // Guarda o texto acrescido ao select quando se tem paginação
     private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
-    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa    
+    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
+    
     ###########################################################
                 
     /**
@@ -83,15 +93,15 @@ class listaServidores
     ###########################################################
    
     /**
-     * Método show
+     * Método prepara
      * 
      * Exibe a lista
      *
      */	
-    public function show()
+    public function prepara()
     {
         # Pega o time inicial
-        $time_start = microtime(true);
+        $this->time_start = microtime(true);
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -208,8 +218,8 @@ class listaServidores
             # Texto do fieldset
             $texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
         
-            # Acrescenta a sql
-            $select.=' LIMIT '.$this->paginacaoInicial.','.$this->paginacaoItens;
+            # Acrescenta a sql para paginacao
+            $this->selectPaginacao =' LIMIT '.$this->paginacaoInicial.','.$this->paginacaoItens;
 
             # Botôes de Navegação das páginas 
             $proximo = $this->paginacaoInicial + $this->paginacaoItens;
@@ -280,8 +290,30 @@ class listaServidores
             }
             echo '</ul>';
             $div->fecha();
-        }       
+        }
+        
+        # Passa para as variaveis da classe
+        $this->select = $select;
+        $this->totReg = $totalRegistros;
+    }
+    
+    ###########################################################
+   
+    /**
+     * Método showTabela
+     * 
+     * Exibe a Tabela
+     *
+     */	
+    public function showTabela()
+    {
 
+        # Executa rotina interna
+        $this->prepara();
+        
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
         # Dados da Tabela
         $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
         $width = array(5,5,15,16,15,8,8,5,5);
@@ -293,13 +325,10 @@ class listaServidores
         # Pega a lista com o limit da tabulação
         titulo($this->nomeLista);
         
-        # Passa o select para a variavel da classe para podes ser usada no relatório
-        $this->select = $select;
+        # Executa o select juntando o selct e o select de paginacao
+        $conteudo = $servidor->select($this->select.$this->selectPaginacao,true);
         
-        # Executa o select
-        $conteudo = $servidor->select($select,true);
-        
-        if($totalRegistros == 0){
+        if($this->totReg == 0){
             br();
             $callout = new Callout();
             $callout->abre();
@@ -312,20 +341,26 @@ class listaServidores
             $tabela = new Tabela();
             
             $tabela->set_conteudo($conteudo);
-            $tabela->set_cabecalho($label,$width,$align);
+            $tabela->set_label($label);
+            #$tabela->set_width($width);
+            $tabela->set_align($align);
             #$tabela->set_titulo($this->nomeLista);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('servidor.php?fase=editar&id=');
+            if($this->permiteEditar){
+                $tabela->set_editar('servidor.php?fase=editar&id=');
+            }
             
-            if ($this->paginacao)
-                $tabela->set_rodape($texto.' ('.$itemInicial.' a '.$itemFinal.' de '.$totalRegistros.' Registros)');
+            if ($this->paginacao){
+                $tabela->set_rodape($texto.' ('.$itemInicial.' a '.$itemFinal.' de '.$this->totReg.' Registros)');
+            }
             
-            if(!is_null($this->matNomeId))
+            if(!is_null($this->matNomeId)){
                 $tabela->set_textoRessaltado($this->matNomeId);
+            }
             
             $tabela->show();
             
@@ -333,7 +368,7 @@ class listaServidores
             $time_end = microtime(true);
             
             # Calcula e exibe o tempo
-            $time = $time_end - $time_start;
+            $time = $time_end - $this->time_start;
             p(number_format($time, 4, '.', ',')." segundos","right","f10");
         }
     }
@@ -346,61 +381,38 @@ class listaServidores
      * Exibe a lista
      *
      */	
-    public function relatorio($select,$titulo,$subTitulo,$agrupamento = null)
+    public function showRelatorio()
     {
+        # Executa rotina interna
+        $this->prepara();
+        
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
-        # Coloca o agrupamento no select
-        if($agrupamento <> 0){
-            $select = str_replace("ORDER BY", "ORDER BY ".$agrupamento.", ", $select); 
-        }
-        
-        # Tipo de agrupamento
-        $arrayAgrupamento = array(array(0,"Sem Agrupamento"),
-                             array(5,"Lotação"),
-                             array(6,"Perfil"));
-
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($select,true);
+        $conteudo = $servidor->select($this->select,true);
         $totalRegistros = count($conteudo);
+        
+        # Dados da Tabela
+        $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
+        $width = array(5,5,15,16,15,8,8,5,5);
+        $align = array("center","center","left","left","left");
+        $function = array (null,"dv",null,null,null,null,"date_to_php");
+        $classe = array(null,null,null,"pessoal");
+        $metodo = array(null,null,null,"get_Cargo");
                 
         # Relatório
         $relatorio = new Relatorio();
-        $relatorio->set_titulo("Relatório de Servidores ".$titulo);
-        $relatorio->set_subtitulo($subTitulo);
+        $relatorio->set_titulo("Relatório de ".$this->nomeLista);
+        #$relatorio->set_subtitulo($subTitulo);
 
-        $relatorio->set_label(array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação"));
-        $relatorio->set_width(array(5,5,15,16,15,8,8,5,5));
-        $relatorio->set_align(array("center","center","left"));
-        $relatorio->set_funcao(array(null,"dv",null,null,null,null,"date_to_php"));
-        $relatorio->set_classe(array(null,null,null,"pessoal"));
-        $relatorio->set_metodo(array(null,null,null,"get_Cargo"));
-        
-        # Agrupamento
-        if($agrupamento <> 0){
-            $relatorio->set_subTotal(TRUE);
-            $relatorio->set_numGrupo($agrupamento-1);
-        }else{
-            $relatorio->set_subTotal(FALSE);
-        }
-        
-        
-        $relatorio->set_formCampos(array(
-                               array ('nome' => 'agrupamento',
-                                      'label' => 'Agrupamanto:',
-                                      'tipo' => 'combo',
-                                      'array' => $arrayAgrupamento,
-                                      'size' => 20,
-                                      'title' => 'Ano',
-                                      'padrao' => $agrupamento,
-                                      'onChange' => 'formPadrao.submit();',
-                                      'col' => 6,
-                                      'linha' => 1)));
-
-    $relatorio->set_formFocus('agrupamento');
-    $relatorio->set_formLink('servidor.php?fase=relatorio');
-
+        $relatorio->set_label($label);
+        #$relatorio->set_width($width);
+        $relatorio->set_align($align);
+        $relatorio->set_funcao($function);
+        $relatorio->set_classe($classe);
+        $relatorio->set_metodo($metodo);
+        $relatorio->set_subTotal(FALSE);
         $relatorio->set_conteudo($conteudo);    
         $relatorio->show();
     }

@@ -22,6 +22,7 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    $subFase = get('subFase',1);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -251,33 +252,91 @@ if($acesso)
             break;
             
         case "listaServidores" :
-            # Botão voltar
-            botaoVoltar('?');
-            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
 
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Voltar');
+            $linkVoltar->set_accessKey('V');
+            $menu1->add_link($linkVoltar,"left");
+
+            # Servidores Ativos
+            $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
+            if($subFase == 1){ 
+                $linkAtivo->set_class('button disabled');
+            }else{
+                $linkAtivo->set_class('button');
+            }
+            $linkAtivo->set_title('Exibe os servidores ativos');
+            $menu1->add_link($linkAtivo,"right");
+
+            # Servidores Inativos
+            $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
+            if($subFase == 1){ 
+                $linkInativo->set_class('button');
+            }else{
+                $linkInativo->set_class('button disabled');
+            }
+            $linkInativo->set_title('Exibe os servidores inativos');
+            $menu1->add_link($linkInativo,"right");
+            
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem2);
+            $menu1->add_link($botaoRel,"right");
+
+            $menu1->show();
+            
             # Titulo
             $servidor = new Pessoal();
             titulo('Servidores '.$servidor->get_perfilNome($id).'s');
             br();
             
-            # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores Ativos');
-            $lista->set_situacao(1);
-            $lista->set_perfil($id);            
-            $lista->show();
-            
-            # Lista de Servidores Inativos
-            $lista = new listaServidores('Servidores Inativos');
-            $lista->set_situacao(1);
-            $lista->set_situacaoSinal("<>");
-            $lista->set_perfil($id);            
-            $lista->show();
+            if($subFase == 1){           
+                # Lista de Servidores Ativos
+                $lista = new listaServidores('Servidores Ativos');
+                $lista->set_situacao(1);
+                $lista->set_perfil($id);   
+                $lista->set_relatorio(TRUE);   
+                $lista->showTabela();
+            }else{            
+                # Lista de Servidores Inativos
+                $lista = new listaServidores('Servidores Inativos');
+                $lista->set_situacao(1);
+                $lista->set_situacaoSinal("<>");
+                $lista->set_perfil($id);            
+                $lista->showTabela();
+            }
             
             $grid->fechaColuna();
             $grid->fechaGrid();
+            break;
+            
+        case "relatorio" :
+            if($subFase == 1){        
+                # Lista de Servidores Ativos
+                $lista = new listaServidores('Servidores Ativos');
+                $lista->set_situacao(1);
+                $lista->set_perfil($id);   
+                $lista->set_relatorio(TRUE);   
+                $lista->showRelatorio();
+            }else{            
+                # Lista de Servidores Inativos
+                $lista = new listaServidores('Servidores Inativos');
+                $lista->set_situacao(1);
+                $lista->set_situacaoSinal("<>");
+                $lista->set_perfil($id);            
+                $lista->showRelatorio();
+            }
             break;
         
         case "grafico" :

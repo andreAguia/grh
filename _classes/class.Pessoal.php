@@ -3197,5 +3197,22 @@ class Pessoal extends Bd
 		return $numIdservidor;
 	}
 	
-	###########################################################
+	#####################################################################################
+	
+	/**
+	 * Método get_nomeConcurso
+	 * 
+	 * Informa o nome de um idconcurso	 */
+	
+	public function get_nomeConcurso($idconcurso)
+	{
+            $select = 'SELECT nome                            
+                         FROM tbconcurso
+                        WHERE idconcurso = '.$idconcurso;
+           
+             $row = parent::select($select,false);
+             return $row[0];
+	}
+
+	###########################################################################################
 }

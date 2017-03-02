@@ -75,7 +75,9 @@ if($acesso)
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');
         $linkArea->set_title('Área do Servidor');
-        $menu1->add_link($linkArea,"right");
+		if(Verifica::acesso($idUsuario,1)){		// por enquanto
+	        $menu1->add_link($linkArea,"right");
+	    }        
         
         # Sobre
         $linkSobre = new Link("Sobre");

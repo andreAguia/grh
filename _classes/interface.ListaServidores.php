@@ -36,6 +36,9 @@ class listaServidores
     private $paginacaoInicial = 0;		# A paginação inicial
     private $pagina = 1;			# Página atual
     private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
+    private $texto = NULL;                      # texto a ser exibido no rodapé indicando quantas páginas e a página atual
+    private $itemFinal = NULL;
+    private $itemInicial = NULL;
     
     # Parâmetros do relatório
     private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
@@ -171,7 +174,7 @@ class listaServidores
         # concurso
         if(!is_null($this->concurso)){
             $select .= ' AND (tbservidor.idConcurso = "'.$this->concurso.'")'; 
-            $this->subTitulo .= "concurso: ". $this->concurso."<br/>";
+            $this->subTitulo .= "concurso: ".$servidor->get_nomeConcurso($this->concurso)."<br/>";
         }
         
         # lotacao
@@ -198,7 +201,7 @@ class listaServidores
         }
                 
         # Calculos da paginaçao
-        $texto = null;
+        $this->texto = null;
         if($this->paginacao)
         {
             # Calcula o total de páginas
@@ -208,14 +211,14 @@ class listaServidores
             $this->pagina = ceil($this->paginacaoInicial/$this->paginacaoItens)+1;
 
             # Calcula o item inicial e final da página
-            $itemFinal = $this->pagina * $this->paginacaoItens;
-            $itemInicial = $itemFinal - $this->paginacaoItens+1;
+            $this->itemFinal = $this->pagina * $this->paginacaoItens;
+            $this->itemInicial = $this->itemFinal - $this->paginacaoItens+1;
 
-            if ($itemFinal > $totalRegistros)
-            $itemFinal = $totalRegistros;
+            if ($this->itemFinal > $totalRegistros)
+            $this->itemFinal = $totalRegistros;
 
             # Texto do fieldset
-            $texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
+            $this->texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
         
             # Acrescenta a sql para paginacao
             $this->selectPaginacao =' LIMIT '.$this->paginacaoInicial.','.$this->paginacaoItens;
@@ -354,7 +357,7 @@ class listaServidores
             }
             
             if ($this->paginacao){
-                $tabela->set_rodape($texto.' ('.$itemInicial.' a '.$itemFinal.' de '.$this->totReg.' Registros)');
+                $tabela->set_rodape($this->texto.' ('.$this->itemInicial.' a '.$this->itemFinal.' de '.$this->totReg.' Registros)');
             }
             
             if(!is_null($this->matNomeId)){

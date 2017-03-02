@@ -95,16 +95,16 @@ if($acesso)
             $menu1->add_link($linkBotao1,"left");
             
             # Relatórios
-            $linkBotao3 = new Link("Relatório");
-            $linkBotao3->set_class('button');        
-            $linkBotao3->set_title('Relatório dessa pesquisa');
-            $linkBotao3->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $linkBotao3->set_accessKey('R');
-            $menu1->add_link($linkBotao3,"right");
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel,"right");
                         
             # Novo Servidor
-            $linkBotao2 = new Link("Incluir Novo Servidor","servidorInclusao.php");
-            $linkBotao2->set_class('button success');        
+            $linkBotao2 = new Link("Novo Servidor","servidorInclusao.php");
+            $linkBotao2->set_class('button');        
             $linkBotao2->set_title('Incluir Novo Servidor');            
             $linkBotao2->set_accessKey('I');
             $menu1->add_link($linkBotao2,"right");
@@ -249,28 +249,7 @@ if($acesso)
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(12);
                 
-                $lista->show();
-                
-                # Pega o select atualizado
-                $select = $lista->get_select();
-                $subTitulo = $lista->get_subTitulo();
-                $titulo = $lista->get_titulo();
-
-                # Retira o LIMIT que ajuda na paginação
-                # (no relatório não tem paginação)
-                $palavraProcurada = 'LIMIT';                     // Define a palavra do select qu ser´aprocurada
-                $posicao = stripos($select, $palavraProcurada);  // Verifica se ela está no select
-
-                # Envia o select por session
-                if($posicao === FALSE){   // Verifica a posição. o === é necessário para não confundir o false com o 0
-                    set_session('sessionSelect',$select);  
-                }else{
-                    set_session('sessionSelect',strstr($select, 'LIMIT', true));
-                }
-
-                # Envia o Título por session
-                set_session('sessionSubTitulo',$subTitulo); 
-                set_session('sessionTitulo',$titulo);
+                $lista->showTabela();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -290,8 +269,33 @@ if($acesso)
 
         # Cria um relatório com a seleção atual
         case "relatorio" :
+            # Lista de Servidores Ativos
             $lista = new listaServidores('Servidores');
-            $lista->relatorio($select,$titulo,$subTitulo,$agrupamentoEscolhido);
+            if($parametroNomeMat <> NULL){
+                $lista->set_matNomeId($parametroNomeMat);
+            }
+            
+            if($parametroCargo <> "*"){
+                $lista->set_cargo($parametroCargo);
+            }
+
+            if($parametroCargoComissao <> "*"){
+                $lista->set_cargoComissao($parametroCargoComissao);
+            }
+
+            if($parametroLotacao <> "*"){
+                $lista->set_lotacao($parametroLotacao);
+            }
+            
+            if($parametroPerfil <> "*"){
+                $lista->set_perfil($parametroPerfil);
+            }
+
+            if($parametroSituacao <> "*"){
+                $lista->set_situacao($parametroSituacao);
+            }
+            
+            $lista->showRelatorio();
             break; 
     }
     $page->terminaPagina();

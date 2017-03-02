@@ -325,8 +325,7 @@ if($acesso)
                 # Lista de Servidores Ativos
                 $lista = new listaServidores('Servidores Ativos');
                 $lista->set_situacao(1);
-                $lista->set_perfil($id);   
-                $lista->set_relatorio(TRUE);   
+                $lista->set_perfil($id);    
                 $lista->showRelatorio();
             }else{            
                 # Lista de Servidores Inativos

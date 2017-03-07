@@ -31,10 +31,9 @@ if($acesso)
     set_session('sessionPaginacao',$paginacao);    
     
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -237,60 +236,105 @@ if($acesso)
             break;
 
         case "listaServidores" :
-            # Botão voltar
-            botaoVoltar('?');
-            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
 
-            # Titulo
-            $servidor = new Pessoal();
-            titulo('Servidores ocupando o cargo: '.$servidor->get_nomeCargoComissao($id));
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu1->add_link($linkVoltar,"left");
+            
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_onClick("window.open('?fase=relatorio&&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem2);
+            $menu1->add_link($botaoRel,"right");
 
-            $select ='SELECT distinct tbservidor.idFuncional, 
-                             tbpessoa.nome,
-                             tbcomissao.descricao,
-                             tbcargo.nome,
-                             tbservidor.idServidor,
-                             tbperfil.nome
-                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                               
-                                           LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                                           LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
-                                           LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
-                                                JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbservidor.situacao = 1
-                         AND tbcomissao.dtExo is NULL
-                         AND tbcomissao.idTipoComissao = '.$id.'
-                    ORDER BY comissao, tbpessoa.nome';
+            $menu1->show();
+            
+            # Pega o nome do cargo
+            $servidor = new Pessoal();  
+            $nomeCargo = $pessoal->get_nomeCargoComissao($id);
+            
+            # Lista de Servidores Ativos
+            $lista = new listaServidores('Servidores Ativos no Cargo de '.$nomeCargo);
+            $lista->set_situacao(1);
+            $lista->set_cargoComissao($nomeCargo);
+            $lista->showTabela();
+            
+            #---------------------            
+            # Histórico do cargo
+            #---------------------
+            
+            # Cria um menu
+            $menu = new MenuBar();
+			
+			# Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_onClick("window.open('../grhRelatorios/cargosComissionadosHistorico.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
 
-            # Conecta com o banco de dados
-            $servidor = new Pessoal();
+            $menu->show();
+			
+            titulo('Histórico');
+            
+            # select
+            $select ='SELECT distinct tbservidor.idFuncional,
+                            tbservidor.matricula,
+                            tbpessoa.nome,
+                            tbcomissao.dtNom,
+                            tbcomissao.dtExo,
+                            concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
+                            concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                       FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                       LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                            JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                       WHERE tbtipocomissao.ativo and tbtipocomissao.idTipoComissao = '.$id.'                    
+                  ORDER BY 7, 6, 4 desc';
+
             $result = $servidor->select($select);
-            $contador = $servidor->count($select); 
-
-            # Parametros da tabela
-            $label = array('idFuncional','Nome','Descrição','Cargo','Lotação','Perfil');
-            #$width = array(10,20,20,15,20,15);	
-            $align = array("center","left","left");
-            #$funcao = array("dv");
-            $classe = array("","","","","Pessoal");
-            $metodo = array("","","","","get_lotacao");
-
+            $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição','Símbolo');
+            $align = array("center","center","left","center","center","left");
+            $function = array(null,"dv",null,"date_to_php","date_to_php");
+           
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
+            #$tabela->set_width($width);
             $tabela->set_align($align);
-            #$tabela->set_funcao($funcao);
-            $tabela->set_classe($classe);
-            $tabela->set_metodo($metodo);
-            #$tabela->set_titulo($titulo);
-
+            $tabela->set_funcao($function);
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
+                                                    'valor' => NULL,
+                                                    'operador' => '=',
+                                                    'id' => 'vigente')));
             $tabela->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();
+            break;
+        
+        case "relatorio" :
+            # Pega o nome do cargo
+            $servidor = new Pessoal();  
+            $nomeCargo = $pessoal->get_nomeCargoComissao($id);
+            
+            # Lista de Servidores Ativos
+            $lista = new listaServidores('Servidores Ativos');
+            $lista->set_situacao(1);
+            $lista->set_cargoComissao($nomeCargo);
+            $lista->showRelatorio();
             break;
     }
     $page->terminaPagina();

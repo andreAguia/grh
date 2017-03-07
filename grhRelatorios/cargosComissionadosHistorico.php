@@ -20,6 +20,10 @@ if($acesso)
 {    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+	
+	# Pega o cargo
+    $cargo = get('cargo');
+	
 
     # Começa uma nova página
     $page = new Page();			
@@ -38,13 +42,18 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                WHERE tbtipocomissao.ativo                     
-           ORDER BY 7, 6, 4';
+                WHERE tbtipocomissao.ativo';
+				
+	if(!is_null($cargo)){
+		$select .= ' AND tbtipocomissao.idTipoComissao = '.$cargo;
+	}
+			                    
+    $select .= ' ORDER BY 7, 6, 4 desc';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
+    $relatorio->set_titulo('Relatório Histórico de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados pelo Símbolo - Ordenados Cronologicamente');
     $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição'));
     #$relatorio->set_width(array(10,10,30,15,15,20,0));

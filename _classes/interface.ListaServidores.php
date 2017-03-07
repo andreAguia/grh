@@ -326,6 +326,7 @@ class listaServidores
         
         # Pega a lista com o limit da tabulação
         titulo($this->nomeLista);
+        #echo $this->select;
         
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select.$this->selectPaginacao,true);
@@ -336,9 +337,7 @@ class listaServidores
             $callout->abre();
                 p('Nenhum item encontrado !!','center');
             $callout->fecha();
-        }
-        else
-        {
+        }else{
             # Monta a tabela
             $tabela = new Tabela();
             

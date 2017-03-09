@@ -241,24 +241,65 @@ if($acesso)
             $grid->abreColuna(12);
             
             # Cria um menu
-            $menu1 = new MenuBar();
+            $menu = new MenuBar();
 
             # Voltar
             $linkVoltar = new Link("Voltar","?");
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
-            $menu1->add_link($linkVoltar,"left");
+            $menu->add_link($linkVoltar,"left");
             
-            # Relatório
+            # Relatórios
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("window.open('?fase=relatorio&&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_onClick("abreFechaDivId('RelServidor');");
             $botaoRel->set_imagem($imagem2);
-            $menu1->add_link($botaoRel,"right");
+            $menu->add_link($botaoRel,"right");
+             
+            $menu->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            # Menu Relatório    
+            $div = new Div("RelServidor");
+            $div->abre();
 
-            $menu1->show();
+            $grid = new Grid("right");
+            $grid->abreColuna(3);
+
+            echo '<nav aria-label="You are here:" role="navigation">';
+            echo '<ul class="breadcrumbs">';
+
+            # Servidores
+            echo '<li>';
+            $link = new Link("Servidores Ativos","?fase=relatorio&&id=".$id);
+            $link->set_title("Exibe a Lista de Servidores");
+            $link->set_janela(TRUE);    
+            $link->show();
+            echo '</li>';
+
+            # Histórico
+            echo '<li>';
+            $link = new Link("Histórico","../grhRelatorios/cargosComissionadosHistorico.php?cargo=".$id);
+            $link->set_title("Exibe a Lista de aniversariantes deste setor");
+            #$link->set_class("disabled");
+            $link->set_janela(TRUE);    
+            $link->show();
+            echo '</li>';
+
+            echo '</ul>';
+            echo '</nav>';
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            $div->fecha();
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
             
             # Pega o nome do cargo
             $servidor = new Pessoal();  
@@ -273,19 +314,6 @@ if($acesso)
             #---------------------            
             # Histórico do cargo
             #---------------------
-            
-            # Cria um menu
-            $menu = new MenuBar();
-			
-			# Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("window.open('../grhRelatorios/cargosComissionadosHistorico.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $botaoRel->set_imagem($imagem2);
-            $menu->add_link($botaoRel,"right");
-
-            $menu->show();
 			
             titulo('Histórico');
             

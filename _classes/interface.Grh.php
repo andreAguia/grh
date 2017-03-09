@@ -58,12 +58,12 @@ class Grh
             
         # Cadastro de Servidores 
         $grid = new Grid();
-        $grid->abreColuna(12,4,2);
+        $grid->abreColuna(12,4,3);
             
         titulo('Servidores');
         br();
         
-        $tamanhoImage = 150;
+        $tamanhoImage = 180;
         $menu = new MenuGrafico(1);
         
         $botao = new BotaoGrafico();
@@ -81,13 +81,13 @@ class Grh
         ##########################################################
             
         # Tabelas Auxiliares 
-        $grid->abreColuna(12,8,4);        
+        $grid->abreColuna(12,8,5);        
            
         titulo('Tabelas Auxiliares');           
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(5);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
@@ -152,31 +152,17 @@ class Grh
         $botao->set_title('Cadastro de Tipos de Licenças');
         $botao->set_accesskey('b');
         $menu->add_item($botao);
-
-        $menu->show();
-        $grid->fechaColuna();
-                        
-        ##############################################################################
-            
-        # Área Especial
-        $grid->abreColuna(12,2,2);
-        titulo('Área Especial');
-        br();
-
-        $tamanhoImage = 60;
-        $menu = new MenuGrafico(1);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
-        $botao->set_url('areaferias.php');
+        #$botao->set_url('areaferias.php');
         $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Férias');
         $botao->set_accesskey('F');
         $menu->add_item($botao);
-        
+
         $menu->show();
         $grid->fechaColuna();
-        br(); 
 		       
         ###############################################################################################
             
@@ -205,13 +191,12 @@ class Grh
         $grid2->fechaGrid();
         
         $grid->fechaColuna();
-        #$grid->fechaGrid();
         br();        
         ##########################################################
             
         # Legislação
         #$grid = new Grid();
-        $grid->abreColuna(12,4,4);
+        $grid->abreColuna(12,6,4);
 
             titulo('Legislação');
             br();
@@ -222,13 +207,12 @@ class Grh
             $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");          
             $menu->show();
         
-        $grid->fechaColuna();
-        
+        $grid->fechaColuna();        
         
         ##########################################################
-        # links externos
         
-        	$grid->abreColuna(12,12,8);
+        # links externos
+        $grid->abreColuna(12,12,8);
             titulo('Links Externos');
             br();
             
@@ -274,6 +258,10 @@ class Grh
             $menu->show();
         
         $grid->fechaColuna();
+        
+        ##########################################################
+        
+        # Tabelas Secundárias
         if(Verifica::acesso($idUsuario,1)){
             $grid->abreColuna(12,12);            
 

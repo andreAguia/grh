@@ -48,7 +48,7 @@ if($acesso)
 		$select .= ' AND tbtipocomissao.idTipoComissao = '.$cargo;
 	}
 			                    
-    $select .= ' ORDER BY 7, 6, 4 desc';
+    $select .= ' ORDER BY 7, tbcomissao.descricao, 4 desc';
 
     $result = $servidor->select($select);
 

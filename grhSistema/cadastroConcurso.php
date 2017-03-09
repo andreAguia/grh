@@ -255,7 +255,7 @@ if($acesso)
             }
             $linkInativo->set_title('Exibe os servidores inativos');
             $menu1->add_link($linkInativo,"right");
-            
+             
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
             $botaoRel = new Button();
@@ -268,13 +268,13 @@ if($acesso)
 
             if($subFase == 1){
 	            # Lista de Servidores Ativos
-	            $lista = new listaServidores('Servidores Ativos desse Concurso');
+	            $lista = new listaServidores('Servidores Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
 	            $lista->set_situacao(1);
 	            $lista->set_concurso($id);            
 	            $lista->showTabela();
             }else{
 	            # Lista de Servidores Inativos
-	            $lista = new listaServidores('Servidores Inativos desse Concurso');
+	            $lista = new listaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
 	            $lista->set_situacao(1);
 	            $lista->set_situacaoSinal("<>");
 	            $lista->set_concurso($id);            

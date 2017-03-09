@@ -14,14 +14,14 @@ class listaServidores
     private $nomeLista = null;  # Nome da lista que aparece no título
     
     # Parâmetros de Pesquisa
-    private $matNomeId = null;  # Busca por matricula nome ou id em um só campos
-    private $cargo = null;
-    private $cargoComissao = null;
-    private $perfil = null;
-    private $concurso = null;
-    private $situacao = null;
+    private $matNomeId = NULL;  # Busca por matricula nome ou id em um só campos
+    private $cargo = NULL;
+    private $cargoComissao = NULL;
+    private $perfil = NULL;
+    private $concurso = NULL;
+    private $situacao = NULL;
     private $situacaoSinal = "=";
-    private $lotacao = null;    
+    private $lotacao = NULL;    
     
     # Parâmetro de edição
     private $permiteEditar = TRUE;          # Indica se terá botão para acessar informções dos servidores
@@ -31,7 +31,7 @@ class listaServidores
     private $time_start = 0; # Contador de segundos gastos na pesquisa
     
     # Parâmetros da paginação da listagem
-    private $paginacao = false;			# Flag que indica se terá ou não paginação na lista
+    private $paginacao = FALSE;			# Flag que indica se terá ou não paginação na lista
     private $paginacaoItens = 15;		# Quantidade de registros por página. 
     private $paginacaoInicial = 0;		# A paginação inicial
     private $pagina = 1;			# Página atual
@@ -41,10 +41,10 @@ class listaServidores
     private $itemInicial = NULL;
     
     # Parâmetros do relatório
-    private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
+    private $select = NULL;     // Guarda o select para ser recuperado pela rotina de relatório
     private $selectPaginacao = NULL;  // Guarda o texto acrescido ao select quando se tem paginação
-    private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
-    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
+    private $titulo = NULL;     // guarda o título do relatório que é montado a partir da pesquisa
+    private $subTitulo = NULL;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
     
     ###########################################################
                 
@@ -100,10 +100,10 @@ class listaServidores
      * Exibe a lista
      *
      */	
-    public function prepara()
+    private function prepara()
     {
         # Pega o time inicial
-        $this->time_start = microtime(true);
+        $this->time_start = microtime(TRUE);
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();

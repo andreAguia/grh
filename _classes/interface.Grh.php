@@ -17,6 +17,8 @@ class Grh
     {        
         # tag do cabeçalho
         echo '<header>';
+		
+		
         
         $cabec = new Div('center');
         $cabec->abre();
@@ -56,12 +58,12 @@ class Grh
             
         # Cadastro de Servidores 
         $grid = new Grid();
-        $grid->abreColuna(12,4,3);
+        $grid->abreColuna(12,4,2);
             
         titulo('Servidores');
         br();
         
-        $tamanhoImage = 180;
+        $tamanhoImage = 150;
         $menu = new MenuGrafico(1);
         
         $botao = new BotaoGrafico();
@@ -73,12 +75,13 @@ class Grh
         $menu->add_item($botao);
 
         $menu->show();
+		br(); 
         $grid->fechaColuna();
         
         ##########################################################
             
         # Tabelas Auxiliares 
-        $grid->abreColuna(12,8,5);        
+        $grid->abreColuna(12,8,4);        
            
         titulo('Tabelas Auxiliares');           
         br();
@@ -153,7 +156,29 @@ class Grh
         $menu->show();
         $grid->fechaColuna();
                         
-        ##########################################################
+        ##############################################################################
+            
+        # Área Especial
+        $grid->abreColuna(12,2,2);
+        titulo('Área Especial');
+        br();
+
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(1);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Férias');
+        $botao->set_url('areaferias.php');
+        $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Férias');
+        $botao->set_accesskey('F');
+        $menu->add_item($botao);
+        
+        $menu->show();
+        $grid->fechaColuna();
+        br(); 
+		       
+        ###############################################################################################
             
         # Alertas
         $grid->abreColuna(12,6,4);
@@ -186,7 +211,7 @@ class Grh
             
         # Legislação
         #$grid = new Grid();
-        $grid->abreColuna(12,6,4);
+        $grid->abreColuna(12,4,4);
 
             titulo('Legislação');
             br();
@@ -198,10 +223,12 @@ class Grh
             $menu->show();
         
         $grid->fechaColuna();
-        $grid->abreColuna(12,12,8);
+        
         
         ##########################################################
+        # links externos
         
+        	$grid->abreColuna(12,12,8);
             titulo('Links Externos');
             br();
             

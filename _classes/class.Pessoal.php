@@ -3206,7 +3206,7 @@ class Pessoal extends Bd
 	
 	public function get_nomeConcurso($idconcurso)
 	{
-            $select = 'SELECT nome                            
+            $select = 'SELECT CONCAT(anobase," - ",regime)                          
                          FROM tbconcurso
                         WHERE idconcurso = '.$idconcurso;
            

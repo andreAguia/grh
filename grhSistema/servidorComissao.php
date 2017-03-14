@@ -116,7 +116,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
+    $objeto->set_label(array("Cargo","Nome Completo do Cargo","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
     $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
@@ -170,7 +170,7 @@ if($acesso)
                                        'title' => 'Tipo dp Cargo em Comissão',
                                        'linha' => 1),
                                array ( 'nome' => 'descricao',                                   
-                                       'label' => 'Descrição ou Nome especificado do cargo:',
+                                       'label' => 'Nome Completo do Cargo:',
                                        'tipo' => 'texto',
                                        'required' => true,
                                        'size' => 80,

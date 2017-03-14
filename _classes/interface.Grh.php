@@ -779,8 +779,8 @@ class Grh
             $tabela = new tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
-            $tabela->set_width(array(30,20,15,15,10,10));
-            $tabela->set_align(array("center"));
+            #$tabela->set_width(array(30,20,15,15,10,10));
+            $tabela->set_align(array("left"));
             $tabela->set_funcao(array(null,null,"formataMoeda"));
             $tabela->set_classe(array(null,null,null,'pessoal','pessoal'));
             $tabela->set_metodo(array(null,null,null,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));

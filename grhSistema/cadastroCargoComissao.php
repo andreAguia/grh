@@ -304,9 +304,10 @@ if($acesso)
             # Pega o nome do cargo
             $servidor = new Pessoal();  
             $nomeCargo = $pessoal->get_nomeCargoComissao($id);
+            $simbolo = $pessoal->get_cargoComissaoSimbolo($id);
             
             # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores Ativos no Cargo de '.$nomeCargo);
+            $lista = new listaServidores('Servidores Ativos no Cargo de '.$nomeCargo.' ('.$simbolo.')');
             $lista->set_situacao(1);
             $lista->set_cargoComissao($nomeCargo);
             $lista->showTabela();
@@ -332,7 +333,7 @@ if($acesso)
                   ORDER BY 7, 6, 4 desc';
 
             $result = $servidor->select($select);
-            $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição','Símbolo');
+            $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo');
             $align = array("center","center","left","center","center","left");
             $function = array(null,"dv",null,"date_to_php","date_to_php");
            

@@ -1544,6 +1544,24 @@ class Pessoal extends Bd
 	/**
 	 * Método get_cargoComissaoVagas
 	 * 
+	 * Exibe o símbolo de um determinado cargo em comissao
+	 */
+	
+	public function get_cargoComissaoSimbolo($id)
+	{
+            $select = 'SELECT simbolo                             
+                         FROM tbtipocomissao 
+                        WHERE idTipoComissao = '.$id;
+           
+            $row = parent::select($select,false);		
+            return $row[0];
+	}
+
+	###########################################################
+	
+	/**
+	 * Método get_cargoComissaoVagas
+	 * 
 	 * Exibe o n�mero de vagas em um determinado cargo em comissao
 	 */
 	

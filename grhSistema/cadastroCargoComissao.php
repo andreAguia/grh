@@ -330,7 +330,7 @@ if($acesso)
                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                             JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.ativo and tbtipocomissao.idTipoComissao = '.$id.'                    
-                  ORDER BY 7, 6, 4 desc';
+                  ORDER BY 7, tbcomissao.descricao, 4 desc';
 
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo');

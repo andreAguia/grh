@@ -38,7 +38,8 @@ if($acesso)
                      tbcomissao.dtNom,
                      tbcomissao.dtExo,
                      concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
-                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
+                     tbcomissao.descricao
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)

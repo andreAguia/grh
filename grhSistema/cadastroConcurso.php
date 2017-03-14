@@ -268,14 +268,14 @@ if($acesso)
 
             if($subFase == 1){
 	            # Lista de Servidores Ativos
-	            $lista = new listaServidores('Servidores Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
-	            $lista->set_situacao(1);
+	            $lista = new listaServidores('Servidores Estatutários Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+	            $lista->set_situacao(1);				
 	            $lista->set_concurso($id);            
 	            $lista->showTabela();
             }else{
 	            # Lista de Servidores Inativos
 	            $lista = new listaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
-	            $lista->set_situacao(1);
+	            $lista->set_situacao(1);				
 	            $lista->set_situacaoSinal("<>");
 	            $lista->set_concurso($id);            
 	            $lista->showTabela();
@@ -289,13 +289,13 @@ if($acesso)
             if($subFase == 1){        
                 # Lista de Servidores Ativos
                 $lista = new listaServidores('Servidores Ativos');
-                $lista->set_situacao(1);
+                $lista->set_situacao(1);				
 	            $lista->set_concurso($id);   
                 $lista->showRelatorio();
             }else{            
                 # Lista de Servidores Inativos
                 $lista = new listaServidores('Servidores Inativos');
-               $lista->set_situacao(1);
+               	$lista->set_situacao(1);				
 	            $lista->set_situacaoSinal("<>");
 	            $lista->set_concurso($id);         
                 $lista->showRelatorio();
@@ -319,7 +319,7 @@ if($acesso)
 
             $servidores = $pessoal->select($selectGrafico);
             
-            titulo('Servidores por Concurso');
+            titulo('Servidores Estatutários Concursados por Concurso');
             
             $grid3 = new Grid();
             $grid3->abreColuna(4);

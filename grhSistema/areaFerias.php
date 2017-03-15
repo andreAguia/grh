@@ -28,11 +28,8 @@ if($acesso)
     
     # Pega os parâmetros
     $parametroNomeMat = retiraAspas(post('parametroNomeMat',get_session('parametroNomeMat')));
-    $parametroCargo = post('parametroCargo',get_session('parametroCargo','*'));
-    $parametroCargoComissao = post('parametroCargoComissao',get_session('parametroCargoComissao','*'));
+    $parametroAnoExercicio = post('parametroAnoExercicio',get_session('parametroAnoExercicio',date("Y")));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
-    $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
-    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
     
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento',0);
@@ -44,11 +41,8 @@ if($acesso)
         
     # Joga os parâmetros par as sessions
     set_session('parametroNomeMat',$parametroNomeMat);
-    set_session('parametroCargo',$parametroCargo);
-    set_session('parametroCargoComissao',$parametroCargoComissao);
+    set_session('parametroAnoExercicio',$parametroAnoExercicio);
     set_session('parametroLotacao',$parametroLotacao);
-    set_session('parametroPerfil',$parametroPerfil);
-    set_session('parametroSituacao',$parametroSituacao);
     
     # Verifica a paginacão
     $paginacao = get('paginacao',get_session('parametroPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
@@ -101,13 +95,6 @@ if($acesso)
             $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
-                        
-            # Novo Servidor
-            $linkBotao2 = new Link("Novo Servidor","servidorInclusao.php");
-            $linkBotao2->set_class('button');        
-            $linkBotao2->set_title('Incluir Novo Servidor');            
-            $linkBotao2->set_accessKey('I');
-            $menu1->add_link($linkBotao2,"right");
             $menu1->show();
 
             # Parâmetros
@@ -130,50 +117,16 @@ if($acesso)
                                           ORDER BY 1');
                 array_unshift($result,array('*','-- Todos --'));
 
-                $controle = new Input('parametroSituacao','combo','Situação:',1);
-                $controle->set_size(30);
-                $controle->set_title('Filtra por Situação');
+                $controle = new Input('parametroAnoExercicio','texto','Ano Exercício:',1);
+                $controle->set_size(8);
+                $controle->set_title('Filtra por Ano exercício');
                 $controle->set_array($result);
-                $controle->set_valor($parametroSituacao);
+                $controle->set_valor($parametroAnoExercicio);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
                 $controle->set_col(2);
                 $form->add_item($controle);
-
-                # Cargos
-                $result = $pessoal->select('SELECT tbcargo.idCargo,
-                                                   concat(tbtipocargo.cargo," - ",tbcargo.nome)
-                                              FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)                              
-                                          ORDER BY 2,1');
-                array_unshift($result,array('*','-- Todos --'));
-
-                $controle = new Input('parametroCargo','combo','Cargo:',1);
-                $controle->set_size(30);
-                $controle->set_title('Filtra por Cargo');
-                $controle->set_array($result);
-                $controle->set_valor($parametroCargo);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(6);
-                $form->add_item($controle);
-
-                # Cargos em Comissão
-                $result = $pessoal->select('SELECT tbtipocomissao.descricao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
-                                              FROM tbtipocomissao
-                                              WHERE ativo
-                                          ORDER BY tbtipocomissao.simbolo');
-                array_unshift($result,array('*','-- Todos --'));
-
-                $controle = new Input('parametroCargoComissao','combo','Cargo em Comissão:',1);
-                $controle->set_size(30);
-                $controle->set_title('Filtra por Cargo em Comissão');
-                $controle->set_array($result);
-                $controle->set_valor($parametroCargoComissao);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(2);
-                $controle->set_col(4);
-                $form->add_item($controle);
-
+                
                 # Lotação
                 $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
@@ -187,24 +140,8 @@ if($acesso)
                 $controle->set_array($result);
                 $controle->set_valor($parametroLotacao);
                 $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(2);
-                $controle->set_col(5);
-                $form->add_item($controle);
-
-                # Perfil
-                $result = $pessoal->select('SELECT idperfil, nome
-                                              FROM tbperfil                                
-                                          ORDER BY 1');
-                array_unshift($result,array('*','-- Todos --'));
-
-                $controle = new Input('parametroPerfil','combo','Perfil:',1);
-                $controle->set_size(30);
-                $controle->set_title('Filtra por Perfil');
-                $controle->set_array($result);
-                $controle->set_valor($parametroPerfil);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(2);
-                $controle->set_col(3);
+                $controle->set_linha(1);
+                $controle->set_col(6);
                 $form->add_item($controle);
                 
                 # submit
@@ -219,35 +156,25 @@ if($acesso)
                 $form->show();
 
                 # Lista de Servidores Ativos
-                $lista = new listaFerias('Servidores');
+                $lista = new listaFerias('Férias Detalhadas');
                 if($parametroNomeMat <> NULL){
                     $lista->set_matNomeId($parametroNomeMat);
                 }
                 
-                if($parametroCargo <> "*"){
-                    $lista->set_cargo($parametroCargo);
-                }
-
-                if($parametroCargoComissao <> "*"){
-                    $lista->set_cargoComissao($parametroCargoComissao);
+                if($parametroAnoExercicio <> "*"){
+                    $lista->set_anoExercicio($parametroAnoExercicio);
                 }
 
                 if($parametroLotacao <> "*"){
                     $lista->set_lotacao($parametroLotacao);
                 }
                 
-                if($parametroPerfil <> "*"){
-                    $lista->set_perfil($parametroPerfil);
-                }
-
-                if($parametroSituacao <> "*"){
-                    $lista->set_situacao($parametroSituacao);
-                }
-                
                 # Paginação
-                $lista->set_paginacao(true);
+                if($parametroLotacao == "*"){
+                    $lista->set_paginacao(true);
+                }
                 $lista->set_paginacaoInicial($paginacao);
-                $lista->set_paginacaoItens(12);
+                $lista->set_paginacaoItens(30);
                 
                 $lista->showTabela();
 
@@ -270,29 +197,17 @@ if($acesso)
         # Cria um relatório com a seleção atual
         case "relatorio" :
             # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores');
+            $lista = new listaFerias('Servidores');
             if($parametroNomeMat <> NULL){
                 $lista->set_matNomeId($parametroNomeMat);
             }
             
-            if($parametroCargo <> "*"){
-                $lista->set_cargo($parametroCargo);
-            }
-
-            if($parametroCargoComissao <> "*"){
-                $lista->set_cargoComissao($parametroCargoComissao);
+            if($parametroAnoExercicio <> "*"){
+                $lista->set_anoExercicio($parametroAnoExercicio);
             }
 
             if($parametroLotacao <> "*"){
                 $lista->set_lotacao($parametroLotacao);
-            }
-            
-            if($parametroPerfil <> "*"){
-                $lista->set_perfil($parametroPerfil);
-            }
-
-            if($parametroSituacao <> "*"){
-                $lista->set_situacao($parametroSituacao);
             }
             
             $lista->showRelatorio();

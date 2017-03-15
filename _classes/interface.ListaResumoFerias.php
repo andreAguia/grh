@@ -7,7 +7,7 @@
  * @author Alat
  */
 
-class listaFerias
+class listaResumoFerias
 {    
     
     # Título

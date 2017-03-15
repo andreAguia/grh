@@ -155,7 +155,9 @@ class Grh
         
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
-        $botao->set_url('areaferias.php');
+        if(Verifica::acesso($idUsuario,1)){
+            $botao->set_url('areaferias.php');
+        }
         $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Férias');
         $botao->set_accesskey('F');

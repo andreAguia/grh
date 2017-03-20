@@ -39,7 +39,7 @@ if($acesso)
                   AND anoExercicio = '.$anoBase.'
                   AND tbferias.status <> "cancelada"
                   GROUP BY 2
-                  ORDER BY 3,1';
+                  ORDER BY 3,2';
     /*
     $select = 'SELECT tbservidor.idServidor,
                       tbservidor.idFuncional,
@@ -63,7 +63,7 @@ if($acesso)
     $relatorio->set_tituloLinha2('Exercício: '.$anoBase);
     $relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
     $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
-    $relatorio->set_width(array(10,45,10,35));
+    #$relatorio->set_width(array(10,45,10,35));
     $relatorio->set_align(array("center","left",null,"left"));
     $relatorio->set_classe(array(null,null,null,"pessoal"));
     $relatorio->set_metodo(array(null,null,null,"get_lotacao"));

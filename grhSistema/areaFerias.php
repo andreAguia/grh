@@ -22,6 +22,7 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase');
+    $tipo = get('tipo','resumida');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -88,6 +89,20 @@ if($acesso)
             $linkBotao1->set_accessKey('V');
             $menu1->add_link($linkBotao1,"left");
             
+            # Detalhado
+            $linkBotao2 = new Link("Detalhado","?fase=pesquisar&tipo=detalhada");
+            $linkBotao2->set_class('button');
+            $linkBotao2->set_title('Voltar a página anterior');
+            $linkBotao2->set_accessKey('D');
+            $menu1->add_link($linkBotao2,"right");
+            
+            # Resumo
+            $linkBotao3 = new Link("Resumido","?fase=pesquisar&tipo=resumida");
+            $linkBotao3->set_class('button');
+            $linkBotao3->set_title('Voltar a página anterior');
+            $linkBotao3->set_accessKey('R');
+            $menu1->add_link($linkBotao3,"right");
+            
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
             $botaoRel = new Button();
@@ -95,6 +110,7 @@ if($acesso)
             $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
+            
             $menu1->show();
 
             # Parâmetros
@@ -111,16 +127,15 @@ if($acesso)
                 $controle->set_col(4);
                 $form->add_item($controle);
 
-                # Situação
-                $result = $pessoal->select('SELECT idsituacao, situacao
-                                              FROM tbsituacao                                
-                                          ORDER BY 1');
-                array_unshift($result,array('*','-- Todos --'));
+                # anoExercicio                
+                $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
+                array_push($anoExercicio,date("Y"));
 
-                $controle = new Input('parametroAnoExercicio','texto','Ano Exercício:',1);
+                $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
                 $controle->set_size(8);
                 $controle->set_title('Filtra por Ano exercício');
-                $controle->set_array($result);
+                $controle->set_array($anoExercicio);
+                $controle->set_valor(date("Y"));
                 $controle->set_valor($parametroAnoExercicio);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
@@ -154,9 +169,15 @@ if($acesso)
                 #$form->add_item($controle);
 
                 $form->show();
+                
+                if($tipo == "detalhada"){
+                    $nome = 'Férias Detalhadas';
+                }else{
+                    $nome = 'Férias Resumidas';
+                }
 
                 # Lista de Servidores Ativos
-                $lista = new listaFerias('Férias Detalhadas');
+                $lista = new listaFerias($nome);
                 if($parametroNomeMat <> NULL){
                     $lista->set_matNomeId($parametroNomeMat);
                 }
@@ -176,7 +197,12 @@ if($acesso)
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(30);
                 
-                $lista->showTabela();
+                if($tipo == "detalhada"){
+                    $lista->showTabelaDetalhada();
+                }else{
+                    $lista->showTabelaResumida();
+                }
+                
 
             $grid->fechaColuna();
             $grid->fechaGrid();

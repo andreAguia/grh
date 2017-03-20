@@ -346,7 +346,7 @@ if($acesso)
             $grid->abreColuna(12);
             
             # Pega os dados
-            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.matricula) 
+            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) 
                                 FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                WHERE tbservidor.situacao = 1
                             GROUP BY tbperfil.nome';

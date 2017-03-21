@@ -22,8 +22,7 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase');
-    $tipo = get('tipo','resumida');
-
+    
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
@@ -70,15 +69,15 @@ if($acesso)
         case "" :
             br(10);
             aguarde();
-            br();
-            loadPage('?fase=pesquisar');
+            br();            
+            loadPage('?fase=pesquisar');            
             break;
         
         case "pesquisar" :
             # Cadastro de Servidores 
             $grid = new Grid();
             $grid->abreColuna(12);
-
+            
             # Cria um menu
             $menu1 = new MenuBar();
 
@@ -88,20 +87,6 @@ if($acesso)
             $linkBotao1->set_title('Voltar a página anterior');
             $linkBotao1->set_accessKey('V');
             $menu1->add_link($linkBotao1,"left");
-            
-            # Detalhado
-            $linkBotao2 = new Link("Detalhado","?fase=pesquisar&tipo=detalhada");
-            $linkBotao2->set_class('button');
-            $linkBotao2->set_title('Voltar a página anterior');
-            $linkBotao2->set_accessKey('D');
-            $menu1->add_link($linkBotao2,"right");
-            
-            # Resumo
-            $linkBotao3 = new Link("Resumido","?fase=pesquisar&tipo=resumida");
-            $linkBotao3->set_class('button');
-            $linkBotao3->set_title('Voltar a página anterior');
-            $linkBotao3->set_accessKey('R');
-            $menu1->add_link($linkBotao3,"right");
             
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
@@ -169,15 +154,9 @@ if($acesso)
                 #$form->add_item($controle);
 
                 $form->show();
-                
-                if($tipo == "detalhada"){
-                    $nome = 'Férias Detalhadas';
-                }else{
-                    $nome = 'Férias Resumidas';
-                }
 
                 # Lista de Servidores Ativos
-                $lista = new listaFerias($nome);
+                $lista = new listaFerias("Férias");
                 if($parametroNomeMat <> NULL){
                     $lista->set_matNomeId($parametroNomeMat);
                 }
@@ -195,14 +174,21 @@ if($acesso)
                     $lista->set_paginacao(true);
                 }
                 $lista->set_paginacaoInicial($paginacao);
-                $lista->set_paginacaoItens(30);
+                $lista->set_paginacaoItens(30);               
                 
-                if($tipo == "detalhada"){
-                    $lista->showTabelaDetalhada();
-                }else{
-                    $lista->showTabelaResumida();
-                }
+                $grid3 = new Grid();
+                $grid3->abreColuna(3);
+                br();
                 
+                $lista->showResumo();
+                
+                $grid3->fechaColuna();
+                $grid3->abreColuna(9);
+                br();
+                $lista->showTabela();
+                
+                $grid3->fechaColuna();
+                $grid3->fechaGrid();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

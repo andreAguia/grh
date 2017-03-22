@@ -112,7 +112,7 @@ if($acesso)
                                'array' => array("Sim","Não"),
                                'size' => 20,
                                'col' => 4,
-                               'title' => 'Cedido com ônus para a FENORTE?'),
+                               'title' => 'Cedido com ônus para a UENF?'),
                         array ('linha' => 2,
                                'nome' => 'salario',
                                'label' => 'Valor recebido pelo órgão de origem:',

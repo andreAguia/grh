@@ -2306,6 +2306,25 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
+	function get_numServidoresAtivos()
+	
+	/**
+	 * informa o número de Servidores Ativos
+	 * 
+	 */
+
+
+	{
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE situacao = 1';		
+
+            $count = parent::count($select);
+            return $count;
+	}
+	
+	###########################################################
+	
 	/**
 	 * M�todo get_ultimoAcesso
 	 * informa a data do �ltimo acesso a �rea do servidor de uma matr�cula

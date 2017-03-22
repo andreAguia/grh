@@ -97,6 +97,10 @@ if($acesso)
             $menu1->add_link($botaoRel,"right");
             
             $menu1->show();
+            
+            # Título
+            titulo("Área de Férias");
+            br();
 
             # Parâmetros
             $form = new Form('?');
@@ -154,7 +158,7 @@ if($acesso)
                 #$form->add_item($controle);
 
                 $form->show();
-
+                
                 # Lista de Servidores Ativos
                 $lista = new listaFerias("Férias");
                 if($parametroNomeMat <> NULL){
@@ -177,13 +181,13 @@ if($acesso)
                 $lista->set_paginacaoItens(30);               
                 
                 $grid3 = new Grid();
-                $grid3->abreColuna(3);
+                $grid3->abreColuna(4);
                 br();
                 
                 $lista->showResumo();
                 
                 $grid3->fechaColuna();
-                $grid3->abreColuna(9);
+                $grid3->abreColuna(8);
                 br();
                 $lista->showTabela();
                 

@@ -61,6 +61,113 @@ if($acesso)
         AreaServidor::cabecalho();
     }
     
+    $grid = new Grid();
+    $grid->abreColuna(12);
+
+    # Cria um menu
+    $menu1 = new MenuBar();
+
+    # Voltar
+    $linkBotao1 = new Link("Voltar","grh.php");
+    $linkBotao1->set_class('button');
+    $linkBotao1->set_title('Voltar a página anterior');
+    $linkBotao1->set_accessKey('V');
+    $menu1->add_link($linkBotao1,"left");
+    
+    # Detalhe
+    $linkBotao1 = new Link("Detalhe","?");
+    $linkBotao1->set_class('button');
+    $linkBotao1->set_title('Voltar a página anterior');
+    $linkBotao1->set_accessKey('D');
+    $menu1->add_link($linkBotao1,"right");
+    
+    # Resumo
+    $linkBotao1 = new Link("Resumo","?fase=resumo");
+    $linkBotao1->set_class('button');
+    $linkBotao1->set_title('Exibe as férias por dia');
+    $linkBotao1->set_accessKey('R');
+    $menu1->add_link($linkBotao1,"right");
+    
+    # Por Mês
+    $linkBotao1 = new Link("Por Mês","grh.php");
+    $linkBotao1->set_class('button');
+    $linkBotao1->set_title('Exibe as férias por mês');
+    $linkBotao1->set_accessKey('P');
+    $menu1->add_link($linkBotao1,"right");
+
+    # Relatórios
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_title("Relatório dessa pesquisa");
+    $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_imagem($imagem);
+    $menu1->add_link($botaoRel,"right");
+
+    $menu1->show();
+    
+    # Título
+    titulo("Área de Férias");
+    br();
+    
+    # Parâmetros
+    $form = new Form('?');
+
+    # Nome ou Matrícula
+    $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
+    $controle->set_size(55);
+    $controle->set_title('Nome, matrícula ou ID:');
+    $controle->set_valor($parametroNomeMat);
+    $controle->set_autofocus(true);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(4);
+    $form->add_item($controle);
+
+    # anoExercicio                
+    $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
+    array_push($anoExercicio,date("Y"));
+
+    $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
+    $controle->set_size(8);
+    $controle->set_title('Filtra por Ano exercício');
+    $controle->set_array($anoExercicio);
+    $controle->set_valor(date("Y"));
+    $controle->set_valor($parametroAnoExercicio);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
+    $form->add_item($controle);
+
+    # Lotação
+    $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                  FROM tblotacao
+                                 WHERE ativo
+                              ORDER BY ativo desc,lotacao');
+    array_unshift($result,array('*','-- Todos --'));
+
+    $controle = new Input('parametroLotacao','combo','Lotação:',1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Lotação');
+    $controle->set_array($result);
+    $controle->set_valor($parametroLotacao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(6);
+    $form->add_item($controle);
+
+    # submit
+    #$controle = new Input('submit','submit');
+    #$controle->set_valor('Pesquisar');
+    #$controle->set_size(20);
+    #$controle->set_accessKey('P');
+    #$controle->set_linha(3);
+    #$controle->set_col(2);
+    #$form->add_item($controle);
+
+    $form->show();
+    $grid->fechaColuna();
+    $grid->fechaGrid();
+    
     ################################################################
     
     switch ($fase)
@@ -78,121 +185,85 @@ if($acesso)
             $grid = new Grid();
             $grid->abreColuna(12);
             
-            # Cria um menu
-            $menu1 = new MenuBar();
+            # Lista de Servidores Ativos
+            $lista = new listaFerias("Férias");
+            if($parametroNomeMat <> NULL){
+                $lista->set_matNomeId($parametroNomeMat);
+            }
 
-            # Voltar
-            $linkBotao1 = new Link("Voltar","grh.php");
-            $linkBotao1->set_class('button');
-            $linkBotao1->set_title('Voltar a página anterior');
-            $linkBotao1->set_accessKey('V');
-            $menu1->add_link($linkBotao1,"left");
-            
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel,"right");
-            
-            $menu1->show();
-            
-            # Título
-            titulo("Área de Férias");
+            if($parametroAnoExercicio <> "*"){
+                $lista->set_anoExercicio($parametroAnoExercicio);
+            }
+
+            if($parametroLotacao <> "*"){
+                $lista->set_lotacao($parametroLotacao);
+            }
+
+            # Paginação
+            if($parametroLotacao == "*"){
+                $lista->set_paginacao(true);
+            }
+            $lista->set_paginacaoInicial($paginacao);
+            $lista->set_paginacaoItens(30);               
+
+            $grid3 = new Grid();
+            $grid3->abreColuna(4);
             br();
 
-            # Parâmetros
-            $form = new Form('?');
+            $lista->showPorDia();
 
-                # Nome ou Matrícula
-                $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
-                $controle->set_size(55);
-                $controle->set_title('Nome, matrícula ou ID:');
-                $controle->set_valor($parametroNomeMat);
-                $controle->set_autofocus(true);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(4);
-                $form->add_item($controle);
+            $grid3->fechaColuna();
+            $grid3->abreColuna(8);
+            br();
+            $lista->showDetalhe();
 
-                # anoExercicio                
-                $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
-                array_push($anoExercicio,date("Y"));
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
 
-                $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
-                $controle->set_size(8);
-                $controle->set_title('Filtra por Ano exercício');
-                $controle->set_array($anoExercicio);
-                $controle->set_valor(date("Y"));
-                $controle->set_valor($parametroAnoExercicio);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(2);
-                $form->add_item($controle);
-                
-                # Lotação
-                $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo
-                                          ORDER BY ativo desc,lotacao');
-                array_unshift($result,array('*','-- Todos --'));
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+            
+        case "resumo" :
+            # Cadastro de Servidores 
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Lista de Servidores Ativos
+            $lista = new listaFerias("Férias");
+            if($parametroNomeMat <> NULL){
+                $lista->set_matNomeId($parametroNomeMat);
+            }
 
-                $controle = new Input('parametroLotacao','combo','Lotação:',1);
-                $controle->set_size(30);
-                $controle->set_title('Filtra por Lotação');
-                $controle->set_array($result);
-                $controle->set_valor($parametroLotacao);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(6);
-                $form->add_item($controle);
-                
-                # submit
-                #$controle = new Input('submit','submit');
-                #$controle->set_valor('Pesquisar');
-                #$controle->set_size(20);
-                #$controle->set_accessKey('P');
-                #$controle->set_linha(3);
-                #$controle->set_col(2);
-                #$form->add_item($controle);
+            if($parametroAnoExercicio <> "*"){
+                $lista->set_anoExercicio($parametroAnoExercicio);
+            }
 
-                $form->show();
-                
-                # Lista de Servidores Ativos
-                $lista = new listaFerias("Férias");
-                if($parametroNomeMat <> NULL){
-                    $lista->set_matNomeId($parametroNomeMat);
-                }
-                
-                if($parametroAnoExercicio <> "*"){
-                    $lista->set_anoExercicio($parametroAnoExercicio);
-                }
+            if($parametroLotacao <> "*"){
+                $lista->set_lotacao($parametroLotacao);
+            }
 
-                if($parametroLotacao <> "*"){
-                    $lista->set_lotacao($parametroLotacao);
-                }
-                
-                # Paginação
-                if($parametroLotacao == "*"){
-                    $lista->set_paginacao(true);
-                }
-                $lista->set_paginacaoInicial($paginacao);
-                $lista->set_paginacaoItens(30);               
-                
-                $grid3 = new Grid();
-                $grid3->abreColuna(4);
-                br();
-                
-                $lista->showResumo();
-                
-                $grid3->fechaColuna();
-                $grid3->abreColuna(8);
-                br();
-                $lista->showTabela();
-                
-                $grid3->fechaColuna();
-                $grid3->fechaGrid();
+            # Paginação
+            if($parametroLotacao == "*"){
+                $lista->set_paginacao(true);
+            }
+            $lista->set_paginacaoInicial($paginacao);
+            $lista->set_paginacaoItens(30);               
+
+            $grid3 = new Grid();
+            $grid3->abreColuna(4);
+            br();
+
+            $lista->showResumo();
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(8);
+            br();
+            $lista->showResumo(FALSE);
+
+
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

@@ -87,12 +87,182 @@ class listaFerias
     ###########################################################
    
     /**
-     * Método prepara
+     * Método showResumo
      * 
-     * Exibe a lista
+     * Exibe a Tabela
      *
      */	
-    private function prepara()
+    public function showPorDia($resumido = TRUE)
+    {
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        # Pega os dias totais desse exercício/Lotação
+        $slctot = "SELECT distinct sum(numDias) as soma
+                     FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                LEFT JOIN tbferias USING (idServidor)
+                     JOIN tbhistlot USING (idServidor)
+                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE anoExercicio = $this->anoExercicio
+                      AND situacao = 1 
+                      AND tbferias.status <> 'cancelada'
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+        
+        # lotacao
+        if(!is_null($this->lotacao)){
+            $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+        }
+        
+        $slctot .= "GROUP BY idServidor
+                    ORDER BY soma desc";
+        
+        ###################################################
+        
+        # Pega os dados do banco
+        $diasTotais = $servidor->select($slctot,TRUE);
+        $totalFerias = count($diasTotais);
+        $conta = array();
+        $tt = 0;        // Totalizador de servidores que pediram férias
+        
+        # Preenche os outros dados
+        if($totalFerias > 0){
+            foreach ($diasTotais as $valor) {
+                $slctot = "SELECT idServidor,
+                                  sum(numDias) as soma
+                             FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                           LEFT JOIN tbferias USING (idServidor)
+                                                JOIN tbhistlot USING (idServidor)
+                                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                            WHERE anoExercicio = $this->anoExercicio
+                              AND situacao = 1 
+                              AND tbferias.status <> 'cancelada'
+                              AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                
+                            if(!is_null($this->lotacao)){
+                                $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                            }
+        
+                 $slctot .= "
+                         GROUP BY idServidor
+                         HAVING soma = $valor[0]
+                         ORDER BY 1";
+                $num = $servidor->count($slctot);
+                $tt += $num;
+                $conta[] = array($valor[0],$num);            
+            }
+        } 
+        
+        ###################################################
+        
+        # Exibe os servidores desse setor
+        # Os que Pediram férias
+        $select1 = "(SELECT tbpessoa.nome,
+                           sum(numDias) as soma
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                    LEFT JOIN tbferias USING (idServidor)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       ";
+        
+                        if(!is_null($this->lotacao)){
+                            $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                        }
+        
+                 $select1 .= "
+                       AND tbferias.status <> 'cancelada'
+                       AND anoExercicio = $this->anoExercicio
+                       AND situacao = 1 
+                  GROUP BY tbpessoa.nome
+                  ORDER BY 2 desc,1)";
+        
+        # Pega os dados do banco
+        $servset1 = $servidor->select($select1,TRUE);
+        
+        # Os que não pediram
+        $select2 = "SELECT tbpessoa.nome,'-'
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      ";
+                 
+                    if(!is_null($this->lotacao)){
+                        $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                    }
+        
+                 $select2 .= "
+                      AND situacao = 1
+                      AND tbpessoa.nome NOT IN 
+                      (SELECT tbpessoa.nome
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                         JOIN tbferias USING (idservidor)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                           AND anoExercicio = $this->anoExercicio
+                           AND tbferias.status <> 'cancelada'";
+        
+                        if(!is_null($this->lotacao)){
+                            $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                        }
+        
+                 $select2 .= "
+                       AND situacao = 1
+                  ORDER BY 1)
+                     ORDER BY 1";        
+        
+        # Pega os dados do banco
+        $servset2 = $servidor->select($select2,TRUE);
+        $servset3 = array_merge_recursive($servset1,$servset2);
+        
+        $totalServidores = count($servset3);
+        
+        # Monta a tabela de Resumo. Está aqui pois preciso pegar o total de servidores
+        $tabela = new Tabela();
+        
+        # Calcula o nº de sevidores sem solicitação de férias nesse exercício
+        if(is_null($this->lotacao)){
+            $totalServidores = $servidor->get_numServidoresAtivos();
+        }
+        $conta[] = array(0,$totalServidores - $tt);
+        
+        $tabela->set_conteudo($conta);
+        $tabela->set_label(array("Total de Dias","Nº de Servidores"));
+        #$tabela->set_width($width);
+        $tabela->set_align(array("center"));
+        $tabela->set_titulo("Resumo");
+        if($resumido){
+            $tabela->show();
+        }
+        
+        callout("Total de Servidores: ".$totalServidores);
+        
+        # Monta a tabela de Servidores.
+        if($totalServidores > 0){
+            # Monta a tabela
+            $tabela = new Tabela();
+
+            $tabela->set_conteudo($servset3);
+            $tabela->set_label(array("Servidores","Dias"));
+            #$tabela->set_width($width);
+            $tabela->set_align(array("left"));
+            $tabela->set_titulo("Servidores Desta Lotação");
+            if(!$resumido){
+                $tabela->show();
+            }
+        }              
+    }
+           
+    ###########################################################
+    
+    /**
+     * Método showDetalhe
+     * 
+     * Exibe a Tabela
+     *
+     */	
+    public function showDetalhe()
     {
         # Pega o time inicial
         $this->time_start = microtime(TRUE);
@@ -252,190 +422,6 @@ class listaFerias
             $div->fecha();
         }
         
-        # Passa para as variaveis da classe
-        $this->select = $select;
-        $this->totReg = $totalRegistros;
-    }
-    
-    ###########################################################
-   
-    /**
-     * Método showResumo
-     * 
-     * Exibe a Tabela
-     *
-     */	
-    public function showResumo()
-    {
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-        
-        # Pega os dias totais desse exercício/Lotação
-        $slctot = "SELECT distinct sum(numDias) as soma
-                     FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                LEFT JOIN tbferias USING (idServidor)
-                     JOIN tbhistlot USING (idServidor)
-                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                    WHERE anoExercicio = $this->anoExercicio
-                      AND situacao = 1 
-                      AND tbferias.status <> 'cancelada'
-                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-        
-        # lotacao
-        if(!is_null($this->lotacao)){
-            $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-        }
-        
-        $slctot .= "GROUP BY idServidor
-                    ORDER BY soma desc";
-        
-        ###################################################
-        
-        # Pega os dados do banco
-        $diasTotais = $servidor->select($slctot,TRUE);
-        $totalFerias = count($diasTotais);
-        $conta = array();
-        $tt = 0;        // Totalizador de servidores que pediram férias
-        
-        # Preenche os outros dados
-        if($totalFerias > 0){
-            foreach ($diasTotais as $valor) {
-                $slctot = "SELECT idServidor,
-                                  sum(numDias) as soma
-                             FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                                           LEFT JOIN tbferias USING (idServidor)
-                                                JOIN tbhistlot USING (idServidor)
-                                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                            WHERE anoExercicio = $this->anoExercicio
-                              AND situacao = 1 
-                              AND tbferias.status <> 'cancelada'
-                              AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-                
-                            if(!is_null($this->lotacao)){
-                                $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-                            }
-        
-                 $slctot .= "
-                         GROUP BY idServidor
-                         HAVING soma = $valor[0]
-                         ORDER BY 1";
-                $num = $servidor->count($slctot);
-                $tt += $num;
-                $conta[] = array($valor[0],$num);            
-            }
-        } 
-        
-        ###################################################
-        
-        # Exibe os servidores desse setor
-        # Os que Pediram férias
-        $select1 = "(SELECT tbpessoa.nome,
-                           sum(numDias) as soma
-                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                                    LEFT JOIN tbferias USING (idServidor)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       ";
-        
-                        if(!is_null($this->lotacao)){
-                            $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-                        }
-        
-                 $select1 .= "
-                       AND tbferias.status <> 'cancelada'
-                       AND anoExercicio = $this->anoExercicio
-                       AND situacao = 1 
-                  GROUP BY tbpessoa.nome
-                  ORDER BY 2 desc,1)";
-        
-        # Pega os dados do banco
-        $servset1 = $servidor->select($select1,TRUE);
-        
-        # Os que não pediram
-        $select2 = "SELECT tbpessoa.nome,'-'
-                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      ";
-                 
-                    if(!is_null($this->lotacao)){
-                        $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-                    }
-        
-                 $select2 .= "
-                      AND situacao = 1
-                      AND tbpessoa.nome NOT IN 
-                      (SELECT tbpessoa.nome
-                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                                         JOIN tbferias USING (idservidor)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                           AND anoExercicio = $this->anoExercicio
-                           AND tbferias.status <> 'cancelada'";
-        
-                        if(!is_null($this->lotacao)){
-                            $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-                        }
-        
-                 $select2 .= "
-                       AND situacao = 1
-                  ORDER BY 1)
-                     ORDER BY 1";        
-        
-        # Pega os dados do banco
-        $servset2 = $servidor->select($select2,TRUE);
-        $servset3 = array_merge_recursive($servset1,$servset2);
-        
-        $totalServidores = count($servset3);
-        
-        # Monta a tabela de Resumo. Está aqui pois preciso pegar o total de servidores
-        $tabela = new Tabela();
-        
-        # Calcula o nº de sevidores sem solicitação de férias nesse exercício
-        if(is_null($this->lotacao)){
-            $totalServidores = $servidor->get_numServidoresAtivos();
-        }
-        $conta[] = array(0,$totalServidores - $tt);
-        
-        $tabela->set_conteudo($conta);
-        $tabela->set_label(array("Total de Dias","Nº de Servidores"));
-        #$tabela->set_width($width);
-        $tabela->set_align(array("center"));
-        $tabela->set_titulo("Resumo");
-        $tabela->show();
-        
-        callout("Total de Servidores: ".$totalServidores);
-        
-        # Monta a tabela de Servidores.
-        if($totalServidores > 0){
-            # Monta a tabela
-            $tabela = new Tabela();
-
-            $tabela->set_conteudo($servset3);
-            $tabela->set_label(array("Servidores","Dias"));
-            #$tabela->set_width($width);
-            $tabela->set_align(array("left"));
-            $tabela->set_titulo("Servidores Desta Lotação");
-            $tabela->show();
-        }              
-    }
-    
-    ###########################################################
-    
-    /**
-     * Método showTabela
-     * 
-     * Exibe a Tabela
-     *
-     */	
-    public function showTabela()
-    {
-        # Executa rotina interna
-        $this->prepara();
-        
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -446,9 +432,9 @@ class listaFerias
         $function = array ("date_to_php");
                         
         # Executa o select juntando o selct e o select de paginacao
-        $conteudo = $servidor->select($this->select.$this->selectPaginacao,true);
+        $conteudo = $servidor->select($select.$this->selectPaginacao,true);
         
-        if($this->totReg == 0){
+        if($totalRegistros == 0){
             br();
             $callout = new Callout();
             $callout->abre();

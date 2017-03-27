@@ -10,9 +10,6 @@
 class listaFerias
 {    
     
-    # Título
-    private $nomeLista = null;  # Nome da lista que aparece no título
-    
     # Parâmetros de Pesquisa
     private $matNomeId = NULL;  # Busca por matricula nome ou id em um só campos
     private $anoExercicio = NULL;
@@ -50,8 +47,8 @@ class listaFerias
      * @param  $name    = nome da classe e do id para estilo
      */
     
-    public function __construct($nome){
-        $this->nomeLista = $nome;
+    public function __construct(){
+        
     }
     
     ###########################################################
@@ -103,16 +100,15 @@ class listaFerias
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select ='SELECT tbservidor.idFuncional,
-                         tbservidor.matricula,
+        $select ='SELECT tbferias.dtInicial,
+                         tbferias.numDias,
+                         tbferias.periodo,
+                         tbferias.status,
+                         tbservidor.idFuncional,
                          tbpessoa.nome,
                          concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
-                         tbperfil.nome,
-                         tbferias.anoExercicio,
-                         tbferias.status,
-                         tbferias.dtInicial,
-                         tbferias.numDias,
-                         tbferias.periodo,idServidor
+                         tbperfil.nome,                         
+                         idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
 			            LEFT JOIN tbferias USING (idservidor) 
                                          JOIN tbhistlot USING (idServidor)
@@ -146,7 +142,7 @@ class listaFerias
         }
         
         # ordenação
-        $select .= ' ORDER BY tbpessoa.nome';
+        $select .= ' ORDER BY tbferias.dtInicial,tbferias.periodo,tbpessoa.nome';
         
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,true);
@@ -264,234 +260,179 @@ class listaFerias
     ###########################################################
    
     /**
-     * Método preparaResumo
-     * 
-     * Exibe a lista
-     *
-     */	
-    private function preparaResumo()
-    {
-        # Pega o time inicial
-        $this->time_start = microtime(TRUE);
-        
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-
-        $select = 'SELECT tbservidor.idFuncional,
-                          tbservidor.matricula,
-                          tbpessoa.nome,
-                          concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
-                          tbperfil.nome,
-                          SUM(tbferias.numDias),
-                          tbservidor.idServidor
-                 FROM tbferias JOIN tbservidor USING (idServidor)
-                               JOIN tbpessoa USING (idPessoa)
-                               JOIN tbhistlot USING (idServidor)
-                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                          LEFT JOIN tbperfil USING (idPerfil)
-                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND tbservidor.situacao = 1
-                  AND anoExercicio = '.$this->anoExercicio.'
-                  AND tbferias.status <> "cancelada"';
-        
-        # Matrícula, nome ou id
-        if(!is_null($this->matNomeId)){
-            if(is_numeric($this->matNomeId)){
-                $select .= ' AND ((';
-            }else{
-                $select .= ' AND (';
-            }
-                        
-            $select .= 'tbpessoa.nome LIKE "%'.$this->matNomeId.'%")';
-            
-            if(is_numeric($this->matNomeId)){
-                $select .= ' OR (tbservidor.matricula LIKE "%'.$this->matNomeId.'%")
-		             OR (tbservidor.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
-            }
-            $this->subTitulo .= "pesquisa: ".$this->matNomeId."<br/>";
-        } 
-        
-        # lotacao
-        if(!is_null($this->lotacao)){
-            $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
-            $this->subTitulo .= "lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
-        }
-        
-        # ordenação
-        $select .= ' GROUP BY 3 ORDER BY 6,3';
-        
-        # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($select,true);
-        $totalRegistros = count($conteudo);
-        
-        # Verifica a necessidade de paginação pelo número de registro
-        if($this->paginacaoItens >= $totalRegistros){
-            $this->paginacao = FALSE;
-        }
-        
-        # Verifica se página Inicial que veio por session deverá ser atualizada para 0
-        if($this->paginacaoInicial > $totalRegistros){
-            $this->paginacaoInicial = 0;
-        }
-                
-        # Calculos da paginaçao
-        $this->texto = null;
-        if($this->paginacao)
-        {
-            # Calcula o total de páginas
-            $totalPaginas = ceil($totalRegistros/$this->paginacaoItens);
-
-            # Calcula o número da página
-            $this->pagina = ceil($this->paginacaoInicial/$this->paginacaoItens)+1;
-
-            # Calcula o item inicial e final da página
-            $this->itemFinal = $this->pagina * $this->paginacaoItens;
-            $this->itemInicial = $this->itemFinal - $this->paginacaoItens+1;
-
-            if ($this->itemFinal > $totalRegistros)
-            $this->itemFinal = $totalRegistros;
-
-            # Texto do fieldset
-            $this->texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
-        
-            # Acrescenta a sql para paginacao
-            $this->selectPaginacao =' LIMIT '.$this->paginacaoInicial.','.$this->paginacaoItens;
-
-            # Botôes de Navegação das páginas 
-            $proximo = $this->paginacaoInicial + $this->paginacaoItens;
-            $anterior = $this->paginacaoInicial - $this->paginacaoItens;            
-        }
-        
-        # Botões de paginação
-        if($this->paginacao){
-            # Começa os botões de navegação
-            $div = new Div("paginacao");
-            $div->abre();            
-            echo'<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
-
-            # Botão Página Anterior
-            if($this->pagina == 1){
-                echo '<li class="pagination-previous disabled"><span class="show-for-sr">page</span></li>';
-            }else{
-                echo '<li class="pagination-previous"><a href="?paginacao='.$anterior.'" aria-label="Página anterior"></a></li>';
-            }
-
-            # Links para a página
-            for($pag = 1;$pag <= $totalPaginas; $pag++){
-                if($pag == $this->pagina){
-                    echo '<li class="current"><span class="show-for-sr">Página Atual</span> '.$pag.'</li>';
-                }else{
-                    $link = $this->paginacaoItens * ($pag-1);
-                
-                    if($totalPaginas > $this->quantidadeMaxLinks){
-                        switch ($pag) {
-                            case 1:
-                            case 2:    
-                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
-                                break;
-                            case 3:
-                                if($this->pagina == 2){
-                                    echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';  
-                                }else{
-                                    echo '<li>...<li>';
-                                }
-                                break;
-                            case $this->pagina-1:
-                            case $this->pagina+1:    
-                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a><li>';
-                                break;
-                            case $totalPaginas-2:
-                                if($this->pagina == $this->pagina-4){
-                                    echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';  
-                                }else{
-                                    echo '<li>...<li>';
-                                }
-                                break;
-                            case $totalPaginas-1:
-                            case $totalPaginas:
-                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
-                                break;
-                        }                                
-                    }else{
-                        echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
-                    }
-                }
-            }
-
-            # Botão Próxima Página
-            if($this->pagina < $totalPaginas){
-                echo '<li class="pagination-next"><a href="?paginacao='.$proximo.'" aria-label="Próxima página"><span class="show-for-sr">page</span></a></li>';
-            }else{
-                echo '<li class="pagination-next disabled"><span class="show-for-sr">page</span></li>';
-            }
-            echo '</ul>';
-            $div->fecha();
-        }
-        
-        # Passa para as variaveis da classe
-        $this->select = $select;
-        $this->totReg = $totalRegistros;
-    }
-    
-    ###########################################################
-   
-    /**
-     * Método graficoResumo
-     * 
-     * Exibe a lista
-     *
-     */	
-    private function graficoResumo()
-    {
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-
-        $selectGrafico = 'SELECT SUM(tbferias.numDias), count(tbferias.idServidor) 
-                            FROM tbferias JOIN tbservidor USING (idServidor)
-                           WHERE tbservidor.situacao = 1
-                           AND anoExercicio = '.$this->anoExercicio.'
-                        GROUP BY 1';
-
-        $servidores = $servidor->select($selectGrafico);
-
-        titulo('Servidores por Perfil');
-
-        $grid3 = new Grid();
-        $grid3->abreColuna(4);
-        br();
-
-        # Tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($servidores);
-        $tabela->set_label(array("Perfil","Servidores"));
-        $tabela->set_width(array(80,20));
-        $tabela->set_align(array("left","center"));    
-        $tabela->show();
-
-        $grid3->fechaColuna();
-        $grid3->abreColuna(8);
-
-        $chart = new Chart("Pie",$servidores);
-        $chart->show();
-
-        $grid3->fechaColuna();
-        $grid3->fechaGrid();
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-    }
-    
-    ###########################################################
-   
-    /**
-     * Método showTabelaDetalhada
+     * Método showResumo
      * 
      * Exibe a Tabela
      *
      */	
-    public function showTabelaDetalhada()
+    public function showResumo()
     {
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        # Pega os dias totais desse exercício/Lotação
+        $slctot = "SELECT distinct sum(numDias) as soma
+                     FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                LEFT JOIN tbferias USING (idServidor)
+                     JOIN tbhistlot USING (idServidor)
+                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE anoExercicio = $this->anoExercicio
+                      AND situacao = 1 
+                      AND tbferias.status <> 'cancelada'
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+        
+        # lotacao
+        if(!is_null($this->lotacao)){
+            $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+        }
+        
+        $slctot .= "GROUP BY idServidor
+                    ORDER BY soma desc";
+        
+        ###################################################
+        
+        # Pega os dados do banco
+        $diasTotais = $servidor->select($slctot,TRUE);
+        $totalFerias = count($diasTotais);
+        $conta = array();
+        $tt = 0;        // Totalizador de servidores que pediram férias
+        
+        # Preenche os outros dados
+        if($totalFerias > 0){
+            foreach ($diasTotais as $valor) {
+                $slctot = "SELECT idServidor,
+                                  sum(numDias) as soma
+                             FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                           LEFT JOIN tbferias USING (idServidor)
+                                                JOIN tbhistlot USING (idServidor)
+                                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                            WHERE anoExercicio = $this->anoExercicio
+                              AND situacao = 1 
+                              AND tbferias.status <> 'cancelada'
+                              AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                
+                            if(!is_null($this->lotacao)){
+                                $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                            }
+        
+                 $slctot .= "
+                         GROUP BY idServidor
+                         HAVING soma = $valor[0]
+                         ORDER BY 1";
+                $num = $servidor->count($slctot);
+                $tt += $num;
+                $conta[] = array($valor[0],$num);            
+            }
+        } 
+        
+        ###################################################
+        
+        # Exibe os servidores desse setor
+        # Os que Pediram férias
+        $select1 = "(SELECT tbpessoa.nome,
+                           sum(numDias) as soma
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                    LEFT JOIN tbferias USING (idServidor)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       ";
+        
+                        if(!is_null($this->lotacao)){
+                            $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                        }
+        
+                 $select1 .= "
+                       AND tbferias.status <> 'cancelada'
+                       AND anoExercicio = $this->anoExercicio
+                       AND situacao = 1 
+                  GROUP BY tbpessoa.nome
+                  ORDER BY 2 desc,1)";
+        
+        # Pega os dados do banco
+        $servset1 = $servidor->select($select1,TRUE);
+        
+        # Os que não pediram
+        $select2 = "SELECT tbpessoa.nome,'-'
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      ";
+                 
+                    if(!is_null($this->lotacao)){
+                        $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                    }
+        
+                 $select2 .= "
+                      AND situacao = 1
+                      AND tbpessoa.nome NOT IN 
+                      (SELECT tbpessoa.nome
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                         JOIN tbferias USING (idservidor)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                           AND anoExercicio = $this->anoExercicio
+                           AND tbferias.status <> 'cancelada'";
+        
+                        if(!is_null($this->lotacao)){
+                            $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                        }
+        
+                 $select2 .= "
+                       AND situacao = 1
+                  ORDER BY 1)
+                     ORDER BY 1";        
+        
+        # Pega os dados do banco
+        $servset2 = $servidor->select($select2,TRUE);
+        $servset3 = array_merge_recursive($servset1,$servset2);
+        
+        $totalServidores = count($servset3);
+        
+        # Monta a tabela de Resumo. Está aqui pois preciso pegar o total de servidores
+        $tabela = new Tabela();
+        
+        # Calcula o nº de sevidores sem solicitação de férias nesse exercício
+        if(is_null($this->lotacao)){
+            $totalServidores = $servidor->get_numServidoresAtivos();
+        }
+        $conta[] = array(0,$totalServidores - $tt);
+        
+        $tabela->set_conteudo($conta);
+        $tabela->set_label(array("Total de Dias","Nº de Servidores"));
+        #$tabela->set_width($width);
+        $tabela->set_align(array("center"));
+        $tabela->set_titulo("Resumo");
+        $tabela->show();
+        
+        callout("Total de Servidores: ".$totalServidores);
+        
+        # Monta a tabela de Servidores.
+        if($totalServidores > 0){
+            # Monta a tabela
+            $tabela = new Tabela();
 
+            $tabela->set_conteudo($servset3);
+            $tabela->set_label(array("Servidores","Dias"));
+            #$tabela->set_width($width);
+            $tabela->set_align(array("left"));
+            $tabela->set_titulo("Servidores Desta Lotação");
+            $tabela->show();
+        }              
+    }
+    
+    ###########################################################
+    
+    /**
+     * Método showTabela
+     * 
+     * Exibe a Tabela
+     *
+     */	
+    public function showTabela()
+    {
         # Executa rotina interna
         $this->prepara();
         
@@ -499,15 +440,11 @@ class listaFerias
         $servidor = new Pessoal();
         
         # Dados da Tabela
-        $label = array("IDFuncional","Matrícula","Servidor","Lotação","Perfil","Exercicio","Status","dt","dias","p");
+        $label = array("Data","Dias","Período","Status","Id","Nome","Lotação","Perfil");
         #$width = array(5,5,15,16,15,8,8,5,5);
-        $align = array("center","center","left","left","left");
-        $function = array (null,"dv",null,null,null,null,null,"date_to_php");
-        
-        # Pega a lista com o limit da tabulação
-        titulo($this->nomeLista);
-        #echo $this->select;
-        
+        $align = array("center","center","center","center","center","left","left");
+        $function = array ("date_to_php");
+                        
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select.$this->selectPaginacao,true);
         
@@ -531,80 +468,7 @@ class listaFerias
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
-            if($this->permiteEditar){
-                $tabela->set_editar('servidor.php?fase=editar&id=');
-            }
-            
-            if ($this->paginacao){
-                $tabela->set_rodape($this->texto.' ('.$this->itemInicial.' a '.$this->itemFinal.' de '.$this->totReg.' Registros)');
-            }
-            
-            if(!is_null($this->matNomeId)){
-                $tabela->set_textoRessaltado($this->matNomeId);
-            }
-            
-            $tabela->show();
-            
-            # Pega o time final
-            $time_end = microtime(true);
-            
-            # Calcula e exibe o tempo
-            $time = $time_end - $this->time_start;
-            p(number_format($time, 4, '.', ',')." segundos","right","f10");
-        }
-    }
-    
-    ###########################################################
-   
-    /**
-     * Método showTabelaResumida
-     * 
-     * Exibe a Tabela
-     *
-     */	
-    public function showTabelaResumida()
-    {
-
-        # Executa rotina interna
-        $this->preparaResumo();
-        $this->graficoResumo();
-        
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-        
-        # Dados da Tabela
-        $label = array("IDFuncional","Matrícula","Servidor","Lotação","Perfil","Dias");
-        #$width = array(5,5,15,16,15,8,8,5,5);
-        $align = array("center","center","left","left");
-        $function = array (null,"dv");
-        
-        # Pega a lista com o limit da tabulação
-        titulo($this->nomeLista);
-        #echo $this->select;
-        
-        # Executa o select juntando o selct e o select de paginacao
-        $conteudo = $servidor->select($this->select.$this->selectPaginacao,true);
-        
-        if($this->totReg == 0){
-            br();
-            $callout = new Callout();
-            $callout->abre();
-                p('Nenhum item encontrado !!','center');
-            $callout->fecha();
-        }else{
-            # Monta a tabela
-            $tabela = new Tabela();
-            
-            $tabela->set_conteudo($conteudo);
-            $tabela->set_label($label);
-            #$tabela->set_width($width);
-            $tabela->set_align($align);
-            #$tabela->set_titulo($this->nomeLista);
-            #$tabela->set_classe($classe);
-            #$tabela->set_metodo($metodo);
-            $tabela->set_funcao($function);
-            $tabela->set_totalRegistro(true);
-            $tabela->set_idCampo('idServidor');
+            $tabela->set_titulo("Férias Solicitadas, Fruídas e Canceladas");
             if($this->permiteEditar){
                 $tabela->set_editar('servidor.php?fase=editar&id=');
             }
@@ -658,7 +522,7 @@ class listaFerias
                 
         # Relatório
         $relatorio = new Relatorio();
-        $relatorio->set_titulo("Relatório de ".$this->nomeLista);
+        $relatorio->set_titulo("Relatório");
         if(!is_null($this->subTitulo)){
             $relatorio->set_subtitulo($this->subTitulo);
         }

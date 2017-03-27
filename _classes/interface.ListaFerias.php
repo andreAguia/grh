@@ -353,7 +353,7 @@ class listaFerias
         $servset1 = $servidor->select($select1,TRUE);
         
         # Os que não pediram
-        $select2 = "SELECT tbpessoa.nome,'0'
+        $select2 = "SELECT tbpessoa.nome,'-'
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)

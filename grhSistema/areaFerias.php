@@ -109,65 +109,6 @@ if($acesso)
     titulo("Área de Férias");
     br();
     
-    # Parâmetros
-    $form = new Form('?');
-
-    # Nome ou Matrícula
-    $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
-    $controle->set_size(55);
-    $controle->set_title('Nome, matrícula ou ID:');
-    $controle->set_valor($parametroNomeMat);
-    $controle->set_autofocus(true);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(4);
-    $form->add_item($controle);
-
-    # anoExercicio                
-    $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
-    array_push($anoExercicio,date("Y"));
-
-    $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
-    $controle->set_size(8);
-    $controle->set_title('Filtra por Ano exercício');
-    $controle->set_array($anoExercicio);
-    $controle->set_valor(date("Y"));
-    $controle->set_valor($parametroAnoExercicio);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(2);
-    $form->add_item($controle);
-
-    # Lotação
-    $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                  FROM tblotacao
-                                 WHERE ativo
-                              ORDER BY ativo desc,lotacao');
-    array_unshift($result,array('*','-- Todos --'));
-
-    $controle = new Input('parametroLotacao','combo','Lotação:',1);
-    $controle->set_size(30);
-    $controle->set_title('Filtra por Lotação');
-    $controle->set_array($result);
-    $controle->set_valor($parametroLotacao);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(6);
-    $form->add_item($controle);
-
-    # submit
-    #$controle = new Input('submit','submit');
-    #$controle->set_valor('Pesquisar');
-    #$controle->set_size(20);
-    #$controle->set_accessKey('P');
-    #$controle->set_linha(3);
-    #$controle->set_col(2);
-    #$form->add_item($controle);
-
-    $form->show();
-    $grid->fechaColuna();
-    $grid->fechaGrid();
-    
     ################################################################
     
     switch ($fase)
@@ -177,23 +118,84 @@ if($acesso)
             br(10);
             aguarde();
             br();            
-            loadPage('?fase=pesquisar');            
+            loadPage('?fase=detalhe');            
             break;
         
-        case "pesquisar" :
-            # Cadastro de Servidores 
-            $grid = new Grid();
-            $grid->abreColuna(12);
+        case "detalhe" :
+            # Parâmetros
+            $form = new Form('?');
+
+            # Nome ou Matrícula
+            $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
+            $controle->set_size(55);
+            $controle->set_title('Nome, matrícula ou ID:');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # anoExercicio                
+            $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
+            array_push($anoExercicio,date("Y"));
+
+            $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano exercício');
+            $controle->set_array($anoExercicio);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroAnoExercicio);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                          FROM tblotacao
+                                         WHERE ativo
+                                      ORDER BY ativo desc,lotacao');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $form->add_item($controle);
+            
+            $form->show();
             
             # Lista de Servidores Ativos
-            $lista = new listaFerias("Férias");
+            $lista = new listaFerias($parametroAnoExercicio);
             if($parametroNomeMat <> NULL){
                 $lista->set_matNomeId($parametroNomeMat);
             }
 
-            if($parametroAnoExercicio <> "*"){
-                $lista->set_anoExercicio($parametroAnoExercicio);
+            if($parametroLotacao <> "*"){
+                $lista->set_lotacao($parametroLotacao);
             }
+
+            # Paginação
+            if($parametroLotacao == "*"){
+                $lista->set_paginacao(true);
+            }
+            $lista->set_paginacaoInicial($paginacao);
+            $lista->set_paginacaoItens(14);               
+
+            $lista->showDetalhe();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+            
+        case "resumo" :
+            # Lista de Servidores Ativos
+            $lista = new listaFerias($parametroAnoExercicio);
 
             if($parametroLotacao <> "*"){
                 $lista->set_lotacao($parametroLotacao);
@@ -214,59 +216,49 @@ if($acesso)
 
             $grid3->fechaColuna();
             $grid3->abreColuna(8);
-            br();
-            $lista->showDetalhe();
-
-            $grid3->fechaColuna();
-            $grid3->fechaGrid();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
             
-        case "resumo" :
-            # Cadastro de Servidores 
-            $grid = new Grid();
-            $grid->abreColuna(12);
+            # Parâmetros
+            $form = new Form('?fase=resumo');
+
+            # anoExercicio                
+            $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
+            array_push($anoExercicio,date("Y"));
+
+            $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano exercício');
+            $controle->set_array($anoExercicio);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroAnoExercicio);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                          FROM tblotacao
+                                         WHERE ativo
+                                      ORDER BY ativo desc,lotacao');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(9);
+            $form->add_item($controle);
             
-            # Lista de Servidores Ativos
-            $lista = new listaFerias("Férias");
-            if($parametroNomeMat <> NULL){
-                $lista->set_matNomeId($parametroNomeMat);
-            }
-
-            if($parametroAnoExercicio <> "*"){
-                $lista->set_anoExercicio($parametroAnoExercicio);
-            }
-
-            if($parametroLotacao <> "*"){
-                $lista->set_lotacao($parametroLotacao);
-            }
-
-            # Paginação
-            if($parametroLotacao == "*"){
-                $lista->set_paginacao(true);
-            }
-            $lista->set_paginacaoInicial($paginacao);
-            $lista->set_paginacaoItens(30);               
-
-            $grid3 = new Grid();
-            $grid3->abreColuna(4);
-            br();
-
-            $lista->showResumo();
-
-            $grid3->fechaColuna();
-            $grid3->abreColuna(8);
-            br();
-            $lista->showResumo(FALSE);
+            $form->show();
+            
+            $lista->showPorDia(FALSE);
 
 
             $grid3->fechaColuna();
             $grid3->fechaGrid();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
             break;
         
         ###############################
@@ -298,8 +290,22 @@ if($acesso)
             }
             
             $lista->showRelatorio();
-            break; 
+            break;
+            
+            ###############################
+
+            # Chama a rotina de férias do servidor
+            case "rotinaFeriasServidor" :
+                set_session('idServidorPesquisado',$id);
+                set_session('areaFerias',TRUE);
+                loadPage('servidorFerias.php');
+                break; 
+
+            ###############################
     }
+    $grid->fechaColuna();
+    $grid->fechaGrid();
+    
     $page->terminaPagina();
 }else{
     loadPage("../../areaServidor/sistema/login.php");

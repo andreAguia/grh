@@ -63,21 +63,11 @@ if($acesso)
         $botaoRel->set_imagem($imagem1);
         $menu1->add_link($botaoRel,"right");
         
-        # Usuário
-        $imagem2 = new Imagem(PASTA_FIGURAS.'user.png',null,15,15);
-        $botaoUsu = new Button();
-        $botaoUsu->set_url("../../areaServidor/sistema/perfilUsuario.php");
-        $botaoUsu->set_title("Configurações do perfil do usuário");
-        $botaoUsu->set_imagem($imagem2);
-        $menu1->add_link($botaoUsu,"right");
-        
         # Área do Servidor
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');
         $linkArea->set_title('Área do Servidor');
-		if(Verifica::acesso($idUsuario,1)){		// por enquanto
-	        $menu1->add_link($linkArea,"right");
-	    }        
+	$menu1->add_link($linkArea,"right");        
         
         # Sobre
         $linkSobre = new Link("Sobre");

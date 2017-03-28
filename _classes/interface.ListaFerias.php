@@ -9,7 +9,6 @@
 
 class listaFerias
 {    
-    
     # Parâmetros de Pesquisa
     private $matNomeId = NULL;  # Busca por matricula nome ou id em um só campos
     private $anoExercicio = NULL;
@@ -47,8 +46,8 @@ class listaFerias
      * @param  $name    = nome da classe e do id para estilo
      */
     
-    public function __construct(){
-        
+    public function __construct($ano){
+        $this->anoExercicio = $ano;
     }
     
     ###########################################################
@@ -156,7 +155,8 @@ class listaFerias
         
         # Exibe os servidores desse setor
         # Os que Pediram férias
-        $select1 = "(SELECT tbpessoa.nome,
+        $select1 = "(SELECT tbservidor.idFuncional,
+                            tbpessoa.nome,
                            sum(numDias) as soma
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                     LEFT JOIN tbferias USING (idServidor)
@@ -174,13 +174,15 @@ class listaFerias
                        AND anoExercicio = $this->anoExercicio
                        AND situacao = 1 
                   GROUP BY tbpessoa.nome
-                  ORDER BY 2 desc,1)";
+                  ORDER BY 3 desc,2)";
         
         # Pega os dados do banco
         $servset1 = $servidor->select($select1,TRUE);
         
         # Os que não pediram
-        $select2 = "SELECT tbpessoa.nome,'-'
+        $select2 = "SELECT tbservidor.idFuncional,
+                           tbpessoa.nome,
+                           '-'
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -209,8 +211,8 @@ class listaFerias
         
                  $select2 .= "
                        AND situacao = 1
-                  ORDER BY 1)
-                     ORDER BY 1";        
+                  ORDER BY tbpessoa.nome asc)
+                     ORDER BY tbpessoa.nome asc";        
         
         # Pega os dados do banco
         $servset2 = $servidor->select($select2,TRUE);
@@ -229,14 +231,13 @@ class listaFerias
         
         $tabela->set_conteudo($conta);
         $tabela->set_label(array("Total de Dias","Nº de Servidores"));
-        #$tabela->set_width($width);
+        $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
         $tabela->set_titulo("Resumo");
         if($resumido){
             $tabela->show();
+            titulo("Total: ".$totalServidores);
         }
-        
-        callout("Total de Servidores: ".$totalServidores);
         
         # Monta a tabela de Servidores.
         if($totalServidores > 0){
@@ -244,9 +245,9 @@ class listaFerias
             $tabela = new Tabela();
 
             $tabela->set_conteudo($servset3);
-            $tabela->set_label(array("Servidores","Dias"));
+            $tabela->set_label(array("Id","Servidor","Dias"));
             #$tabela->set_width($width);
-            $tabela->set_align(array("left"));
+            $tabela->set_align(array("center","left"));
             $tabela->set_titulo("Servidores Desta Lotação");
             if(!$resumido){
                 $tabela->show();
@@ -312,7 +313,7 @@ class listaFerias
         }
         
         # ordenação
-        $select .= ' ORDER BY tbferias.dtInicial,tbferias.periodo,tbpessoa.nome';
+        $select .= ' ORDER BY tbpessoa.nome,tbferias.periodo';
         
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,true);
@@ -438,7 +439,7 @@ class listaFerias
             br();
             $callout = new Callout();
             $callout->abre();
-                p('Nenhum item encontrado !!','center');
+                p('Não há solicitações de férias !!','center');
             $callout->fecha();
         }else{
             # Monta a tabela
@@ -454,7 +455,7 @@ class listaFerias
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
-            $tabela->set_titulo("Férias Solicitadas, Fruídas e Canceladas");
+            $tabela->set_titulo("Férias Detalhadas");
             if($this->permiteEditar){
                 $tabela->set_editar('servidor.php?fase=editar&id=');
             }

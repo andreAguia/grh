@@ -50,7 +50,7 @@ if($acesso)
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
-    $relatorio->set_width(array(10,10,10,5,8,10,15));
+    #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
 

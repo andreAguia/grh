@@ -23,6 +23,9 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica se veio da área de férias
+    $areaFerias = get_session("areaFerias");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -51,7 +54,11 @@ if($acesso)
     $objeto->set_nome('Histórico de Férias');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
+    if($areaFerias){
+        $objeto->set_voltarLista('areaFerias.php');
+    }else{
+        $objeto->set_voltarLista('servidorMenu.php');
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT anoExercicio,
@@ -91,20 +98,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha","Solicitação de Férias"));
-    $objeto->set_width(array(10,10,10,5,8,10,15,12,8));	
+    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
-
-    # Botão da solicitação de férias
-    $botao1 = new BotaoGrafico();
-    $botao1->set_title('Emite a segunda via da solicitação de férias');
-    $botao1->set_label('');
-    $botao1->set_url('?fase=solicitacaoFerias&id=');     
-    $botao1->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","","","",$botao1));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

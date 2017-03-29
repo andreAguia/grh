@@ -103,14 +103,14 @@ if($acesso)
     $nacionalidade = $pessoal->select('SELECT idNacionalidade,
                                        nacionalidade
                                   FROM tbnacionalidade
-                              ORDER BY idNacionalidade');
+                              ORDER BY nacionalidade');
     array_unshift($nacionalidade, array(null,null)); # Adiciona o valor de nulo
     
     # Pega os dados da combo de país de origem
     $paisOrigem = $pessoal->select('SELECT idPais,
                                        pais
                                   FROM tbpais
-                              ORDER BY idPais');
+                              ORDER BY pais');
     array_unshift($paisOrigem, array(null,null)); # Adiciona o valor de nulo
 
      

@@ -84,7 +84,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
-                $menu->add_item('linkAjax','Censo','?fase=censo','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Nacionalidade','?fase=nacionalidade','','','divMenuRelatorioGrh'); 
                 $menu->show();
             $callout->fecha();
             $divMenu2->fecha();
@@ -334,10 +334,10 @@ if($acesso)
         
         ######################################
 
-         case "censo";
+         case "nacionalidade";
             $menu = new Menu();
             $menu->add_item('titulo','Censo');
-            $menu->add_item('linkWindow','Relatório de Docentes da Universidade','../grhRelatorios/censoDocentes.php'); 
+            $menu->add_item('linkWindow','Relatório de Servidores Agrupados por Nacionalidade','../grhRelatorios/geralServidoresNacionalidade.php'); 
 
             $menu->show();
             break;

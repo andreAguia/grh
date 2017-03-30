@@ -25,6 +25,7 @@ if($acesso)
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    set_session('areaFerias',FALSE);
     
     # Pega os parâmetros
     $parametroNomeMat = retiraAspas(post('parametroNomeMat',get_session('parametroNomeMat')));
@@ -104,6 +105,7 @@ if($acesso)
     $menu1->add_link($botaoRel,"right");
 
     $menu1->show();
+    br();
     
     # Título
     titulo("Área de Férias");
@@ -264,11 +266,11 @@ if($acesso)
         ###############################
 
         # Chama o menu do Servidor que se quer editar
-        case "editar" :
-            br(8);
-            aguarde();
-            set_session('idServidorPesquisado',$id);
-            loadPage('servidorMenu.php');
+        case "editaFerias" :
+            $servidor = $pessoal->get_idServidorFerias($id);
+            set_session('idServidorPesquisado',$servidor);
+            set_session('areaFerias',TRUE);
+            loadPage('servidorFerias.php?fase=editar&id='.$id);
             break; 
         
         ###############################

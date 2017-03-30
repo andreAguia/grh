@@ -3039,6 +3039,30 @@ class Pessoal extends Bd
 	}
 		
     ###########################################################
+
+	
+	/**
+	 * Método get_idServidorFerias
+	 * Informa o id servidor de um pedido de férias
+	 * 
+	 * @param	string $idFerias  matricula do servidor
+	 */
+
+	public function get_idServidorFerias($idFerias)
+	
+	{
+            # Pega o cargo do servidor
+            $select = 'SELECT idServidor
+                         FROM tbferias
+                        WHERE idFerias = '.$idFerias;
+
+            $row = parent::select($select,false);
+            
+            return $row[0];
+			
+	}
+		
+    ###########################################################
 	
 	function get_numCargoComissaoAtivo()
 	

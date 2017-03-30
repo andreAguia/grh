@@ -157,8 +157,9 @@ class listaFerias
         # Os que Pediram férias
         $select1 = "(SELECT tbservidor.idFuncional,
                             tbpessoa.nome,
-                           sum(numDias) as soma
-                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                            tbservidor.idServidor,
+                            sum(numDias) as soma
+                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                     LEFT JOIN tbferias USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -174,7 +175,7 @@ class listaFerias
                        AND anoExercicio = $this->anoExercicio
                        AND situacao = 1 
                   GROUP BY tbpessoa.nome
-                  ORDER BY 3 desc,2)";
+                  ORDER BY 4 desc,tbpessoa.nome)";
         
         # Pega os dados do banco
         $servset1 = $servidor->select($select1,TRUE);
@@ -182,6 +183,7 @@ class listaFerias
         # Os que não pediram
         $select2 = "SELECT tbservidor.idFuncional,
                            tbpessoa.nome,
+                           tbservidor.idServidor,
                            '-'
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
@@ -245,10 +247,11 @@ class listaFerias
             $tabela = new Tabela();
 
             $tabela->set_conteudo($servset3);
-            $tabela->set_label(array("Id","Servidor","Dias"));
-            #$tabela->set_width($width);
-            $tabela->set_align(array("center","left"));
-            $tabela->set_titulo("Servidores Desta Lotação");
+            $tabela->set_label(array("Id","Servidor","Cargo","Dias"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
+            $tabela->set_align(array("center","left","left"));
+            $tabela->set_titulo("Total de férias nesse ano");
             if(!$resumido){
                 $tabela->show();
             }
@@ -279,7 +282,7 @@ class listaFerias
                          tbpessoa.nome,
                          concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                          tbperfil.nome,                         
-                         idServidor
+                         idFerias
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
 			            LEFT JOIN tbferias USING (idservidor) 
                                          JOIN tbhistlot USING (idServidor)
@@ -454,10 +457,10 @@ class listaFerias
             #$tabela->set_metodo($metodo);
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
-            $tabela->set_idCampo('idServidor');
+            $tabela->set_idCampo('idFerias');
             $tabela->set_titulo("Férias Detalhadas");
             if($this->permiteEditar){
-                $tabela->set_editar('servidor.php?fase=editar&id=');
+                $tabela->set_editar('?fase=editaFerias&id=');
             }
             
             if ($this->paginacao){

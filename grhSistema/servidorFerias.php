@@ -54,10 +54,14 @@ if($acesso)
     $objeto->set_nome('Histórico de Férias');
 
     # botão de voltar da lista
+    $objeto->set_voltarLista('servidorMenu.php');
+        
+    # botão de voltar do formulário
     if($areaFerias){
-        $objeto->set_voltarLista('areaFerias.php');
+        $objeto->set_voltarForm('areaFerias.php');
+        $objeto->set_linkListar('areaFerias.php');
     }else{
-        $objeto->set_voltarLista('servidorMenu.php');
+        $objeto->set_linkListar('?fase=listar');
     }
 
     # select da lista
@@ -95,7 +99,7 @@ if($acesso)
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?fase=listar');
+    
 
     # Parametros da tabela
     $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));

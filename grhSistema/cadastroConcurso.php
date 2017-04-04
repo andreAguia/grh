@@ -41,8 +41,10 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();			
-    $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
+    $page = new Page();
+    if($fase == "grafico"){
+        $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página

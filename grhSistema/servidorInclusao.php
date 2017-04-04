@@ -354,8 +354,7 @@ if($acesso){
                 $controle = new Input('submit','submit');
                 $controle->set_valor(' Concluir ');
                 $controle->set_size(20);
-                $controle->set_formLinha(1);
-                $controle->set_formAlign('center');
+                $controle->set_linha(1);
                 $controle->set_accessKey('E');
                 $form->add_item($controle);
 

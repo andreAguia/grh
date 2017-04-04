@@ -12,7 +12,7 @@ class Checkup
 
 	
     private $idServidor = null;  //informa se será somente para um servidor ou se será para todos
-    private $lista = true;      //informa se será listagem ou somente contagem dos registros
+    private $lista = true;       //informa se será listagem ou somente contagem dos registros
         
     ###########################################################
 
@@ -101,7 +101,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -174,7 +177,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -247,7 +253,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -302,7 +311,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -354,7 +366,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -406,7 +421,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -457,7 +475,10 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
@@ -509,10 +530,14 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
+
     ###########################################################
     
      /**
@@ -565,10 +590,14 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
+    
     ###########################################################
     
      /**
@@ -621,9 +650,13 @@ class Checkup
             if($this->lista){
                 $tabela->show();
             }else{
-                p($count.' '.$titulo,"checkupResumo");
+                $metodo = explode(":",__METHOD__);
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                $link->show();
             }
         }
     }
+
     ###########################################################
 }

@@ -44,18 +44,15 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    if($fase <> "organograma"){
-        $page = new Page();
+    # Começa uma nova página
+    $page = new Page();
+    if($fase == "grafico"){
         $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
-        $page->iniciaPagina();
-    }else{
-        echo '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>';
     }
+    $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if($fase <> "organograma"){
-        AreaServidor::cabecalho();
-    }
+    AreaServidor::cabecalho();
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();

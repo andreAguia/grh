@@ -41,11 +41,12 @@ div#divGaveta{
  * Check up
  *******************************************/
 
-p#checkupResumo{
+a#checkupResumo{
     font-size: 11px;
     text-align: left;
     color: #02548b;
     margin: 0px;
+    white-space: pre-wrap; 
 }
 
 /*******************************************

@@ -22,6 +22,7 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','menu');
+    $alerta = get('alerta');
 		
     # Define a senha padrão de acordo com o que está nas variáveis
     #define("SENHA_PADRAO",$config->get_variavel('senha_padrao'));    
@@ -121,7 +122,7 @@ if($acesso)
         case "resumoAlertas" :
             titulo('Alertas');
             br();                
-            $checkup = New Checkup(false);                
+            $checkup = New Checkup(FALSE);                
             $checkup->get_all();
             break;
 
@@ -141,7 +142,12 @@ if($acesso)
             
             # executa o checkup
             $checkup = New Checkup();
-            $checkup->get_all();
+            
+            if(is_null($alerta)){
+                $checkup->get_all();
+            }else{
+                $checkup->$alerta();
+            }
             
             # Grava no log a atividade
             $data = date("Y-m-d H:i:s");

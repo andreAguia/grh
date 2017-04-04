@@ -73,9 +73,9 @@ if($acesso)
     # botão salvar
     #$objeto->set_botaoSalvarGrafico(false);
 
-    # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
+    # Caminhos    
     $objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 

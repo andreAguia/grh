@@ -91,7 +91,7 @@ class listaFerias
      * Exibe a Tabela
      *
      */	
-    public function showPorDia($resumido = TRUE)
+    public function showResumo($resumido = TRUE)
     {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -251,7 +251,7 @@ class listaFerias
             $tabela->set_classe(array(NULL,NULL,"pessoal"));
             $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
             $tabela->set_align(array("center","left","left"));
-            $tabela->set_titulo("Total de férias nesse ano");
+            $tabela->set_titulo("Resumo por Servidor");
             if(!$resumido){
                 $tabela->show();
             }
@@ -274,13 +274,11 @@ class listaFerias
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select ='SELECT tbferias.dtInicial,
+        $select ='SELECT tbpessoa.nome,
                          tbferias.numDias,
+                         tbferias.dtInicial,
                          tbferias.periodo,
                          tbferias.status,
-                         tbservidor.idFuncional,
-                         tbpessoa.nome,
-                         concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                          tbperfil.nome,                         
                          idFerias
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -430,20 +428,20 @@ class listaFerias
         $servidor = new Pessoal();
         
         # Dados da Tabela
-        $label = array("Data","Dias","Período","Status","Id","Nome","Lotação","Perfil");
+        $label = array("Nome","Dias","Data","Período","Status","Perfil");
         #$width = array(5,5,15,16,15,8,8,5,5);
-        $align = array("center","center","center","center","center","left","left");
-        $function = array ("date_to_php");
+        $align = array("left","center","center","center","center","center");
+        $function = array (null,null,"date_to_php");
                         
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($select.$this->selectPaginacao,true);
         
         if($totalRegistros == 0){
-            br();
-            $callout = new Callout();
-            $callout->abre();
-                p('Não há solicitações de férias !!','center');
-            $callout->fecha();
+            #br();
+            #$callout = new Callout();
+            #$callout->abre();
+            #    p('Não há solicitações de férias !!','center');
+            #$callout->fecha();
         }else{
             # Monta a tabela
             $tabela = new Tabela();

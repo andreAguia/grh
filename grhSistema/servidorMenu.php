@@ -17,6 +17,9 @@ include ("_config.php");
 set_session('sessionParametro');	# Zera a session do par�metro de pesquisa da classe modelo1
 set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
 
+# Verifica se veio dos alertas
+$alertas = get_session("alertas");
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
@@ -42,7 +45,13 @@ if($acesso){
     $menu = new MenuBar();
     
     # Voltar
-    $linkBotao1 = new Link("Voltar",'servidor.php');
+    if(is_null($alertas)){
+        $caminhoVolta = 'servidor.php';
+    }else{
+        $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alertas;
+    }
+        
+    $linkBotao1 = new Link("Voltar",$caminhoVolta);
     $linkBotao1->set_class('button');
     $linkBotao1->set_title('Volta para a página anterior');
     $linkBotao1->set_accessKey('V');

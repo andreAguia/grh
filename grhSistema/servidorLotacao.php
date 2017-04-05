@@ -73,8 +73,12 @@ if($acesso)
     # botão salvar
     #$objeto->set_botaoSalvarGrafico(false);
 
-    # Caminhos    
-    $objeto->set_linkExcluir('?fase=excluir');
+    # Caminhos
+    if(Verifica::acesso($idUsuario,1)){ // Só permite editar ou excluir para o administrador
+        $objeto->set_linkExcluir('?fase=excluir');
+    }else{
+        $objeto->set_botaoEditar(FALSE);
+    }
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');

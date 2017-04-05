@@ -46,7 +46,14 @@ a#checkupResumo{
     text-align: left;
     color: #02548b;
     margin: 0px;
-    white-space: pre-wrap; 
+}
+
+ul.checkupResumo li{ 
+    padding: 0px 0px 0px 0px;    
+    text-align: left;
+    font-size: 12px;
+    list-style-type: none;
+    margin: 0px 15px 0px 0px;
 }
 
 /*******************************************

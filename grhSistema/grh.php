@@ -115,6 +115,9 @@ if($acesso)
 
             # monta o menu principal
             Grh::menu($idUsuario);
+    
+            # Zera a session de alertas
+            set_session('alertas');
             break;
 
 ##################################################################	
@@ -122,8 +125,12 @@ if($acesso)
         case "resumoAlertas" :
             titulo('Alertas');
             br();                
-            $checkup = New Checkup(FALSE);                
+            $checkup = New Checkup(FALSE);
+            
+            echo "<ul class='checkupResumo'>";
             $checkup->get_all();
+            echo "</ul>";
+            
             break;
 
 ##################################################################

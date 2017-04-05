@@ -17,8 +17,6 @@ class Grh
     {        
         # tag do cabeçalho
         echo '<header>';
-		
-		
         
         $cabec = new Div('center');
         $cabec->abre();
@@ -27,7 +25,7 @@ class Grh
         $cabec->fecha();       
         
         if(!(is_null($titulo))){
-             br();
+            br();
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -39,7 +37,6 @@ class Grh
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
-
         echo '</header>';
     }
     
@@ -75,7 +72,7 @@ class Grh
         $menu->add_item($botao);
 
         $menu->show();
-		br(); 
+        br(); 
         $grid->fechaColuna();
         
         ##########################################################
@@ -181,20 +178,6 @@ class Grh
             br(2);
             aguarde();
         $divAlertas->fecha();
-        
-        # Mais detalhes
-        $linkBotao3 = new Link("Saiba mais","?fase=alertas");
-        $linkBotao3->set_class('small secondary button');
-        $linkBotao3->set_title('Informa os servidores que geraram os alertas');
-        $linkBotao3->set_accessKey('M');
-       
-        #$menu1->add_link($linkBotao3,"right");
-        br();
-        $grid2 = new Grid('center');
-        $grid2->abreColuna(5);        
-             $linkBotao3->show();       
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
         
         $grid->fechaColuna();
         br();        

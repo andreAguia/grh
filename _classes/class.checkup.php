@@ -11,8 +11,8 @@ class Checkup
   */
 
 	
-    private $idServidor = null;  //informa se será somente para um servidor ou se será para todos
-    private $lista = true;       //informa se será listagem ou somente contagem dos registros
+    private $idServidor = NULL;  //informa se será somente para um servidor ou se será para todos
+    private $lista = TRUE;       //informa se será listagem ou somente contagem dos registros
         
     ###########################################################
 
@@ -22,10 +22,9 @@ class Checkup
      * Faz um checkup
      */
     
-    public function __construct($lista = true,$idServidor = null)
-    {
+    public function __construct($lista = TRUE,$idServidor = NULL){
         $this->lista = $lista;
-        $this->idServidor = $idServidor;        
+        $this->idServidor = $idServidor;
     }
     
     ###########################################################
@@ -56,6 +55,7 @@ class Checkup
     
     public function get_licencaVencendo(){
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
        
         $select = 'SELECT tbservidor.idFuncional,
                   tbpessoa.nome,
@@ -100,11 +100,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -119,7 +121,8 @@ class Checkup
     
     public function get_trienioVencendo()
     {
-        $servidor = new Pessoal(); 
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
             
             $select = '(SELECT DISTINCT tbservidor.idFuncional,
                   tbpessoa.nome,
@@ -176,11 +179,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -196,6 +201,7 @@ class Checkup
     public function get_trienioVencido()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
         
         $select = '(SELECT DISTINCT tbservidor.idFuncional,  
                   tbpessoa.nome,
@@ -229,34 +235,36 @@ class Checkup
          ORDER BY 6)
          ORDER BY 6';		
 
-    $result = $servidor->select($select);
-    $count = $servidor->count($select);
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
 
-    # Cabeçalho da tabela
-    $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
-    $width = array(10,45,10,10,10,10);
-    $align = array('center','left');
-    $titulo = 'Servidores com Triênio Vencido antes de '.date('Y');
-    $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
-    $linkEditar = 'servidor.php?fase=editar&id=';
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
+        $width = array(10,45,10,10,10,10);
+        $align = array('center','left');
+        $titulo = 'Servidores com Triênio Vencido antes de '.date('Y');
+        $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
 
-    # Exibe a tabela
-    $tabela = new Tabela();
-    $tabela->set_conteudo($result);
-    $tabela->set_cabecalho($label,$width,$align);
-    $tabela->set_titulo($titulo);
-    $tabela->set_funcao($funcao);
-    $tabela->set_editar($linkEditar);
-    $tabela->set_idCampo('idServidor');
-    
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -272,6 +280,7 @@ class Checkup
     public function get_auxilioCrecheVencido()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
         
         $select = 'SELECT tbservidor.idFuncional,
                   tbpessoa.nome,
@@ -310,11 +319,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -330,6 +341,7 @@ class Checkup
     public function get_motoristaCarteiraVencida()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
@@ -365,11 +377,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -385,6 +399,7 @@ class Checkup
     public function get_motoristaSemDataCarteira()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
@@ -420,11 +435,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -440,6 +457,7 @@ class Checkup
     public function get_motoristaSemCarteira()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
@@ -474,11 +492,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -494,6 +514,7 @@ class Checkup
     public function get_estatutarioSemCargo()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
@@ -529,11 +550,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -549,6 +572,7 @@ class Checkup
     public function get_servidorCom74()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
                           tbpessoa.nome,
@@ -589,11 +613,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }
@@ -609,6 +635,7 @@ class Checkup
     public function get_servidorComMais75()
     {
         $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
                           tbpessoa.nome,
@@ -649,11 +676,13 @@ class Checkup
         if ($count <> 0){
             if($this->lista){
                 $tabela->show();
+                set_session('alertas',$metodo[2]);
             }else{
-                $metodo = explode(":",__METHOD__);
                 $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
                 $link->set_id("checkupResumo");
+                echo "<li>";
                 $link->show();
+                echo "</li>";
             }
         }
     }

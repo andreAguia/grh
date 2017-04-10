@@ -160,6 +160,10 @@ if($acesso){
             
             # monta o menu do servidor
             Grh::menuServidor($idServidorPesquisado);
+            
+            # Exibe o rodapé da página
+            br();
+            Grh::rodape($idUsuario);
             break;
         
    ##################################################################	

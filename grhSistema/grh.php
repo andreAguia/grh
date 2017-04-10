@@ -118,6 +118,10 @@ if($acesso)
     
             # Zera a session de alertas
             set_session('alertas');
+            
+            # Exibe o rodapé da página
+            br();
+            Grh::rodape($idUsuario);
             break;
 
 ##################################################################	

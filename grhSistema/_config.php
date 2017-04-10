@@ -112,7 +112,8 @@ $idServidorPesquisado = get_session('idServidorPesquisado'); # Servidor Editado 
 # Define se usa o input type data do html5 ou se usa o javascript
 # Se usar o html 5 o controle não trabalha com formato brasileiro
 # mas browsers exibem no format brasileiro ao 'perceber' o idioma do usuário
-if(BROWSER_NAME == 'CHROME'){
+$browser = array('CHROME','OPR','VIVALDI');
+if (in_array(BROWSER_NAME, $browser)){ 
     define('HTML5',true);
 }else{
     define('HTML5',false);

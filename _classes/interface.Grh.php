@@ -339,32 +339,8 @@ class Grh
             $grid->fechaColuna();
         }
         $grid->fechaGrid();
-        br();    
-        ##########################################################
-       
-        # Exibe faixa azul
-        $grid = new Grid();
-        $grid->abreColuna(12);        
-            titulo();        
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-        
-        # Exibe a versão do sistema
-        $intra = new Intra();
-        $grid = new Grid();
-        $grid->abreColuna(4);
-            p('Usuário : '.$intra->get_usuario($idUsuario),'grhUsuarioLogado');
-        $grid->fechaColuna();
-        $grid->abreColuna(4);
-            p('Versão: '.VERSAO,'grhVersao');
-        $grid->fechaColuna();
-        $grid->abreColuna(4);
-            p(BROWSER_NAME." - ".IP,'grhIp');
-        $grid->fechaColuna();
-        $grid->fechaGrid();        
-            $grid->fechaGrid();
+        br();
     }
-    
         
 ##########################################################
 
@@ -666,35 +642,6 @@ class Grh
             br();
         $grid2->fechaColuna();
         $grid2->fechaGrid();
-        
-        ##########################################################
-       
-        # Exibe faixa azul
-        br();
-        $grid = new Grid();
-        $grid->abreColuna(12);        
-            titulo();        
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-        
-        $intra = new Intra();
-        $grid = new Grid();
-        
-        # Exibe os ids (pessoa e servidor)
-        $grid->abreColuna(4);
-            p('(Servidor: '.$idServidor.' Pessoa: '.$pessoa->get_idPessoa($idServidor).")",'grhUsuarioLogado');
-        $grid->fechaColuna();
-        
-        # Exibe a versão do Sistema
-        $grid->abreColuna(4);
-            p('Versão: '.VERSAO,'grhVersao');
-        $grid->fechaColuna();
-        
-        # Exibe informações do Browser
-        $grid->abreColuna(4);
-            p(BROWSER_NAME." - ".IP,'grhIp');
-        $grid->fechaColuna();
-        $grid->fechaGrid();        
      }     
     
     ###########################################################
@@ -1037,8 +984,41 @@ class Grh
         }
         
         $relatorio->show();
-        
-        
     }
+        
+    ##########################################################
+    
+    /**
+    * método rodape
+    * Exibe oo rodapé
+    * 
+    * @param    string $idUsuario -> Usuário logado
+    */
+    public static function rodape($idUsuario) {
+       
+        # Exibe faixa azul
+        $grid = new Grid();
+        $grid->abreColuna(12);        
+            titulo();        
+        $grid->fechaColuna();
+        $grid->fechaGrid();
 
+        # Exibe a versão do sistema
+        $intra = new Intra();
+        $grid = new Grid();
+        $grid->abreColuna(4);
+            p('Usuário : '.$intra->get_usuario($idUsuario),'usuarioLogado');
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+            if(HTML5){
+                p('Versão: '.VERSAO.' (HTML5)','versao');
+            }else{
+                p('Versão: '.VERSAO,'versao');
+            }
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+            p(BROWSER_NAME." - ".IP,'ip');
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+    }
 }

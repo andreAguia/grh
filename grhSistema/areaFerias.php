@@ -28,7 +28,6 @@ if($acesso)
     set_session('areaFerias',FALSE);
     
     # Pega os parâmetros
-    $parametroNomeMat = retiraAspas(post('parametroNomeMat',get_session('parametroNomeMat')));
     $parametroAnoExercicio = post('parametroAnoExercicio',get_session('parametroAnoExercicio',date("Y")));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
     
@@ -40,14 +39,9 @@ if($acesso)
     $titulo = get_session('sessionTitulo');
     $subTitulo = get_session('sessionSubTitulo');
         
-    # Joga os parâmetros par as sessions
-    set_session('parametroNomeMat',$parametroNomeMat);
+    # Joga os parâmetros par as sessions    
     set_session('parametroAnoExercicio',$parametroAnoExercicio);
     set_session('parametroLotacao',$parametroLotacao);
-    
-    # Verifica a paginacão
-    $paginacao = get('paginacao',get_session('parametroPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('parametroPaginacao',$paginacao);  
 
     # Ordem da tabela
     $orderCampo = get('orderCampo');
@@ -114,17 +108,6 @@ if($acesso)
     # Formulário de Pesquisa
     $form = new Form('?');
 
-    # Nome ou Matrícula
-    $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
-    $controle->set_size(55);
-    $controle->set_title('Nome, matrícula ou ID:');
-    $controle->set_valor($parametroNomeMat);
-    $controle->set_autofocus(true);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(4);
-    $form->add_item($controle);
-
     # anoExercicio                
     $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
     array_push($anoExercicio,date("Y"));
@@ -137,7 +120,7 @@ if($acesso)
     $controle->set_valor($parametroAnoExercicio);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(2);
+    $controle->set_col(3);
     $form->add_item($controle);
 
     # Lotação
@@ -145,7 +128,7 @@ if($acesso)
                                   FROM tblotacao
                                  WHERE ativo
                               ORDER BY ativo desc,lotacao');
-    array_push($result,array('*','Nenhum'));
+    array_unshift($result,array('*','Todas'));
     
     $controle = new Input('parametroLotacao','combo','Lotação:',1);
     $controle->set_size(30);
@@ -154,7 +137,7 @@ if($acesso)
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(6);
+    $controle->set_col(9);
     $form->add_item($controle);
 
     $form->show();
@@ -164,36 +147,36 @@ if($acesso)
     switch ($fase)
     {
         case "" :
-            # Resumo
-            $grid2 = new Grid();
-            $grid2->abreColuna(4);
-            
-            # Resumo Geral
+            # Exibe aas férias
             if($parametroLotacao <> '*'){
-                $lista = new listaFerias($parametroAnoExercicio);
-                $lista->set_lotacao($parametroLotacao);
-                $lista->showResumo();
-            }
+                # lateral
+                $grid2 = new Grid();
+                $grid2->abreColuna(3);
 
-            $grid2->fechaColuna();
-            $grid2->abreColuna(8);
-            
-            # Resumo Por Servidor
-            if($parametroLotacao <> '*'){
-                $lista->showResumo(FALSE);
-            }
-            #$grid2->fechaColuna();
-            #$grid2->abreColuna(12);
-            
-            # Detalhado
-            if($parametroLotacao <> '*'){
-                $lista = new listaFerias($parametroAnoExercicio);
-                $lista->set_lotacao($parametroLotacao);
-                $lista->showDetalhe();
-            }
+                # Resumo Geral da lotação
+                $lista1 = new listaFerias($parametroAnoExercicio);
+                $lista1->set_lotacao($parametroLotacao);
+                $lista1->showResumo();
+                
+                $grid2->fechaColuna();
+                $grid2->abreColuna(9);
+                
+                # Resumo por servidor sa Lotação
+                $lista1->showResumo(FALSE);
 
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
+                # Detalhado da Lotação
+                $lista2 = new listaFerias($parametroAnoExercicio);
+                $lista2->set_lotacao($parametroLotacao);
+                $lista2->showDetalhe();
+
+                $grid2->fechaColuna();
+                $grid2->fechaGrid();
+            }else{
+                # Resumo Geral de Todas as Lotações
+                $lista1 = new listaFerias($parametroAnoExercicio);
+                $lista1->set_lotacao($parametroLotacao);
+                $lista1->showResumo();
+            }
             break;
             
         
@@ -205,6 +188,15 @@ if($acesso)
             set_session('idServidorPesquisado',$servidor);
             set_session('areaFerias',TRUE);
             loadPage('servidorFerias.php?fase=editar&id='.$id);
+            break; 
+        
+        ###############################
+
+        # Chama o menu do Servidor que se quer editar
+        case "editaServidorFerias" :
+            set_session('idServidorPesquisado',$id);
+            set_session('areaFerias',TRUE);
+            loadPage('servidorFerias.php');
             break; 
         
         ###############################

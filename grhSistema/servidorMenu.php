@@ -163,7 +163,7 @@ if($acesso){
             
             # Exibe o rodapé da página
             br();
-            Grh::rodape($idUsuario);
+            Grh::rodape($idUsuario,$idServidorPesquisado,$pessoal->get_idPessoa($idServidorPesquisado));
             break;
         
    ##################################################################	

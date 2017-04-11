@@ -60,6 +60,7 @@ if($acesso)
     if($areaFerias){
         $objeto->set_voltarForm('areaFerias.php');
         $objeto->set_linkListar('areaFerias.php');
+        $objeto->set_voltarLista('areaFerias.php');
     }else{
         $objeto->set_linkListar('?fase=listar');
     }
@@ -119,7 +120,11 @@ if($acesso)
     $objeto->set_formLabelTipo(1);
     
     # Pega o ano atual
-    $anoAtual = (date('Y'));
+    if($areaFerias){
+        $anoAtual = get_session('parametroAnoExercicio');
+    }else{
+        $anoAtual = (date('Y'));
+    }
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'anoExercicio',

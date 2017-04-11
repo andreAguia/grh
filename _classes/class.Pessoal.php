@@ -2306,19 +2306,28 @@ class Pessoal extends Bd
 	
 	###########################################################
 	
-	function get_numServidoresAtivos()
+	function get_numServidoresAtivos($idLotacao = NULL)
 	
 	/**
 	 * informa o número de Servidores Ativos
 	 * 
+         * @param integer $idPessoa do servidor
 	 */
 
 
 	{
             $select = 'SELECT idServidor
                          FROM tbservidor
-                        WHERE situacao = 1';		
-
+                         JOIN tbhistlot USING (idServidor)
+                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND situacao = 1';	
+            
+            # Lotação
+            if((!is_null($idLotacao)) AND ($idLotacao <> "*")){
+                $select .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+            }
+            
             $count = parent::count($select);
             return $count;
 	}

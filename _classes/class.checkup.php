@@ -83,7 +83,6 @@ class Checkup
         # Cabeçalho da tabela
         $titulo = 'Servidores com Licença Terminando em '.date('Y');
         $label = array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final');
-        $width = array(10,30,10,20,10,5,10);
         $funcao = array(null,null,null,null,"date_to_php",null,"date_to_php");
         $align = array('center','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
@@ -91,7 +90,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -161,7 +161,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio');
-        $width = array(10,45,10,10,10,10);
         $align = array('center','left');
         $titulo = 'Servidores com Triênio Vencendo em '.date('Y');
         $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
@@ -170,7 +169,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -240,7 +240,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
-        $width = array(10,45,10,10,10,10);
         $align = array('center','left');
         $titulo = 'Servidores com Triênio Vencido antes de '.date('Y');
         $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
@@ -249,7 +248,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -302,7 +302,6 @@ class Checkup
         # Cabeçalho da tabela
         $titulo = 'Servidores com o Auxílio Creche vencendo em '.date('Y');
         $label = array("IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo");
-        $width = array(10,20,20,10,10,10,15);
         $funcao = array(null,null,null,"date_to_php","date_to_php");
         $align = array('center','left','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
@@ -310,7 +309,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -344,11 +344,11 @@ class Checkup
         $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
-                        tbpessoa.nome,
-                        tbdocumentacao.dtVencMotorista,
-                        tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
+                          tbpessoa.nome,
+                          tbdocumentacao.dtVencMotorista,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                     LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista < now()
@@ -359,7 +359,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data da Carteira');
-        $width = array(10,75,10);
         $align = array('center','left');
         $titulo = 'Motoristas com Carteira de Habilitação Vencida';
         $funcao = array(null,null,"date_to_php");
@@ -368,7 +367,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -402,11 +402,11 @@ class Checkup
         $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
-                        tbpessoa.nome,
-                        tbdocumentacao.dtVencMotorista,
-                  tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
+                          tbpessoa.nome,
+                          tbdocumentacao.dtVencMotorista,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                     LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista is null
@@ -417,7 +417,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data da Carteira');
-        $width = array(10,75,10);
         $align = array('center','left');
         $titulo = 'Motoristas com carteira de habilitação sem data de vencimento cadastrada no sistema';
         $funcao = array(null,null,"date_to_php");
@@ -426,7 +425,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -460,10 +460,10 @@ class Checkup
         $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,  
-                        tbpessoa.nome,
-                  tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
+                          tbpessoa.nome,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                     LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
                     AND (tbdocumentacao.motorista is null OR tbdocumentacao.motorista ="")
@@ -474,7 +474,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome');
-        $width = array(10,85);
         $align = array('center','left');
         $titulo = 'Motorista sem número da carteira de habilitação cadastrada:';
         $funcao = array(null);
@@ -483,7 +482,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
@@ -530,7 +530,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Lotação');
-        $width = array(10,40,45);
         $align = array('center','left');
         $titulo = 'Servidores estatutários sem cargo cadastrado';
         $classe = array(null,null,"Pessoal");
@@ -540,7 +539,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
@@ -591,7 +591,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
-        $width = array(10,30,10,5,20,20);
         $align = array('center','left','center','center','left','left');
         $titulo = 'Servidores estatutários que faz 75 anos este ano - (Preparar aposentadoria compulsória)';
         $classe = array(null,null,null,null,"Pessoal","Pessoal");
@@ -602,7 +601,8 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_funcao($funcao);
@@ -654,7 +654,6 @@ class Checkup
 
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
-        $width = array(10,30,10,5,20,20);
         $align = array('center','left','center','center','left','left');
         $titulo = 'Servidores estatutários com 75 anos ou mais - (Aposentar Compulsoriamente)';
         $classe = array(null,null,null,null,"Pessoal","Pessoal");
@@ -665,11 +664,74 @@ class Checkup
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_cabecalho($label,$width,$align);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
         $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
+    
+     /**
+     * Método get_servidorComMaisde1MatriculaAtiva
+     * 
+     * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
+     */
+    
+    public function get_servidorComMaisde1MatriculaAtiva()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT tbservidor.idFuncional,  
+                          tbpessoa.nome,
+                          idServidor,
+                          idServidor,
+                          idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE tbservidor.situacao = 1
+                 GROUP BY tbservidor.idPessoa
+               HAVING COUNT(*) > 1  
+                ORDER BY tbpessoa.nome';		
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Nome','Lotação','Cargo');
+        $align = array('center','left','left','left');
+        $titulo = 'Servidores com mais de uma matrícula ativa';
+        $classe = array(null,null,"Pessoal","Pessoal");
+        $metodo2 = array(null,null,"get_lotacao","get_cargo");
+        #$funcao = array(null,null,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo2);
+        #$tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        

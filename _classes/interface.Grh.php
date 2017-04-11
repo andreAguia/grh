@@ -994,7 +994,7 @@ class Grh
     * 
     * @param    string $idUsuario -> Usuário logado
     */
-    public static function rodape($idUsuario) {
+    public static function rodape($idUsuario,$idServidor = NULL,$idPessoa = NULL) {
        
         # Exibe faixa azul
         $grid = new Grid();
@@ -1007,7 +1007,17 @@ class Grh
         $intra = new Intra();
         $grid = new Grid();
         $grid->abreColuna(4);
-            p('Usuário : '.$intra->get_usuario($idUsuario),'usuarioLogado');
+            $texto = 'Usuário: '.$intra->get_usuario($idUsuario);
+            
+            if(!is_null($idServidor)){
+                $texto .= " - Servidor: ".$idServidor;
+            }
+            
+            if(!is_null($idPessoa)){
+                $texto .= " - Pessoa: ".$idPessoa;
+            }
+            
+            p($texto,'usuarioLogado');
         $grid->fechaColuna();
         $grid->abreColuna(4);
             if(HTML5){

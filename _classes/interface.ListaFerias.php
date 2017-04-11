@@ -9,8 +9,7 @@
 
 class listaFerias
 {    
-    # Parâmetros de Pesquisa
-    private $matNomeId = NULL;  # Busca por matricula nome ou id em um só campos
+    # Parâmetros de Pesquisa    
     private $anoExercicio = NULL;
     private $lotacao = NULL;    
     
@@ -21,19 +20,8 @@ class listaFerias
     private $totReg = 0;     # total de registros encontrados
     private $time_start = 0; # Contador de segundos gastos na pesquisa
     
-    # Parâmetros da paginação da listagem
-    private $paginacao = FALSE;			# Flag que indica se terá ou não paginação na lista
-    private $paginacaoItens = 15;		# Quantidade de registros por página. 
-    private $paginacaoInicial = 0;		# A paginação inicial
-    private $pagina = 1;			# Página atual
-    private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
-    private $texto = NULL;                      # texto a ser exibido no rodapé indicando quantas páginas e a página atual
-    private $itemFinal = NULL;
-    private $itemInicial = NULL;
-    
     # Parâmetros do relatório
     private $select = NULL;     // Guarda o select para ser recuperado pela rotina de relatório
-    private $selectPaginacao = NULL;  // Guarda o texto acrescido ao select quando se tem paginação
     private $titulo = NULL;     // guarda o título do relatório que é montado a partir da pesquisa
     private $subTitulo = NULL;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
     
@@ -108,7 +96,7 @@ class listaFerias
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
         
         # lotacao
-        if(!is_null($this->lotacao)){
+        if($this->lotacao <> '*'){
             $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
         
@@ -137,7 +125,7 @@ class listaFerias
                               AND tbferias.status <> 'cancelada'
                               AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
                 
-                            if(!is_null($this->lotacao)){
+                            if($this->lotacao <> '*'){
                                 $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                             }
         
@@ -147,7 +135,7 @@ class listaFerias
                          ORDER BY 1";
                 $num = $servidor->count($slctot);
                 $tt += $num;
-                $conta[] = array($valor[0],$num);            
+                $conta[] = array($num,$valor[0]);            
             }
         } 
         
@@ -166,7 +154,7 @@ class listaFerias
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        ";
         
-                        if(!is_null($this->lotacao)){
+                        if($this->lotacao <> '*'){
                             $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                         }
         
@@ -191,7 +179,7 @@ class listaFerias
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       ";
                  
-                    if(!is_null($this->lotacao)){
+                    if($this->lotacao <> '*'){
                         $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                     }
         
@@ -207,7 +195,7 @@ class listaFerias
                            AND anoExercicio = $this->anoExercicio
                            AND tbferias.status <> 'cancelada'";
         
-                        if(!is_null($this->lotacao)){
+                        if($this->lotacao <> '*'){
                             $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                         }
         
@@ -226,13 +214,11 @@ class listaFerias
         $tabela = new Tabela();
         
         # Calcula o nº de sevidores sem solicitação de férias nesse exercício
-        if(is_null($this->lotacao)){
-            $totalServidores = $servidor->get_numServidoresAtivos();
-        }
-        $conta[] = array(0,$totalServidores - $tt);
+        $totalServidores = $servidor->get_numServidoresAtivos($this->lotacao);
+        $conta[] = array($totalServidores - $tt,0);
         
         $tabela->set_conteudo($conta);
-        $tabela->set_label(array("Total de Dias","Nº de Servidores"));
+        $tabela->set_label(array("Nº de Servidores","Total de Dias"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
         $tabela->set_titulo("Resumo");
@@ -252,6 +238,10 @@ class listaFerias
             $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
             $tabela->set_align(array("center","left","left"));
             $tabela->set_titulo("Resumo por Servidor");
+            $tabela->set_idCampo('idServidor');
+            if($this->permiteEditar){
+                $tabela->set_editar('?fase=editaServidorFerias&id=');
+            }
             if(!$resumido){
                 $tabela->show();
             }
@@ -290,23 +280,6 @@ class listaFerias
                   AND tbservidor.situacao = 1
                   AND anoExercicio = '.$this->anoExercicio;
         
-        # Matrícula, nome ou id
-        if(!is_null($this->matNomeId)){
-            if(is_numeric($this->matNomeId)){
-                $select .= ' AND ((';
-            }else{
-                $select .= ' AND (';
-            }
-                        
-            $select .= 'tbpessoa.nome LIKE "%'.$this->matNomeId.'%")';
-            
-            if(is_numeric($this->matNomeId)){
-                $select .= ' OR (tbservidor.matricula LIKE "%'.$this->matNomeId.'%")
-		             OR (tbservidor.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
-            }
-            $this->subTitulo .= "pesquisa: ".$this->matNomeId."<br/>";
-        }    
-      
         # lotacao
         if(!is_null($this->lotacao)){
             $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
@@ -320,110 +293,6 @@ class listaFerias
         $conteudo = $servidor->select($select,true);
         $totalRegistros = count($conteudo);
         
-        # Verifica a necessidade de paginação pelo número de registro
-        if($this->paginacaoItens >= $totalRegistros){
-            $this->paginacao = FALSE;
-        }
-        
-        # Verifica se página Inicial que veio por session deverá ser atualizada para 0
-        if($this->paginacaoInicial > $totalRegistros){
-            $this->paginacaoInicial = 0;
-        }
-                
-        # Calculos da paginaçao
-        $this->texto = null;
-        if($this->paginacao)
-        {
-            # Calcula o total de páginas
-            $totalPaginas = ceil($totalRegistros/$this->paginacaoItens);
-
-            # Calcula o número da página
-            $this->pagina = ceil($this->paginacaoInicial/$this->paginacaoItens)+1;
-
-            # Calcula o item inicial e final da página
-            $this->itemFinal = $this->pagina * $this->paginacaoItens;
-            $this->itemInicial = $this->itemFinal - $this->paginacaoItens+1;
-
-            if ($this->itemFinal > $totalRegistros)
-            $this->itemFinal = $totalRegistros;
-
-            # Texto do fieldset
-            $this->texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
-        
-            # Acrescenta a sql para paginacao
-            $this->selectPaginacao =' LIMIT '.$this->paginacaoInicial.','.$this->paginacaoItens;
-
-            # Botôes de Navegação das páginas 
-            $proximo = $this->paginacaoInicial + $this->paginacaoItens;
-            $anterior = $this->paginacaoInicial - $this->paginacaoItens;            
-        }
-        
-        # Botões de paginação
-        if($this->paginacao){
-            # Começa os botões de navegação
-            $div = new Div("paginacao");
-            $div->abre();            
-            echo'<ul class="pagination text-center" role="navigation" aria-label="Pagination">';
-
-            # Botão Página Anterior
-            if($this->pagina == 1){
-                echo '<li class="pagination-previous disabled"><span class="show-for-sr">page</span></li>';
-            }else{
-                echo '<li class="pagination-previous"><a href="?paginacao='.$anterior.'" aria-label="Página anterior"></a></li>';
-            }
-
-            # Links para a página
-            for($pag = 1;$pag <= $totalPaginas; $pag++){
-                if($pag == $this->pagina){
-                    echo '<li class="current"><span class="show-for-sr">Página Atual</span> '.$pag.'</li>';
-                }else{
-                    $link = $this->paginacaoItens * ($pag-1);
-                
-                    if($totalPaginas > $this->quantidadeMaxLinks){
-                        switch ($pag) {
-                            case 1:
-                            case 2:    
-                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
-                                break;
-                            case 3:
-                                if($this->pagina == 2){
-                                    echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';  
-                                }else{
-                                    echo '<li>...<li>';
-                                }
-                                break;
-                            case $this->pagina-1:
-                            case $this->pagina+1:    
-                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a><li>';
-                                break;
-                            case $totalPaginas-2:
-                                if($this->pagina == $this->pagina-4){
-                                    echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';  
-                                }else{
-                                    echo '<li>...<li>';
-                                }
-                                break;
-                            case $totalPaginas-1:
-                            case $totalPaginas:
-                                echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
-                                break;
-                        }                                
-                    }else{
-                        echo '<li><a href="?paginacao='.$link.'" aria-label="Pagina '.$pag.'">'.$pag.'</a></li>';
-                    }
-                }
-            }
-
-            # Botão Próxima Página
-            if($this->pagina < $totalPaginas){
-                echo '<li class="pagination-next"><a href="?paginacao='.$proximo.'" aria-label="Próxima página"><span class="show-for-sr">page</span></a></li>';
-            }else{
-                echo '<li class="pagination-next disabled"><span class="show-for-sr">page</span></li>';
-            }
-            echo '</ul>';
-            $div->fecha();
-        }
-        
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -434,7 +303,7 @@ class listaFerias
         $function = array (null,null,"date_to_php");
                         
         # Executa o select juntando o selct e o select de paginacao
-        $conteudo = $servidor->select($select.$this->selectPaginacao,true);
+        $conteudo = $servidor->select($select,true);
         
         if($totalRegistros == 0){
             #br();
@@ -459,14 +328,6 @@ class listaFerias
             $tabela->set_titulo("Férias Detalhadas");
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaFerias&id=');
-            }
-            
-            if ($this->paginacao){
-                $tabela->set_rodape($this->texto.' ('.$this->itemInicial.' a '.$this->itemFinal.' de '.$this->totReg.' Registros)');
-            }
-            
-            if(!is_null($this->matNomeId)){
-                $tabela->set_textoRessaltado($this->matNomeId);
             }
             
             $tabela->show();

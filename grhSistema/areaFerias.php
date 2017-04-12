@@ -94,7 +94,7 @@ if($acesso)
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Relatório dessa pesquisa");
-    $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_url("?fase=relatorio");
     $botaoRel->set_imagem($imagem);
     $menu1->add_link($botaoRel,"right");
 
@@ -203,24 +203,10 @@ if($acesso)
 
         # Cria um relatório com a seleção atual
         case "relatorio" :
-            # Lista de Servidores Ativos
-            $lista = new listaFerias('Servidores');
-            if($parametroNomeMat <> NULL){
-                $lista->set_matNomeId($parametroNomeMat);
-            }
-            
-            if($parametroAnoExercicio <> "*"){
-                $lista->set_anoExercicio($parametroAnoExercicio);
-            }
-
-            if($parametroLotacao <> "*"){
-                $lista->set_lotacao($parametroLotacao);
-            }
-            
-            $lista->showRelatorio();
+            include("grhRelatorios.php?fase=ferias");
             break;
             
-            ###############################
+        ###############################
 
             # Chama a rotina de férias do servidor
             case "rotinaFeriasServidor" :
@@ -229,7 +215,7 @@ if($acesso)
                 loadPage('servidorFerias.php');
                 break; 
 
-            ###############################
+        ###############################
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

@@ -33,7 +33,7 @@ if($acesso)
     
     $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
-                     CONCAT(substring(tblotacao.UADM,1,3),"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
+                     CONCAT(tblotacao.UADM,"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
                      tbferias.anoExercicio,
                      tbferias.dtInicial,
                      CONCAT(tbferias.numDias,"(",tbferias.periodo,")"),

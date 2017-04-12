@@ -700,26 +700,30 @@ class Checkup
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
-        $select = 'SELECT tbservidor.idFuncional,  
+        $select = 'SELECT idfuncional,
+                          matricula,
                           tbpessoa.nome,
+                          tbperfil.nome,                          
                           idServidor,
                           idServidor,
+                          tbsituacao.situacao,
                           idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                    WHERE tbservidor.situacao = 1
-                 GROUP BY tbservidor.idPessoa
-               HAVING COUNT(*) > 1  
-                ORDER BY tbpessoa.nome';		
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idPessoa IN (SELECT idpessoa FROM tbservidor WHERE tbservidor.situacao = 1 GROUP BY idPessoa HAVING COUNT(*) > 1 ORDER BY idpessoa)
+                      AND tbservidor.situacao = 1
+                 ORDER BY tbpessoa.nome';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome','Lotação','Cargo');
-        $align = array('center','left','left','left');
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
+        $align = array('center','center','left','center','left','left','center');
         $titulo = 'Servidores com mais de uma matrícula ativa';
-        $classe = array(null,null,"Pessoal","Pessoal");
-        $metodo2 = array(null,null,"get_lotacao","get_cargo");
+        $classe = array(null,null,null,null,"Pessoal","Pessoal");
+        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
         #$funcao = array(null,null,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 

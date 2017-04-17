@@ -337,8 +337,8 @@ if($acesso)
          case "nacionalidade";
             $menu = new Menu();
             $menu->add_item('titulo','Censo');
-            $menu->add_item('linkWindow','Relatório de Servidores Agrupados por Nacionalidade','../grhRelatorios/geralServidoresNacionalidade.php'); 
-
+            $menu->add_item('linkWindow','Relatório de Servidores Agrupados por Nacionalidade','../grhRelatorios/geralServidoresNacionalidade.php');
+            $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
             $menu->show();
             break;
     }

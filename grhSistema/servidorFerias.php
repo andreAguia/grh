@@ -119,11 +119,14 @@ if($acesso)
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
     
+    # Pega o valor para o anoexercicio
+    $exercícioDisponivel = $pessoal->get_feriasExercicioDisponivel($idServidorPesquisado);
+    
     # Pega o ano atual
     if($areaFerias){
-        $anoAtual = get_session('parametroAnoExercicio');
+        $anoPadrao = get_session('parametroAnoExercicio');
     }else{
-        $anoAtual = (date('Y'));
+        $anoPadrao = $exercícioDisponivel;
     }
 
     # Campos para o formulario
@@ -132,7 +135,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 7,
                                        'col' => 2,
-                                       'padrao' => $anoAtual,
+                                       'padrao' => $anoPadrao,
                                        'required' => true,
                                        'autofocus' => true,
                                        'title' => 'Ano de Exercício das Férias.',
@@ -204,7 +207,13 @@ if($acesso)
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     $botaoRel->set_accessKey('R');
     
-    $objeto->set_botaoListarExtra(array($botaoRel));
+    # Resumo
+    $botaoResumo = new Button("Resumo");
+    $botaoResumo->set_title("Resumo das Férias");
+    $botaoResumo->set_url("?fase=resumo");
+    #$botaoResumo->set_accessKey('R');
+    
+    $objeto->set_botaoListarExtra(array($botaoRel,$botaoResumo));
         
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -222,10 +231,53 @@ if($acesso)
     {
             case "" :
             case "listar" :
-            case "editar" :			
+                
+                echo $exercícioDisponivel;
+                $objeto->listar();
+                break;
+            
+            case "editar" :
+                # Verifica se é inclusão
+                if(is_null($id)){
+                    # Verifica se veio da área de Férias
+                    if($areaFerias){
+                        # Verifica se ano disponível é o mesmo da session
+                        if($exercícioDisponivel <> $anoPadrao){
+                            callout("Esse servidor tem férias pendentes para o exercício de ".$exercícioDisponivel);
+                            echo "oi";
+                        }
+                    }
+                }
+                echo $pessoal->get_feriasDiasPorExercicio($idServidorPesquisado,$anoPadrao);
+                $objeto->editar($id);
+                break;
             case "excluir" :	
             case "gravar" :		
                 $objeto->$fase($id);			
+                break;
+            
+            case "resumo" :
+                botaoVoltar("?");
+                get_DadosServidor($idServidorPesquisado);
+                
+                $grid = new Grid();
+                $grid->abreColuna(12);
+                    titulo("Resumo das Férias");
+                    br();
+                $grid->fechaColuna();
+                $grid->fechaGrid();    
+                
+                $grid = new Grid("center");
+                $grid->abreColuna(4);
+                
+                    $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($lista);
+                    $tabela->set_label(array("Exercício","Dias"));
+                    $tabela->set_align(array("center"));
+                    $tabela->show();
+                $grid->fechaColuna();
+                $grid->fechaGrid();
                 break;
 
 ################################################################

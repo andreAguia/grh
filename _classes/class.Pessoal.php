@@ -3284,5 +3284,88 @@ class Pessoal extends Bd
              return $row[0];
 	}
 
-	###########################################################################################
+	#####################################################################################
+	
+	/**
+	 * Método get_feriasResumo
+	 * 
+	 * Fornece um array com a lista de totais de dias fruidos/solicitados por ano de exercicio
+         */
+	
+	public function get_feriasResumo($idservidor){
+            $select = 'SELECT anoexercicio, SUM(numDias)                          
+                         FROM tbferias
+                        WHERE idservidor = '.$idservidor.'
+                          AND (status = "fruida" OR status = "solicitada" OR status = "confirmada")
+                     GROUP BY anoexercicio
+                     ORDER BY anoexercicio asc';
+           
+             $row = parent::select($select);
+             return $row;
+	}
+
+	#####################################################################################
+	
+	/**
+	 * Método get_exercicioDisponivel
+	 * 
+	 * Informa o ano exercício das férias disponivel para fruir
+         */
+	
+	public function get_feriasExercicioDisponivel($idservidor){
+            
+            # Pega as férias cadastradas no sistema
+            $lista = $this->get_feriasResumo($idservidor);
+            
+            # Pega o ano de admissão do servidor
+            $anoAdmissao = $this->get_anoAdmissao($idservidor);
+            
+            # Pega o ano atual
+            $anoAtual = date("Y");
+            
+            # Definr a variável
+            $retorno = NULL;
+            $ultimo = NULL;
+            
+            # Se não tiver férias cadastradas o ano disponível é o posterior ao da admissão
+            if(count($lista) == 0){
+                $retorno = $anoAdmissao + 1;
+            }else{
+                # Se houver verifica se alguma das férias tem menos de 30 dias 
+                foreach ($lista as $value){
+                    if($value[1] < 30){
+                        $retorno = $value[0];
+                    }
+                    $ultimo = $value[0];
+                }
+            }
+            
+            if(is_null($retorno) AND ($ultimo<>$anoAtual)){
+                $retorno = $ultimo+1;
+            }
+            return $retorno;
+	}
+
+	#####################################################################################
+	
+	/**
+	 * Método get_feriasDiasPorExercicio
+	 * 
+	 * Informa os dias de umas férias fruidas, solicitadas ou confirmadas de um servidor em um ano exercicio,
+         */
+	
+	public function get_feriasDiasPorExercicio($idservidor,$anoExercicio){
+            $select = 'SELECT anoexercicio, SUM(numDias)                          
+                         FROM tbferias
+                        WHERE idservidor = '.$idservidor.'
+                          AND anoExercicio = '.$anoExercicio.'
+                          AND (status = "fruida" OR status = "solicitada" OR status = "confirmada")
+                     GROUP BY anoexercicio
+                     ORDER BY anoexercicio asc';
+           
+             $row = parent::select($select,false);
+             return $row[1];
+	}
+
+	#####################################################################################
 }

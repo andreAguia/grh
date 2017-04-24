@@ -29,7 +29,7 @@ if($acesso)
     
     # Pega os parâmetros
     $parametroAnoExercicio = post('parametroAnoExercicio',get_session('parametroAnoExercicio',date("Y")));
-    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
+    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
     
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento',0);
@@ -68,27 +68,6 @@ if($acesso)
     $linkBotao1->set_title('Voltar a página anterior');
     $linkBotao1->set_accessKey('V');
     $menu1->add_link($linkBotao1,"left");
-    
-    # Detalhe
-    $linkBotao1 = new Link("Detalhe","?");
-    $linkBotao1->set_class('button');
-    $linkBotao1->set_title('Voltar a página anterior');
-    $linkBotao1->set_accessKey('D');
-    #$menu1->add_link($linkBotao1,"right");
-    
-    # Resumo
-    $linkBotao1 = new Link("Resumo","?fase=resumo");
-    $linkBotao1->set_class('button');
-    $linkBotao1->set_title('Exibe as férias por dia');
-    $linkBotao1->set_accessKey('R');
-    #$menu1->add_link($linkBotao1,"right");
-    
-    # Por Mês
-    $linkBotao1 = new Link("Por Mês","grh.php");
-    $linkBotao1->set_class('button');
-    $linkBotao1->set_title('Exibe as férias por mês');
-    $linkBotao1->set_accessKey('P');
-    #$menu1->add_link($linkBotao1,"right");
 
     # Relatórios
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
@@ -128,7 +107,7 @@ if($acesso)
                                   FROM tblotacao
                                  WHERE ativo
                               ORDER BY ativo desc,lotacao');
-    array_unshift($result,array('*','Todas'));
+    array_unshift($result,array(NULL,'Todas'));
     
     $controle = new Input('parametroLotacao','combo','Lotação:',1);
     $controle->set_size(30);
@@ -148,35 +127,34 @@ if($acesso)
     {
         case "" :
             # Exibe aas férias
-            if($parametroLotacao <> '*'){
-                # lateral
-                $grid2 = new Grid();
-                $grid2->abreColuna(3);
+            # lateral
+            $grid2 = new Grid();
+            $grid2->abreColuna(3);
 
-                # Resumo Geral da lotação
-                $lista1 = new listaFerias($parametroAnoExercicio);
+            # Resumo Geral da lotação
+            $lista1 = new listaFerias($parametroAnoExercicio);
+            if(!empty($parametroLotacao)){
                 $lista1->set_lotacao($parametroLotacao);
-                $lista1->showResumo();
-                
-                $grid2->fechaColuna();
-                $grid2->abreColuna(9);
-                
-                # Resumo por servidor sa Lotação
-                $lista1->showResumo(FALSE);
-
-                # Detalhado da Lotação
-                $lista2 = new listaFerias($parametroAnoExercicio);
-                $lista2->set_lotacao($parametroLotacao);
-                $lista2->showDetalhe();
-
-                $grid2->fechaColuna();
-                $grid2->fechaGrid();
-            }else{
-                # Resumo Geral de Todas as Lotações
-                $lista1 = new listaFerias($parametroAnoExercicio);
-                $lista1->set_lotacao($parametroLotacao);
-                $lista1->showResumo();
             }
+            $lista1->showResumo();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(9);
+
+            # Resumo por servidor sa Lotação
+            if(!empty($parametroLotacao)){
+                $lista1->showResumo(FALSE);
+            }
+
+            # Detalhado da Lotação
+            $lista2 = new listaFerias($parametroAnoExercicio);
+            $lista2->set_lotacao($parametroLotacao);
+            if(!empty($parametroLotacao)){
+                $lista2->showDetalhe();
+            }
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
             
         

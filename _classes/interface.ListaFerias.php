@@ -96,7 +96,7 @@ class listaFerias
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
         
         # lotacao
-        if($this->lotacao <> '*'){
+        if(!is_null($this->lotacao)){
             $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
         
@@ -125,7 +125,7 @@ class listaFerias
                               AND tbferias.status <> 'cancelada'
                               AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
                 
-                            if($this->lotacao <> '*'){
+                            if(!is_null($this->lotacao)){
                                 $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                             }
         
@@ -154,7 +154,7 @@ class listaFerias
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        ";
         
-                        if($this->lotacao <> '*'){
+                        if(!is_null($this->lotacao)){
                             $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                         }
         
@@ -179,7 +179,7 @@ class listaFerias
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       ";
                  
-                    if($this->lotacao <> '*'){
+                    if(!is_null($this->lotacao)){
                         $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                     }
         
@@ -195,7 +195,7 @@ class listaFerias
                            AND anoExercicio = $this->anoExercicio
                            AND tbferias.status <> 'cancelada'";
         
-                        if($this->lotacao <> '*'){
+                        if(!is_null($this->lotacao)){
                             $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
                         }
         

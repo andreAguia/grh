@@ -81,7 +81,7 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidores com Licença Terminando em '.date('Y');
+        $titulo = 'Servidores com licença terminando em '.date('Y');
         $label = array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final');
         $funcao = array(null,null,null,null,"date_to_php",null,"date_to_php");
         $align = array('center','left');
@@ -162,7 +162,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio');
         $align = array('center','left');
-        $titulo = 'Servidores com Triênio Vencendo em '.date('Y');
+        $titulo = 'Servidores com triênio vencendo em '.date('Y');
         $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -241,7 +241,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
         $align = array('center','left');
-        $titulo = 'Servidores com Triênio Vencido antes de '.date('Y');
+        $titulo = 'Servidores com triênio vencido antes de '.date('Y');
         $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -300,7 +300,7 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidores com o Auxílio Creche vencendo em '.date('Y');
+        $titulo = 'Servidores com o auxílio creche vencendo em '.date('Y');
         $label = array("IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo");
         $funcao = array(null,null,null,"date_to_php","date_to_php");
         $align = array('center','left','left');
@@ -360,7 +360,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data da Carteira');
         $align = array('center','left');
-        $titulo = 'Motoristas com Carteira de Habilitação Vencida';
+        $titulo = 'Motoristas com carteira de habilitação vencida';
         $funcao = array(null,null,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -722,6 +722,138 @@ class Checkup
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
         $titulo = 'Servidores com mais de uma matrícula ativa';
+        $classe = array(null,null,null,null,"Pessoal","Pessoal");
+        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
+        #$funcao = array(null,null,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo2);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
+    
+     /**
+     * Método get_servidorComPerfilOutros
+     * 
+     * Servidor com perfil outros
+     */
+    
+    public function get_servidorComPerfilOutros()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idPerfil = 8
+                      AND tbservidor.situacao = 1
+                 ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
+        $align = array('center','center','left','center','left','left','center');
+        $titulo = 'Servidores com perfil outros';
+        $classe = array(null,null,null,null,"Pessoal","Pessoal");
+        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
+        #$funcao = array(null,null,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo2);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
+    
+     /**
+     * Método get_servidorSemPerfil
+     * 
+     * Servidor com perfil outros
+     */
+    
+    public function get_servidorSemPerfil()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idPerfil is NULL
+                      AND tbservidor.situacao = 1
+                 ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
+        $align = array('center','center','left','center','left','left','center');
+        $titulo = 'Servidores sem perfil cadastrado';
         $classe = array(null,null,null,null,"Pessoal","Pessoal");
         $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
         #$funcao = array(null,null,"date_to_php");

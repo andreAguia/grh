@@ -141,9 +141,11 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 
-            # Resumo por servidor sa Lotação
+            # Resumo por servidor da Lotação
             if(!empty($parametroLotacao)){
                 $lista1->showResumo(FALSE);
+            }else{
+                $lista1->showResumoGeral();
             }
 
             # Detalhado da Lotação

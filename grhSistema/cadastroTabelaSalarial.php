@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -55,7 +55,7 @@ if($acesso)
     $objeto->set_nome('Tabela Salarial');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -106,7 +106,7 @@ if($acesso)
     $objeto->set_label(array("id","Plano","Nível","Faixa","Valor"));
     $objeto->set_width(array(5,22,22,22,22));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(null,null,null,null,"formataMoeda"));
+    $objeto->set_funcao(array(NULL,NULL,NULL,NULL,"formataMoeda"));
 
     $planoAtual = $pessoal->get_numDecretoPlanoAtual();
 
@@ -140,27 +140,27 @@ if($acesso)
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
                'array' => $result,
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'size' => 20),    
          array ('linha' => 1,
                 'nome' => 'nivel',
                'label' => 'Nível:',
                'tipo' => 'combo',
                'array' => array("Superior","Médio","Fundamental","Elementar"),
-               'required' => true,
+               'required' => TRUE,
                'size' => 20),
         array ('linha' => 1,
                'nome' => 'faixa',
                'label' => 'Faixa:',
                'tipo' => 'texto',
-	       'required' => true,
+	       'required' => TRUE,
                'size' => 20),    
          array ('linha' => 1,
                'nome' => 'valor',
                'label' => 'Valor:',
                'tipo' => 'moeda',
-	       'required' => true,
+	       'required' => TRUE,
                'size' => 10)));
 
     # Matrícula para o Log

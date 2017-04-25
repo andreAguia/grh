@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -107,7 +107,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -137,8 +137,8 @@ if($acesso)
     $objeto->set_campos(array( array ( 'nome' => 'empresa',
                                        'label' => 'Empresa:',
                                        'tipo' => 'texto',
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'size' => 80,                                   
                                        'title' => 'Nome da Empresa.',
                                        'col' => 8,
@@ -146,7 +146,7 @@ if($acesso)
                                array ( 'nome' => 'empresaTipo',
                                        'label' => 'Tipo:',
                                        'tipo' => 'combo',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => Array(Array(1,"Pública"),Array(2,"Privada")),
                                        'size' => 20,
                                        'col' => 4,
@@ -155,7 +155,7 @@ if($acesso)
                                array ( 'nome' => 'dtPublicacao',
                                        'label' => 'Data da Pub. no DOERJ:',
                                        'tipo' => 'data',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
@@ -163,7 +163,7 @@ if($acesso)
                                array ( 'nome' => 'pgPublicacao',
                                        'label' => 'Pág:',
                                        'tipo' => 'texto',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'col' => 2,
                                        'size' => 5,                         
                                        'title' => 'A Página do DOERJ',
@@ -171,7 +171,7 @@ if($acesso)
                                array ( 'nome' => 'processo',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 30,
                                        'col' => 4,
                                        'title' => 'Número do Processo',
@@ -179,35 +179,35 @@ if($acesso)
                                array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
-                                       'notNull' => true,
+                                       'notNull' => TRUE,
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Data inícial do Período.',
                                        'linha' => 3),
                                array ( 'nome' => 'dtFinal',
                                        'label' => 'Data Final:',
                                        'tipo' => 'data',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 20,
                                        'col' => 3,
-                                       'notNull' => true,
+                                       'notNull' => TRUE,
                                        'title' => 'Data final do Período.',
                                        'linha' => 3),
                                array ( 'nome' => 'dias',
                                        'label' => 'Dias:',
                                        'tipo' => 'numero',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 5,
                                        'col' => 2,
-                                       'notNull' => true,
+                                       'notNull' => TRUE,
                                        'title' => 'Quantidade de Dias Averbado.',
                                        'linha' => 3),
                                array ( 'nome' => 'regime',
                                        'label' => 'Regime:',
                                        'tipo' => 'combo',
                                        'col' => 6,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => Array(Array(1,"Celetista"),Array(2,"Estatutário")),
                                        'size' => 20,                               
                                        'title' => 'Tipo do Regime',
@@ -216,7 +216,7 @@ if($acesso)
                                        'label' => 'Cargo:',
                                        'tipo' => 'combo',
                                        'col' => 6,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => Array(Array(1,"Professor"),Array(2,"Outros")),
                                        'size' => 20,                               
                                        'title' => 'Cargo',
@@ -240,7 +240,7 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(true);
+    #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 

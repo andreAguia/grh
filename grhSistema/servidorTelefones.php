@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -72,7 +72,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -102,7 +102,7 @@ if($acesso)
     $objeto->set_campos(array( array ('linha' => 1,
                                       'nome' => 'tipo',
                                       'label' => 'Tipo:',
-                                      'autofocus' => true,
+                                      'autofocus' => TRUE,
                                       'tipo' => 'combo',
                                       'array' => array("","Celular","E-mail","Residencial","Trabalho","Outros"),
                                       'title' => 'Tipo de Contato',

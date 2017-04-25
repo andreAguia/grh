@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -58,7 +58,7 @@ if($acesso)
     $objeto->set_nome('Cargos em Comissão');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -122,9 +122,9 @@ if($acesso)
                                               'operador' => '=',
                                               'id' => 'inativo')));
     
-    $objeto->set_funcao(array(null,null,null,"formataMoeda"));
-    $objeto->set_classe(array(null,null,null,null,null,'pessoal',null,'pessoal'));
-    $objeto->set_metodo(array(null,null,null,null,null,'get_servidoresCargoComissao',null,'get_cargoComissaoVagasDisponiveis'));
+    $objeto->set_funcao(array(NULL,NULL,NULL,"formataMoeda"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal',NULL,'pessoal'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_servidoresCargoComissao',NULL,'get_cargoComissaoVagasDisponiveis'));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -162,7 +162,7 @@ if($acesso)
                'nome' => 'descricao',
                'label' => 'Cargo em Comissão:',
                'tipo' => 'texto',
-               'autofocus' => true,
+               'autofocus' => TRUE,
                'size' => 50),
          array ('linha' => 1,
                 'col' => 3,
@@ -204,12 +204,12 @@ if($acesso)
     $numCargoComissaoAtivo = $pessoal->get_numCargoComissaoAtivo();
     
     # Paginação
-    $objeto->set_paginacao(true);
+    $objeto->set_paginacao(TRUE);
     $objeto->set_paginacaoInicial($paginacao);
     $objeto->set_paginacaoItens($numCargoComissaoAtivo);
     
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório os Perfis");
     $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
@@ -251,7 +251,7 @@ if($acesso)
             $menu->add_link($linkVoltar,"left");
             
             # Relatórios
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("abreFechaDivId('RelServidor');");
@@ -335,7 +335,7 @@ if($acesso)
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo');
             $align = array("center","center","left","center","center","left");
-            $function = array(null,"dv",null,"date_to_php","date_to_php");
+            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php");
            
             # Monta a tabela
             $tabela = new Tabela();

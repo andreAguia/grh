@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -56,7 +56,7 @@ if($acesso)
                                     LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
                 WHERE tbservidor.situacao = 1
                   AND idPerfil = 1
-                  AND tbtrienio.dtInicial is null
+                  AND tbtrienio.dtInicial is NULL
                   AND YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = "'.$relatorioAno.'"
                   AND month(DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR))= "'.$relatorioMes.'"               
              GROUP BY tbservidor.idServidor           
@@ -74,11 +74,11 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio'));
     $relatorio->set_width(array(10,50,10,10,10,10));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(null,null,"date_to_php",null,"date_to_php","date_to_php"));
+    $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'ano',
                          'label' => 'Ano:',

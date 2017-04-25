@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -74,7 +74,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -105,8 +105,8 @@ if($acesso)
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Data do início da cessão.',
                                        'col' => 3,
                                        'linha' => 1),
@@ -120,7 +120,7 @@ if($acesso)
                                array ( 'nome' => 'orgao',
                                        'label' => 'Órgão Cessionário:',
                                        'tipo' => 'texto',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 100,
                                        'col' => 6,
                                        'title' => 'O órgão cessionário',
@@ -163,7 +163,7 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(true);
+    #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 

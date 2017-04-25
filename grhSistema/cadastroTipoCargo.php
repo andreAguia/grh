@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -106,8 +106,8 @@ if($acesso)
     $objeto->set_width(array(5,20,10,15,10,10,10,15));
     $objeto->set_align(array("center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,null,'pessoal','pessoal'));
-    $objeto->set_metodo(array(null,null,null,null,null,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -127,8 +127,8 @@ if($acesso)
                'nome' => 'cargo',
                'label' => 'Cargo:',
                'tipo' => 'texto',
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'col' => 5,
                'size' => 50),
         array ('linha' => 1,
@@ -141,7 +141,7 @@ if($acesso)
                'nome' => 'nivel',
                'label' => 'Nível do Cargo:',
                'tipo' => 'combo',
-               'required' => true,
+               'required' => TRUE,
                'array' => array(NULL,"Doutorado","Superior","Médio","Fundamental","Elementar"),
                'col' => 3,
                'size' => 30),
@@ -162,7 +162,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Gráfico
-    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);            
+    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);            
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");

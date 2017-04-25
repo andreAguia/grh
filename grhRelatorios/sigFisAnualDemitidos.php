@@ -6,7 +6,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -55,16 +55,16 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Mês'));
     $relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,null,"date_to_php","date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","date_to_php","get_NomeMes"));
     
-    $relatorio->set_classe(array(null,null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,null,"get_cargo"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,"get_cargo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(9);
-    $relatorio->set_botaoVoltar(false);
-    $relatorio->set_dataImpressao(false);
-    #$relatorio->set_totalRegistro(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    #$relatorio->set_totalRegistro(FALSE);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'ano',
                          'label' => 'Ano:',
@@ -102,21 +102,21 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo(null);
+    $relatorio->set_titulo(NULL);
     $relatorio->set_tituloLinha2('Exonerados em um Cargo em Comissao');
     $relatorio->set_subtitulo('Ordenado pela Data de Exoneração');
 
     $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Exoneração','Publicação','Mês'));
     $relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,null,"date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","get_NomeMes"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(8);
-    $relatorio->set_botaoVoltar(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $page->terminaPagina();

@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -115,8 +115,8 @@ if($acesso)
                'nome' => 'nome',
                'label' => 'Tipo de Progressão:',           
                'tipo' => 'texto',
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'size' => 50),
         array ('linha' => 2,
                'nome' => 'obs',

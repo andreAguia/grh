@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");

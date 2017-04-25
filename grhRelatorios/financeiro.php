@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -50,7 +50,7 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Salário','Triênio','Comissão','Gratificação Especial','Salário Cedidos','Total','Perfil'));
     $relatorio->set_width(array(10,30,10,10,10,10,10,10,0));
     $relatorio->set_align(array("center","left","right","right","right","right","right","right"));
-    $relatorio->set_funcao(array(null,null,"formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda"));
+    $relatorio->set_funcao(array(NULL,NULL,"formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda"));
 
     $classe = array("","","pessoal","pessoal","pessoal","pessoal","pessoal","pessoal");
     $metodo = array("","","get_salarioBase","get_trienioValor","get_salarioCargoComissao","get_gratificacao","get_salarioCessao","get_salarioTotal");

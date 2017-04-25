@@ -33,7 +33,7 @@ else
     $campoValor[6] = "Não";
     
     # passa os dados do aux para nulo
-    $campoValor[7] = null;  # data
-    $campoValor[8] = null;  # processo
-    $campoValor[9] = null;  # documento
+    $campoValor[7] = NULL;  # data
+    $campoValor[8] = NULL;  # processo
+    $campoValor[9] = NULL;  # documento
 }

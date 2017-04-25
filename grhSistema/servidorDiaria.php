@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -87,7 +87,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -99,7 +99,7 @@ if($acesso)
     $objeto->set_label(array("id","CI","Origem","Destino","Saída","Chegada","Valor","Emitir CI"));
     $objeto->set_width(array(4,11,20,20,10,10,8,8));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (null,null,null,null,"date_to_php","date_to_php","formataMoeda"));
+    $objeto->set_funcao(array (NULL,NULL,NULL,NULL,"date_to_php","date_to_php","formataMoeda"));
 
     # Link do CI
     $botao = new BotaoGrafico();
@@ -126,23 +126,23 @@ if($acesso)
                                  WHERE descricao LIKE "%diaria%"
                               ORDER BY descricao');
 
-    array_push($result, array(null,null)); # Adiciona o valor de null
+    array_push($result, array(NULL,NULL)); # Adiciona o valor de NULL
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'origem',
                                        'label' => 'Origem:',
                                        'tipo' => 'texto',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 50,
                                        'col' => 6,
                                        'padrao' => 'Campos dos Goytacazes',
                                        'title' => 'Local de Origem',
-                                       'autofocus' => true,
+                                       'autofocus' => TRUE,
                                        'linha' => 1),
                                array ( 'nome' => 'destino',
                                        'label' => 'Destino:',
                                        'tipo' => 'texto',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 50,
                                        'col' => 6,
                                        'title' => 'Local de Destino',
@@ -152,7 +152,7 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Data da Saída.',
                                        'linha' => 2),
                                array ( 'nome' => 'dataChegada',
@@ -160,7 +160,7 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Data de Chegada.',
                                        'linha' => 2),
                                array ( 'nome' => 'valor',
@@ -168,11 +168,11 @@ if($acesso)
                                        'tipo' => 'moeda',
                                        'size' => 10,
                                        'col' => 4,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Valor da Diária',
                                        'linha' => 2), 
                                array ( 'nome' => 'dataCi',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'label' => 'Data:',
                                        'tipo' => 'data',
                                        'col' => 3,
@@ -189,7 +189,7 @@ if($acesso)
                                        'linha' => 3),
                                array ( 'nome' => 'assuntoCi',                                   
                                        'label' => 'Assunto:',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'tipo' => 'texto',
                                        'size' => 50,
                                        'col' => 6,
@@ -217,7 +217,7 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(true);
+    #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 
@@ -255,7 +255,7 @@ if($acesso)
             # Log
             $atividade = "Emitiu CI de Diária de ".$pessoal->get_nome($idServidorPesquisado);
             $data = date("Y-m-d H:i:s");
-            $intra->registraLog($idUsuario,$data,$atividade,null,null,4,$idServidorPesquisado);
+            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
             
             loadPage('?');            
             break;

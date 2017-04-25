@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -72,13 +72,13 @@ if($acesso)
     $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão voltar
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(false);
+    $objeto->set_botaoIncluir(FALSE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -97,21 +97,21 @@ if($acesso)
                                        estciv
                                   FROM tbestciv
                               ORDER BY estciv');
-    array_unshift($estadoCivil, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($estadoCivil, array(NULL,NULL)); # Adiciona o valor de nulo
     
     # Pega os dados da combo de nacionalidade
     $nacionalidade = $pessoal->select('SELECT idNacionalidade,
                                        nacionalidade
                                   FROM tbnacionalidade
                               ORDER BY nacionalidade');
-    array_unshift($nacionalidade, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($nacionalidade, array(NULL,NULL)); # Adiciona o valor de nulo
     
     # Pega os dados da combo de país de origem
     $paisOrigem = $pessoal->select('SELECT idPais,
                                        pais
                                   FROM tbpais
                               ORDER BY pais');
-    array_unshift($paisOrigem, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($paisOrigem, array(NULL,NULL)); # Adiciona o valor de nulo
 
      
 
@@ -121,8 +121,8 @@ if($acesso)
                                'nome' => 'nome',
                                'label' => 'Nome:',
                                'tipo' => 'texto',
-                               'required' => true,
-                               'autofocus' => true,
+                               'required' => TRUE,
+                               'autofocus' => TRUE,
                                'title' => 'Nome do servidor',
                                'col' => 5,
                                'size' => 50),
@@ -139,7 +139,7 @@ if($acesso)
                                'tipo' => 'combo',
                                'array' => array("Masculino","Feminino"),
                                'title' => 'Sexo do Servidor',
-                               'required' => true,
+                               'required' => TRUE,
                                'col' => 2,
                                'size' => 15),
                         array ('linha' => 1,

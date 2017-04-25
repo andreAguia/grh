@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -55,7 +55,7 @@ if($acesso)
     $objeto->set_nome('Plano de Cargos & Salários');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -112,7 +112,7 @@ if($acesso)
     $objeto->set_label(array("id","Decreto / Lei","Data do Decreto / Lei","Publicação no DOERJ","Página no DOERJ","Plano Atual"));
     $objeto->set_width(array(10,25,20,20,10,10));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
 
     $objeto->set_formatacaoCondicional(array(
                                              array('coluna' => 5,
@@ -139,22 +139,22 @@ if($acesso)
                'label' => 'Decreto ou Lei:',
                'title' => 'Número do Decreto',
                'tipo' => 'texto',
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'size' => 30),
          array ('linha' => 1,
                'nome' => 'dtDecreto',
                'label' => 'Data do Decreto:',
                'title' => 'Data do decreto',
                'tipo' => 'data',
-               'required' => true,
+               'required' => TRUE,
                'size' => 15),
         array ('linha' => 1,
                'nome' => 'dtPublicacao',
                'label' => 'Data da Publicação:',
                'title' => 'Data da Publicação no DOERJ',
                'tipo' => 'data',
-               'required' => true,
+               'required' => TRUE,
                'size' => 15),
          array ('linha' => 1,
                'nome' => 'pgPublicacao',
@@ -166,7 +166,7 @@ if($acesso)
                'label' => 'Plano atual:',
                'title' => 'Se é o Plano de Cargos atualmente ativo',
                'tipo' => 'combo',
-               'array' => array(array('1','Sim'),array(null,'Não')),
+               'array' => array(array('1','Sim'),array(NULL,'Não')),
                'padrao' => 'Sim',
                'size' => 10),   
         array ('linha' => 3,

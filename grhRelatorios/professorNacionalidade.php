@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -47,10 +47,10 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','País de Origem','Nacionalidade'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center","left","left"));
-    #$relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
+    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     
-    $relatorio->set_classe(array(null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,"get_Cargo"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_Cargo"));
     
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(4);

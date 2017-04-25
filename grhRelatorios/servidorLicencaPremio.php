@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -50,20 +50,20 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();   
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_subtitulo("Licenças Fruídas");
     $relatorio->set_label(array("Licença","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
     $relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
+    $relatorio->set_funcao(array(NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
     $relatorio->show();
     
     ###### Publicações
@@ -83,21 +83,21 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();   
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    $relatorio->set_totalRegistro(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_subtitulo("Publicações");
     $relatorio->set_label(array("Data da Publicação","Pag.","P.Aq.Início","P.Aq.Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
     $relatorio->set_width(array(10,5,14,14,20,8,8,8));
     $relatorio->set_align(array('center'));    
-    $relatorio->set_classe(array(null,null,null,null,null,null,'Pessoal','Pessoal'));
-    $relatorio->set_metodo(array(null,null,null,null,null,null,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
-    $relatorio->set_funcao(array('date_to_php',null,'date_to_php','date_to_php',null));
-    $relatorio->set_dataImpressao(false);
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
+    $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL));
+    $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
     $relatorio->show();
     
     ###### Resumo
@@ -110,10 +110,10 @@ if($acesso)
                     array($diasPublicados,$diasFruidos,$diasDisponiveis));
     
     $relatorio = new Relatorio();   
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
     #$relatorio->set_subtitulo("Resumo");
     $relatorio->set_label(array("","",""));
     $relatorio->set_width(array(33,33,33));
@@ -122,7 +122,7 @@ if($acesso)
 
     $relatorio->set_conteudo($tabela);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
                 
     $relatorio->show();
 

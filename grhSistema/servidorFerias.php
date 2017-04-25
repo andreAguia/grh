@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -94,7 +94,7 @@ if($acesso)
                                WHERE idFerias = '.$id);
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -105,7 +105,7 @@ if($acesso)
     # Parametros da tabela
     $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
+    $objeto->set_funcao(array (NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -136,14 +136,14 @@ if($acesso)
                                        'size' => 7,
                                        'col' => 2,
                                        'padrao' => $anoPadrao,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Ano de Exercício das Férias.',
                                        'linha' => 1),
                                array ( 'nome' => 'status',
                                        'label' => 'Status:',
                                        'tipo' => 'combo',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => array('','solicitada','confirmada','fruida','cancelada'),
                                        'size' => 20,
                                        'col' => 3,
@@ -154,7 +154,7 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Data do início das férias.',
                                        'linha' => 1),
                                array ( 'nome' => 'numDias',
@@ -162,7 +162,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'col' => 2,
                                        'size' => 5,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Dias de Férias.',
                                        'linha' => 1),
                                array ( 'nome' => 'periodo',
@@ -220,7 +220,7 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    $objeto->set_paginacao(false);
+    $objeto->set_paginacao(FALSE);
     $objeto->set_paginacaoInicial($paginacao);
     $objeto->set_paginacaoItens(6);
 
@@ -302,7 +302,7 @@ if($acesso)
 
                 # Acessa o Banco de dados
                 $ferias = new Pessoal();
-                $row = $ferias->select($select,false);
+                $row = $ferias->select($select,FALSE);
                 $row = urlencode(serialize($row));  // Prepara para ser enviado por get
 
                 # preenche outro array com o restante dos dados
@@ -314,7 +314,7 @@ if($acesso)
                 # Log
                 $atividade = "Emitiu Solicitação de Férias de ".$pessoal->get_nome($idServidorPesquisado);
                 $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario,$data,$atividade,null,null,4,$idServidorPesquisado);
+                $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
     
                 loadPage('?');
                 break;
@@ -344,7 +344,7 @@ if($acesso)
 
                 # Acessa o Banco de dados
                 $ferias = new Pessoal();
-                $row = $ferias->select($select,false);
+                $row = $ferias->select($select,FALSE);
                 $row = urlencode(serialize($row));  // Prepara para ser enviado por get
 
                 # preenche outro array com o restante dos dados

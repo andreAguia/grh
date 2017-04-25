@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -195,7 +195,7 @@ if($acesso)
                     $menu3 = new MenuBar();
 
                     # Grafico
-                    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+                    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);
                     $botaoGra = new Button();
                     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
                     $botaoGra->set_url("?fase=lotacao&diretoria=$diretoria");
@@ -206,7 +206,7 @@ if($acesso)
                     $menu3->add_link($botaoGra,"right");
                     
                     # Organograma
-                    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',null,15,15);
+                    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',NULL,15,15);
                     $botaoOrg = new Button();                    
                     $botaoOrg->set_title("Exibe o Organograma da UENF");
                     $botaoOrg->set_imagem($imagem3);

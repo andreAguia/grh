@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -45,18 +45,18 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();   
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    $relatorio->set_totalRegistro(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array (null,null,'date_to_php',null,null,'date_to_php'));
+    $relatorio->set_funcao(array (NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
     $relatorio->show();
 
     $page->terminaPagina();

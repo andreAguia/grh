@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -63,7 +63,7 @@ if($acesso)
     $objeto->set_nome('Lotação');	
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -128,10 +128,10 @@ if($acesso)
     $objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center","center","center","center","center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,null,null,"pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,null,null,"get_lotacaoNumServidores"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_lotacaoNumServidores"));
 
-    #$objeto->set_function(array(null,null,null,null,null,null,null,"get_lotacaoNumServidores"));
+    #$objeto->set_function(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_lotacaoNumServidores"));
     $objeto->set_formatacaoCondicional(array(
                                         array('coluna' => 7,
                                               'valor' => 'Não',
@@ -175,7 +175,7 @@ if($acesso)
                'nome' => 'codigo',
                'label' => 'Código:',
                'tipo' => 'texto',
-               'autofocus' => true,
+               'autofocus' => TRUE,
                'size' => 15),               
         array ('linha' => 1,
                'col' => 3,
@@ -238,7 +238,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
        
     # Grafico
-    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
@@ -246,7 +246,7 @@ if($acesso)
     #$botaoGra->set_accessKey('G');
     
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório das Lotações Ativas");
     $botaoRel->set_onClick("window.open('../grhRelatorios/lotacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
@@ -254,7 +254,7 @@ if($acesso)
     #$botaoRel->set_accessKey('R');
     
     # Organograma
-    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',null,15,15);
+    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',NULL,15,15);
     $botaoOrg = new Button();
     $botaoOrg->set_title("Exibe o Organograma da UENF");
     $botaoOrg->set_imagem($imagem3);
@@ -262,7 +262,7 @@ if($acesso)
     #$botaoOrg->set_accessKey('O');
     
     # Organograma2
-    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',null,15,15);
+    $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',NULL,15,15);
     $botaoOrga = new Button();
     $botaoOrga->set_title("Exibe o Organograma2 da UENF");
     $botaoOrga->set_imagem($imagem3);
@@ -275,7 +275,7 @@ if($acesso)
     $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
 	
     # Paginação
-    $objeto->set_paginacao(true);
+    $objeto->set_paginacao(TRUE);
     $objeto->set_paginacaoInicial($paginacao);
     $objeto->set_paginacaoItens($numLotacaoAtiva);
 
@@ -308,7 +308,7 @@ if($acesso)
             $menu->add_link($btnVoltar,"left");
 
             # Relatórios
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("abreFechaDivId('RelServidor');");

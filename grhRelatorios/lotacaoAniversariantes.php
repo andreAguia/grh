@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -57,7 +57,7 @@ if($acesso)
     $relatorio->set_label(array('Data','Nome'));
     $relatorio->set_width(array(10,90));
     $relatorio->set_align(array("center","left"));
-    $relatorio->set_funcao(array(null,null,"get_nomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,"get_nomeMes"));
     
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);

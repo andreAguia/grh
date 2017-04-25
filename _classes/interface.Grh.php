@@ -673,7 +673,7 @@ class Grh
             $estatistica->set_label(array("",""));
             $estatistica->set_align(array("center"));
             $estatistica->set_width(array(60,40));
-            $estatistica->set_totalRegistro(false);
+            $estatistica->set_totalRegistro(FALSE);
             $estatistica->show();
 
         $div->fecha();		
@@ -717,9 +717,9 @@ class Grh
             $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
             #$tabela->set_width(array(30,20,15,15,10,10));
             $tabela->set_align(array("left"));
-            $tabela->set_funcao(array(null,null,"formataMoeda"));
-            $tabela->set_classe(array(null,null,null,'pessoal','pessoal'));
-            $tabela->set_metodo(array(null,null,null,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
+            $tabela->set_funcao(array(NULL,NULL,"formataMoeda"));
+            $tabela->set_classe(array(NULL,NULL,NULL,'pessoal','pessoal'));
+            $tabela->set_metodo(array(NULL,NULL,NULL,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
             $tabela->show();
         }
     }	
@@ -839,22 +839,22 @@ class Grh
                                        LEFT JOIN tbperfil ON tbservidor.idPerfil = tbperfil.idPerfil
                    WHERE idServidor = '.$idServidor;
 
-        $conteudo = $servidor->select($select,true);
+        $conteudo = $servidor->select($select,TRUE);
         
         # Pega a situação
         $situacao = $servidor->get_situacao($idServidor);
         
         if ($situacao == "Ativo"){
             $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
-            $function = array(null,"dv",null,null,null,"date_to_php");
+            $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php");
         }else{
             $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação","Saída");
-            $function = array(null,"dv",null,null,null,"date_to_php",null,null,"date_to_php");
+            $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php");
         }
         #$align = array("center");
         
-        $classe = array(null,null,null,null,"pessoal",null,"pessoal","pessoal");
-        $metodo = array(null,null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao");
+        $classe = array(NULL,NULL,NULL,NULL,"pessoal",NULL,"pessoal","pessoal");
+        $metodo = array(NULL,NULL,NULL,NULL,"get_Cargo",NULL,"get_Lotacao","get_Situacao");
         
         $formatacaoCondicional = array( array('coluna' => 0,
                                               'valor' => $servidor->get_idFuncional($idServidor),
@@ -868,7 +868,7 @@ class Grh
         $tabela->set_funcao($function);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(false);
+        $tabela->set_totalRegistro(FALSE);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
         
         # Limita o tamanho da tela
@@ -916,7 +916,7 @@ class Grh
             #$estatistica->set_titulo('Legenda'); 
             $tabela->set_conteudo($folgas);
             $tabela->set_cabecalho($label,$width,$align);
-            $tabela->set_totalRegistro(false);
+            $tabela->set_totalRegistro(FALSE);
             $tabela->set_formatacaoCondicional(array(
                                             array('coluna' => 0,
                                                   'valor' => 'Folgas Pendentes',
@@ -963,15 +963,15 @@ class Grh
         $relatorio->set_titulo($titulo);
         $relatorio->set_label(array("Id","Servidor","Perfil","Cargo","Admissão","Lotação","Situação"));
         #$relatorio->set_width(array(8,20,10,20,10,20,5));
-        $relatorio->set_funcao(array(null,null,null,null,"date_to_php"));        
-        $relatorio->set_classe(array(null,null,null,"pessoal",null,"pessoal","pessoal"));
-        $relatorio->set_metodo(array(null,null,null,"get_Cargo",null,"get_Lotacao","get_Situacao"));
+        $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));        
+        $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal",NULL,"pessoal","pessoal"));
+        $relatorio->set_metodo(array(NULL,NULL,NULL,"get_Cargo",NULL,"get_Lotacao","get_Situacao"));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(false);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(FALSE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_brHr(0);
         $relatorio->set_linhaFinal(TRUE);
         
@@ -979,8 +979,8 @@ class Grh
         # Utilizado para quando os dados doservidor é a primeira coisa a ser
         # exibida no relatório. Se não for esconde o cabeçalho, menu etc
         if(!$cabecalho){
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
         }
         
         $relatorio->show();

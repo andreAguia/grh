@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -71,7 +71,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -103,15 +103,15 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'maxLength' => 20,                                   
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'col' => 3,
                                        'title' => 'Data do Elogio/Advertência.',
                                        'linha' => 1),
                                array ( 'nome' => 'tipo',
                                        'label' => 'Tipo:',
                                        'tipo' => 'combo',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => array(array(1,'Elogio'),array(2,'Advertência')),
                                        'size' => 20,
                                        'title' => 'Qual o tipo de ocorrência',
@@ -122,7 +122,7 @@ if($acesso)
                                        'tipo' => 'textarea',
                                        'size' => array(80,5),
                                        'col' => 12,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Descrição do Elogio ou Advertência.',
                                        'linha' => 2),
                                array ( 'nome' => 'idServidor',

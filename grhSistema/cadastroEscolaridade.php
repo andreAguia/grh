@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -55,7 +55,7 @@ if($acesso)
     $objeto->set_nome('Escolaridade');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -118,8 +118,8 @@ if($acesso)
                'nome' => 'escolaridade',
                'label' => 'Escolaridade:',
                'tipo' => 'texto',
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'size' => 40),
         array ('linha' => 2,
                'nome' => 'obs',

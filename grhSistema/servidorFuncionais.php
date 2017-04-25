@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -85,13 +85,13 @@ if($acesso)
     $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão voltar
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(false);
+    $objeto->set_botaoIncluir(FALSE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -111,7 +111,7 @@ if($acesso)
                                   FROM tbperfil
                               ORDER BY nome');
 
-    array_unshift($perfil, array(null,null)); 
+    array_unshift($perfil, array(NULL,NULL)); 
 
     # Pega os dados da combo concurso
     $concurso = $pessoal->select('SELECT idconcurso,
@@ -119,7 +119,7 @@ if($acesso)
                                   FROM tbconcurso
                               ORDER BY nome');
 
-    array_unshift($concurso, array(null,null)); 
+    array_unshift($concurso, array(NULL,NULL)); 
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
@@ -128,7 +128,7 @@ if($acesso)
                                                LEFT JOIN tbarea USING (idarea)
                               ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
-    array_unshift($cargo, array(0,null)); 
+    array_unshift($cargo, array(0,NULL)); 
 
     # Pega os dados da combo situação
     $situacao = $pessoal->select('SELECT idsituacao,
@@ -136,7 +136,7 @@ if($acesso)
                                   FROM tbsituacao
                               ORDER BY situacao');
 
-    array_unshift($situacao, array(null,null)); 
+    array_unshift($situacao, array(NULL,NULL)); 
     
     # Pega os dados da combo motivo de Saída do servidor
     $motivo = $pessoal->select('SELECT idmotivo,
@@ -144,32 +144,32 @@ if($acesso)
                                   FROM tbmotivo
                               ORDER BY idmotivo');
 
-    array_unshift($motivo, array(null,null)); 
+    array_unshift($motivo, array(NULL,NULL)); 
 
     # Campos para o formulario
     $campos = array(array( 'linha' => 1,
                            'nome' => 'idFuncional',
                            'label' => 'id Funcional:',
                            'tipo' => 'texto',
-                           'autofocus' => true,
+                           'autofocus' => TRUE,
                            'size' => 10,
-                           'unique'=> true,
+                           'unique'=> TRUE,
                            'col' => 2,
                            'title' => 'Número da id funcional do servidor.'),
                   array ( 'linha' => 1,
                            'nome' => 'matricula',
                            'label' => 'Matricula:',
                            'tipo' => 'texto',
-                           'autofocus' => true,
+                           'autofocus' => TRUE,
                            'size' => 10,
-                           'unique'=> true,
+                           'unique'=> TRUE,
                            'col' => 2,
                            'title' => 'Matrícula do servidor.'),
                    array ('linha' => 1,
                            'nome' => 'idPerfil',
                            'label' => 'Perfil:',
                            'tipo' => 'combo',
-                           'required' => true,
+                           'required' => TRUE,
                            'array' => $perfil,
                            'title' => 'Perfil do servidor', 
                            'col' => 3,
@@ -215,7 +215,7 @@ if($acesso)
                                'size' => 20,
                                'col' => 3,
                                'fieldset' => 'Dados da Admissão',
-                               'required' => true,
+                               'required' => TRUE,
                                'title' => 'Data de Admissão.'),
                        array ( 'linha' => 3,
                                'nome' => 'processoAdm',

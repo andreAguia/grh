@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -59,7 +59,7 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição'));
     #$relatorio->set_width(array(10,10,30,15,15,20,0));
     $relatorio->set_align(array("center","center","left","center","center","left"));
-    $relatorio->set_funcao(array(null,"dv",null,"date_to_php","date_to_php"));
+    $relatorio->set_funcao(array(NULL,"dv",NULL,"date_to_php","date_to_php"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

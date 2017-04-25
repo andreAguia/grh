@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -88,7 +88,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -120,7 +120,7 @@ if($acesso)
                                       nome
                                  FROM tbtipoprogressao
                              ORDER BY nome');
-    array_push($result1, array(null,null)); # Adiciona o valor de nulo
+    array_push($result1, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Pega os dados da combo classe
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
@@ -129,15 +129,15 @@ if($acesso)
                                  FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
                                 WHERE nivel = "'.$nivel.'" 
                              ORDER BY numdecreto,nivel,classe');
-    array_push($result2, array(null,null)); # Adiciona o valor de nulo
+    array_push($result2, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'col' => 3,
                                        'title' => 'Data inícial da Progressão ou Enquadramento.',
                                        'linha' => 1),
@@ -145,7 +145,7 @@ if($acesso)
                                        'label' => 'Tipo:',
                                        'tipo' => 'combo',
                                        'col' => 6,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => $result1,
                                        'size' => 20,                               
                                        'title' => 'Tipo de Progressão / Enquadramento',
@@ -156,7 +156,7 @@ if($acesso)
                                        'array' => $result2,
                                        'size' => 20,
                                        'col' => 6,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Valor',
                                        'linha' => 2), 
                                array ( 'nome' => 'documento',

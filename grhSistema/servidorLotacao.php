@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -71,7 +71,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    #$objeto->set_botaoSalvarGrafico(false);
+    #$objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     if(Verifica::acesso($idUsuario,1)){ // Só permite editar ou excluir para o administrador
@@ -89,8 +89,8 @@ if($acesso)
     $objeto->set_align(array("center","left","left"));
     $objeto->set_funcao(array ("date_to_php"));
     
-    $objeto->set_classe(array (null,"pessoal"));
-    $objeto->set_metodo(array (null,"get_nomelotacao"));    
+    $objeto->set_classe(array (NULL,"pessoal"));
+    $objeto->set_metodo(array (NULL,"get_nomelotacao"));    
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -116,7 +116,7 @@ if($acesso)
     $selectLotacao .= ' ORDER BY lotacao';
     
     $result = $pessoal->select($selectLotacao);
-    array_unshift($result, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'data',
@@ -124,15 +124,15 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'maxLength' => 20,                                   
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'col' => 3,
                                        'title' => 'Data do início da exibição da notícia.',
                                        'linha' => 1),
                                array ( 'nome' => 'lotacao',
                                        'label' => 'Lotacão:',
                                        'tipo' => 'combo',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'array' => $result,
                                        'size' => 20,
                                        'col' => 9,

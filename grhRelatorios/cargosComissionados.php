@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -50,8 +50,8 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Descrição','Cargo','Lotação','Perfil'));
     #$relatorio->set_width(array(10,30,20,0,25,10));
     $relatorio->set_align(array("center","left","left","left","left"));
-    $relatorio->set_classe(array(null,null,null,null,"Pessoal"));
-    $relatorio->set_metodo(array(null,null,null,null,"get_Lotacao"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,"Pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,"get_Lotacao"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

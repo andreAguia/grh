@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -70,7 +70,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -82,7 +82,7 @@ if($acesso)
     $objeto->set_label(array("Data do Início da Folga","Data do Término da Folga","Dias Folgados"));
     $objeto->set_width(array(30,30,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php","date_to_php",null));
+    $objeto->set_funcao(array ("date_to_php","date_to_php",NULL));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -100,8 +100,8 @@ if($acesso)
                                        'label' => 'Data do Início da Folga:',
                                        'tipo' => 'data',
                                        'size' => 20,                                
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Data da Fola ou do início da folga.',
                                        'col' => 3,
                                        'linha' => 1),
@@ -110,7 +110,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 5,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Quantidade de dias folgados.',
                                        'linha' => 1),
                                array ( 'nome' => 'idServidor',

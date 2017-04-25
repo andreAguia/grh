@@ -83,41 +83,57 @@ class listaFerias
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
+        # Informa as lotações ativas
         $selectLotacao = 'SELECT idlotacao,
-                                 concat(IFNULL(UADM,"")," - ",IFNULL(DIR,"")," - ",IFNULL(GER,"")) lotacao
+                                 concat(IFNULL(UADM,"")," - ",IFNULL(DIR,"")," - ",IFNULL(GER,"")," - ",IFNULL(nome,"")) lotacao
                           FROM tblotacao       
                          WHERE ativo
                         ORDER BY lotacao'; 
-        
-        # Informa as lotações ativas
-        $conteudo = $servidor->select($selectLotacao,true);
+        $conteudo = $servidor->select($selectLotacao,TRUE);
         
         # Cria o array para a tabela
         $listaTabela = array();
         
         # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
-        $diasTotais = $this->getDiasFerias();   
-        
-        ##### PArei aqui
-        
-        foreach ($conteudo as $listaLotacao) {
-            
+        $diasFeriasMulti = $this->getDiasFerias();   
+        $tt = count($diasFeriasMulti);
+       
+        # Transforma $diasTotais (array multi) em array simples
+        for ($i = 0; $i < $tt; $i++){
+            $diasTotais[$i] = $diasFeriasMulti[$i][0];
         }
         
+        # Adiciona no fim de $dias Totais a coluna para quem não solicitou férias
+        array_push($diasTotais, "Não Solicitou");
         
+        # Percorre as lotações e preenche a tabela
+        foreach ($conteudo as $listaLotacao) {
+            $lista = array($listaLotacao[0],$listaLotacao[1]);
+            
+            #PArei Aqui
+            
+            # Acrescenta os totais na coluna dos dias
+            foreach ($diasTotais as $dias) {
+                $lista[] = "-";
+            }
+            
+            $listaTabela[] = $lista;
+        }
         
+        # Colocando elementos no início do array
+        array_unshift($diasTotais, "ID","Lotação");
+        
+                
         
         # Monta a tabela de Resumo.
         $tabela = new Tabela();
         
-        $tabela->set_conteudo($conta);
+        $tabela->set_conteudo($listaTabela);
         $tabela->set_label($diasTotais);
         $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array("center"));
-        $tabela->set_titulo("Resumo");
+        $tabela->set_align(array("center","left"));
+        $tabela->set_titulo("Solicitação de Férias por Lotação");
         $tabela->show();
-                      
-        
     }
     
     ###########################################################
@@ -134,11 +150,11 @@ class listaFerias
         $servidor = new Pessoal();
         
         # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
-        $diasTotais = $this->getDiasFerias();   
+        $diasTotais = $this->getDiasFerias(); 
         
         # Conta o número de dias 
         $totalFerias = count($diasTotais);
-        
+       
         $conta = array();   // Array para exibir na tela    
         $tt = 0;            // Totalizador de servidores que pediram férias
         
@@ -180,9 +196,10 @@ class listaFerias
             $tabela = new Tabela();
 
             $tabela->set_conteudo($servset3);
-            $tabela->set_label(array("Id","Servidor","Cargo","Dias"));
+            $tabela->set_label(array("Id","Servidor","Cargo","Admissão","Dias"));
             $tabela->set_classe(array(NULL,NULL,"pessoal"));
             $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
             $tabela->set_align(array("center","left","left"));
             $tabela->set_titulo("Resumo por Servidor");
             $tabela->set_idCampo('idServidor');
@@ -237,7 +254,7 @@ class listaFerias
         $select .= ' ORDER BY tbpessoa.nome,tbferias.periodo';
         
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($select,true);
+        $conteudo = $servidor->select($select,TRUE);
         $totalRegistros = count($conteudo);
         
         # Conecta com o banco de dados
@@ -247,10 +264,10 @@ class listaFerias
         $label = array("Nome","Dias","Data","Período","Status","Perfil");
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("left","center","center","center","center","center");
-        $function = array (null,null,"date_to_php");
+        $function = array (NULL,NULL,"date_to_php");
                         
         # Executa o select juntando o selct e o select de paginacao
-        $conteudo = $servidor->select($select,true);
+        $conteudo = $servidor->select($select,TRUE);
         
         if($totalRegistros == 0){
             #br();
@@ -270,7 +287,7 @@ class listaFerias
             #$tabela->set_classe($classe);
             #$tabela->set_metodo($metodo);
             $tabela->set_funcao($function);
-            $tabela->set_totalRegistro(true);
+            $tabela->set_totalRegistro(TRUE);
             $tabela->set_idCampo('idFerias');
             $tabela->set_titulo("Férias Detalhadas");
             if($this->permiteEditar){
@@ -280,7 +297,7 @@ class listaFerias
             $tabela->show();
             
             # Pega o time final
-            $time_end = microtime(true);
+            $time_end = microtime(TRUE);
             
             # Calcula e exibe o tempo
             $time = $time_end - $this->time_start;
@@ -305,16 +322,16 @@ class listaFerias
         $servidor = new Pessoal();
         
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($this->select,true);
+        $conteudo = $servidor->select($this->select,TRUE);
         $totalRegistros = count($conteudo);
         
         # Dados da Tabela
         $label = array("IDFuncional","Matrícula","Servidor","Lotação","Perfil","Exercicio","Status","dt","dias","p");
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        $function = array (null,"dv",null,null,null,null,null,"date_to_php");
-        $classe = array(null,null,null,"pessoal");
-        $metodo = array(null,null,null,"get_Cargo");
+        $function = array (NULL,"dv",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+        $classe = array(NULL,NULL,NULL,"pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_Cargo");
                 
         # Relatório
         $relatorio = new Relatorio();
@@ -365,7 +382,7 @@ class listaFerias
         $slctot .= "GROUP BY idServidor
                     ORDER BY soma desc";
         
-        $diasTotais = $servidor->select($slctot,TRUE);
+        $diasTotais = $servidor->select($slctot);
         return $diasTotais;
     }
     
@@ -416,13 +433,14 @@ class listaFerias
      * Informa array com todos os servidores que pediram férias desse setor e o total de dias
      *
      */	
-    private function getServidoresComTotalDiasFerias(){
+    private function getServidoresComTotalDiasFerias($idLotacao = NULL){
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
         $select1 = "(SELECT tbservidor.idFuncional,
                             tbpessoa.nome,
                             tbservidor.idServidor,
+                            tbservidor.dtAdmissao,
                             sum(numDias) as soma
                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                     LEFT JOIN tbferias USING (idServidor)
@@ -431,7 +449,10 @@ class listaFerias
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        ";
         
-        if(!is_null($this->lotacao)){
+        # Verifica se tem filtro por lotação
+        if(!is_null($idLotacao)){ // dá prioridade ao filtro da função
+            $select1 .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+        }elseif(!is_null($this->lotacao)){  // senão verifica o da classe
             $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
         
@@ -440,7 +461,7 @@ class listaFerias
               AND anoExercicio = $this->anoExercicio
               AND situacao = 1 
          GROUP BY tbpessoa.nome
-         ORDER BY 4 desc,tbpessoa.nome)";
+         ORDER BY 5 desc,tbpessoa.nome)";
         
         # Pega os dados do banco
         $retorno = $servidor->select($select1,TRUE);
@@ -456,13 +477,14 @@ class listaFerias
      * Informa array com todos os servidores que não pediram férias desse setor
      *
      */	
-    private function getServidoresSemFerias(){
+    private function getServidoresSemFerias($idLotacao = NULL){
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
         $select2 = "SELECT tbservidor.idFuncional,
                            tbpessoa.nome,
                            tbservidor.idServidor,
+                           tbservidor.dtAdmissao,
                            '-'
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
@@ -470,7 +492,10 @@ class listaFerias
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       ";
                  
-        if(!is_null($this->lotacao)){
+        # Verifica se tem filtro por lotação
+        if(!is_null($idLotacao)){ // dá prioridade ao filtro da função
+            $select2 .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+        }elseif(!is_null($this->lotacao)){  // senão verifica o da classe
             $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
 

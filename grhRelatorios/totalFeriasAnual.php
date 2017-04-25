@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -64,12 +64,12 @@ if($acesso)
     $relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
     $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
     #$relatorio->set_width(array(10,45,10,35));
-    $relatorio->set_align(array("center","left",null,"left"));
-    $relatorio->set_classe(array(null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,"get_lotacao"));
+    $relatorio->set_align(array("center","left",NULL,"left"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
-    $relatorio->set_dataImpressao(false);
+    $relatorio->set_dataImpressao(FALSE);
 
     $relatorio->set_formCampos(array(
                                array ('nome' => 'anoBase',
@@ -80,7 +80,7 @@ if($acesso)
                                       'onChange' => 'formPadrao.submit();',
                                       'padrao' => $anoBase,
                                       'col' => 3,
-                                      'autofocus' => true,
+                                      'autofocus' => TRUE,
                                       'linha' => 1)));
     $relatorio->set_formLink('?');
     $relatorio->show();
@@ -109,14 +109,14 @@ if($acesso)
     #$relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
     $relatorio2->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
     $relatorio2->set_width(array(10,45,10,35));
-    $relatorio2->set_align(array("center","left",null,"left"));
-    $relatorio2->set_classe(array(null,null,null,"pessoal"));
-    $relatorio2->set_metodo(array(null,null,null,"get_lotacao"));
+    $relatorio2->set_align(array("center","left",NULL,"left"));
+    $relatorio2->set_classe(array(NULL,NULL,NULL,"pessoal"));
+    $relatorio2->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
     $relatorio2->set_conteudo($result2);
-    $relatorio2->set_cabecalhoRelatorio(false);
-    $relatorio2->set_menuRelatorio(false);
+    $relatorio2->set_cabecalhoRelatorio(FALSE);
+    $relatorio2->set_menuRelatorio(FALSE);
     $relatorio2->set_numGrupo(2);
-    $relatorio2->set_log(false);
+    $relatorio2->set_log(FALSE);
     $relatorio2->show();
 
     $page->terminaPagina();

@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -55,7 +55,7 @@ if($acesso)
     $objeto->set_nome('Nacionalidade');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -120,8 +120,8 @@ if($acesso)
                'nome' => 'nacionalidade',
                'label' => 'Nacionalidade:',
                'tipo' => 'texto',
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'col' => 6,
                'size' => 60)));
 

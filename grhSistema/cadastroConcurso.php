@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -59,7 +59,7 @@ if($acesso)
     $objeto->set_nome('Concursos');	
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -116,8 +116,8 @@ if($acesso)
     $objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
 
-    $objeto->set_classe(array(null,null,null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,null,"get_servidoresConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_servidoresConcurso"));
     
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -156,7 +156,7 @@ if($acesso)
                'nome' => 'anobase',
                'label' => 'Ano Base:',
                'tipo' => 'texto',
-               'autofocus' => true,
+               'autofocus' => TRUE,
                'col' => 2,
                'size' => 10),
          array ('linha' => 1,
@@ -189,7 +189,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Imagem
-    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);
+    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);
     
     # Grafico
     $botaoGra = new Button();
@@ -259,7 +259,7 @@ if($acesso)
             $menu1->add_link($linkInativo,"right");
              
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");

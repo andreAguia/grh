@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -70,7 +70,7 @@ if($acesso)
     $menu1->add_link($linkBotao1,"left");
 
     # Relatórios
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Relatório dessa pesquisa");
     $botaoRel->set_url("?fase=relatorio");

@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -55,7 +55,7 @@ if($acesso)
     $objeto->set_nome('Licenças e Afastamentos');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -115,7 +115,7 @@ if($acesso)
     $objeto->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero"));
     $objeto->set_width(array(5,38,7,10,10,10,10,10));
     $objeto->set_align(array("center","left","center","center","center","center","center","center","left"));
-    #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
+    #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -136,7 +136,7 @@ if($acesso)
                'title' => 'Nome do Afastamento ou Licença',
                'label' => 'Nome do Afastamento ou Licença',
                'tipo' => 'texto',
-               'autofocus' => true,
+               'autofocus' => TRUE,
                'col' => 6,
                'size' => 100),
         array ('linha' => 1,
@@ -203,7 +203,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório dos Afastamentos e Licenças");
     $botaoRel->set_onClick("window.open('../grhRelatorios/tiposLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");

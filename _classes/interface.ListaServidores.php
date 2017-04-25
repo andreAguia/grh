@@ -11,7 +11,7 @@ class listaServidores
 {    
     
     # Título
-    private $nomeLista = null;  # Nome da lista que aparece no título
+    private $nomeLista = NULL;  # Nome da lista que aparece no título
     
     # Parâmetros de Pesquisa
     private $matNomeId = NULL;  # Busca por matricula nome ou id em um só campos
@@ -187,7 +187,7 @@ class listaServidores
         $select .= ' ORDER BY tbpessoa.nome';
         
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($select,true);
+        $conteudo = $servidor->select($select,TRUE);
         $totalRegistros = count($conteudo);
         
         # Verifica a necessidade de paginação pelo número de registro
@@ -201,7 +201,7 @@ class listaServidores
         }
                 
         # Calculos da paginaçao
-        $this->texto = null;
+        $this->texto = NULL;
         if($this->paginacao)
         {
             # Calcula o total de páginas
@@ -320,16 +320,16 @@ class listaServidores
         $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
         $width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        $function = array (null,"dv",null,null,null,null,"date_to_php");
-        $classe = array(null,null,null,"pessoal");
-        $metodo = array(null,null,null,"get_Cargo");
+        $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+        $classe = array(NULL,NULL,NULL,"pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_Cargo");
         
         # Pega a lista com o limit da tabulação
         titulo($this->nomeLista);
         #echo $this->select;
         
         # Executa o select juntando o selct e o select de paginacao
-        $conteudo = $servidor->select($this->select.$this->selectPaginacao,true);
+        $conteudo = $servidor->select($this->select.$this->selectPaginacao,TRUE);
         
         if($this->totReg == 0){
             br();
@@ -349,7 +349,7 @@ class listaServidores
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_funcao($function);
-            $tabela->set_totalRegistro(true);
+            $tabela->set_totalRegistro(TRUE);
             $tabela->set_idCampo('idServidor');
             if($this->permiteEditar){
                 $tabela->set_editar('servidor.php?fase=editar&id=');
@@ -366,7 +366,7 @@ class listaServidores
             $tabela->show();
             
             # Pega o time final
-            $time_end = microtime(true);
+            $time_end = microtime(TRUE);
             
             # Calcula e exibe o tempo
             $time = $time_end - $this->time_start;
@@ -391,16 +391,16 @@ class listaServidores
         $servidor = new Pessoal();
         
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($this->select,true);
+        $conteudo = $servidor->select($this->select,TRUE);
         $totalRegistros = count($conteudo);
         
         # Dados da Tabela
         $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
         $width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        $function = array (null,"dv",null,null,null,null,"date_to_php");
-        $classe = array(null,null,null,"pessoal");
-        $metodo = array(null,null,null,"get_Cargo");
+        $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+        $classe = array(NULL,NULL,NULL,"pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_Cargo");
                 
         # Relatório
         $relatorio = new Relatorio();

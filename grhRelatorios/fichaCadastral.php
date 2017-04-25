@@ -8,8 +8,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -70,16 +70,16 @@ if($acesso)
     $relatorio->set_titulo('Ficha Cadastral');
     $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Perfil','Situação'));
     $relatorio->set_width(array(15,10,40,15,20));
-    $relatorio->set_funcao(array(null,"dv"));
+    $relatorio->set_funcao(array(NULL,"dv"));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    #$relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_linhaNomeColuna(false);
+    #$relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_linhaNomeColuna(FALSE);
     $relatorio->set_brHr(0);
     $relatorio->set_formCampos(array(
               array ('nome' => 'contatos',
@@ -217,25 +217,25 @@ if($acesso)
     $result = $pessoal->select($select);   
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Data Admissão','Cargo','Concurso','Data Demissão','Motivo'));
     $relatorio->set_width(array(12,30,20,12,26));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php",null,null,"date_to_php"));
-    $relatorio->set_classe(array(null,"Pessoal"));
-    $relatorio->set_metodo(array(null,"get_Cargo"));
+    $relatorio->set_funcao(array("date_to_php",NULL,NULL,"date_to_php"));
+    $relatorio->set_classe(array(NULL,"Pessoal"));
+    $relatorio->set_metodo(array(NULL,"get_Cargo"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);    
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);    
     $relatorio->show();
 
     $fieldset->fecha();
@@ -256,7 +256,7 @@ if($acesso)
     $conteudo = array(array($salarioBase,$trienio,$comissao,$gratificacao,$total));
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Salário Base','Triênio','Cargo em Comissão','Gratificação Especial','Total'));
     $relatorio->set_width(array(20,20,20,20,20));
@@ -264,15 +264,15 @@ if($acesso)
     $relatorio->set_funcao(array('formataMoeda','formataMoeda','formataMoeda','formataMoeda','formataMoeda'));
     $relatorio->set_conteudo($conteudo);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $fieldset->fecha();
@@ -303,23 +303,23 @@ if($acesso)
         $result = $pessoal->select($select);    
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Órgão de Origem','Matrícula Externa','Cedido com Ônus','Salário','Processo de Cessão','Publicação','Pag.'));
         $relatorio->set_width(array(15,15,15,10,20,15,5));    
         $relatorio->set_align(array('cener'));
-        $relatorio->set_funcao(array(null,null,null,'formataMoeda',null,"date_to_php"));
+        $relatorio->set_funcao(array(NULL,NULL,NULL,'formataMoeda',NULL,"date_to_php"));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(false);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);    
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(FALSE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);    
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -346,7 +346,7 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Nascimento','Nacionalidade','Naturalidade','Estado Civil','Sexo'));
     $relatorio->set_width(array(20,20,20,20,20));
@@ -354,15 +354,15 @@ if($acesso)
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $fieldset->fecha();
@@ -382,7 +382,7 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Nome do Pai','Nome da Mãe'));
     $relatorio->set_width(array(50,50));
@@ -390,15 +390,15 @@ if($acesso)
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $fieldset->fecha();
@@ -422,7 +422,7 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('CPF','Identidade - Órgão - Emissão','PisPasep','Título de Eleitor - Zona - Seção'));
     $relatorio->set_width(array(20,30,20,30));
@@ -430,15 +430,15 @@ if($acesso)
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     ##
@@ -454,23 +454,23 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Carteira Motorista','Vencimento','Conselho de Classe','Registro','Reservista'));
     $relatorio->set_width(array(20,20,20,20,20));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(null,"date_to_php"));
+    $relatorio->set_funcao(array(NULL,"date_to_php"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $fieldset->fecha();
@@ -494,7 +494,7 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
+    #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Endereço','Cep'));
     $relatorio->set_width(array(80,20));
@@ -502,15 +502,15 @@ if($acesso)
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $fieldset->fecha();
@@ -532,7 +532,7 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Tipo','Número'));
         $relatorio->set_width(array(50,50));
@@ -540,15 +540,15 @@ if($acesso)
         #$relatorio->set_funcao($funcao);
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(false);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(FALSE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -580,23 +580,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array("Nome","Nascimento","Parentesco","Sexo","Depend. no IR","Auxílio Creche","Término do Aux. Creche"));
         $relatorio->set_width(array(30,10,10,10,10,10,10));
-        $relatorio->set_funcao(array(null,"date_to_php",null,null,null,null,"date_to_php"));
+        $relatorio->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,"date_to_php"));
         $relatorio->set_align(array('left','center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -622,7 +622,7 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Nível','Curso','Instituição','Término'));
         $relatorio->set_width(array(20,35,35,10));
@@ -630,15 +630,15 @@ if($acesso)
         #$relatorio->set_funcao($funcao);
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -663,7 +663,7 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Data','Lotação','Motivo'));
         $relatorio->set_width(array(20,40,40));
@@ -671,15 +671,15 @@ if($acesso)
         $relatorio->set_align(array('center','left','left'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -709,23 +709,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Cargo','Valor','Nomeação','Processo','Exoneração','Processo'));
         $relatorio->set_width(array(20,10,15,20,15,20));
-        $relatorio->set_funcao(array(null,'formataMoeda','date_to_php',null,'date_to_php'));
+        $relatorio->set_funcao(array(NULL,'formataMoeda','date_to_php',NULL,'date_to_php'));
         $relatorio->set_align(array('left','left','left','left','left','left'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -754,23 +754,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Data Inicial','Tipo','Valor','Processo','DOERJ','Pág.'));
         $relatorio->set_width(array(10,25,20,20,10,5));
-        $relatorio->set_funcao(array('date_to_php',null,null,null,'date_to_php'));
+        $relatorio->set_funcao(array('date_to_php',NULL,NULL,NULL,'date_to_php'));
         $relatorio->set_align(array('center','left','center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -797,23 +797,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Data Inicial','Percentual (%)','Processo','DOERJ','Pág.'));
         $relatorio->set_width(array(20,20,20,20,20));
-        $relatorio->set_funcao(array('date_to_php',null,null,'date_to_php'));
+        $relatorio->set_funcao(array('date_to_php',NULL,NULL,'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -839,7 +839,7 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Data Inicial','Data Final','Valor','Processo'));
         $relatorio->set_width(array(25,25,25,25));
@@ -847,15 +847,15 @@ if($acesso)
         $relatorio->set_align(array('left','left','left','left'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -884,23 +884,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Exercício','Status','Data Inicial','Dias','Data Final','Documento 1/3','Folha'));
         $relatorio->set_width(array(10,10,15,10,15,20,20));
-        $relatorio->set_funcao(array(null,null,'date_to_php',null,'date_to_php'));
+        $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -931,23 +931,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Tipo','Início','Dias','Término','Perícia','Bim','Processo','DOERJ','Pág.'));
         $relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-        $relatorio->set_funcao(array(null,'date_to_php',null,'date_to_php','date_to_php',null,null,'date_to_php'));
+        $relatorio->set_funcao(array(NULL,'date_to_php',NULL,'date_to_php','date_to_php',NULL,NULL,'date_to_php'));
         $relatorio->set_align(array('left','center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -987,22 +987,22 @@ if($acesso)
 
         $result = $pessoal->select($select);
         $relatorio = new Relatorio();
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);        
         $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Pag.","Processo"));
         $relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
-        $relatorio->set_funcao(array("date_to_php","date_to_php",null,null,null,null,null,"date_to_php"));
+        $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
         $relatorio->set_align(array('left','left','left','left','left','left','left','left','left','Left'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();
@@ -1034,23 +1034,23 @@ if($acesso)
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        #$relatorio->set_titulo(null);
+        #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array("Saída","Chegada","CI","Processo","Data","Origem","Destino","Valor"));
         $relatorio->set_width(array(10,10,10,10,10,20,20,10));
-        $relatorio->set_funcao(array("date_to_php","date_to_php",null,null,"date_to_php",null,null,"formataMoeda"));
+        $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,"date_to_php",NULL,NULL,"formataMoeda"));
         $relatorio->set_align(array("center"));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
-        $relatorio->set_subTotal(false);
-        $relatorio->set_totalRegistro(true);
-        $relatorio->set_dataImpressao(false);
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_log(false);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
         $relatorio->show();
 
         $fieldset->fecha();

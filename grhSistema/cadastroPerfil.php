@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -59,7 +59,7 @@ if($acesso)
     $objeto->set_nome('Perfil');	
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -120,10 +120,10 @@ if($acesso)
     $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Servidores","Ver"));
     #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
     $objeto->set_align(array("center"));
-    #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
+    #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
-    $objeto->set_classe(array(null,null,null,null,null,null,null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,null,null,null,null,null,"get_servidoresPerfil"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresPerfil"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -156,7 +156,7 @@ if($acesso)
                'title' => 'Nome do Perfil',
                'label' => 'Nome:',
                'tipo' => 'texto',
-               'autofocus' => true, 
+               'autofocus' => TRUE, 
                'size' => 50),
          array ('linha' => 1,
                'nome' => 'tipo',
@@ -214,7 +214,7 @@ if($acesso)
                'size' => array(80,5))));
     
     # Gráfico
-    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',null,15,15);            
+    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);            
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
@@ -223,7 +223,7 @@ if($acesso)
     #$botaoGra->set_accessKey('G');
     
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório os Perfis");
     $botaoRel->set_onClick("window.open('../grhRelatorios/perfil.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
@@ -291,7 +291,7 @@ if($acesso)
             $menu1->add_link($linkInativo,"right");
             
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");

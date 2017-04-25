@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -60,7 +60,7 @@ if($acesso)
     $objeto->set_nome('Cargos e Funções');	
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -120,8 +120,8 @@ if($acesso)
     #$objeto->set_width(array(5,20,25,25,10,5,5));
     $objeto->set_align(array("center","center","center","left"));
 
-    $objeto->set_classe(array(null,null,null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,null,null,"get_servidoresCargo"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_servidoresCargo"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -155,14 +155,14 @@ if($acesso)
                                         cargo
                                    FROM tbtipocargo
                                ORDER BY idTipoCargo desc');
-    array_push($result2, array(null,null));
+    array_push($result2, array(NULL,NULL));
     
     # Pega os dados da combo de Área
     $result3 = $pessoal->select('SELECT idArea,
                                         CONCAT(tbtipocargo.cargo," - ",area)
                                   FROM tbarea JOIN tbtipocargo USING (idTipoCargo)
                               ORDER BY idarea desc');
-    array_push($result3, array(null,null));
+    array_push($result3, array(NULL,NULL));
 
     # Campos para o formulario
     $objeto->set_campos(array(        
@@ -171,7 +171,7 @@ if($acesso)
                'nome' => 'idtipocargo',
                'label' => 'Cargo:',
                'tipo' => 'combo',               
-               'required' => true,
+               'required' => TRUE,
                'array' => $result2,
                'size' => 30),
         array ('linha' => 1,
@@ -179,23 +179,23 @@ if($acesso)
                'nome' => 'idarea',
                'label' => 'Área:',
                'tipo' => 'combo',               
-               'required' => true,
+               'required' => TRUE,
                'array' => $result3,      
-               'required' => true,
+               'required' => TRUE,
                'size' => 50),
         array ('linha' => 2,
                'col' => 8,
                'nome' => 'nome',
                'label' => 'Função:',
                'tipo' => 'texto',               
-               'required' => true,
+               'required' => TRUE,
                'size' => 50),
         array ('linha' => 2,
                'col' => 4,
                'nome' => 'idPlano',
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
-               'required' => true,
+               'required' => TRUE,
                'array' => $result1,
                'size' => 30),
         array ('linha' => 4,
@@ -215,7 +215,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Paginação
-    $objeto->set_paginacao(true);
+    $objeto->set_paginacao(TRUE);
     $objeto->set_paginacaoInicial($paginacao);
     
     # Cadastro de Cargos
@@ -298,7 +298,7 @@ if($acesso)
             $menu->add_link($linkInativo,"right");
             
             # Mapa do Cargo
-            $imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',null,15,15);
+            $imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Mapa do Cargo");
             $botaoRel->set_onClick("window.open('../grhRelatorios/mapaCargo.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
@@ -306,7 +306,7 @@ if($acesso)
             $menu->add_link($botaoRel,"right");
             
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");

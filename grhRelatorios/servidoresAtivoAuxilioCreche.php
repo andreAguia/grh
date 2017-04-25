@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -51,9 +51,9 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Servidor','Nome do Filho(a)','Nascimento','Idade','Processo','Término','Documento Exclusão'));
     $relatorio->set_width(array(5,20,25,10,5,15,10,10));
     $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,null,"date_to_php"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_dataImpressao(false);
+    $relatorio->set_dataImpressao(FALSE);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
@@ -85,10 +85,10 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Servidor','Nome do Filho(a)','Nascimento','Idade','Processo','Término','Documento Exclusão'));
     $relatorio->set_width(array(5,20,25,10,5,15,10,10));
     $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(null,null,null,"date_to_php",null,null,"date_to_php"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
     $relatorio->show();
 
     $page->terminaPagina();

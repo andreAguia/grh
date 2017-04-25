@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -95,7 +95,7 @@ if($acesso)
             $menu1->add_link($linkBotao1,"left");
             
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
@@ -118,7 +118,7 @@ if($acesso)
                 $controle->set_size(55);
                 $controle->set_title('Nome, matrícula ou ID:');
                 $controle->set_valor($parametroNomeMat);
-                $controle->set_autofocus(true);
+                $controle->set_autofocus(TRUE);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
                 $controle->set_col(4);
@@ -245,7 +245,7 @@ if($acesso)
                 }
                 
                 # Paginação
-                $lista->set_paginacao(true);
+                $lista->set_paginacao(TRUE);
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(12);
                 

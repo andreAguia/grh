@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -119,15 +119,15 @@ if($acesso)
                'label' => 'Data:',
                'tipo' => 'date',
                'size' => 20,
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'title' => 'Data do feriado.',
                'linha' => 1),
         array ('linha' => 1,
                'nome' => 'descricao',
                'label' => 'Descrição:',
                'tipo' => 'texto',
-               'required' => true,
+               'required' => TRUE,
                'size' => 50),
         array ('linha' => 1,
                'nome' => 'tipo',

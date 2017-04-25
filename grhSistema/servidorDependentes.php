@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -35,23 +35,23 @@ if($acesso)
                     switch(document.formDependente.parentesco.value)
                     {                    
                         case "2":
-                            document.formDependente.auxCreche.disabled = false;
+                            document.formDependente.auxCreche.disabled = FALSE;
                             switch(document.formDependente.auxCreche.value)
                             {                    
                                 case "Sim":
                                     abreDivId("div7");
                                     abreDivId("boxCreche");
-                                    document.formDependente.dtTermino.disabled = false;
-                                    document.formDependente.processo.disabled = false;
-                                    document.formDependente.ciExclusao.disabled = false;
+                                    document.formDependente.dtTermino.disabled = FALSE;
+                                    document.formDependente.processo.disabled = FALSE;
+                                    document.formDependente.ciExclusao.disabled = FALSE;
                                     break;
                                 default:
                                 case "Não":
                                     fechaDivId("div7");
                                     fechaDivId("boxCreche");
-                                    document.formDependente.dtTermino.disabled = true;
-                                    document.formDependente.processo.disabled = true;
-                                    document.formDependente.ciExclusao.disabled = true;
+                                    document.formDependente.dtTermino.disabled = TRUE;
+                                    document.formDependente.processo.disabled = TRUE;
+                                    document.formDependente.ciExclusao.disabled = TRUE;
                                     break;
                             }
                             break;
@@ -59,7 +59,7 @@ if($acesso)
                             fechaDivId("div7");
                             fechaDivId("boxCreche");
                             document.formDependente.auxCreche.value = "Não";
-                            document.formDependente.auxCreche.disabled = true;
+                            document.formDependente.auxCreche.disabled = TRUE;
                             break;
                     }
                 }                        
@@ -134,7 +134,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -146,7 +146,7 @@ if($acesso)
     $objeto->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
     $objeto->set_width(array(20,10,10,10,10,10,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (null,"date_to_php",null,null,null,null,null,"date_to_php"));
+    $objeto->set_funcao(array (NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -166,15 +166,15 @@ if($acesso)
                                           parentesco
                                      FROM tbparentesco
                                  ORDER BY parentesco');
-    array_push($result, array(null,null)); # Adiciona o valor de nulo
+    array_push($result, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'nome',
                                        'label' => 'Nome do Dependente:',
                                        'tipo' => 'texto',
                                        'size' => 50,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Nome do dependente.',
                                        'col' => 6,
                                        'linha' => 1),
@@ -183,7 +183,7 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 12,
                                        'maxLength' => 20,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Data de Nascimento.',
                                        'col' => 3,
                                        'linha' => 1),
@@ -198,7 +198,7 @@ if($acesso)
                                        'label' => 'Parentesco:',
                                        'tipo' => 'combo',
                                        'array' => $result,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'onChange' => 'exibeEscondeCampos();',
                                        'size' => 20,                                       
                                        'title' => 'Parentesco do dependente.',
@@ -208,7 +208,7 @@ if($acesso)
                                        'label' => 'Sexo:',
                                        'tipo' => 'combo',
                                        'array' => array("","M","F"),
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Gênero do dependente.',
@@ -217,7 +217,7 @@ if($acesso)
                                        'label' => 'Dependente no IR:',
                                        'tipo' => 'combo',
                                        'array' => array("Não","Sim"),
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 20, 
                                        'col' => 2,
                                        'title' => 'Dependente no Imposto de Renda.',
@@ -272,7 +272,7 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(true);
+    #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 

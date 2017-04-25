@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -42,7 +42,7 @@ if($acesso)
 
     $relatorio->set_label(array("Cargo","Área","Função"));
     $relatorio->set_width(array(0,40,60));
-    $relatorio->set_align(array(null,"left","left"));
+    $relatorio->set_align(array(NULL,"left","left"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);

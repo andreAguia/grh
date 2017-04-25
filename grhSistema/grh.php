@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -57,7 +57,7 @@ if($acesso)
         $menu1->add_link($linkVoltar,"left");
 
         # Relatórios
-        $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
+        $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_url("grhRelatorios.php");
         $botaoRel->set_title("Relatórios dos Sistema");
@@ -154,7 +154,7 @@ if($acesso)
             # executa o checkup
             $checkup = New Checkup();
             
-            if(is_null($alerta)){
+            if(IS_NULL($alerta)){
                 $checkup->get_all();
             }else{
                 $checkup->$alerta();
@@ -163,7 +163,7 @@ if($acesso)
             # Grava no log a atividade
             $data = date("Y-m-d H:i:s");
             $atividade = 'Visualizou os Alertas do Sistema';
-            $intra->registraLog($idUsuario,$data,$atividade,null,null,4);
+            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4);
             
             $grid->fechaColuna();
             $grid->fechaGrid();

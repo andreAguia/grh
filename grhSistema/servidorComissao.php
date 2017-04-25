@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -62,7 +62,7 @@ if($acesso)
     # Retira o botão de inclusão quando o servidor já tem cargo em comissão em aberto.
     if(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){
         # Retira o botão de incluir
-        $objeto->set_botaoIncluir(false);
+        $objeto->set_botaoIncluir(FALSE);
         
         # Informa o porquê
         $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor já tem um cargo em comissão.<br/>"
@@ -107,7 +107,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -119,7 +119,7 @@ if($acesso)
     $objeto->set_label(array("Cargo","Nome Completo do Cargo","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array (null,null,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -156,14 +156,14 @@ if($acesso)
     }           
      
     $quantidadeCargos = count($novaLista);          // pega a quantidade de cargos vagos
-    array_unshift($novaLista, array(null,null));       // adiciona o valor de nulo
+    array_unshift($novaLista, array(NULL,NULL));       // adiciona o valor de nulo
         
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
                                        'label' => 'Tipo da Cargo em Comissão:',
                                        'tipo' => 'combo',
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'array' => $novaLista,
                                        'size' => 20,
                                        'col' => 4,
@@ -172,7 +172,7 @@ if($acesso)
                                array ( 'nome' => 'descricao',                                   
                                        'label' => 'Nome Completo do Cargo:',
                                        'tipo' => 'texto',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 80,
                                        'col' => 6,
                                        'title' => 'Descrição do Cargo. Pode-se usar a Lotação.',
@@ -181,7 +181,7 @@ if($acesso)
                                        'label' => 'Pro Tempore:',
                                        'tipo' => 'combo',
                                        'array' => array(array(0,"Não"),array(1,"Sim")),
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
@@ -191,7 +191,7 @@ if($acesso)
                                        'fieldset' => 'Dados da Nomeação',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Data da Nomeação.',
                                        'col' => 3,
                                        'linha' => 3),
@@ -286,7 +286,7 @@ if($acesso)
     
 
     # Paginação
-    #$objeto->set_paginacao(true);
+    #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 

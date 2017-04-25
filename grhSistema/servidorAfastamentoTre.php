@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -77,7 +77,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -89,7 +89,7 @@ if($acesso)
     $objeto->set_label(array("Data Inícial do Trabalho","Dias Trabalhados","Data de Término do Trabalho","Folgas Concedidas","Descrição do Trabalho Efetuado","Documento"));
     $objeto->set_width(array(10,10,10,10,30,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php",null,"date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -108,8 +108,8 @@ if($acesso)
                                        'label' => 'Data Inicial do Trabalho no TRE:',
                                        'tipo' => 'data',
                                        'size' => 20,                                
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Data Inicial do trabalho no TRE.',
                                        'col' => 3,
                                        'linha' => 1),
@@ -118,7 +118,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 5,
                                        'col' => 2,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Quantidade em dias trabalhados.',
                                        'linha' => 1),
                                array ( 'nome' => 'folgas',
@@ -126,7 +126,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 5,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Quantidade (em dias) de folgas concedidas.',
                                        'linha' => 1), 
                                array ( 'nome' => 'documento',
@@ -139,7 +139,7 @@ if($acesso)
                                array ( 'nome' => 'descricao',
                                        'label' => 'Descrição do Trabalho Efetuado:',
                                        'tipo' => 'textarea',
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'size' => array(80,5),                                                                 
                                        'title' => 'Descrição do Trabalho Efetuado',
                                        'col' => 12,

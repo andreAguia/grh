@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -79,7 +79,7 @@ if($acesso)
     #$objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -91,7 +91,7 @@ if($acesso)
     $objeto->set_label(array("Nível","Curso","Instituição","Ano de Término"));
     $objeto->set_width(array(15,30,35,10));	
     $objeto->set_align(array("center"));
-    #$objeto->set_function(array (null,"date_to_php"));
+    #$objeto->set_function(array (NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -111,15 +111,15 @@ if($acesso)
                                             Escolaridade
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
-    array_unshift($result, array(null,null)); # Adiciona o valor de nulo
+    array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'escolaridade',
                                        'label' => 'Nível:',
                                        'tipo' => 'combo',
                                        'array' => $result,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'size' => 20,
                                        'col' => 4,
                                        'title' => 'Nível do Curso.',
@@ -129,7 +129,7 @@ if($acesso)
                                        'tipo' => 'texto',
                                        'size' => 80,
                                        'col' => 8,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Nome do curso.',
                                        'linha' => 1),
                                array ( 'nome' => 'instEnsino',
@@ -137,7 +137,7 @@ if($acesso)
                                        'tipo' => 'texto',
                                        'size' => 80,
                                        'col' => 7,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Nome da Instituição de Ensino.',
                                        'linha' => 2),                               
                                array ( 'nome' => 'horas',
@@ -152,7 +152,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 5,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Nome da Instituição de Ensino.',
                                        'linha' => 2),
                                 array ('linha' => 3,

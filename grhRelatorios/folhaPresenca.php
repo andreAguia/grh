@@ -8,8 +8,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -53,14 +53,14 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Admissão'));
     $relatorio->set_width(array(12,30,28,20,10));
     $relatorio->set_align(array("center"));
-    $relatorio->set_funcao(array("dv",null,null,null,"date_to_php"));
-    $relatorio->set_classe(array(null,null,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(null,null,"get_Cargo","get_Lotacao"));
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
+    $relatorio->set_funcao(array("dv",NULL,NULL,NULL,"date_to_php"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_conteudo($result);
-    $relatorio->set_linhaNomeColuna(false);
+    $relatorio->set_linhaNomeColuna(FALSE);
     #$relatorio->set_logDetalhe('Servidor: '.$pessoal->get_nome($matriculaGrh).' ('.$matriculaGrh.')');
     
     $relatorio->set_formCampos(array(
@@ -124,7 +124,7 @@ if($acesso)
 
         # Verifica se nesta data existe um feriado
         #$feriado = $pessoal->get_feriado($data); 
-        $feriado = null;
+        $feriado = NULL;
         # Verifica se nesta data o servidor está em férias
         $ferias = $pessoal->emFerias($idServidorPesquisado, $data);
 

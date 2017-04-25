@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -57,7 +57,7 @@ if($acesso)
 
     # retira o botão de incluir triênio quando estiver no máximo
     if ($ultimoPercentual == "60")
-        $objeto->set_botaoIncluir(false);
+        $objeto->set_botaoIncluir(FALSE);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Triênios do Servidor');
@@ -105,7 +105,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -117,7 +117,7 @@ if($acesso)
     $objeto->set_label(array("a partir de","%","P.Aq.Início","P.Aq.Fim","Processo","DOERJ","Documento"));
     $objeto->set_width(array(10,5,10,10,20,15,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php",null,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -156,8 +156,8 @@ if($acesso)
     $objeto->set_campos(array( array ( 'nome' => 'percentual',
                                        'label' => 'Percentual:',
                                        'tipo' => 'combo',
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'array' => $percentuais,
                                        'size' => 20,
                                        'col' => 3,
@@ -168,7 +168,7 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'padrao' => $proximoTrienio,
                                        'title' => 'Data inícial do Triênio.',
                                        'linha' => 1),
@@ -178,7 +178,7 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,                 
+                                       'required' => TRUE,                 
                                        'title' => 'Data de início do período aquisitivo',
                                        'linha' => 1),
                                 array ( 'nome' => 'dtFimPeriodo',
@@ -186,7 +186,7 @@ if($acesso)
                                        'tipo' => 'data',
                                         'col' => 3,
                                        'size' => 20,
-                                       'required' => true,                 
+                                       'required' => TRUE,                 
                                        'title' => 'Data de término do período aquisitivo',
                                        'linha' => 1), 
                                array ( 'nome' => 'documento',

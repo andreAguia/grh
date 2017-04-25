@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -51,13 +51,13 @@ if($acesso)
     $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão voltar
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(false);
+    $objeto->set_botaoIncluir(FALSE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -75,7 +75,7 @@ if($acesso)
     $objeto->set_campos(array(
                         array ('linha' => 1,
                                'nome' => 'obs',
-                               'autofocus' => true,
+                               'autofocus' => TRUE,
                                'label' => 'Observações do Servidor',
                                'tipo' => 'textarea',
                                'size' => array(255,20))));

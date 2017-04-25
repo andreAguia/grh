@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -59,7 +59,7 @@ if($acesso)
     $objeto->set_nome('Área');	
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão de voltar da lista
     $objeto->set_voltarLista('cadastroCargo.php');
@@ -110,8 +110,8 @@ if($acesso)
     $objeto->set_width(array(5,20,60,10));
     $objeto->set_align(array("center","center","left","center"));
 
-    $objeto->set_classe(array(null,null,null,"Pessoal"));
-    $objeto->set_metodo(array(null,null,null,"get_servidoresArea"));
+    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,"get_servidoresArea"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -139,7 +139,7 @@ if($acesso)
                                       cargo
                                   FROM tbtipocargo
                               ORDER BY idTipoCargo desc');
-    array_unshift($result2, array(null,null));
+    array_unshift($result2, array(NULL,NULL));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -148,15 +148,15 @@ if($acesso)
                'nome' => 'area',
                'label' => 'Área:',
                'tipo' => 'texto',
-               'autofocus' => true,
-               'required' => true,
+               'autofocus' => TRUE,
+               'required' => TRUE,
                'size' => 50),
         array('linha' => 1,
                'col' => 6,
                'nome' => 'idTipoCargo',
                'label' => 'Cargo:',
                'tipo' => 'combo',               
-               'required' => true,
+               'required' => TRUE,
                'array' => $result2,
                'size' => 30),
         array ('linha' => 2,
@@ -176,7 +176,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Paginação
-    $objeto->set_paginacao(true);
+    $objeto->set_paginacao(TRUE);
     $objeto->set_paginacaoInicial($paginacao);
 
     ################################################################

@@ -35,7 +35,7 @@ define("PASTA_ESTILOS","../_css/");                     # Estilos Específicos
 # Fontes para PDF
 define('FPDF_FONTPATH','../../_framework/_pdfFont/');
 
-# Tags aceitas em campos com htmlTag = true
+# Tags aceitas em campos com htmlTag = TRUE
 define('TAGS','<p></p><a></a><br/><br><div></div><table></table><tr></tr><td></td><th></th><strong></strong><em></em><u></u><sub></sub><sup></sup><ol></ol><li></li><ul></ul><hr><span></span><h3></h3>');       
 
 # Cria array dos meses
@@ -114,9 +114,9 @@ $idServidorPesquisado = get_session('idServidorPesquisado'); # Servidor Editado 
 # mas browsers exibem no format brasileiro ao 'perceber' o idioma do usuário
 $browser = array('CHROME','OPR','VIVALDI');
 if (in_array(BROWSER_NAME, $browser)){ 
-    define('HTML5',true);
+    define('HTML5',TRUE);
 }else{
-    define('HTML5',false);
+    define('HTML5',FALSE);
 }
 
 /**

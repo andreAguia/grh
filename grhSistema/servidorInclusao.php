@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -30,36 +30,36 @@ if($acesso){
                     switch(document.novoServidor.perfil.value)
                     {
                         case '1':
-                            document.novoServidor.cargo.disabled = false;
+                            document.novoServidor.cargo.disabled = FALSE;
                             abreDivId('divEstatutarios');
                             fechaDivId('divCedidos');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstagiarios');                        
                             break;
                         case '2':
-                            document.novoServidor.cargo.disabled = true;
+                            document.novoServidor.cargo.disabled = TRUE;
                             abreDivId('divCedidos');
                             fechaDivId('divEstatutarios');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstagiarios'); 
                             break;
                         case '3':
-                            document.novoServidor.cargo.disabled = true;
+                            document.novoServidor.cargo.disabled = TRUE;
                             abreDivId('divConvidados');
                             fechaDivId('divCedidos');
                             fechaDivId('divEstatutarios');
                             fechaDivId('divEstagiarios'); 
                             break;
                         case '4':
-                            document.novoServidor.cargo.disabled = true;
+                            document.novoServidor.cargo.disabled = TRUE;
                             abreDivId('divEstagiarios');
                             fechaDivId('divCedidos');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstatutarios'); 
                             break;
                         default:
-                            document.novoServidor.cargo.disabled = true;
-                            document.novoServidor.salario.disabled = true;
+                            document.novoServidor.cargo.disabled = TRUE;
+                            document.novoServidor.salario.disabled = TRUE;
                             fechaDivId('divCedidos');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstatutarios');
@@ -110,7 +110,7 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             #$controle->set_required(TRUE);
-            $controle->set_autofocus(true);
+            $controle->set_autofocus(TRUE);
             $controle->set_title('O CPF do Novo Servidor');
             $form->add_item($controle);
 
@@ -140,7 +140,7 @@ if($acesso){
 
             # Variáveis para tratamento de erros
             $erro = 0;	  	// flag de erro: 1 - tem erro; 0 - não tem	
-            $msgErro = null; 	// repositório de mensagens de erro        
+            $msgErro = NULL; 	// repositório de mensagens de erro        
 
             # Pega os valores digitados
             $cpf = post('cpf');
@@ -191,8 +191,8 @@ if($acesso){
             $cpf = get_session('sessionCpf');
 
             # Variaveis de quando o servidor já for cadastrado
-            $nome = null;
-            $pis = null;
+            $nome = NULL;
+            $pis = NULL;
 
             # Verifica se o CPF já está cadastrado
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
@@ -233,7 +233,7 @@ if($acesso){
                 $controle = new Input('cpf','cpf','CPF:',1);
                 $controle->set_size(20);            
                 $controle->set_linha(1);
-                $controle->set_readonly(true);
+                $controle->set_readonly(TRUE);
                 $controle->set_valor($cpf);
                 $controle->set_required(TRUE);
                 $controle->set_col(3);
@@ -248,9 +248,9 @@ if($acesso){
                 $controle->set_required(TRUE);
                 if(!is_null($nome)){
                     $controle->set_valor($nome);
-                    $controle->set_readonly(true);                    
+                    $controle->set_readonly(TRUE);                    
                 }else{
-                    $controle->set_autofocus(true);
+                    $controle->set_autofocus(TRUE);
                 }
                 
                 $controle->set_title('O nome do servidor.');
@@ -262,7 +262,7 @@ if($acesso){
                                               FROM tbperfil
                                           ORDER BY nome');
 
-                array_push($perfil, array(null,null)); 
+                array_push($perfil, array(NULL,NULL)); 
 
                 $controle = new Input('perfil','combo','Perfil:',1);
                 $controle->set_size(20);            
@@ -295,7 +295,7 @@ if($acesso){
                                               WHERE ativo
                                            ORDER BY lotacao');
 
-                array_push($lotacao, array(null,null)); # Adiciona o valor de nulo
+                array_push($lotacao, array(NULL,NULL)); # Adiciona o valor de nulo
 
                 $controle = new Input('lotacao','combo','Lotação Inicial:',1);
                 $controle->set_size(20);            
@@ -332,7 +332,7 @@ if($acesso){
                               FROM tbcargo
                           ORDER BY nome');
 
-                array_push($cargo, array(null,null)); 
+                array_push($cargo, array(NULL,NULL)); 
 
                 $controle = new Input('cargo','combo','Cargo:',1);
                 $controle->set_size(20);            
@@ -372,7 +372,7 @@ if($acesso){
 
                 # Variáveis para tratamento de erros
                 $erro = 0;	  	// flag de erro: 1 - tem erro; 0 - não tem	
-                $msgErro = null; 	// repositório de mensagens de erro
+                $msgErro = NULL; 	// repositório de mensagens de erro
 
                 # Pega os valores digitados
                 $cpf = post('cpf');     
@@ -384,7 +384,7 @@ if($acesso){
                 $dtAdmissao = post('dtAdmissao');
                 $pisPasep = post('pisPasep');
                 $cargo = post('cargo'); 
-                $classe = null;
+                $classe = NULL;
                 $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
                 # Verifica se o Nome foi digitado
@@ -475,11 +475,11 @@ if($acesso){
                         # dados
                         $campos = array('nome');
                         $valor = array($nome);
-                        $idValor = null;
+                        $idValor = NULL;
                         $tabela = 'tbpessoa';
 
                         # gravação
-                        $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                        $pessoal->gravar($campos,$valor,$idValor,$tabela,NULL,FALSE);
 
                         # pega o id
                         $idPessoa = $pessoal->get_lastId();
@@ -490,11 +490,11 @@ if($acesso){
                         # dados
                         $campos = array('CPF','pisPasep','idPessoa');
                         $valor = array($cpf,$pisPasep,$idPessoa);
-                        $idValor = null;
+                        $idValor = NULL;
                         $tabela = 'tbdocumentacao';
 
                         # gravação
-                        $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                        $pessoal->gravar($campos,$valor,$idValor,$tabela,NULL,FALSE);
                         
                          # pega o id
                          $idDocumentacao = $pessoal->get_lastId();
@@ -506,11 +506,11 @@ if($acesso){
                     # dados
                     $campos = array('matricula','idPerfil','idPessoa','idCargo','dtAdmissao','situacao','idFuncional');
                     $valor = array($matricula,$perfil,$idPessoa,$cargo,$dtAdmissao,1,$idFuncional);
-                    $idValor = null;
+                    $idValor = NULL;
                     $tabela = 'tbservidor';
 
                     # gravação
-                    $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                    $pessoal->gravar($campos,$valor,$idValor,$tabela,NULL,FALSE);
                     
                     # pega o id
                     $idServidor = $pessoal->get_lastId();
@@ -536,11 +536,11 @@ if($acesso){
                     # dados
                     $campos = array('idServidor','lotacao','data','motivo');
                     $valor = array($idServidor,$lotacao,$dtAdmissao,'Lotação Inicial');
-                    $idValor = null;
+                    $idValor = NULL;
                     $tabela = 'tbhistlot';
 
                     # gravação
-                    $pessoal->gravar($campos,$valor,$idValor,$tabela,null,false);
+                    $pessoal->gravar($campos,$valor,$idValor,$tabela,NULL,FALSE);
                     
                     # Grava no Log
                     $atividade = "Lotação Inicial:[lotacao]->".$lotacao." [data]->".$dtAdmissao;
@@ -558,7 +558,7 @@ if($acesso){
 
                         $campos = array('idServidor','idTpProgressao','dtInicial','idClasse');
                         $valor = array($idServidor,1,$dtAdmissao,$classe);
-                        $idValor = null;
+                        $idValor = NULL;
                         $tabela = 'tbprogressao';
 
                         # gravação
@@ -576,7 +576,7 @@ if($acesso){
                     {
                         $campos = array('idServidor');
                         $valor = array($idServidor);
-                        $idValor = null;
+                        $idValor = NULL;
                         $tabela = 'tbcedido';
 
                         # gravação

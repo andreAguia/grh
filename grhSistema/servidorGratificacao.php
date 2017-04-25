@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -63,7 +63,7 @@ if($acesso)
     # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
     if(is_null($pessoal->get_gratificacaoDtFinal($idServidorPesquisado))){
         # Retira o botão de incluir
-        $objeto->set_botaoIncluir(false);
+        $objeto->set_botaoIncluir(FALSE);
         
         # Informa o porquê
         $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor ainda está recebendo uma gratificação.<br/>"
@@ -98,7 +98,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -130,8 +130,8 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Data inícial da Gratificação.',
                                        'linha' => 1),
                                array ( 'nome' => 'dtFinal',
@@ -145,7 +145,7 @@ if($acesso)
                                        'label' => 'Valor:',
                                        'tipo' => 'moeda',
                                        'size' => 20,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'col' => 3,
                                        'title' => 'Valor da Gratificação.',
                                        'linha' => 1),

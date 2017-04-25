@@ -7,7 +7,7 @@ class OrganogramaUenf
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $diretoria string NULL A Diretoria do organograma. Se for null exibe o organograma de toda a Uenf
+     * @var private $diretoria string NULL A Diretoria do organograma. Se for NULL exibe o organograma de toda a Uenf
      * @var private $ignore    string NULL ALguma lotação a ser ignorada na exibição
      */
 	

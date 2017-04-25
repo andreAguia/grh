@@ -65,10 +65,10 @@ class Checkup
                   tblicenca.numDias,
                   ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                   tbservidor.idServidor
-             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
-                                LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                                LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                             LEFT JOIN tblicenca USING (idServidor)
+                             LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
+                             LEFT JOIN tbperfil USING (idPerfil)
             WHERE tbservidor.situacao = 1
               AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "'.date('Y').'"';
         
@@ -83,7 +83,7 @@ class Checkup
         # Cabeçalho da tabela
         $titulo = 'Servidores com licença terminando em '.date('Y');
         $label = array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final');
-        $funcao = array(null,null,null,null,"date_to_php",null,"date_to_php");
+        $funcao = array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php");
         $align = array('center','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -131,8 +131,8 @@ class Checkup
                   MAX(tbtrienio.dtInicial),
                   DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),
                   tbservidor.idServidor
-             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                             LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1
          GROUP BY tbservidor.idServidor
@@ -146,8 +146,8 @@ class Checkup
                   "",
                   DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR),
                   tbservidor.idServidor
-             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                             LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                             LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1              
          GROUP BY tbservidor.idServidor
@@ -163,7 +163,7 @@ class Checkup
         $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio');
         $align = array('center','left');
         $titulo = 'Servidores com triênio vencendo em '.date('Y');
-        $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
+        $funcao = array(NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -210,8 +210,8 @@ class Checkup
                   MAX(tbtrienio.dtInicial),
                   DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),
                   tbservidor.idServidor
-             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                             LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                             LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1
          GROUP BY tbservidor.idServidor
@@ -225,8 +225,8 @@ class Checkup
                   "",
                   DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR),
                   tbservidor.idServidor
-             FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
+             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                             LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1              
          GROUP BY tbservidor.idServidor
@@ -242,7 +242,7 @@ class Checkup
         $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
         $align = array('center','left');
         $titulo = 'Servidores com triênio vencido antes de '.date('Y');
-        $funcao = array(null,null,"date_to_php",null,"date_to_php","date_to_php");
+        $funcao = array(NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -290,8 +290,8 @@ class Checkup
                   ciExclusao,
                   processo,
                   tbservidor.idServidor
-             FROM tbdependente JOIN tbpessoa ON(tbpessoa.idpessoa = tbdependente.idpessoa)
-                               JOIN tbservidor ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+             FROM tbdependente JOIN tbpessoa USING (idpessoa)
+                               JOIN tbservidor USING (idpessoa)
             WHERE tbservidor.situacao = 1
               AND YEAR(dtTermino) = "'.date('Y').'"
          ORDER BY dtTermino';
@@ -302,7 +302,7 @@ class Checkup
         # Cabeçalho da tabela
         $titulo = 'Servidores com o auxílio creche vencendo em '.date('Y');
         $label = array("IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo");
-        $funcao = array(null,null,null,"date_to_php","date_to_php");
+        $funcao = array(NULL,NULL,NULL,"date_to_php","date_to_php");
         $align = array('center','left','left');
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -347,8 +347,8 @@ class Checkup
                           tbpessoa.nome,
                           tbdocumentacao.dtVencMotorista,
                           tbservidor.idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                     LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
+                                     LEFT JOIN tbdocumentacao USING (idpessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista < now()
@@ -361,7 +361,7 @@ class Checkup
         $label = array('IdFuncional','Nome','Data da Carteira');
         $align = array('center','left');
         $titulo = 'Motoristas com carteira de habilitação vencida';
-        $funcao = array(null,null,"date_to_php");
+        $funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -376,6 +376,7 @@ class Checkup
         
         if ($count <> 0){
             if($this->lista){
+                callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, a nova data, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -405,11 +406,11 @@ class Checkup
                           tbpessoa.nome,
                           tbdocumentacao.dtVencMotorista,
                           tbservidor.idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                     LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
+                                     LEFT JOIN tbdocumentacao USING (idpessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
-                    AND tbdocumentacao.dtVencMotorista is null
+                    AND tbdocumentacao.dtVencMotorista is NULL
                 ORDER BY tbpessoa.nome';		
 
         $result = $servidor->select($select);
@@ -418,8 +419,8 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data da Carteira');
         $align = array('center','left');
-        $titulo = 'Motoristas com carteira de habilitação sem data de vencimento cadastrada no sistema';
-        $funcao = array(null,null,"date_to_php");
+        $titulo = 'Motoristas com carteira de habilitação sem data de vencimento';
+        $funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -434,6 +435,7 @@ class Checkup
         
         if ($count <> 0){
             if($this->lista){
+                callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, a data da carteira, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -462,11 +464,11 @@ class Checkup
         $select = 'SELECT tbservidor.idFuncional,  
                           tbpessoa.nome,
                           tbservidor.idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                     LEFT JOIN tbdocumentacao ON (tbdocumentacao.idPessoa = tbpessoa.idPessoa)
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
+                                     LEFT JOIN tbdocumentacao USING (idpessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
-                    AND (tbdocumentacao.motorista is null OR tbdocumentacao.motorista ="")
+                    AND (tbdocumentacao.motorista is NULL OR tbdocumentacao.motorista ="")
                 ORDER BY tbpessoa.nome';		
 
         $result = $servidor->select($select);
@@ -476,7 +478,7 @@ class Checkup
         $label = array('IdFuncional','Nome');
         $align = array('center','left');
         $titulo = 'Motorista sem número da carteira de habilitação cadastrada:';
-        $funcao = array(null);
+        $funcao = array(NULL);
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -491,6 +493,7 @@ class Checkup
         
         if ($count <> 0){
             if($this->lista){
+                callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, os dados da carteira de habilitação, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -519,7 +522,7 @@ class Checkup
         $select = 'SELECT tbservidor.idFuncional,  
                         tbpessoa.nome,
                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 0
                     AND tbservidor.idPerfil = 1
@@ -532,8 +535,8 @@ class Checkup
         $label = array('IdFuncional','Nome','Lotação');
         $align = array('center','left');
         $titulo = 'Servidores estatutários sem cargo cadastrado';
-        $classe = array(null,null,"Pessoal");
-        $metodo = array(null,null,"get_lotacao");
+        $classe = array(NULL,NULL,"Pessoal");
+        $metodo = array(NULL,NULL,"get_lotacao");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -593,9 +596,9 @@ class Checkup
         $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
         $align = array('center','left','center','center','left','left');
         $titulo = 'Servidores estatutários que faz 75 anos este ano - (Preparar aposentadoria compulsória)';
-        $classe = array(null,null,null,null,"Pessoal","Pessoal");
-        $metodo = array(null,null,null,null,"get_lotacao","get_cargo");
-        $funcao = array(null,null,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -612,6 +615,7 @@ class Checkup
        
         if ($count <> 0){
             if($this->lista){
+                callout("Avisar ao servidor sobre a aposentadoria compulsória.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -656,9 +660,9 @@ class Checkup
         $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
         $align = array('center','left','center','center','left','left');
         $titulo = 'Servidores estatutários com 75 anos ou mais - (Aposentar Compulsoriamente)';
-        $classe = array(null,null,null,null,"Pessoal","Pessoal");
-        $metodo = array(null,null,null,null,"get_lotacao","get_cargo");
-        $funcao = array(null,null,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -722,9 +726,9 @@ class Checkup
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
         $titulo = 'Servidores com mais de uma matrícula ativa';
-        $classe = array(null,null,null,null,"Pessoal","Pessoal");
-        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        #$funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -741,6 +745,7 @@ class Checkup
        
         if ($count <> 0){
             if($this->lista){
+                callout("Algum erro no sistema, favor verificar. Somente uma matrícula deveria estar ativa");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -788,9 +793,9 @@ class Checkup
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
         $titulo = 'Servidores com perfil outros';
-        $classe = array(null,null,null,null,"Pessoal","Pessoal");
-        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        #$funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -807,6 +812,7 @@ class Checkup
        
         if ($count <> 0){
             if($this->lista){
+                callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco. Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -854,9 +860,9 @@ class Checkup
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
         $titulo = 'Servidores sem perfil cadastrado';
-        $classe = array(null,null,null,null,"Pessoal","Pessoal");
-        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        #$funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -873,6 +879,7 @@ class Checkup
        
         if ($count <> 0){
             if($this->lista){
+                callout("Algum erro no sistema, favor verificar. Todos os servidores devem tem um perfil cadastrado.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -890,7 +897,7 @@ class Checkup
      /**
      * Método get_servidorEstatutarioSemConcurso
      * 
-     * Servidor Concursado se concurso cadastrado
+     * Servidor Concursado sem concurso cadastrado
      */
     
     public function get_servidorEstatutarioSemConcurso()
@@ -921,9 +928,9 @@ class Checkup
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
         $titulo = 'Servidores estatutário sem concurso cadastrado';
-        $classe = array(null,null,null,null,"Pessoal","Pessoal");
-        $metodo2 = array(null,null,null,null,"get_lotacao","get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        #$funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -940,6 +947,210 @@ class Checkup
        
         if ($count <> 0){
             if($this->lista){
+                callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
+    
+     /**
+     * Método get_cargoComissaoNomeacaoIgualExoneracao
+     * 
+     * Cargo em comissão nomeado e exonerado no mesmo dia?!
+     */
+    
+    public function get_cargoComissaoNomeacaoIgualExoneracao()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT distinct tbservidor.idFuncional,
+                        tbservidor.matricula,
+                        tbpessoa.nome,
+                        tbcomissao.dtNom,
+                        tbcomissao.dtExo,
+                        concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
+                        concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
+                        tbcomissao.descricao,
+                        tbservidor.idServidor
+                   FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
+                                   LEFT JOIN tbcomissao USING (idServidor)
+                                        JOIN tbtipocomissao USING (idTipoComissao)
+                   WHERE tbtipocomissao.ativo AND (tbcomissao.dtNom = tbcomissao.dtExo)
+              ORDER BY 7, tbcomissao.descricao, 4 desc';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição');
+        $align = array('center','center','left','center','center','left');
+        $titulo = 'Cargo em comissão nomeado e exonerado no mesmo dia';
+        #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        #$metodo = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,"dv",NULL,"date_to_php","date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        #$tabela->set_classe($classe);
+        #$tabela->set_metodo($metodo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                callout("Algum erro de cadastro. Não me parece normal alguém ser nomeado e exonerado no mesmo dia.");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
+    
+     /**
+     * Método get_servidorCom10MesesLicencaSemVencimento
+     * 
+     * Cargo em comissão nomeado e exonerado no mesmo dia?!
+     */
+    
+    public function get_servidorCom10MesesLicencaSemVencimento()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbservidor.matricula,
+                          tbpessoa.nome,
+                          tblicenca.dtInicial,
+                          tblicenca.numDias,
+                          ADDDATE(dtInicial,numDias-1),
+                          DATEDIFF(now(),dtInicial),
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
+                                     LEFT JOIN tblicenca USING (idServidor)
+                    WHERE situacao = 1 
+                      AND idTpLicenca = 16              
+                      AND ADDDATE(dtInicial,numDias-1) > NOW()
+                      AND (DATEDIFF(now(),dtInicial) > 300 AND DATEDIFF(now(),dtInicial) < 365)
+              ORDER BY 3';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Data Inicial','Dias','Término',"Dias Fruídos");
+        $align = array('center','center','left','center','center','center');
+        $titulo = 'Servidor se aproximando de 1 ano em licença sem vencimentos.';
+        #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        #$metodo = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,"dv",NULL,"date_to_php",NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        #$tabela->set_classe($classe);
+        #$tabela->set_metodo($metodo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                callout("Avisar que após 1 ano ele terá que pagar o Rio Previdência ou pedir exoneração.");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
+    
+     /**
+     * Método get_servidorComMaisde1AnoLicencaSemVencimento
+     * 
+     * Cargo em comissão nomeado e exonerado no mesmo dia?!
+     */
+    
+    public function get_servidorComMaisde1AnoLicencaSemVencimento()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbservidor.matricula,
+                          tbpessoa.nome,
+                          tblicenca.dtInicial,
+                          tblicenca.numDias,
+                          ADDDATE(dtInicial,numDias-1),
+                          DATEDIFF(now(),dtInicial),
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
+                                     LEFT JOIN tblicenca USING (idServidor)
+                    WHERE situacao = 1 
+                      AND idTpLicenca = 16              
+                      AND ADDDATE(dtInicial,numDias-1) > NOW()
+                      AND DATEDIFF(now(),dtInicial) > 365
+              ORDER BY 3';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Data Inicial','Dias','Término',"Dias Fruídos");
+        $align = array('center','center','left','center','center','center');
+        $titulo = 'Servidor com mais de 1 ano em licença sem vencimentos.';
+        #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        #$metodo = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,"dv",NULL,"date_to_php",NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        #$tabela->set_classe($classe);
+        #$tabela->set_metodo($metodo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                callout("Providenciar para que o servidor pague separado o Rio Previdência ou pedir exoneração.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{

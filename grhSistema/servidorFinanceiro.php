@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -56,7 +56,7 @@ if($acesso)
     $label = array("Descrição","Valor");
     $width = array(60,40);
     $align = array("left","right");
-    $function = array (null,"formataMoeda");
+    $function = array (NULL,"formataMoeda");
 
     $formatacaoCondicional = array(array('coluna' => 0,
                                          'valor' => 'Total',
@@ -75,7 +75,7 @@ if($acesso)
     $tabela->set_cabecalho($label,$width,$align);
     $tabela->set_funcao($function);
     #$tabela->set_link($link);
-    $tabela->set_totalRegistro(false);
+    $tabela->set_totalRegistro(FALSE);
     #$tabela->set_idCampo('idServidor');
     $tabela->set_formatacaoCondicional($formatacaoCondicional);
     $tabela->show();

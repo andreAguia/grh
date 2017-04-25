@@ -8,8 +8,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # nome das lotações
 $lotacaoOrigem = "Gerência de Recursos Humanos e Pagamento - DPAF/GRH";
@@ -82,7 +82,7 @@ if($acesso)
              JOIN tbdocumentacao on (tbpessoa.idPessoa = tbdocumentacao.idpessoa)
         WHERE tbservidor.idServidor = '.$idServidorPesquisado;
     
-    $row = $pessoal->select($select,false); 
+    $row = $pessoal->select($select,FALSE); 
     
     br(2);
     

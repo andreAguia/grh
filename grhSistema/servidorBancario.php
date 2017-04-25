@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -60,13 +60,13 @@ if($acesso)
     $objeto->set_linkListar('servidorMenu.php');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # botão voltar
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(false);
+    $objeto->set_botaoIncluir(FALSE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -83,7 +83,7 @@ if($acesso)
     # Pega os dados da combo parentesco
     $bancos = new Pessoal();
     $result = $bancos->select('SELECT idBanco, banco FROM tbbanco order by banco');
-    array_push($result, array(null,null)); # Adiciona o valor de nulo
+    array_push($result, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -92,8 +92,8 @@ if($acesso)
                                'label' => 'Banco:',
                                'tipo' => 'combo',
                                'array' => $result,
-                               'required' => true,
-                               'autofocus' => true,
+                               'required' => TRUE,
+                               'autofocus' => TRUE,
                                'col' => 4,
                                'title' => 'Nome do Banco do Servidor',                           
                                'size' => 20),
@@ -101,7 +101,7 @@ if($acesso)
                                'nome' => 'agencia',
                                'label' => 'Agência:',
                                'tipo' => 'texto',
-                               'required' => true,
+                               'required' => TRUE,
                                'col' => 4,
                                'title' => 'Número da Agência',                           
                                'size' => 10),
@@ -110,7 +110,7 @@ if($acesso)
                                'label' => 'Conta Corrente:',
                                'tipo' => 'texto',
                                'col' => 4,
-                               'required' => true,
+                               'required' => TRUE,
                                'title' => 'Número da conta corrente do servidor',                           
                                'size' => 20),
                         array ('linha' => 4,

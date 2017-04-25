@@ -6,7 +6,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -47,12 +47,12 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Processo','P.Aquisitivo (Início)','P.Aquisitivo (Fim)','Data Publicação','Dias Fruídos','Dispon'));
     $relatorio->set_width(array(10,34,20,10,10,8,8));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(null,null,null,"date_to_php","date_to_php","date_to_php"));
-    $relatorio->set_classe(array(null,null,null,null,null,null,'Pessoal','Pessoal'));
-    $relatorio->set_metodo(array(null,null,null,null,null,null,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php","date_to_php"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
     
     
     $relatorio->show();

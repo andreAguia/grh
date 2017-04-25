@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -55,13 +55,13 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Admissão','Início do Prazo para o Gozo','Ultimo Prazo para o Gozo','Início Previsto do Gozo','Observação','Lotação'));
     $relatorio->set_width(array(5,30,10,10,10,15,20,0));
     $relatorio->set_align(array("center","left"));
-    $relatorio->set_funcao(array(null,null,"date_to_php"));
+    $relatorio->set_funcao(array(NULL,NULL,"date_to_php"));
     $relatorio->set_numGrupo(7);
     
     $relatorio->set_conteudo($result);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_subTotal(false);    
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_subTotal(FALSE);    
     
     switch ($numReg){
         case ($numReg <= 5):
@@ -93,7 +93,7 @@ if($acesso)
     $selectOrgao = $servidor->select('SELECT distinct orgao, orgao
                                         FROM tbhistcessao
                                        WHERE ((tbhistcessao.dtFim is NULL) OR (tbhistcessao.dtFim > CURDATE()))');
-    array_unshift($selectOrgao, array(null,null)); 
+    array_unshift($selectOrgao, array(NULL,NULL)); 
     
     $relatorio->set_formCampos(array(
                                array ('nome' => 'orgao',

@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -91,7 +91,7 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -103,7 +103,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Dias","Data Término","Médico","Especialidade","Tipo","Parentesco"));
     $objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php",null,"date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -123,15 +123,15 @@ if($acesso)
                                      Parentesco
                                 FROM tbparentesco
                             ORDER BY parentesco');
-    array_push($result, array(0,null)); # Adiciona o valor de nulo
+    array_push($result, array(0,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'dtInicio',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'required' => true,
-                                       'autofocus' => true,
+                                       'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'title' => 'Data inícial do atestado.',
                                        'col' => 3,
                                        'linha' => 1),
@@ -140,7 +140,7 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 5,
                                        'col' => 2,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Quantidade de dias do atestado.',
                                        'linha' => 1),
                                array ( 'nome' => 'tipo',
@@ -164,7 +164,7 @@ if($acesso)
                                        'tipo' => 'texto',
                                        'size' => 80,
                                        'col' => 6,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Nome do Médico.',
                                        'linha' => 2),
                                array ( 'nome' => 'especi_medico',
@@ -172,7 +172,7 @@ if($acesso)
                                        'tipo' => 'texto',
                                        'size' => 80,
                                        'col' => 6,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Especialidade do Médico.',
                                        'linha' => 2),                               
                                 array ('linha' => 5,
@@ -193,7 +193,7 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(true);
+    #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
 

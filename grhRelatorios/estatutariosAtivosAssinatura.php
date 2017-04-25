@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -45,8 +45,8 @@ if($acesso)
     $relatorio->set_width(array(10,40,30,20));
     $relatorio->set_align(array("center","left","left"));
     
-    $relatorio->set_classe(array(null,null,"Pessoal"));
-    $relatorio->set_metodo(array(null,null,"get_lotacao"));
+    $relatorio->set_classe(array(NULL,NULL,"Pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

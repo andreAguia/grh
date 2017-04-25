@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -148,7 +148,7 @@ if($acesso){
         }
 
         # botão salvar
-        $objeto->set_botaoSalvarGrafico(false);
+        $objeto->set_botaoSalvarGrafico(FALSE);
 
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');    // Comentar caso não queira edição de licença prêmio
@@ -161,8 +161,8 @@ if($acesso){
         $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","P.Aq. Início","P.Aq. Término","Publicação"));
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(null,null,null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
-        $objeto->set_numeroOrdem(true);
+        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
     
         # Classe do banco de dados
@@ -221,17 +221,17 @@ if($acesso){
                 # oculta controle se for licença premio para pegar os dados da publicaçao
                 if($idTpLicenca == 6){
                     $tipo = 'hidden';
-                    $notnull = FALSE;
+                    $notNULL = FALSE;
                 }else{
                     $tipo = 'data';
-                    $notnull = TRUE;
+                    $notNULL = TRUE;
                 }    
             
                 array_push($campos,array ( 'nome' => 'dtInicioPeriodo',
                                         'label' => 'Período Aquisitivo Início:',
                                         'tipo' => $tipo,
                                         'size' => 20,
-                                        'required' => $notnull,                 
+                                        'required' => $notNULL,                 
                                         'title' => 'Data de início do período aquisitivo',
                                         'col' => 4,
                                         'linha' => 2),
@@ -240,7 +240,7 @@ if($acesso){
                                         'tipo' => $tipo,
                                         'size' => 20,
                                         'col' => 4,
-                                        'required' => $notnull,                 
+                                        'required' => $notNULL,                 
                                         'title' => 'Data de término do período aquisitivo',
                                         'linha' => 2));   
             }
@@ -313,7 +313,7 @@ if($acesso){
                                        'padrao' => $valor,
                                        'array' => $array,
                                        'size' => 5,
-                                       'required' => true,
+                                       'required' => TRUE,
                                        'title' => 'Número de dias.',
                                        'col' => 2,
                                        'linha' => 3));
@@ -350,7 +350,7 @@ if($acesso){
 
                     # Adiciona o valor nulo
                     #if(!is_null($result2))
-                    #    array_push($result2, array(null,null)); 
+                    #    array_push($result2, array(NULL,NULL)); 
 
                     # cria o formulário
                     array_push($campos,array('nome' => 'idpublicacaoPremio',
@@ -359,7 +359,7 @@ if($acesso){
                                              'size' => 30,
                                              'col' => 6,
                                              'array' => $result2,
-                                             'required' => true,
+                                             'required' => TRUE,
                                              'title' => 'Data da Publicação no DOERJ.',
                                              'linha' => 4));
                 }
@@ -511,7 +511,7 @@ if($acesso){
                 array_unshift($result, array('Inicial',' -- Selecione o Tipo de Licença --')); # Adiciona o valor de nulo
 
                 $form = new Form('?fase=validaLicenca','inclusao');
-                #$form->set_withTable(false);
+                #$form->set_withTable(FALSE);
                 $form->onSubmit("return enviardados();");        // insere rotina extra em jscript
 
                     br();
@@ -519,8 +519,8 @@ if($acesso){
                     # Tipo de Licença
                     $controle = new Input('idTpLicenca','combo','Tipo de Afastamento ou Licença',1);
                     $controle->set_size(20);
-                    $controle->set_required(true);
-                    $controle->set_autofocus(true);
+                    $controle->set_required(TRUE);
+                    $controle->set_autofocus(TRUE);
                     $controle->set_title('O tipo do Afastamento ou Licença');
                     $controle->set_array($result);
                     $controle->set_linha(1);

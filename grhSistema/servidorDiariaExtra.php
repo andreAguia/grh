@@ -25,7 +25,7 @@ if(!is_null($dataCi)) // verifica se a data foi preenchida pois o calculo depend
         $numCi = $pessoal->select('SELECT numeroCI
                                           FROM tbdiaria
                                          WHERE year(dataCi) = '.$anoCi.'                                 
-                                      ORDER BY numeroCI desc',false);
+                                      ORDER BY numeroCI desc',FALSE);
 
         if(is_null($numCi[0]))
             $numCi[0] = 300;    // se for o primeiro inicia com 300
@@ -49,7 +49,7 @@ if(!is_null($dataCi)) // verifica se a data foi preenchida pois o calculo depend
                     WHERE year(dataCi) = '.$anoCi.' 
                       AND numeroCi = '.$numCi;
 
-        if ((isset($id)) and ($id <> null))
+        if ((isset($id)) and ($id <> NULL))
             $select .=' AND iddiaria <> '.$id; // retira o próprio registro quando for edit
 
         $select .=' ORDER BY numeroCI desc';

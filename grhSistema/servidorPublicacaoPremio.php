@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -58,7 +58,7 @@ if($acesso)
     $objeto->set_nome('Publicação de Licença Prêmio no DOERJ');
 
     # botão salvar
-    $objeto->set_botaoSalvarGrafico(false);
+    $objeto->set_botaoSalvarGrafico(FALSE);
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('servidorLicenca.php');
@@ -107,10 +107,10 @@ if($acesso)
     $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
     $objeto->set_width(array(10,5,14,14,20,8,8,8));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array('date_to_php',null,'date_to_php','date_to_php',null));
-    $objeto->set_classe(array(null,null,null,null,null,null,'Pessoal','Pessoal'));
-    $objeto->set_metodo(array(null,null,null,null,null,null,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
-    $objeto->set_numeroOrdem(true);
+    $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
+    $objeto->set_numeroOrdem(TRUE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -134,7 +134,7 @@ if($acesso)
                                 'tipo' => 'data',
                                 'size' => 20,
                                 'col' => 3,
-                                'required' => true,
+                                'required' => TRUE,
                                 'title' => 'Data da Publicação no DOERJ.',
                                 'linha' => 1),
                         array ( 'nome' => 'pgPublicacao',
@@ -150,7 +150,7 @@ if($acesso)
                                 'padrao' => $pessoal->get_licencaPremioNumProcesso($idServidorPesquisado),
                                 'size' => 30,
                                 'col' => 4,
-                                'required' => true,
+                                'required' => TRUE,
                                 'title' => 'Número do Processo',
                                 'linha' => 1),
                         array ( 'nome' => 'dtInicioPeriodo',
@@ -158,7 +158,7 @@ if($acesso)
                                 'tipo' => 'data',
                                 'col' => 3,
                                 'size' => 20,
-                                'required' => true,                 
+                                'required' => TRUE,                 
                                 'title' => 'Data de início do período aquisitivo',
                                 'linha' => 2),
                         array ( 'nome' => 'dtFimPeriodo',
@@ -166,7 +166,7 @@ if($acesso)
                                 'tipo' => 'data',
                                 'size' => 20,
                                 'col' => 3,
-                                'required' => true,                 
+                                'required' => TRUE,                 
                                 'title' => 'Data de término do período aquisitivo',
                                 'linha' => 2),
                         array ( 'nome' => 'numDias',
@@ -175,7 +175,7 @@ if($acesso)
                                 'padrao' => 90,
                                 'size' => 5,
                                 'col' => 3,
-                                'required' => true,
+                                'required' => TRUE,
                                 'title' => 'Dias de Férias.',
                                 'linha' => 2),
                          array ('linha' => 5,
@@ -248,7 +248,7 @@ if($acesso)
                 $titulo = 'Licenças Prêmio';
                 $label = array("Licença","Publicação","Pag.","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término");
                 $width = array(13,10,6,10,6,10,15,15,15);
-                $funcao = array(null,'date_to_php',null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php');
+                $funcao = array(NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php');
                 $align = array('center');
 
                 # Exibe a tabela

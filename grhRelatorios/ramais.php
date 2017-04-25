@@ -8,7 +8,7 @@
  */
 
 # Servidor logado 
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -56,9 +56,9 @@ if($acesso)
     $relatorio->set_align(array("center","left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_subTotal(FALSE);
     $relatorio->set_funcaoAntesTitulo('p');
     $relatorio->set_funcaoAntesTituloParametro($parametro);
     $relatorio->show();
@@ -88,11 +88,11 @@ if($acesso)
     $relatorio->set_align(array("center","left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_log(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
 
     $page->terminaPagina();

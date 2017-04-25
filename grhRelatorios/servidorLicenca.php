@@ -6,8 +6,8 @@
  */
 
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -47,19 +47,19 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();   
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    $relatorio->set_totalRegistro(false);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_totalRegistro(FALSE);
     #$relatorio->set_subtitulo("Todas as Licenças");
     $relatorio->set_label(array("Licença","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
     $relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(null,'date_to_php',null,'date_to_php',null,'date_to_php','date_to_php','date_to_php'));
+    $relatorio->set_funcao(array(NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_botaoVoltar(FALSE);
     $relatorio->show();
 
     $page->terminaPagina();

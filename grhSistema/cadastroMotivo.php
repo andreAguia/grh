@@ -6,7 +6,7 @@
  */
 
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = NULL;
 
 # Configuração
 include ("_config.php");
@@ -98,8 +98,8 @@ if($acesso)
     $objeto->set_width(array(5,35,50));
     $objeto->set_align(array("center","left","left"));
 
-    #$objeto->set_classe(array(null,null,null,"Pessoal"));
-    #$objeto->set_metodo(array(null,null,null,"get_servidoresSituacao"));
+    #$objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
+    #$objeto->set_metodo(array(NULL,NULL,NULL,"get_servidoresSituacao"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -119,8 +119,8 @@ if($acesso)
                'nome' => 'motivo',
                'label' => 'Motivo:',
                'tipo' => 'texto',
-               'required' => true,
-               'autofocus' => true,
+               'required' => TRUE,
+               'autofocus' => TRUE,
                'col' => 12,
                'size' => 50),
         array ('linha' => 2,

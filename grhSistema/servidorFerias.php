@@ -231,8 +231,6 @@ if($acesso)
     {
             case "" :
             case "listar" :
-                
-                echo $exercícioDisponivel;
                 $objeto->listar();
                 break;
             

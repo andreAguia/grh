@@ -127,6 +127,8 @@ if($acesso)
     {
         case "" :
             # Exibe aas férias
+            
+            ######################################
             # lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);
@@ -137,7 +139,9 @@ if($acesso)
                 $lista1->set_lotacao($parametroLotacao);
             }
             $lista1->showResumo();
-
+            
+            #######################################
+            # Área Principal            
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 

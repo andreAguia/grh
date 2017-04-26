@@ -94,12 +94,15 @@ class listaFerias
         # Cria o array para a tabela
         $listaTabela = array();
         
-        # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
-        $diasFeriasMulti = $this->getDiasFerias();   
-        $tt = count($diasFeriasMulti);
+        # Define as variáveis
+        $diasFeriasMulti = $this->getDiasFerias();  // array total de dias multi
+        $diasTotais = array();                      // array total de dias simples
+        $diasTotaisPorLotacaoMulti = array();       // array total de dias por lotacão mult 
+        $diasTotaisPorLotacao = array();            // array total de dias por lotacão 
+        $tt1 = count($diasFeriasMulti);              // contador de dias
        
         # Transforma $diasTotais (array multi) em array simples
-        for ($i = 0; $i < $tt; $i++){
+        for ($i = 0; $i < $tt1; $i++){
             $diasTotais[$i] = $diasFeriasMulti[$i][0];
         }
         
@@ -108,10 +111,20 @@ class listaFerias
         
         # Percorre as lotações e preenche a tabela
         foreach ($conteudo as $listaLotacao) {
+            # Acrescenta o id e nome da lotação
             $lista = array($listaLotacao[0],$listaLotacao[1]);
+                       
+            # Pega os dias desse lotação
+            $diasTotaisPorLotacaoMulti = $this->getDiasFerias($listaLotacao[0]);
+            $tt2 = count($diasTotaisPorLotacaoMulti); 
             
-            #PArei Aqui
-            
+            # Transforma $diasTotaisPorLotacaoMulti (array multi) em array simples
+            for ($i = 0; $i < $tt2; $i++){
+                $diasTotaisPorLotacao[$i] = $diasTotaisPorLotacaoMulti[$i][0];
+            }
+            print_r($diasTotaisPorLotacao);
+            echo "---";
+            br();
             # Acrescenta os totais na coluna dos dias
             foreach ($diasTotais as $dias) {
                 $lista[] = "-";
@@ -359,7 +372,7 @@ class listaFerias
      * Informa os totais de dias de férias de uma determinada lotação de uma ano exercício
      *
      */	
-    private function getDiasFerias(){
+    private function getDiasFerias($idLotacao = NULL){
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -374,8 +387,10 @@ class listaFerias
                       AND tbferias.status <> 'cancelada'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
         
-        # lotacao
-        if(!is_null($this->lotacao)){
+        # Verifica se tem filtro por lotação
+        if(!is_null($idLotacao)){ // dá prioridade ao filtro da função
+            $slctot .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+        }elseif(!is_null($this->lotacao)){  // senão verifica o da classe
             $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
         
@@ -433,7 +448,7 @@ class listaFerias
      * Informa array com todos os servidores que pediram férias desse setor e o total de dias
      *
      */	
-    private function getServidoresComTotalDiasFerias($idLotacao = NULL){
+    private function getServidoresComTotalDiasFerias(){
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -450,9 +465,7 @@ class listaFerias
                        ";
         
         # Verifica se tem filtro por lotação
-        if(!is_null($idLotacao)){ // dá prioridade ao filtro da função
-            $select1 .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
-        }elseif(!is_null($this->lotacao)){  // senão verifica o da classe
+        if(!is_null($this->lotacao)){  // senão verifica o da classe
             $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
         
@@ -477,7 +490,7 @@ class listaFerias
      * Informa array com todos os servidores que não pediram férias desse setor
      *
      */	
-    private function getServidoresSemFerias($idLotacao = NULL){
+    private function getServidoresSemFerias(){
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -493,9 +506,7 @@ class listaFerias
                       ";
                  
         # Verifica se tem filtro por lotação
-        if(!is_null($idLotacao)){ // dá prioridade ao filtro da função
-            $select2 .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
-        }elseif(!is_null($this->lotacao)){  // senão verifica o da classe
+        if(!is_null($this->lotacao)){  // senão verifica o da classe
             $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
         }
 

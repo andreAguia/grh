@@ -46,7 +46,7 @@ if($acesso)
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Histórico de Lotações');
+    $objeto->set_nome('Telefones & Emails (Contatos)');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
@@ -54,6 +54,7 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista('SELECT tipo,
                                      numero,
+                                     obs,
                                      idContatos
                                 FROM tbcontatos
                           WHERE idPessoa='.$idPessoa.'
@@ -62,6 +63,7 @@ if($acesso)
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,
                                      numero,
+                                     obs,
                                      idPessoa
                                 FROM tbcontatos
                                WHERE idContatos = '.$id);
@@ -81,9 +83,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Número"));
-    $objeto->set_width(array(40,50));	
-    $objeto->set_align(array("center"));
+    $objeto->set_label(array("Tipo","Número","Obs"));
+    #$objeto->set_width(array(40,50));	
+    $objeto->set_align(array("left","left","left"));
     #$objeto->set_function(array ("date_to_php","get_nomelotacao"));
 
     # Classe do banco de dados
@@ -104,16 +106,23 @@ if($acesso)
                                       'label' => 'Tipo:',
                                       'autofocus' => TRUE,
                                       'tipo' => 'combo',
-                                      'array' => array("","Celular","E-mail","Residencial","Trabalho","Outros"),
+                                      'array' => array("","Celular","E-mail Principal","E-mail","Residencial","Trabalho","Outros"),
                                       'title' => 'Tipo de Contato',
-                                      'col' => 4,
+                                      'col' => 3,
                                       'size' => 15),
                                array ( 'nome' => 'numero',
                                        'label' => 'Valor:',
                                        'tipo' => 'texto',
                                        'size' => 80,                         
                                        'title' => 'O número ou o endereço de email',
-                                       'col' => 8,
+                                       'col' => 4,
+                                       'linha' => 1),
+                               array ( 'nome' => 'obs',
+                                       'label' => 'Observação:',
+                                       'tipo' => 'texto',
+                                       'size' => 80,                         
+                                       'title' => 'Algun dado a mais sobre eesse contato',
+                                       'col' => 5,
                                        'linha' => 1),
                                array ( 'nome' => 'idPessoa',
                                        'label' => 'idPessoa:',

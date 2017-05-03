@@ -3368,4 +3368,21 @@ class Pessoal extends Bd
 	}
 
 	#####################################################################################
+	
+	/**
+	 * Método get_emailPrincipalServidor(idServidor)
+	 * 
+	 * Informa se o servidor tem email principal e qual seria
+         */
+	
+	public function get_emailPrincipalServidor($idServidor){
+            $select = 'SELECT numero
+                         FROM tbcontatos LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE tipo = "E-mail Principal" AND idservidor = '.$idServidor;
+           
+             $row = parent::select($select,FALSE);
+             return $row[0];
+	}
+
+	#####################################################################################
 }

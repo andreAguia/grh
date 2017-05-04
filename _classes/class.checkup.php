@@ -895,18 +895,19 @@ class Checkup
     ###########################################################
     
      /**
-     * Método get_servidorEstatutarioSemConcurso
+     * Método get_servidorTecnicoEstatutarioSemConcurso
      * 
      * Servidor Concursado sem concurso cadastrado
      */
     
-    public function get_servidorEstatutarioSemConcurso()
+    public function get_servidorTecnicoEstatutarioSemConcurso()
     {
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
         $select = 'SELECT idfuncional,
                           matricula,
+                          dtAdmissao,
                           tbpessoa.nome,
                           tbperfil.nome,                          
                           idServidor,
@@ -919,18 +920,19 @@ class Checkup
                     WHERE idConcurso is NULL
                       AND tbservidor.situacao = 1
                       AND idPerfil = 1
-                 ORDER BY tbpessoa.nome';
+                      AND (idCargo <> 128 AND idCargo <> 129)
+                 ORDER BY dtAdmissao,tbpessoa.nome';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
-        $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidores estatutário sem concurso cadastrado';
-        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
-        $metodo2 = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
-        #$funcao = array(NULL,NULL,"date_to_php");
+        $label = array('IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação');
+        $align = array('center','center','center','left','center','left','left','center');
+        $titulo = 'Servidores técnicos estatutários sem concurso cadastrado';
+        $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -941,7 +943,77 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo2);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+     ###########################################################
+    
+     /**
+     * Método get_servidorProfessorEstatutarioSemConcurso
+     * 
+     * Servidor Concursado sem concurso cadastrado
+     */
+    
+    public function get_servidorProfessorEstatutarioSemConcurso()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          dtAdmissao,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idConcurso is NULL
+                      AND tbservidor.situacao = 1
+                      AND idPerfil = 1
+                      AND (idCargo = 128 OR idCargo = 129)
+                 ORDER BY dtAdmissao,tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação');
+        $align = array('center','center','center','left','center','left','left','center');
+        $titulo = 'Servidores professores estatutários sem concurso cadastrado';
+        $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo2);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        

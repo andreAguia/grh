@@ -72,7 +72,6 @@ if($acesso)
                                      numDias,
                                      periodo,
                                      ADDDATE(dtInicial,numDias-1),
-                                     documento,
                                      folha,
                                      idFerias,
                                      idFerias
@@ -85,10 +84,9 @@ if($acesso)
                                      status,
                                      dtInicial,
                                      numDias,
-                                     periodo,
-                                     documento,
                                      folha,
                                      obs,
+                                     periodo,
                                      idServidor
                                 FROM tbferias
                                WHERE idFerias = '.$id);
@@ -103,9 +101,10 @@ if($acesso)
     
 
     # Parametros da tabela
-    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
+    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Folha do 1/3"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array (NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
+    $objeto->set_width(array (10,10,15,10,10,15,20));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -146,7 +145,7 @@ if($acesso)
                                        'required' => TRUE,
                                        'array' => array('','solicitada','confirmada','fruida','cancelada'),
                                        'size' => 20,
-                                       'col' => 3,
+                                       'col' => 2,
                                        'title' => 'Status das férias',
                                        'linha' => 1),      
                                array ( 'nome' => 'dtInicial',
@@ -159,47 +158,40 @@ if($acesso)
                                        'linha' => 1),
                                array ( 'nome' => 'numDias',
                                        'label' => 'Dias:',
-                                       'tipo' => 'numero',
+                                       'tipo' => 'combo',
+                                       'array' => array(NULL,30,20,15,10),
                                        'col' => 2,
                                        'size' => 5,
                                        'required' => TRUE,
                                        'title' => 'Dias de Férias.',
                                        'linha' => 1),
-                               array ( 'nome' => 'periodo',
-                                       'label' => 'Período:',
-                                       'tipo' => 'combo',
-                                       'array' => array(' ','1º','2º','3º','Único'),
-                                       'size' => 20,
-                                       'col' => 2,
-                                       'title' => 'período de férias',
-                                       'linha' => 1), 	         
-                               array ( 'nome' => 'documento',
-                                       'label' => 'Documento Solicitando 1/3:',
-                                       'tipo' => 'texto',
-                                       'size' => 50,                                   
-                                       'title' => 'Documento solicitando 1/3.',
-                                       'col' => 7,
-                                       'linha' => 2),
                                array ( 'nome' => 'folha',
-                                       'label' => 'Mês/Ano do pagamento da folha:',
+                                       'label' => 'Mês/Ano do pagamento do 1/3:',
                                        'tipo' => 'texto',
                                        'size' => 50,                                   
-                                       'title' => 'mês/ano do pagamento da folha.',
-                                       'col' => 5,
-                                       'linha' => 2),
+                                       'title' => 'mês/ano do pagamento do 1/3',
+                                       'col' => 3,
+                                       'linha' => 1),
                                array ( 'linha' => 3,
                                        'col' => 12,
                                         'nome' => 'obs',
                                         'label' => 'Observação:',
                                         'tipo' => 'textarea',
                                         'size' => array(80,5)),
+                               array ( 'nome' => 'periodo',
+                                       'label' => 'Período:',
+                                       'tipo' => 'hidden',
+                                       'array' => array(' ','1º','2º','3º','Único'),
+                                       'size' => 20,
+                                       'title' => 'período de férias',
+                                       'linha' => 1), 
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
-                                       'linha' => 6)));
+                                       'linha' => 2)));
 
     # Relatório
     $botaoRel = new Button("Relatório");
@@ -234,26 +226,16 @@ if($acesso)
                 $objeto->listar();
                 break;
             
-            case "editar" :
-                # Verifica se é inclusão
-                if(is_null($id)){
-                    # Verifica se veio da área de Férias
-                    if($areaFerias){
-                        # Verifica se ano disponível é o mesmo da session
-                        if($exercícioDisponivel <> $anoPadrao){
-                            callout("Esse servidor tem férias pendentes para o exercício de ".$exercícioDisponivel);
-                            echo "oi";
-                        }
-                    }
-                }
-                echo $pessoal->get_feriasDiasPorExercicio($idServidorPesquisado,$anoPadrao);
+            case "editar" :                
                 $objeto->editar($id);
                 break;
-            case "excluir" :	
             case "gravar" :		
-                $objeto->$fase($id);			
+                $objeto->gravar($id,"servidorFeriasExtra.php"); 			
                 break;
             
+            case "excluir" :	
+                $objeto->excluir($id);
+                break;
             case "resumo" :
                 botaoVoltar("?");
                 get_DadosServidor($idServidorPesquisado);
@@ -274,6 +256,7 @@ if($acesso)
                     $tabela->set_label(array("Exercício","Dias"));
                     $tabela->set_align(array("center"));
                     $tabela->show();
+                    
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

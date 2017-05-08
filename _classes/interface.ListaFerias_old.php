@@ -18,6 +18,12 @@ class listaFerias
     
     # Outros
     private $totReg = 0;     # total de registros encontrados
+    private $time_start = 0; # Contador de segundos gastos na pesquisa
+    
+    # Parâmetros do relatório
+    private $select = NULL;     // Guarda o select para ser recuperado pela rotina de relatório
+    private $titulo = NULL;     // guarda o título do relatório que é montado a partir da pesquisa
+    private $subTitulo = NULL;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
     
     ###########################################################
                 
@@ -66,23 +72,81 @@ class listaFerias
     }
     
     ###########################################################
-    
-    public function set_lotacao($idLotacao = NULL){
+   
     /**
-     * Informa o tamanho do controle
+     * Método showResumoGeral
      * 
-     * @param $idLotacao integer NULL o idLotacão da lotação a ser exibida as férias
-     * @note Quando o $idLotacao não é informado será exibido de todas as lotações.
-     * 
-     * @syntax $ListaFerias->set_lotacao($idLotacao]);  
-     */
-    
-        # Força a ser nulo mesno quando for ""
-        if(vazio($idLotacao)){
-            $idLotacao = NULL;
+     * Exibe um resumo geral das férias por lotação
+     *
+     */	
+    public function showResumoGeral(){
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        # Informa as lotações ativas
+        $selectLotacao = 'SELECT idlotacao,
+                                 concat(IFNULL(UADM,"")," - ",IFNULL(DIR,"")," - ",IFNULL(GER,"")," - ",IFNULL(nome,"")) lotacao
+                          FROM tblotacao       
+                         WHERE ativo
+                        ORDER BY lotacao'; 
+        $conteudo = $servidor->select($selectLotacao,TRUE);
+        
+        # Cria o array para a tabela
+        $listaTabela = array();
+        
+        # Define as variáveis
+        $diasFeriasMulti = $this->getDiasFerias();  // array total de dias multi
+        $diasTotais = array();                      // array total de dias simples
+        $diasTotaisPorLotacaoMulti = array();       // array total de dias por lotacão mult 
+        $diasTotaisPorLotacao = array();            // array total de dias por lotacão 
+        $tt1 = count($diasFeriasMulti);              // contador de dias
+       
+        # Transforma $diasTotais (array multi) em array simples
+        for ($i = 0; $i < $tt1; $i++){
+            $diasTotais[$i] = $diasFeriasMulti[$i][0];
         }
         
-        $this->lotacao = $idLotacao;
+        # Adiciona no fim de $dias Totais a coluna para quem não solicitou férias
+        array_push($diasTotais, "Não Solicitou");
+        
+        # Percorre as lotações e preenche a tabela
+        foreach ($conteudo as $listaLotacao) {
+            # Acrescenta o id e nome da lotação
+            $lista = array($listaLotacao[0],$listaLotacao[1]);
+                       
+            # Pega os dias desse lotação
+            $diasTotaisPorLotacaoMulti = $this->getDiasFerias($listaLotacao[0]);
+            $tt2 = count($diasTotaisPorLotacaoMulti); 
+            
+            # Transforma $diasTotaisPorLotacaoMulti (array multi) em array simples
+            for ($i = 0; $i < $tt2; $i++){
+                $diasTotaisPorLotacao[$i] = $diasTotaisPorLotacaoMulti[$i][0];
+            }
+            #print_r($diasTotaisPorLotacao);
+            #echo "---";
+            #br();
+            # Acrescenta os totais na coluna dos dias
+            foreach ($diasTotais as $dias) {
+                $lista[] = "-";
+            }
+            
+            $listaTabela[] = $lista;
+        }
+        
+        # Colocando elementos no início do array
+        array_unshift($diasTotais, "ID","Lotação");
+        
+                
+        
+        # Monta a tabela de Resumo.
+        $tabela = new Tabela();
+        
+        $tabela->set_conteudo($listaTabela);
+        $tabela->set_label($diasTotais);
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array("center","left"));
+        $tabela->set_titulo("Solicitação de Férias por Lotação");
+        $tabela->show();
     }
     
     ###########################################################
@@ -93,7 +157,8 @@ class listaFerias
      * Exibe a Tabela
      *
      */	
-    public function showResumo(){
+    public function showResumo($resumido = TRUE)
+    {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -133,48 +198,11 @@ class listaFerias
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
         $tabela->set_titulo("Resumo");
-        $tabela->show();
-        titulo("Total: ".$totalServidores);
-    }
-    
-    ###########################################################
-   
-    /**
-     * Método showResumoServidor
-     * 
-     * Exibe um resumo geral das férias por lotação
-     *
-     */	
-    public function showResumoServidor(){
-        
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-        
-        # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
-        $diasTotais = $this->getDiasFerias(); 
-        
-        # Conta o número de dias 
-        $totalFerias = count($diasTotais);
-       
-        $conta = array();   // Array para exibir na tela    
-        $tt = 0;            // Totalizador de servidores que pediram férias
-        
-        # Informa quantos servidores em cada total de dias
-        if($totalFerias > 0){
-            $conta = $this->getTotalServidorDiasFerias($diasTotais);
-            
-            # Soma os servidores que periram férias nesse exercício e nessa lotação
-            foreach ($conta as $contaSomada) {
-                $tt += $contaSomada[0];
-            }
+        if($resumido){
+            $tabela->show();
+            titulo("Total: ".$totalServidores);
         }
         
-        # Exibe os servidores desse setor
-        $servset1 = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
-        $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
-        $servset3 = array_merge_recursive($servset1,$servset2); // Funta os dois
-        $totalServidores = count($servset3);                    // Conta o número de servidores
-               
         # Monta a tabela de Servidores.
         if($totalServidores > 0){
             # Monta a tabela
@@ -191,12 +219,149 @@ class listaFerias
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
             }
-            if(is_null($this->lotacao)){
-                callout("Seleciona uma lotação","secondary");
-            }else{
+            if(!$resumido){
                 $tabela->show();
             }
         }              
+    }
+           
+    ###########################################################
+    
+    /**
+     * Método showDetalhe
+     * 
+     * Exibe a Tabela
+     *
+     */	
+    public function showDetalhe()
+    {
+        # Pega o time inicial
+        $this->time_start = microtime(TRUE);
+        
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        $select ='SELECT tbpessoa.nome,
+                         tbferias.numDias,
+                         tbferias.dtInicial,
+                         tbferias.periodo,
+                         tbferias.status,
+                         tbperfil.nome,                         
+                         idFerias
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+			            LEFT JOIN tbferias USING (idservidor) 
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                    LEFT JOIN tbperfil USING (idPerfil)
+                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbservidor.situacao = 1
+                  AND anoExercicio = '.$this->anoExercicio;
+        
+        # lotacao
+        if(!is_null($this->lotacao)){
+            $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
+            $this->subTitulo .= "lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
+        }
+        
+        # ordenação
+        $select .= ' ORDER BY tbpessoa.nome,tbferias.periodo';
+        
+        # Pega a quantidade de itens da lista
+        $conteudo = $servidor->select($select,TRUE);
+        $totalRegistros = count($conteudo);
+        
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        # Dados da Tabela
+        $label = array("Nome","Dias","Data","Período","Status","Perfil");
+        #$width = array(5,5,15,16,15,8,8,5,5);
+        $align = array("left","center","center","center","center","center");
+        $function = array (NULL,NULL,"date_to_php");
+                        
+        # Executa o select juntando o selct e o select de paginacao
+        $conteudo = $servidor->select($select,TRUE);
+        
+        if($totalRegistros == 0){
+            #br();
+            #$callout = new Callout();
+            #$callout->abre();
+            #    p('Não há solicitações de férias !!','center');
+            #$callout->fecha();
+        }else{
+            # Monta a tabela
+            $tabela = new Tabela();
+            
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label($label);
+            #$tabela->set_width($width);
+            $tabela->set_align($align);
+            #$tabela->set_titulo($this->nomeLista);
+            #$tabela->set_classe($classe);
+            #$tabela->set_metodo($metodo);
+            $tabela->set_funcao($function);
+            $tabela->set_totalRegistro(TRUE);
+            $tabela->set_idCampo('idFerias');
+            $tabela->set_titulo("Férias Detalhadas");
+            if($this->permiteEditar){
+                $tabela->set_editar('?fase=editaFerias&id=');
+            }
+            
+            $tabela->show();
+            
+            # Pega o time final
+            $time_end = microtime(TRUE);
+            
+            # Calcula e exibe o tempo
+            $time = $time_end - $this->time_start;
+            p(number_format($time, 4, '.', ',')." segundos","right","f10");
+        }
+    }
+    
+    ###########################################################
+   
+    /**
+     * Método relatorio
+     * 
+     * Exibe a lista
+     *
+     */	
+    public function showRelatorio()
+    {
+        # Executa rotina interna
+        $this->prepara();
+        
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        # Pega a quantidade de itens da lista
+        $conteudo = $servidor->select($this->select,TRUE);
+        $totalRegistros = count($conteudo);
+        
+        # Dados da Tabela
+        $label = array("IDFuncional","Matrícula","Servidor","Lotação","Perfil","Exercicio","Status","dt","dias","p");
+        #$width = array(5,5,15,16,15,8,8,5,5);
+        $align = array("center","center","left","left","left");
+        $function = array (NULL,"dv",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+        $classe = array(NULL,NULL,NULL,"pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_Cargo");
+                
+        # Relatório
+        $relatorio = new Relatorio();
+        $relatorio->set_titulo("Relatório");
+        if(!is_null($this->subTitulo)){
+            $relatorio->set_subtitulo($this->subTitulo);
+        }
+
+        $relatorio->set_label($label);
+        #$relatorio->set_width($width);
+        $relatorio->set_align($align);
+        $relatorio->set_funcao($function);
+        $relatorio->set_classe($classe);
+        $relatorio->set_metodo($metodo);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_conteudo($conteudo);    
+        $relatorio->show();
     }
     
     ###########################################################

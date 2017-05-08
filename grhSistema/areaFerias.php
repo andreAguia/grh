@@ -126,39 +126,23 @@ if($acesso)
     switch ($fase)
     {
         case "" :
-            # Exibe aas férias
-            
-            ######################################
             # lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);
 
-            # Resumo Geral da lotação
+            # Resumo geral ou da lotação
             $lista1 = new listaFerias($parametroAnoExercicio);
-            if(!empty($parametroLotacao)){
-                $lista1->set_lotacao($parametroLotacao);
-            }
+            $lista1->set_lotacao($parametroLotacao);
             $lista1->showResumo();
             
             #######################################
+            
             # Área Principal            
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 
-            # Resumo por servidor da Lotação
-            if(!empty($parametroLotacao)){
-                $lista1->showResumo(FALSE);
-            }else{
-                $lista1->showResumoGeral();
-            }
-
-            # Detalhado da Lotação
-            $lista2 = new listaFerias($parametroAnoExercicio);
-            $lista2->set_lotacao($parametroLotacao);
-            if(!empty($parametroLotacao)){
-                $lista2->showDetalhe();
-            }
-
+            $lista1->showResumoServidor();
+            
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;

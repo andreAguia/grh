@@ -3349,27 +3349,6 @@ class Pessoal extends Bd
 	#####################################################################################
 	
 	/**
-	 * Método get_feriasDiasPorExercicio
-	 * 
-	 * Informa os dias de umas férias fruidas, solicitadas ou confirmadas de um servidor em um ano exercicio,
-         */
-	
-	public function get_feriasDiasPorExercicio($idservidor,$anoExercicio){
-            $select = 'SELECT anoexercicio, SUM(numDias)                          
-                         FROM tbferias
-                        WHERE idservidor = '.$idservidor.'
-                          AND anoExercicio = '.$anoExercicio.'
-                          AND (status = "fruida" OR status = "solicitada" OR status = "confirmada")
-                     GROUP BY anoexercicio
-                     ORDER BY anoexercicio asc';
-           
-             $row = parent::select($select,FALSE);
-             return $row[1];
-	}
-
-	#####################################################################################
-	
-	/**
 	 * Método get_emailPrincipalServidor(idServidor)
 	 * 
 	 * Informa se o servidor tem email principal e qual seria
@@ -3385,4 +3364,45 @@ class Pessoal extends Bd
 	}
 
 	#####################################################################################
+	
+	/**
+	 * Método get_feriasSomaDias
+	 * 
+	 * Informa os dias de férias fruidas, solicitadas ou confirmadas de um servidor em um ano exercicio,
+         */
+	
+	public function get_feriasSomaDias($anoExercicio,$idservidor){
+            $select = 'SELECT anoexercicio, SUM(numDias)                          
+                         FROM tbferias
+                        WHERE idservidor = '.$idservidor.'
+                          AND anoExercicio = '.$anoExercicio.'
+                          AND status <> "cancelada"
+                     GROUP BY anoexercicio
+                     ORDER BY anoexercicio asc';
+           
+             $row = parent::select($select,FALSE);
+             return $row[1];
+	}
+        
+        #####################################################################################
+	
+	/**
+	 * Método get_feriasQuantidadesPeriodos
+	 * 
+	 * Informa os períodos solicitados por um servidor em um anoexercicio
+         */
+	
+	public function get_feriasQuantidadesPeriodos($anoExercicio,$idservidor){
+            $select = 'SELECT idFerias                          
+                         FROM tbferias
+                        WHERE idservidor = '.$idservidor.'
+                          AND anoExercicio = '.$anoExercicio.'
+                          AND status <> "cancelada"';
+           
+             $row = parent::count($select);
+             return $row;
+	}
+        
+        #####################################################################################
+	
 }

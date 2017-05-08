@@ -1236,4 +1236,71 @@ class Checkup
     }
 
     ###########################################################
+    
+     /**
+     * Método get_servidorSemIdFuncional
+     * 
+     * Exibe servidor ativo sem id Funcional cadastrado
+     */
+    
+    public function get_servidorSemIdFuncional()
+    {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idfuncional IS NULL
+                      AND tbservidor.situacao = 1
+                 ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
+        $align = array('center','center','left','center','left','left','center');
+        $titulo = 'Servidor sem Id Funcional cadastrado no Sistema';
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodo2 = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        #$funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo2);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count <> 0){
+            if($this->lista){
+                #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ###########################################################
 }

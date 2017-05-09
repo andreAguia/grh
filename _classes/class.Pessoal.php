@@ -3403,6 +3403,29 @@ class Pessoal extends Bd
              return $row;
 	}
         
-        #####################################################################################
+        ###########################################################
+	
+	/**
+	 * M�todo get_dataNascimento
+	 * informa a data de nascimento de um idServidor
+	 * 
+	 * @param	string $idServidor idServidor do servidor
+	 */
+
+	function get_dataNascimento($idServidor)
+	{
+            $select = 'SELECT tbpessoa.dtNasc
+                         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+                        WHERE idServidor = '.$idServidor;
+
+            if($idServidor == 0){
+                alert("$idServidor inválido");
+            }else{ 
+                $nome = parent::select($select,FALSE);
+                return date_to_php($nome[0]);
+            }
+	}
+	
+	###########################################################
 	
 }

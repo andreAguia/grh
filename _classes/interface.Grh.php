@@ -154,15 +154,13 @@ class Grh
         $botao->set_accesskey('b');
         $menu->add_item($botao);
         
-        if(Verifica::acesso($idUsuario,1)){
-            $botao = new BotaoGrafico();
-            $botao->set_label('Férias');
-            $botao->set_url('areaferias.php');
-            $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Área de Férias');
-            $botao->set_accesskey('F');
-            $menu->add_item($botao);
-        }
+        $botao = new BotaoGrafico();
+        $botao->set_label('Férias');
+        $botao->set_url('areaferias.php');
+        $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Férias');
+        $botao->set_accesskey('F');
+        $menu->add_item($botao);
 
         $menu->show();
         $grid->fechaColuna();

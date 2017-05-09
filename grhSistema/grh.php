@@ -40,6 +40,7 @@ if($acesso)
     # Menu
     if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas')){       
         p(SISTEMA,'grhTitulo');
+        p("Versão: ".VERSAO,"versao");
     
         # Limita o tamanho da tela
         $grid = new Grid();
@@ -95,10 +96,11 @@ if($acesso)
     $painel2->abre();
    
     p(SISTEMA,'grhTitulo');
-    p('Versão: '.VERSAO.'<br/>Atualizado em: '.ATUALIZACAO,'grhVersao');
+    p('Versão: '.VERSAO.'<br/>Atualizado em: '.ATUALIZACAO,'versao');
     
     p(SETOR,'grhSetor');
-    p('Desenvolvedor: '.AUTOR.'<br/>'.EMAILAUTOR,'grhAutor');
+    p('Desenvolvedor: '.AUTOR,'versao');
+    p(EMAILAUTOR,'versao');
    
     $painel2 ->fecha();
     $div->fecha();
@@ -154,7 +156,7 @@ if($acesso)
             # executa o checkup
             $checkup = New Checkup();
             
-            if(IS_NULL($alerta)){
+            if(is_null($alerta)){
                 $checkup->get_all();
             }else{
                 $checkup->$alerta();

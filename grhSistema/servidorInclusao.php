@@ -347,6 +347,15 @@ if($acesso){
                 $controle->set_linha(3);
                 $controle->set_col(3);                
                 $controle->set_title('A matrícula do servidor.');
+                #$form->add_item($controle);
+                
+                # Data de Nascimento
+                $controle = new Input('dtNasc','date','Data de Nascimento:',1);
+                $controle->set_size(15);
+                $controle->set_col(3);
+                $controle->set_required(TRUE);
+                $controle->set_linha(3);
+                $controle->set_title('A data de nascimento do servidor.');
                 $form->add_item($controle);
 
                 # submit
@@ -378,6 +387,7 @@ if($acesso){
                 $nome = post('nome'); 
                 $perfil = post('perfil'); 
                 $matricula = post('matricula'); 
+                $dtNasc = post('dtNasc');
                 $idFuncional = post('idFuncional'); 
                 $lotacao = post('lotacao');
                 $dtAdmissao = post('dtAdmissao');
@@ -413,8 +423,20 @@ if($acesso){
                 }
 
                 # Verifica se a Admissão foi digitada
-               if(empty($dtAdmissao)){
+                if(empty($dtAdmissao)){
                     $msgErro.='Você tem que informar a Data de Admissão do Servidor!\n';
+                    $erro = 1;
+                }
+                
+                # Verifica se a data de nascimento foi digitada
+                if(empty($dtNasc)){
+                    $msgErro.='Você tem que informar a Data de Nascimento do Servidor!\n';
+                    $erro = 1;
+                }
+                
+                # Verifica se servidor tem mais de 18 anos
+                if(idade(date_to_php($dtNasc)) < 18){
+                    $msgErro.='Você não pode cadastrar servidor menor de 18 anos.!\n';
                     $erro = 1;
                 }
 
@@ -472,8 +494,8 @@ if($acesso){
                     {
                         # Gravar na tbpessoa
                         # dados
-                        $campos = array('nome');
-                        $valor = array($nome);
+                        $campos = array('nome','dtNasc');
+                        $valor = array($nome,$dtNasc);
                         $idValor = NULL;
                         $tabela = 'tbpessoa';
 

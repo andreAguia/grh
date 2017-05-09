@@ -75,7 +75,7 @@ if($acesso)
     $botaoRel->set_title("Relatório dessa pesquisa");
     $botaoRel->set_url("?fase=relatorio");
     $botaoRel->set_imagem($imagem);
-    $menu1->add_link($botaoRel,"right");
+    #$menu1->add_link($botaoRel,"right");
 
     $menu1->show();
     

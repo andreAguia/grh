@@ -6,8 +6,8 @@
  */
 
 # Sobre o Sistema
-define("VERSAO","1.0.05");                                     # Versão do Sistema 								
-define("ATUALIZACAO","25/04/2017");                            # Última Atualização
+define("VERSAO","1.0.06");                                     # Versão do Sistema 								
+define("ATUALIZACAO","09/05/2017");                            # Última Atualização
 define("SISTEMA","Sistema de Gestão de Pessoas");              # Nome do sistema
 define("DESCRICAO","Sistema da Gerência de Recursos Humanos"); # Descrição do sistema
 define("PALAVRAS_CHAVE","Uenf,GRH");                           # Palavras chave para sites de busca

@@ -290,10 +290,10 @@ if($acesso){
 
                  # Lotação               
                 $lotacao = $pessoal->select('SELECT idlotacao, 
-                                                    concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+                                                    concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
                                                FROM tblotacao
                                               WHERE ativo
-                                           ORDER BY lotacao');
+                                           ORDER BY tblotacao.DIR,tblotacao.GER');
 
                 array_push($lotacao, array(NULL,NULL)); # Adiciona o valor de nulo
 
@@ -327,10 +327,9 @@ if($acesso){
                 }
 
                 # Cargo                
-                $cargo = $pessoal->select('SELECT idcargo,
-                                   nome
-                              FROM tbcargo
-                          ORDER BY nome');
+                $cargo = $pessoal->select('SELECT idcargo, CONCAT(tbTipoCargo.cargo," - ",tbcargo.nome)'
+                        . '                  FROM tbcargo JOIN tbTipoCargo USING (idTipoCargo)'
+                        . '              ORDER BY tbTipoCargo.cargo,tbcargo.nome');
 
                 array_push($cargo, array(NULL,NULL)); 
 

@@ -2113,7 +2113,7 @@ class Pessoal extends Bd
 
         public function get_nivelCargoCargo($idCargo)
 	{
-            $select = 'SELECT tpCargo
+            $select = 'SELECT idTipoCargo
 			 FROM tbcargo
                         WHERE idCargo = '.$idCargo;
 		

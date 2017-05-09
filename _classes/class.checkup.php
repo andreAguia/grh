@@ -1316,7 +1316,6 @@ class Checkup
         $select = 'SELECT tbservidor.idFuncional,  
                           tbpessoa.nome,
                           dtNasc,
-                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
                           tbservidor.idServidor,
                           tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -1328,12 +1327,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
-        $align = array('center','left','center','center','left','left');
+        $label = array('IdFuncional','Nome','Data de Nascimento','Lotação','Cargo');
+        $align = array('center','left','center','left','left');
         $titulo = 'Servidores sem data de nascimento cadastrada no sistema';
-        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
-        $metodoTabela = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
-        $funcao = array(NULL,NULL,"date_to_php");
+        $classe = array(NULL,NULL,NULL,"Pessoal","Pessoal");
+        $metodoTabela = array(NULL,NULL,NULL,"get_lotacao","get_cargo");
+        #$funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -1343,7 +1342,7 @@ class Checkup
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
-        $tabela->set_funcao($funcao);
+        #$tabela->set_funcao($funcao);
         $tabela->set_metodo($metodoTabela);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');

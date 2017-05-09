@@ -127,7 +127,6 @@ class listaFerias
         
         # Monta a tabela de Resumo.
         $tabela = new Tabela();
-        
         $tabela->set_conteudo($conta);
         $tabela->set_label(array("Nº de Servidores","Total de Dias"));
         $tabela->set_totalRegistro(FALSE);
@@ -192,7 +191,16 @@ class listaFerias
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
             }
             if(is_null($this->lotacao)){
-                callout("Seleciona uma lotação","secondary");
+                $feriasProblematicas = $this->getServidoresComTotalDiasFeriasComProblemas();
+                
+                if(count($feriasProblematicas) > 0){
+                    $tabela->set_conteudo($feriasProblematicas);
+                    $tabela->set_titulo("O sistema detectou problemas com essas férias");
+                    $tabela->show();
+                }else{
+                    callout("Seleciona uma lotação","secondary");
+                }
+                
             }else{
                 $tabela->show();
             }
@@ -309,6 +317,48 @@ class listaFerias
               AND anoExercicio = $this->anoExercicio
               AND situacao = 1 
          GROUP BY tbpessoa.nome
+         ORDER BY 5 desc,tbpessoa.nome)";
+        
+        # Pega os dados do banco
+        $retorno = $servidor->select($select1,TRUE);
+        
+        return $retorno;
+    }
+    
+    ###########################################################
+   
+    /**
+     * Método getServidoresComTotalDiasFeriasComProblemas
+     * 
+     * Informa array com todos os servidores que pediram férias desse setor e o total de dias superior a 30
+     *
+     */	
+    private function getServidoresComTotalDiasFeriasComProblemas(){
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        $select1 = "(SELECT tbservidor.idFuncional,
+                            tbpessoa.nome,
+                            tbservidor.idServidor,
+                            tbservidor.dtAdmissao,
+                            sum(numDias) as soma
+                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                    LEFT JOIN tbferias USING (idServidor)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+        
+        # Verifica se tem filtro por lotação
+        if(!is_null($this->lotacao)){  // senão verifica o da classe
+            $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+        }
+        
+        $select1 .= "
+              AND tbferias.status <> 'cancelada'
+              AND anoExercicio = $this->anoExercicio
+              AND situacao = 1 
+         GROUP BY tbpessoa.nome
+         HAVING sum(numDias) > 30
          ORDER BY 5 desc,tbpessoa.nome)";
         
         # Pega os dados do banco

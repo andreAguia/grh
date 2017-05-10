@@ -230,7 +230,7 @@ if($acesso)
                 $objeto->editar($id);
                 break;
             case "gravar" :		
-                $objeto->gravar($id); 			
+                $objeto->gravar($id,"servidorFeriasExtra.php"); 			
                 break;
             
             case "excluir" :	

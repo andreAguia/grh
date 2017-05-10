@@ -78,9 +78,6 @@ if($acesso)
     #$objeto->set_orderTipo($orderTipo);
     #$objeto->set_orderChamador('?fase=listar');
 
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');

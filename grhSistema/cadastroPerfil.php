@@ -56,10 +56,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Perfil');	
-
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
+    $objeto->set_nome('Perfil');
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');

@@ -89,7 +89,11 @@ if($acesso)
 
     # anoExercicio                
     $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
-    array_push($anoExercicio,date("Y"));
+    
+    # Verifica se existe o ano atual na combo e acrescenta caso não tenha
+    if($anoExercicio[count($anoExercicio)-1][0] < date("Y")){
+        array_push($anoExercicio,date("Y"));
+    }
 
     $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
     $controle->set_size(8);

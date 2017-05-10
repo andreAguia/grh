@@ -73,9 +73,6 @@ if($acesso)
     #$objeto->set_orderTipo($orderTipo);
     #$objeto->set_orderChamador('?fase=listar');
 
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -83,7 +80,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Número","Obs"));
+    $objeto->set_label(array("Tipo","Especifique","Obs"));
     #$objeto->set_width(array(40,50));	
     $objeto->set_align(array("left","left","left"));
     #$objeto->set_function(array ("date_to_php","get_nomelotacao"));
@@ -111,7 +108,7 @@ if($acesso)
                                       'col' => 3,
                                       'size' => 15),
                                array ( 'nome' => 'numero',
-                                       'label' => 'Valor:',
+                                       'label' => 'Especifique:',
                                        'tipo' => 'texto',
                                        'size' => 80,                         
                                        'title' => 'O número ou o endereço de email',

@@ -146,10 +146,7 @@ if($acesso){
 
             $objeto->set_selectEdita($selectEdita);
         }
-
-        # botão salvar
-        $objeto->set_botaoSalvarGrafico(FALSE);
-
+        
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');    // Comentar caso não queira edição de licença prêmio
         $objeto->set_linkExcluir('?fase=excluir');

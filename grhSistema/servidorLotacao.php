@@ -69,10 +69,7 @@ if($acesso)
     #$objeto->set_orderCampo($orderCampo);
     #$objeto->set_orderTipo($orderTipo);
     #$objeto->set_orderChamador('?fase=listar');
-
-    # botão salvar
-    #$objeto->set_botaoSalvarGrafico(FALSE);
-
+    
     # Caminhos
     if(Verifica::acesso($idUsuario,1)){ // Só permite editar ou excluir para o administrador
         $objeto->set_linkExcluir('?fase=excluir');

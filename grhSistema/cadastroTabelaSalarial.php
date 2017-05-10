@@ -54,9 +54,6 @@ if($acesso)
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Tabela Salarial');
 
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
-
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
 

@@ -57,10 +57,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos e Funções');	
-
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
+    $objeto->set_nome('Cargos e Funções');
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');

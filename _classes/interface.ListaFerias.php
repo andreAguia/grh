@@ -189,6 +189,8 @@ class listaFerias
             $tabela->set_idCampo('idServidor');
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
+                $tabela->set_nomeColunaEditar("Acessar");
+                $tabela->set_editarBotao("ver.png");
             }
             if(is_null($this->lotacao)){
                 $feriasProblematicas = $this->getServidoresComTotalDiasFeriasComProblemas();

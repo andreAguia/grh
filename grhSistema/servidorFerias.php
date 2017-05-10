@@ -54,23 +54,21 @@ if($acesso)
     $objeto->set_nome('Histórico de Férias');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
-        
-    # botão de voltar do formulário
     if($areaFerias){
-        $objeto->set_voltarForm('areaFerias.php');
-        $objeto->set_linkListar('areaFerias.php');
         $objeto->set_voltarLista('areaFerias.php');
     }else{
-        $objeto->set_linkListar('?fase=listar');
+        $objeto->set_voltarLista('servidorMenu.php');
     }
+        
+    # botão de voltar do formulário
+    $objeto->set_linkListar('?fase=listar');
 
     # select da lista
     $objeto->set_selectLista('SELECT anoExercicio,
                                      status,
                                      dtInicial,
                                      numDias,
-                                     periodo,
+                                     idFerias,
                                      ADDDATE(dtInicial,numDias-1),
                                      folha,
                                      idFerias,
@@ -91,9 +89,6 @@ if($acesso)
                                 FROM tbferias
                                WHERE idFerias = '.$id);
 
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -105,6 +100,8 @@ if($acesso)
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array (NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
     $objeto->set_width(array (10,10,15,10,10,15,20));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

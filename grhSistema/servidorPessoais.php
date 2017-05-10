@@ -71,9 +71,6 @@ if($acesso)
     #$objeto->set_linkListar('?');
     $objeto->set_linkListar('servidorMenu.php');
 
-    # botão salvar
-    $objeto->set_botaoSalvarGrafico(FALSE);
-
     # botão voltar
     $objeto->set_voltarForm('servidorMenu.php');
 

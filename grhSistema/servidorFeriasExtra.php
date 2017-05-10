@@ -5,40 +5,44 @@
  * 
  */
 
-$exercicio = $campoValor[0];
-$dias = $campoValor[3];
-$servidor = $campoValor[7];
-$periodo = NULL;
+$exercicio = $campoValor[0];    // Ano exercício
+$dias = $campoValor[3];         // Dias solicitado
+$servidor = $campoValor[7];     // idServidor
+$periodo = NULL;    
 
+# Conecta ao banco de dados
 $pessoal = new Pessoal();
-$diasFerias = $pessoal->get_feriasSomaDias($exercicio,$servidor);
-$quantidadePeriodos = $pessoal->get_feriasQuantidadesPeriodos($exercicio,$servidor);
+
+# Verifica quantos dias o servidor já pediu nesse exercicio
+$diasFerias = $pessoal->get_feriasSomaDias($exercicio,$servidor,$id);
 
 switch ($diasFerias){
-    case 0 :        // Não pediu férias anteriores
-        if($dias == 30){            // Pediu 30 de vez
-            $periodo = 'Único';     // é único
-        }else{
-            $periodo = '1º';        // Se pediu menos de 30 o período é o primeiro
-        }
-        break;
+    
     case 30 :       // Já pediu o limite
         $erro = 1;
         $msgErro .= 'O servidor não tem mais dias disponíveis para férias nesse período!\n';
         break;
     
     case 20:
-    case 15:
-    case 10:
-        if($dias+$diasFerias > 30){
+        if($dias > 10){
             $erro = 1;
             $msgErro .= 'O servidor não pode tirar mais de 30 dias de férias!\n';
-        }else{
-            $periodo = $quantidadePeriodos+1;
-            $periodo .= "º";
         }
         break;
-            
+        
+    case 15:
+        if($dias <> 15){
+            $erro = 1;
+            $msgErro .= 'O servidor só poderá tirar 15 dias!\n';
+        }
+        break;
+        
+    case 10:
+        if(($dias <> 10) AND ($dias <> 20)){
+            $erro = 1;
+            $msgErro .= 'O servidor já tem 10 dias de férias, só poderá pedir mais 20 ou 10 dias\n';
+        }
+        break;
 }
 
 $campoValor[6] = $periodo;

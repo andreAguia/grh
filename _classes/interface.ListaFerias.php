@@ -179,7 +179,6 @@ class listaFerias
             # Monta a tabela
             $tabela = new Tabela();
 
-            $tabela->set_conteudo($servset3);
             $tabela->set_label(array("Id","Servidor","Cargo","Admissão","Dias"));
             $tabela->set_classe(array(NULL,NULL,"pessoal"));
             $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
@@ -187,23 +186,27 @@ class listaFerias
             $tabela->set_align(array("center","left","left"));
             $tabela->set_titulo("Resumo por Servidor");
             $tabela->set_idCampo('idServidor');
+            
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
                 $tabela->set_nomeColunaEditar("Acessar");
                 $tabela->set_editarBotao("ver.png");
             }
+            
+            $feriasProblematicas = $this->getServidoresComTotalDiasFeriasComProblemas();
+            if(count($feriasProblematicas) > 0){
+                $tabela->set_conteudo($feriasProblematicas);
+                $tabela->set_titulo("O sistema detectou problemas com essas férias");
+                $tabela->show();
+            }
+            
+            
+            
             if(is_null($this->lotacao)){
-                $feriasProblematicas = $this->getServidoresComTotalDiasFeriasComProblemas();
-                
-                if(count($feriasProblematicas) > 0){
-                    $tabela->set_conteudo($feriasProblematicas);
-                    $tabela->set_titulo("O sistema detectou problemas com essas férias");
-                    $tabela->show();
-                }else{
-                    callout("Seleciona uma lotação","secondary");
-                }
-                
+                $tabela->set_conteudo($servset1);
+                $tabela->show();
             }else{
+                $tabela->set_conteudo($servset3);
                 $tabela->show();
             }
         }              

@@ -26,7 +26,16 @@ if($acesso)
     $page->iniciaPagina();
     
     # Pega os parâmetros dos relatórios
-    $lotacao = post('lotacao',66);
+    $lotacaoRel = post('lotacao',66);
+    
+    # Pega a lotação quando vem da área de férias
+    $lotacaoArea = get("lotacaoArea");
+    
+    if(is_null($lotacaoArea)){
+        $lotacao = $lotacaoRel;
+    }else{
+        $lotacao = $lotacaoArea;
+    }
 
     ######
     
@@ -102,20 +111,22 @@ if($acesso)
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        ORDER BY 2');
     
-    $relatorio->set_formCampos(array(
-                               array ('nome' => 'lotacao',
-                                      'label' => 'Lotação:',
-                                      'tipo' => 'combo',
-                                      'array' => $selectLot,
-                                      'col' => 12,
-                                      'size' => 50,
-                                      'padrao' => $lotacao,
-                                      'title' => 'Mês',
-                                      'onChange' => 'formPadrao.submit();',
-                                      'linha' => 1)));
+    if(is_null($lotacaoArea)){
+        $relatorio->set_formCampos(array(
+                                   array ('nome' => 'lotacao',
+                                          'label' => 'Lotação:',
+                                          'tipo' => 'combo',
+                                          'array' => $selectLot,
+                                          'col' => 12,
+                                          'size' => 50,
+                                          'padrao' => $lotacao,
+                                          'title' => 'Mês',
+                                          'onChange' => 'formPadrao.submit();',
+                                          'linha' => 1)));
 
-    $relatorio->set_formFocus('anoBase');
-    $relatorio->set_formLink('?');
+        $relatorio->set_formFocus('anoBase');
+        $relatorio->set_formLink('?');
+    }
     $relatorio->show();
     
     # Rodapé

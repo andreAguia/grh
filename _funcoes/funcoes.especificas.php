@@ -107,4 +107,16 @@ function formataAtribuicao($texto){
     return $novoTexto;
 }
 
+##########################################################
+/**
+ * Função que formata a exibição da lei no servidorLicenca.php
+ * 
+ */
+
+function exibeLeiLicenca($lei){
+    $texto = explode("@",$lei);
+    $novoTexto = str_replace("@", "<br/>", $lei);
+    return $novoTexto;
+}
+
 ###########################################################

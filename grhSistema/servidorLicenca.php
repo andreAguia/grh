@@ -69,7 +69,7 @@ if($acesso){
         $objeto->set_voltarLista('servidorMenu.php');
 
         # select da lista
-        $objeto->set_selectLista('SELECT tbtipolicenca.nome,
+        $objeto->set_selectLista('SELECT CONCAT(tbtipolicenca.nome,"@",IFNULL(lei,"")),
                                      CASE tipo
                                             WHEN 1 THEN "Inicial"
                                             WHEN 2 THEN "Prorrogação"
@@ -158,7 +158,7 @@ if($acesso){
         $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","P.Aq. Início","P.Aq. Término","Publicação"));
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_funcao(array("exibeLeiLicenca",NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
     
@@ -241,7 +241,6 @@ if($acesso){
                                         'title' => 'Data de término do período aquisitivo',
                                         'linha' => 2));   
             }
-
 
             # A data Inicial 
             array_push($campos,array ( 'nome' => 'dtInicial',
@@ -502,7 +501,7 @@ if($acesso){
                 titulo("Inclusão de novo afastamento");
 
                 # Pega os dados da combo licenca
-                $result = $pessoal->select('SELECT idTpLicenca,nome
+                $result = $pessoal->select('SELECT idTpLicenca,CONCAT(nome" (",IFNULL(lei,""),")")
                                             FROM tbtipolicenca
                                         ORDER BY nome');
                 array_unshift($result, array('Inicial',' -- Selecione o Tipo de Licença --')); # Adiciona o valor de nulo

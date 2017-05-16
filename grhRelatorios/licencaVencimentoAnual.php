@@ -31,7 +31,7 @@ if($acesso)
     $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      tbtipolicenca.nome,
+                      CONCAT(tbtipolicenca.nome,"@",IFNULL(lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
@@ -54,7 +54,7 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final','Mês'));
     $relatorio->set_width(array(10,30,10,25,10,5,10));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php","get_nomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"exibeLeiLicenca","date_to_php",NULL,"date_to_php","get_nomeMes"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(7);

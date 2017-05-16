@@ -31,6 +31,7 @@ if($acesso)
     
     br();
     $select = "SELECT tbtipolicenca.nome,
+                    tbtipolicenca.lei,
                     dtInicial,
                     numdias,
                     ADDDATE(dtInicial,numDias-1),
@@ -52,10 +53,10 @@ if($acesso)
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
     #$relatorio->set_subtitulo("Todas as Licenças");
-    $relatorio->set_label(array("Licença","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
-    $relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
+    $relatorio->set_label(array("Licença","Lei","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
+    #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
+    $relatorio->set_align(array('left'));
+    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

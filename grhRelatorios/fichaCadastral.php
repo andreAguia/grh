@@ -196,6 +196,7 @@ if($acesso)
     $relatorio->set_formFocus('contatos');		
     $relatorio->set_formLink('?');
     $relatorio->set_logServidor($idFicha);
+    $relatorio->set_logDetalhe("Visualizou a Ficha Cadastral");
     $relatorio->show();        
 
     /*

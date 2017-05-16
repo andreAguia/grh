@@ -61,6 +61,8 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Licenças");
+    $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
 
     $page->terminaPagina();

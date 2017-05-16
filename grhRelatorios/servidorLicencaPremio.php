@@ -64,6 +64,8 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Licenças Prêmio");
+    $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
     
     ###### Publicações
@@ -98,6 +100,7 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_log(FALSE);
     $relatorio->show();
     
     ###### Resumo
@@ -123,7 +126,7 @@ if($acesso)
     $relatorio->set_conteudo($tabela);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
-                
+    $relatorio->set_log(FALSE);            
     $relatorio->show();
 
     $page->terminaPagina();

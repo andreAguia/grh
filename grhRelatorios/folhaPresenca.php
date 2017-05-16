@@ -61,8 +61,6 @@ if($acesso)
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_conteudo($result);
     $relatorio->set_linhaNomeColuna(FALSE);
-    #$relatorio->set_logDetalhe('Servidor: '.$pessoal->get_nome($matriculaGrh).' ('.$matriculaGrh.')');
-    
     $relatorio->set_formCampos(array(
                                array ('nome' => 'anoBase',
                                       'label' => 'Ano:',
@@ -86,6 +84,8 @@ if($acesso)
 
     $relatorio->set_formFocus('anoBase');
     $relatorio->set_formLink('?');
+    $relatorio->set_logServidor($idServidorPesquisado);
+    $relatorio->set_logDetalhe("Visualizou a Folha de Presença");
     $relatorio->show();
 
     # Monta o relatório da folha de Presença

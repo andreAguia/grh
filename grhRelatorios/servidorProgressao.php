@@ -57,6 +57,8 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_logServidor($idServidorPesquisado);
+    $relatorio->set_logDetalhe("Visualizou o Histórico de Progressões e Enquadramentos");
     $relatorio->show();
 
     $page->terminaPagina();

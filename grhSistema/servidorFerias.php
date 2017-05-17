@@ -191,16 +191,17 @@ if($acesso)
                                        'linha' => 2)));
 
     # Relatório
-    $botaoRel = new Button("Relatório");
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Férias");
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $botaoRel->set_accessKey('R');
-    
+        
     # Resumo
     $botaoResumo = new Button("Resumo");
     $botaoResumo->set_title("Resumo das Férias");
     $botaoResumo->set_url("?fase=resumo");
-    #$botaoResumo->set_accessKey('R');
+    $botaoResumo->set_accessKey('R');
     
     $objeto->set_botaoListarExtra(array($botaoRel,$botaoResumo));
         

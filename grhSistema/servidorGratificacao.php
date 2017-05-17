@@ -77,6 +77,7 @@ if($acesso)
                                      dtFinal,
                                      valor,
                                      processo,
+                                     obs,
                                      idGratificacao
                                 FROM tbgratificacao
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -104,10 +105,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Data Final","Valor","Processo"));
-    $objeto->set_width(array(20,20,20,30));	
+    $objeto->set_label(array("Data Inicial","Data Final","Valor","Processo","Obs"));
+    #$objeto->set_width(array(20,20,20,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php","date_to_php","formataMoeda"));
+    $objeto->set_funcao(array("date_to_php","date_to_php","formataMoeda"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -167,7 +168,15 @@ if($acesso)
                                        'title' => 'Matrícula',
                                        'linha' => 5)));
 
-
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Gratificação Especial");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorGratificacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    
+    $objeto->set_botaoListarExtra(array($botaoRel));
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

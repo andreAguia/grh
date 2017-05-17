@@ -444,7 +444,7 @@ class Grh
             $botao->set_image(PASTA_FIGURAS.'arquivo.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Posição Física das Pastas Funcionais');                
             #$botao->set_accessKey('b');
-            $menu->add_item($botao);
+            #$menu->add_item($botao);
             
             $menu->show();
             br();
@@ -530,7 +530,7 @@ class Grh
             }
 
             $botao = new BotaoGrafico();
-            $botao->set_label('Faltas Abonadas (Atestados)');
+            $botao->set_label('Atestados (Faltas Abonadas)');
             $botao->set_url('servidorAtestado.php');
             $botao->set_image(PASTA_FIGURAS.'atestado.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Atestados do Servidor');                
@@ -603,6 +603,14 @@ class Grh
                 $botao->set_accessKey('G');
                 $menu->add_item($botao);
             }
+            
+            # Diarias
+            $botao = new BotaoGrafico();
+            $botao->set_label('Diárias');
+            $botao->set_url('servidorDiaria.php');
+            $botao->set_image(PASTA_FIGURAS.'diaria.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Controle de Diárias');
+            $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
             $botao->set_label('Dados Bancários');
@@ -627,14 +635,6 @@ class Grh
             #$botao->set_image(PASTA_FIGURAS.'bens.png',$tamanhoImage,$tamanhoImage);
             #$botao->set_title('DBV - Declaração de Bens e Valores');
             #$menu->add_item($botao);
-
-            # Diarias
-            $botao = new BotaoGrafico();
-            $botao->set_label('Diárias');
-            $botao->set_url('servidorDiaria.php');
-            $botao->set_image(PASTA_FIGURAS.'diaria.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Controle de Diárias');
-            $menu->add_item($botao);
 
             $menu->show();
             br();
@@ -972,6 +972,7 @@ class Grh
         $relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_brHr(0);
         $relatorio->set_linhaFinal(TRUE);
+        $relatorio->set_log(FALSE);
         
         # Verifica se exibe ou não o início do cabeçalho
         # Utilizado para quando os dados doservidor é a primeira coisa a ser

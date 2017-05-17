@@ -60,8 +60,7 @@ if($acesso)
                                  destino,
                                  dataSaida,
                                  dataChegada,
-                                 valor,                                 
-                                 iddiaria,
+                                 valor,
                                  iddiaria
                                 FROM tbdiaria
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -92,16 +91,16 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","CI","Origem","Destino","Saída","Chegada","Valor","Emitir CI"));
-    $objeto->set_width(array(4,11,20,20,10,10,8,8));	
+    $objeto->set_label(array("id","CI","Origem","Destino","Saída","Chegada","Valor"));
+    #$objeto->set_width(array(4,11,20,20,10,10,8,8));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (NULL,NULL,NULL,NULL,"date_to_php","date_to_php","formataMoeda"));
+    $objeto->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php","date_to_php","formataMoeda"));
 
     # Link do CI
     $botao = new BotaoGrafico();
     $botao->set_url('?fase=diaria&id=');
     $botao->set_image(PASTA_FIGURAS.'printer.png',20,20);
-    $objeto->set_link(array("","","","","","","",$botao));
+    #$objeto->set_link(array("","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -207,7 +206,16 @@ if($acesso)
                                        'title' => 'idServidor',
                                        'linha' => 5)));
 
-
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Diárias");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorDiaria.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    
+    $objeto->set_botaoListarExtra(array($botaoRel));
+    
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

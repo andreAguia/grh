@@ -29,18 +29,25 @@ if($acesso)
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
     
+    # Pega o idPessoa
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+    
     br();
-    $select = "SELECT anoExercicio,
-                        status,
-                        dtInicial,
-                        numDias,
-                        periodo,
-                        ADDDATE(dtInicial,numDias-1),
-                        documento,
-                        folha
-                   FROM tbferias
-                  WHERE idServidor = $idServidorPesquisado
-               ORDER BY dtInicial desc";
+    $select = "SELECT nome,
+                    dtNasc,
+                    tbparentesco.parentesco,
+                    CASE sexo
+                       WHEN 'F' THEN 'Feminino'
+                       WHEN 'M' THEN 'Masculino'
+                    end,
+                    TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),
+                    dependente,
+                    auxCreche,
+                    dtTermino,
+                    idDependente
+               FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+         WHERE idPessoa = $idPessoa
+      ORDER BY dtNasc desc";
 
     $result = $pessoal->select($select);
 
@@ -49,16 +56,16 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
+    $relatorio->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
-
+    $relatorio->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
+    
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Férias");
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Lista de Dependentes");
     $relatorio->show();
 
     $page->terminaPagina();

@@ -27,20 +27,18 @@ if($acesso)
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Cessão');
     
     br();
-    $select = "SELECT anoExercicio,
-                        status,
-                        dtInicial,
-                        numDias,
-                        periodo,
-                        ADDDATE(dtInicial,numDias-1),
-                        documento,
-                        folha
-                   FROM tbferias
-                  WHERE idServidor = $idServidorPesquisado
-               ORDER BY dtInicial desc";
+    $select = "SELECT dtInicio,
+                        dtFim,
+                        orgao,
+                        processo,
+                        CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
+                        idHistCessao
+                   FROM tbhistcessao
+             WHERE idServidor = $idServidorPesquisado
+          ORDER BY dtInicio desc";
 
     $result = $pessoal->select($select);
 
@@ -49,16 +47,18 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
+    $relatorio->set_label(array("Data Inicial","Data Término","Órgão Cessionário","Processo","Publicação no DOERJ"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
+    $relatorio->set_align(array("center"));
+    $relatorio->set_funcao(array ("date_to_php","date_to_php"));
+    #$relatorio->set_classe(array(NULL,"pessoal"));
+    #$relatorio->set_metodo(array(NULL,"get_nomelotacao"));    
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Férias");
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Cessão");
     $relatorio->show();
 
     $page->terminaPagina();

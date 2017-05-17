@@ -27,20 +27,23 @@ if($acesso)
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Relatório de Atestados (Faltas Abonadas)');
+    
+    # Pega o idPessoa
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
     
     br();
-    $select = "SELECT anoExercicio,
-                        status,
-                        dtInicial,
-                        numDias,
-                        periodo,
-                        ADDDATE(dtInicial,numDias-1),
-                        documento,
-                        folha
-                   FROM tbferias
+    $select = "SELECT dtInicio,
+                    numDias,
+                    ADDDATE(dtInicio,numDias-1),
+                    nome_medico,
+                    especi_medico,
+                    tipo,
+                    tbparentesco.Parentesco,
+                    tbatestado.obs
+                   FROM tbatestado LEFT JOIN tbparentesco ON (tbatestado.parentesco = tbparentesco.idParentesco)
                   WHERE idServidor = $idServidorPesquisado
-               ORDER BY dtInicial desc";
+               ORDER BY 1 desc";
 
     $result = $pessoal->select($select);
 
@@ -49,16 +52,16 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Documento 1/3","Folha"));
-    #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
+    $relatorio->set_label(array("Data Inicial","Dias","Data Término","Médico","Especialidade","Tipo","Parentesco","Obs"));
+    #$relatorio->set_width(array(10,80));
+    $relatorio->set_align(array("center","center","center","left","center","center","center","left"));
+    $relatorio->set_funcao(array ("date_to_php",NULL,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Férias");
+    $relatorio->set_logDetalhe("Visualizou o Relatório da Atestados (Faltas Abonadas)");
     $relatorio->show();
 
     $page->terminaPagina();

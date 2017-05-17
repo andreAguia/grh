@@ -114,9 +114,9 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
-    $objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
+    #$objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php","date_to_php"));
+    $objeto->set_funcao(array("date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -138,7 +138,7 @@ if($acesso)
                                        'autofocus' => TRUE,
                                        'size' => 80,                                   
                                        'title' => 'Nome da Empresa.',
-                                       'col' => 8,
+                                       'col' => 6,
                                        'linha' => 1),
                                array ( 'nome' => 'empresaTipo',
                                        'label' => 'Tipo:',
@@ -146,7 +146,7 @@ if($acesso)
                                        'required' => TRUE,
                                        'array' => Array(Array(1,"Pública"),Array(2,"Privada")),
                                        'size' => 20,
-                                       'col' => 4,
+                                       'col' => 3,
                                        'title' => 'Tipo da Empresa',
                                        'linha' => 1),
                                array ( 'nome' => 'dtPublicacao',
@@ -167,7 +167,7 @@ if($acesso)
                                        'linha' => 2),
                                array ( 'nome' => 'processo',
                                        'label' => 'Processo:',
-                                       'tipo' => 'processo',
+                                       'tipo' => 'texto',
                                        'required' => TRUE,
                                        'size' => 30,
                                        'col' => 4,
@@ -232,6 +232,14 @@ if($acesso)
                                        'linha' => 10)));
 
 
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAverbacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $objeto->set_botaoListarExtra(array($botaoRel));
+        
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

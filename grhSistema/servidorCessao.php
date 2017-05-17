@@ -155,6 +155,16 @@ if($acesso)
                                        'size' => 5,
                                        'title' => 'idServidor',
                                        'linha' => 3)));
+    
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Cessão");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorCessao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    
+    $objeto->set_botaoListarExtra(array($botaoRel));
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

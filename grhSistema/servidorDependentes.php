@@ -141,9 +141,9 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
-    $objeto->set_width(array(20,10,10,10,10,10,10,10));	
+    #$objeto->set_width(array(20,10,10,10,10,10,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
+    $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -263,6 +263,14 @@ if($acesso)
                                        'size' => 5,
                                        'title' => 'idPessoa',
                                        'linha' => 5)));
+
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Dependentes");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorDependentes.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $objeto->set_botaoListarExtra(array($botaoRel));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

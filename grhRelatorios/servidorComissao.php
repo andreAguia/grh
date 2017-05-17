@@ -1,0 +1,65 @@
+<?php
+/**
+ * Relatório
+ *    
+ * By Alat
+ */
+
+# Inicia as variáveis que receberão as sessions
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
+
+# Configuração
+include ("../grhSistema/_config.php");
+
+# Permissão de Acesso
+$acesso = Verifica::acesso($idUsuario,2);
+
+if($acesso)
+{    
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
+
+    # Começa uma nova página
+    $page = new Page();			
+    $page->iniciaPagina();
+
+    ######
+    
+    # Dados do Servidor
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Cargo em Comissão');
+    
+    br();
+    $select = "SELECT concat(tbtipocomissao.descricao,' - (',tbtipocomissao.simbolo,')') as comissao,
+                      concat(tbcomissao.descricao,' ',if(protempore = 1,'pro tempore','')) as descCargo,
+                        tbcomissao.dtNom,
+                        tbcomissao.dtExo,
+                        idComissao
+                   FROM tbcomissao, tbtipocomissao
+                  WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
+                    AND idServidor = $idServidorPesquisado
+               ORDER BY 3 desc";
+
+    $result = $pessoal->select($select);
+
+    $relatorio = new Relatorio();   
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_label(array("Cargo","Nome Completo do Cargo","Data de Nomeação","Data de Exoneração"));
+    #$relatorio->set_width(array(10,10,10,5,8,10,15));
+    $relatorio->set_align(array("left","left","center"));
+    $relatorio->set_funcao(array(NULL,NULL,"date_to_php","date_to_php"));
+    #$relatorio->set_classe(array(NULL,"pessoal"));
+    #$relatorio->set_metodo(array(NULL,"get_nomelotacao"));    
+
+    $relatorio->set_conteudo($result);
+    #$relatorio->set_numGrupo(2);
+    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_logServidor($idServidorPesquisado);
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Cargo em Comissão");
+    $relatorio->show();
+
+    $page->terminaPagina();
+}

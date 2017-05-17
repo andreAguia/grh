@@ -86,7 +86,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Nível","Curso","Instituição","Ano de Término"));
-    $objeto->set_width(array(15,30,35,10));	
+    #$objeto->set_width(array(15,30,35,10));	
     $objeto->set_align(array("center"));
     #$objeto->set_function(array (NULL,"date_to_php"));
 
@@ -165,8 +165,15 @@ if($acesso)
                                        'size' => 6,
                                        'title' => 'idPessoa',
                                        'linha' => 5)));
-
-   # Log
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Formação");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFormacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $objeto->set_botaoListarExtra(array($botaoRel));
+    
+    # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 

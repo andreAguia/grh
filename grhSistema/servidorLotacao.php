@@ -84,8 +84,7 @@ if($acesso)
     $objeto->set_label(array("Data","Lotação","Motivo"));
     #$objeto->set_width(array(10,30,50));	
     $objeto->set_align(array("center","left","left"));
-    $objeto->set_funcao(array ("date_to_php"));
-    
+    $objeto->set_funcao(array("date_to_php"));
     $objeto->set_classe(array (NULL,"pessoal"));
     $objeto->set_metodo(array (NULL,"get_nomelotacao"));    
 
@@ -149,6 +148,14 @@ if($acesso)
                                        'size' => 5,
                                        'title' => 'idServidor',
                                        'linha' => 4)));
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Lotação");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLotacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    
+    $objeto->set_botaoListarExtra(array($botaoRel));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

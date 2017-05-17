@@ -116,7 +116,7 @@ if($acesso)
     $objeto->set_label(array("Cargo","Nome Completo do Cargo","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -278,10 +278,17 @@ if($acesso)
     # Botão Extra
     $botaoVagas = new Button("Vagas","?fase=vagas");
     $botaoVagas->set_title('Exibe a disponibilidade dos cargos em comissão');
-    $botaoVagas->set_accessKey('g');
-    $objeto->set_botaoListarExtra(array($botaoVagas));
+    $botaoVagas->set_accessKey('a');
     
-
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Cargo em Comissão");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorComissao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        
+    $objeto->set_botaoListarExtra(array($botaoRel,$botaoVagas));
+    
     # Paginação
     #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);

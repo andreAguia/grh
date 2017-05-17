@@ -77,11 +77,12 @@ if($acesso)
                                'tipo' => 'textarea',
                                'size' => array(255,20))));
     # Relatório
-    $botaoRel = new Button("Relatório");
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Observações do Servidor");
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorObs.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $botaoRel->set_accessKey('R');
-    
+        
     $objeto->set_botaoEditarExtra(array($botaoRel));
     
     # Log

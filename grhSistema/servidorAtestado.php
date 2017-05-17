@@ -68,6 +68,7 @@ if($acesso)
                                      especi_medico,
                                      tipo,
                                      tbparentesco.Parentesco,
+                                     tbatestado.obs,
                                      idAtestado
                                 FROM tbatestado LEFT JOIN tbparentesco ON (tbatestado.parentesco = tbparentesco.idParentesco)
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -97,9 +98,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Dias","Data Término","Médico","Especialidade","Tipo","Parentesco"));
-    $objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center"));
+    $objeto->set_label(array("Data Inicial","Dias","Data Término","Médico","Especialidade","Tipo","Parentesco","Obs"));
+    #$objeto->set_width(array(10,10,10,20,20,10,10));	
+    $objeto->set_align(array("center","center","center","left","center","center","center","left"));
     $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
@@ -184,7 +185,15 @@ if($acesso)
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 6)));
-
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Atestados (Faltas Abonadas)");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAtestado.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $objeto->set_botaoListarExtra(array($botaoRel));
+    
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

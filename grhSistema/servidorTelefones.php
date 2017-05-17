@@ -80,8 +80,8 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Especifique","Obs"));
-    #$objeto->set_width(array(40,50));	
+    $objeto->set_label(array("Tipo","Email / Telefone","Obs"));
+    $objeto->set_width(array(10,40,40));
     $objeto->set_align(array("left","left","left"));
     #$objeto->set_function(array ("date_to_php","get_nomelotacao"));
 
@@ -108,7 +108,7 @@ if($acesso)
                                       'col' => 3,
                                       'size' => 15),
                                array ( 'nome' => 'numero',
-                                       'label' => 'Especifique:',
+                                       'label' => 'Email / Telefone:',
                                        'tipo' => 'texto',
                                        'size' => 80,                         
                                        'title' => 'O número ou o endereço de email',
@@ -128,6 +128,14 @@ if($acesso)
                                        'size' => 5,
                                        'title' => 'idPessoa',
                                        'linha' => 3)));
+
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Contatos");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorTelefones.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $objeto->set_botaoListarExtra(array($botaoRel));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

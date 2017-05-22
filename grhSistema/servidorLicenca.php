@@ -71,9 +71,9 @@ if($acesso){
         # select da lista
         $objeto->set_selectLista('SELECT CONCAT(tbtipolicenca.nome,"@",IFNULL(lei,"")),
                                      CASE tipo
-                                            WHEN 1 THEN "Inicial"
-                                            WHEN 2 THEN "Prorrogação"
-                                            end,
+                                        WHEN 1 THEN "Inicial"
+                                        WHEN 2 THEN "Prorrogação"
+                                        end,
                                      IF(alta = 1,"Alta",NULL),
                                      dtInicial,
                                      numdias,
@@ -501,7 +501,7 @@ if($acesso){
                 titulo("Inclusão de novo afastamento");
 
                 # Pega os dados da combo licenca
-                $result = $pessoal->select('SELECT idTpLicenca,CONCAT(nome" (",IFNULL(lei,""),")")
+                $result = $pessoal->select('SELECT idTpLicenca,CONCAT(nome,IFNULL(concat(" (",lei,")"),""))
                                             FROM tbtipolicenca
                                         ORDER BY nome');
                 array_unshift($result, array('Inicial',' -- Selecione o Tipo de Licença --')); # Adiciona o valor de nulo

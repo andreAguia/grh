@@ -3473,5 +3473,27 @@ class Pessoal extends Bd
 	}
 	
 	###########################################################
+
+	
+	/**
+	 * M�todo get_idServidoridFuncional
+	 * Informa a idServidor de uma matrícula
+	 * 
+	 * @param	string $idFuncional  idFuncional do servidor
+	 */
+
+	public function get_idServidoridFuncional($idFuncional){
+            # Pega o cargo do servidor
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idFuncional = '.$idFuncional;
+
+            $row = parent::select($select,FALSE);
+            
+            return $row[0];
+			
+	}
+		
+    ###########################################################
 	
 }

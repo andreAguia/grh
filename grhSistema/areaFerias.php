@@ -143,8 +143,32 @@ if($acesso)
                 br();
                 $menu = new Menu();
                 $menu->add_item('titulo','Relatórios');
-                $menu->add_item('linkWindow','Escala Anual de Férias','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php?lotacaoArea='.$parametroLotacao);
-                #$menu->add_item('linkWindow','Escala Anual de Férias - Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
+                
+                
+                if($parametroLotacao == 113){
+                    $menu->add_item('linkWindow','Escala Anual de Férias','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
+                }else{
+                    $menu->add_item('linkWindow','Escala Anual de Férias','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php?lotacaoArea='.$parametroLotacao);
+                }
+                
+                #$menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
+                #$menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
+                #$menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');
+                #$menu->add_item('linkWindow','Escala Mensal de Férias Fruídas','../grhRelatorios/escalaMensalFeriasFruidas.php');
+                #$menu->add_item('linkWindow','Escala Mensal de Férias Solicitadas','../grhRelatorios/escalaMensalFeriasSolicitadas.php');
+                #$menu->add_item('linkWindow','Escala Mensal de Férias Confirmadas','../grhRelatorios/escalaMensalFeriasConfirmadas.php');
+                #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
+                #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação','../grhRelatorios/escalaMensalFeriasGeralPorLotacao.php');
+                #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação - Assinatura','../grhRelatorios/escalaMensalFeriasGeralPorLotacaoComAssinatura.php');
+                #$menu->add_item('linkWindow','Escala Semestral de Férias (Fevereiro - Agosto)','../grhRelatorios/escalaSemestralFeriasGeralFevereiroAgosto.php');
+                #$menu->add_item('linkWindow','Escala Semestral de Férias (Setembro - Janeiro)','../grhRelatorios/escalaSemestralFeriasGeralSetembroJaneiro.php');
+                #$menu->add_item('linkWindow','Total de Férias por Ano do Exercício','../grhRelatorios/totalFeriasAnual.php');
+                #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Férias','../grhRelatorios/servidorEmFerias.php');
+                $menu->show();
+            }else{
+                br();
+                $menu = new Menu();
+                $menu->add_item('titulo','Relatórios');
                 #$menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
                 #$menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
                 #$menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');

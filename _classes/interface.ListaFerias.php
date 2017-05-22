@@ -173,7 +173,7 @@ class listaFerias
         $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
         $servset3 = array_merge_recursive($servset1,$servset2); // Funta os dois
         $totalServidores = count($servset3);                    // Conta o número de servidores
-               
+                
         # Monta a tabela de Servidores.
         if($totalServidores > 0){
             # Monta a tabela
@@ -184,23 +184,19 @@ class listaFerias
             $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
             $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
             $tabela->set_align(array("center","left","left"));
-            $tabela->set_titulo("Resumo por Servidor");
             $tabela->set_idCampo('idServidor');
+            $tabela->set_titulo("Resumo por Servidor");
+            
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
+                                                    'valor' => 30,
+                                                    'operador' => '>',
+                                                    'id' => 'problemas')));
             
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
                 $tabela->set_nomeColunaEditar("Acessar");
                 $tabela->set_editarBotao("ver.png");
-            }
-            
-            $feriasProblematicas = $this->getServidoresComTotalDiasFeriasComProblemas();
-            if(count($feriasProblematicas) > 0){
-                $tabela->set_conteudo($feriasProblematicas);
-                $tabela->set_titulo("O sistema detectou problemas com essas férias");
-                $tabela->show();
-            }
-            
-            
+            }           
             
             if(is_null($this->lotacao)){
                 $tabela->set_conteudo($servset1);

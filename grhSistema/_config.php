@@ -119,6 +119,10 @@ if (in_array(BROWSER_NAME, $browser)){
     define('HTML5',FALSE);
 }
 
+# Define o horário
+date_default_timezone_set("America/Sao_Paulo");
+setlocale(LC_ALL, 'pt_BR');
+
 /**
  * Função que é chamada automaticamente pelo sistema
  * para carregar na memória uma classe no exato momento

@@ -150,7 +150,6 @@ if($acesso)
                            'tipo' => 'texto',
                            'autofocus' => TRUE,
                            'size' => 10,
-                           'unique'=> TRUE,
                            'col' => 2,
                            'title' => 'Número da id funcional do servidor.'),
                   array ( 'linha' => 1,

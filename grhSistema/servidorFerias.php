@@ -224,7 +224,15 @@ if($acesso)
                 $objeto->listar();
                 break;
             
-            case "editar" :                
+            case "editar" :  
+                $mensagem1 = "Tipos de Férias:<br/>"
+                    . " Solicitada -> Férias solicitadas pelo servidor que ainda não foi fruída.<br/>"
+                    . " Confirmada -> Férias que foram emitidas o aviso de férias e assim sendo confirmadas pelo sistema.<br/>"
+                    . " Fruídas    -> Férias confirmadas cuja data de início ja passou.<br/>"
+                    . " Canceladas -> Férias canceladas por motivos diversos.";
+                #$objeto->set_rotinaExtraEditar("callout");
+                #$objeto->set_rotinaExtraEditarParametro($mensagem1);
+                    
                 $objeto->editar($id);
                 break;
             case "gravar" :		

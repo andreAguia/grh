@@ -70,7 +70,6 @@ define("BROWSER_VERSION",$browser['version']);	# Versão do browser
 
 # Pega o ip e nome da máquina
 define("IP",getenv("REMOTE_ADDR"));     # Ip da máquina
-define("HOST",gethostbyaddr(IP));       # O nome da máquina
 
 # Sistema Operacional
 define("SO",get_So());

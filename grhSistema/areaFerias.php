@@ -144,15 +144,13 @@ if($acesso)
                 $menu = new Menu();
                 $menu->add_item('titulo','Relatórios');
                 
-                
                 if($parametroLotacao == 113){
                     $menu->add_item('linkWindow','Escala Anual de Férias','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
                 }else{
                     $menu->add_item('linkWindow','Escala Anual de Férias','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php?lotacaoArea='.$parametroLotacao);
                 }
                 
-                #$menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
-                #$menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
+                 #$menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
                 #$menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');
                 #$menu->add_item('linkWindow','Escala Mensal de Férias Fruídas','../grhRelatorios/escalaMensalFeriasFruidas.php');
                 #$menu->add_item('linkWindow','Escala Mensal de Férias Solicitadas','../grhRelatorios/escalaMensalFeriasSolicitadas.php');
@@ -169,7 +167,7 @@ if($acesso)
                 br();
                 $menu = new Menu();
                 $menu->add_item('titulo','Relatórios');
-                #$menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
+                $menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php?parametroAnoExercicio='.$parametroAnoExercicio);
                 #$menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
                 #$menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');
                 #$menu->add_item('linkWindow','Escala Mensal de Férias Fruídas','../grhRelatorios/escalaMensalFeriasFruidas.php');

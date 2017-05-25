@@ -26,7 +26,16 @@ if($acesso)
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $anoBase = post('anoBase',date('Y'));
+    $anoBaseRel = post('anoBase',date('Y'));
+    
+    # Pega o ano exercicio quando vem da área de férias
+    $parametroAnoExercicio = get("parametroAnoExercicio");
+    
+    if(is_null($parametroAnoExercicio)){
+        $anoBase = $anoBaseRel;
+    }else{
+        $anoBase = $parametroAnoExercicio;
+    }
 
     ######
     
@@ -65,6 +74,8 @@ if($acesso)
     $relatorio->set_numGrupo(8);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
 
+    if(is_null($parametroAnoExercicio))
+    {
     $relatorio->set_formCampos(array(
                                array ('nome' => 'anoBase',
                                       'label' => 'Ano Base:',
@@ -77,6 +88,7 @@ if($acesso)
 
     $relatorio->set_formFocus('anoBase');
     $relatorio->set_formLink('?');
+    }
     $relatorio->show();
 
     $page->terminaPagina();

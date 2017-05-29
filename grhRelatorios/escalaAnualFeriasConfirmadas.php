@@ -26,26 +26,33 @@ if($acesso)
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $anoBase = post('anoBase',date('Y'));
+    $anoBaseRel = post('anoBase',date('Y'));
+    
+    # Pega o ano exercicio quando vem da área de férias
+    $parametroAnoExercicio = get("parametroAnoExercicio");
+    
+    if(is_null($parametroAnoExercicio)){
+        $anoBase = $anoBaseRel;
+    }else{
+        $anoBase = $parametroAnoExercicio;
+    }
 
     ######
     
-    $select ='SELECT tbservidor.idfuncional,
+    $select ='SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
-                     CONCAT(substring(tblotacao.UADM,1,3),"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
+                     tbservidor.idServidor,
                      tbferias.anoExercicio,
                      tbferias.dtInicial,
-                     CONCAT(tbferias.numDias,"(",tbferias.periodo,")"),
+                     tbferias.numDias,
+                     idFerias,
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y")as dtf,
                      tbferias.folha,
                      month(tbferias.dtInicial)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
-                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                        JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
+                                     JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
                WHERE tbservidor.situacao = 1
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                 AND tbferias.status = "confirmada"
+                 AND tbferias.status = "confirmadas"
                  AND year(tbferias.dtInicial) = '.$anoBase.'
             ORDER BY month(tbferias.dtInicial), tbservidor.idServidor';
 
@@ -56,30 +63,33 @@ if($acesso)
     $relatorio->set_tituloLinha2($anoBase);
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados por Matrícula');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha','Mês'));
-    $relatorio->set_width(array(10,30,20,5,9,8,9,10));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Folha','Mês'));
+    #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,"get_nomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL,"get_nomeMes"));
+     $relatorio->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_lotacao",NULL,NULL,NULL,"get_feriasPeriodo"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(8);
+    $relatorio->set_numGrupo(9);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
 
+    if(is_null($parametroAnoExercicio))
+    {
     $relatorio->set_formCampos(array(
                                array ('nome' => 'anoBase',
                                       'label' => 'Ano Base:',
                                       'tipo' => 'texto',
                                       'size' => 4,
-                                      'col' => 3,
                                       'title' => 'Ano',
                                       'padrao' => $anoBase,
-                                      'onChange' => 'formPadrao.submit();',
+                                      'col' => 3,
                                       'linha' => 1)));
 
     $relatorio->set_formFocus('anoBase');
     $relatorio->set_formLink('?');
+    }
     $relatorio->show();
 
     $page->terminaPagina();
 }
-?>

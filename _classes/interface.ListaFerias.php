@@ -131,9 +131,27 @@ class listaFerias
         $tabela->set_label(array("Nº de Servidores","Total de Dias"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo("Resumo");
+        $tabela->set_titulo("Resumo por Dia");
+        $tabela->set_rodape("Total de Servidores: ".$totalServidores);
         $tabela->show();
-        titulo("Total: ".$totalServidores);
+        
+        ## Resumo por status
+        
+        $select = "SELECT count(*), status FROM tbferias WHERE anoexercicio = ".$this->anoExercicio." Group by status ORDer by status";
+        
+        $resumo = $servidor->select($select);
+        
+        # Monta a tabela de Resumo.
+        $tabela = new Tabela();
+        $tabela->set_conteudo($resumo);
+        $tabela->set_label(array("Nº de Servidores","Status"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array("center"));
+        $tabela->set_titulo("Resumo por Status");
+        $tabela->set_rodape("Total de Servidores: ".$totalServidores);
+        $tabela->show();
+        
+        
     }
     
     ###########################################################

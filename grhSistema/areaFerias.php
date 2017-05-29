@@ -42,10 +42,6 @@ if($acesso)
     # Joga os parâmetros par as sessions    
     set_session('parametroAnoExercicio',$parametroAnoExercicio);
     set_session('parametroLotacao',$parametroLotacao);
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
     
     # Começa uma nova página
     $page = new Page();
@@ -63,19 +59,35 @@ if($acesso)
     $menu1 = new MenuBar();
 
     # Voltar
-    $linkBotao1 = new Link("Voltar","grh.php");
-    $linkBotao1->set_class('button');
-    $linkBotao1->set_title('Voltar a página anterior');
-    $linkBotao1->set_accessKey('V');
-    $menu1->add_link($linkBotao1,"left");
+    $botaoVoltar = new Link("Voltar","grh.php");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Voltar a página anterior');
+    $botaoVoltar->set_accessKey('V');
+    $menu1->add_link($botaoVoltar,"left");
 
-    # Relatórios
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-    $botaoRel = new Button();
-    $botaoRel->set_title("Relatório dessa pesquisa");
-    $botaoRel->set_url("?fase=relatorio");
-    $botaoRel->set_imagem($imagem);
-    #$menu1->add_link($botaoRel,"right");
+    # Resumo
+    $botaoResumo = new Link("Resumo","?fase=Resumo");
+    if(($fase == "")OR($fase == "Resumo"))
+    {
+        $botaoResumo->set_class('disabled button');
+    }else{
+        $botaoResumo->set_class('button');
+    }
+    $botaoResumo->set_title('Voltar a página anterior');
+    $botaoResumo->set_accessKey('R');
+    $menu1->add_link($botaoResumo,"right");
+    
+    # Detalhe
+    $botaoDetalhe = new Link("Detalhe","?fase=Detalhe");
+    if($fase == "Detalhe")
+    {
+        $botaoDetalhe->set_class('disabled button');
+    }else{
+        $botaoDetalhe->set_class('button');
+    }
+    $botaoDetalhe->set_title('Voltar a página anterior');
+    $botaoDetalhe->set_accessKey('D');
+    $menu1->add_link($botaoDetalhe,"right");
 
     $menu1->show();
     
@@ -85,7 +97,7 @@ if($acesso)
     ################################################################
     
     # Formulário de Pesquisa
-    $form = new Form('?');
+    $form = new Form('?fase='.$fase);
 
     # anoExercicio                
     $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
@@ -130,15 +142,24 @@ if($acesso)
     switch ($fase)
     {
         case "" :
+        case "Resumo" :
+        case "Detalhe" :    
             # lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);
 
-            # Resumo geral ou da lotação
-            $lista1 = new listaFerias($parametroAnoExercicio);
-            $lista1->set_lotacao($parametroLotacao);
-            $lista1->showResumo();
+            if($fase == "Detalhe"){
+                $lista1 = new listaFerias($parametroAnoExercicio);
+                $lista1->set_lotacao($parametroLotacao);
+                $lista1->showResumoStatus();
+            }else{
+                # Resumo geral ou da lotação
+                $lista1 = new listaFerias($parametroAnoExercicio);
+                $lista1->set_lotacao($parametroLotacao);
+                $lista1->showResumo();
+            }
             
+            # Relatórios
             if(!vazio($parametroLotacao)){
                 $menu = new Menu();
                 $menu->add_item('titulo','Relatórios');
@@ -186,8 +207,12 @@ if($acesso)
             # Área Principal            
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
-
-            $lista1->showResumoServidor();
+            
+            if($fase == "Detalhe"){
+                $lista1->showDetalheServidor();
+            }else{
+                $lista1->showResumoServidor();
+            }
             
             $grid2->fechaColuna();
             $grid2->fechaGrid();

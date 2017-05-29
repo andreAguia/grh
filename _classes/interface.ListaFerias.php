@@ -69,9 +69,10 @@ class listaFerias
     
     public function set_lotacao($idLotacao = NULL){
     /**
-     * Informa o tamanho do controle
+     * Informa a lotação dos servidore s cujas ferias serão exibidas
      * 
      * @param $idLotacao integer NULL o idLotacão da lotação a ser exibida as férias
+     * 
      * @note Quando o $idLotacao não é informado será exibido de todas as lotações.
      * 
      * @syntax $ListaFerias->set_lotacao($idLotacao]);  
@@ -131,27 +132,57 @@ class listaFerias
         $tabela->set_label(array("Nº de Servidores","Total de Dias"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo("Resumo por Dia");
+        $tabela->set_titulo("Por Dia");
         $tabela->set_rodape("Total de Servidores: ".$totalServidores);
         $tabela->show();
+    }
+    
+    ###########################################################
+   
+    /**
+     * Método showResumoStatus
+     * 
+     * Exibe a Tabela
+     *
+     */	
+    public function showResumoStatus(){
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
         
-        ## Resumo por status
-        
-        $select = "SELECT count(*), status FROM tbferias WHERE anoexercicio = ".$this->anoExercicio." Group by status ORDer by status";
+        # Pega os dados
+        $select = "SELECT count(*) as tot,
+                          status
+                     FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
+                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE anoExercicio = $this->anoExercicio
+                      AND tbservidor.situacao = 1    
+                      AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                        
+                if(!is_null($this->lotacao)){
+                    $select .= " AND tblotacao.idlotacao = ".$this->lotacao;
+                };
+                
+                $select .= " GROUP BY status ORDER BY status";
         
         $resumo = $servidor->select($select);
+        
+        # Pega a soma dos campos
+        $soma = 0;
+        foreach ($resumo as $value){
+            $soma += $value['tot'];
+        }
         
         # Monta a tabela de Resumo.
         $tabela = new Tabela();
         $tabela->set_conteudo($resumo);
         $tabela->set_label(array("Nº de Servidores","Status"));
         $tabela->set_totalRegistro(FALSE);
+        $tabela->set_rodape("Total de Servidores: ".$soma);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo("Resumo por Status");
-        $tabela->set_rodape("Total de Servidores: ".$totalServidores);
+        $tabela->set_funcao(array(NULL,"exibeDescricaoStatus"));
+        $tabela->set_titulo("Por Status");
         $tabela->show();
-        
-        
     }
     
     ###########################################################
@@ -189,23 +220,21 @@ class listaFerias
         # Exibe os servidores desse setor
         $servset1 = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
         $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
-        $servset3 = array_merge_recursive($servset1,$servset2); // Funta os dois
+        $servset3 = array_merge_recursive($servset1,$servset2); // Junta os dois
         $totalServidores = count($servset3);                    // Conta o número de servidores
                 
         # Monta a tabela de Servidores.
         if($totalServidores > 0){
-            # Monta a tabela
+            
             $tabela = new Tabela();
-
-            $tabela->set_label(array("Id","Servidor","Cargo","Admissão","Dias"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+            $tabela->set_titulo("Resumo por Servidor Ativos");
+            $tabela->set_label(array("Id","Servidor","Cargo","Lotação","Admissão","Dias"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_lotacaoSimples"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
             $tabela->set_align(array("center","left","left"));
             $tabela->set_idCampo('idServidor');
-            $tabela->set_titulo("Resumo por Servidor");
-            
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
                                                     'valor' => 30,
                                                     'operador' => '>',
                                                     'id' => 'problemas')));
@@ -224,6 +253,55 @@ class listaFerias
                 $tabela->show();
             }
         }              
+    }
+    
+    ###########################################################
+   
+    /**
+     * Método showDetalheServidor
+     * 
+     * Exibe as férias detalhadas dos servidores da lotação 
+     *
+     */	
+    public function showDetalheServidor(){
+        
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        $select ='SELECT tbservidor.idfuncional,        
+                     tbpessoa.nome,
+                     tbservidor.idServidor,
+                     tbferias.anoExercicio,
+                     tbferias.dtInicial,
+                     tbferias.numDias,
+                     idFerias,
+                     date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y")as dtf,
+                     tbferias.status
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+               WHERE anoExercicio = '.$this->anoExercicio.'
+                 AND tbservidor.situacao = 1  
+                 AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+        
+            if(!is_null($this->lotacao)){
+                $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            }
+                 
+            $select .= ' ORDER BY tbpessoa.nome, dtInicial';
+        
+        $result = $servidor->select($select);
+
+        $tabela = new Tabela();
+        $tabela->set_titulo('Detalhe das Férias dos Servidores Ativos');
+        $tabela->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
+        $tabela->set_align(array("center","left","left"));
+        $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
+        $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
+        $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,"get_feriasPeriodo"));
+        $tabela->set_conteudo($result);
+        $tabela->show();
     }
     
     ###########################################################
@@ -317,6 +395,7 @@ class listaFerias
         $select1 = "(SELECT tbservidor.idFuncional,
                             tbpessoa.nome,
                             tbservidor.idServidor,
+                            tbservidor.idServidor,
                             tbservidor.dtAdmissao,
                             sum(numDias) as soma
                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
@@ -324,6 +403,7 @@ class listaFerias
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND tbservidor.situacao = 1  
                        ";
         
         # Verifica se tem filtro por lotação
@@ -336,7 +416,7 @@ class listaFerias
               AND anoExercicio = $this->anoExercicio
               AND situacao = 1 
          GROUP BY tbpessoa.nome
-         ORDER BY 5 desc,tbpessoa.nome)";
+         ORDER BY 6 desc,tbpessoa.nome)";
         
         # Pega os dados do banco
         $retorno = $servidor->select($select1,TRUE);
@@ -365,7 +445,8 @@ class listaFerias
                                     LEFT JOIN tbferias USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND tbservidor.situacao = 1  ";
         
         # Verifica se tem filtro por lotação
         if(!is_null($this->lotacao)){  // senão verifica o da classe
@@ -401,12 +482,14 @@ class listaFerias
         $select2 = "SELECT tbservidor.idFuncional,
                            tbpessoa.nome,
                            tbservidor.idServidor,
+                           tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-'
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1  
                       ";
                  
         # Verifica se tem filtro por lotação

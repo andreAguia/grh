@@ -374,6 +374,30 @@ class Pessoal extends Bd
 
     }
 
+    ######################################################################################
+
+    /**
+     * M�todo get_lotacao
+     * Informa a lotação atual do servidor sem o UADM
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+
+    public function get_lotacaoSimples($idServidor)
+
+    {
+            $select = 'SELECT  tblotacao.DIR,
+                               tblotacao.GER
+                          FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
+                         WHERE tbhistlot.idServidor = '.$idServidor.'
+                         ORDER BY data DESC';
+
+            $row = parent::select($select,FALSE);
+
+            return $row[0].'-'.$row[1];
+
+    }
+
     ###########################################################
 
     /**

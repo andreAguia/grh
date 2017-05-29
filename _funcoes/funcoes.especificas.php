@@ -120,3 +120,38 @@ function exibeLeiLicenca($lei){
 }
 
 ###########################################################
+
+function exibeDescricaoStatus($status){
+/**
+ * Retorna a descrição de um status de férias no on mouse over
+ * 
+ * @note Usado na rotina de férias e área de férias 
+ * 
+ * @syntax exibeDescricaoStatus($status);
+ * 
+ * @param $status string NULL o status das férias
+ */
+    
+    $texto = "";
+    switch ($status)
+    {
+        case "solicitada" :
+            $texto = "Férias solicitadas pelo setor que ainda não foram recebidas oficialmente pelo GRH";
+            break;
+        
+        case "confirmada" :
+            $texto = "Férias Recebidas e verificadas oficialmente pelo GRH";
+            break;
+        
+        case "fruida" :
+            $texto = "Férias Confirmadas em que a data de início já passou. O sistema habilita essas férias automáticamente";
+            break;
+        
+        case "cancelada" :
+            $texto = "Férias canceladas pelo servidor.";
+            break;
+    }
+    echo "<abbr title='$texto'>$status</abbr>";
+}
+
+##################################################################

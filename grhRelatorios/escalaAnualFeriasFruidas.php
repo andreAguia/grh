@@ -53,7 +53,7 @@ if($acesso)
                                      JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
                WHERE tbservidor.situacao = 1
                  AND tbferias.status = "fruída"
-                 AND year(tbferias.dtInicial) = '.$anoBase.'
+                 AND anoExercicio = '.$anoBase.'
             ORDER BY month(tbferias.dtInicial), tbservidor.idServidor';
 
     $result = $servidor->select($select);
@@ -68,7 +68,7 @@ if($acesso)
     $relatorio->set_align(array("center","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL,"get_nomeMes"));
      $relatorio->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_lotacao",NULL,NULL,NULL,"get_feriasPeriodo"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,"get_feriasPeriodo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(9);

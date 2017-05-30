@@ -734,40 +734,85 @@ class Grh
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
-        # Div que ressalta situação do servidor (licença, férias, etc)
+        # Inicializa a variável das mensagens
+        $mensagem = array();
+        
+        ##### Situação do servidor
+        
+        # Pega as situações
         $ferias = $pessoal->emFerias($idservidor);
         $licenca = $pessoal->emLicenca($idservidor);
         $situacao = $pessoal->get_idSituacao($idservidor);
         $folgaTre = $pessoal->emFolgaTre($idservidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
-        
-        if(($ferias) OR ($licenca) OR ($afastadoTre) OR ($folgaTre) OR ($situacao <> 1)){
+        $cedido = $pessoal->emCessao($idservidor);
             
-            # Férias
-            if($ferias){
-                $mensagem = 'Servidor em férias';
-            }
+        # Férias
+        if($ferias){
+            $mensagem[] = 'Servidor em férias';
+        }
 
-            # Licenca
-            if($licenca){
-                $mensagem = 'Servidor em licença '.$pessoal->get_licenca($idservidor);
-            }
+        # Licenca
+        if($licenca){
+            $mensagem[] = 'Servidor em licença '.$pessoal->get_licenca($idservidor);
+        }
+
+        # Situação
+        if($situacao <> 1){
+            $mensagem[] = $pessoal->get_motivo($idservidor);
+        }
+
+        # Folga TRE
+        if($folgaTre){
+            $mensagem[] = 'Folga TRE';
+        }
+
+        # Afastamento TRE
+        if($afastadoTre){
+            $mensagem[] = 'Prestando serviço ao TRE';
+        }
+
+        # Cedido
+        if(!is_null($cedido)){
+            $mensagem[] = 'Servidor Cedido a(o) '.$cedido;
+        }
+        
+        ##### Ocorrências
+        
+        $ocorrencia = new Checkup();
+        
+        # Define as rotinas a serem verificadas
+        $rotinas = array("get_motoristaCarteiraVencida",
+                         "get_motoristaSemDataCarteira",
+                         "get_motoristaSemCarteira",
+                         "get_estatutarioSemCargo",
+                         "get_servidorCom74",
+                         "get_servidorComMais75",
+                         "get_servidorComPerfilOutros",
+                         "get_servidorTecnicoEstatutarioSemConcurso",
+                         "get_servidorProfessorEstatutarioSemConcurso",
+                         "get_cargoComissaoNomeacaoIgualExoneracao",
+                         "get_servidorCom10MesesLicencaSemVencimento",
+                         "get_servidorComMaisde1AnoLicencaSemVencimento",
+                         "get_servidorSemIdFuncional",
+                         "get_servidorSemDtNasc",
+                         "get_servidorCedidoLotacaoErrada");
+        
+        # Percorre as rotinas e preenche as mensagens 
+        foreach ($rotinas as $rr) {
+            $texto = $ocorrencia->$rr($idservidor);
             
-            # Situação
-            if($situacao <> 1){
-                $mensagem = $pessoal->get_motivo($idservidor);
+            # Verifica se texto não é nullo e acrecenta as mensagens
+            if(!is_null($texto)){
+                $mensagem[] = $texto;
             }
-            
-            # Folga TRE
-            if($folgaTre){
-                $mensagem = 'Folga TRE';
-            }
-            
-            # Afastamento TRE
-            if($afastadoTre){
-                $mensagem = 'Prestando serviço ao TRE';
-            }
-            
+        }
+        
+        $qtdMensagem = count($mensagem);
+        $contador = 1;
+        
+        ##### Exibe a mensagem
+        if($qtdMensagem > 0){
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -775,13 +820,27 @@ class Grh
             # Exibe a mensagem
             $callout = new Callout('warning');
             $callout->abre();
-                p($mensagem);
+            
+            # Percorre o array 
+            foreach ($mensagem as $mm) {
+                echo $mm;
+                if($contador < $qtdMensagem){
+                    br();
+                    $contador++;
+                }
+            }
+            
             $callout->fecha();
             
             $grid->fechaColuna();
             $grid->fechaGrid();  
-        } 
-
+        }
+        
+        
+       /* 
+        
+        
+                        
         # Verifica pendencia de motorista com carteira vencida no sistema grh
         $perfil = $pessoal->get_perfil($idservidor);
         $cargo = $pessoal->get_cargo($idservidor);
@@ -808,6 +867,7 @@ class Grh
                 }
             }
         }
+        */
     }
     
     ###########################################################

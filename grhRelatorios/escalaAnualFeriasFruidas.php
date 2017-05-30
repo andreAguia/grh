@@ -31,6 +31,9 @@ if($acesso)
     # Pega o ano exercicio quando vem da área de férias
     $parametroAnoExercicio = get("parametroAnoExercicio");
     
+    # Pega a lotação quando vem da área de férias
+    $lotacaoArea = get("lotacaoArea");
+    
     if(is_null($parametroAnoExercicio)){
         $anoBase = $anoBaseRel;
     }else{
@@ -50,11 +53,18 @@ if($acesso)
                      tbferias.folha,
                      month(tbferias.dtInicial)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
-                                     JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
+                                     JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
                  AND tbferias.status = "fruída"
                  AND anoExercicio = '.$anoBase.'
-            ORDER BY month(tbferias.dtInicial), tbservidor.idServidor';
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    if(!is_null($lotacaoArea)){
+        $select .= ' AND tbhistlot.lotacao = '.$lotacaoArea;
+    }
+    
+    $select .= ' ORDER BY month(tbferias.dtInicial), tbservidor.idServidor';
 
     $result = $servidor->select($select);
 

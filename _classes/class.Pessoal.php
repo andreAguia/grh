@@ -426,7 +426,7 @@ class Pessoal extends Bd
 
     /**
      * M�todo get_idlotacao
-     * Informa o id da lota��o atual do servidor
+     * Informa o id da lotação atual do servidor
      *
      * @param	string $idServidor  id do servidor
      */
@@ -796,6 +796,28 @@ class Pessoal extends Bd
             return 0;
         else 
             return 1;
+    }
+    
+    ##########################################################################################
+    
+    function emCessao($idServidor)
+
+
+    # Função que informa se o servidor está cedido para outro órgão
+    #
+    # Par�metro: a matr�cula a ser pesquisada
+
+    {
+        # Monta o select		
+        $select = "SELECT orgao 
+                     FROM tbhistcessao
+                    WHERE idServidor = '$idServidor'
+                      AND current_date() >= dtInicio
+                      AND (isNull(dtFim) OR current_date() <= dtFim)";
+
+        $row = parent::select($select,FALSE);
+        return $row[0];		
+
     }
 
     ##########################################################################################

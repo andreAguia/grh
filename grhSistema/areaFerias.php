@@ -170,6 +170,7 @@ if($acesso)
                     $menu->add_item('linkWindow','Escala Anual de Férias','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php?lotacaoArea='.$parametroLotacao);
                 }
                 
+                $menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php?parametroAnoExercicio='.$parametroAnoExercicio.'&lotacaoArea='.$parametroLotacao);
                 #$menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
                 #$menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');
                 #$menu->add_item('linkWindow','Escala Mensal de Férias Fruídas','../grhRelatorios/escalaMensalFeriasFruidas.php');

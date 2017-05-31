@@ -24,22 +24,13 @@ if($acesso)
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
-
-    # Pega os parâmetros dos relatórios
-    $anoBaseRel = post('anoBase',date('Y'));
     
     # Pega o ano exercicio quando vem da área de férias
-    $parametroAnoExercicio = get("parametroAnoExercicio");
+    $anoBase = get("parametroAnoExercicio",date('Y'));
     
     # Pega a lotação quando vem da área de férias
     $lotacaoArea = get("lotacaoArea");
     
-    if(is_null($parametroAnoExercicio)){
-        $anoBase = $anoBaseRel;
-    }else{
-        $anoBase = $parametroAnoExercicio;
-    }
-
     ######
     
     $select ='SELECT tbservidor.idfuncional,        
@@ -60,11 +51,12 @@ if($acesso)
                  AND tbferias.status = "fruída"
                  AND anoExercicio = '.$anoBase.'
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    
     if(!is_null($lotacaoArea)){
         $select .= ' AND tbhistlot.lotacao = '.$lotacaoArea;
     }
     
-    $select .= ' ORDER BY month(tbferias.dtInicial), tbservidor.idServidor';
+    $select .= ' ORDER BY month(tbferias.dtInicial), tbferias.dtInicial';
 
     $result = $servidor->select($select);
 
@@ -73,37 +65,20 @@ if($acesso)
     $relatorio->set_tituloLinha2($anoBase);
     
     if(!is_null($lotacaoArea)){
-        $relatorio->set_tituloLinha3($servidor->get_lotacao($lotacaoArea));
+        $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($lotacaoArea));
     }
     
-    $relatorio->set_subtitulo('Agrupados por Mês - Ordenados por Matrícula');
+    $relatorio->set_subtitulo('Agrupados por Mês - Ordenados por Data');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Folha','Mês'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL,"get_nomeMes"));
-     $relatorio->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,"get_feriasPeriodo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(9);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
-
-    if(is_null($parametroAnoExercicio))
-    {
-    $relatorio->set_formCampos(array(
-                               array ('nome' => 'anoBase',
-                                      'label' => 'Ano Base:',
-                                      'tipo' => 'texto',
-                                      'size' => 4,
-                                      'title' => 'Ano',
-                                      'padrao' => $anoBase,
-                                      'col' => 3,
-                                      'linha' => 1)));
-
-    $relatorio->set_formFocus('anoBase');
-    $relatorio->set_formLink('?');
-    }
     $relatorio->show();
 
     $page->terminaPagina();

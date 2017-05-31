@@ -78,7 +78,7 @@ class listaFerias
      * @syntax $ListaFerias->set_lotacao($idLotacao]);  
      */
     
-        # Força a ser nulo mesno quando for ""
+        # Força a ser nulo mesmo quando for ""
         if(vazio($idLotacao)){
             $idLotacao = NULL;
         }

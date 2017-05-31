@@ -9,7 +9,7 @@
 $idUsuario = NULL;
 
 # Configuração
-include ("_config.php");
+include("_config.php");
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
@@ -22,7 +22,7 @@ if($acesso)
     
     # Verifica a fase do programa
     $fase = get('fase','listar');
-
+    
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
@@ -33,17 +33,15 @@ if($acesso)
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
-
+    
     # Ordem da tabela
     $orderCampo = get('orderCampo');
     $orderTipo = get('orderTipo');
-
-    # Começa uma nova página
+    
     # Começa uma nova página
     $page = new Page();
     if($fase == "grafico"){
@@ -157,14 +155,6 @@ if($acesso)
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
 
-    # Pega os dados da combo de responsáveis
-    $responsavel = new Pessoal();
-    $result = $responsavel->select('SELECT matricula, 
-                                           nome
-                                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     WHERE tbservidor.situacao = 1
-                                  ORDER BY nome');
-
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
@@ -230,7 +220,7 @@ if($acesso)
                'label' => 'Observação:',
                'tipo' => 'textarea',
                'size' => array(80,5))));
-
+    
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
        

@@ -138,15 +138,6 @@ if($acesso){
     $grid->fechaGrid();
     $div->fecha();
     
-    # Exibe o arquivo e gaveta físicos da pasta do servidor
-    $arquivoGaveta = $pessoal->get_arquivoGaveta($idServidorPesquisado);
-    if(!is_null($arquivoGaveta)){
-        $divGaveta = new Div("divGaveta");
-        $divGaveta->abre();
-        p($arquivoGaveta,"f18");
-        $divGaveta->fecha();
-    }
-    
     # Exibe os dados do Servidor
     Grh::listaDadosServidor($idServidorPesquisado);
     

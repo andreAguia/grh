@@ -31,6 +31,9 @@ if($acesso)
     # Pega o ano exercicio quando vem da área de férias
     $parametroAnoExercicio = get("parametroAnoExercicio");
     
+    # Pega a lotação quando vem da área de férias
+    $lotacaoArea = get("lotacaoArea");
+    
     if(is_null($parametroAnoExercicio)){
         $anoBase = $anoBaseRel;
     }else{
@@ -50,18 +53,30 @@ if($acesso)
                      tbferias.folha,
                      month(tbferias.dtInicial)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
-                                     JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
+                                     JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
                  AND tbferias.status = "solicitada"
                  AND anoExercicio = '.$anoBase.'
-            ORDER BY month(tbferias.dtInicial), tbservidor.idServidor';
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    if(!is_null($lotacaoArea)){
+        $select .= ' AND tbhistlot.lotacao = '.$lotacaoArea;
+    }
+
+    $select .= ' ORDER BY month(tbferias.dtInicial), tbferias.dtInicial';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Escala Anual de Férias Solicitada');
     $relatorio->set_tituloLinha2($anoBase);
-    $relatorio->set_subtitulo('Agrupados por Mês - Ordenados por Matrícula');
+    
+    if(!is_null($lotacaoArea)){
+        $relatorio->set_tituloLinha3($servidor->get_lotacao($lotacaoArea));
+    }
+    
+    $relatorio->set_subtitulo('Agrupados por Mês - Ordenados por Data');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Folha','Mês'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));

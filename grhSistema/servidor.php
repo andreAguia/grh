@@ -220,7 +220,7 @@ if($acesso)
 
                 # Lista de Servidores Ativos
                 $lista = new listaServidores('Servidores');
-                if($parametroNomeMat <> NULL){
+                if(!is_null($parametroNomeMat)){
                     $lista->set_matNomeId($parametroNomeMat);
                 }
                 

@@ -26,17 +26,11 @@ if($acesso)
     $page->iniciaPagina();
     
     # Pega os parâmetros dos relatórios
-    $lotacaoRel = post('lotacao',66);
+    #$lotacaoRel = post('lotacao',66);
     
     # Pega a lotação quando vem da área de férias
     $lotacaoArea = get("lotacaoArea");
     
-    if(is_null($lotacaoArea)){
-        $lotacao = $lotacaoRel;
-    }else{
-        $lotacao = $lotacaoArea;
-    }
-
     ######
     
     $select ='SELECT tbservidor.idFuncional,
@@ -53,7 +47,7 @@ if($acesso)
                WHERE tbservidor.situacao = 1
                  AND idPerfil = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                 AND tblotacao.idLotacao = '.$lotacao.'
+                 AND tblotacao.idLotacao = '.$lotacaoArea.'
             ORDER BY 8, tbpessoa.nome';
 
 
@@ -99,7 +93,7 @@ if($acesso)
             $relatorio->set_espacamento(1);
             break; 
     }
-    
+    /*
     # Pega os dados da combo lotacao
     $selectLot = $servidor->select('SELECT distinct idlotacao,
                                 concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
@@ -110,6 +104,7 @@ if($acesso)
                             AND idPerfil = 1
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        ORDER BY 2');
+    
     
     if(is_null($lotacaoArea)){
         $relatorio->set_formCampos(array(
@@ -127,6 +122,9 @@ if($acesso)
         $relatorio->set_formFocus('anoBase');
         $relatorio->set_formLink('?');
     }
+     * 
+     */
+    
     $relatorio->show();
     
     # Rodapé

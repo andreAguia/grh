@@ -65,6 +65,30 @@ if($acesso)
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar,"left");
 
+    # Resumo
+    $botaoResumo = new Link("Resumo","?fase=Resumo");
+    if(($fase == "")OR($fase == "Resumo"))
+    {
+        $botaoResumo->set_class('disabled button');
+    }else{
+        $botaoResumo->set_class('button');
+    }
+    $botaoResumo->set_title('Voltar a página anterior');
+    $botaoResumo->set_accessKey('R');
+    $menu1->add_link($botaoResumo,"right");
+    
+    # Detalhe
+    $botaoDetalhe = new Link("Detalhe","?fase=Detalhe");
+    if($fase == "Detalhe")
+    {
+        $botaoDetalhe->set_class('disabled button');
+    }else{
+        $botaoDetalhe->set_class('button');
+    }
+    $botaoDetalhe->set_title('Voltar a página anterior');
+    $botaoDetalhe->set_accessKey('D');
+    $menu1->add_link($botaoDetalhe,"right");
+
     $menu1->show();
     
     # Título
@@ -117,20 +141,23 @@ if($acesso)
     
     switch ($fase)
     {
-        case "" : 
+        case "" :
+        case "Resumo" :
+        case "Detalhe" :    
             # lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);
-            
-            # por dias
-            $lista1 = new listaFerias($parametroAnoExercicio);
-            $lista1->set_lotacao($parametroLotacao);
-            $lista1->showResumo();
-            
-            # por status
-            $lista1 = new listaFerias($parametroAnoExercicio);
-            $lista1->set_lotacao($parametroLotacao);
-            $lista1->showResumoStatus();
+
+            if($fase == "Detalhe"){
+                $lista1 = new listaFerias($parametroAnoExercicio);
+                $lista1->set_lotacao($parametroLotacao);
+                $lista1->showResumoStatus();
+            }else{
+                # Resumo geral ou da lotação
+                $lista1 = new listaFerias($parametroAnoExercicio);
+                $lista1->set_lotacao($parametroLotacao);
+                $lista1->showResumo();
+            }
             
             # Relatórios
             if(!vazio($parametroLotacao)){
@@ -182,9 +209,12 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
             
-            $lista1->showResumoServidor();
-            $lista1->showDetalheServidor();
-                        
+            if($fase == "Detalhe"){
+                $lista1->showDetalheServidor();
+            }else{
+                $lista1->showResumoServidor();
+            }
+            
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;

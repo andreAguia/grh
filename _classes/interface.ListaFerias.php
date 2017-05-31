@@ -227,7 +227,7 @@ class listaFerias
         if($totalServidores > 0){
             
             $tabela = new Tabela();
-            $tabela->set_titulo("Resumo por Servidor Ativos");
+            $tabela->set_titulo("Resumo");
             $tabela->set_label(array("Id","Servidor","Cargo","Lotação","Admissão","Dias"));
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
             $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_lotacaoSimples"));
@@ -294,7 +294,7 @@ class listaFerias
         $result = $servidor->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Detalhe das Férias dos Servidores Ativos');
+        $tabela->set_titulo('Detalhe');
         $tabela->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
         $tabela->set_align(array("center","left","left"));
         $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));

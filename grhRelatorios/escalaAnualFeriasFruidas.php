@@ -71,6 +71,11 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Escala Anual de Férias Fruídas');
     $relatorio->set_tituloLinha2($anoBase);
+    
+    if(!is_null($lotacaoArea)){
+        $relatorio->set_tituloLinha3($servidor->get_lotacao($lotacaoArea));
+    }
+    
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados por Matrícula');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Folha','Mês'));

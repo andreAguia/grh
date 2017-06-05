@@ -84,11 +84,7 @@ class Grh
         br();
 
         $tamanhoImage = 60;
-        if(Verifica::acesso($idUsuario,1)){
-            $menu = new MenuGrafico(5);
-        }else{
-            $menu = new MenuGrafico(4);
-        }
+        $menu = new MenuGrafico(4);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
@@ -153,14 +149,6 @@ class Grh
         $botao->set_title('Cadastro de Tipos de Licenças');
         $botao->set_accesskey('b');
         $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Férias');
-        $botao->set_url('areaferias.php');
-        $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área de Férias');
-        $botao->set_accesskey('F');
-        $menu->add_item($botao);
 
         $menu->show();
         $grid->fechaColuna();
@@ -178,13 +166,36 @@ class Grh
         $divAlertas->fecha();
         
         $grid->fechaColuna();
-        br();        
+        br();
+        
+        ##########################################################
+            
+        # Área Especial
+        #$grid = new Grid();
+        $grid->abreColuna(12,6,3);
+            
+            titulo('Área Especial');
+            br();
+            $tamanhoImage = 60;
+            $menu = new MenuGrafico(2);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Férias');
+            $botao->set_url('areaferias.php');
+            $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Área de Férias');
+            $botao->set_accesskey('F');
+            $menu->add_item($botao);
+            $menu->show();
+        
+        $grid->fechaColuna();        
+        
         ##########################################################
             
         # Legislação
         #$grid = new Grid();
         $grid->abreColuna(12,6,4);
-
+            
             titulo('Legislação');
             br();
             $menu = new Menu();
@@ -200,7 +211,7 @@ class Grh
         ##########################################################
         
         # links externos
-        $grid->abreColuna(12,12,8);
+        $grid->abreColuna(12,6,5);
             titulo('Links Externos');
             br();
             
@@ -251,7 +262,7 @@ class Grh
         
         # Tabelas Secundárias
         if(Verifica::acesso($idUsuario,1)){
-            $grid->abreColuna(12,12);            
+            $grid->abreColuna(12,6,12);            
 
                 $tamanhoImage = 50;
                 titulo('Tabelas Secundárias'); 

@@ -25,13 +25,14 @@ if($acesso)
     $page = new Page();			
     $page->iniciaPagina();
     
-    # Pega os parâmetros dos relatórios
-    $anoBase = post('anoBase',date('Y'));
+     # Pega o ano exercicio quando vem da área de férias
+    $anoBase = get("parametroAnoExercicio",date('Y'));
     
     # Relatório 1
     $select = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       SUM(tbferias.numDias),
+                      tbservidor.idServidor,
                       tbservidor.idServidor
                  FROM tbferias JOIN tbservidor USING (idServidor)
                                JOIN tbpessoa USING (idPessoa)
@@ -59,30 +60,17 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Total de Férias Fruídas, Confirmadas ou Solicitadas');
-    $relatorio->set_tituloLinha2('Exercício: '.$anoBase);
+    $relatorio->set_titulo('Resumo Anual de Férias');
+    $relatorio->set_tituloLinha2($anoBase);
     $relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
-    $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
+    $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Cargo","Lotação"));
     #$relatorio->set_width(array(10,45,10,35));
-    $relatorio->set_align(array("center","left",NULL,"left"));
-    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
+    $relatorio->set_align(array("center","left",NULL,"left","left"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacaoSimples"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
     $relatorio->set_dataImpressao(FALSE);
-
-    $relatorio->set_formCampos(array(
-                               array ('nome' => 'anoBase',
-                                      'label' => 'Ano Base:',
-                                      'tipo' => 'texto',
-                                      'size' => 4,
-                                      'title' => 'Ano',
-                                      'onChange' => 'formPadrao.submit();',
-                                      'padrao' => $anoBase,
-                                      'col' => 3,
-                                      'autofocus' => TRUE,
-                                      'linha' => 1)));
-    $relatorio->set_formLink('?');
     $relatorio->show();
 
     ### Relatório 2
@@ -90,8 +78,9 @@ if($acesso)
     $select2 = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       "Férias Não Solicitadas",
+                      tbservidor.idServidor,
                       tbservidor.idServidor
-                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
+                 FROM tbservidor JOIN tbpessoa USING(idpessoa)
                 WHERE tbservidor.situacao = 1
                   AND tbservidor.idServidor NOT IN(
                SELECT tbservidor.idServidor
@@ -107,11 +96,11 @@ if($acesso)
     $relatorio2->set_titulo('');
     #$relatorio->set_tituloLinha2('Exercício: '.$anoBase);
     #$relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
-    $relatorio2->set_label(array("Id Funcional","Nome","Dias de férias","Lotação"));
+    $relatorio2->set_label(array("Id Funcional","Nome","Dias de férias","Cargo","Lotação"));
     $relatorio2->set_width(array(10,45,10,35));
-    $relatorio2->set_align(array("center","left",NULL,"left"));
-    $relatorio2->set_classe(array(NULL,NULL,NULL,"pessoal"));
-    $relatorio2->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
+    $relatorio2->set_align(array("center","left",NULL,"left","left"));
+    $relatorio2->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
+    $relatorio2->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacaoSimples"));
     $relatorio2->set_conteudo($result2);
     $relatorio2->set_cabecalhoRelatorio(FALSE);
     $relatorio2->set_menuRelatorio(FALSE);

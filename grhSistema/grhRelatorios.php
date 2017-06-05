@@ -75,7 +75,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Diárias','?fase=diarias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Estatutários','?fase=estatutarios','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Faltas','?fase=faltas','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
+                #$menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença','?fase=licenca','','','divMenuRelatorioGrh');
@@ -200,12 +200,7 @@ if($acesso)
             $menu->add_item('titulo','Férias');
             $menu->add_item('linkWindow','Escala Anual de Férias UENF','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php');
             $menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
-            $menu->add_item('linkWindow','Escala Anual de Férias Fruídas','../grhRelatorios/escalaAnualFeriasFruidas.php');
-            $menu->add_item('linkWindow','Escala Anual de Férias Solicitadas','../grhRelatorios/escalaAnualFeriasSolicitadas.php');
-            $menu->add_item('linkWindow','Escala Anual de Férias Confirmadas','../grhRelatorios/escalaAnualFeriasConfirmadas.php');
-            $menu->add_item('linkWindow','Escala Mensal de Férias Fruídas','../grhRelatorios/escalaMensalFeriasFruidas.php');
-            $menu->add_item('linkWindow','Escala Mensal de Férias Solicitadas','../grhRelatorios/escalaMensalFeriasSolicitadas.php');
-            $menu->add_item('linkWindow','Escala Mensal de Férias Confirmadas','../grhRelatorios/escalaMensalFeriasConfirmadas.php');
+            
             $menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
             $menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação','../grhRelatorios/escalaMensalFeriasGeralPorLotacao.php');
             $menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação - Assinatura','../grhRelatorios/escalaMensalFeriasGeralPorLotacaoComAssinatura.php');

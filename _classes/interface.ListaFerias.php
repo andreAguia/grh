@@ -51,15 +51,13 @@ class listaFerias
     public function __call ($metodo, $parametros)
     {
         ## Se for set, atribui um valor para a propriedade
-        if (substr($metodo, 0, 3) == 'set')
-        {
+        if (substr($metodo, 0, 3) == 'set'){
             $var = substr($metodo, 4);
             $this->$var = $parametros[0];
         }
 
         # Se for Get, retorna o valor da propriedade
-        if (substr($metodo, 0, 3) == 'get')
-        {
+        if (substr($metodo, 0, 3) == 'get'){
             $var = substr($metodo, 4);
             return $this->$var;
         }
@@ -80,6 +78,11 @@ class listaFerias
     
         # Força a ser nulo mesmo quando for ""
         if(vazio($idLotacao)){
+            $idLotacao = NULL;
+        }
+        
+        # Transforma em nulo a máscara *
+        if($idLotacao == "*"){
             $idLotacao = NULL;
         }
         
@@ -228,13 +231,13 @@ class listaFerias
             
             $tabela = new Tabela();
             $tabela->set_titulo("Resumo");
-            $tabela->set_label(array("Id","Servidor","Cargo","Lotação","Admissão","Dias"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_lotacaoSimples"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+            $tabela->set_label(array("Id","Servidor","Lotação","Admissão","Dias"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,"get_cargo","get_lotacaoSimples"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
             $tabela->set_align(array("center","left","left"));
             $tabela->set_idCampo('idServidor');
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
                                                     'valor' => 30,
                                                     'operador' => '>',
                                                     'id' => 'problemas')));
@@ -395,7 +398,6 @@ class listaFerias
         $select1 = "(SELECT tbservidor.idFuncional,
                             tbpessoa.nome,
                             tbservidor.idServidor,
-                            tbservidor.idServidor,
                             tbservidor.dtAdmissao,
                             sum(numDias) as soma
                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
@@ -416,7 +418,7 @@ class listaFerias
               AND anoExercicio = $this->anoExercicio
               AND situacao = 1 
          GROUP BY tbpessoa.nome
-         ORDER BY 6 desc,tbpessoa.nome)";
+         ORDER BY soma desc,tbpessoa.nome)";
         
         # Pega os dados do banco
         $retorno = $servidor->select($select1,TRUE);
@@ -481,7 +483,6 @@ class listaFerias
         
         $select2 = "SELECT tbservidor.idFuncional,
                            tbpessoa.nome,
-                           tbservidor.idServidor,
                            tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-'

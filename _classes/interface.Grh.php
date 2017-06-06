@@ -834,7 +834,7 @@ class Grh
             
             # Percorre o array 
             foreach ($mensagem as $mm) {
-                echo $mm;
+                echo "- ".$mm;
                 if($contador < $qtdMensagem){
                     br();
                     $contador++;

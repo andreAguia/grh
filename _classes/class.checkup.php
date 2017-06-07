@@ -1509,5 +1509,75 @@ class Checkup
         }
     }
     
+    ##########################################################
+    
+     /**
+     * Método get_servidorEstatutarioSemCargo
+     * 
+     * Servidor cedido que não está lotado na reitoria cedidos
+     */
+    
+    public function get_servidorEstatutarioSemCargo($idServidor = NULL) {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                    WHERE (idCargo IS NULL OR idCargo = 0)
+                      AND situacao = 1
+                      AND idPerfil = 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
+        $align = array('center','center','left','center','left');
+        $titulo = 'Servidor estatutário sem cargo cadastrado no sistema';
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
+        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
+        #$funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
     ###########################################################
 }

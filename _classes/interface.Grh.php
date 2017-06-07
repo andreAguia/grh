@@ -807,7 +807,8 @@ class Grh
                          "get_servidorComMaisde1AnoLicencaSemVencimento",
                          "get_servidorSemIdFuncional",
                          "get_servidorSemDtNasc",
-                         "get_servidorCedidoLotacaoErrada");
+                         "get_servidorCedidoLotacaoErrada",
+                         "get_servidorEstatutarioSemCargo");
         
         # Percorre as rotinas e preenche as mensagens 
         foreach ($rotinas as $rr) {

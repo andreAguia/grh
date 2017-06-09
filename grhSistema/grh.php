@@ -38,7 +38,7 @@ if($acesso)
     }
      
     # Menu
-    if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas')){       
+    if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes')){       
         p(SISTEMA,'grhTitulo');
         p("Versão: ".VERSAO,"versao");
     
@@ -72,10 +72,9 @@ if($acesso)
 	$menu1->add_link($linkArea,"right");        
         
         # Sobre
-        $linkSobre = new Link("Sobre");
+        $linkSobre = new Link("Sobre","?fase=sobre");
         $linkSobre->set_class('success button');
         $linkSobre->set_title('Exibe informações do Sistema');
-        $linkSobre->set_onClick("abreFechaDivId('divSobre');");
         $menu1->add_link($linkSobre,"right");
 
         $menu1->show();
@@ -83,27 +82,6 @@ if($acesso)
         $grid->fechaColuna();
         $grid->fechaGrid();
     }
-    
-##################################################################
-    
-    # Sobre
-    $div = new Div("divSobre");
-    $div->abre();
-    
-    $painel2 = new Callout();
-    $painel2->set_title('Sobre o Sistema');
-    #$painel2->set_botaoFechar(TRUE);
-    $painel2->abre();
-   
-    p(SISTEMA,'grhTitulo');
-    p('Versão: '.VERSAO.'<br/>Atualizado em: '.ATUALIZACAO,'versao');
-    
-    p(SETOR,'grhSetor');
-    p('Desenvolvedor: '.AUTOR,'versao');
-    p(EMAILAUTOR,'versao');
-   
-    $painel2 ->fecha();
-    $div->fecha();
     
 ##################################################################
     
@@ -170,6 +148,98 @@ if($acesso)
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+            
+##################################################################
+            
+        case "sobre" :
+
+            # Limita o tamanho da tela
+            br(3);
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+            
+            # Cria um menu
+            $menu2 = new MenuBar();
+            
+            $painel2 = new Callout();
+            $painel2->set_title('Sobre o Sistema');
+            #$painel2->set_botaoFechar(TRUE);
+            $painel2->abre();
+            
+            br();
+            p(SISTEMA,'grhTitulo');
+            p('Versão: '.VERSAO.'<br/>Atualizado em: '.ATUALIZACAO,'versao');
+
+            br();
+            p('Desenvolvedor: '.AUTOR,'versao');
+            p(EMAILAUTOR,'versao');
+            
+            # detalhes
+            $linkFecha = new Link("Detalhes","?fase=atualizacoes");
+            $linkFecha->set_class('button');
+            $linkFecha->set_title('Exibe os detalhes das atualizações');
+            $menu2->add_link($linkFecha,"left");
+            
+            # ok
+            $linkFecha = new Link("Ok","?");
+            $linkFecha->set_class('button');
+            $linkFecha->set_title('fecha esta janela');
+            $menu2->add_link($linkFecha,"right");
+            $menu2->show();
+            
+            $painel2 ->fecha();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            break;
+            
+##################################################################
+        
+        case "atualizacoes" :
+            
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # botão voltar
+            botaoVoltar("?","Voltar","Volta ao Menu principal");
+            
+            # Título
+            titulo("Detalhes das Atualizações");
+            #p("Detalhes das Atualizações","center","f16");
+            br();
+            
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            
+            # Pega os dados 
+            $atualizacoes = $intra->get_atualizacoes();
+            
+            # Percorre os dados
+            foreach ($atualizacoes as $valor) {
+                
+                p("Versão:".$valor[0],"f16");
+                p(date_to_php($valor[1]),"right","f10");
+                
+                $painel3 = new Callout();
+                $painel3->set_title('Alterações');
+                $painel3->abre();
+                    p("<pre>".$valor[2]."</pre>");
+                $painel3 ->fecha();
+                hr();
+            }
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+##################################################################
+        
+
     }
 
     $page->terminaPagina();

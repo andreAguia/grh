@@ -324,14 +324,11 @@ class listaServidores
         $classe = array(NULL,NULL,NULL,"pessoal");
         $metodo = array(NULL,NULL,NULL,"get_Cargo");
         
-        # Pega a lista com o limit da tabulação
-        titulo($this->nomeLista);
-        #echo $this->select;
-        
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select.$this->selectPaginacao,TRUE);
         
         if($this->totReg == 0){
+            tituloTable($this->nomeLista);
             br();
             $callout = new Callout();
             $callout->abre();
@@ -341,6 +338,7 @@ class listaServidores
             # Monta a tabela
             $tabela = new Tabela();
             
+            $tabela->set_titulo($this->nomeLista);
             $tabela->set_conteudo($conteudo);
             $tabela->set_label($label);
             #$tabela->set_width($width);

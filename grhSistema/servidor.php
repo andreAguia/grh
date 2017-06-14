@@ -114,14 +114,14 @@ if($acesso)
             $form = new Form('?');
 
                 # Nome ou Matrícula
-                $controle = new Input('parametroNomeMat','texto','Nome, matrícula ou IdFuncional:',1);
+                $controle = new Input('parametroNomeMat','texto','Nome, Mat. ou Id:',1);
                 $controle->set_size(55);
                 $controle->set_title('Nome, matrícula ou ID:');
                 $controle->set_valor($parametroNomeMat);
                 $controle->set_autofocus(TRUE);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(4);
+                $controle->set_col(2);
                 $form->add_item($controle);
 
                 # Situação
@@ -142,19 +142,20 @@ if($acesso)
 
                 # Cargos
                 $result = $pessoal->select('SELECT tbcargo.idCargo,
-                                                   concat(tbtipocargo.cargo," - ",tbcargo.nome)
-                                              FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)                              
-                                          ORDER BY 2,1');
+                                               concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome)
+                                          FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                       LEFT JOIN tbarea USING (idTipoCargo)
+                                      ORDER BY 2');
                 array_unshift($result,array('*','-- Todos --'));
 
-                $controle = new Input('parametroCargo','combo','Cargo:',1);
+                $controle = new Input('parametroCargo','combo','Cargo - Área - Função:',1);
                 $controle->set_size(30);
                 $controle->set_title('Filtra por Cargo');
                 $controle->set_array($result);
                 $controle->set_valor($parametroCargo);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(6);
+                $controle->set_col(8);
                 $form->add_item($controle);
 
                 # Cargos em Comissão

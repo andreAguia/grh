@@ -144,7 +144,7 @@ if($acesso)
                 $result = $pessoal->select('SELECT tbcargo.idCargo,
                                                concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome)
                                           FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                                       LEFT JOIN tbarea USING (idTipoCargo)
+                                                       LEFT JOIN tbarea USING (idArea)
                                       ORDER BY 2');
                 array_unshift($result,array('*','-- Todos --'));
 

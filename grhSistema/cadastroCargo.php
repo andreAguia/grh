@@ -88,6 +88,7 @@ if($acesso)
                                 WHERE nome LIKE "%'.$parametro.'%"
                                    OR idCargo LIKE "%'.$parametro.'%" 
                                    OR tbarea.area LIKE "%'.$parametro.'%" 
+                                   OR nome LIKE "%'.$parametro.'%"     
                                    OR tbtipocargo.cargo LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 

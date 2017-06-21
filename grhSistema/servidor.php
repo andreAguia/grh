@@ -121,7 +121,7 @@ if($acesso)
                 $controle->set_autofocus(TRUE);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(2);
+                $controle->set_col(3);
                 $form->add_item($controle);
 
                 # Situação
@@ -155,7 +155,7 @@ if($acesso)
                 $controle->set_valor($parametroCargo);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(8);
+                $controle->set_col(7);
                 $form->add_item($controle);
 
                 # Cargos em Comissão

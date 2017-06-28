@@ -285,7 +285,6 @@ class listaFerias
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                WHERE anoExercicio = '.$this->anoExercicio.'
-                 AND tbservidor.situacao = 1  
                  AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
         
             if(!is_null($this->lotacao)){
@@ -297,7 +296,7 @@ class listaFerias
         $result = $servidor->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Detalhe');
+        $tabela->set_titulo('Por Solicitação (Servidorea Ativos e Inativos)');
         $tabela->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
         $tabela->set_align(array("center","left","left"));
         $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));

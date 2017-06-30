@@ -831,8 +831,8 @@ class Pessoal extends Bd
 
     {
             # Monta o select		
-            $select = "SELECT tbTipoLicenca.nome 
-                         FROM tblicenca JOIN tbTipoLicenca ON (tblicenca.idTpLicenca = tbTipoLicenca.idTpLicenca)
+            $select = "SELECT tbtipolicenca.nome 
+                         FROM tblicenca JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
                         WHERE idServidor = '$idServidor'
                           AND current_date() >= dtInicial 
                           AND current_date() <= ADDDATE(dtInicial,numDias-1)";

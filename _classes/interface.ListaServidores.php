@@ -7,7 +7,7 @@
  * @author Alat
  */
 
-class listaServidores
+class ListaServidores
 {    
     
     # Título

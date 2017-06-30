@@ -315,13 +315,13 @@ if($acesso)
             
             if($subFase == 1){   
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores Ativos - Cargo: '.$pessoal->get_nomeCargo($id));       
+                $lista = new ListaServidores('Servidores Ativos - Cargo: '.$pessoal->get_nomeCargo($id));       
                 $lista->set_situacao(1);
                 $lista->set_cargo($id);
                 $lista->showTabela();
             }else{   
                 # Lista de Servidores Inativos
-                $lista = new listaServidores('Servidores Inativos - Cargo: '.$pessoal->get_nomeCargo($id));       
+                $lista = new ListaServidores('Servidores Inativos - Cargo: '.$pessoal->get_nomeCargo($id));       
                 $lista->set_situacao(1);
                 $lista->set_situacaoSinal("<>");
                 $lista->set_cargo($id);
@@ -335,13 +335,13 @@ if($acesso)
         case "relatorio" :
             if($subFase == 1){   
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores Ativos');       
+                $lista = new ListaServidores('Servidores Ativos');       
                 $lista->set_situacao(1);
                 $lista->set_cargo($id);
                 $lista->showRelatorio();
             }else{   
                 # Lista de Servidores Inativos
-                $lista = new listaServidores('Servidores Inativos');       
+                $lista = new ListaServidores('Servidores Inativos');       
                 $lista->set_situacao(1);
                 $lista->set_situacaoSinal("<>");
                 $lista->set_cargo($id);

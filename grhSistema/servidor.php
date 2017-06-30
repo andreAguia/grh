@@ -220,7 +220,7 @@ if($acesso)
                 $form->show();
 
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores');
+                $lista = new ListaServidores('Servidores');
                 if(!is_null($parametroNomeMat)){
                     $lista->set_matNomeId($parametroNomeMat);
                 }
@@ -271,7 +271,7 @@ if($acesso)
         # Cria um relatório com a seleção atual
         case "relatorio" :
             # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores');
+            $lista = new ListaServidores('Servidores');
             if($parametroNomeMat <> NULL){
                 $lista->set_matNomeId($parametroNomeMat);
             }

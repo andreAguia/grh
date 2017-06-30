@@ -350,7 +350,7 @@ if($acesso)
             br();
             
             # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores Ativos');
+            $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);
             $lista->set_lotacao($id);            
             $lista->showTabela();

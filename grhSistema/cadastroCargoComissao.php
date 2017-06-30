@@ -304,7 +304,7 @@ if($acesso)
             $simbolo = $pessoal->get_cargoComissaoSimbolo($id);
             
             # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores Ativos no Cargo de '.$nomeCargo.' ('.$simbolo.')');
+            $lista = new ListaServidores('Servidores Ativos no Cargo de '.$nomeCargo.' ('.$simbolo.')');
             $lista->set_situacao(1);
             $lista->set_cargoComissao($nomeCargo);
             $lista->showTabela();
@@ -357,7 +357,7 @@ if($acesso)
             $nomeCargo = $pessoal->get_nomeCargoComissao($id);
             
             # Lista de Servidores Ativos
-            $lista = new listaServidores('Servidores Ativos');
+            $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);
             $lista->set_cargoComissao($nomeCargo);
             $lista->showRelatorio();

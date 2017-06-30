@@ -301,14 +301,14 @@ if($acesso)
             
             if($subFase == 1){           
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores Ativos - Perfil: '.$pessoal->get_perfilNome($id));
+                $lista = new ListaServidores('Servidores Ativos - Perfil: '.$pessoal->get_perfilNome($id));
                 $lista->set_situacao(1);
                 $lista->set_perfil($id);   
                 $lista->set_relatorio(TRUE);   
                 $lista->showTabela();
             }else{            
                 # Lista de Servidores Inativos
-                $lista = new listaServidores('Servidores Inativos - Perfil: '.$pessoal->get_perfilNome($id));
+                $lista = new ListaServidores('Servidores Inativos - Perfil: '.$pessoal->get_perfilNome($id));
                 $lista->set_situacao(1);
                 $lista->set_situacaoSinal("<>");
                 $lista->set_perfil($id);            
@@ -322,13 +322,13 @@ if($acesso)
         case "relatorio" :
             if($subFase == 1){        
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores Ativos');
+                $lista = new ListaServidores('Servidores Ativos');
                 $lista->set_situacao(1);
                 $lista->set_perfil($id);    
                 $lista->showRelatorio();
             }else{            
                 # Lista de Servidores Inativos
-                $lista = new listaServidores('Servidores Inativos');
+                $lista = new ListaServidores('Servidores Inativos');
                 $lista->set_situacao(1);
                 $lista->set_situacaoSinal("<>");
                 $lista->set_perfil($id);            

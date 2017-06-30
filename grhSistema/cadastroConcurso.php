@@ -267,13 +267,13 @@ if($acesso)
 
             if($subFase == 1){
 	            # Lista de Servidores Ativos
-	            $lista = new listaServidores('Servidores Estatutários Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+	            $lista = new ListaServidores('Servidores Estatutários Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
 	            $lista->set_situacao(1);				
 	            $lista->set_concurso($id);            
 	            $lista->showTabela();
             }else{
 	            # Lista de Servidores Inativos
-	            $lista = new listaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+	            $lista = new ListaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
 	            $lista->set_situacao(1);				
 	            $lista->set_situacaoSinal("<>");
 	            $lista->set_concurso($id);            
@@ -287,13 +287,13 @@ if($acesso)
 		case "relatorio" :
             if($subFase == 1){        
                 # Lista de Servidores Ativos
-                $lista = new listaServidores('Servidores Ativos');
+                $lista = new ListaServidores('Servidores Ativos');
                 $lista->set_situacao(1);				
 	            $lista->set_concurso($id);   
                 $lista->showRelatorio();
             }else{            
                 # Lista de Servidores Inativos
-                $lista = new listaServidores('Servidores Inativos');
+                $lista = new ListaServidores('Servidores Inativos');
                	$lista->set_situacao(1);				
 	            $lista->set_situacaoSinal("<>");
 	            $lista->set_concurso($id);         

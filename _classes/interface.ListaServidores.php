@@ -101,7 +101,7 @@ class listaServidores
     private function prepara()
     {
         # Pega o time inicial
-        $this->time_start = microtime(TRUE);
+        #$this->time_start = microtime(TRUE);
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();

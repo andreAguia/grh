@@ -103,7 +103,7 @@ class Grh
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Cargo e Função');
+        $botao->set_label('Cargo Efetivo');
         $botao->set_url('cadastroCargo.php');
         $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Funções');

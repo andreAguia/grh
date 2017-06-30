@@ -21,7 +21,7 @@ if($acesso)
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase','inicial');
+    $fase = get('fase');
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -118,7 +118,6 @@ if($acesso)
     switch ($fase)
     {
         case "" : 
-        case "inicial" : 
             # lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);

@@ -78,15 +78,13 @@ class listaServidores
     public function __call ($metodo, $parametros)
     {
         ## Se for set, atribui um valor para a propriedade
-        if (substr($metodo, 0, 3) == 'set')
-        {
+        if (substr($metodo, 0, 3) == 'set'){
             $var = substr($metodo, 4);
             $this->$var = $parametros[0];
         }
 
         # Se for Get, retorna o valor da propriedade
-        if (substr($metodo, 0, 3) == 'get')
-        {
+        if (substr($metodo, 0, 3) == 'get'){
             $var = substr($metodo, 4);
             return $this->$var;
         }
@@ -307,8 +305,7 @@ class listaServidores
      * Exibe a Tabela
      *
      */	
-    public function showTabela()
-    {
+    public function showTabela(){
 
         # Executa rotina interna
         $this->prepara();
@@ -318,7 +315,7 @@ class listaServidores
         
         # Dados da Tabela
         $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
-        $width = array(5,5,15,16,15,8,8,5,5);
+        #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
         $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
         $classe = array(NULL,NULL,NULL,"pessoal");

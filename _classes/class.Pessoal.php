@@ -825,7 +825,7 @@ class Pessoal extends Bd
     function get_licenca($idServidor)
 
 
-    # Fun��o que informa licenca de uma matr�cula
+    # Fun��o que informa licenca de uma matrícula
     #
     # Par�metro: a matr�cula a ser pesquisada
 

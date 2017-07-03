@@ -1,79 +1,44 @@
 <?php
-/**
- * Exibe uma lista detalhada dos servidores
- * 
- * esta classe foi criada devido a sua grande (re)usabilidade
- * 
- * @author Alat
- */
-
-class listaFerias
-{    
-    # Parâmetros de Pesquisa    
+class ListaFerias
+{
+ /**
+  * Exibe várias informações em forma de listas sobre as férias dos servidores
+  * 
+  * @author André Águia (Alat) - alataguia@gmail.com
+  * 
+  * @var private $anoExercicio   integer NULL O Ano de exercícios das férias
+  * @var private $lotacao        integer NULL O id da lotação. Quando NULL exibe de todas a universidade
+  * @var private $permiteEditar  boolean TRUE Indica se terá botão para acessar informções dos servidores
+  */
+    
     private $anoExercicio = NULL;
-    private $lotacao = NULL;    
-    
-    # Parâmetro de edição
-    private $permiteEditar = TRUE;          # Indica se terá botão para acessar informções dos servidores
-    
-    # Outros
-    private $totReg = 0;     # total de registros encontrados
+    private $lotacao = NULL;
+    private $permiteEditar = TRUE;
     
     ###########################################################
-                
-    /**
-     * método construtor
-     * inicia um Formulário
-     * 
-     * @param  $name    = nome da classe e do id para estilo
-     */
     
     public function __construct($ano){
+                
+    /**
+     * Inicia a classe atribuindo um valor ao anoExercicio
+     * 
+     * @param $anoExercicio integer NULL O Ano de exercícios das férias
+     */    
+    
         $this->anoExercicio = $ano;
     }
-    
-    ###########################################################
-
-    /**
-    * Métodos get e set construídos de forma automática pelo 
-    * metodo mágico __call.
-    * Esse método cria um set e um get para todas as propriedades da classe.
-    * Um método existente tem prioridade sobre os métodos criados pelo __call.
-    * 
-    * O formato dos métodos devem ser:
-    * 	set_propriedade
-    * 	get_propriedade
-    * 
-    * @param 	$metodo		O nome do metodo
-    * @param 	$parametros	Os parâmetros inseridos  
-    */
-    
-    public function __call ($metodo, $parametros)
-    {
-        ## Se for set, atribui um valor para a propriedade
-        if (substr($metodo, 0, 3) == 'set'){
-            $var = substr($metodo, 4);
-            $this->$var = $parametros[0];
-        }
-
-        # Se for Get, retorna o valor da propriedade
-        if (substr($metodo, 0, 3) == 'get'){
-            $var = substr($metodo, 4);
-            return $this->$var;
-        }
-    }
-    
+        
     ###########################################################
     
     public function set_lotacao($idLotacao = NULL){
     /**
-     * Informa a lotação dos servidore s cujas ferias serão exibidas
+     * Informa a lotação dos servidores cujas ferias serão exibidas
      * 
      * @param $idLotacao integer NULL o idLotacão da lotação a ser exibida as férias
      * 
      * @note Quando o $idLotacao não é informado será exibido de todas as lotações.
      * 
-     * @syntax $ListaFerias->set_lotacao($idLotacao]);  
+     * @syntax $ListaFerias->set_lotacao([$idLotacao]);  
      */
     
         # Força a ser nulo mesmo quando for ""
@@ -90,14 +55,16 @@ class listaFerias
     }
     
     ###########################################################
+    
+    public function showResumoPorDia(){
    
     /**
-     * Método showResumo
+     * Informa os totais de servidores que solicitaram férias por total de dias solicitados
      * 
-     * Exibe a Tabela
+     * @syntax $ListaFerias->showResumoPorDia();  
      *
      */	
-    public function showResumo(){
+    
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
@@ -135,7 +102,7 @@ class listaFerias
         $tabela->set_label(array("Nº de Servidores","Total de Dias"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo("Por Dia");
+        $tabela->set_titulo("Resumo Por Dia");
         $tabela->set_rodape("Total de Servidores: ".$totalServidores);
         $tabela->show();
     }
@@ -362,8 +329,7 @@ class listaFerias
                                        LEFT JOIN tbferias USING (idServidor)
                                             JOIN tbhistlot USING (idServidor)
                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE anoExercicio = $this->anoExercicio
-                          AND situacao = 1 
+                        WHERE anoExercicio = $this->anoExercicio                          
                           AND tbferias.status <> 'cancelada'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -404,7 +370,6 @@ class listaFerias
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND tbservidor.situacao = 1  
                        ";
         
         # Verifica se tem filtro por lotação
@@ -447,7 +412,7 @@ class listaFerias
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND tbservidor.situacao = 1  ";
+                        ";
         
         # Verifica se tem filtro por lotação
         if(!is_null($this->lotacao)){  // senão verifica o da classe

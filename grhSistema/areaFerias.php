@@ -21,7 +21,7 @@ if($acesso)
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase');
+    $fase = get('fase','porDia');
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -64,6 +64,20 @@ if($acesso)
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar,"left");
+    
+    # Agrupado por dia
+    $botaoVoltar = new Link("por Dia","?fase=porDia");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Lista de servidores agrupados por total de dias fruídos / Solicitados');
+    $botaoVoltar->set_accessKey('D');
+    $menu1->add_link($botaoVoltar,"right");
+    
+    # Por Solicitação
+    $botaoVoltar = new Link("por Solicitação","?fase=porSolicitacao");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Lista de solicitações de férias');
+    $botaoVoltar->set_accessKey('S');
+    $menu1->add_link($botaoVoltar,"right");
 
     $menu1->show();
     
@@ -118,6 +132,8 @@ if($acesso)
     switch ($fase)
     {
         case "" : 
+        case "porDia" :
+        case "porSolicitacao" :      
             # lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);
@@ -125,7 +141,7 @@ if($acesso)
             # por dias
             $lista1 = new listaFerias($parametroAnoExercicio);
             $lista1->set_lotacao($parametroLotacao);
-            $lista1->showResumo();
+            $lista1->showResumoPorDia();
             
             # por status
             $lista1 = new listaFerias($parametroAnoExercicio);
@@ -168,8 +184,11 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
             
-            $lista1->showResumoServidor();
-            $lista1->showDetalheServidor();
+            if($fase == "porDia"){
+                $lista1->showResumoServidor();
+            }else{
+                $lista1->showDetalheServidor();
+            }
                         
             $grid2->fechaColuna();
             $grid2->fechaGrid();

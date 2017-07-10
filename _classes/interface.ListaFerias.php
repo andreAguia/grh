@@ -56,6 +56,42 @@ class ListaFerias
     
     ###########################################################
     
+    public function showResumoGeral(){
+   
+    /**
+     * Informa os totais de servidores do setor com ou sem férias
+     * 
+     * @syntax $ListaFerias->showResumoGeral();  
+     *
+     */	        
+        # Servidores desse setor que solicitaram férias
+        $servset1 = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
+        $totalServidores1 = count($servset1);
+        
+        # Servidores desse setor que NÃO solicitaram férias
+        $semFerias = array();                           // Array dos servidores sem férias    
+        $servset2 = $this->getServidoresSemFerias();    // Os que não pediram férias
+        $totalServidores2 = count($servset2);
+        $semFerias[] = array("Solicitaram",$totalServidores1);
+        $semFerias[] = array("Não Solicitaram",$totalServidores2);
+        $totalServidores3 = $totalServidores1 + $totalServidores2;
+        
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($semFerias);
+        $tabela->set_label(array("Descrição","Nº de Servidores"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array("center"));
+        $tabela->set_titulo("Resumo Geral");
+        $tabela->set_rodape("Total de Servidores: ".$totalServidores3);
+        $tabela->show();
+        
+        # Coloca no array para exibição o número de servidores sem ferias
+        
+    }
+    
+    ###########################################################
+       
     public function showResumoPorDia(){
    
     /**
@@ -63,11 +99,7 @@ class ListaFerias
      * 
      * @syntax $ListaFerias->showResumoPorDia();  
      *
-     */	
-    
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-        
+     */	        
         # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
         $diasTotais = $this->getDiasFerias(); 
         
@@ -87,46 +119,40 @@ class ListaFerias
             }
         }
         
-        # Exibe os servidores desse setor
-        $servset1 = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
-        $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
-        $servset3 = array_merge_recursive($servset1,$servset2); // Funta os dois
-        $totalServidores = count($servset3);                    // Conta o número de servidores
+        # Exibe os servidores desse setor que solicitaram férias
+        $servset = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
+        $totalServidores = count($servset);                    // Conta o número de servidores
         
-        # Coloca no array para exibição o número de servidores sem ferias
-        $conta[] = array(count($servset2),0);
-        
-        # Monta a tabela de Resumo.
+        # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conta);
-        $tabela->set_label(array("Nº de Servidores","Total de Dias"));
+        $tabela->set_label(array("Dias","Servidores"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo("Resumo Por Dia");
+        $tabela->set_titulo("Servidores Por Dia");
         $tabela->set_rodape("Total de Servidores: ".$totalServidores);
-        $tabela->show();
+        $tabela->show();        
     }
     
     ###########################################################
    
     /**
-     * Método showResumoStatus
+     * Método showResumoPorStatus
      * 
      * Exibe a Tabela
      *
      */	
-    public function showResumoStatus(){
+    public function showResumoPorStatus(){
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
         # Pega os dados
-        $select = "SELECT count(*) as tot,
-                          status
+        $select = "SELECT status,
+                          count(*) as tot                          
                      FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                    JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE anoExercicio = $this->anoExercicio
-                      AND tbservidor.situacao = 1    
                       AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
                         
                 if(!is_null($this->lotacao)){
@@ -143,30 +169,27 @@ class ListaFerias
             $soma += $value['tot'];
         }
         
-        # Monta a tabela de Resumo.
+        # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($resumo);
-        $tabela->set_label(array("Nº de Servidores","Status"));
+        $tabela->set_label(array("Status","Solicitações"));
         $tabela->set_totalRegistro(FALSE);
-        $tabela->set_rodape("Total de Servidores: ".$soma);
+        $tabela->set_rodape("Total de Solicitações: ".$soma);
         $tabela->set_align(array("center"));
         $tabela->set_funcao(array(NULL,"exibeDescricaoStatus"));
-        $tabela->set_titulo("Por Status");
+        $tabela->set_titulo("Solicitações Por Status");
         $tabela->show();
     }
     
     ###########################################################
    
     /**
-     * Método showResumoServidor
+     * Método showPorDia
      * 
      * Exibe um resumo geral das férias por lotação
      *
      */	
-    public function showResumoServidor(){
-        
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
+    public function showPorDia(){
         
         # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
         $diasTotais = $this->getDiasFerias(); 
@@ -197,7 +220,7 @@ class ListaFerias
         if($totalServidores > 0){
             
             $tabela = new Tabela();
-            $tabela->set_titulo("Resumo");
+            $tabela->set_titulo("Por Dia");
             $tabela->set_label(array("Id","Servidor","Lotação","Admissão","Dias"));
             $tabela->set_classe(array(NULL,NULL,"pessoal"));
             $tabela->set_metodo(array(NULL,"get_cargo","get_lotacaoSimples"));
@@ -228,12 +251,12 @@ class ListaFerias
     ###########################################################
    
     /**
-     * Método showDetalheServidor
+     * Método showPorSolicitacao
      * 
      * Exibe as férias detalhadas dos servidores da lotação 
      *
      */	
-    public function showDetalheServidor(){
+    public function showPorSolicitacao(){
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -263,7 +286,7 @@ class ListaFerias
         $result = $servidor->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Por Solicitação (Servidorea Ativos e Inativos)');
+        $tabela->set_titulo('Por Solicitação');
         $tabela->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
         $tabela->set_align(array("center","left","left"));
         $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
@@ -292,7 +315,6 @@ class ListaFerias
                      JOIN tbhistlot USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE anoExercicio = $this->anoExercicio
-                      AND situacao = 1 
                       AND tbferias.status <> 'cancelada'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
         
@@ -342,7 +364,7 @@ class ListaFerias
                      HAVING soma = $valor[0]
                      ORDER BY 1";
             $num = $servidor->count($slctot);
-            $conta[] = array($num,$valor[0]);            
+            $conta[] = array($valor[0],$num);            
         }
         
         return $conta;
@@ -380,8 +402,7 @@ class ListaFerias
         $select1 .= "
               AND tbferias.status <> 'cancelada'
               AND anoExercicio = $this->anoExercicio
-              AND situacao = 1 
-         GROUP BY tbpessoa.nome
+        GROUP BY tbpessoa.nome
          ORDER BY soma desc,tbpessoa.nome)";
         
         # Pega os dados do banco

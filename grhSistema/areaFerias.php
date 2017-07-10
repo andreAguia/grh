@@ -138,15 +138,16 @@ if($acesso)
             $grid2 = new Grid();
             $grid2->abreColuna(3);
             
-            # por dias
+            # geral
             $lista1 = new listaFerias($parametroAnoExercicio);
             $lista1->set_lotacao($parametroLotacao);
+            $lista1->showResumoGeral();
+            
+            # por dias
             $lista1->showResumoPorDia();
             
             # por status
-            $lista1 = new listaFerias($parametroAnoExercicio);
-            $lista1->set_lotacao($parametroLotacao);
-            $lista1->showResumoStatus();
+            $lista1->showResumoPorStatus();
             
             # Relatórios
             $menu = new Menu();
@@ -185,9 +186,9 @@ if($acesso)
             $grid2->abreColuna(9);
             
             if($fase == "porDia"){
-                $lista1->showResumoServidor();
+                $lista1->showPorDia();
             }else{
-                $lista1->showDetalheServidor();
+                $lista1->showPorSolicitacao();
             }
                         
             $grid2->fechaColuna();

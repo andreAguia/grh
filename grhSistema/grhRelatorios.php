@@ -71,6 +71,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Cargos','?fase=cargos','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cedidos','?fase=cedidos','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Dependentes & Auxílio Creche','?fase=dependentes','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Diárias','?fase=diarias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Estatutários','?fase=estatutarios','','','divMenuRelatorioGrh'); 
@@ -80,11 +81,11 @@ if($acesso)
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença','?fase=licenca','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','SigFis','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
-                $menu->add_item('linkAjax','Nacionalidade','?fase=nacionalidade','','','divMenuRelatorioGrh'); 
                 $menu->show();
             $callout->fecha();
             $divMenu2->fecha();
@@ -303,7 +304,7 @@ if($acesso)
             $menu->add_item('linkWindow','Estatutários Agrupados pela Lotação','../grhRelatorios/estatutariosLotacao.php'); 
             $menu->add_item('linkWindow','Estatutários Agrupados pelo Cargo','../grhRelatorios/estatutariosCargo.php'); 
             $menu->add_item('linkWindow','Estatutários Com CPF e Data de Nascimento','../grhRelatorios/estatutariosCpfNascimento.php'); 
-
+            
             $menu->show();
             break;  
         
@@ -336,6 +337,18 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
             $menu->show();
             break;
+        
+        ######################################
+
+        case "professores";        
+            $menu = new Menu();
+            $menu->add_item('titulo','Professores');
+            $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
+            $menu->add_item('linkWindow','Relatório de Professores Com Data de Nascimento e Sexo','../grhRelatorios/professorIdadeSexo.php'); 
+            $menu->show();
+            break;
+
+        ######################################
     }
     
     $page->terminaPagina();

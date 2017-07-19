@@ -68,7 +68,8 @@ if($acesso)
                 $menu = new Menu();
                 $menu->add_item('titulo','Categorias de Relatórios');
                 $menu->add_item('linkAjax','Atestado','?fase=atestado','','','divMenuRelatorioGrh');  
-                $menu->add_item('linkAjax','Cargos','?fase=cargos','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Cargo Efetivo','?fase=cargoEfetivo','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Cargo Em Comissão','?fase=cargoEmComissao','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cedidos','?fase=cedidos','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
@@ -122,11 +123,20 @@ if($acesso)
 
         ######################################
 
-        case "cargos";        
+        case "cargoEfetivo";        
             $menu = new Menu();
             $menu->add_item('titulo','Cargos');
             $menu->add_item('linkWindow','Relatório de Cargos - Agrupados por Nível','../grhRelatorios/cargoNivel.php');
-            $menu->add_item('linkWindow','Relatório de Estatutários','../grhRelatorios/cargoEstatutarios.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários - Por Cargo','../grhRelatorios/cargoEstatutarios.php');
+            
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "cargoEmComissao";        
+            $menu = new Menu();
+            $menu->add_item('titulo','Cargos');
             $menu->add_item('linkWindow','Relatório dos Cargos em Comissão','../grhRelatorios/cargoComissao.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo','../grhRelatorios/cargosComissionados.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Histórico','../grhRelatorios/cargosComissionadosHistorico.php');

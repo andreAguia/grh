@@ -1517,12 +1517,14 @@ class Pessoal extends Bd
                 return $id;
             else
             {
-                $select = 'SELECT nome
+                $select = 'SELECT nome,
+                                  DIR,
+                                  GER
                              FROM tblotacao
                             WHERE idLotacao = '.$id;
 
                 $row = parent::select($select,FALSE);
-                return $row[0];
+                return $row[0].' - '.$row[1].'/'.$row[2];
             }
 
     }

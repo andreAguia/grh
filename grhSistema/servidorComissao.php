@@ -72,8 +72,8 @@ if($acesso)
     }
 
     # select da lista
-    $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
-                                     concat(tbcomissao.descricao," ",if(protempore = 1,"<span class=\'label success\'>pro tempore</span>","")) as descCargo,
+    $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")",if(protempore = 1," <span class=\'label success\'>pro tempore</span>","")) as comissao,
+                                     idLotacao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao
@@ -84,7 +84,7 @@ if($acesso)
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
-                                     descricao,
+                                     idLotacao,
                                      protempore,
                                      dtNom,
                                      numProcNom,
@@ -113,10 +113,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Nome Completo do Cargo","Data de Nomeação","Data de Exoneração"));
+    $objeto->set_label(array("Cargo","Setor","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
     $objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php"));
+    $objeto->set_classe(array(NULL,"pessoal"));
+    $objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -154,6 +156,16 @@ if($acesso)
      
     $quantidadeCargos = count($novaLista);          // pega a quantidade de cargos vagos
     array_unshift($novaLista, array(NULL,NULL));       // adiciona o valor de nulo
+    
+    # combo lotacao
+    $selectLotacao = 'SELECT idlotacao, 
+                             concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+                        FROM tblotacao 
+                       WHERE ativo
+                    ORDER BY lotacao';
+    
+    $result = $pessoal->select($selectLotacao);
+    array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
         
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -166,13 +178,14 @@ if($acesso)
                                        'col' => 4,
                                        'title' => 'Tipo dp Cargo em Comissão',
                                        'linha' => 1),
-                               array ( 'nome' => 'descricao',                                   
-                                       'label' => 'Nome Completo do Cargo:',
-                                       'tipo' => 'texto',
+                               array ( 'nome' => 'idLotacao',                                   
+                                       'label' => 'Setor:',
+                                       'tipo' => 'combo',
+                                       'array' => $result,
                                        'required' => TRUE,
                                        'size' => 80,
                                        'col' => 6,
-                                       'title' => 'Descrição do Cargo. Pode-se usar a Lotação.',
+                                       'title' => 'Setor de onde o cargo é vinculado.',
                                        'linha' => 1),
                                array ( 'nome' => 'protempore',
                                        'label' => 'Pro Tempore:',

@@ -28,7 +28,6 @@ class ListaServidores
     
     # Outros
     private $totReg = 0;     # total de registros encontrados
-    private $time_start = 0; # Contador de segundos gastos na pesquisa
     
     # Parâmetros da paginação da listagem
     private $paginacao = FALSE;			# Flag que indica se terá ou não paginação na lista
@@ -306,6 +305,9 @@ class ListaServidores
      *
      */	
     public function showTabela(){
+        
+        # Pega o time inicial
+        $time_start = microtime(TRUE);
 
         # Executa rotina interna
         $this->prepara();
@@ -364,8 +366,8 @@ class ListaServidores
             $time_end = microtime(TRUE);
             
             # Calcula e exibe o tempo
-            $time = $time_end - $this->time_start;
-            p(number_format($time, 4, '.', ',')." segundos","right","f10");
+            $time = $time_end - $time_start;
+            p(number_format($time, 4, '.', ',')." segundos","right","f10");   
         }
     }
     

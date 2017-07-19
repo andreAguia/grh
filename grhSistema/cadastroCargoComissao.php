@@ -312,8 +312,6 @@ if($acesso)
             #---------------------            
             # Histórico do cargo
             #---------------------
-			
-            titulo('Histórico');
             
             # select
             $select ='SELECT distinct tbservidor.idFuncional,
@@ -338,7 +336,7 @@ if($acesso)
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
-            #$tabela->set_width($width);
+            $tabela->set_titulo("Histórico");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_formatacaoCondicional(array( array('coluna' => 4,

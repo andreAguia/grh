@@ -268,7 +268,16 @@ class Grh
                 titulo('Tabelas Secundárias'); 
                 br();
 
-                $menu = new MenuGrafico(9);   
+                $menu = new MenuGrafico(10);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Cargo em Comissão');
+                $botao->set_url("especialCargoComissao.php");
+                #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
+                $botao->set_image(PASTA_FIGURAS.'comissao.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Área Especial de Cargo em Comissão');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');

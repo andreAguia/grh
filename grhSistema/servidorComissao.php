@@ -54,7 +54,7 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-        $orderCampo = "3";
+        $orderCampo = "4";
 
     if(is_null($orderTipo))
         $orderTipo = 'desc';
@@ -72,19 +72,25 @@ if($acesso)
     }
 
     # select da lista
-    $objeto->set_selectLista('SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")",if(protempore = 1," <span class=\'label success\'>pro tempore</span>","")) as comissao,
-                                     idLotacao,
+    $objeto->set_selectLista('SELECT CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")",if(protempore = 1," <span class=\'label success\'>pro tempore</span>","")) as comissao,
+                                     CONCAT(
+                                        IF(ISNULL(tblotacao.UADM),"",CONCAT(tblotacao.UADM," - ")), 
+                                        IF(ISNULL(tblotacao.DIR),"",CONCAT(tblotacao.DIR,"/")),
+                                        IF(ISNULL(tblotacao.GER),"",CONCAT(tblotacao.GER," ")),
+                                        IF(ISNULL(tbcomissao.descricao),"",tbcomissao.descricao)
+                                     ),
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao
-                                FROM tbcomissao, tbtipocomissao
-                               WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
-                                 AND idServidor = '.$idServidorPesquisado.'
+                                FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                                                LEFT JOIN tblotacao USING (idLotacao)
+                               WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
                                      idLotacao,
+                                     descricao,
                                      protempore,
                                      dtNom,
                                      numProcNom,
@@ -113,12 +119,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Setor","Data de Nomeação","Data de Exoneração"));
+    $objeto->set_label(array("Cargo","Setor ou Descrição","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
     $objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php"));
-    $objeto->set_classe(array(NULL,"pessoal"));
-    $objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
+    #$objeto->set_classe(array(NULL,"pessoal"));
+    #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -182,11 +188,17 @@ if($acesso)
                                        'label' => 'Setor:',
                                        'tipo' => 'combo',
                                        'array' => $result,
-                                       'required' => TRUE,
                                        'size' => 80,
-                                       'col' => 6,
-                                       'title' => 'Setor de onde o cargo é vinculado.',
+                                       'col' => 8,
+                                       'title' => 'Setor de onde o cargo é vinculado.&#013;Somente Preencha esse campo quando a lotação for importante para definição do cargo.&#013;Como Gerentes, Diretores, Chefes de laboratórios, etc',
                                        'linha' => 1),
+                                array ('linha' => 2,
+                                       'col' => 10,
+                                       'nome' => 'descricao',
+                                       'label' => 'Descrição do Cargo:',
+                                       'tipo' => 'texto',
+                                       'title' => 'Em alguns cargos é necessário uma descrição mais detalhada.&#013;Exemplo: Coordenador de curso.',
+                                       'size' => 50),
                                array ( 'nome' => 'protempore',
                                        'label' => 'Pro Tempore:',
                                        'tipo' => 'combo',
@@ -195,7 +207,7 @@ if($acesso)
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
-                                       'linha' => 1),
+                                       'linha' => 2),
                                array ( 'nome' => 'dtNom',
                                        'label' => 'Data da Nomeação:',
                                        'fieldset' => 'Dados da Nomeação',

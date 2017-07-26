@@ -35,11 +35,12 @@ if($acesso)
     $select ='SELECT distinct tbservidor.idFuncional,
                      tbservidor.matricula,
                      tbpessoa.nome,
+                     tbcomissao.idComissao,
+                     IF(protempore,"Sim",""),
                      tbcomissao.dtNom,
                      tbcomissao.dtExo,
                      concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
-                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
-                     tbcomissao.descricao
+                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
@@ -49,19 +50,19 @@ if($acesso)
 		$select .= ' AND tbtipocomissao.idTipoComissao = '.$cargo;
 	}
 			                    
-    $select .= ' ORDER BY 7, tbcomissao.descricao, 4 desc';
+    $select .= ' ORDER BY 9,4,6 desc';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Histórico de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados pelo Símbolo - Ordenados Cronologicamente');
-    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição'));
+    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Descrição/Lotação','Pro Tempore','Nomeação','Exoneração'));
     #$relatorio->set_width(array(10,10,30,15,15,20,0));
-    $relatorio->set_align(array("center","center","left","center","center","left"));
-    $relatorio->set_funcao(array(NULL,"dv",NULL,"date_to_php","date_to_php"));
+    $relatorio->set_align(array("center","center","left","left","center","center"));
+    $relatorio->set_funcao(array(NULL,"dv",NULL,"descricaoComissao",NULL,"date_to_php","date_to_php"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(6);
+    $relatorio->set_numGrupo(8);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

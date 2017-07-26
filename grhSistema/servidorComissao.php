@@ -72,18 +72,13 @@ if($acesso)
     }
 
     # select da lista
-    $objeto->set_selectLista('SELECT CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")",if(protempore = 1," <span class=\'label success\'>pro tempore</span>","")) as comissao,
-                                     CONCAT(
-                                        IF(ISNULL(tblotacao.UADM),"",CONCAT(tblotacao.UADM," - ")), 
-                                        IF(ISNULL(tblotacao.DIR),"",CONCAT(tblotacao.DIR,"/")),
-                                        IF(ISNULL(tblotacao.GER),"",CONCAT(tblotacao.GER," ")),
-                                        IF(ISNULL(tbcomissao.descricao),"",tbcomissao.descricao)
-                                     ),
+    $objeto->set_selectLista('SELECT CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
+                                     idComissao,
+                                     IF(protempore,"Sim",""),
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao
                                 FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
-                                                LEFT JOIN tblotacao USING (idLotacao)
                                WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
@@ -119,10 +114,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Setor ou Descrição","Data de Nomeação","Data de Exoneração"));
+    $objeto->set_label(array("Cargo","Setor ou Descrição","Pro Tempore","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array(NULL,"descricaoComissao",NULL,"date_to_php","date_to_php"));
     #$objeto->set_classe(array(NULL,"pessoal"));
     #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 

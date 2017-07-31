@@ -31,14 +31,14 @@ if($acesso)
     
     br();
     $select = "SELECT concat(tbtipocomissao.descricao,' - (',tbtipocomissao.simbolo,')') as comissao,
-                      concat(tbcomissao.descricao,' ',if(protempore = 1,'pro tempore','')) as descCargo,
-                        tbcomissao.dtNom,
-                        tbcomissao.dtExo,
-                        idComissao
-                   FROM tbcomissao, tbtipocomissao
-                  WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
-                    AND idServidor = $idServidorPesquisado
-               ORDER BY 3 desc";
+                      idComissao,
+                      tbcomissao.dtNom,
+                      tbcomissao.dtExo,
+                      idComissao
+                 FROM tbcomissao, tbtipocomissao
+                WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
+                  AND idServidor = $idServidorPesquisado
+             ORDER BY 3 desc";
 
     $result = $pessoal->select($select);
 
@@ -47,10 +47,10 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Cargo","Nome Completo do Cargo","Data de Nomeação","Data de Exoneração"));
+    $relatorio->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array("left","left","center"));
-    $relatorio->set_funcao(array(NULL,NULL,"date_to_php","date_to_php"));
+    $relatorio->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
     #$relatorio->set_classe(array(NULL,"pessoal"));
     #$relatorio->set_metodo(array(NULL,"get_nomelotacao"));    
 

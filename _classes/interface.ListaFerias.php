@@ -176,7 +176,7 @@ class ListaFerias
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_rodape("Total de Solicitações: ".$soma);
         $tabela->set_align(array("center"));
-        $tabela->set_funcao(array(NULL,"exibeDescricaoStatus"));
+        $tabela->set_funcao(array("exibeDescricaoStatus"));
         $tabela->set_titulo("Solicitações Por Status");
         $tabela->show();
     }

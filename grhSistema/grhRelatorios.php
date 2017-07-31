@@ -239,13 +239,13 @@ if($acesso)
         case "geral";
             $menu = new Menu();
             $menu->add_item('titulo','Geral');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos','../grhRelatorios/geralServidoresAtivos.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoLotacao.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoCpf.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Assinatura','../grhRelatorios/geralServidoresAtivosAssinatura.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Check','../grhRelatorios/geralServidoresAtivosCheck.php');
-            $menu->add_item('linkWindow','Relatório Geral de Servidores - Agrupados por Lotação','../grhRelatorios/geralServidoresLotacao.php');
-            $menu->add_item('linkWindow','Relatório Geral de Servidores','../grhRelatorios/geralServidoresAtivos.php');
-            $menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos e Inativos - Agrupados por Lotação','../grhRelatorios/geralServidoresLotacao.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados','../grhRelatorios/geralServidoresAposentados.php');
             $menu->show();
             break;    
 
@@ -267,8 +267,10 @@ if($acesso)
         case "lotacao";
             $menu = new Menu();
             $menu->add_item('titulo','Lotação');
-            $menu->add_item('linkWindow','Relatório de Aniversariantes','../grhRelatorios/lotacaoAniversariantes.php');
-            $menu->add_item('linkWindow','Relatório de Servidores Ativos','../grhRelatorios/lotacaoServidoresAtivos.php');
+            $menu->add_item('linkWindow','Relatório de Lotações Ativas','../grhRelatorios/lotacao.php');
+            $menu->add_item('linkWindow','Relatório de Aniversariantes - Por Lotação','../grhRelatorios/lotacaoAniversariantes.php');
+            $menu->add_item('linkWindow','Relatório de Servidores Ativos - Por Lotação','../grhRelatorios/lotacaoServidoresAtivos.php');
+            #$menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
             $menu->show();
             break;    
 

@@ -49,7 +49,7 @@ if($acesso)
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Anual de Servidores Demitidos e Exonerados em '.$relatorioAno);
-    $relatorio->set_tituloLinha2('Demitidos da Fenorte');
+    $relatorio->set_tituloLinha2('Demitidos da UENF');
     $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
 
     $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Mês'));

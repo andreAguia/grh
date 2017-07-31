@@ -1,6 +1,6 @@
 <?php
 /**
- * Histórico de Cargos em Comissão
+ * Dados de Cargos em Comissão
  *  
  * By Alat
  */
@@ -54,7 +54,7 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-        $orderCampo = "4";
+        $orderCampo = "3";
 
     if(is_null($orderTipo))
         $orderTipo = 'desc';
@@ -74,17 +74,15 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista('SELECT CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
                                      idComissao,
-                                     IF(protempore,"Sim",""),
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao
                                 FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
                                WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY '.$orderCampo.' '.$orderTipo);
+                            ORDER BY 3 desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
-                                     idLotacao,
                                      descricao,
                                      protempore,
                                      dtNom,
@@ -103,9 +101,9 @@ if($acesso)
                                WHERE idComissao = '.$id);
 
     # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
+    #$objeto->set_orderCampo($orderCampo);
+    #$objeto->set_orderTipo($orderTipo);
+    #$objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -114,10 +112,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Setor ou Descrição","Pro Tempore","Data de Nomeação","Data de Exoneração"));
+    $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array(NULL,"descricaoComissao",NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
     #$objeto->set_classe(array(NULL,"pessoal"));
     #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 
@@ -159,14 +157,14 @@ if($acesso)
     array_unshift($novaLista, array(NULL,NULL));       // adiciona o valor de nulo
     
     # combo lotacao
-    $selectLotacao = 'SELECT idlotacao, 
-                             concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
-                        FROM tblotacao 
-                       WHERE ativo
-                    ORDER BY lotacao';
-    
-    $result = $pessoal->select($selectLotacao);
-    array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
+    #$selectLotacao = 'SELECT idlotacao, 
+    #                         concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+    #                    FROM tblotacao 
+    #                   WHERE ativo
+    #                ORDER BY lotacao';
+    # 
+    #$result = $pessoal->select($selectLotacao);
+    #array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
         
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -179,16 +177,8 @@ if($acesso)
                                        'col' => 4,
                                        'title' => 'Tipo dp Cargo em Comissão',
                                        'linha' => 1),
-                               array ( 'nome' => 'idLotacao',                                   
-                                       'label' => 'Setor:',
-                                       'tipo' => 'combo',
-                                       'array' => $result,
-                                       'size' => 80,
-                                       'col' => 8,
-                                       'title' => 'Setor de onde o cargo é vinculado.&#013;Somente Preencha esse campo quando a lotação for importante para definição do cargo.&#013;Como Gerentes, Diretores, Chefes de laboratórios, etc',
-                                       'linha' => 1),
-                                array ('linha' => 2,
-                                       'col' => 10,
+                                array ('linha' => 1,
+                                       'col' => 6,
                                        'nome' => 'descricao',
                                        'label' => 'Descrição do Cargo:',
                                        'tipo' => 'texto',
@@ -202,7 +192,7 @@ if($acesso)
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
-                                       'linha' => 2),
+                                       'linha' => 1),
                                array ( 'nome' => 'dtNom',
                                        'label' => 'Data da Nomeação:',
                                        'fieldset' => 'Dados da Nomeação',

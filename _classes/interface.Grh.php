@@ -357,7 +357,6 @@ class Grh
             $grid->fechaColuna();
         }
         $grid->fechaGrid();
-        br();
     }
         
 ##########################################################
@@ -805,7 +804,6 @@ class Grh
         $rotinas = array("get_motoristaCarteiraVencida",
                          "get_motoristaSemDataCarteira",
                          "get_motoristaSemCarteira",
-                         "get_estatutarioSemCargo",
                          "get_servidorCom74",
                          "get_servidorComMais75",
                          "get_servidorComPerfilOutros",

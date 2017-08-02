@@ -176,6 +176,10 @@ tr#problemas{
     background-color:#ffdcc3;
 }
 
+tr#faltando{
+    background-color:#e9fde9;
+}
+
 /*******************************************
  * Relatórios
  *******************************************/

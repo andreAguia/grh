@@ -230,7 +230,11 @@ class ListaFerias
             $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
                                                     'valor' => 30,
                                                     'operador' => '>',
-                                                    'id' => 'problemas')));
+                                                    'id' => 'problemas'),
+                                               array('coluna' => 4,
+                                                    'valor' => 30,
+                                                    'operador' => '<',
+                                                    'id' => 'faltando')));
             
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaServidorFerias&id=');

@@ -32,8 +32,10 @@ if($acesso)
                       tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.dtAdmissao,
-                      tbservidor.dtDemissao
+                      tbservidor.dtDemissao,
+                      tbcontatos.numero
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                 LEFT JOIN tbcontatos ON (tbservidor.idPessoa = tbcontatos.idPessoa)
                 WHERE YEAR(tbservidor.dtDemissao) = "'.$relatorioAno.'"
                   AND situacao = 2   
              ORDER BY dtDemissao';		
@@ -45,10 +47,10 @@ if($acesso)
     $relatorio->set_titulo('Relatório Anual de Servidores Aposentados em '.$relatorioAno);
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída'));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída','Contato'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-    $relatorio->set_align(array('center','left','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_align(array('center','left','left','center','center','left'));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
     
     $relatorio->set_classe(array(NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,"get_cargo"));

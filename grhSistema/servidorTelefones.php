@@ -149,9 +149,11 @@ if($acesso)
         case "listar" :
         case "editar" :			
         case "excluir" :	
-        case "gravar" :		
             $objeto->$fase($id);             
             break;
+        case "gravar" :
+                $objeto->gravar($id,'servidorTelefonesExtra.php'); 	
+                break;
     }
     $page->terminaPagina();
 }else{

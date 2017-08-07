@@ -242,13 +242,8 @@ class ListaFerias
                 $tabela->set_editarBotao("ver.png");
             }           
             
-            if(is_null($this->lotacao)){
-                $tabela->set_conteudo($servset1);
-                $tabela->show();
-            }else{
-                $tabela->set_conteudo($servset3);
-                $tabela->show();
-            }
+            $tabela->set_conteudo($servset3);
+            $tabela->show();
         }              
     }
     

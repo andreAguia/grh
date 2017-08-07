@@ -87,7 +87,7 @@ if($acesso)
     ################################################################
     
     # Formulário de Pesquisa
-    $form = new Form('?fase='.$fase);
+    $form = new Form('?fase='.substr($fase, 0, -1)); // retira o x da fase
 
     # anoExercicio                
     $anoExercicio = $pessoal->select('SELECT DISTINCT anoExercicio, anoExercicio FROM tbferias ORDER BY 1');
@@ -133,14 +133,34 @@ if($acesso)
     {
         case "" : 
         case "porDia" :
-        case "porSolicitacao" :      
-            # lateral
+        case "porSolicitacao" :
+            br(4);
+            aguarde();
+            br();
+            
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+                p("Aguarde...","center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase='.$fase.'x');
+            break;
+        
+        case "porDiax" :
+        case "porSolicitacaox" :
+        
             $grid2 = new Grid();
+            
+            # Área Lateral
             $grid2->abreColuna(3);
             
-            # geral
+            # Informa a classe com os parâmetros
             $lista1 = new listaFerias($parametroAnoExercicio);
             $lista1->set_lotacao($parametroLotacao);
+            
+            # resumo geral
             $lista1->showResumoGeral();
             
             # por dias
@@ -185,7 +205,7 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
             
-            if($fase == "porDia"){
+            if($fase == "porDiax"){
                 $lista1->showPorDia();
             }else{
                 $lista1->showPorSolicitacao();

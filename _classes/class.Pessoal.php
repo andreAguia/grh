@@ -1686,7 +1686,7 @@ class Pessoal extends Bd
      * Exibe o n�mero de servidores ativos em um determinado concurso
      */
 
-    public function get_servidoressituacao($id)
+    public function get_servidoresSituacao($id)
     {
         $select = 'SELECT idServidor                             
                      FROM tbservidor

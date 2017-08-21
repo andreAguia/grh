@@ -120,8 +120,14 @@ class ListaServidores
                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                                     LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
-                                    LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+                                    LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)';
+        
+        if(!is_null($this->cargoComissao)){
+            $select .= ' LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                         LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)';
+        }
+        
+        $select .= ' WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
         
         # Matrícula, nome ou id
         if(!is_null($this->matNomeId)){
@@ -164,7 +170,7 @@ class ListaServidores
         
         # cargo em comissão
         if(!is_null($this->cargoComissao)){
-            $select .= ' AND ((SELECT tbtipocomissao.descricao FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao) WHERE dtExo is NULL AND tbcomissao.idServidor = tbservidor.idServidor) = "'.$this->cargoComissao.'")';    
+            $select .= ' AND tbcomissao.dtExo is NULL AND tbtipocomissao.descricao = "'.$this->cargoComissao.'"';    
             $this->subTitulo .= "cargo em comissão: ".$this->cargoComissao."<br/>";
         }
         

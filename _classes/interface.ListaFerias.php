@@ -255,7 +255,7 @@ class ListaFerias
      * Exibe as férias detalhadas dos servidores da lotação 
      *
      */	
-    public function showPorSolicitacao(){
+    public function showPorSolicitacao($titulo = "Por Solicitação"){
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -285,7 +285,7 @@ class ListaFerias
         $result = $servidor->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Por Solicitação');
+        $tabela->set_titulo($titulo);
         $tabela->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
         $tabela->set_align(array("center","left","left"));
         $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));

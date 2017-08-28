@@ -84,7 +84,6 @@ if($acesso)
                                      numDias,
                                      folha,
                                      obs,
-                                     periodo,
                                      idServidor
                                 FROM tbferias
                                WHERE idFerias = '.$id);
@@ -175,13 +174,6 @@ if($acesso)
                                         'label' => 'Observação:',
                                         'tipo' => 'textarea',
                                         'size' => array(80,5)),
-                               array ( 'nome' => 'periodo',
-                                       'label' => 'Período:',
-                                       'tipo' => 'hidden',
-                                       'array' => array(' ','1º','2º','3º','Único'),
-                                       'size' => 20,
-                                       'title' => 'período de férias',
-                                       'linha' => 1), 
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
@@ -279,8 +271,7 @@ if($acesso)
                 $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
 
                 # Select das férias
-                $select = "SELECT periodo,
-                                  anoExercicio,
+                $select = "SELECT anoExercicio,
                                   DATE_FORMAT(dtInicial,'%d/%m/%Y'),
                                   numDias,
                                   DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal
@@ -321,8 +312,7 @@ if($acesso)
                 $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
 
                 # Select das férias
-                $select = "SELECT periodo,
-                                  anoExercicio,
+                $select = "SELECT anoExercicio,
                                   DATE_FORMAT(dtInicial,'%d/%m/%Y'),
                                   numDias,
                                   DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal

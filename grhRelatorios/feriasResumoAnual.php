@@ -25,8 +25,16 @@ if($acesso)
     $page = new Page();			
     $page->iniciaPagina();
     
-     # Pega o ano exercicio quando vem da área de férias
+    # Pega o ano exercicio quando vem da área de férias
     $anoBase = get("parametroAnoExercicio",date('Y'));
+    
+    # Pega a lotação quando vem da área de férias
+    $lotacaoArea = get("lotacaoArea");
+    
+    # Transforma em nulo a máscara *
+    if($lotacaoArea == "*"){
+        $lotacaoArea = NULL;
+    }
     
     # Relatório 1
     $select = 'SELECT tbservidor.idFuncional,
@@ -36,11 +44,19 @@ if($acesso)
                       tbservidor.idServidor
                  FROM tbferias JOIN tbservidor USING (idServidor)
                                JOIN tbpessoa USING (idPessoa)
-                WHERE tbservidor.situacao = 1                   
-                  AND anoExercicio = '.$anoBase.'
+                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                WHERE anoExercicio = '.$anoBase.'
                   AND tbferias.status <> "cancelada"
-                  GROUP BY 2
-                  ORDER BY 3,2';
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    
+    if(!is_null($lotacaoArea)){
+        $select .= ' AND tbhistlot.lotacao = '.$lotacaoArea;
+    }
+    
+    $select .= ' GROUP BY 2
+                 ORDER BY 3 desc, 2';
+    
     /*
     $select = 'SELECT tbservidor.idServidor,
                       tbservidor.idFuncional,
@@ -62,6 +78,9 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Resumo Anual de Férias');
     $relatorio->set_tituloLinha2($anoBase);
+    if(!is_null($lotacaoArea)){
+        $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($lotacaoArea));
+    }
     $relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
     $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Cargo","Lotação"));
     #$relatorio->set_width(array(10,45,10,35));
@@ -75,20 +94,38 @@ if($acesso)
 
     ### Relatório 2
 
-    $select2 = 'SELECT tbservidor.idFuncional,
-                      tbpessoa.nome,
-                      "Férias Não Solicitadas",
-                      tbservidor.idServidor,
-                      tbservidor.idServidor
-                 FROM tbservidor JOIN tbpessoa USING(idpessoa)
-                WHERE tbservidor.situacao = 1
-                  AND tbservidor.idServidor NOT IN(
-               SELECT tbservidor.idServidor
-                 FROM tbservidor JOIN tbferias ON (tbferias.idServidor = tbservidor.idServidor)
-                WHERE tbservidor.situacao = 1                   
-                  AND anoExercicio = '.$anoBase.'
-                  AND tbferias.status <> "cancelada")
-                  ORDER BY 2';
+    $select2 =  'SELECT tbservidor.idFuncional,
+                        tbpessoa.nome,
+                        "Servidores que Não Solicitaram Férias",
+                        tbservidor.idServidor,
+                        tbservidor.idServidor
+                   FROM tbservidor JOIN tbpessoa USING(idpessoa)
+                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                  WHERE tbservidor.situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    
+    if(!is_null($lotacaoArea)){
+        $select2 .= ' AND tbhistlot.lotacao = '.$lotacaoArea;
+    }
+    
+    $select2 .= '
+                    AND tbservidor.idServidor NOT IN(
+                 SELECT tbservidor.idServidor
+                   FROM tbservidor JOIN tbferias ON (tbferias.idServidor = tbservidor.idServidor)
+                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                  WHERE tbservidor.situacao = 1                   
+                    AND anoExercicio = '.$anoBase.'
+                    AND tbferias.status <> "cancelada"
+                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    
+    if(!is_null($lotacaoArea)){
+        $select2 .= ' AND tbhistlot.lotacao = '.$lotacaoArea;
+    }
+    
+    $select2 .= ')
+                    ORDER BY 2';
 
     $result2 = $servidor->select($select2);
 

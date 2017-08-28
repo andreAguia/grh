@@ -227,14 +227,19 @@ class ListaFerias
             $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
             $tabela->set_align(array("center","left","left"));
             $tabela->set_idCampo('idServidor');
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
-                                                    'valor' => 30,
-                                                    'operador' => '>',
-                                                    'id' => 'problemas'),
+            $tabela->set_formatacaoCondicional(array(
                                                array('coluna' => 4,
-                                                    'valor' => 30,
-                                                    'operador' => '<',
-                                                    'id' => 'faltando')));
+                                                     'valor' => 30,
+                                                     'operador' => '>',
+                                                     'id' => 'problemas'),
+                                               array('coluna' => 4,
+                                                     'valor' => 30,
+                                                     'operador' => '=',
+                                                     'id' => 'certo'),
+                                               array('coluna' => 4,
+                                                     'valor' => 30,
+                                                     'operador' => '<',
+                                                     'id' => 'faltando')));
             
             if($this->permiteEditar){
                 $tabela->set_editar('?fase=editaServidorFerias&id=');

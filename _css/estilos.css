@@ -177,7 +177,11 @@ tr#problemas{
 }
 
 tr#faltando{
-    background-color:#e9fde9;
+    background-color:#99ccff;
+}
+
+tr#certo{
+    background-color:#cccccc;
 }
 
 /*******************************************

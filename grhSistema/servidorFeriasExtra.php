@@ -7,8 +7,7 @@
 
 $exercicio = $campoValor[0];    // Ano exercício
 $dias = $campoValor[3];         // Dias solicitado
-$servidor = $campoValor[7];     // idServidor
-$periodo = NULL;    
+$servidor = $campoValor[6];     // idServidor
 
 # Conecta ao banco de dados
 $pessoal = new Pessoal();
@@ -44,5 +43,3 @@ switch ($diasFerias){
         }
         break;
 }
-
-$campoValor[6] = $periodo;

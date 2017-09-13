@@ -144,7 +144,7 @@ function exibeDescricaoStatus($status){
             break;
         
         case "fruida" :
-            $texto = "Férias Confirmadas em que a data de início já passou. O sistema habilita essas férias automáticamente";
+            $texto = "Férias já gozadas, desfrutadas. O sistema altera para fruídas todas as férias confirmadas em que a data de início já passou.";
             break;
         
         case "cancelada" :

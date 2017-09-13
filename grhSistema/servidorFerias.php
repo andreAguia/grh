@@ -139,7 +139,7 @@ if($acesso)
                                        'label' => 'Status:',
                                        'tipo' => 'combo',
                                        'required' => TRUE,
-                                       'array' => array('','solicitada','confirmada','fruida','cancelada'),
+                                       'array' => array('','solicitada','confirmada','fruída','cancelada'),
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Status das férias',

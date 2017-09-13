@@ -143,12 +143,8 @@ function exibeDescricaoStatus($status){
             $texto = "Férias Recebidas e verificadas oficialmente pelo GRH";
             break;
         
-        case "fruida" :
+        case "fruída" :
             $texto = "Férias já gozadas, desfrutadas. O sistema altera para fruídas todas as férias confirmadas em que a data de início já passou.";
-            break;
-        
-        case "cancelada" :
-            $texto = "Férias canceladas pelo servidor.";
             break;
     }
     echo "<abbr title='$texto'>$status</abbr>";

@@ -182,14 +182,12 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Anual de Férias Solicitadas','../grhRelatorios/feriasAnualStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=s&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Anual de Férias Confirmadas','../grhRelatorios/feriasAnualStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=c&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Anual de Férias Fruídas','../grhRelatorios/feriasAnualStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=f&lotacaoArea='.$parametroLotacao);
-            $menu->add_item('linkWindow','Relatório Anual de Férias Canceladas','../grhRelatorios/feriasAnualStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=ca&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Resumo Anual de Férias','../grhRelatorios/feriasResumoAnual.php?parametroAnoExercicio='.$parametroAnoExercicio.'&lotacaoArea='.$parametroLotacao);
             $menu->add_item('titulo','Relatórios Mensais');
             $menu->add_item('linkWindow','Relatório Mensal de Férias Solicitadas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=s&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Mensal de Férias Confirmadas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=c&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Mensal de Férias Fruídas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=f&lotacaoArea='.$parametroLotacao);
-            $menu->add_item('linkWindow','Relatório Mensal de Férias Canceladas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=ca&lotacaoArea='.$parametroLotacao);
-           
+                       
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação','../grhRelatorios/escalaMensalFeriasGeralPorLotacao.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação - Assinatura','../grhRelatorios/escalaMensalFeriasGeralPorLotacaoComAssinatura.php');

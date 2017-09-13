@@ -319,7 +319,6 @@ class ListaFerias
                      JOIN tbhistlot USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE anoExercicio = $this->anoExercicio
-                      AND tbferias.status <> 'cancelada'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
         
         # Verifica se tem filtro por lotação
@@ -355,8 +354,7 @@ class ListaFerias
                                        LEFT JOIN tbferias USING (idServidor)
                                             JOIN tbhistlot USING (idServidor)
                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE anoExercicio = $this->anoExercicio                          
-                          AND tbferias.status <> 'cancelada'
+                        WHERE anoExercicio = $this->anoExercicio 
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                         if(!is_null($this->lotacao)){
@@ -404,7 +402,6 @@ class ListaFerias
         }
         
         $select1 .= "
-              AND tbferias.status <> 'cancelada'
               AND anoExercicio = $this->anoExercicio
         GROUP BY tbpessoa.nome
          ORDER BY soma desc,tbpessoa.nome)";
@@ -445,7 +442,6 @@ class ListaFerias
         }
         
         $select1 .= "
-              AND tbferias.status <> 'cancelada'
               AND anoExercicio = $this->anoExercicio
               AND situacao = 1 
          GROUP BY tbpessoa.nome
@@ -496,8 +492,7 @@ class ListaFerias
                                 JOIN tbhistlot USING (idServidor)
                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND anoExercicio = $this->anoExercicio
-                  AND tbferias.status <> 'cancelada'";
+                  AND anoExercicio = $this->anoExercicio";
 
         if(!is_null($this->lotacao)){
             $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';

@@ -157,8 +157,7 @@ class Pessoal extends Bd
                       sum(numDias) as dias,
                       status
                  FROM tbferias
-                WHERE idServidor = '$idServidor' AND
-                  status <> 'cancelada'
+                WHERE idServidor = '$idServidor' 
          GROUP BY 1
          ORDER BY 1 DESC
          LIMIT 1";
@@ -762,8 +761,7 @@ class Pessoal extends Bd
                      FROM tbferias
                     WHERE idServidor = '$idServidor'
                       AND current_date() >= dtInicial 
-                      AND current_date() <= ADDDATE(dtInicial,numDias-1)
-                      AND status <> 'cancelada'";
+                      AND current_date() <= ADDDATE(dtInicial,numDias-1)";
 
         $row = parent::select($select,FALSE);
 
@@ -3344,7 +3342,7 @@ class Pessoal extends Bd
             $select = 'SELECT anoexercicio, SUM(numDias)                          
                          FROM tbferias
                         WHERE idservidor = '.$idservidor.'
-                          AND (status = "fruida" OR status = "solicitada" OR status = "confirmada")
+                          AND (status = "fruída" OR status = "solicitada" OR status = "confirmada")
                      GROUP BY anoexercicio
                      ORDER BY anoexercicio asc';
            
@@ -3416,15 +3414,14 @@ class Pessoal extends Bd
 	/**
 	 * Método get_feriasSomaDias
 	 * 
-	 * Informa os dias de férias fruidas, solicitadas ou confirmadas de um servidor em um ano exercicio,
+	 * Informa os dias de férias fruídas, solicitadas ou confirmadas de um servidor em um ano exercicio,
          */
 	
 	public function get_feriasSomaDias($anoExercicio,$idservidor,$id=NULL){
             $select = 'SELECT anoexercicio, SUM(numDias)                          
                          FROM tbferias
                         WHERE idservidor = '.$idservidor.'
-                          AND anoExercicio = '.$anoExercicio.'
-                          AND status <> "cancelada"';
+                          AND anoExercicio = '.$anoExercicio;
             
             # Retira o id ferias do calculo caso seja edição desse mesmo registro
             # para não contá-lo 2 vezes
@@ -3467,26 +3464,23 @@ class Pessoal extends Bd
             $status = $ferias[4];
             $periodo = NULL;
             
-            if($status <> "cancelada"){
-                # Verifica as férias desse servidor nesse periodo
-                $select2 = "SELECT idFerias
-                              FROM tbferias
-                             WHERE idServidor = $idServidor
-                               AND anoExercicio = $anoExercicio
-                               AND status <> 'cancelada'     
-                          ORDER BY dtInicial asc";       
+            # Verifica as férias desse servidor nesse periodo
+            $select2 = "SELECT idFerias
+                          FROM tbferias
+                         WHERE idServidor = $idServidor
+                           AND anoExercicio = $anoExercicio
+                      ORDER BY dtInicial asc";       
 
-                $listaFerias = parent::select($select2);
+            $listaFerias = parent::select($select2);
 
-                # Percorre as féras desse servidor no exercicio informado
-                # para saber em que lugar na ordem ela se encontra
-                $ordem = 1;            
-                foreach ($listaFerias as $value){
-                    if($value[0] == $idFerias){
-                        $periodo = $ordem."º";
-                    }
-                    $ordem ++;
+            # Percorre as féras desse servidor no exercicio informado
+            # para saber em que lugar na ordem ela se encontra
+            $ordem = 1;            
+            foreach ($listaFerias as $value){
+                if($value[0] == $idFerias){
+                    $periodo = $ordem."º";
                 }
+                $ordem ++;
                 
                 # Se for único
                 if($numDias == 30){

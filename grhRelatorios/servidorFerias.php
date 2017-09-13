@@ -35,9 +35,7 @@ if($acesso)
                         dtInicial,
                         numDias,
                         idFerias,
-                        ADDDATE(dtInicial,numDias-1),
-                        documento,
-                        folha
+                        ADDDATE(dtInicial,numDias-1)
                    FROM tbferias
                   WHERE idServidor = $idServidorPesquisado
                ORDER BY dtInicial desc";
@@ -49,7 +47,7 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Folha 1/3","Folha"));
+    $relatorio->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));

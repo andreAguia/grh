@@ -44,10 +44,6 @@ if($acesso)
         case "s" :
             $status = "solicitada";
             break;
-        
-        case "ca" :
-            $status = "cancelada";
-            break;
     }
     
     # Pega a lotação quando vem da área de férias
@@ -68,7 +64,6 @@ if($acesso)
                      tbferias.numDias,
                      idFerias,
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y") as dtf,
-                     tbferias.folha,
                      month(tbferias.dtInicial)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
                                      JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
@@ -97,15 +92,15 @@ if($acesso)
     
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados pela Data Inicial');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Folha','Mês'));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Mês'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL,"get_nomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,"get_nomeMes"));
     $relatorio->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,"get_feriasPeriodo"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(9);
+    $relatorio->set_numGrupo(8);
     $relatorio->show();
 
     $page->terminaPagina();

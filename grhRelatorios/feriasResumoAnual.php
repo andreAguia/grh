@@ -47,7 +47,6 @@ if($acesso)
                                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE anoExercicio = '.$anoBase.'
-                  AND tbferias.status <> "cancelada"
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
     
     if(!is_null($lotacaoArea)){
@@ -70,7 +69,6 @@ if($acesso)
                  FROM tbservidor JOIN tbferias ON (tbferias.idServidor = tbservidor.idServidor)
                 WHERE tbservidor.situacao = 1                   
                   AND anoExercicio = '.$anoBase.'
-                  AND tbferias.status <> "cancelada")
                   ORDER BY 3';
     */
     $result = $servidor->select($select);
@@ -83,7 +81,7 @@ if($acesso)
     }
     $relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
     $relatorio->set_label(array("Id Funcional","Nome","Dias de férias","Cargo","Lotação"));
-    #$relatorio->set_width(array(10,45,10,35));
+    $relatorio->set_width(array(10,30,0,30,30));
     $relatorio->set_align(array("center","left",NULL,"left","left"));
     $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacaoSimples"));
@@ -117,7 +115,6 @@ if($acesso)
                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                   WHERE tbservidor.situacao = 1                   
                     AND anoExercicio = '.$anoBase.'
-                    AND tbferias.status <> "cancelada"
                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
     
     if(!is_null($lotacaoArea)){
@@ -134,7 +131,7 @@ if($acesso)
     #$relatorio->set_tituloLinha2('Exercício: '.$anoBase);
     #$relatorio->set_subtitulo('Agrupados por Número de Dias de Férias');
     $relatorio2->set_label(array("Id Funcional","Nome","Dias de férias","Cargo","Lotação"));
-    $relatorio2->set_width(array(10,45,10,35));
+    $relatorio2->set_width(array(10,30,0,30,30));
     $relatorio2->set_align(array("center","left",NULL,"left","left"));
     $relatorio2->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
     $relatorio2->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacaoSimples"));

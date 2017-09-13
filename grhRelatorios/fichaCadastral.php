@@ -875,9 +875,7 @@ if($acesso)
                           status,
                           dtInicial,
                           numDias,
-                          ADDDATE(dtInicial,numDias-1),
-                          documento,
-                          folha
+                          ADDDATE(dtInicial,numDias-1)
                      FROM tbferias
                     WHERE idServidor='.$idFicha.'
                     ORDER BY anoExercicio desc,dtInicial desc';
@@ -887,8 +885,8 @@ if($acesso)
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Exercício','Status','Data Inicial','Dias','Data Final','Documento 1/3','Folha'));
-        $relatorio->set_width(array(10,10,15,10,15,20,20));
+        $relatorio->set_label(array('Exercício','Status','Data Inicial','Dias','Data Final'));
+        #$relatorio->set_width(array(10,10,15,10,15,20,20));
         $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);

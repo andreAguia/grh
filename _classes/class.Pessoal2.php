@@ -1839,7 +1839,7 @@ class Pessoal2 extends Bd
 
         { 
             # monta o update
-            $sql = 'UPDATE tbferias SET status = "fruida"
+            $sql = 'UPDATE tbferias SET status = "fruída"
                      WHERE status = "confirmada"
                        AND dtInicial < current_date()';
             

@@ -70,7 +70,6 @@ if($acesso)
                                      numDias,
                                      idFerias,
                                      ADDDATE(dtInicial,numDias-1),
-                                     folha,
                                      idFerias,
                                      idFerias
                                 FROM tbferias
@@ -82,7 +81,6 @@ if($acesso)
                                      status,
                                      dtInicial,
                                      numDias,
-                                     folha,
                                      obs,
                                      idServidor
                                 FROM tbferias
@@ -95,10 +93,10 @@ if($acesso)
     
 
     # Parametros da tabela
-    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final","Folha do 1/3"));
+    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array (NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
-    $objeto->set_width(array (10,10,15,10,10,15,20));
+    $objeto->set_width(array (15,15,15,15,15,15));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
 
@@ -139,7 +137,7 @@ if($acesso)
                                        'label' => 'Status:',
                                        'tipo' => 'combo',
                                        'required' => TRUE,
-                                       'array' => array('','solicitada','confirmada','fruída','cancelada'),
+                                       'array' => array('','solicitada','confirmada','fruída'),
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Status das férias',
@@ -160,13 +158,6 @@ if($acesso)
                                        'size' => 5,
                                        'required' => TRUE,
                                        'title' => 'Dias de Férias.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'folha',
-                                       'label' => 'Mês/Ano do pagamento do 1/3:',
-                                       'tipo' => 'texto',
-                                       'size' => 50,                                   
-                                       'title' => 'mês/ano do pagamento do 1/3',
-                                       'col' => 3,
                                        'linha' => 1),
                                array ( 'linha' => 3,
                                        'col' => 12,
@@ -220,8 +211,7 @@ if($acesso)
                 $mensagem1 = "Tipos de Férias:<br/>"
                     . " Solicitada -> Férias solicitadas pelo servidor que ainda não foi fruída.<br/>"
                     . " Confirmada -> Férias que foram emitidas o aviso de férias e assim sendo confirmadas pelo sistema.<br/>"
-                    . " Fruídas    -> Férias confirmadas cuja data de início ja passou.<br/>"
-                    . " Canceladas -> Férias canceladas por motivos diversos.";
+                    . " Fruídas    -> Férias confirmadas cuja data de início ja passou.";
                 #$objeto->set_rotinaExtraEditar("callout");
                 #$objeto->set_rotinaExtraEditarParametro($mensagem1);
                     

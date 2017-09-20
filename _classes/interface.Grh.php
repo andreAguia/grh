@@ -186,6 +186,14 @@ class Grh
             $botao->set_title('Área de Férias');
             $botao->set_accesskey('F');
             $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Estatística');
+            $botao->set_url('estatistica.php');
+            $botao->set_image(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Análise estatísticas');
+            #$botao->set_accesskey('F');
+            $menu->add_item($botao);
             $menu->show();
         
         $grid->fechaColuna();        

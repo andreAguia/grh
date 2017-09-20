@@ -25,6 +25,9 @@ if($acesso)
     $diretoria = get('diretoria');
     $grafico = get('grafico');
     
+    # Pega o ano
+    $ano = post("ano",date("Y"));
+    
     # Começa uma nova página
     $page = new Page();
     $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
@@ -46,9 +49,9 @@ if($acesso)
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
     $menu1->add_link($linkVoltar,"left");
-
+    
     # Por Perfil
-    $linkRel = new Link("por Perfil","?");
+    $linkRel = new Link("por Perfil","?fase=perfil");
     $linkRel->set_class('button');
     $linkRel->set_title('Estatística por Perfil');
     #$linkRel->set_accessKey('R');
@@ -61,10 +64,17 @@ if($acesso)
     #$linkRel->set_accessKey('R');
     $menu1->add_link($linkRel,"right");
     
-    # Por CArgo
-    $linkRel = new Link("por Cargo","?fase=cargo");
+    # Por Cargo
+    $linkRel = new Link("por Cargo","?");
     $linkRel->set_class('button');
     $linkRel->set_title('Estatística por Cargo');
+    #$linkRel->set_accessKey('R');
+    $menu1->add_link($linkRel,"right");
+    
+    # Temporal por Cargo
+    $linkRel = new Link("Temporal","?fase=temporalCargo");
+    $linkRel->set_class('button');
+    $linkRel->set_title('Estatística Temporal por Cargo');
     #$linkRel->set_accessKey('R');
     $menu1->add_link($linkRel,"right");
 
@@ -77,15 +87,245 @@ if($acesso)
     ################################################################
     
     switch ($fase)
-    {
+    {   
         case "":
+            titulo("Servidores por Cargo Efetivo");
+            br();
+            
+            $grid2 = new Grid("center");
+            $grid2->abreColuna(12);
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(4);
+            
+            # Pega os dados
+            $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE situacao = 1
+                            GROUP BY tbtipocargo.tipo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+            
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+            
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Cargo");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Perfil","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total: ".$total);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(8);
+            
+            $chart = new Chart("Pie",$servidores);
+            $chart->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(6);
+
+            # Professores
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                                 AND tbtipocargo.tipo = "Professor"
+                            GROUP BY tbtipocargo.cargo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Professores");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total: ".$total);
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+
+            # Professores
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                                 AND tbtipocargo.tipo = "Adm/Tec"
+                            GROUP BY tbtipocargo.cargo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Administrativos e Técnicos");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total: ".$total);
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            hr();
+            break;
+        case "temporalCargo":
+            titulo("Servidores por Cargo Efetivo");
+            
+            $grid2 = new Grid("center");
+            $grid2->abreColuna(12);
+            
+            # Formulário do Ano
+            $form = new Form('?fase=temporalCargo');
+            
+            # Preenche o array
+            for($i = 2000;$i<=date("Y");$i++){
+                $listaAnos[] = $i;
+            }
+            
+            $controle = new Input('ano','combo','Ano:',1);
+            $controle->set_size(5);
+            $controle->set_title('Ano:');
+            $controle->set_array($listaAnos);
+            $controle->set_valor($ano);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            $form->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(4);
+            
+            # Pega os dados
+            $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE YEAR(dtadmissao) <= "'.$ano.'" 
+                                 AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
+                            GROUP BY tbtipocargo.tipo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+            
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+            
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Cargo");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Perfil","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total: ".$total);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(8);
+            
+            $chart = new Chart("Pie",$servidores);
+            $chart->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(6);
+
+            # Professores
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE YEAR(dtadmissao) <= "'.$ano.'" 
+                                 AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
+                                 AND tbtipocargo.tipo = "Professor"
+                            GROUP BY tbtipocargo.cargo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Professores");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total: ".$total);
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+
+            # Professores
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE YEAR(dtadmissao) <= "'.$ano.'" 
+                                 AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
+                                 AND tbtipocargo.tipo = "Adm/Tec"
+                            GROUP BY tbtipocargo.cargo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Administrativos e Técnicos");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total: ".$total);
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            hr();
+            break;
+        case "perfil":
             titulo("Servidores por Perfil");
             
             $grid2 = new Grid();
             $grid2->abreColuna(4);
             
             # Pega os dados
-            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.matricula) as jj
+            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                WHERE tbservidor.situacao = 1
                             GROUP BY tbperfil.nome
@@ -126,7 +366,7 @@ if($acesso)
             titulo("Servidores por Lotação");
             
             # Pega os dados
-            $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.matricula) as jj
+            $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
@@ -231,7 +471,7 @@ if($acesso)
                     $grid2->abreColuna(4);
 
                     # Pega os dados
-                    $selectGrafico2 = 'SELECT tblotacao.ger, count(tbservidor.matricula),tblotacao.nome as jj
+                    $selectGrafico2 = 'SELECT tblotacao.ger, count(tbservidor.idServidor),tblotacao.nome as jj
                                         FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
@@ -279,45 +519,6 @@ if($acesso)
             break;
         
             #########################################
-            
-            case "cargo":
-                titulo("Servidores por Cargo");
-                $grid2 = new Grid();
-                $grid2->abreColuna(4);
-
-                # Pega os dados
-                $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.matricula) as jj
-                                    FROM tbservidor JOIN tbcargo USING (idCargo)
-                                                    JOIN tbtipocargo USING (idTipoCargo)
-                                   WHERE tbservidor.situacao = 1
-                                GROUP BY tbtipocargo.cargo
-                                ORDER BY 2 DESC ';
-
-                $servidores = $pessoal->select($selectGrafico);
-                
-                # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));
-
-                # Exemplo de tabela simples
-                $tabela = new Tabela();
-                $tabela->set_conteudo($servidores);
-                $tabela->set_label(array("Cargo","Servidores"));
-                $tabela->set_width(array(80,20));
-                $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total: ".$total);
-                $tabela->show();
-
-                $grid2->fechaColuna();
-                $grid2->abreColuna(8);
-
-                $chart = new Chart("Pie",$servidores);
-                $chart->show();
-
-                $grid2->fechaColuna();
-                $grid2->fechaGrid();
-
-                hr();
-                break;
     }
     
     # Fecha o grid

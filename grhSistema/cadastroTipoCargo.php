@@ -71,6 +71,7 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista ('SELECT idTipoCargo,
                                       cargo,
+                                      tipo,
                                       sigla,
                                       nivel,
                                       vagas,
@@ -83,6 +84,7 @@ if($acesso)
 
     # select do edita
     $objeto->set_selectEdita('SELECT cargo,
+                                     tipo,
                                      sigla,
                                      nivel,
                                      vagas,
@@ -102,12 +104,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Cargo","Sigla","Nível","Vagas","Servidores Ativos","Vagas Disponíveis","Obs"));
-    $objeto->set_width(array(5,20,10,15,10,10,10,15));
+    $objeto->set_label(array("Id","Cargo","Tipo","Sigla","Nível","Vagas","Servidores Ativos","Vagas Disponíveis","Obs"));
+    #$objeto->set_width(array(5,20,10,15,10,10,10,15));
     $objeto->set_align(array("center","left"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -129,7 +131,15 @@ if($acesso)
                'tipo' => 'texto',
                'required' => TRUE,
                'autofocus' => TRUE,
-               'col' => 5,
+               'col' => 3,
+               'size' => 50),
+        array ('linha' => 1,
+               'nome' => 'tipo',
+               'label' => 'Tipo:',
+               'tipo' => 'combo',
+               'required' => TRUE,
+               'array' => array(NULL,"Adm/Tec","Professor"),
+               'col' => 2,
                'size' => 50),
         array ('linha' => 1,
                'nome' => 'sigla',

@@ -183,7 +183,7 @@ if($acesso)
                                        'label' => 'Descrição do Cargo:',
                                        'tipo' => 'texto',
                                        'title' => 'Em alguns cargos é necessário uma descrição mais detalhada.&#013;Exemplo: Coordenador de curso.',
-                                       'size' => 50),
+                                       'size' => 100),
                                array ( 'nome' => 'protempore',
                                        'label' => 'Pro Tempore:',
                                        'tipo' => 'combo',

@@ -236,14 +236,14 @@ if($acesso){
                 $controle->set_readonly(TRUE);
                 $controle->set_valor($cpf);
                 $controle->set_required(TRUE);
-                $controle->set_col(3);
+                $controle->set_col(2);
                 $controle->set_title('O CPF do Novo Servidor');
                 $form->add_item($controle);            
 
                 # Nome
                 $controle = new Input('nome','texto','Nome:',1);
                 $controle->set_size(50);
-                $controle->set_col(6);
+                $controle->set_col(5);
                 $controle->set_linha(1);
                 $controle->set_required(TRUE);
                 if(!is_null($nome)){
@@ -251,9 +251,27 @@ if($acesso){
                     $controle->set_readonly(TRUE);                    
                 }else{
                     $controle->set_autofocus(TRUE);
-                }
-                
+                }                
                 $controle->set_title('O nome do servidor.');
+                $form->add_item($controle);
+                                
+                # Sexo
+                $controle = new Input('sexo','combo','Sexo:',1);
+                $controle->set_size(15);
+                $controle->set_col(2);
+                $controle->set_array(array(NULL,"Masculino","Feminino"));
+                $controle->set_required(TRUE);
+                $controle->set_linha(1);
+                $controle->set_title('Sexo do Servidor.');
+                $form->add_item($controle);
+                
+                # Data de Nascimento
+                $controle = new Input('dtNasc','date','Data de Nascimento:',1);
+                $controle->set_size(15);
+                $controle->set_col(3);
+                $controle->set_required(TRUE);
+                $controle->set_linha(1);
+                $controle->set_title('A data de nascimento do servidor.');
                 $form->add_item($controle);
 
                 # Perfil                
@@ -266,7 +284,7 @@ if($acesso){
 
                 $controle = new Input('perfil','combo','Perfil:',1);
                 $controle->set_size(20);            
-                $controle->set_linha(1);
+                $controle->set_linha(2);
                 $controle->set_required(TRUE);
                 $controle->set_col(3);
                 $controle->set_title('O perfil do Servidor.');
@@ -279,14 +297,6 @@ if($acesso){
                 #p($mensagem);
                 #$p->show();
                 #$form->add_item($p);
-
-                # IdFuncional
-                $controle = new Input('idFuncional','texto','IdFuncional:',1);
-                $controle->set_size(20);            
-                $controle->set_linha(2);
-                $controle->set_col(3);                
-                $controle->set_title('A IdFuncional do servidor.');
-                $form->add_item($controle);
 
                  # Lotação               
                 $lotacao = $pessoal->select('SELECT idlotacao, 
@@ -341,6 +351,14 @@ if($acesso){
                 $controle->set_array($cargo);
                 $form->add_item($controle); 
                 
+                # IdFuncional
+                $controle = new Input('idFuncional','texto','IdFuncional:',1);
+                $controle->set_size(20);            
+                $controle->set_linha(3);
+                $controle->set_col(3);                
+                $controle->set_title('A IdFuncional do servidor.');
+                $form->add_item($controle);
+                
                 # Matrícula
                 $controle = new Input('matricula','texto','Matrícula: (sem o dígito verificador)',1);
                 $controle->set_size(20);            
@@ -348,15 +366,6 @@ if($acesso){
                 $controle->set_col(3);                
                 $controle->set_title('A matrícula do servidor.');
                 #$form->add_item($controle);
-                
-                # Data de Nascimento
-                $controle = new Input('dtNasc','date','Data de Nascimento:',1);
-                $controle->set_size(15);
-                $controle->set_col(3);
-                $controle->set_required(TRUE);
-                $controle->set_linha(3);
-                $controle->set_title('A data de nascimento do servidor.');
-                $form->add_item($controle);
 
                 # submit
                 $controle = new Input('submit','submit');
@@ -383,7 +392,8 @@ if($acesso){
                 $msgErro = NULL; 	// repositório de mensagens de erro
 
                 # Pega os valores digitados
-                $cpf = post('cpf');     
+                $cpf = post('cpf');
+                $sexo = post('sexo');
                 $nome = post('nome'); 
                 $perfil = post('perfil'); 
                 $matricula = post('matricula'); 
@@ -399,6 +409,12 @@ if($acesso){
                 # Verifica se o Nome foi digitado
                 if(empty($nome)){
                     $msgErro.='Você tem que informar o Nome do Servidor!\n';
+                    $erro = 1;
+                }
+                
+                # Verifica se o Sexo foi digitado
+                if(empty($sexo)){
+                    $msgErro.='Você tem que informar o Sexo do Servidor!\n';
                     $erro = 1;
                 }
 
@@ -469,9 +485,10 @@ if($acesso){
                     $erro = 1;
                 }
                 
-                # formata data quando vier de um controle html5 (vem yyyy/mm/dd)
+                # formata as datas quando vier de um controle html5 (vem yyyy/mm/dd)
                 if(HTML5){
                     $dtAdmissao = date_to_php($dtAdmissao);
+                    $dtNasc = date_to_php($dtNasc);
                 }
                 
                 # verifica a validade da data de admissao
@@ -480,7 +497,15 @@ if($acesso){
                     $erro = 1;
                 }else{
                     $dtAdmissao = date_to_bd($dtAdmissao);
-                }               
+                }     
+                
+                # verifica a validade da data de Nascimento
+                if (!validaData($dtNasc)){
+                    $msgErro.='A data de Nascimento não é válida!\n';
+                    $erro = 1;
+                }else{
+                    $dtNasc = date_to_bd($dtNasc);
+                }     
                 
                 # Verifia se houve erro 
                 if ($erro == 1){
@@ -494,8 +519,8 @@ if($acesso){
                     {
                         # Gravar na tbpessoa
                         # dados
-                        $campos = array('nome','dtNasc');
-                        $valor = array($nome,$dtNasc);
+                        $campos = array('nome','dtNasc','sexo');
+                        $valor = array($nome,$dtNasc,$sexo);
                         $idValor = NULL;
                         $tabela = 'tbpessoa';
 

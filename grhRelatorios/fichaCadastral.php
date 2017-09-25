@@ -14,11 +14,12 @@ $idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
-# Verifica qual será a matrícula a ser exibida
-if(is_null($idServidorPesquisado))
+# Verifica qual será o id
+if(is_null($idServidorPesquisado)){
     $idFicha = $idUsuario;
-else
+}else{
     $idFicha = $idServidorPesquisado;
+}
 
 # Pega os parâmetros do relatório
 $postContatos = post('contatos');
@@ -203,8 +204,7 @@ if($acesso)
      * Dados Funcionais
      */
 
-    $fieldset = new Fieldset('Dados Funcionais','fieldsetRelatorio');
-    $fieldset->abre();
+    tituloRelatorio('Dados Funcionais');
 
     $select = 'SELECT tbservidor.dtAdmissao,
                       tbservidor.idServidor,
@@ -239,14 +239,11 @@ if($acesso)
     $relatorio->set_log(FALSE);    
     $relatorio->show();
 
-    $fieldset->fecha();
-
     /*
      * Dados Financeiros
      */
 
-    $fieldset = new Fieldset('Dados Financeiros','fieldsetRelatorio');
-    $fieldset->abre();        
+    tituloRelatorio('Dados Financeiros');
 
     # pega os valores
     $salarioBase = $pessoal->get_salarioBase($idFicha);                              // salário base
@@ -276,8 +273,6 @@ if($acesso)
     $relatorio->set_log(FALSE);
     $relatorio->show();
 
-    $fieldset->fecha();
-
     /*
      * Dados dos Cedidos
      */
@@ -288,8 +283,7 @@ if($acesso)
     # Verifica se é Cedido
     if ($idPerfil == '2')
     {
-        $fieldset = new Fieldset('Dados dos Cedidos','fieldsetRelatorio');
-        $fieldset->abre();   
+        tituloRelatorio('Dados dos Cedidos');
 
         $select = 'SELECT orgaoOrigem,
                           matExterna,
@@ -322,8 +316,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -333,8 +325,7 @@ if($acesso)
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idFicha);		
 
-    $fieldset = new Fieldset('Dados Pessoais','fieldsetRelatorio');
-    $fieldset->abre();
+    tituloRelatorio('Dados Pessoais');
 
     $select = 'SELECT dtNasc,
                         nacionalidade,
@@ -366,14 +357,11 @@ if($acesso)
     $relatorio->set_log(FALSE);
     $relatorio->show();
 
-    $fieldset->fecha();
-
     /*
      * Filiação
      */
 
-    $fieldset = new Fieldset('Filiação','fieldsetRelatorio');
-    $fieldset->abre();
+    tituloRelatorio('Filiação');
 
     $select = 'SELECT nomePai,
                         nomeMae 
@@ -402,14 +390,11 @@ if($acesso)
     $relatorio->set_log(FALSE);
     $relatorio->show();
 
-    $fieldset->fecha();
-
     /*
      * Documentação
      */
 
-    $fieldset = new Fieldset('Documentação','fieldsetRelatorio');
-    $fieldset->abre();
+    tituloRelatorio('Documentação');
 
     $select = 'SELECT CPF,
                         concat(identidade," - ",
@@ -474,14 +459,11 @@ if($acesso)
     $relatorio->set_log(FALSE);
     $relatorio->show();
 
-    $fieldset->fecha();
-
     /*
      * Endereço
      */
 
-    $fieldset = new Fieldset('Endereço','fieldsetRelatorio');      
-    $fieldset->abre();
+    tituloRelatorio('Endereço');
 
     $select = 'SELECT CONCAT(IF(endereco is NULL," ",endereco)," ",
                              IF(complemento is NULL,"",complemento)," - ",
@@ -514,16 +496,13 @@ if($acesso)
     $relatorio->set_log(FALSE);
     $relatorio->show();
 
-    $fieldset->fecha();
-
     /*
      * Contatos
      */
 
     if($postContatos)
     {
-        $fieldset = new Fieldset('Contatos','fieldsetRelatorio');      
-        $fieldset->abre();
+        tituloRelatorio('Contatos');
 
         $select = 'SELECT tipo,
                             numero
@@ -551,8 +530,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -561,8 +538,7 @@ if($acesso)
 
     if($postDependentes)
     {
-        $fieldset = new Fieldset('Dependentes','fieldsetRelatorio');   
-        $fieldset->abre();
+        tituloRelatorio('Dependentes');
 
         $select = 'SELECT nome,
                           dtNasc,
@@ -599,8 +575,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -609,8 +583,7 @@ if($acesso)
 
     if($postFormacao)
     {
-        $fieldset = new Fieldset('Formação','fieldsetRelatorio');      
-        $fieldset->abre();
+        tituloRelatorio('Formação');
 
         $select = 'SELECT tbescolaridade.Escolaridade,
                             habilitacao,
@@ -641,8 +614,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -651,8 +622,7 @@ if($acesso)
 
     if($postLotacao)
     {
-        $fieldset = new Fieldset('Histórico de Lotações','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Lotações');
 
         $select ='SELECT tbhistlot.data,
                          concat(tblotacao.UADM,"-",tblotacao.DIR,"-",tblotacao.GER) as lotacao,
@@ -682,8 +652,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -692,8 +660,7 @@ if($acesso)
 
     if($postCargo)
     {
-        $fieldset = new Fieldset('Histórico de Cargos em Comissão','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Cargos em Comissão');
 
         $select = 'SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
                           tbtipocomissao.valsal,
@@ -728,8 +695,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -738,8 +703,7 @@ if($acesso)
 
     if($postProgressao)
     {
-        $fieldset = new Fieldset('Histórico de Progressões e Enquadramentos','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Progressões e Enquadramentos');
 
         $select ='SELECT tbprogressao.dtInicial,
                          tbtipoprogressao.nome,
@@ -773,8 +737,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -783,8 +745,7 @@ if($acesso)
 
     if($postTrienio)
     {
-        $fieldset = new Fieldset('Histórico de Triênio','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Triênio');
 
         $select = 'SELECT dtInicial,
                           percentual,
@@ -816,8 +777,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -826,8 +785,7 @@ if($acesso)
 
     if($postGratificacao)
     {
-        $fieldset = new Fieldset('Histórico de Gratificação Especial','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Gratificação Especial');
 
         $select = 'SELECT dtInicial,
                           dtFinal,
@@ -858,8 +816,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -868,8 +824,7 @@ if($acesso)
     
     if($postFerias)
     {
-        $fieldset = new Fieldset('Histórico de Férias','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Férias');
 
         $select = 'SELECT anoExercicio,
                           status,
@@ -901,8 +856,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
 
     /*
@@ -911,8 +864,7 @@ if($acesso)
     
     if($postLicenca)
     {
-        $fieldset = new Fieldset('Histórico de Afastamentos, Faltas e Licenças','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
         $select = 'SELECT tbtipolicenca.nome,
                           tblicenca.dtInicial,
@@ -948,8 +900,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }    
     
     /*
@@ -958,8 +908,7 @@ if($acesso)
 
     if($postAverbacao)
     {
-        $fieldset = new Fieldset('Tempo de Serviço Averbado','fieldsetRelatorio');               
-        $fieldset->abre();
+        tituloRelatorio('Tempo de Serviço Averbado');
 
         $select = 'SELECT dtInicial,
                         dtFinal,
@@ -1003,8 +952,6 @@ if($acesso)
         $relatorio->set_menuRelatorio(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     } 
     
     /*
@@ -1013,8 +960,7 @@ if($acesso)
 
     if($postDiaria)
     {
-        $fieldset = new Fieldset('Histórico de Diária','fieldsetRelatorio');
-        $fieldset->abre();
+        tituloRelatorio('Histórico de Diária');
 
         $select = 'SELECT dataSaida,
                           dataChegada,
@@ -1051,8 +997,6 @@ if($acesso)
         #$relatorio->set_linhaNomeColuna(FALSE);
         $relatorio->set_log(FALSE);
         $relatorio->show();
-
-        $fieldset->fecha();
     }
     
     # Data da Impressão

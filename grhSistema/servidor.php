@@ -106,7 +106,7 @@ if($acesso)
             $linkBotao2 = new Link("Novo Servidor","servidorInclusao.php");
             $linkBotao2->set_class('button');        
             $linkBotao2->set_title('Incluir Novo Servidor');            
-            $linkBotao2->set_accessKey('I');
+            $linkBotao2->set_accessKey('N');
             $menu1->add_link($linkBotao2,"right");
             $menu1->show();
 

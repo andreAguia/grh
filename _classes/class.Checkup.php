@@ -1271,7 +1271,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidor sem Id Funcional cadastrado no Sistema';
+        $titulo = 'Servidor(es) sem Id Funcional cadastrado no Sistema';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -1337,7 +1337,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data de Nascimento','Lotação','Cargo');
         $align = array('center','left','center','left','left');
-        $titulo = 'Servidores sem data de nascimento cadastrada no sistema';
+        $titulo = 'Servidor(es) sem data de nascimento cadastrada no sistema';
         $classe = array(NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -1411,7 +1411,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Órgão','Início','Término','Lotação');
         $align = array('center','left','left','center','center','left');
-        $titulo = 'Servidor cedido sem estar lotado no Gabinete - Cedidos';
+        $titulo = 'Servidor(es) cedido(s) sem estar lotado no Gabinete - Cedidos';
         $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao");
         $funcao = array(NULL,NULL,NULL,"date_to_php","date_to_php");
@@ -1481,7 +1481,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
         $align = array('center','center','left','center','left');
-        $titulo = 'Servidor estatutário sem cargo cadastrado.';
+        $titulo = 'Servidor(es) estatutário(s) sem cargo cadastrado.';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -1504,6 +1504,149 @@ class Checkup
                 return $titulo;
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorSemCargo
+     * 
+     * Servidor NÃO estatutário sem cargo cadastrado:
+     */
+    
+    public function get_servidorSemCargo($idServidor = NULL) {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                    WHERE (idCargo IS NULL OR idCargo = 0)
+                      AND situacao = 1
+                      AND idPerfil <> 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
+        $align = array('center','center','left','center','left');
+        $titulo = 'Servidor(es) NÃO estatutário(s) sem cargo cadastrado.';
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
+        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
+        #$funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
+                $link->set_id("checkupResumo");
+                echo "<li>";
+                $link->show();
+                echo "</li>";
+            }
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorDuplicado
+     * 
+     * Servidor Duplicado no Sistema
+     */
+    
+    public function get_servidorDuplicado($idServidor = NULL) {
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbservidor.matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil) 
+                     WHERE tbservidor.idServidor IN( SELECT tbservidor.idServidor
+                                                       FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                      WHERE tbservidor.situacao = 1
+                                                        AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                                   GROUP BY tbservidor.idServidor
+                                                     HAVING COUNT(*) > 1)';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
+        $align = array('center','center','left','center','left');
+        $titulo = 'Servidor(es) Duplicado(s) no sistema.';
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
+        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
+        #$funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                callout("Verifique se não existem 2 lançamentos de lotação com o mesmo dia. Isso gera registros duplos em listagem onde é exibidda a lotação do servidor.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{

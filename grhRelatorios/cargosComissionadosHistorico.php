@@ -42,11 +42,10 @@ if($acesso)
                      concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
-                                     JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                WHERE tbtipocomissao.ativo';
+                                     JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)';
 				
 	if(!is_null($cargo)){
-		$select .= ' AND tbtipocomissao.idTipoComissao = '.$cargo;
+		$select .= ' WHERE tbtipocomissao.idTipoComissao = '.$cargo;
 	}
 			                    
     $select .= ' ORDER BY 8, tbcomissao.descricao,tbcomissao.dtNom desc';

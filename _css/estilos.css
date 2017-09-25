@@ -196,6 +196,20 @@ p#aim{
  }
  
  /*******************************************
+ * Ficha Cadastral
+ *******************************************/
+ 
+ div#tituloFichaCadastral{
+     background-color: #e6e6e6;
+     font-weight: normal;
+     font-size: 12px;
+     text-align: left;
+     margin-top: 10px;
+     padding: 4px 2px 2px 10px;
+}
+
+ 
+ /*******************************************
  * CI Diária
  *******************************************/
  

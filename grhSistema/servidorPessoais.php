@@ -134,7 +134,7 @@ if($acesso)
                                'nome' => 'sexo',
                                'label' => 'Sexo:',
                                'tipo' => 'combo',
-                               'array' => array("Masculino","Feminino"),
+                               'array' => array(NULL,"Masculino","Feminino"),
                                'title' => 'Sexo do Servidor',
                                'required' => TRUE,
                                'col' => 2,

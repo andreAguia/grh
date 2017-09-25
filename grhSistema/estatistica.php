@@ -94,32 +94,99 @@ if($acesso)
             titulo("Estatística Geral");
             br();
             
+            # Tamanho da coluna do grid
             $x = 3;
 
             $grid2 = new Grid();
+            
+            #### Geral
+            
             $grid2->abreColuna($x);
             
-            # Pega os dados
-            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as jj
-                                FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                               WHERE tbservidor.situacao = 1
-                            GROUP BY tbperfil.nome
-                            ORDER BY 2 DESC ';
+                # Geral - Por Perfil
+                $grid3 = new Grid();
+                $grid3->abreColuna(12);
+                
+                    # Pega os dados
+                    $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as jj
+                                        FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                       WHERE tbservidor.situacao = 1
+                                    GROUP BY tbperfil.nome
+                                    ORDER BY 2 DESC ';
 
-            $servidores = $pessoal->select($selectGrafico);
-            
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));
-            
-            # Exemplo de tabela simples
-            $tabela = new Tabela();
-            $tabela->set_titulo("por Perfil");
-            $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Perfil","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
+                    $servidores = $pessoal->select($selectGrafico);
+
+                    # Soma a coluna do count
+                    $total = array_sum(array_column($servidores, "jj"));
+
+                    # Exemplo de tabela simples
+                    $tabela = new Tabela();
+                    $tabela->set_titulo("por Perfil");
+                    $tabela->set_conteudo($servidores);
+                    $tabela->set_label(array("Perfil","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_rodape("Total de Servidores: ".$total);
+                    $tabela->show();
+
+                $grid3->fechaColuna();
+                
+                # Geral - Por Cargo
+                $grid3->abreColuna(12);
+                
+                    # Pega os dados
+                    $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
+                                        FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                                        LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                       WHERE situacao = 1
+                                    GROUP BY tbtipocargo.tipo
+                                    ORDER BY 2 DESC ';
+
+                    $servidores = $pessoal->select($selectGrafico);
+
+                    # Soma a coluna do count
+                    $total = array_sum(array_column($servidores, "jj"));
+
+                    # Exemplo de tabela simples
+                    $tabela = new Tabela();
+                    $tabela->set_titulo("por Cargo");
+                    $tabela->set_conteudo($servidores);
+                    $tabela->set_label(array("Tipo do Cargo","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_rodape("Total de Servidores: ".$total);
+                    $tabela->show();
+                $grid3->fechaColuna();
+                
+                # Geral - Por Lotação
+                $grid3->abreColuna(12);
+                
+                    # Pega os dados
+                    $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
+                                        FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                       WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                         AND situacao = 1
+                                         AND ativo
+                                    GROUP BY tblotacao.dir
+                                    ORDER BY 1';
+
+                    $servidores = $pessoal->select($selectGrafico);
+
+                    # Soma a coluna do count
+                    $total = array_sum(array_column($servidores, "jj"));            
+
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($servidores);
+                    $tabela->set_titulo("por Lotação");
+                    $tabela->set_label(array("Diretoria","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_rodape("Total de Servidores: ".$total);
+                    $tabela->show();
+                $grid3->fechaColuna();
+                $grid3->fechaGrid();
             
             $grid2->fechaColuna();
             
@@ -127,121 +194,68 @@ if($acesso)
             
             $grid2->abreColuna($x);
             
-            # Pega os dados
-            $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
-                                FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                 AND situacao = 1
-                                 AND ativo
-                            GROUP BY tblotacao.dir
-                            ORDER BY 1';
+                # Geral - Por Sexo
+                $grid3 = new Grid();
+                $grid3->abreColuna(12);
+            
+                    # Pega os dados
+                    $selectGrafico = 'SELECT tbpessoa.sexo, count(tbservidor.idServidor) as jj
+                                        FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                       WHERE situacao = 1
+                                    GROUP BY tbpessoa.sexo
+                                    ORDER BY 1';
 
-            $servidores = $pessoal->select($selectGrafico);
-            
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));            
+                    $servidores = $pessoal->select($selectGrafico);
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($servidores);
-            $tabela->set_titulo("por Lotação");
-            $tabela->set_label(array("Diretoria","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
+                    # Soma a coluna do count
+                    $total = array_sum(array_column($servidores, "jj"));            
 
-            $grid2->fechaColuna();
-            
-            ##############################
-            
-            $grid2->abreColuna($x);
-            
-            # Pega os dados
-            $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
-                                FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
-                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE situacao = 1
-                            GROUP BY tbtipocargo.tipo
-                            ORDER BY 2 DESC ';
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($servidores);
+                    $tabela->set_titulo("por Sexo");
+                    $tabela->set_label(array("Sexo","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_rodape("Total de Servidores: ".$total);
+                    $tabela->show();
 
-            $servidores = $pessoal->select($selectGrafico);
-            
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));
-            
-            # Exemplo de tabela simples
-            $tabela = new Tabela();
-            $tabela->set_titulo("por Cargo");
-            $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Tipo do Cargo","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
-            
-            $grid2->fechaColuna();
-            
-            ##############################
-            
-            $grid2->abreColuna($x);
-            
-            # Pega os dados
-            $selectGrafico = 'SELECT tbpessoa.sexo, count(tbservidor.idServidor) as jj
-                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1
-                            GROUP BY tbpessoa.sexo
-                            ORDER BY 1';
+                $grid3->fechaColuna();
+                
+                # Geral - Por Nacionalidade
+                $grid3->abreColuna(12);
+                
+                    # Pega os dados
+                    $selectGrafico = 'SELECT tbnacionalidade.nacionalidade, count(tbservidor.idServidor) as jj
+                                        FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
+                                                             JOIN tbservidor USING (idPessoa)
+                                       WHERE situacao = 1
+                                    GROUP BY tbnacionalidade.nacionalidade
+                                    ORDER BY 1';
 
-            $servidores = $pessoal->select($selectGrafico);
-            
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));            
+                    $servidores = $pessoal->select($selectGrafico);
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($servidores);
-            $tabela->set_titulo("por Sexo");
-            $tabela->set_label(array("Sexo","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
+                    # Soma a coluna do count
+                    $total = array_sum(array_column($servidores, "jj"));            
+
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($servidores);
+                    $tabela->set_titulo("por Nacionalidade");
+                    $tabela->set_label(array("Nacionalidade","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_rodape("Total de Servidores: ".$total);
+                    $tabela->show();
+
+                $grid3->fechaColuna();
+                $grid3->fechaGrid();
 
             $grid2->fechaColuna();
             
             ##############################
             
-            $grid2->abreColuna($x);
-            
-            # Pega os dados
-            $selectGrafico = 'SELECT tbnacionalidade.nacionalidade, count(tbservidor.idServidor) as jj
-                                FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
-                                                     JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1
-                            GROUP BY tbnacionalidade.nacionalidade
-                            ORDER BY 1';
-
-            $servidores = $pessoal->select($selectGrafico);
-            
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));            
-
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($servidores);
-            $tabela->set_titulo("por Nacionalidade");
-            $tabela->set_label(array("Nacionalidade","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
-
-            $grid2->fechaColuna();
-            
-            ##############################
-            
+            # Geral - Por Idade
             $grid2->abreColuna($x);
             
             # Pega os dados
@@ -265,11 +279,12 @@ if($acesso)
             $tabela->set_align(array("left","center"));
             $tabela->set_rodape("Total de Servidores: ".$total);
             $tabela->show();
-
-            $grid2->fechaColuna();
             
+            $grid2->fechaColuna();
+
             ##############################
             
+            # Geral - Por Cidade
             $grid2->abreColuna($x);
             
             # Pega os dados

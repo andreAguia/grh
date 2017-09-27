@@ -22,13 +22,12 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica tipo de cargo será exibido (1->ativos ou 0->inativos)
+    $tipo = get('tipo',1);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
-    # Verifica a paginacão
-    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);    
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
@@ -55,7 +54,12 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos em Comissão');
+    if($tipo){
+        $complemento = " Ativos";
+    }else{
+        $complemento = " Inativos";
+    }
+    $objeto->set_nome('Cargos em Comissão'.$complemento);
     
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -64,7 +68,7 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
+    # ordenação
     if(is_null($orderCampo))
             $orderCampo = "9 desc, 3";
 
@@ -82,9 +86,10 @@ if($acesso)
                                       idTipoComissao,
                                       IF(ativo = 0, "Não", "Sim") as ativo
                                  FROM tbtipocomissao
-                                WHERE descricao LIKE "%'.$parametro.'%"
+                                WHERE ativo = '.$tipo.'
+                                  AND (descricao LIKE "%'.$parametro.'%"
                                    OR simbolo LIKE "%'.$parametro.'%" 
-                                   OR idTipoComissao LIKE "%'.$parametro.'%" 
+                                   OR idTipoComissao LIKE "%'.$parametro.'%") 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -109,15 +114,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Não Ocupadas","Cargo Ativo?"));
+    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Disponíveis","Cargo Ativo?"));
     $objeto->set_width(array(5,20,10,10,10,10,10,10,10));
     $objeto->set_align(array("center"));
-    
-    $objeto->set_formatacaoCondicional(array(
-                                        array('coluna' => 8,
-                                              'valor' => "Não",
-                                              'operador' => '=',
-                                              'id' => 'inativo')));
     
     $objeto->set_funcao(array(NULL,NULL,NULL,"formataMoeda"));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal',NULL,'pessoal'));
@@ -197,23 +196,36 @@ if($acesso)
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
     
-    # Pega o número de Lotações ativas para a paginação
-    $numCargoComissaoAtivo = $pessoal->get_numCargoComissaoAtivo();
-    
-    # Paginação
-    $objeto->set_paginacao(TRUE);
-    $objeto->set_paginacaoInicial($paginacao);
-    $objeto->set_paginacaoItens($numCargoComissaoAtivo);
-    
     # Relatório
     $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
-    $botaoRel->set_title("Exibe Relatório os Perfis");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_title("Abre relatório dos cargos exibidos na listagem abaixo");
+    if($tipo){
+        $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissaoAtivos.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    }else{
+        $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissaoInativos.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    }
     $botaoRel->set_imagem($imagem2);
     #$botaoRel->set_accessKey('R');
-
-    $objeto->set_botaoListarExtra(array($botaoRel));
+    
+    # Cargos Ativos
+    $botaoAtivo = new Button("Cargos Ativos","?tipo=1");
+    $botaoAtivo->set_title("Exibe os Cargos Ativos");
+    
+    # Cargos Ativos
+    $botaoInativo = new Button("Cargos Inativos","?tipo=0");
+    $botaoInativo->set_title("Exibe os Cargos Inativos");
+    
+    # Cria o array de botões
+    $arrayBotoes = array($botaoRel);
+    if($tipo){
+        array_unshift($arrayBotoes,$botaoInativo);
+    }else{
+        array_unshift($arrayBotoes,$botaoAtivo);
+    }
+    
+    # Informa o array
+    $objeto->set_botaoListarExtra($arrayBotoes);
 
     ################################################################
     switch ($fase)

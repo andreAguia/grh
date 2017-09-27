@@ -328,7 +328,7 @@ if($acesso){
                 # PIS/Pasep
                 if(is_null($pis)){                
                     $controle = new Input('pisPasep','texto','Pis/Pasep:',1);
-                    $controle->set_size(12);            
+                    $controle->set_size(20);            
                     $controle->set_linha(3);
                     $controle->set_col(3);
                     $controle->set_required(TRUE);

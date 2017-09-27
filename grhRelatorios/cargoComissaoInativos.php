@@ -32,13 +32,13 @@ if($acesso)
                      valsal,
                      vagas
                 FROM tbtipocomissao
-                WHERE ativo = 1
+                WHERE NOT ativo
            ORDER BY simbolo';
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Cargos em Comissão');
+    $relatorio->set_titulo('Relatório de Cargos em Comissão Inativos');
     #$relatorio->set_subtitulo('Agrupados por Instituição');
 
     $relatorio->set_label(array('Cargo','Símbolo','Valor','Vagas'));
@@ -48,6 +48,8 @@ if($acesso)
     
     $relatorio->set_colunaSomatorio(3);
     $relatorio->set_textoSomatorio('Total de Vagas:');
+    $relatorio->set_exibeSomatorioGeral(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
 
     $relatorio->set_conteudo($result);    
     $relatorio->show();

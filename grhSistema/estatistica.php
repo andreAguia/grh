@@ -135,6 +135,9 @@ if($acesso)
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->set_linkTitulo("#");
+                $tabela->set_linkTituloImagem("ver.png");
+                $tabela->set_linkTituloTitle("teste");
                 $tabela->show();
                 
                 ###############################

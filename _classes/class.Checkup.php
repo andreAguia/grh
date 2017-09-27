@@ -1247,7 +1247,7 @@ class Checkup
         $metodo = explode(":",__METHOD__);
         
 
-        $select = 'SELECT idfuncional,
+        $select = 'SELECT idFuncional,
                           matricula,
                           tbpessoa.nome,
                           tbperfil.nome,                          
@@ -1258,7 +1258,7 @@ class Checkup
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                    WHERE idfuncional IS NULL
+                    WHERE (idFuncional IS NULL OR idFuncional = "")
                       AND tbservidor.situacao = 1';
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
@@ -1271,7 +1271,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidor(es) sem Id Funcional cadastrado no Sistema';
+        $titulo = 'Servidor(es) sem id funcional cadastrado no sistema';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");

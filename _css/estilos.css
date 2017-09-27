@@ -35,12 +35,7 @@ div#RelServidor{
     display :none;
 }
 
-div#divGaveta{
-    position: absolute;
-    top: 2%;
-    left: 93%;
-    width: 8px;
-}
+
 
 /*******************************************
  * Check up
@@ -182,6 +177,26 @@ tr#faltando{
 
 tr#certo{
     background-color:#99ccff;
+}
+
+/*******************************************
+ * Estatística
+ *******************************************/
+
+p#estatisticaNumero{
+    font-size: 50px;
+    text-align: center;
+    color: #02548b;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#estatisticaTexto{
+    font-size: 14px;
+    text-align: center;
+    color: #02548b;
+    padding: 0px;
+    margin: 0px;
 }
 
 /*******************************************

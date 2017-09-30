@@ -45,39 +45,15 @@ if($acesso)
     $menu1 = new MenuBar();
 
     # Voltar
-    $linkVoltar = new Link("Voltar","grh.php");
+    if(is_null($fase)){
+        $linkVoltar = new Link("Voltar","grh.php");
+    }else{
+         $linkVoltar = new Link("Voltar","?");
+    }
     $linkVoltar->set_class('button');
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
     $menu1->add_link($linkVoltar,"left");
-    
-    # Por Perfil
-    $linkRel = new Link("Geral","?fase=geral");
-    $linkRel->set_class('button');
-    $linkRel->set_title('Estatística Geral');
-    #$linkRel->set_accessKey('R');
-    $menu1->add_link($linkRel,"right");
-    
-    # Por Lotação
-    $linkRel = new Link("por Lotação","?fase=lotacao");
-    $linkRel->set_class('button');
-    $linkRel->set_title('Estatística por Lotação');
-    #$linkRel->set_accessKey('R');
-    $menu1->add_link($linkRel,"right");
-    
-    # Por Cargo
-    $linkRel = new Link("por Cargo","?fase=cargo");
-    $linkRel->set_class('button');
-    $linkRel->set_title('Estatística por Cargo');
-    #$linkRel->set_accessKey('R');
-    $menu1->add_link($linkRel,"right");
-    
-    # Temporal por Cargo
-    $linkRel = new Link("Temporal","?fase=temporalCargo");
-    $linkRel->set_class('button');
-    $linkRel->set_title('Estatística Temporal por Cargo');
-    #$linkRel->set_accessKey('R');
-    $menu1->add_link($linkRel,"right");
 
     $menu1->show();
     
@@ -135,9 +111,6 @@ if($acesso)
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
-                $tabela->set_linkTitulo("#");
-                $tabela->set_linkTituloImagem("ver.png");
-                $tabela->set_linkTituloTitle("teste");
                 $tabela->show();
                 
                 ###############################
@@ -163,6 +136,7 @@ if($acesso)
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->set_linkTitulo("?fase=cargo");
                 $tabela->show();
                 
                 ###############################
@@ -190,6 +164,7 @@ if($acesso)
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->set_linkTitulo("?fase=lotacao");
                 $tabela->show();
             
             $grid->fechaColuna();

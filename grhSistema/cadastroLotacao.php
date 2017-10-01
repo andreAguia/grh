@@ -23,12 +23,11 @@ if($acesso)
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
+    # Verifica tipo de Lotação exibida (1->ativa ou 0->inativa)
+    $tipo = get('tipo',1);
+    
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
-    # Verifica a paginacão
-    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);    
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -58,7 +57,12 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Lotação');
+    if($tipo){
+        $complemento = " Ativas";
+    }else{
+        $complemento = " Inativas";
+    }
+    $objeto->set_nome('Lotações '.$complemento);
 
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -86,12 +90,13 @@ if($acesso)
                                       idLotacao,
                                       idLotacao
                                  FROM tblotacao
-                                WHERE UADM LIKE "%'.$parametro.'%"
+                                WHERE ativo = '.$tipo.'  
+                                AND (UADM LIKE "%'.$parametro.'%"
                                    OR DIR LIKE "%'.$parametro.'%"
                                    OR GER LIKE "%'.$parametro.'%"
                                    OR nome LIKE "%'.$parametro.'%"
                                    OR ramais LIKE "%'.$parametro.'%"
-                                   OR idLotacao LIKE "%'.$parametro.'%" 
+                                   OR idLotacao LIKE "%'.$parametro.'%") 
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
@@ -127,11 +132,6 @@ if($acesso)
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_lotacaoNumServidores"));
 
     #$objeto->set_function(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_lotacaoNumServidores"));
-    $objeto->set_formatacaoCondicional(array(
-                                        array('coluna' => 7,
-                                              'valor' => 'Não',
-                                              'operador' => '=',
-                                              'id' => 'inativo')));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -169,6 +169,7 @@ if($acesso)
                'nome' => 'UADM',
                'label' => 'Unidade Administrativa:',
                'tipo' => 'combo',
+               'required' => TRUE,
                'array' => array('UENF','FENORTE'),
                'size' => 15),
         array ('linha' => 1,
@@ -177,6 +178,7 @@ if($acesso)
                'label' => 'Sigla da Diretoria:',
                'title' => 'Sigla da Diretoria',
                'tipo' => 'texto',
+               'required' => TRUE,
                'size' => 15),
         array ('linha' => 1,
                'col' => 3,
@@ -191,10 +193,12 @@ if($acesso)
                'label' => 'Nome completo da lotação:',
                'title' => 'Nome completo da lotação sem siglas',
                'tipo' => 'texto',
+               'required' => TRUE,
                'size' => 100),
         array ('linha' => 2,
                'col' => 2,
                'nome' => 'ativo',
+               'required' => TRUE,
                'label' => 'Ativo:',
                'title' => 'Se a lotação está ativa e permite movimentações',
                'tipo' => 'combo',
@@ -255,16 +259,24 @@ if($acesso)
     $botaoOrga->set_imagem($imagem3);
     $botaoOrga->set_url("?fase=organograma");
     #$botaoOrg->set_accessKey('O');
-
-    $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel,$botaoOrg));    
     
-    # Pega o número de Lotações ativas para a paginação
-    $numLotacaoAtiva = $pessoal->get_numLotacaoAtiva();
-	
-    # Paginação
-    $objeto->set_paginacao(TRUE);
-    $objeto->set_paginacaoInicial($paginacao);
-    $objeto->set_paginacaoItens($numLotacaoAtiva);
+    # Cargos Ativos
+    $botaoAtivo = new Button("Lotações Ativas","?tipo=1");
+    $botaoAtivo->set_title("Exibe os Cargos Ativos");
+    
+    # Cargos Ativos
+    $botaoInativo = new Button("Lotações Inativas","?tipo=0");
+    $botaoInativo->set_title("Exibe os Cargos Inativos");
+    
+    # Cria o array de botões
+    $arrayBotoes = array($botaoGra,$botaoRel,$botaoOrg);
+    if($tipo){
+        array_unshift($arrayBotoes,$botaoInativo);
+    }else{
+        $arrayBotoes = array($botaoAtivo);
+    }
+
+    $objeto->set_botaoListarExtra($arrayBotoes); 
 
     ################################################################
     switch ($fase)

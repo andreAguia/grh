@@ -30,8 +30,7 @@ if($acesso)
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -153,6 +152,7 @@ if($acesso)
                'title' => 'Nome do Perfil',
                'label' => 'Nome:',
                'tipo' => 'texto',
+               'required' => TRUE,
                'autofocus' => TRUE, 
                'size' => 50),
          array ('linha' => 1,
@@ -160,12 +160,14 @@ if($acesso)
                'title' => 'Tipo do Perfil',
                'label' => 'Tipo:',
                'tipo' => 'combo',
+               'required' => TRUE,
                'array' => array("Concursados","Não Concursados"),
                'size' => 20),         
         array ('linha' => 3,
                'nome' => 'progressao',
                'title' => 'informa se esse perfil tem direito a progressão',
                'label' => 'Progressão:',
+               'required' => TRUE,
                'tipo' => 'combo',
                'array' => array("Sim","Não"),
                'size' => 20),
@@ -173,12 +175,14 @@ if($acesso)
                'nome' => 'trienio',
                'title' => 'informa se esse perfil tem direito ao triênio',
                'label' => 'Triênio:',
+               'required' => TRUE,
                'tipo' => 'combo',
                'array' => array("Sim","Não"),
                'size' => 20),
         array ('linha' => 3,
                'nome' => 'comissao',
                'title' => 'informa se esse perfil tem direito a ter cargo em comissão',
+               'required' => TRUE,
                'label' => 'Comissão:',
                'tipo' => 'combo',
                'array' => array("Sim","Não"),
@@ -187,11 +191,13 @@ if($acesso)
                'nome' => 'gratificacao',
                'title' => 'informa se esse perfil tem direito a receber gratificação especial',
                'label' => 'Gratificação:',
+               'required' => TRUE,
                'tipo' => 'combo',
                'array' => array("Sim","Não"),
                'size' => 20),
          array ('linha' => 3,
                'nome' => 'ferias',
+               'required' => TRUE,
                'title' => 'informa se esse perfil tem direito as férias',
                'label' => 'Férias:',
                'tipo' => 'combo',
@@ -200,6 +206,7 @@ if($acesso)
         array ('linha' => 3,
                'nome' => 'licenca',
                'title' => 'informa se esse perfil tem direito a licença',
+               'required' => TRUE,
                'label' => 'Licença:',
                'tipo' => 'combo',
                'array' => array("Sim","Não"),
@@ -265,27 +272,17 @@ if($acesso)
             $linkVoltar->set_accessKey('V');
             $menu1->add_link($linkVoltar,"left");
 
-            # Servidores Ativos
-            if($subFase == 1){ 
-                $linkAtivo = new Link("Ativos","#");
-                $linkAtivo->set_class('button disabled');
-            }else{
-                $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
-                $linkAtivo->set_class('button');
-            }
-            $linkAtivo->set_title('Exibe os servidores ativos');
-            $menu1->add_link($linkAtivo,"right");
-
             # Servidores Inativos
             if($subFase == 1){ 
-                $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
-                $linkInativo->set_class('button');
+                $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
+                $linkTipo->set_title('Exibe os servidores inativos');
             }else{
-                $linkInativo = new Link("Inativos","#");
-                $linkInativo->set_class('button disabled');
+                $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
+                $linkTipo->set_title('Exibe os servidores ativos');
             }
-            $linkInativo->set_title('Exibe os servidores inativos');
-            $menu1->add_link($linkInativo,"right");
+            $linkTipo->set_class('button');
+            $linkTipo->set_title('Exibe os servidores inativos');
+            $menu1->add_link($linkTipo,"right");
             
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);

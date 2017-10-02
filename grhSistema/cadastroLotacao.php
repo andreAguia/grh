@@ -23,7 +23,7 @@ if($acesso)
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
-    # Verifica tipo de Lotação exibida (1->ativa ou 0->inativa)
+    # Verifica tipo (1->ativo ou 0->inativo)
     $tipo = get('tipo',1);
     
     # pega o id (se tiver)

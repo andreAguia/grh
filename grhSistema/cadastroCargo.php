@@ -28,8 +28,8 @@ if($acesso)
     $id = soNumeros(get('id'));
     
     # Verifica a paginacão
-    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
+    #$paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
+    #set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -213,8 +213,8 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Paginação
-    $objeto->set_paginacao(TRUE);
-    $objeto->set_paginacaoInicial($paginacao);
+    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacaoInicial($paginacao);
     
     # Cadastro de Cargos
     $botaoCargo = new Button("Cargos");
@@ -273,34 +273,24 @@ if($acesso)
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar,"left");
             
-            # Servidores Ativos
+             # Tipo de servidores
             if($subFase == 1){ 
-                $linkAtivo = new Link("Ativos","#");
-                $linkAtivo->set_class('button disabled');
+                $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
+                $linkTipo->set_title('Exibe os servidores inativos');
             }else{
-                $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
-                $linkAtivo->set_class('button');
+                $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
+                $linkTipo->set_title('Exibe os servidores ativos');
             }
-            $linkAtivo->set_title('Exibe os servidores ativos');
-            $menu->add_link($linkAtivo,"right");
-
-            # Servidores Inativos
-            if($subFase == 1){ 
-                $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
-                $linkInativo->set_class('button');
-            }else{
-                $linkInativo = new Link("Inativos","#");
-                $linkInativo->set_class('button disabled');
-            }
-            $linkInativo->set_title('Exibe os servidores inativos');
-            $menu->add_link($linkInativo,"right");
+            $linkTipo->set_class('button');
+            $linkTipo->set_title('Exibe os servidores inativos');
+            $menu->add_link($linkTipo,"right");
             
             # Mapa do Cargo
-            $imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',NULL,15,15);
-            $botaoRel = new Button();
+            #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',NULL,15,15);
+            $botaoRel = new Button("Mapa do Cargo");
             $botaoRel->set_title("Mapa do Cargo");
             $botaoRel->set_onClick("window.open('../grhRelatorios/mapaCargo.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $botaoRel->set_imagem($imagem1);
+            #$botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel,"right");
             
             # Relatório

@@ -263,16 +263,16 @@ if($acesso)
             $grid->abreColuna(12);
             
             # Cria um menu
-            $menu1 = new MenuBar();
+            $menu = new MenuBar();
 
             # Voltar
             $linkVoltar = new Link("Voltar","?");
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
-            $menu1->add_link($linkVoltar,"left");
+            $menu->add_link($linkVoltar,"left");
 
-            # Servidores Inativos
+            # Tipo de servidores
             if($subFase == 1){ 
                 $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
                 $linkTipo->set_title('Exibe os servidores inativos');
@@ -282,7 +282,7 @@ if($acesso)
             }
             $linkTipo->set_class('button');
             $linkTipo->set_title('Exibe os servidores inativos');
-            $menu1->add_link($linkTipo,"right");
+            $menu->add_link($linkTipo,"right");
             
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -290,9 +290,9 @@ if($acesso)
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem2);
-            $menu1->add_link($botaoRel,"right");
+            $menu->add_link($botaoRel,"right");
 
-            $menu1->show();
+            $menu->show();
             
             $servidor = new Pessoal();
             

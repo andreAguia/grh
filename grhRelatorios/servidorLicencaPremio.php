@@ -78,7 +78,7 @@ if($acesso)
                       numDias,
                       idPublicacaoPremio,
                       idPublicacaoPremio
-                 FROM tbpublicacaoPremio
+                 FROM tbpublicacaopremio
                 WHERE idServidor = $idServidorPesquisado
              ORDER BY dtPublicacao desc";
 

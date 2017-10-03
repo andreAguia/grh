@@ -108,7 +108,9 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
+    if(Verifica::acesso($idUsuario,1)){
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
@@ -119,7 +121,7 @@ if($acesso)
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresPerfil"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosPerfil"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -243,9 +245,22 @@ if($acesso)
         case "listar" :
             $objeto->listar();
             break;
+        
+        case "excluir" :
+            # Verifica se esse perfil tem servidor
+            $sevAtivos = $pessoal->get_servidoresAtivosPerfil($id);
+            $sevIntivos = $pessoal->get_servidoresInativosPerfil($id);
+            $serTotal = $sevAtivos + $sevIntivos;
+            
+            if($serTotal > 0){
+                alert('Este Perfil tem '.$serTotal.' servidores cadastrados:\n'.$sevAtivos.' ativo(s) e '.$sevIntivos.' inativo(s).\nEle não poderá ser excluído.');
+                back(1);
+            }else{
+                $objeto->excluir($id);
+            }            
+            break;
 
         case "editar" :
-        case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);
             break;

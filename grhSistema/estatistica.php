@@ -436,7 +436,7 @@ if($acesso)
             break;
             
         case "sexo":
-            titulo("Estatística por Cargo Efetivo");
+            titulo("Estatística por Sexo");
             br();
             
             $grid2 = new Grid();

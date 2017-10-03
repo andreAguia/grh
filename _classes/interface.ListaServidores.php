@@ -182,8 +182,15 @@ class ListaServidores
         
         # lotacao
         if(!is_null($this->lotacao)){
-            $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
-            $this->subTitulo .= "lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
+            
+            # Verifica se o que veio é numérico
+            if(is_numeric($this->lotacao)){
+                $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
+                $this->subTitulo .= "lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
+            }else{ # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';                
+                $this->subTitulo .= "lotação: ".$this->lotacao."<br/>";
+            }
         }
         
         # ordenação

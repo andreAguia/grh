@@ -1660,16 +1660,35 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_servidoresPerfil
+     * Método get_servidoresAtivosPerfil
      * 
-     * Exibe o n�mero de servidores ativos em um determinado concurso
+     * Exibe o número de servidores ativos 
      */
 
-    public function get_servidoresPerfil($id)
+    public function get_servidoresAtivosPerfil($id)
     {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
+                          idPerfil = '.$id;
+
+        $numero = parent::count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresAtivosPerfil
+     * 
+     * Exibe o número de servidores inativos 
+     */
+
+    public function get_servidoresInativosPerfil($id)
+    {
+        $select = 'SELECT idServidor                             
+                     FROM tbservidor
+                    WHERE situacao <> 1 AND 
                           idPerfil = '.$id;
 
         $numero = parent::count($select);

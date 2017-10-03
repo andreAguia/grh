@@ -47,7 +47,7 @@ if($acesso)
         $grid->abreColuna(12);
 
         # Cria um menu
-        $menu1 = new MenuBar();
+        $menu = new MenuBar();
 
         # Voltar
         $linkVoltar = new Link("Sair","../../areaServidor/sistema/login.php");
@@ -55,7 +55,7 @@ if($acesso)
         $linkVoltar->set_title('Sair do Sistema');
         $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
         $linkVoltar->set_accessKey('i');
-        $menu1->add_link($linkVoltar,"left");
+        $menu->add_link($linkVoltar,"left");
 
         # Relatórios
         $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -63,15 +63,15 @@ if($acesso)
         $botaoRel->set_url("grhRelatorios.php");
         $botaoRel->set_title("Relatórios dos Sistema");
         $botaoRel->set_imagem($imagem1);
-        $menu1->add_link($botaoRel,"right");
+        $menu->add_link($botaoRel,"right");
         
         # Área do Servidor
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');
         $linkArea->set_title('Área do Servidor');
-	$menu1->add_link($linkArea,"right");
+	$menu->add_link($linkArea,"right");
 
-        $menu1->show();
+        $menu->show();
 
         $grid->fechaColuna();
         $grid->fechaGrid();

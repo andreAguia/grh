@@ -53,7 +53,7 @@ if($acesso)
                                      lotacao,
                                      motivo,
                                      idHistLot
-                                FROM tbhistLot
+                                FROM tbhistlot
                           WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY data desc');
 
@@ -62,7 +62,7 @@ if($acesso)
                                      lotacao,
                                      motivo,
                                      idServidor
-                                FROM tbhistLot
+                                FROM tbhistlot
                                WHERE idHistLot = '.$id);
 
     # ordem da lista
@@ -88,7 +88,7 @@ if($acesso)
     $objeto->set_classBd('pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbhistLot');
+    $objeto->set_tabela('tbhistlot');
 
     # Nome do campo id
     $objeto->set_idCampo('idHistLot');

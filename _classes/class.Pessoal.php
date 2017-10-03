@@ -100,7 +100,7 @@ class Pessoal extends Bd
     public function get_gratificacao($idServidor)
     {
             $select = 'SELECT valor
-                         FROM tbGratificacao
+                         FROM tbgratificacao
                         WHERE idServidor = '.$idServidor.'
                           AND current_date() >= dtInicial 
                           AND (dtFinal is NULL OR current_date() <= dtFinal)';
@@ -123,7 +123,7 @@ class Pessoal extends Bd
     public function get_gratificacaoDtFinal($idServidor)
     {
         $select = 'SELECT dtFinal
-                     FROM tbGratificacao
+                     FROM tbgratificacao
                     WHERE idServidor = '.$idServidor.'
                     ORDER BY dtInicial desc';
         $numero = parent::count($select);

@@ -224,36 +224,26 @@ if($acesso)
             $grid->abreColuna(12);
 			
 			# Cria um menu
-            $menu1 = new MenuBar();
+            $menu = new MenuBar();
 
             # Voltar
             $linkVoltar = new Link("Voltar","?");
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
-            $menu1->add_link($linkVoltar,"left");
+            $menu->add_link($linkVoltar,"left");
 
-            # Servidores Ativos
+            # Tipo de servidores
             if($subFase == 1){ 
-                $linkAtivo = new Link("Ativos","#");
-                $linkAtivo->set_class('button disabled');
+                $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
+                $linkTipo->set_title('Exibe os servidores inativos');
             }else{
-                $linkAtivo = new Link("Ativos","?fase=listaServidores&subFase=1&id=$id");
-                $linkAtivo->set_class('button');
+                $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
+                $linkTipo->set_title('Exibe os servidores ativos');
             }
-            $linkAtivo->set_title('Exibe os servidores ativos');
-            $menu1->add_link($linkAtivo,"right");
-
-            # Servidores Inativos
-            if($subFase == 1){ 
-                $linkInativo = new Link("Inativos","?fase=listaServidores&subFase=2&id=$id");
-                $linkInativo->set_class('button');
-            }else{
-                $linkInativo = new Link("Inativos","#");
-                $linkInativo->set_class('button disabled');
-            }
-            $linkInativo->set_title('Exibe os servidores inativos');
-            $menu1->add_link($linkInativo,"right");
+            $linkTipo->set_class('button');
+            $linkTipo->set_title('Exibe os servidores inativos');
+            $menu->add_link($linkTipo,"right");
              
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -261,9 +251,9 @@ if($acesso)
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem2);
-            $menu1->add_link($botaoRel,"right");
+            $menu->add_link($botaoRel,"right");
 
-            $menu1->show();
+            $menu->show();
 
             if($subFase == 1){
 	            # Lista de Servidores Ativos

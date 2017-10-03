@@ -273,7 +273,7 @@ if($acesso)
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar,"left");
             
-             # Tipo de servidores
+            # Tipo de servidores
             if($subFase == 1){ 
                 $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
                 $linkTipo->set_title('Exibe os servidores inativos');

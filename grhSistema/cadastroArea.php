@@ -27,8 +27,8 @@ if($acesso)
     $id = soNumeros(get('id'));
     
     # Verifica a paginacão
-    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
+    #$paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
+    #set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
@@ -173,8 +173,8 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     
     # Paginação
-    $objeto->set_paginacao(TRUE);
-    $objeto->set_paginacaoInicial($paginacao);
+    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacaoInicial($paginacao);
 
     ################################################################
     switch ($fase)

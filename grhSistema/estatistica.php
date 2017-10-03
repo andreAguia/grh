@@ -137,6 +137,7 @@ if($acesso)
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
                 $tabela->set_linkTitulo("?fase=cargo");
+                $tabela->set_linkTituloTitle("Exibe detalhes");
                 $tabela->show();
                 
                 ###############################
@@ -165,6 +166,7 @@ if($acesso)
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
                 $tabela->set_linkTitulo("?fase=lotacao");
+                $tabela->set_linkTituloTitle("Exibe detalhes");
                 $tabela->show();
             
             $grid->fechaColuna();
@@ -192,6 +194,8 @@ if($acesso)
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->set_linkTitulo("?fase=sexo");
+                $tabela->set_linkTituloTitle("Exibe detalhes");
                 $tabela->show();
                 
                 # Geral - Por Nacionalidade
@@ -284,7 +288,20 @@ if($acesso)
             br();
             
             $grid2 = new Grid();
-            $grid2->abreColuna(4);
+            $grid2->abreColuna(3);
+            
+            # Número de Servidores
+            $painel = new Callout();
+            $painel->set_title('Painel com tipo primary');
+            $painel->abre();
+
+                $numServidores = $pessoal->get_numServidoresAtivos();
+                p($numServidores,"estatisticaNumero");
+                p("Servidores Ativos","estatisticaTexto");
+
+            $painel->fecha(); 
+
+            ###############################
             
             # Pega os dados
             $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
@@ -310,7 +327,7 @@ if($acesso)
             $tabela->show();
             
             $grid2->fechaColuna();
-            $grid2->abreColuna(8);
+            $grid2->abreColuna(9);
             
             $chart = new Chart("Pie",$servidores);
             $chart->show();
@@ -395,7 +412,7 @@ if($acesso)
                                 ORDER BY 2 DESC ';
 
                 $servidores = $pessoal->select($selectGrafico);
-
+                
                 # Soma a coluna do count
                 $total = array_sum(array_column($servidores, "jj"));
 
@@ -417,6 +434,217 @@ if($acesso)
 
             hr();
             break;
+            
+        case "sexo":
+            titulo("Estatística por Cargo Efetivo");
+            br();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(3);
+            
+             # Número de Servidores
+            $painel = new Callout();
+            $painel->set_title('Painel com tipo primary');
+            $painel->abre();
+
+                $numServidores = $pessoal->get_numServidoresAtivos();
+                p($numServidores,"estatisticaNumero");
+                p("Servidores Ativos","estatisticaTexto");
+
+            $painel->fecha(); 
+
+            ###############################
+            
+            # Geral - Por Sexo
+            $selectGrafico = 'SELECT tbpessoa.sexo, count(tbservidor.idServidor) as jj
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                               WHERE situacao = 1
+                            GROUP BY tbpessoa.sexo
+                            ORDER BY 1';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));            
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_titulo("por Sexo");
+            $tabela->set_label(array("Sexo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(9);
+            
+            $chart = new Chart("Pie",$servidores);
+            $chart->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(6);
+            
+            # Sexo por Lotação
+            $selectGrafico = 'SELECT tblotacao.dir, tbpessoa.sexo, count(tbservidor.idServidor) as jj
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                         LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                     AND situacao = 1
+                                     AND ativo
+                            GROUP BY tblotacao.dir, tbpessoa.sexo
+                            ORDER BY 1';
+
+            $servidores = $pessoal->select($selectGrafico);
+            
+            # Novo array 
+            $novoArray = array();
+            
+            # Valores anteriores
+            $diretoriaAnterior = NULL;
+            $sexoAnterior = NULL;
+            $contagemAnterior = NULL;
+            
+            # Contador 
+            $contador = 1;
+            
+            # Melhora a apresentação da tabela
+            foreach ($servidores as $value) {
+                # Carrega as variáveis de armazenamento para comparação 
+                $diretoria = $value[0];
+                $sexo = $value[1];
+                $contagem = $value[2];
+                
+                # Verifica se mudou de diretoria
+                if($diretoria <> $diretoriaAnterior){
+                    # O normal é ser diferente no contador 1. Significa que tem servidores dos 2 generos (msculino e feminino)
+                    if($contador == 1){
+                        $contador = 2;
+                        
+                        # passa os valores para as variaveis anteriores
+                        $diretoriaAnterior = $diretoria;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                    }else{
+                        # Se for diferente no 2 significa que só tem servidores de um único genero nessa diretoria
+                        if($sexo == "feminino"){
+                            array_push($novoArray,array($diretoriaAnterior,$contagemAnterior,0,$contagemAnterior+$contagem));
+                        }else{
+                            array_push($novoArray,array($diretoriaAnterior,0,$contagemAnterior,$contagemAnterior+$contagem));
+                        }
+                        
+                        # passa os valores para as variaveis anteriores
+                        $diretoriaAnterior = $diretoria;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                        $contador = 1;
+                    }
+                }else{
+                    array_push($novoArray,array($diretoria,$contagemAnterior,$contagem,$contagemAnterior+$contagem));
+                    $contador = 1;
+                }
+            }
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));            
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($novoArray);
+            $tabela->set_titulo("por Diretoria");
+            $tabela->set_label(array("Diretoria","Feminino","Masculino","Total"));
+            $tabela->set_width(array(25,25,25,25));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+            
+            ##################################
+
+            # Sexo por Cargo
+            $selectGrafico = 'SELECT tbtipocargo.cargo, tbpessoa.sexo, count(tbservidor.idServidor) as jj
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                              JOIN tbcargo USING (idCargo)
+                                              JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                            GROUP BY tbtipocargo.cargo, tbpessoa.sexo
+                            ORDER BY 1';
+
+            $servidores = $pessoal->select($selectGrafico);
+            
+            # Novo array 
+            $novoArray2 = array();
+            
+            # Valores anteriores
+            $cargoAnterior = NULL;
+            $sexoAnterior = NULL;
+            $contagemAnterior = NULL;
+            
+            # Contador 
+            $contador = 1;
+            
+            # Melhora a apresentação da tabela
+            foreach ($servidores as $value) {
+                # Carrega as variáveis de armazenamento para comparação 
+                $cargo = $value[0];
+                $sexo = $value[1];
+                $contagem = $value[2];
+                
+                # Verifica se mudou de diretoria
+                if($cargo <> $cargoAnterior){
+                    # O normal é ser diferente no contador 1. Significa que tem servidores dos 2 generos (msculino e feminino)
+                    if($contador == 1){
+                        $contador = 2;
+                        
+                        # passa os valores para as variaveis anteriores
+                        $cargoAnterior = $cargo;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                    }else{
+                        # Se for diferente no 2 significa que só tem servidores de um único genero nesse cargo
+                        if($sexo == "feminino"){
+                            array_push($novoArray2,array($cargoAnterior,$contagemAnterior,0,$contagemAnterior+$contagem));
+                        }else{
+                            array_push($novoArray2,array($cargoAnterior,0,$contagemAnterior,$contagemAnterior+$contagem));
+                        }
+                        
+                        # passa os valores para as variaveis anteriores
+                        $cargoAnterior = $cargo;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                        $contador = 1;
+                    }
+                }else{
+                    array_push($novoArray2,array($cargo,$contagemAnterior,$contagem,$contagemAnterior+$contagem));
+                    $contador = 1;
+                }
+            }
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));            
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($novoArray2);
+            $tabela->set_titulo("por Cargo");
+            $tabela->set_label(array("Cargo","Feminino","Masculino","Total"));
+            $tabela->set_width(array(55,15,15,15));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            hr();
+            break;
+            
         case "temporalCargo":
             titulo("Número de Servidores que Trabalharam na UENF em ".$ano);
             
@@ -598,7 +826,20 @@ if($acesso)
             br();
             
             $grid2 = new Grid();
-            $grid2->abreColuna(4);
+            $grid2->abreColuna(3);
+            
+            # Número de Servidores
+            $painel = new Callout();
+            $painel->set_title('Painel com tipo primary');
+            $painel->abre();
+
+                $numServidores = $pessoal->get_numServidoresAtivos();
+                p($numServidores,"estatisticaNumero");
+                p("Servidores Ativos","estatisticaTexto");
+
+            $painel->fecha(); 
+
+            ###############################
             
             # Pega os dados
             $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
@@ -626,7 +867,7 @@ if($acesso)
             $tabela->show();
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(8);
+            $grid2->abreColuna(9);
 
             $chart = new Chart("Pie",$servidores);
             #$chart->set_tresd(TRUE);

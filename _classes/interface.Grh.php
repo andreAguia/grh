@@ -731,11 +731,11 @@ class Grh
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
-            #$tabela->set_width(array(30,20,15,15,10,10));
+            $tabela->set_width(array(25,15,15,15,15,15));
             $tabela->set_align(array("left"));
             $tabela->set_funcao(array(NULL,NULL,"formataMoeda"));
-            $tabela->set_classe(array(NULL,NULL,NULL,'pessoal','pessoal'));
-            $tabela->set_metodo(array(NULL,NULL,NULL,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
+            $tabela->set_classe(array(NULL,NULL,NULL,NULL,'pessoal','pessoal'));
+            $tabela->set_metodo(array(NULL,NULL,NULL,NULL,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
             $tabela->show();
         }
     }	

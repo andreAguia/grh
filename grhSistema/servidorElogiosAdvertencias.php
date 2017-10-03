@@ -83,7 +83,7 @@ if($acesso)
     $objeto->set_funcao(array ("date_to_php"));
 
     # Classe do banco de dados
-    $objeto->set_classBd('pessoal');
+    $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
     $objeto->set_tabela('tbelogio');

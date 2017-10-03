@@ -73,7 +73,7 @@ if($acesso)
                                       numDias,
                                       idPublicacaoPremio,
                                       idPublicacaoPremio
-                                 FROM tbpublicacaoPremio
+                                 FROM tbpublicacaopremio
                                  WHERE idServidor = '.$idServidorPesquisado.'
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
@@ -86,8 +86,8 @@ if($acesso)
                                      numDias,
                                      obs,
                                      idServidor
-                                FROM tbpublicacaoPremio
-                               WHERE idpublicacaoPremio = '.$id);
+                                FROM tbpublicacaopremio
+                               WHERE idPublicacaoPremio = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -113,7 +113,7 @@ if($acesso)
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbpublicacaoPremio');
+    $objeto->set_tabela('tbpublicacaopremio');
 
     # Nome do campo id
     $objeto->set_idCampo('idPublicacaoPremio');

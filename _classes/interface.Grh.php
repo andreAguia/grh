@@ -728,7 +728,7 @@ class Grh
         else
         {
             # Monta a tabela
-            $tabela = new tabela();
+            $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
             #$tabela->set_width(array(30,20,15,15,10,10));

@@ -83,6 +83,31 @@ tr#inativo td{
 }
 
 /*******************************************
+ * Aniversariante do dia
+ *******************************************/
+tr#aniversariante td{
+    background-color: #99ccff;
+}
+
+p#aniversariante{
+    font-size: 14px;
+    text-align: center;
+    font-family: tahoma;
+    color: #02548b;
+    padding: 0;
+    margin: 0px;
+}
+
+a#linkAniversariante{
+    font-size: 14px;
+    color: #02548b;
+}
+
+div#divAniversariante{
+    text-align: right;
+}
+
+/*******************************************
  * Cadastro de Afastamento e Folgas Tre
  *******************************************/
 

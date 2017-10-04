@@ -278,34 +278,80 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_aniversariantes
-     * Exibe os niversariantes de um determinado m�s
+     * Método get_aniversariantes
+     * Exibe os aniversariantes de um determinado mês
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_aniversariantes($mes = NULL)
-    {
+    public function get_aniversariantes($mes = NULL){
+        
+        # Se o mês não for definido pega-se o mês atual
+        if (is_null($mes)){
+            $mes = date("n");
+        }
 
-            if (is_null($mes))
-                    $mes = date("n");
+        # Monta o select
+        $select = 'SELECT concat(date_format(tbpessoa.dtNasc,"%d/%m")," - ",tbpessoa.nome) as nasc,
+                          date_format(tbpessoa.dtNasc,"%d")	
+                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                    WHERE month(dtNasc) = '.$mes.' 
+                      AND tbservidor.situacao = 1
+                 ORDER BY nasc';
 
-            $select = 'SELECT concat(date_format(tbpessoa.dtNasc,"%d/%m")," - ",tbpessoa.nome) as nasc,
-                                      date_format(tbpessoa.dtNasc,"%d")	
-                                       FROM tbpessoa, tbservidor
-                                       WHERE month(dtNasc) = '.$mes.' and
-                                             tbservidor.idPessoa = tbpessoa.idPessoa and
-                                             tbservidor.situacao = 1
-                                       ORDER BY nasc';
+        # Pega o resultado do select
+        $result = parent::select($select);
 
-            # conecta com o banco
-
-            # Pega o resultado do select
-            $result = parent::select($select);
-
-            return $result; 
+        return $result; 
     }
+    
+    ###########################################################
 
+    /**
+     * Método get_numAniversariantes
+     * Exibe os aniversariantes de um determinado mês
+     * 
+     * @param	$mes	string	valor de 1 a 12 que informa o m�s
+     */
+    public function get_numAniversariantes($mes = NULL){
+        
+        # Se o mês não for definido pega-se o mês atual
+        if (is_null($mes)){
+            $mes = date("n");
+        }
 
+        # Monta o select
+        $select = 'SELECT idPessoa
+                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                    WHERE month(dtNasc) = '.$mes.' 
+                      AND tbservidor.situacao = 1';
+
+        # Pega o resultado do select
+        $result = parent::count($select);
+
+        return $result; 
+    }
+    
+    ###########################################################
+
+    /**
+     * Método get_numAniversariantesHoje
+     * Exibe os aniversariantes de hoje
+     */
+    public function get_numAniversariantesHoje(){
+        
+        # Monta o select
+        $select = 'SELECT idPessoa
+                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                    WHERE (DAY(dtNasc) = DAY(CURDATE()) AND MONTH(dtNasc) = MONTH(CURDATE()))
+                      AND tbservidor.situacao = 1';
+
+        # Pega o resultado do select
+        $result = parent::count($select);
+
+        return $result; 
+    }
+    
+    ###########################################################
 
     /**
      * M�todo set_senhaNull

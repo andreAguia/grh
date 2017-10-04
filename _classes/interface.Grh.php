@@ -170,11 +170,42 @@ class Grh
         
         ##########################################################
             
-        # Área Especial
+        # Aniversarintes
         #$grid = new Grid();
         $grid->abreColuna(12,6,3);
+        
+            titulo("Aniversariantes de ".get_nomeMes());
+            br();
+
+            # Pega os valores
+            $pessoal = new Pessoal();
+            $numServidores = $pessoal->get_numAniversariantes();
+            $numHoje = $pessoal->get_numAniversariantesHoje();
+
+            # Exibe os valores
+            p("Aniversariantes do mês: ".$numServidores,"aniversariante");
+            p("Aniversariantes de hoje: ".$numHoje,"aniversariante");
+            br();
             
-            titulo('Área Especial');
+            # Voltar
+            $div = new Div("divAniversariante");
+            $div->abre();
+                $link = new Link("Saiba mais","?fase=aniversariantes");
+                #$link->set_class('small button');
+                $link->set_id('linkAniversariante');
+                $link->set_title('Aniversarintes do mês');
+                $link->show();
+            $div->fecha();
+           
+        $grid->fechaColuna();        
+        
+         ##########################################################
+            
+        # Área Especial
+        #$grid = new Grid();
+        $grid->abreColuna(12,6,5);
+        
+         titulo('Área Especial');
             br();
             $tamanhoImage = 60;
             $menu = new MenuGrafico(2);
@@ -195,7 +226,7 @@ class Grh
             #$botao->set_accesskey('F');
             $menu->add_item($botao);
             $menu->show();
-        
+            
         $grid->fechaColuna();        
         
         ##########################################################
@@ -219,11 +250,11 @@ class Grh
         ##########################################################
         
         # links externos
-        $grid->abreColuna(12,6,5);
+        $grid->abreColuna(12,6,12);
             titulo('Links Externos');
             br();
             
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(5);
             $largura = 120;
             $altura = 50;
 
@@ -273,6 +304,7 @@ class Grh
             $grid->abreColuna(12,6,12);            
 
                 $tamanhoImage = 50;
+                br();
                 titulo('Tabelas Secundárias'); 
                 br();
 
@@ -814,7 +846,9 @@ class Grh
                          "get_servidorSemIdFuncional",
                          "get_servidorSemDtNasc",
                          "get_servidorCedidoLotacaoErrada",
-                         "get_servidorEstatutarioSemCargo");
+                         "get_servidorEstatutarioSemCargo",
+                         "get_servidorSemCargo",
+                         "get_servidorDuplicado");
         
         # Percorre as rotinas e preenche as mensagens 
         foreach ($rotinas as $rr) {

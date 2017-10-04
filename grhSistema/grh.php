@@ -38,7 +38,7 @@ if($acesso)
     }
      
     # Menu
-    if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes')){       
+    if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes')){       
         p(SISTEMA,'grhTitulo');
         p("Versão: ".VERSAO,"versao");
     
@@ -142,6 +142,53 @@ if($acesso)
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+            
+        ##################################################################	
+
+        case "aniversariantes" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Botão voltar
+            botaoVoltar('?');
+            
+            $select ='SELECT DAY(tbpessoa.dtNasc),
+                     tbpessoa.nome,
+                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor
+                FROM tbpessoa LEFT JOIN tbservidor ON (tbpessoa.idPessoa = tbservidor.idPessoa)
+                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+               WHERE tbservidor.situacao = 1
+                 AND MONTH(tbpessoa.dtNasc) = MONTH(NOW())    
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+             ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
+
+            $result = $pessoal->select($select);
+            
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
+            $tabela->set_align(array("center","left","left","left"));
+            $tabela->set_classe(array(NULL,NULL,NULL,'Pessoal','Pessoal'));
+            $tabela->set_metodo(array(NULL,NULL,NULL,'get_cargo','get_perfil'));
+            $tabela->set_titulo("Aniversariantes de ".get_nomeMes());
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                            'valor' => date("d"),
+                                                            'operador' => '=',
+                                                            'id' => 'aniversariante')                                              
+                                                            ));
+            $tabela->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+##################################################################
+    
     }
 
     $page->terminaPagina();

@@ -104,7 +104,7 @@ if($acesso)
                                'size' => 25),
                         array ('linha' => 2,
                                'nome' => 'onus',
-                               'label' => 'Cedido com ônus para a FENORTE?:',
+                               'label' => 'Cedido com ônus para a UENF?:',
                                'tipo' => 'combo',
                                'array' => array("Sim","Não"),
                                'size' => 20,

@@ -50,163 +50,141 @@ class Grh
      * 
      * @var private $matriculaUsuário string NULL Informa a matrícula do servidor logado para exibir somente os links que o servidor tem permissão 
      */
+       ##########################################################
+        
+        # 1º Coluna
+        $grid1 = new Grid();
+        $grid1->abreColuna(12,8,8);
+        
+        ##########################################################
+        
+            # Cadastro de Servidores 
+            $grid = new Grid();
+            $grid->abreColuna(12,4,4);
+
+            titulo('Servidores');
+            br();
+
+            $tamanhoImage = 180;
+            $menu = new MenuGrafico(1);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Servidores');
+            $botao->set_url('servidor.php');
+            $botao->set_image(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Servidores');
+            $botao->set_accesskey('S');
+            $menu->add_item($botao);
+
+            $menu->show();
+            br(); 
+            $grid->fechaColuna();
         
         ##########################################################
             
-        # Cadastro de Servidores 
-        $grid = new Grid();
-        $grid->abreColuna(12,4,3);
-            
-        titulo('Servidores');
-        br();
-        
-        $tamanhoImage = 180;
-        $menu = new MenuGrafico(1);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Servidores');
-        $botao->set_url('servidor.php');
-        $botao->set_image(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Servidores');
-        $botao->set_accesskey('S');
-        $menu->add_item($botao);
+            # Tabelas Auxiliares 
+            $grid->abreColuna(12,8,8);        
 
-        $menu->show();
-        br(); 
-        $grid->fechaColuna();
-        
-        ##########################################################
-            
-        # Tabelas Auxiliares 
-        $grid->abreColuna(12,8,5);        
-           
-        titulo('Tabelas Auxiliares');           
-        br();
+            titulo('Tabelas Auxiliares');           
+            br();
 
-        $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Perfil');
-        $botao->set_url('cadastroPerfil.php');
-        $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Perfil');
-        $botao->set_accesskey('P');
-        $menu->add_item($botao);
+            $tamanhoImage = 60;
+            $menu = new MenuGrafico(4);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Lotação');
-        $botao->set_url('cadastroLotacao.php');
-        $botao->set_image(PASTA_FIGURAS.'lotacao.jpg',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Lotação');
-        $botao->set_accesskey('L');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Cargo Efetivo');
-        $botao->set_url('cadastroCargo.php');
-        $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Funções');
-        $botao->set_accesskey('C');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Cargo em Comissão');
-        $botao->set_url('cadastroCargoComissao.php');
-        $botao->set_image(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Cargos em Comissão');
-        $botao->set_accesskey('g');
-        $menu->add_item($botao);
+            $botao = new BotaoGrafico();
+            $botao->set_label('Perfil');
+            $botao->set_url('cadastroPerfil.php');
+            $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Perfil');
+            $botao->set_accesskey('P');
+            $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Concurso');
-        $botao->set_url('cadastroConcurso.php');
-        $botao->set_image(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Concursos');
-        $botao->set_accesskey('o');
-        $menu->add_item($botao);   
+            $botao = new BotaoGrafico();
+            $botao->set_label('Lotação');
+            $botao->set_url('cadastroLotacao.php');
+            $botao->set_image(PASTA_FIGURAS.'lotacao.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Lotação');
+            $botao->set_accesskey('L');
+            $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Licenças e Afastamentos');
-        $botao->set_url('cadastroLicenca.php');
-        $botao->set_image(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Tipos de Licenças');
-        #$botao->set_accesskey('T');
-        $menu->add_item($botao);
+            $botao = new BotaoGrafico();
+            $botao->set_label('Cargo Efetivo');
+            $botao->set_url('cadastroCargo.php');
+            $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Funções');
+            $botao->set_accesskey('C');
+            $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('PDV');
-        $botao->set_url('cadastroPlanoCargos.php');
-        $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
-        $botao->set_accesskey('D');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Tabela Salarial');
-        $botao->set_url('cadastroTabelaSalarial.php');
-        $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Tipos de Licenças');
-        $botao->set_accesskey('b');
-        $menu->add_item($botao);
+            $botao = new BotaoGrafico();
+            $botao->set_label('Cargo em Comissão');
+            $botao->set_url('cadastroCargoComissao.php');
+            $botao->set_image(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Cargos em Comissão');
+            $botao->set_accesskey('g');
+            $menu->add_item($botao);
 
-        $menu->show();
-        $grid->fechaColuna();
+            $botao = new BotaoGrafico();
+            $botao->set_label('Concurso');
+            $botao->set_url('cadastroConcurso.php');
+            $botao->set_image(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Concursos');
+            $botao->set_accesskey('o');
+            $menu->add_item($botao);   
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Licenças e Afastamentos');
+            $botao->set_url('cadastroLicenca.php');
+            $botao->set_image(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Tipos de Licenças');
+            #$botao->set_accesskey('T');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('PDV');
+            $botao->set_url('cadastroPlanoCargos.php');
+            $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
+            $botao->set_accesskey('D');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Tabela Salarial');
+            $botao->set_url('cadastroTabelaSalarial.php');
+            $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Tipos de Licenças');
+            $botao->set_accesskey('b');
+            $menu->add_item($botao);
+
+            $menu->show();
+            $grid->fechaColuna();
 		       
         ###############################################################################################
             
-        # Alertas
-        $grid->abreColuna(12,6,4);
-
-        $divAlertas = new Div("divAlertas");
-        $divAlertas->abre();            
-            titulo('Alertas');
-            br(2);
-            aguarde();
-        $divAlertas->fecha();
+            # Legislação
+            $grid->abreColuna(12,4,4);
         
-        $grid->fechaColuna();
-        br();
+            titulo('Legislação');
+            br();
+            
+            $menu = new Menu();
+            $menu->add_item('linkWindow','Estatuto dos Servidores',"http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1","Decreto nº 2479 de 08 de Março de 1979");
+            $menu->add_item('linkWindow','Plano de Cargos e Vencimentos',"http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument","LEI Nº 4.800 de 29 de Junho de 2006");
+            $menu->add_item('linkWindow','Resoluções da Reitoria',"http://uenf.br/reitoria/legislacao/resolucoes/");
+            $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");     
+            $menu->add_item('linkWindow','Estatuto da UENF',"http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");            
+            $menu->show();
+        
+            $grid->fechaColuna();
+            br();
         
         ##########################################################
+                        
+            # Área Especial        
+            $grid->abreColuna(12,8,8);
             
-        # Aniversarintes
-        #$grid = new Grid();
-        $grid->abreColuna(12,6,3);
-        
-            titulo("Aniversariantes de ".get_nomeMes());
-            br();
-
-            # Pega os valores
-            $pessoal = new Pessoal();
-            $numServidores = $pessoal->get_numAniversariantes();
-            $numHoje = $pessoal->get_numAniversariantesHoje();
-
-            # Exibe os valores
-            p("Aniversariantes do mês: ".$numServidores,"aniversariante");
-            p("Aniversariantes de hoje: ".$numHoje,"aniversariante");
+            titulo('Área Especial');
             br();
             
-            # Voltar
-            $div = new Div("divAniversariante");
-            $div->abre();
-                $link = new Link("Saiba mais","?fase=aniversariantes");
-                #$link->set_class('small button');
-                $link->set_id('linkAniversariante');
-                $link->set_title('Aniversarintes do mês');
-                $link->show();
-            $div->fecha();
-           
-        $grid->fechaColuna();        
-        
-         ##########################################################
-            
-        # Área Especial
-        #$grid = new Grid();
-        $grid->abreColuna(12,6,5);
-        
-         titulo('Área Especial');
-            br();
             $tamanhoImage = 60;
             $menu = new MenuGrafico(2);
             
@@ -227,30 +205,28 @@ class Grh
             $menu->add_item($botao);
             $menu->show();
             
-        $grid->fechaColuna();        
+            $grid->fechaColuna();
+            $grid->fechaGrid();
         
         ##########################################################
-            
-        # Legislação
-        #$grid = new Grid();
-        $grid->abreColuna(12,6,4);
-            
-            titulo('Legislação');
-            br();
-            $menu = new Menu();
-            $menu->add_item('linkWindow','Estatuto dos Servidores',"http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1","Decreto nº 2479 de 08 de Março de 1979");
-            $menu->add_item('linkWindow','Plano de Cargos e Vencimentos',"http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument","LEI Nº 4.800 de 29 de Junho de 2006");
-            $menu->add_item('linkWindow','Resoluções da Reitoria',"http://uenf.br/reitoria/legislacao/resolucoes/");
-            $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");     
-            $menu->add_item('linkWindow','Estatuto da UENF',"http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");            
-            $menu->show();
+        $grid1->fechaColuna();
         
-        $grid->fechaColuna();        
+        # 2º Coluna - Alertas
+        $grid1->abreColuna(12,4,4);
+            
+            $divAlertas = new Div("divAlertas");
+            $divAlertas->abre();            
+                titulo('Alertas');
+                br(5);
+                aguarde();
+            $divAlertas->fecha();
+            
+        $grid1->fechaColuna();     
         
-        ##########################################################
+        ##########################################################        
         
         # links externos
-        $grid->abreColuna(12);
+        $grid1->abreColuna(12,12,8);
             titulo('Links Externos');
             br();
             
@@ -294,14 +270,44 @@ class Grh
             $menu->add_item($botao);
 
             $menu->show();
-        
-        $grid->fechaColuna();
+            
+        $grid1->fechaColuna();
+            
+        ##########################################################
+            
+        # Aniversarintes
+        $grid1->abreColuna(12,12,4);
+
+            titulo("Aniversariantes de ".get_nomeMes());
+            br();
+
+            # Pega os valores
+            $pessoal = new Pessoal();
+            $numServidores = $pessoal->get_numAniversariantes();
+            $numHoje = $pessoal->get_numAniversariantesHoje();
+
+            # Exibe os valores
+            p("Aniversariantes do mês: ".$numServidores,"aniversariante");
+            p("Aniversariantes de hoje: ".$numHoje,"aniversariante");
+            br();
+
+            # Voltar
+            $div = new Div("divAniversariante");
+            $div->abre();
+                $link = new Link("Saiba mais","?fase=aniversariantes");
+                #$link->set_class('small button');
+                $link->set_id('linkAniversariante');
+                $link->set_title('Aniversarintes do mês');
+                $link->show();
+            $div->fecha();
+
+        $grid1->fechaColuna();
         
         ##########################################################
         
         # Tabelas Secundárias
         if(Verifica::acesso($idUsuario,1)){
-            $grid->abreColuna(12);            
+            $grid1->abreColuna(12);            
 
                 $tamanhoImage = 50;
                 br();
@@ -385,9 +391,10 @@ class Grh
 
                 $menu->show();
 
-            $grid->fechaColuna();
+            $grid1->fechaColuna();
+            
         }
-        $grid->fechaGrid();
+        $grid1->fechaGrid();
     }
         
 ##########################################################
@@ -833,22 +840,26 @@ class Grh
         
         # Define as rotinas a serem verificadas
         $rotinas = array("get_motoristaCarteiraVencida",
-                         "get_motoristaSemDataCarteira",
-                         "get_motoristaSemCarteira",
-                         "get_servidorCom74",
-                         "get_servidorComMais75",
-                         "get_servidorComPerfilOutros",
-                         "get_servidorTecnicoEstatutarioSemConcurso",
-                         "get_servidorProfessorEstatutarioSemConcurso",
-                         "get_cargoComissaoNomeacaoIgualExoneracao",
-                         "get_servidorCom10MesesLicencaSemVencimento",
-                         "get_servidorComMaisde1AnoLicencaSemVencimento",
-                         "get_servidorSemIdFuncional",
-                         "get_servidorSemDtNasc",
-                         "get_servidorCedidoLotacaoErrada",
-                         "get_servidorEstatutarioSemCargo",
-                         "get_servidorSemCargo",
-                         "get_servidorDuplicado");
+            "get_motoristaSemDataCarteira",
+            "get_motoristaSemCarteira",
+            "get_servidorCom74",
+            "get_servidorComMais75",
+            "get_servidorComPerfilOutros",
+            "get_servidorTecnicoEstatutarioSemConcurso",
+            "get_servidorProfessorEstatutarioSemConcurso",
+            "get_cargoComissaoNomeacaoIgualExoneracao",
+            "get_servidorCom10MesesLicencaSemVencimento",
+            "get_servidorComMaisde1AnoLicencaSemVencimento",
+            "get_servidorSemIdFuncional",
+            "get_servidorSemDtNasc",
+            "get_servidorCedidoLotacaoErrada",
+            "get_servidorEstatutarioSemCargo",
+            "get_servidorSemCargo",
+            "get_servidorDuplicado",
+            "get_servidorCedidoSemInfoCedente",
+            "get_servidorInativoComPerfilOutros",
+            "get_servidorInativoSemMotivoSaida",
+            );
         
         # Percorre as rotinas e preenche as mensagens 
         foreach ($rotinas as $rr) {

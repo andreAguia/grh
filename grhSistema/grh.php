@@ -23,6 +23,7 @@ if($acesso)
     # Verifica a fase do programa
     $fase = get('fase','menu');
     $alerta = get('alerta');
+    $parametroMes = post('parametroMes',date("m"));
 		
     # Define a senha padrão de acordo com o que está nas variáveis
     #define("SENHA_PADRAO",$config->get_variavel('senha_padrao'));    
@@ -146,12 +147,35 @@ if($acesso)
         ##################################################################	
 
         case "aniversariantes" :
+            br();
+            
             # Limita o tamanho da tela
             $grid = new Grid();
-            $grid->abreColuna(12);
+            $grid->abreColuna(5);
             
             # Botão voltar
             botaoVoltar('?');
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(2);
+            
+            # Situação
+            $form = new Form('?fase=aniversariantes');
+
+            $controle = new Input('parametroMes','combo');
+            $controle->set_size(30);
+            $controle->set_title('O mês dos aniversários');
+            $controle->set_array($mes);
+            $controle->set_valor($parametroMes);
+            $controle->set_onChange('formPadrao.submit();');
+            $form->add_item($controle);
+            $form->show();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(5);
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
             
             $select ='SELECT DAY(tbpessoa.dtNasc),
                      tbpessoa.nome,
@@ -162,7 +186,7 @@ if($acesso)
                                    JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
-                 AND MONTH(tbpessoa.dtNasc) = MONTH(NOW())    
+                 AND MONTH(tbpessoa.dtNasc) = '.$parametroMes.'    
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
              ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
 
@@ -175,12 +199,10 @@ if($acesso)
             $tabela->set_align(array("center","left","left","left"));
             $tabela->set_classe(array(NULL,NULL,NULL,'Pessoal','Pessoal'));
             $tabela->set_metodo(array(NULL,NULL,NULL,'get_cargo','get_perfil'));
-            $tabela->set_titulo("Aniversariantes de ".get_nomeMes());
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                            'valor' => date("d"),
-                                                            'operador' => '=',
-                                                            'id' => 'aniversariante')                                              
-                                                            ));
+            $tabela->set_titulo("Aniversariantes de ".get_nomeMes($parametroMes));
+            if(date("m") == $parametroMes){
+                $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));
+            }
             $tabela->show();
             
             $grid->fechaColuna();

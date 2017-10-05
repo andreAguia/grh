@@ -250,7 +250,7 @@ class Grh
         ##########################################################
         
         # links externos
-        $grid->abreColuna(12,6,12);
+        $grid->abreColuna(12);
             titulo('Links Externos');
             br();
             
@@ -301,7 +301,7 @@ class Grh
         
         # Tabelas Secundárias
         if(Verifica::acesso($idUsuario,1)){
-            $grid->abreColuna(12,6,12);            
+            $grid->abreColuna(12);            
 
                 $tamanhoImage = 50;
                 br();

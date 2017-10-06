@@ -25,6 +25,15 @@ if($acesso)
     $diretoria = get('diretoria');
     $grafico = get('grafico');
     
+    # Verifica se veio menu grh e registra o acesso no log
+    $origem = get('origem',FALSE);
+    if($origem){
+        # Grava no log a atividade
+        $atividade = "Visualizou a área de estatística";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
+    
     # Pega o ano
     $ano = post("ano",date("Y"));
     
@@ -69,14 +78,14 @@ if($acesso)
         case "geral":
             titulo("Estatística Geral");
             br();
-            
+                        
             # Tamanho da coluna do grid
             $x = 3;
 
             $grid = new Grid();
             
             ## Primeira Coluna            
-            $grid->abreColuna($x);
+            $grid->abreColuna(6,4,3);
             
                 # Número de Servidores
                 $painel = new Callout();
@@ -172,7 +181,7 @@ if($acesso)
             $grid->fechaColuna();
             
             ## Segunda Coluna            
-            $grid->abreColuna($x);
+            $grid->abreColuna(6,4,3);
             
                 # Geral - Por Sexo
                 $selectGrafico = 'SELECT tbpessoa.sexo, count(tbservidor.idServidor) as jj
@@ -225,7 +234,7 @@ if($acesso)
             
             ## Terceira Coluna 
             
-            $grid->abreColuna($x);
+            $grid->abreColuna(6,4,3);
             
                 # Geral - Por Idade
                 $selectGrafico = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade, count(tbservidor.idServidor) as jj
@@ -253,7 +262,7 @@ if($acesso)
             
             ## Quarta Coluna 
             
-            $grid->abreColuna($x);
+            $grid->abreColuna(6,4,3);
             
                 # Geral - Por Cidade
                 $selectGrafico = 'SELECT tbpessoa.cidade, count(tbservidor.idServidor) as jj

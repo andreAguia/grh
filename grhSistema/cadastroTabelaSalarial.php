@@ -22,6 +22,15 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $origem = get('origem',FALSE);
+    if($origem){
+        # Grava no log a atividade
+        $atividade = "Visualizou o cadastro de tabela salarial";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));

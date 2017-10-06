@@ -22,6 +22,15 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase');
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $origem = get('origem',FALSE);
+    if($origem){
+        # Grava no log a atividade
+        $atividade = "Visualizou o cadastro de servidores";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -265,7 +274,7 @@ if($acesso)
             br(8);
             aguarde();
             set_session('idServidorPesquisado',$id);
-            loadPage('servidorMenu.php');
+            loadPage('servidorMenu.php?origem=1');
             break; 
         
         ###############################

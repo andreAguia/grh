@@ -1411,7 +1411,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Órgão','Início','Término','Lotação');
         $align = array('center','left','left','center','center','left');
-        $titulo = 'Servidor(es) cedido(s) pela UENF sem estar lotado no Gabinete - Cedidos';
+        $titulo = 'Servidor(es) cedido(s) pela UENF sem estar lotado no Reitoria - Cedidos';
         $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao");
         $funcao = array(NULL,NULL,NULL,"date_to_php","date_to_php");
@@ -1433,7 +1433,7 @@ class Checkup
             if(!is_null($idServidor)){
                 return $titulo;
             }elseif($this->lista){
-                callout("O servidor cedido pela deve estar cadastrado no setor Gabinete - Cessão.");
+                callout("O servidor cedido pela deve estar cadastrado no setor Reitoria - Cessão.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{

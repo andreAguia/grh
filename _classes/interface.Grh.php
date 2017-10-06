@@ -70,7 +70,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Servidores');
-            $botao->set_url('servidor.php');
+            $botao->set_url('servidor.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Servidores');
             $botao->set_accesskey('S');
@@ -93,7 +93,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Perfil');
-            $botao->set_url('cadastroPerfil.php');
+            $botao->set_url('cadastroPerfil.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Perfil');
             $botao->set_accesskey('P');
@@ -101,7 +101,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Lotação');
-            $botao->set_url('cadastroLotacao.php');
+            $botao->set_url('cadastroLotacao.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'lotacao.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Lotação');
             $botao->set_accesskey('L');
@@ -109,7 +109,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Cargo Efetivo');
-            $botao->set_url('cadastroCargo.php');
+            $botao->set_url('cadastroCargo.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Funções');
             $botao->set_accesskey('C');
@@ -117,7 +117,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Cargo em Comissão');
-            $botao->set_url('cadastroCargoComissao.php');
+            $botao->set_url('cadastroCargoComissao.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Cargos em Comissão');
             $botao->set_accesskey('g');
@@ -125,7 +125,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Concurso');
-            $botao->set_url('cadastroConcurso.php');
+            $botao->set_url('cadastroConcurso.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Concursos');
             $botao->set_accesskey('o');
@@ -133,7 +133,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Licenças e Afastamentos');
-            $botao->set_url('cadastroLicenca.php');
+            $botao->set_url('cadastroLicenca.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Tipos de Licenças');
             #$botao->set_accesskey('T');
@@ -141,7 +141,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('PDV');
-            $botao->set_url('cadastroPlanoCargos.php');
+            $botao->set_url('cadastroPlanoCargos.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
             $botao->set_accesskey('D');
@@ -149,7 +149,7 @@ class Grh
 
             $botao = new BotaoGrafico();
             $botao->set_label('Tabela Salarial');
-            $botao->set_url('cadastroTabelaSalarial.php');
+            $botao->set_url('cadastroTabelaSalarial.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Tipos de Licenças');
             $botao->set_accesskey('b');
@@ -190,7 +190,7 @@ class Grh
             
             $botao = new BotaoGrafico();
             $botao->set_label('Férias');
-            $botao->set_url('areaFerias.php');
+            $botao->set_url('areaFerias.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Área de Férias');
             $botao->set_accesskey('F');
@@ -198,7 +198,7 @@ class Grh
             
             $botao = new BotaoGrafico();
             $botao->set_label('Estatística');
-            $botao->set_url('estatistica.php');
+            $botao->set_url('estatistica.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Análise estatísticas');
             #$botao->set_accesskey('F');
@@ -318,7 +318,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
-                $botao->set_url("cadastroBanco.php");
+                $botao->set_url("cadastroBanco.php?origem=1");
                 #$botao->set_onClick("abreDivId('divMensagemAguarde'); fechaDivId('divMenu'); window.location='banco.php'");
                 $botao->set_image(PASTA_FIGURAS.'banco.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Bancos');
@@ -327,7 +327,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Escolaridade');
-                $botao->set_url("cadastroEscolaridade.php");
+                $botao->set_url("cadastroEscolaridade.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Escolaridades');
                 #$botao->set_accesskey('S');
@@ -335,7 +335,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Estado Civil');
-                $botao->set_url("cadastroEstadoCivil.php");
+                $botao->set_url("cadastroEstadoCivil.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Estado Civil');
                 #$botao->set_accesskey('S');
@@ -343,7 +343,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Parentesco');
-                $botao->set_url("cadastroParentesco.php");
+                $botao->set_url("cadastroParentesco.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'parentesco.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Parentesco');
                 #$botao->set_accesskey('S');
@@ -351,7 +351,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Situação');
-                $botao->set_url("cadastroSituacao.php");
+                $botao->set_url("cadastroSituacao.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Situação');
                 #$botao->set_accesskey('S');
@@ -359,7 +359,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Motivos de Saída');
-                $botao->set_url("cadastroMotivo.php");
+                $botao->set_url("cadastroMotivo.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'saida.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Motivos de Saída do Servidor da Instituição');
                 #$botao->set_accesskey('S');
@@ -367,7 +367,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Tipos de Progressão');
-                $botao->set_url("cadastroProgressao.php");
+                $botao->set_url("cadastroProgressao.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Tipos de Progressões');
                 #$botao->set_accesskey('S');
@@ -375,7 +375,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Nacionalidade');
-                $botao->set_url("cadastroNacionalidade.php");
+                $botao->set_url("cadastroNacionalidade.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'nacionalidade.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Nacionalidades');
                 #$botao->set_accesskey('S');
@@ -383,7 +383,7 @@ class Grh
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('País');
-                $botao->set_url("cadastroPais.php");
+                $botao->set_url("cadastroPais.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Paises');
                 #$botao->set_accesskey('S');

@@ -23,6 +23,15 @@ if($acesso)
     # Verifica a fase do programa
     $fase = get('fase','porDia');
     
+    # Verifica se veio menu grh e registra o acesso no log
+    $origem = get('origem',FALSE);
+    if($origem){
+        # Grava no log a atividade
+        $atividade = "Visualizou a área de férias";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
+    
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     set_session('areaFerias',FALSE);

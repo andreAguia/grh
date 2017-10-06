@@ -29,6 +29,15 @@ if($acesso){
 	
     # Verifica a fase do programa
     $fase = get('fase','menu');
+    
+    # Registra no log
+    $origem = get('origem',FALSE);
+    if($origem){
+        # Grava no log a atividade
+        $atividade = "Visualizou o cadastro do servidor ".$pessoal->get_nome($idServidorPesquisado);
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
 
     # Começa uma nova página
     $page = new Page();			

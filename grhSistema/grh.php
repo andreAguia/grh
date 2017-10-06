@@ -137,8 +137,8 @@ if($acesso)
             
             # Grava no log a atividade
             $data = date("Y-m-d H:i:s");
-            $atividade = 'Visualizou os Alertas do Sistema';
-            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4);
+            $atividade = 'Visualizou o método: '.$alerta.' da classe Checkup.';
+            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
             
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -148,6 +148,11 @@ if($acesso)
 
         case "aniversariantes" :
             br();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou os anivesariantes de ".get_nomeMes($parametroMes);
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
             
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -159,7 +164,7 @@ if($acesso)
             $grid->fechaColuna();
             $grid->abreColuna(2);
             
-            # Situação
+            # Mês 
             $form = new Form('?fase=aniversariantes');
 
             $controle = new Input('parametroMes','combo');

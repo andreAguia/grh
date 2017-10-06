@@ -2326,16 +2326,16 @@ class Pessoal extends Bd
      * @param	string $id  id do cargo
      */
 
-    public function get_nomeCargo($id)
+    public function get_nomeCargo($idCargo)
 
     {
-            if (!is_numeric($id))
-                return $id;
+            if (!is_numeric($idCargo))
+                return $idCargo;
             else
             {
                 $select = 'SELECT nome
                              FROM tbcargo
-                            WHERE idCargo = '.$id;
+                            WHERE idCargo = '.$idCargo;
 
                 $row = parent::select($select,FALSE);
                 return $row[0];

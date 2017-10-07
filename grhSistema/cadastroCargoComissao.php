@@ -294,7 +294,7 @@ if($acesso)
             # Servidores
             echo '<li>';
             $link = new Link("Servidores Ativos","?fase=relatorio&&id=".$id);
-            $link->set_title("Exibe a Lista de Servidores");
+            $link->set_title("Exibe a lista de servidores ativos nesse cargo em comissão");
             $link->set_janela(TRUE);    
             $link->show();
             echo '</li>';
@@ -302,7 +302,7 @@ if($acesso)
             # Histórico
             echo '<li>';
             $link = new Link("Histórico","../grhRelatorios/cargosComissionadosHistorico.php?cargo=".$id);
-            $link->set_title("Exibe a Lista de aniversariantes deste setor");
+            $link->set_title("Exibe o histórico de servidores nesse cargo em comissão");
             #$link->set_class("disabled");
             $link->set_janela(TRUE);    
             $link->show();
@@ -327,7 +327,7 @@ if($acesso)
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos no Cargo de '.$nomeCargo.' ('.$simbolo.')');
             $lista->set_situacao(1);
-            $lista->set_cargoComissao($nomeCargo);
+            $lista->set_cargoComissao($id);
             $lista->showTabela();
             
             #---------------------            

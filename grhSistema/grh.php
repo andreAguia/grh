@@ -109,7 +109,6 @@ if($acesso)
             echo "<ul class='checkupResumo'>";
             $checkup->get_all();
             echo "</ul>";
-            
             break;
 
 ##################################################################

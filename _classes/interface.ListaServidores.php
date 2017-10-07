@@ -170,8 +170,8 @@ class ListaServidores
         
         # cargo em comissão
         if(!is_null($this->cargoComissao)){
-            $select .= ' AND tbcomissao.dtExo is NULL AND tbtipocomissao.descricao = "'.$this->cargoComissao.'"';    
-            $this->subTitulo .= "cargo em comissão: ".$this->cargoComissao."<br/>";
+            $select .= ' AND tbcomissao.dtExo is NULL AND tbtipocomissao.idTipoComissao = "'.$this->cargoComissao.'"';    
+            $this->subTitulo .= "cargo em comissão: ".$servidor->get_nomeCargoComissao($this->cargoComissao)."<br/>";
         }
         
         # concurso

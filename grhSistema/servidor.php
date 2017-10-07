@@ -168,7 +168,7 @@ if($acesso)
                 $form->add_item($controle);
 
                 # Cargos em Comissão
-                $result = $pessoal->select('SELECT tbtipocomissao.descricao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                $result = $pessoal->select('SELECT tbtipocomissao.idTipoComissao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                                               FROM tbtipocomissao
                                               WHERE ativo
                                           ORDER BY tbtipocomissao.simbolo');

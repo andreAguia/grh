@@ -13,8 +13,7 @@ class Grh
      * 
      * Exibe o cabecalho
      */     
-    public static function cabecalho($titulo = NULL)
-    {        
+    public static function cabecalho($titulo = NULL){        
         # tag do cabeçalho
         echo '<header>';
         
@@ -230,7 +229,7 @@ class Grh
             titulo('Links Externos');
             br();
             
-            $menu = new MenuGrafico(5);
+            $menu = new MenuGrafico(3);
             $largura = 120;
             $altura = 50;
 

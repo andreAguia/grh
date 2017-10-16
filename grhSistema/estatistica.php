@@ -39,7 +39,7 @@ if($acesso)
     
     # Começa uma nova página
     $page = new Page();
-    $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
+    $page->set_jscript('<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>');
     $page->iniciaPagina();
     
     # Cabeçalho da Página
@@ -148,37 +148,10 @@ if($acesso)
                 $tabela->set_linkTitulo("?fase=cargo");
                 $tabela->set_linkTituloTitle("Exibe detalhes");
                 $tabela->show();
-                
-                ###############################
-                
-                # Geral - Por Lotação
-                $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
-                                    FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                     AND situacao = 1
-                                     AND ativo
-                                GROUP BY tblotacao.dir
-                                ORDER BY 1';
-
-                $servidores = $pessoal->select($selectGrafico);
-
-                # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));            
-
-                # Tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($servidores);
-                $tabela->set_titulo("por Lotação");
-                $tabela->set_label(array("Diretoria","Servidores"));
-                $tabela->set_width(array(80,20));
-                $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total de Servidores: ".$total);
-                $tabela->set_linkTitulo("?fase=lotacao");
-                $tabela->set_linkTituloTitle("Exibe detalhes");
-                $tabela->show();
             
             $grid->fechaColuna();
+            
+            ###############################
             
             ## Segunda Coluna            
             $grid->abreColuna(6,4,3);
@@ -207,6 +180,8 @@ if($acesso)
                 $tabela->set_linkTituloTitle("Exibe detalhes");
                 $tabela->show();
                 
+            ###############################    
+                
                 # Geral - Por Nacionalidade
                 $selectGrafico = 'SELECT tbnacionalidade.nacionalidade, count(tbservidor.idServidor) as jj
                                     FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
@@ -232,15 +207,57 @@ if($acesso)
 
             $grid->fechaColuna();
             
+            ###############################
+            
             ## Terceira Coluna 
             
             $grid->abreColuna(6,4,3);
             
                 # Geral - Por Idade
-                $selectGrafico = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade, count(tbservidor.idServidor) as jj
+                $selectGrafico = 'SELECT count(tbservidor.idServidor) as jj,
+                                         TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                    WHERE situacao = 1
                                 GROUP BY idade
+                                ORDER BY 2';
+
+                $servidores = $pessoal->select($selectGrafico);
+
+                # Separa os arrays para analise estatística
+                $idades = array();
+                foreach ($servidores as $item){
+                    $idades[] = $item[1];
+                }
+
+                # Soma a coluna do count
+                $total = array_sum(array_column($servidores, "jj"));  
+
+                # Dados da tabela
+                $dados[] = array("Maior Idade",maiorValor($idades));
+                $dados[] = array("Menor Idade",menorValor($idades));
+                $dados[] = array("Idade Média",media_aritmetica($idades));
+                
+                # Tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($dados);
+                $tabela->set_titulo("por Idade");
+                $tabela->set_label(array("Descrição","Idade"));
+                $tabela->set_width(array(50,50));
+                $tabela->set_align(array("left","center"));
+                $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->set_linkTituloTitle("Exibe detalhes");
+                $tabela->show();
+                
+            ###############################
+                
+                # Geral - Por Lotação
+                $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
+                                    FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                     AND situacao = 1
+                                     AND ativo
+                                GROUP BY tblotacao.dir
                                 ORDER BY 1';
 
                 $servidores = $pessoal->select($selectGrafico);
@@ -251,14 +268,18 @@ if($acesso)
                 # Tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($servidores);
-                $tabela->set_titulo("por Idade");
-                $tabela->set_label(array("Idade","Servidores"));
+                $tabela->set_titulo("por Lotação");
+                $tabela->set_label(array("Diretoria","Servidores"));
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));
                 $tabela->set_rodape("Total de Servidores: ".$total);
-                $tabela->show();
+                $tabela->set_linkTitulo("?fase=lotacao");
+                $tabela->set_linkTituloTitle("Exibe detalhes");
+                $tabela->show();    
             
             $grid->fechaColuna();
+            
+            ###############################
             
             ## Quarta Coluna 
             
@@ -291,7 +312,9 @@ if($acesso)
             
             hr();
             break;
-           
+        
+####################################################################################################
+        
         case "cargo":
             titulo("Estatística por Cargo Efetivo");
             br();
@@ -443,6 +466,8 @@ if($acesso)
 
             hr();
             break;
+            
+####################################################################################################
             
         case "sexo":
             titulo("Estatística por Sexo");
@@ -653,6 +678,8 @@ if($acesso)
             $grid2->fechaGrid();
             hr();
             break;
+            
+####################################################################################################
             
         case "temporalCargo":
             titulo("Número de Servidores que Trabalharam na UENF em ".$ano);

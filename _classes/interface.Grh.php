@@ -313,7 +313,7 @@ class Grh
                 titulo('Tabelas Secundárias'); 
                 br();
 
-                $menu = new MenuGrafico(9);
+                $menu = new MenuGrafico(11);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -385,6 +385,22 @@ class Grh
                 $botao->set_url("cadastroPais.php?origem=1");
                 $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Paises');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Estado');
+                $botao->set_url("cadastroEstado.php?origem=1");
+                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Estados');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Cidades');
+                $botao->set_url("cadastroCidade.php?origem=1");
+                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Cidades');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
 

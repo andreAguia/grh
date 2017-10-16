@@ -145,7 +145,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_periodoDisponivel
+     * Método get_periodoDisponivel
      * informa o per�odo dispon�vel de f�rias de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -189,7 +189,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_ramais
+     * Método get_ramais
      * Retorna um array com os setores e os ramais
      */
     public function get_ramais()
@@ -211,7 +211,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_salarioBase
+     * Método get_salarioBase
      * informa o sal�rio base de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -234,7 +234,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_salarioTotal
+     * Método get_salarioTotal
      * informa o sal�rio Total de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -257,7 +257,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_salarioCessao
+     * Método get_salarioCessao
      * informa o sal�rio recebido pelo �rg�o de origem de um cedido
      * 
      * @param	string $idServidor idServidor do servidor
@@ -354,7 +354,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo set_senhaNull
+     * Método set_senhaNull
      * muda a senha de um usu�rio para NULL (bloqueia o mesmo)
      * 
      * @param	string 	$idServidor 	-> idServidor do servidor
@@ -369,7 +369,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_diasAusentes
+     * Método get_diasAusentes
      * Informa, em dias, o per�odo entre a data atual
      * e o �ltimo acesso do usu�rio 
      *
@@ -397,7 +397,7 @@ class Pessoal extends Bd
     ######################################################################################
 
     /**
-     * M�todo get_lotacao
+     * Método get_lotacao
      * Informa a lota��o atual do servidor
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -422,7 +422,7 @@ class Pessoal extends Bd
     ######################################################################################
 
     /**
-     * M�todo get_lotacao
+     * Método get_lotacao
      * Informa a lotação atual do servidor sem o UADM
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -446,7 +446,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_lotacaoNumServidores
+     * Método get_lotacaoNumServidores
      * Informa o n�mero de servidores ativos nessa lota��o
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -470,7 +470,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_idlotacao
+     * Método get_idlotacao
      * Informa o id da lotação atual do servidor
      *
      * @param	string $idServidor  id do servidor
@@ -545,7 +545,7 @@ class Pessoal extends Bd
 
 
     /**
-     * M�todo get_perfil
+     * Método get_perfil
      * Informa o perfil do servidor
      * 
      * @param   string $idServidor  idServidor do servidor
@@ -570,7 +570,7 @@ class Pessoal extends Bd
 
 
     /**
-     * M�todo get_idCargo
+     * Método get_idCargo
      * Informa o id do cargo do servidor
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -593,7 +593,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_idpessoa
+     * Método get_idpessoa
      * fornece o id_pessoa de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -613,7 +613,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_idpessoaCPF
+     * Método get_idpessoaCPF
      * fornece o id_pessoa de um CPF
      * 
      * @param	string $cpf cpf do servidor
@@ -633,7 +633,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_idPessoaPis
+     * Método get_idPessoaPis
      * fornece o id_pessoa de um PisF
      * 
      * @param	string $pis do servidor
@@ -654,7 +654,7 @@ class Pessoal extends Bd
     ##########################################################
 
     /**
-     * M�todo get_anoAdmissao
+     * Método get_anoAdmissao
      * informa o ano de admiss�o de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -674,7 +674,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_dtAdmissao
+     * Método get_dtAdmissao
      * informa o ano de admiss�o de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -696,7 +696,7 @@ class Pessoal extends Bd
     function get_idPerfil($idServidor)
 
     /**
-     * M�todo get_idPerfil
+     * Método get_idPerfil
      * informa o id do perfil do servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -718,7 +718,7 @@ class Pessoal extends Bd
     function get_digito($idServidor)
 
     /**
-     * M�todo get_digito
+     * Método get_digito
      * informa o d�gito verificador de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1115,7 +1115,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_situacao
+     * Método get_situacao
      * informa a situa��o de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1135,7 +1135,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_idSituacao
+     * Método get_idSituacao
      * informa a idsitua��o de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1155,7 +1155,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_motivo
+     * Método get_motivo
      * informa o motivo de saída de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1175,7 +1175,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_idPessoaAtiva
+     * Método get_idPessoaAtiva
      * informa se a pessoa tem alguma matr�cula ativa
      * 
      * @param	integer $idPessoa   idPessoa do servidor
@@ -1195,7 +1195,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_nome
+     * Método get_nome
      * fornece o nome de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1222,7 +1222,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_sexo
+     * Método get_sexo
      * informa o sexo de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1230,23 +1230,18 @@ class Pessoal extends Bd
 
     function get_sexo($idServidor)
     {
-            $select = 'SELECT tbpessoa.sexo
-                         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                        WHERE idServidor = '.$idServidor;
-
-            if($idServidor == 0)
-                    $nome[0] = "";
-            else 
-                    $nome = parent::select($select,FALSE);
-
-
-            return $nome[0];
+        $select = 'SELECT tbpessoa.sexo
+                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                    WHERE idServidor = '.$idServidor;
+        
+        $sexo = parent::select($select,FALSE);
+        return $sexo[0];
     }
 
     ###########################################################
 
     /**
-     * M�todo get_nomeidPessoa
+     * Método get_nomeidPessoa
      * fornece o nome de um idPessoa
      * 
  * @param   integer $idPessoa    idPessoa do servidor
@@ -1266,7 +1261,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_cargoComissao
+     * Método get_cargoComissao
      * Informa o cargo em Comiss�o do Servidor (se tiver)
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -1303,7 +1298,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_cargoComissaoPorId
+     * Método get_cargoComissaoPorId
      * Informa o id e o nome do cargo em Comiss�o do Servidor (se tiver)
      * usado na rotina de Cargo em comiss�o para preencher a combo
      * 
@@ -1327,7 +1322,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_salarioCargoComissao
+     * Método get_salarioCargoComissao
      * Informa o sal�rio de um cargo em Comiss�o do Servidor (se tiver)
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -1362,7 +1357,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_trienioPercentual
+     * Método get_trienioPercentual
      * informa o percentual atual do trienio de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1384,7 +1379,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_trienioValor
+     * Método get_trienioValor
      * informa o valor atual do trienio de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1404,7 +1399,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_trienioDataInicial
+     * Método get_trienioDataInicial
      * informa a data Inicial de um trienio de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1452,7 +1447,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_trienioPer�odoAquisitivo
+     * Método get_trienioPer�odoAquisitivo
      * informa a per�odo Aquisitivo de um trienio de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1475,7 +1470,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_trienioNumProcesso
+     * Método get_trienioNumProcesso
      * informa a n� do processo de um trienio de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -1520,7 +1515,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_nomelotacao
+     * Método get_nomelotacao
      * Informa o nome da lota��o a partir do id
      *
      * @param	string $id  id da lota��o
@@ -1548,7 +1543,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_nomeCOmpletolotacao
+     * Método get_nomeCOmpletolotacao
      * Informa o nome da COmpleto lota��o a partir do id
      *
      * @param	string $id  id da lota��o
@@ -1614,7 +1609,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_servidoresCargoComissao
+     * Método get_servidoresCargoComissao
      * 
      * Exibe o n�mero de servidores ativos em um determinado cargo em comissao
      */
@@ -1687,7 +1682,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_servidoresConcurso
+     * Método get_servidoresConcurso
      * 
      * Exibe o n�mero de servidores ativos em um determinado concurso
      */
@@ -1744,7 +1739,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_servidoressituacaouacao
+     * Método get_servidoressituacaouacao
      * 
      * Exibe o n�mero de servidores ativos em um determinado concurso
      */
@@ -1762,7 +1757,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilLicenca
+     * Método get_perfilLicenca
      * informa se o perfil � permitido tirar licen�a
      * 
      * @param   integer $id id do Perfil
@@ -1783,7 +1778,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilProgressao
+     * Método get_perfilProgressao
      * informa se o perfil � permitido ter progressao
      * 
      * @param   integer $id id do Perfil
@@ -1804,7 +1799,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilTrienio
+     * Método get_perfilTrienio
      * informa se o perfil � permitido ter Tri�nios
      * 
      * @param   integer $id id do Perfil
@@ -1825,7 +1820,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilComissao
+     * Método get_perfilComissao
      * informa se o perfil � permitido ter Cargo em Comiss�o
      * 
      * @param   integer $id id do Perfil
@@ -1846,7 +1841,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilMatricula
+     * Método get_perfilMatricula
      * informa a matr�cula inicial e final permitida a um perfil
      * 
      * @param   integer $id id do Perfil
@@ -1868,7 +1863,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilGratificacao
+     * Método get_perfilGratificacao
      * informa se o perfil � permitido ter Gratifica��o Especial
      * 
      * @param   integer $id id do Perfil
@@ -1889,7 +1884,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilQuantidade
+     * Método get_perfilQuantidade
      * informa se o n�mero de servidores ativos nesse perfil
      * 
      * @param   integer $id id do Perfil
@@ -1911,7 +1906,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilFerias
+     * Método get_perfilFerias
      * informa se o perfil � permitido ter F�rias
      * 
      * @param   integer $id id do Perfil
@@ -1932,7 +1927,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_nivelCargo
+     * Método get_nivelCargo
      * Informa o n�vel de escolaridade do cargo de uma matr�cula
      * 
      * @param   string $idServidor do servidor
@@ -2216,7 +2211,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_nivelCargoCargo
+     * Método get_nivelCargoCargo
      * Informa o n�vel de escolaridade do cargo de um idCargo
      * 
      * @param   string $idCargo
@@ -2236,7 +2231,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_planoCargosAtual
+     * Método get_planoCargosAtual
      * Informa o id do Plano de CArgos Atual (com a data de publica��o mais recente)
      * 	 
      */
@@ -2255,7 +2250,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_classeInicial
+     * Método get_classeInicial
      * Informa o idClasse inicial (sal�rio Inicial)
      * 
      * @param   string $plano
@@ -2279,7 +2274,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_Pis
+     * Método get_Pis
      * fornece o Pis de um id_pessoa
      * 
      * @param	string $idPessoa do servidor
@@ -2300,7 +2295,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_perfilNome
+     * Método get_perfilNome
      * informa o nome do perfil
      * 
      * @param   integer $id id do Perfil
@@ -2320,7 +2315,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_nomeCargo
+     * Método get_nomeCargo
      * Informa o nome do cargo a partir do id
      *
      * @param	string $id  id do cargo
@@ -2346,7 +2341,7 @@ class Pessoal extends Bd
     ##########################################################
 
     /**
-     * M�todo get_nomeCargoComissao
+     * Método get_nomeCargoComissao
      * Informa o nome do cargo em comissao a partir do id
      *
      * @param	string $id  id do cargo
@@ -2446,7 +2441,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_ultimoAcesso
+     * Método get_ultimoAcesso
      * informa a data do �ltimo acesso a �rea do servidor de uma matr�cula
      * 
      * @param	string $idServidor idServidor do servidor
@@ -2595,7 +2590,7 @@ class Pessoal extends Bd
    ###########################################################
 
     /**
-     * M�todo get_parentesco
+     * Método get_parentesco
      * Informa o parentesco
      * 
      * @param	string $id  id do parentesco
@@ -2947,7 +2942,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_cpf
+     * Método get_cpf
      * fornece o CPF de um id_pessoa
      * 
      * @param	string $idPessoa do servidor
@@ -2968,7 +2963,7 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * M�todo get_identidade
+     * Método get_identidade
      * fornece o n�mero, org�o e data de emiss�o da
      * carteira de identidade de um id_pessoa
      * 
@@ -3074,7 +3069,7 @@ class Pessoal extends Bd
 
 	
 	/**
-	 * M�todo get_idFuncional
+	 * Método get_idFuncional
 	 * Informa a idFuncional de um servidor
 	 * 
 	 * @param	string $idServidor  idServidor do servidor
@@ -3138,7 +3133,7 @@ class Pessoal extends Bd
 
 	
 	/**
-	 * M�todo get_idServidor
+	 * Método get_idServidor
 	 * Informa a idServidor de uma matrícula
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -3332,7 +3327,7 @@ class Pessoal extends Bd
 	###########################################################
 
 	/**
-	 * M�todo get_nomeCompletoCargo
+	 * Método get_nomeCompletoCargo
 	 * Informa o nome do cargo a partir do id
 	 *
 	 * @param	string $id  id do cargo
@@ -3559,7 +3554,7 @@ class Pessoal extends Bd
         ###########################################################
 	
 	/**
-	 * M�todo get_dataNascimento
+	 * Método get_dataNascimento
 	 * informa a data de nascimento de um idServidor
 	 * 
 	 * @param	string $idServidor idServidor do servidor
@@ -3568,8 +3563,8 @@ class Pessoal extends Bd
 	function get_dataNascimento($idServidor)
 	{
             $select = 'SELECT tbpessoa.dtNasc
-                         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                        WHERE idServidor = '.$idServidor;
+                         FROM tbpessoa JOIN tbservidor USING(idPessoa)
+                        WHERE tbservidor.idServidor = '.$idServidor;
 
             if($idServidor == 0){
                 alert("$idServidor inválido");
@@ -3583,8 +3578,8 @@ class Pessoal extends Bd
 
 	
 	/**
-	 * M�todo get_idServidoridFuncional
-	 * Informa a idServidor de uma matrícula
+	 * Método get_idServidoridFuncional
+	 * Informa a idServidor de um idFuncional
 	 * 
 	 * @param	string $idFuncional  idFuncional do servidor
 	 */
@@ -3600,7 +3595,98 @@ class Pessoal extends Bd
             return $row[0];
 			
 	}
-		
-    ###########################################################
+        
+        ###########################################################
+	
+	/**
+	 * Método get_dataAposentadoria
+	 * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria
+	 * 
+	 * @param string $idServidor idServidor do servidor
+	 */
+
+	public function get_dataAposentadoria($idServidor){
+            # Pega o sexo do servidor
+            $sexo = $this->get_sexo($idServidor);
+            
+            # Define a idade que dá direito para cada gênero
+            switch ($sexo){
+                case "Masculino" :
+                    $idade = 60;
+                    break;
+                case "Feminino" :
+                    $idade = 55;
+                    break;
+            }
+            
+            # Pega a data de nascimento (vem dd/mm/AAAA)
+            $dtNasc = $this->get_dataNascimento($idServidor);
+            $partes = explode("/",$dtNasc);
+            
+            # Soma
+            $novoAno  = $partes[2]+$idade;
+            
+            # Calcula a data
+            $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+            return $novaData;			
+	}
+        
+        ###########################################################
+	
+	/**
+	 * Método get_dataCompulsoria
+	 * Informa a data em que o servidor é obrigado a se aposentar
+	 * 
+	 * @param string $idServidor idServidor do servidor
+	 */
+
+	public function get_dataCompulsoria($idServidor){
+            
+            # Idade obrigatória
+            $idade = 75;
+            
+            # Pega a data de nascimento (vem dd/mm/AAAA)
+            $dtNasc = $this->get_dataNascimento($idServidor);
+            $partes = explode("/",$dtNasc);
+            
+            # Soma
+            $novoAno  = $partes[2]+$idade;
+            
+            # Calcula a data
+            $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+            return $novaData;			
+	}
+        
+        ###########################################################
+	
+	/**
+	 * Método get_idade
+	 * Informa a idade do servidor
+	 * 
+	 * @param string $idServidor idServidor do servidor
+	 */
+
+        public function get_idade($idServidor){
+            
+            # Pega a data de nascimento do servidor
+            $dataNascimento = $this->get_dataNascimento($idServidor);
+            
+            
+            # Separa em dia, mês e ano
+            list($dia, $mes, $ano) = explode('/', $dataNascimento);
+
+            # Descobre que dia é hoje e retorna a unix timestamp
+            $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+            
+            # Descobre a unix timestamp da data de nascimento
+            $nascimento = mktime( 0, 0, 0, $mes, $dia, $ano);
+
+            # Depois apenas fazemos o cálculo já citado :)
+            $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+            
+            return $idade;
+        }
+
+        ###########################################################
 	
 }

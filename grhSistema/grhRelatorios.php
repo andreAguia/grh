@@ -30,8 +30,7 @@ if($acesso)
     $page = new Page();			
     $page->iniciaPagina();
 
-    switch ($fase)
-    {	
+    switch ($fase){	
         # Exibe o Menu Inicial
 
         case "menu" :
@@ -67,6 +66,7 @@ if($acesso)
                 # Menu de tipos de relatórios
                 $menu = new Menu();
                 $menu->add_item('titulo','Categorias de Relatórios');
+                $menu->add_item('linkAjax','Aposentadoria','?fase=aposentadoria','','','divMenuRelatorioGrh');  
                 $menu->add_item('linkAjax','Atestado','?fase=atestado','','','divMenuRelatorioGrh');  
                 $menu->add_item('linkAjax','Cargo Efetivo','?fase=cargoEfetivo','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cargo em Comissão','?fase=cargoEmComissao','','','divMenuRelatorioGrh');
@@ -81,8 +81,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença','?fase=licenca','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','SigFis','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
@@ -119,6 +118,16 @@ if($acesso)
             # Fecha o grid
             $grid->fechaColuna();
             $grid->fechaGrid();
+            break;
+
+        ######################################
+
+        case "aposentadoria";        
+            $menu = new Menu();
+            $menu->add_item('titulo','Aposentadoria');
+            $menu->add_item('linkWindow','Relatório de Estatutários com Idade para Aposentadoria','../grhRelatorios/servIdadeAposent.php');
+            
+            $menu->show();
             break;
 
         ######################################

@@ -87,7 +87,7 @@ if($acesso)
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT cidade,
+    $objeto->set_selectEdita('SELECT nome,
                                      idEstado
                                 FROM tbcidade
                                WHERE idCidade = '.$id);
@@ -119,26 +119,32 @@ if($acesso)
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-
-    # Foco do form
-    $objeto->set_formFocus('estciv');
+    
+    # Pega os dados da combo de Estado
+    $result3 = $pessoal->select('SELECT idEstado,
+                                        nome
+                                  FROM tbestado
+                              ORDER BY nome');
+    array_push($result3, array(NULL,NULL));
 
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'pais',
-               'label' => 'País:',
+               'nome' => 'nome',
+               'label' => 'Estado:',
                'tipo' => 'texto',
                'required' => TRUE,
                'autofocus' => TRUE,
-               'col' => 6,
+               'col' => 10,
                'size' => 60),
-        array ('linha' => 2,
-               'nome' => 'continente',
-               'title' => 'Continente do País',
-               'label' => 'Continente:',
-               'tipo' => 'combo',
-               'array' => array("---","América do Sul","América Central","América do Norte","Europa","África","Ásia","Oceania"),
+        array ('linha' => 1,
+               'nome' => 'idEstado',
+               'title' => 'Estado',
+               'label' => 'Estado:',
+               'tipo' => 'combo',               
+               'required' => TRUE,
+               'array' => $result3,
+               'col' => 2,
                'size' => 10)));
 
     # Matrícula para o Log

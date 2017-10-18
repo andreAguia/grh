@@ -375,7 +375,7 @@ class Grh
                 $botao = new BotaoGrafico();
                 $botao->set_label('Nacionalidade');
                 $botao->set_url("cadastroNacionalidade.php?origem=1");
-                $botao->set_image(PASTA_FIGURAS.'nacionalidade.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Nacionalidades');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
@@ -383,7 +383,7 @@ class Grh
                 $botao = new BotaoGrafico();
                 $botao->set_label('País');
                 $botao->set_url("cadastroPais.php?origem=1");
-                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_image(PASTA_FIGURAS.'nacionalidade.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Paises');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
@@ -391,7 +391,7 @@ class Grh
                 $botao = new BotaoGrafico();
                 $botao->set_label('Estado');
                 $botao->set_url("cadastroEstado.php?origem=1");
-                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_image(PASTA_FIGURAS.'estado.jpeg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Estados');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
@@ -399,7 +399,7 @@ class Grh
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cidades');
                 $botao->set_url("cadastroCidade.php?origem=1");
-                $botao->set_image(PASTA_FIGURAS.'pais.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_image(PASTA_FIGURAS.'city.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Cidades');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);

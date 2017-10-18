@@ -139,6 +139,7 @@ if($acesso)
                'title' => 'Unidade da federação',
                'label' => 'UF:',
                'tipo' => 'texto',
+               'required' => TRUE,
                'col' => 2,
                'size' => 10)));
 

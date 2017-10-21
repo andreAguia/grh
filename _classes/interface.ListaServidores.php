@@ -105,23 +105,28 @@ class ListaServidores
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select ='SELECT tbservidor.idFuncional,
-                         tbservidor.matricula,
-                         tbpessoa.nome,
-                         tbservidor.idServidor,
-                         concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
-                         tbperfil.nome,
-                         tbservidor.dtAdmissao,
-                         tbsituacao.situacao,
-                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                    LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
-                                    LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
-                                    LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)';
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbservidor.matricula,
+                          tbpessoa.nome,
+                          tbservidor.idServidor,
+                          concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                          tbperfil.nome,
+                          tbservidor.dtAdmissao,';
         
+        if($this->situacao <> 1){
+             $select .= 'tbservidor.dtDemissao,';
+        }
+        
+        $select .= '      tbsituacao.situacao,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                                     LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                     LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)';
+                            
         if(!is_null($this->cargoComissao)){
             $select .= ' LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                          LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)';
@@ -154,30 +159,30 @@ class ListaServidores
             }else{
                 $this->titulo .= $servidor->get_nomeSituacao($this->situacao)."s";
             }
-        }
+        }        
         
         # perfil
         if(!is_null($this->perfil)){
             $select .= ' AND (tbperfil.idperfil = "'.$this->perfil.'")';
-            $this->subTitulo .= "perfil: ".$servidor->get_nomePerfil($this->perfil)."<br/>";
+            $this->subTitulo .= "Perfil: ".$servidor->get_nomePerfil($this->perfil)."<br/>";
         }
         
         # cargo
         if(!is_null($this->cargo)){
             $select .= ' AND (tbcargo.idcargo = "'.$this->cargo.'")';
-            $this->subTitulo .= "cargo: ".$servidor->get_nomeCompletoCargo($this->cargo)."<br/>";
+            $this->subTitulo .= "Cargo: ".$servidor->get_nomeCompletoCargo($this->cargo)."<br/>";
         }
         
         # cargo em comissão
         if(!is_null($this->cargoComissao)){
             $select .= ' AND tbcomissao.dtExo is NULL AND tbtipocomissao.idTipoComissao = "'.$this->cargoComissao.'"';    
-            $this->subTitulo .= "cargo em comissão: ".$servidor->get_nomeCargoComissao($this->cargoComissao)."<br/>";
+            $this->subTitulo .= "Cargo em comissão: ".$servidor->get_nomeCargoComissao($this->cargoComissao)."<br/>";
         }
         
         # concurso
         if(!is_null($this->concurso)){
             $select .= ' AND (tbservidor.idConcurso = "'.$this->concurso.'")'; 
-            $this->subTitulo .= "concurso: ".$servidor->get_nomeConcurso($this->concurso)."<br/>";
+            $this->subTitulo .= "Concurso: ".$servidor->get_nomeConcurso($this->concurso)."<br/>";
         }
         
         # lotacao
@@ -186,10 +191,10 @@ class ListaServidores
             # Verifica se o que veio é numérico
             if(is_numeric($this->lotacao)){
                 $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                
-                $this->subTitulo .= "lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
+                $this->subTitulo .= "Lotação: ".$servidor->get_nomeLotacao($this->lotacao)." - ".$servidor->get_nomeCompletoLotacao($this->lotacao)."<br/>";
             }else{ # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';                
-                $this->subTitulo .= "lotação: ".$this->lotacao."<br/>";
+                $this->subTitulo .= "Lotação: ".$this->lotacao."<br/>";
             }
         }
         
@@ -224,8 +229,9 @@ class ListaServidores
             $this->itemFinal = $this->pagina * $this->paginacaoItens;
             $this->itemInicial = $this->itemFinal - $this->paginacaoItens+1;
 
-            if ($this->itemFinal > $totalRegistros)
-            $this->itemFinal = $totalRegistros;
+            if ($this->itemFinal > $totalRegistros){
+                $this->itemFinal = $totalRegistros;
+            }
 
             # Texto do fieldset
             $this->texto = 'Página: '.$this->pagina.' de '.$totalPaginas;
@@ -329,10 +335,18 @@ class ListaServidores
         $servidor = new Pessoal();
         
         # Dados da Tabela
-        $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
+        if($this->situacao == 1){
+            $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
+        }else{
+            $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Saída","Situação");
+        }
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+        if($this->situacao == 1){
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+        }else{
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
+        }            
         $classe = array(NULL,NULL,NULL,"pessoal");
         $metodo = array(NULL,NULL,NULL,"get_Cargo");
         
@@ -404,17 +418,24 @@ class ListaServidores
         $conteudo = $servidor->select($this->select,TRUE);
         $totalRegistros = count($conteudo);
         
-        # Dados da Tabela
-        $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
-        $width = array(5,5,15,16,15,8,8,5,5);
+        if($this->situacao == 1){
+            $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
+        }else{
+            $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Saída","Situação");
+        }
+        #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+        if($this->situacao == 1){
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+        }else{
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
+        }
         $classe = array(NULL,NULL,NULL,"pessoal");
         $metodo = array(NULL,NULL,NULL,"get_Cargo");
                 
         # Relatório
         $relatorio = new Relatorio();
-        $relatorio->set_titulo("Relatório de ".$this->nomeLista);
+        $relatorio->set_titulo("Servidores ".$this->titulo);
         if(!is_null($this->subTitulo)){
             $relatorio->set_subtitulo($this->subTitulo);
         }

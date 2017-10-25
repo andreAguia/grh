@@ -126,6 +126,7 @@ if($acesso)
             $menu = new Menu();
             $menu->add_item('titulo','Aposentadoria');
             $menu->add_item('linkWindow','Relatório de Estatutários com Idade para Aposentadoria','../grhRelatorios/servIdadeAposent.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
             
             $menu->show();
             break;
@@ -256,8 +257,8 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Assinatura','../grhRelatorios/geralServidoresAtivosAssinatura.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Check','../grhRelatorios/geralServidoresAtivosCheck.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos e Inativos - Agrupados por Lotação','../grhRelatorios/geralServidoresLotacao.php');
-            $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos e Inativos - Com CPF','../grhRelatorios/geralServidoresCPF.php');
-            $menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos e Inativos - Com CPF','../grhRelatorios/geralServidoresCPF.php'); 
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Inativos','../grhRelatorios/geralServidoresInativos.php');
             $menu->show();
             break;    
 

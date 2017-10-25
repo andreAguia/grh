@@ -59,7 +59,7 @@ if($acesso)
     $objeto->set_nome('Área');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('cadastroCargo.php');
+    $objeto->set_voltarLista('cadastroFuncao.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
@@ -67,7 +67,7 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "1";
+            $orderCampo = "2";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';
@@ -103,9 +103,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Area","Servidores Ativos"));
+    $objeto->set_label(array("id","Cargo","Area","Servidores<br/>Ativos"));
     $objeto->set_width(array(5,20,60,10));
-    $objeto->set_align(array("center","center","left","center"));
+    $objeto->set_align(array("center","left","left","center"));
 
     $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,"get_servidoresArea"));

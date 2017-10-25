@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Cargos
+ * Cadastro de Tipos de Cargos
  *  
  * By Alat
  */
@@ -22,29 +22,14 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
-    $subFase = get('subFase',1);
-    
-    # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
-        # Grava no log a atividade
-        $atividade = "Visualizou o cadastro de cargo efetivo";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
-    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
-    # Verifica a paginacão
-    #$paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    #set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
-    
+
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -54,9 +39,10 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
     $page->iniciaPagina();
-    
+
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
@@ -66,50 +52,46 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos e Funções');
+    $objeto->set_nome('Cargos');
 
-    # bot?o de voltar da lista
+    # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenação
-    if(is_null($orderCampo))
-            $orderCampo = " 2 asc, 3 asc, 4 asc, 5 asc, 6";
+    # ordenaç?o
+    if(is_null($orderCampo)){
+        $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
+    if(is_null($orderTipo)){
+        $orderTipo = 'asc';
+    }
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idCargo,
-                                      tbtipocargo.cargo,
-                                      tbarea.area,
-                                      nome,
-                                      tbplano.numDecreto,                                  
-                                      idCargo,
-                                      idCargo,
-                                      idCargo
-                                 FROM tbcargo LEFT JOIN tbplano USING (idPlano)
-                                              LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                              LEFT JOIN tbarea USING (idarea)
-                                WHERE nome LIKE "%'.$parametro.'%"
-                                   OR idCargo LIKE "%'.$parametro.'%" 
-                                   OR tbarea.area LIKE "%'.$parametro.'%" 
-                                   OR nome LIKE "%'.$parametro.'%"     
-                                   OR tbtipocargo.cargo LIKE "%'.$parametro.'%"
+    $objeto->set_selectLista ('SELECT idTipoCargo,
+                                      tipo,
+                                      cargo,
+                                      sigla,
+                                      nivel,
+                                      vagas,
+                                      idTipoCargo,
+                                      idTipoCargo
+                                 FROM tbtipocargo
+                                WHERE cargo LIKE "%'.$parametro.'%"
                              ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idtipocargo,
-                                     idarea,
-                                     nome,
-                                     idPlano,
-                                     atribuicoes,
+    $objeto->set_selectEdita('SELECT cargo,
+                                     tipo,
+                                     sigla,
+                                     nivel,
+                                     vagas,
                                      obs
-                                FROM tbcargo
-                               WHERE idCargo = '.$id);
+                                FROM tbtipocargo
+                               WHERE idTipoCargo = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -123,230 +105,148 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Área","Função","Plano de Cargos","Servidores","Ver"));
-    #$objeto->set_width(array(5,20,25,25,10,5,5));
-    $objeto->set_align(array("center","center","center","left"));
-
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_servidoresCargo"));
-
-    # Botão de exibição dos servidores
-    $botao = new BotaoGrafico();
-    $botao->set_label('');    
-    $botao->set_url('?fase=aguarde&id=');   
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","",$botao));
+    $objeto->set_label(["Id","Tipo","Cargo","Sigla","Nível","Vagas","Servidores<br/>Ativos","Vagas<br/>Disponíveis"]);
+    $objeto->set_align(["center","center","left"]);
+    
+    $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal']);
+    $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis']);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbcargo');
+    $objeto->set_tabela('tbtipocargo');
 
     # Nome do campo id
-    $objeto->set_idCampo('idCargo');
+    $objeto->set_idCampo('idTipoCargo');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
 
-    # Pega os dados da combo de Plano e Cargos
-    $result1 = $pessoal->select('SELECT idPlano, 
-                                      numDecreto
-                                  FROM tbplano
-                              ORDER BY numDecreto');
-    
-    # Pega os dados da combo de Tipos de Cargos
-    $result2 = $pessoal->select('SELECT idTipoCargo, 
-                                        cargo
-                                   FROM tbtipocargo
-                               ORDER BY idTipoCargo desc');
-    array_push($result2, array(NULL,NULL));
-    
-    # Pega os dados da combo de Área
-    $result3 = $pessoal->select('SELECT idArea,
-                                        CONCAT(tbtipocargo.cargo," - ",area)
-                                  FROM tbarea JOIN tbtipocargo USING (idTipoCargo)
-                              ORDER BY idarea desc');
-    array_push($result3, array(NULL,NULL));
-
     # Campos para o formulario
-    $objeto->set_campos(array(        
-         array('linha' => 1,
-               'col' => 6,
-               'nome' => 'idtipocargo',
-               'label' => 'Cargo:',
-               'tipo' => 'combo',               
-               'required' => TRUE,
-               'array' => $result2,
-               'size' => 30),
+    $objeto->set_campos(array(
         array ('linha' => 1,
-               'col' => 6,
-               'nome' => 'idarea',
-               'label' => 'Área:',
-               'tipo' => 'combo',               
+               'nome' => 'cargo',
+               'label' => 'Cargo:',
+               'tipo' => 'texto',
                'required' => TRUE,
-               'array' => $result3,
+               'autofocus' => TRUE,
+               'col' => 3,
                'size' => 50),
-        array ('linha' => 2,
-               'col' => 8,
-               'nome' => 'nome',
-               'label' => 'Função:',
-               'tipo' => 'texto',               
-               'required' => TRUE,
-               'size' => 50),
-        array ('linha' => 2,
-               'col' => 4,
-               'nome' => 'idPlano',
-               'label' => 'Plano de Cargos:',
+        array ('linha' => 1,
+               'nome' => 'tipo',
+               'label' => 'Tipo:',
                'tipo' => 'combo',
                'required' => TRUE,
-               'array' => $result1,
+               'array' => array(NULL,"Adm/Tec","Professor"),
+               'col' => 2,
+               'size' => 50),
+        array ('linha' => 1,
+               'nome' => 'sigla',
+               'label' => 'Sigla:',
+               'tipo' => 'texto',
+               'col' => 2,
+               'size' => 50),
+        array ('linha' => 1,
+               'nome' => 'nivel',
+               'label' => 'Nível do Cargo:',
+               'tipo' => 'combo',
+               'required' => TRUE,
+               'array' => array(NULL,"Doutorado","Superior","Médio","Fundamental","Elementar"),
+               'col' => 3,
                'size' => 30),
-        array ('linha' => 4,
-               'col' => 8,
-               'nome' => 'atribuicoes',
-               'label' => 'Atribuições do Cargo:',
-               'tipo' => 'textarea',
-               'size' => array(40,15)),
-        array ('linha' => 4,
-               'col' => 4,
+        array ('linha' => 1,
+               'col' => 2,
+               'nome' => 'vagas',
+               'label' => 'Vagas:',
+               'tipo' => 'numero',
+               'size' => 10),
+        array ('linha' => 2,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
-               'size' => array(40,15))));
+               'col' => 12,
+               'size' => array(80,5))));
 
     # Matrícula para o Log
     $objeto->set_idUsuario($idUsuario);
     
-    # Paginação
-    #$objeto->set_paginacao(TRUE);
-    #$objeto->set_paginacaoInicial($paginacao);
+    # Gráfico
+    $imagem = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);            
+    $botaoGra = new Button();
+    $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
+    #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
+    $botaoGra->set_url("?fase=grafico");
+    $botaoGra->set_imagem($imagem);
+    #$botaoGra->set_accessKey('G');
     
     # Cadastro de Cargos
-    $botaoCargo = new Button("Cargos");
+    $botaoCargo = new Button("Funções");
     $botaoCargo->set_title("Acessa o Cadastro de Cargos");
-    $botaoCargo->set_url('cadastroTipoCargo.php');  
+    $botaoCargo->set_url('cadastroFuncao.php');  
     #$botaoCargo->set_accessKey('L');
-    
-    # Cadastro de Áreas
-    $botaoArea = new Button("Áreas");
-    $botaoArea->set_title("Acessa o Cadastro de Áreas");
-    $botaoArea->set_url('cadastroArea.php');  
-    #$botaoArea->set_accessKey('L');
 
-    $objeto->set_botaoListarExtra(array($botaoCargo,$botaoArea));
+    $objeto->set_botaoListarExtra([$botaoGra,$botaoCargo]);
 
     ################################################################
     switch ($fase)
     {
-        case "" :
+        case "" :            
         case "listar" :
             $objeto->listar();
-
-            # Div da listagem de servidores
-            $divServidores = new div('divServidores');
-            $divServidores->abre();
-            $divServidores->fecha();
             break;
 
-        case "editar" :
-            $objeto->$fase($id);        
-            break;
-
+        case "editar" :	
         case "excluir" :	
-        case "gravar" :		
+        case "gravar" :
             $objeto->$fase($id);
             break;
         
-        case "aguarde" :
-            br(10);
-            aguarde();
+        case "grafico" :
+            # Gráfico Estatístico
+            $pessoal = new Pessoal();
+            
+            # Pega os dados
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.matricula) 
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                            GROUP BY tbtipocargo.cargo';
+
+            $servidores = $pessoal->select($selectGrafico);
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(12);
+            
+            botaoVoltar("?");            
+            titulo('Servidores por Cargo');
+
+            $grid3 = new Grid();
+            $grid3->abreColuna(4);
             br();
-            loadPage('?fase=listaServidores&id='.$id);
-            break;
 
-        case "listaServidores" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            
-            # Cria um menu
-            $menu = new MenuBar();
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));    
+            $tabela->show();
 
-            # Botão voltar
-            $btnVoltar = new Button("Voltar","?");
-            $btnVoltar->set_title('Volta para a página anterior');
-            $btnVoltar->set_accessKey('V');
-            $menu->add_link($btnVoltar,"left");
+            $grid3->fechaColuna();
+            $grid3->abreColuna(8);
+
+            $chart = new Chart("Pie",$servidores);
+            $chart->show();
+
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
             
-            # Tipo de servidores
-            if($subFase == 1){ 
-                $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
-                $linkTipo->set_title('Exibe os servidores inativos');
-            }else{
-                $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
-                $linkTipo->set_title('Exibe os servidores ativos');
-            }
-            $linkTipo->set_class('button');
-            $linkTipo->set_title('Exibe os servidores inativos');
-            $menu->add_link($linkTipo,"right");
-            
-            # Mapa do Cargo
-            #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',NULL,15,15);
-            $botaoRel = new Button("Mapa do Cargo");
-            $botaoRel->set_title("Mapa do Cargo");
-            $botaoRel->set_onClick("window.open('../grhRelatorios/mapaCargo.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            #$botaoRel->set_imagem($imagem1);
-            $menu->add_link($botaoRel,"right");
-            
-            # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $botaoRel->set_imagem($imagem2);
-            $menu->add_link($botaoRel,"right");
-             
-            $menu->show();
-            
-            if($subFase == 1){   
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores Ativos - Cargo: '.$pessoal->get_nomeCargo($id));       
-                $lista->set_situacao(1);
-                $lista->set_cargo($id);
-                $lista->showTabela();
-            }else{   
-                # Lista de Servidores Inativos
-                $lista = new ListaServidores('Servidores Inativos - Cargo: '.$pessoal->get_nomeCargo($id));       
-                $lista->set_situacao(1);
-                $lista->set_situacaoSinal("<>");
-                $lista->set_cargo($id);
-                $lista->showTabela();
-            }
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
-            
-        case "relatorio" :
-            if($subFase == 1){   
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores Ativos');       
-                $lista->set_situacao(1);
-                $lista->set_cargo($id);
-                $lista->showRelatorio();
-            }else{   
-                # Lista de Servidores Inativos
-                $lista = new ListaServidores('Servidores Inativos');       
-                $lista->set_situacao(1);
-                $lista->set_situacaoSinal("<>");
-                $lista->set_cargo($id);
-                $lista->showRelatorio();
-            }
-            break;
-    }
+    }									 	 		
+
     $page->terminaPagina();
 }else{
     loadPage("../../areaServidor/sistema/login.php");

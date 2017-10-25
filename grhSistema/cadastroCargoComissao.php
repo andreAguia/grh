@@ -123,9 +123,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Ver Servidores","Vagas Disponíveis","Cargo Ativo?"));
-    $objeto->set_width(array(5,20,10,10,10,10,10,10,10));
-    $objeto->set_align(array("center"));
+    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas<br/>Ocupadas","Ver","Vagas<br/>Disponíveis","Ativo?"));
+    #$objeto->set_width(array(5,20,10,10,10,10,10,10,10));
+    $objeto->set_align(array("center","left"));
     
     $objeto->set_funcao(array(NULL,NULL,NULL,"formataMoeda"));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal',NULL,'pessoal'));

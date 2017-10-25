@@ -57,7 +57,7 @@ if($acesso)
     if(is_null($fase)){
         $linkVoltar = new Link("Voltar","grh.php");
     }else{
-         $linkVoltar = new Link("Voltar","?");
+        $linkVoltar = new Link("Voltar","?");
     }
     $linkVoltar->set_class('button');
     $linkVoltar->set_title('Voltar para página anterior');
@@ -286,11 +286,13 @@ if($acesso)
             $grid->abreColuna(6,4,3);
             
                 # Geral - Por Cidade
-                $selectGrafico = 'SELECT tbpessoa.cidade, count(tbservidor.idServidor) as jj
+                $selectGrafico = 'SELECT CONCAT(tbcidade.nome," (",tbestado.uf,")"), count(tbservidor.idServidor) as jj
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                                  JOIN tbcidade USING (idCidade)
+                                                  JOIN tbestado USING (idEstado)
                                    WHERE situacao = 1
-                                GROUP BY tbpessoa.cidade
-                                ORDER BY 1';
+                                GROUP BY 1
+                                ORDER BY jj desc';
 
                 $servidores = $pessoal->select($selectGrafico);
 

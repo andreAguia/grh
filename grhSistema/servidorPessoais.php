@@ -55,9 +55,8 @@ if($acesso)
                                      paisOrigem,
                                      anoChegada,
                                      endereco,
-                                     complemento,
                                      bairro,
-                                     cidade,
+                                     idCidade,
                                      uf,
                                      cep,
                                      nomePai,
@@ -109,8 +108,13 @@ if($acesso)
                                   FROM tbpais
                               ORDER BY pais');
     array_unshift($paisOrigem, array(NULL,NULL)); # Adiciona o valor de nulo
-
-     
+    
+    # Pega os dados da combo de cidade
+    $cidade = $pessoal->select('SELECT idCidade,
+                                       CONCAT(tbcidade.nome," (",tbestado.uf,")")
+                                  FROM tbcidade JOIN tbestado USING (idEstado)
+                              ORDER BY tbestado.uf,tbcidade.nome');
+    array_unshift($cidade, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -183,36 +187,23 @@ if($acesso)
                                'tipo' => 'texto',                          
                                'title' => 'Endereço do Servidor',
                                'fieldset' => 'Endereço',
-                               'col' => 6,
-                               'size' => 50),
-                        array ('linha' => 5,
-                               'nome' => 'complemento',
-                               'label' => 'Complemento:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Complemento do endereço',
-                               'col' => 6,
+                               'col' => 12,
                                'size' => 50),
                         array ('linha' => 6,
                                'nome' => 'bairro',
                                'label' => 'Bairro:',
                                'tipo' => 'texto',                          
                                'title' => 'Bairro',
-                               'col' => 4,
+                               'col' => 5,
                                'size' => 50),
                         array ('linha' => 6,
-                               'nome' => 'cidade',
+                               'nome' => 'idCidade',
                                'label' => 'Cidade:',
-                               'tipo' => 'texto',
-                               'col' => 4,
-                               'title' => 'Cidade do endereço',                           
-                               'size' => 50),
-                        array ('linha' => 6,
-                               'nome' => 'uf',
-                               'label' => 'UF:',
-                               'tipo' => 'texto',                          
-                               'title' => 'UF',
-                               'col' => 2,
-                               'size' => 3),
+                               'tipo' => 'combo',
+                               'array' => $cidade,                        
+                               'title' => 'Cidade de Moradia do Servidor',                           
+                               'col' => 5,
+                               'size' => 30),
                         array ('linha' => 6,
                                'nome' => 'cep',
                                'label' => 'Cep:',

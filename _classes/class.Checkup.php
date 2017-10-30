@@ -33,12 +33,35 @@ class Checkup
      */
     
     public function get_all(){
+        # Pega todos as informações da classe
         $api = new ReflectionClass($this);
+        
+        # Inicia um array para guardar o retorno 
+        $metodoRetorno = array();
+        
+        # Percorre todos os métodos da classe e guarda no array seu retorno
         foreach($api->getMethods() as $method){
             if (($method->getName() <> 'get_all') AND ($method->getName() <> '__construct')){
                 $metodo =  $method->getName();
-                $this->$metodo();
+                $metodoRetorno[] = $this->$metodo();
             }
+        }
+        
+        # Ordena os métodos pela prioridade
+        function cmp($a, $b) {          // Função específica que compara se $a é maior que $b
+            return $a[2] > $b[2];
+        }
+
+        // Ordena
+        usort($metodoRetorno, 'cmp');
+        
+        # Percorre o array $metodoRetorno e exibe a lista
+        foreach($metodoRetorno as $listaRetorno){
+            $link = new Link($listaRetorno[0],"?fase=alertas&alerta=".$listaRetorno[1]);
+            $link->set_id("checkupResumo".$listaRetorno[2]);
+            echo "<li>";
+            $link->show();
+            echo "</li>";
         }
     }
             
@@ -51,6 +74,9 @@ class Checkup
      */
     
     public function get_licencaVencendo(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 3;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
        
@@ -74,10 +100,10 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidores com licença terminando em '.date('Y');
-        $label = array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final');
-        $funcao = array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php");
-        $align = array('center','left');
+        $titulo = 'Servidor(es) com licença terminando em '.date('Y');
+        $label = ['IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final'];
+        $funcao = [NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"];
+        $align = ['center','left'];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -95,11 +121,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -112,8 +135,10 @@ class Checkup
      * Servidores com trênio vencendo este ano
      */
     
-    public function get_trienioVencendo()
-    {
+    public function get_trienioVencendo(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 3;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
             
@@ -153,10 +178,10 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio');
-        $align = array('center','left');
-        $titulo = 'Servidores com triênio vencendo em '.date('Y');
-        $funcao = array(NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php");
+        $label = ['IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio'];
+        $align = ['center','left'];
+        $titulo = 'Servidor(es) com triênio vencendo em '.date('Y');
+        $funcao = [NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -174,11 +199,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -191,8 +213,10 @@ class Checkup
      * Servidores com trênio vencido anterior a esse ano
      */
     
-    public function get_trienioVencido()
-    {
+    public function get_trienioVencido(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 3;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -232,10 +256,10 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:');
-        $align = array('center','left');
-        $titulo = 'Servidores com triênio vencido antes de '.date('Y');
-        $funcao = array(NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php");
+        $label = ['IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Deveriam ter recebido em:'];
+        $align = ['center','left'];
+        $titulo = 'Servidor(es) com triênio vencido antes de '.date('Y');
+        $funcao = [NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -253,11 +277,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -270,8 +291,10 @@ class Checkup
      * Servidores com o auxílio creche vencendo este ano
      */
     
-    public function get_auxilioCrecheVencido()
-    {
+    public function get_auxilioCrecheVencido(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 3;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -293,10 +316,10 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidores com o auxílio creche vencendo em '.date('Y');
-        $label = array("IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo");
-        $funcao = array(NULL,NULL,NULL,"date_to_php","date_to_php");
-        $align = array('center','left','left');
+        $titulo = 'Servidor(es) com o auxílio creche vencendo em '.date('Y');
+        $label = ["IdFuncional","Servidor","Dependente","Nascimento","Término do Aux.","CI Exclusão","Processo"];
+        $funcao = [NULL,NULL,NULL,"date_to_php","date_to_php"];
+        $align = ['center','left','left'];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -314,11 +337,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -331,14 +351,19 @@ class Checkup
      * Motoristas com carteira de habilitação vencida no sistema
      */
     
-    public function get_motoristaCarteiraVencida($idServidor = NULL)
-    {
+    public function get_motoristaCarteiraVencida($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
-        $select = 'SELECT tbservidor.idFuncional,  
+        $select = 'SELECT tbservidor.idFuncional, 
+                          tbservidor.matricula,  
                           tbpessoa.nome,
+                          motorista,
                           tbdocumentacao.dtVencMotorista,
+                          tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
                                      LEFT JOIN tbdocumentacao USING (idpessoa)
@@ -354,12 +379,14 @@ class Checkup
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
+        
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome','Data da Carteira');
-        $align = array('center','left');
-        $titulo = 'Motorista com carteira de habilitação vencida';
-        $funcao = array(NULL,NULL,"date_to_php");
+        $label = ['IdFuncional','Matrícula','Nome','Habilitação','Data da Carteira','Cargo'];
+        $align = ['center','center','left','center','center','left'];
+        $titulo = 'Motorista(s) com carteira de habilitação vencida';
+        $funcao = [NULL,"dv",NULL,NULL,"date_to_php"];
+        $classe = [NULL,NULL,NULL,NULL,NULL,"Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,NULL,"get_cargo"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -368,6 +395,8 @@ class Checkup
         $tabela->set_label($label);
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -376,15 +405,12 @@ class Checkup
             if(!is_null($idServidor)){
                 return $titulo;
             }elseif($this->lista){
-                callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, a nova data, senão esta mensagem continuará sendo exibida para esse servidor.");
+                callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada.<br/>Lembre-se de cadastrar no sistema, na área de documentos do motorista, a nova data, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -397,14 +423,19 @@ class Checkup
      * Motoristas com carteira de habilitação sem data de vencimento cadastrada no sistema
      */
     
-    public function get_motoristaSemDataCarteira($idServidor = NULL)
-    {
+    public function get_motoristaSemDataCarteira($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
-        $select = 'SELECT tbservidor.idFuncional,  
+       $select = 'SELECT tbservidor.idFuncional, 
+                          tbservidor.matricula,  
                           tbpessoa.nome,
+                          motorista,
                           tbdocumentacao.dtVencMotorista,
+                          tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
                                      LEFT JOIN tbdocumentacao USING (idpessoa)
@@ -420,10 +451,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome','Data da Carteira');
-        $align = array('center','left');
-        $titulo = 'Motorista com carteira de habilitação sem data de vencimento';
-        $funcao = array(NULL,NULL,"date_to_php");
+        $label = ['IdFuncional','Matrícula','Nome','Habilitação','Data da Carteira','Cargo'];
+        $align = ['center','center','left','center','center','left'];
+        $titulo = 'Motorista(s) com carteira de habilitação sem data de vencimento';
+        $funcao = [NULL,"dv",NULL,NULL,"date_to_php"];
+        $classe = [NULL,NULL,NULL,NULL,NULL,"Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,NULL,"get_cargo"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -432,6 +465,8 @@ class Checkup
         $tabela->set_label($label);
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -444,11 +479,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -461,13 +493,18 @@ class Checkup
      * Motorista sem número da carteira de habilitação cadastrada:
      */
     
-    public function get_motoristaSemCarteira($idServidor = NULL)
-    {
+    public function get_motoristaSemCarteira($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
-        $select = 'SELECT tbservidor.idFuncional,  
+        $select = 'SELECT tbservidor.idFuncional, 
+                          tbservidor.matricula,  
                           tbpessoa.nome,
+                          motorista,
+                          tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
                                      LEFT JOIN tbdocumentacao USING (idpessoa)
@@ -483,10 +520,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Nome');
-        $align = array('center','left');
-        $titulo = 'Motorista sem número da carteira de habilitação cadastrada:';
-        $funcao = array(NULL);
+        $label = array('IdFuncional','Matrícula','Nome','Habilitação','Cargo');
+        $align = array('center','center','left');
+        $titulo = 'Motorista(s) sem número da carteira de habilitação cadastrada:';
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
+        $rotina = array(NULL,NULL,NULL,NULL,"get_cargo");
+        $funcao = array(NULL,"dv");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -495,6 +534,8 @@ class Checkup
         $tabela->set_label($label);
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -507,11 +548,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -524,8 +562,10 @@ class Checkup
      * Servidor estatutário que faz 75 anos este ano (Preparar aposentadoria compulsória)
      */
     
-    public function get_servidorCom74($idServidor = NULL)
-    {
+    public function get_servidorCom74($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -550,7 +590,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
         $align = array('center','left','center','center','left','left');
-        $titulo = 'Servidor estatutário que faz 75 anos este ano. Preparar aposentadoria compulsória';
+        $titulo = 'Servidor(es) estatutário(s) que faz 75 anos este ano. Preparar aposentadoria compulsória';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         $funcao = array(NULL,NULL,"date_to_php");
@@ -563,8 +603,8 @@ class Checkup
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
-        $tabela->set_funcao($funcao);
         $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        
@@ -576,11 +616,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -593,8 +630,10 @@ class Checkup
      * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
      */
     
-    public function get_servidorComMais75($idServidor = NULL)
-    {
+    public function get_servidorComMais75($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -619,7 +658,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Data de Nascimento','Idade','Lotação','Cargo');
         $align = array('center','left','center','center','left','left');
-        $titulo = 'Servidor estatutário com 75 anos ou mais. Aposentar Compulsoriamente';
+        $titulo = 'Servidor(es) estatutário com 75 anos ou mais. Aposentar Compulsoriamente';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         $funcao = array(NULL,NULL,"date_to_php");
@@ -644,11 +683,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -661,8 +697,10 @@ class Checkup
      * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
      */
     
-    public function get_servidorComMaisde1MatriculaAtiva()
-    {
+    public function get_servidorComMaisde1MatriculaAtiva(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -687,7 +725,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidores com mais de uma matrícula ativa';
+        $titulo = 'Servidor(es) com mais de uma matrícula ativa';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -711,11 +749,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -728,8 +763,10 @@ class Checkup
      * Servidor Ativo com perfil outros
      */
     
-    public function get_servidorComPerfilOutros($idServidor = NULL)
-    {
+    public function get_servidorComPerfilOutros($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -757,7 +794,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidor com perfil outros';
+        $titulo = 'Servidor(es) com perfil outros';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -783,11 +820,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -800,8 +834,10 @@ class Checkup
      * Servidor com perfil outros
      */
     
-    public function get_servidorSemPerfil($idServidor = NULL)
-    {
+    public function get_servidorSemPerfil($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -829,7 +865,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidor sem perfil cadastrado';
+        $titulo = 'Servidor(es) sem perfil cadastrado';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -855,11 +891,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -872,8 +905,10 @@ class Checkup
      * Servidor Concursado sem concurso cadastrado
      */
     
-    public function get_servidorTecnicoEstatutarioSemConcurso($idServidor = NULL)
-    {
+    public function get_servidorTecnicoEstatutarioSemConcurso($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -903,12 +938,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação');
-        $align = array('center','center','center','left','center','left','left','center');
-        $titulo = 'Servidor técnico estatutário sem concurso cadastrado';
-        $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
-        $rotina = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
-        $funcao = array(NULL,NULL,"date_to_php");
+        $label = ['IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação'];
+        $align = ['center','center','center','left','center','left','left','center'];
+        $titulo = 'Servidor(es) técnico(s) estatutário(s) sem concurso cadastrado';
+        $classe = [NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo"];
+        $funcao = [NULL,"dv","date_to_php"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -931,11 +966,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -948,8 +980,10 @@ class Checkup
      * Servidor Concursado sem concurso cadastrado
      */
     
-    public function get_servidorProfessorEstatutarioSemConcurso($idServidor = NULL)
-    {
+    public function get_servidorProfessorEstatutarioSemConcurso($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -978,12 +1012,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação');
-        $align = array('center','center','center','left','center','left','left','center');
-        $titulo = 'Servidor professor estatutário sem concurso cadastrado';
-        $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
-        $rotina = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
-        $funcao = array(NULL,NULL,"date_to_php");
+        $label = ['IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação'];
+        $align = ['center','center','center','left','center','left','left','center'];
+        $titulo = 'Professor(es) estatutário(s) sem concurso cadastrado';
+        $classe = [NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo"];
+        $funcao = [NULL,"dv","date_to_php"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -1006,11 +1040,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1023,8 +1054,10 @@ class Checkup
      * Cargo em comissão nomeado e exonerado no mesmo dia?!
      */
     
-    public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = NULL)
-    {
+    public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -1079,11 +1112,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1097,6 +1127,9 @@ class Checkup
      */
     
     public function get_servidorCom10MesesLicencaSemVencimento($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -1126,7 +1159,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Data Inicial','Dias','Término',"Dias Fruídos");
         $align = array('center','center','left','center','center','center');
-        $titulo = 'Servidor se aproximando de 1 ano em licença sem vencimentos.';
+        $titulo = 'Servidor(es) se aproximando de 1 ano em licença sem vencimentos.';
         #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         #$rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         $funcao = array(NULL,"dv",NULL,"date_to_php",NULL,"date_to_php");
@@ -1152,11 +1185,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1169,8 +1199,10 @@ class Checkup
      * Cargo em comissão nomeado e exonerado no mesmo dia?!
      */
     
-    public function get_servidorComMaisde1AnoLicencaSemVencimento($idServidor = NULL)
-    {
+    public function get_servidorComMaisde1AnoLicencaSemVencimento($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -1199,7 +1231,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Data Inicial','Dias','Término',"Dias Fruídos");
         $align = array('center','center','left','center','center','center');
-        $titulo = 'Servidor com mais de 1 ano em licença sem vencimentos.';
+        $titulo = 'Servidor(es) com mais de 1 ano em licença sem vencimentos.';
         #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         #$rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         $funcao = array(NULL,"dv",NULL,"date_to_php",NULL,"date_to_php");
@@ -1225,11 +1257,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1242,7 +1271,10 @@ class Checkup
      * Exibe servidor ativo sem id Funcional cadastrado
      */
     
-    public function get_servidorSemIdFuncional($idServidor = NULL) {
+    public function get_servidorSemIdFuncional($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -1271,7 +1303,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidor(es) sem id funcional cadastrado no sistema';
+        $titulo = 'Servidor(es) SEM id funcional cadastrado no sistema';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");
@@ -1297,11 +1329,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1314,7 +1343,10 @@ class Checkup
      * Servidor sem data de nasciment cadastrada
      */
     
-    public function get_servidorSemDtNasc($idServidor = NULL) {
+    public function get_servidorSemDtNasc($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -1363,11 +1395,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1380,7 +1409,10 @@ class Checkup
      * Servidor cedido pela UENF que não está lotado na reitoria cedidos
      */
     
-    public function get_servidorCedidoLotacaoErrada($idServidor = NULL) {
+    public function get_servidorCedidoLotacaoErrada($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -1437,11 +1469,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1454,15 +1483,19 @@ class Checkup
      * Servidor estatutário sem cargo cadastrado:
      */
     
-    public function get_servidorEstatutarioSemCargo($idServidor = NULL) {
+    public function get_servidorEstatutarioSemCargo($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
 
         $select = 'SELECT idfuncional,
                           matricula,
-                          tbpessoa.nome,
-                          tbperfil.nome,                          
+                          tbpessoa.nome,        
+                          idServidor,
+                          tbperfil.nome,   
                           idServidor,
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -1479,12 +1512,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
-        $align = array('center','center','left','center','left');
+        $label = ['IdFuncional','Matrícula','Nome','Lotação','Perfil','Cargo'];
+        $align = ['center','center','left','left','center'];
         $titulo = 'Servidor(es) estatutário(s) sem cargo cadastrado.';
-        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
-        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
-        #$funcao = array(NULL,NULL,"date_to_php");
+        $classe = [NULL,NULL,NULL,"Pessoal",NULL,"Pessoal"];
+        $rotina = [NULL,NULL,NULL,"get_lotacao",NULL,"get_cargo"];
+        $funcao = [NULL,"dv"];
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -1495,7 +1528,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        
@@ -1507,11 +1540,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1524,7 +1554,10 @@ class Checkup
      * Servidor NÃO estatutário sem cargo cadastrado:
      */
     
-    public function get_servidorSemCargo($idServidor = NULL) {
+    public function get_servidorSemCargo($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -1533,6 +1566,7 @@ class Checkup
                           matricula,
                           tbpessoa.nome,
                           tbperfil.nome,                          
+                          idServidor,
                           idServidor,
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -1549,12 +1583,12 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo');
         $align = array('center','center','left','center','left');
         $titulo = 'Servidor(es) sem cargo cadastrado.';
-        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
-        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
-        #$funcao = array(NULL,NULL,"date_to_php");
+        $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
+        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $funcao = array(NULL,"dv");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -1565,7 +1599,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        
@@ -1577,84 +1611,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
-            }
-        }
-    }
-
-    ##########################################################
-    
-     /**
-     * Método get_servidorDuplicado
-     * 
-     * Servidor Duplicado no Sistema
-     */
-    
-    public function get_servidorDuplicado($idServidor = NULL) {
-        $servidor = new Pessoal();
-        $metodo = explode(":",__METHOD__);
-        
-
-        $select = 'SELECT tbservidor.idFuncional,
-                          tbservidor.matricula,
-                          tbpessoa.nome,
-                          tbperfil.nome,
-                          idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbperfil USING (idPerfil) 
-                     WHERE tbservidor.idServidor IN( SELECT tbservidor.idServidor
-                                                       FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                                      WHERE tbservidor.situacao = 1
-                                                        AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                                   GROUP BY tbservidor.idServidor
-                                                     HAVING COUNT(*) > 1)';
-                if(!is_null($idServidor)){
-                    $select .= ' AND idServidor = "'.$idServidor.'"';
-                }                
-        $select .= ' ORDER BY tbpessoa.nome';                 
-
-        $result = $servidor->select($select);
-        $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
-        $align = array('center','center','left','center','left');
-        $titulo = 'Servidor(es) Duplicado(s) no sistema.';
-        $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
-        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
-        #$funcao = array(NULL,NULL,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
-        # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
-        $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('idServidor');
-       
-        if($count > 0){
-            if(!is_null($idServidor)){
-                return $titulo;
-            }elseif($this->lista){
-                callout("Verifique se não existem 2 lançamentos de lotação com o mesmo dia. Isso gera registros duplos em listagem onde é exibidda a lotação do servidor.");
-                $tabela->show();
-                set_session('alertas',$metodo[2]);
-            }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1667,7 +1625,10 @@ class Checkup
      * Servidor cedido PARA a UENF sem informação do órgão cedente
      */
     
-    public function get_servidorCedidoSemInfoCedente($idServidor = NULL) {
+    public function get_servidorCedidoSemInfoCedente($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -1693,7 +1654,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Nome','Órgão Cedente','Lotação');
         $align = array('center','left','left','left');
-        $titulo = 'Servidor(es) cedido(s) para UENF sem informações da cessão cadastrada';
+        $titulo = 'Servidor(es) cedido(s) para UENF sem informações da cessão';
         $classe = array(NULL,NULL,NULL,"Pessoal");
         $rotina = array(NULL,NULL,NULL,"get_lotacao");
         #$funcao = array(NULL,NULL,NULL,"date_to_php","date_to_php");
@@ -1719,11 +1680,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1736,8 +1694,10 @@ class Checkup
      * Servidor Inativo com perfil outros
      */
     
-    public function get_servidorInativoComPerfilOutros($idServidor = NULL)
-    {
+    public function get_servidorInativoComPerfilOutros($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
 
@@ -1768,7 +1728,7 @@ class Checkup
         $titulo = 'Servidor(es) inativo(s) com perfil outros';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
-        #$funcao = array(NULL,NULL,"date_to_php");
+        $funcao = array(NULL,"dv");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
@@ -1779,7 +1739,7 @@ class Checkup
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        
@@ -1787,15 +1747,12 @@ class Checkup
             if(!is_null($idServidor)){
                 return $titulo;
             }elseif($this->lista){
-                callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco. Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
+                callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco.<br/>Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }
@@ -1808,7 +1765,10 @@ class Checkup
      * Servidor inativo sem motivo de saída:
      */
     
-    public function get_servidorInativoSemMotivoSaida($idServidor = NULL) {
+    public function get_servidorInativoSemMotivoSaida($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
         
@@ -1818,11 +1778,12 @@ class Checkup
                           tbpessoa.nome,
                           tbperfil.nome,                          
                           idServidor,
+                          idServidor,
+                          motivo,
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbperfil USING (idPerfil)
-                    WHERE (idCargo IS NULL OR idCargo = 0)
-                      AND situacao <> 1
+                                     LEFT JOIN tbperfil USING (idPerfil)                                     
+                    WHERE situacao <> 1
                       AND (motivo is NULL OR motivo = 0)';
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
@@ -1833,11 +1794,223 @@ class Checkup
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Nome','Perfil','Cargo');
-        $align = array('center','center','left','center','left');
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação','Motivo'];
+        $align = ['center','center','left','center','left'];
         $titulo = 'Servidor(es) inativo(s) sem motivo de saída cadastrado.';
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
+        $funcao = [NULL,"dv"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorInativoSemdataSaida
+     * 
+     * Servidor inativo sem data de saída:
+     */
+    
+    public function get_servidorInativoSemdataSaida($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+                
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          dtDemissao,
+                          idServidor 
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                    WHERE situacao <> 1
+                      AND (dtDemissao IS NULL OR dtDemissao = "")';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação','Saída'];
+        $align = ['center','center','left','center','left'];
+        $titulo = 'Servidor(es) inativo(s) sem data de saída cadastrada.';
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
+        $funcao = [NULL,"dv"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorDuplicado
+     * 
+     * Servidor Duplicado no Sistema
+     */
+    
+    public function get_servidorDuplicado($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbservidor.matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil) 
+                     WHERE tbservidor.idServidor IN( SELECT tbservidor.idServidor
+                                                       FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                      WHERE tbservidor.situacao = 1
+                                                        AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                                   GROUP BY tbservidor.idServidor
+                                                     HAVING COUNT(*) > 1)';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação');
+        $align = array('center','center','left','center','left');
+        $titulo = 'Servidor(es) duplicado(s) no sistema.';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal");
-        $rotina = array(NULL,NULL,NULL,NULL,"get_cargo");
+        $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao");
+        #$funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                callout("Verifique se não existem 2 lançamentos de lotação com o mesmo dia. Isso gera registros duplos em listagem onde é exibidda a lotação do servidor.");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorSemSituacao
+     * 
+     * Servidor inativo sem motivo de saída:
+     */
+    
+    public function get_servidorSemSituacao($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          idServidor,                          
+                          idServidor,
+                          idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                     
+                    WHERE situacao IS NULL';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação');
+        $align = array('center','center','left','center','left');
+        $titulo = 'Servidor(es) sem situacao cadastrada.';
+        $classe = array(NULL,NULL,NULL,"Pessoal","Pessoal","Pessoal");
+        $rotina = array(NULL,NULL,NULL,"get_perfil","get_cargo","get_situacao");
         #$funcao = array(NULL,NULL,"date_to_php");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
@@ -1861,77 +2034,8 @@ class Checkup
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
-            }
-        }
-    }
-
-    ##########################################################
-    
-     /**
-     * Método get_servidorInativoSemdataSaida
-     * 
-     * Servidor inativo sem data de saída:
-     */
-    
-    public function get_servidorInativoSemdataSaida($idServidor = NULL) {
-        $servidor = new Pessoal();
-        $metodo = explode(":",__METHOD__);
-        
-
-        $select = 'SELECT idfuncional,
-                          matricula,
-                          tbpessoa.nome,
-                          tbperfil.nome,                          
-                          dtDemissao,
-                          idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbperfil USING (idPerfil)
-                    WHERE (idCargo IS NULL OR idCargo = 0)
-                      AND situacao <> 1
-                      AND (dtDemissao IS NULL OR dtDemissao = "")';
-                if(!is_null($idServidor)){
-                    $select .= ' AND idServidor = "'.$idServidor.'"';
-                }                
-        $select .= ' ORDER BY tbpessoa.nome';                 
-
-        $result = $servidor->select($select);
-        $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional','Matrícula','Nome','Perfil','Saída');
-        $align = array('center','center','left','center','left');
-        $titulo = 'Servidor(es) inativo(s) sem data de saída cadastrada.';
-        $funcao = array(NULL,NULL,NULL,NULL,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
-        # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
-        $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('idServidor');
-       
-        if($count > 0){
-            if(!is_null($idServidor)){
-                return $titulo;
-            }elseif($this->lista){
-                #callout("Servidor sem Id Funcional cadastrado no Sistema");
-                $tabela->show();
-                set_session('alertas',$metodo[2]);
-            }else{
-                $link = new Link($count.' '.$titulo,"?fase=alertas&alerta=".$metodo[2]);
-                $link->set_id("checkupResumo");
-                echo "<li>";
-                $link->show();
-                echo "</li>";
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
             }
         }
     }

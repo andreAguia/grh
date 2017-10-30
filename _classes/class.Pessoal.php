@@ -3689,4 +3689,35 @@ class Pessoal extends Bd
 
         ###########################################################
 	
+	/**
+	 * Método temLotacaoNestaData
+	 * Verifica se servidor já tem lotação na data informada. Evita problema de duplicidade de servidor quando tem 2 ou mais lotações começando na mesma data.
+	 * 
+	 * @param data    $data       A data do início da lotação a ser verificadaidServidor do servidor
+         * @param integer $idServidor O idServidor do servidor em questão
+         * @param integer $idHistLot  O id da tabela tbhistlot para certificar que não está comparando o mesno registro.
+	 */
+
+        public function temLotacaoNestaData($data, $idServidor, $idHistLot = NULL){
+            
+            $select = 'SELECT data
+                         FROM tbhistlot
+                         WHERE idServidor = '.$idServidor.'
+                           AND data = "'.$data.'"';
+            
+            if(!is_null($idHistLot)){
+            $select .= ' AND idHistLot <> '.$idHistLot;
+            }
+
+            $result = parent::count($select);
+            
+            if($result > 0){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }
+
+        ###########################################################
+	
 }

@@ -113,7 +113,7 @@ if($acesso)
     $cidade = $pessoal->select('SELECT idCidade,
                                        CONCAT(tbcidade.nome," (",tbestado.uf,")")
                                   FROM tbcidade JOIN tbestado USING (idEstado)
-                              ORDER BY tbestado.uf,tbcidade.nome');
+                              ORDER BY proximidade,tbestado.uf,tbcidade.nome');
     array_unshift($cidade, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario

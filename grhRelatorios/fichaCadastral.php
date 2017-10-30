@@ -465,13 +465,13 @@ if($acesso)
 
     tituloRelatorio('Endereço');
 
-    $select = 'SELECT CONCAT(IF(endereco is NULL," ",endereco)," ",
-                             IF(complemento is NULL,"",complemento)," - ",
-                             IF(bairro is NULL,"",bairro)," - ",
-                             IF(cidade is NULL,"",cidade)," - ",
-                             IF(UF is NULL,"",UF)),
+    $select = 'SELECT endereco,
+                      bairro,
+                      tbcidade.nome,
+                      tbestado.uf,
                       cep 
-                 FROM tbpessoa
+                 FROM tbpessoa LEFT JOIN tbcidade USING (idCidade)
+                               LEFT JOIN tbestado USING (idEstado)
                 WHERE idPessoa = '.$idPessoa;
 
     $result = $pessoal->select($select);
@@ -479,9 +479,9 @@ if($acesso)
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('Endereço','Cep'));
-    $relatorio->set_width(array(80,20));
-    $relatorio->set_align(array('left','center'));
+    $relatorio->set_label(['Endereço','Bairro','Cidade','UF','Cep']);
+    #$relatorio->set_width(array(80,20));
+    $relatorio->set_align(['left','center']);
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);

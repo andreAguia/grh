@@ -218,13 +218,18 @@ if($acesso){
             $div->fecha();
 
             # Mensagem
-            if(is_null($nome))
-                $mensagem = 'O CPF '.$cpf.' não está cadastrado no sistema.';
-            else
-                $mensagem = 'O CPF '.$cpf.' já está cadastrado para o servidor INATIVO: '.$nome.'. Entre com os dados da sua nova matrícula.';
-            
-            # Mensagem
+            if (is_null($nome)) {
+                $mensagem = 'O CPF ' . $cpf . ' não está cadastrado no sistema.';
+            } else {
+                $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor INATIVO: ' . $nome . '. Entre com os dados da sua nova matrícula.';
+            }
+
+            # Mensagem do cpf
             br();
+            callout($mensagem);
+            
+            # Mensagem sobre a matrícula
+            $mensagem = 'Você tem a opção de digitar a matrícula ou deixar em branco para que o sistema gere automaticamente.<br/>Se uma matrícula for informada ela deve seguir os limítes definidos no cadastro de perfil.';
             callout($mensagem);
             
             $form = new Form('?fase=validaDados','novoServidor');
@@ -292,9 +297,7 @@ if($acesso){
                 $controle->set_onChange('exibeEscondeCampos();');
                 $form->add_item($controle);
 
-                # Mensagem sobre a matrícula
-                #$mensagem = 'Você tem a opção de digitar a matrícula ou deixar em branco para que o sistema gere automaticamente.    Se uma matrícula for informada ela deve seguir os limítes definidos no cadastro de perfil.';
-                #p($mensagem);
+                
                 #$p->show();
                 #$form->add_item($p);
 
@@ -365,7 +368,7 @@ if($acesso){
                 $controle->set_linha(3);
                 $controle->set_col(3);                
                 $controle->set_title('A matrícula do servidor.');
-                #$form->add_item($controle);
+                $form->add_item($controle);
 
                 # submit
                 $controle = new Input('submit','submit');
@@ -375,8 +378,8 @@ if($acesso){
                 $controle->set_accessKey('E');
                 $form->add_item($controle);
 
-            $form->show();		
-
+            $form->show();
+            
             $callout->fecha(); 
             $grid->fechaColuna();
             $grid->fechaGrid();

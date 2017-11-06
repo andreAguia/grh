@@ -200,7 +200,7 @@ class ListaServidores
         
         # ordenação
         $select .= ' ORDER BY tbpessoa.nome';
-        
+        #echo $select;
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,TRUE);
         $totalRegistros = count($conteudo);

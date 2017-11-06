@@ -92,7 +92,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_gratificacao
-     * informa gratifica��o de uma matr�cula(se houver)
+     * informa graificação de uma matrícula(se houver)
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -115,7 +115,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_gratificacaoDtFinal
-     * informa a data de t�rmino da gratifica��o de uma matr�cula(se houver)
+     * informa a data de t�rmino da graificação de uma matrícula(se houver)
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -135,11 +135,11 @@ class Pessoal extends Bd
             $row[0] = NULL;
 
 
-        # Verifica se j� tem alguma gratifica��o ou se nunca teve
+        # Verifica se j� tem alguma graificação ou se nunca teve
         if($numero == 0)
-            return FALSE; # nunca teve gratifica��o
+            return FALSE; # nunca teve graificação
         else
-            return $row[0]; # Informa se tem gratifica��o em aberto
+            return $row[0]; # Informa se tem graificação em aberto
     }
 
     ###########################################################
@@ -212,7 +212,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_salarioBase
-     * informa o sal�rio base de uma matr�cula
+     * informa o sal�rio base de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -235,7 +235,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_salarioTotal
-     * informa o sal�rio Total de uma matr�cula
+     * informa o sal�rio Total de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -719,7 +719,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_digito
-     * informa o d�gito verificador de uma matr�cula
+     * informa o d�gito verificador de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -799,7 +799,7 @@ class Pessoal extends Bd
 
     # Fun��o que informa se a idServidor est� em f�rias na data atual
     #
-    # Par�metro: a matr�cula a ser pesquisada
+    # Par�metro: a matrícula a ser pesquisada
 
     {
         # Monta o select
@@ -824,7 +824,7 @@ class Pessoal extends Bd
 
     # Fun��o que informa se a idServidor est� em licanca na data atual
     #
-    # Par�metro: a matr�cula a ser pesquisada
+    # Par�metro: a matrícula a ser pesquisada
 
     {
         # Monta o select
@@ -849,7 +849,7 @@ class Pessoal extends Bd
 
     # Função que informa se o servidor está cedido para outro órgão
     #
-    # Par�metro: a matr�cula a ser pesquisada
+    # Par�metro: a matrícula a ser pesquisada
 
     {
         # Monta o select		
@@ -871,7 +871,7 @@ class Pessoal extends Bd
 
     # Fun��o que informa licenca de uma matrícula
     #
-    # Par�metro: a matr�cula a ser pesquisada
+    # Par�metro: a matrícula a ser pesquisada
 
     {
             # Monta o select		
@@ -942,7 +942,7 @@ class Pessoal extends Bd
     function get_licencaPublicacao($idLicenca)
 
 
-    # Fun��o que informa se a licen�a necessita de publica��o no DOERJ
+    # Fun��o que informa se a licen�a necessita de publicação no DOERJ
     #
     # Par�metro: id do tipo de licen�a
 
@@ -1176,7 +1176,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_idPessoaAtiva
-     * informa se a pessoa tem alguma matr�cula ativa
+     * informa se a pessoa tem alguma matrícula ativa
      * 
      * @param	integer $idPessoa   idPessoa do servidor
      */
@@ -1358,7 +1358,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_trienioPercentual
-     * informa o percentual atual do trienio de uma matr�cula
+     * informa o percentual atual do trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -1380,7 +1380,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_trienioValor
-     * informa o valor atual do trienio de uma matr�cula
+     * informa o valor atual do trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -1400,7 +1400,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_trienioDataInicial
-     * informa a data Inicial de um trienio de uma matr�cula
+     * informa a data Inicial de um trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -1448,7 +1448,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_trienioPer�odoAquisitivo
-     * informa a per�odo Aquisitivo de um trienio de uma matr�cula
+     * informa a per�odo Aquisitivo de um trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -1471,7 +1471,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_trienioNumProcesso
-     * informa a n� do processo de um trienio de uma matr�cula
+     * informa a n� do processo de um trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -1842,7 +1842,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_perfilMatricula
-     * informa a matr�cula inicial e final permitida a um perfil
+     * informa a matrícula inicial e final permitida a um perfil
      * 
      * @param   integer $id id do Perfil
      */
@@ -1928,7 +1928,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_nivelCargo
-     * Informa o n�vel de escolaridade do cargo de uma matr�cula
+     * Informa o n�vel de escolaridade do cargo de uma matrícula
      * 
      * @param   string $idServidor do servidor
      */
@@ -2165,10 +2165,11 @@ class Pessoal extends Bd
 
         $count = parent::count($select);
 
-        if($count == 0)
+        if($count == 0){
             return FALSE;
-        else
+        }else{
             return TRUE;
+        }
     }
 
     ###########################################################
@@ -2176,36 +2177,39 @@ class Pessoal extends Bd
     function get_novaMatricula($perfil)
 
     /**
-     * informa uma matr�cula nova (gera nova matr�cula)
+     * informa uma matrícula nova (gera nova matrícula)
      * 
-     * @param	string $perfil perfil para saber a faixa da matr�cula
+     * @param	string $perfil perfil para saber a faixa da matrícula
      */
 
     {
-        # pega a faixa da matr�cula para esse perfil
+        # pega a faixa da matrícula para esse perfil
         $faixa = $this->get_perfilMatricula($perfil);
+        if(is_null($faixa[0])){
+            return "-";
+        }else{
 
-        # pega a �ltima matr�cula utilizada nessa faixa
-        $select = 'SELECT idServidor
-                     FROM tbservidor
-                    WHERE idServidor >= '.$faixa[0].'
-                      AND idServidor <= '.$faixa[1].'  
-                 ORDER BY idServidor desc';		
+            # pega a última matrícula utilizada nessa faixa
+            $select = 'SELECT matricula
+                         FROM tbservidor
+                        WHERE matricula >= '.$faixa[0].'
+                          AND matricula < '.$faixa[1].'
+                     ORDER BY matricula desc';		
 
-        $row = parent::select($select,FALSE);
-        $count = parent::count($select);            
+            $row = parent::select($select,FALSE);
+            $count = parent::count($select);            
 
-        # se n�o tiver nenhum idServidor cadastrada nessa faixa pega-se a matr�cula inicial da faixa                
-        if($count == 0)
-            $novaMatricula = $faixa[0];
-        else
-        {
-            # pega a �ltima matr�cula
-            $ultimaMatricula = $row[0];
-            $novaMatricula = $ultimaMatricula +1;
+            # se não tiver nenhum idServidor cadastrada nessa faixa pega-se a matrícula inicial da faixa                
+            if($count == 0){
+                $novaMatricula = $faixa[0];
+            }else{
+                # pega a última matrícula
+                $ultimaMatricula = $row[0];
+                $novaMatricula = $ultimaMatricula +1;
+            }
+
+            return $novaMatricula;
         }
-
-        return $novaMatricula;
     }
 
     ###########################################################
@@ -2232,7 +2236,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_planoCargosAtual
-     * Informa o id do Plano de CArgos Atual (com a data de publica��o mais recente)
+     * Informa o id do Plano de CArgos Atual (com a data de publicação mais recente)
      * 	 
      */
 
@@ -2442,7 +2446,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_ultimoAcesso
-     * informa a data do �ltimo acesso a �rea do servidor de uma matr�cula
+     * informa a data do �ltimo acesso a �rea do servidor de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -2639,7 +2643,7 @@ class Pessoal extends Bd
     function get_licencaPremioNumDiasPublicadaPorId($idPublicacaoPremio)
 
     /**
-     * informa o n�mero de dias publicados para licen�a pr�mio de uma publica��o espec�fica
+     * informa o n�mero de dias publicados para licen�a pr�mio de uma publicação espec�fica
      * 
      * @param	string $idPublicacaoPremio id da Publica��o
      */
@@ -2689,7 +2693,7 @@ class Pessoal extends Bd
     function get_licencaPremioNumDiasDisponiveisPorId($idPublicacaoPremio)
 
     /**
-     * informa o n�mero de dias Dispon�veis para licen�a pr�mio de uma publica��o espec�fica
+     * informa o n�mero de dias Dispon�veis para licen�a pr�mio de uma publicação espec�fica
      * 
      * @param	string $idPublicacaoPremio id da Publica��o
      */
@@ -2702,7 +2706,7 @@ class Pessoal extends Bd
         # Pega os dias fru�dos
         $diasFruidos = $this->get_licencaPremioNumDiasFruidasPorId($idPublicacaoPremio);
         
-        # Calcula os dias dispon�veis dessa publica��o
+        # Calcula os dias dispon�veis dessa publicação
         $diasDisponiveis = $diasPublicados-$diasFruidos;
         return $diasDisponiveis;
     }
@@ -2765,14 +2769,14 @@ class Pessoal extends Bd
 
     function get_licencaPremioPublicacaoDisponivel($idServidor)
 
-    # Fun��o que informa a publica��o com dias dispon�veis para licen�a pr�mio de uma idServidor
+    # Fun��o que informa a publicação com dias dispon�veis para licen�a pr�mio de uma idServidor
     #
     # Par�metro: idServidor do servidor
 
     {
         # vari�veis
-        $publicacaoEscolhida = NULL;    // guarda a publica��o escolhida para retornar
-        $diasDisponiveis = NULL;        // guarda a quantidade de dias disponiveis pela publica��o
+        $publicacaoEscolhida = NULL;    // guarda a publicação escolhida para retornar
+        $diasDisponiveis = NULL;        // guarda a quantidade de dias disponiveis pela publicação
 
         # valida par�metro
         if(is_null($idServidor))
@@ -2788,7 +2792,7 @@ class Pessoal extends Bd
         $row = parent::select($select);
         if (parent::count($select) > 0)
         {
-            # Percorre o array para verificar a primeira publica��o com dias dispon�veis
+            # Percorre o array para verificar a primeira publicação com dias dispon�veis
             foreach ($row as $publicacao)
             {
                 $diasDisponiveis = $this->get_licencaPremioNumDiasDisponiveisPorId($publicacao[0]);
@@ -2808,10 +2812,10 @@ class Pessoal extends Bd
     function get_licencaPremioDadosPublicacao($idpublicacaopremio)
 
     # Fun��o que informa, de uma s� vez, v�rios dados de uma 
-    # publica��o de licen�a pr�mio de uma idServidor para grava��o
+    # publicação de licen�a pr�mio de uma idServidor para grava��o
     # na rotina extra de cadastro de licen�a
     #
-    # Par�metro: id da publica��o
+    # Par�metro: id da publicação
 
     {
             # valida par�metro
@@ -2836,7 +2840,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioNumPublicacao($idPublicacao)
 
-    # Fun��o que informa quantas licen�as foram lan�adas com essa publica��o
+    # Fun��o que informa quantas licen�as foram lan�adas com essa publicação
     #
     # Par�metro: id da Publica��o
 
@@ -2860,7 +2864,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioNumProcesso($idServidor)
 
-    # Fun��o que informa o N�mero do processo da �ltima publica��o
+    # Fun��o que informa o N�mero do processo da última publicação
     # para sugerir para o pr�ximo cadastro de publica��es
     #
     # Par�metro: idServidor do servidor
@@ -2914,7 +2918,7 @@ class Pessoal extends Bd
 
     # Fun��o que informa v�rios dados de uma licen�a
     #
-    # Fun��o usada na rotina tempor�rio que transforma uma licen�a em publica��o de licen�a premio
+    # Fun��o usada na rotina tempor�rio que transforma uma licen�a em publicação de licen�a premio
     # 
     # Par�metro: id da licen�a
 
@@ -3023,7 +3027,7 @@ class Pessoal extends Bd
 
     # Fun��o que informa se a idServidor est� folgando (TRE) na data atual
     #
-    # Par�metro: a matr�cula a ser pesquisada
+    # Par�metro: a matrícula a ser pesquisada
 
     {
         # Monta o select
@@ -3047,7 +3051,7 @@ class Pessoal extends Bd
 
     # Função que informa se a idServidor está afastada para o (TRE) na data atual
     #
-    # Par�metro: a matr�cula a ser pesquisada
+    # Par�metro: a matrícula a ser pesquisada
 
     {
         # Monta o select

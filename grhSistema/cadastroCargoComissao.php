@@ -341,6 +341,7 @@ if($acesso)
                             tbcomissao.dtNom,
                             tbcomissao.dtExo,
                             concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
+                            idPerfil,
                             concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
@@ -349,9 +350,11 @@ if($acesso)
                   ORDER BY 7, tbcomissao.descricao, 4 desc';
 
             $result = $servidor->select($select);
-            $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo');
-            $align = array("center","center","left","center","center","left");
-            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php");
+            $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
+            $align = array("center","center","left","center","center","left","center");
+            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php",NULL);
+            $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal");
+            $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,"get_perfil");
            
             # Monta a tabela
             $tabela = new Tabela();
@@ -360,6 +363,8 @@ if($acesso)
             $tabela->set_titulo("Histórico");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
             $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
                                                     'valor' => NULL,
                                                     'operador' => '=',
@@ -378,7 +383,7 @@ if($acesso)
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);
-            $lista->set_cargoComissao($nomeCargo);
+            $lista->set_cargoComissao($id);
             $lista->showRelatorio();
             break;
     }

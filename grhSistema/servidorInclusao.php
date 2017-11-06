@@ -433,7 +433,11 @@ if($acesso){
                         $msgErro.='Essa matrícula já está em uso!\n';
                         $erro = 1;
                     }
-                }                
+                }else{
+                    if(!empty($perfil)){
+                        $matricula=$pessoal->get_novaMatricula($perfil);
+                    }
+                }               
                 
                 # Verifica se a lotação foi digitada
                 if(empty($lotacao)){

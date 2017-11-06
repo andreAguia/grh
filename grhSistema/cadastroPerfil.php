@@ -90,6 +90,9 @@ if($acesso)
                                       gratificacao,
                                       ferias,
                                       licenca,
+                                      matIni,
+                                      matFim,
+                                      idPerfil,
                                       idPerfil,
                                       idPerfil
                                  FROM tbperfil
@@ -106,6 +109,9 @@ if($acesso)
                                       gratificacao,
                                       ferias,
                                       licenca,
+                                      matIni,
+                                      matFim,
+                                      novoServidor,
                                      obs
                                 FROM tbperfil
                                WHERE idPerfil = '.$id);
@@ -124,13 +130,13 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Servidores","Ver"));
+    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Inicio","Fim","Próxima","Servidores","Ver"));
     #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
     $objeto->set_align(array("center"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosPerfil"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_novaMatricula","get_servidoresAtivosPerfil"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -139,7 +145,7 @@ if($acesso)
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","","","","","",$botao));
+    $objeto->set_link(array("","","","","","","","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -223,6 +229,29 @@ if($acesso)
                'array' => array("Sim","Não"),
                'size' => 20),
         array ('linha' => 4,
+               'nome' => 'matIni',
+               'title' => 'Início da faixa da matrícula reservada para esse perfil',
+               'label' => 'Matrícula Inicial:',
+               'tipo' => 'texto',
+               'col' => 3,
+               'size' => 10),
+        array ('linha' => 4,
+              'nome' => 'matFim',
+               'title' => 'Fim da faixa da matrícula reservada para esse perfil',
+               'label' => 'Matrícula Final:',
+               'tipo' => 'texto',
+               'col' => 3,
+               'size' => 10),
+         array ('linha' => 4,
+               'nome' => 'novoServidor',
+               'title' => 'Permite que novos servidores sejam cadastrados nesse perfil',
+               'required' => TRUE,
+               'label' => 'Habilita Novo Servidor:',
+               'tipo' => 'combo',
+               'array' => array(array(1,"Sim"),array(0,"Não")),
+               'col' => 3,
+               'size' => 10),
+        array ('linha' => 5,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',

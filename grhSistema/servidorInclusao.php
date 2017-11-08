@@ -282,7 +282,8 @@ if($acesso){
                 # Perfil                
                 $perfil = $pessoal->select('SELECT idperfil,
                                                    nome
-                                              FROM tbperfil
+                                              FROM tbperfil     
+                                             WHERE novoServidor
                                           ORDER BY nome');
 
                 array_push($perfil, array(NULL,NULL)); 
@@ -301,7 +302,7 @@ if($acesso){
                 #$p->show();
                 #$form->add_item($p);
 
-                 # Lotação               
+                # Lotação               
                 $lotacao = $pessoal->select('SELECT idlotacao, 
                                                     concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
                                                FROM tblotacao
@@ -408,7 +409,7 @@ if($acesso){
                 $cargo = post('cargo'); 
                 $classe = NULL;
                 $idPessoa = $pessoal->get_idPessoaCPF($cpf);
-
+                
                 # Verifica se o Nome foi digitado
                 if(empty($nome)){
                     $msgErro.='Você tem que informar o Nome do Servidor!\n';
@@ -425,8 +426,14 @@ if($acesso){
                 if(empty($perfil)){
                     $msgErro.='Você tem que informar o Perfil do Servidor!\n';
                     $erro = 1;
+                }else{
+                    # Verifica se o Perfil permite novo servidor
+                    if(!$pessoal->podeNovoServidor($perfil)){
+                        $msgErro.='Esse perfil não permite novo servidor!\n';
+                        $erro = 1;
+                    }
                 }
-                
+               
                 # Verifica se a matrícula já existe
                 if(!empty($matricula)){
                     if($pessoal->get_existeMatricula($matricula)){
@@ -435,7 +442,7 @@ if($acesso){
                     }
                 }else{
                     if(!empty($perfil)){
-                        $matricula=$pessoal->get_novaMatricula($perfil);
+                        $matricula = $pessoal->get_novaMatricula($perfil);
                     }
                 }               
                 

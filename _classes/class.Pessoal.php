@@ -2201,7 +2201,16 @@ class Pessoal extends Bd
 
             # se não tiver nenhum idServidor cadastrada nessa faixa pega-se a matrícula inicial da faixa                
             if($count == 0){
-                $novaMatricula = $faixa[0];
+                # Diferencia se o select voltou vazio por não ter ninguém na faixa
+                # ou se por não ter matrícula vaga na faixa.
+                if($pessoal->get_existeMatricula($faixa[1])){
+                    # Já ocupado o último valor dessa faixa
+                    alert("Não há mais matrículas vagas para esse perfil./nAumente o número de matrículas no cadastro de perfil.");
+                    back(1);
+                }else{
+                    # Faixa vazia então pega-se o primeiro valor
+                    $novaMatricula = $faixa[0];
+                }
             }else{
                 # pega a última matrícula
                 $ultimaMatricula = $row[0];
@@ -3720,6 +3729,26 @@ class Pessoal extends Bd
             }else{
                 return FALSE;
             }
+        }
+
+        ###########################################################
+	
+	/**
+	 * Método podeNovoServidor
+	 * Verifica se é permitido incluir novos servidores nesse perfil.
+	 *
+         * @param integer $idPerfil O idPerfil do servidor a ser incluído
+	 */
+
+        public function podeNovoServidor($idPerfil){
+            
+            $select = 'SELECT novoServidor
+                         FROM tbperfil
+                         WHERE idPerfil = '.$idPerfil;
+            
+            $result = parent::select($select,FALSE);
+            
+            return $result[0];
         }
 
         ###########################################################

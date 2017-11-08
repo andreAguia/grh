@@ -94,6 +94,7 @@ if($acesso)
                                       matFim,
                                       idPerfil,
                                       idPerfil,
+                                      if(novoServidor = 1,"Sim","Não"),
                                       idPerfil
                                  FROM tbperfil
                                 WHERE nome LIKE "%'.$parametro.'%"
@@ -130,7 +131,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Inicio","Fim","Próxima","Servidores","Ver"));
+    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Inicio","Fim","Próxima","Servidores","Novo<br/>Servidor","Ver"));
     #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
     $objeto->set_align(array("center"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
@@ -145,7 +146,7 @@ if($acesso)
     $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","","","","","","","","",$botao));
+    $objeto->set_link(array("","","","","","","","","","","","","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -249,7 +250,7 @@ if($acesso)
                'label' => 'Habilita Novo Servidor:',
                'tipo' => 'combo',
                'array' => array(array(1,"Sim"),array(0,"Não")),
-               'col' => 3,
+               'col' => 2,
                'size' => 10),
         array ('linha' => 5,
                'nome' => 'obs',

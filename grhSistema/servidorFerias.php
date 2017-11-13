@@ -68,8 +68,8 @@ if($acesso)
                                      status,
                                      dtInicial,
                                      numDias,
-                                     idFerias,
                                      ADDDATE(dtInicial,numDias-1),
+                                     idFerias,
                                      idFerias,
                                      idFerias
                                 FROM tbferias
@@ -93,12 +93,12 @@ if($acesso)
     
 
     # Parametros da tabela
-    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","P","Data Final"));
+    $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","Data Final","Período"));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
-    $objeto->set_width(array (15,15,15,15,15,15));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+    $objeto->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php',NULL));
+    $objeto->set_width(array(15,15,15,15,15,15));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

@@ -196,7 +196,9 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório Mensal de Férias Solicitadas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=s&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Mensal de Férias Confirmadas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=c&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Mensal de Férias Fruídas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=f&lotacaoArea='.$parametroLotacao);
-                       
+            
+            $menu->add_item('linkWindow','Escala Anual de Férias de Técnicos Estatutarios','../grhRelatorios/escalaAnualFeriasTecnicosEstatutarios.php');
+            
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação','../grhRelatorios/escalaMensalFeriasGeralPorLotacao.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação - Assinatura','../grhRelatorios/escalaMensalFeriasGeralPorLotacaoComAssinatura.php');

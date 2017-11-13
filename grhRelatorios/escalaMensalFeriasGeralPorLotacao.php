@@ -36,9 +36,9 @@ if($acesso)
                      CONCAT(tblotacao.UADM,"-",tblotacao.DIR,"-",tblotacao.GER) lotacao,
                      tbferias.anoExercicio,
                      tbferias.dtInicial,
-                     CONCAT(tbferias.numDias,"(",tbferias.periodo,")"),
+                     tbferias.numDias,
+                     tbferias.idFerias,
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y")as dtf,
-                     tbferias.folha,
                      status
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -59,11 +59,12 @@ if($acesso)
 
 
 
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha','Status'));
-    $relatorio->set_width(array(10,30,20,5,9,8,9,10,10));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
+    #$relatorio->set_width(array(10,30,20,5,9,8,9,10,10));
     $relatorio->set_align(array("center","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
-
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

@@ -38,17 +38,20 @@ if($acesso)
                      "31/12/'.$anoBase.'",
                      "___ /___ /_____",
                      "<br/>__________________________"
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
-                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbcargo USING (idCargo)
+                                     JOIN tbtipocargo USING (idTipoCargo)
                WHERE tbservidor.situacao = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                 AND tbtipocargo.tipo = "Adm/Tec"
             ORDER BY 3,tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Escala Mensal de Férias Geral');
+    $relatorio->set_titulo('Escala Anual de Férias dos Técnicos Estatutários');
     $relatorio->set_tituloLinha2('Janeiro - Dezembro '.$anoBase);
 
     $relatorio->set_label(['IdFuncional','Nome','Lotação','Admissão','Início do Prazo<br/>para o Gozo','Ultimo Prazo<br/>para o Gozo','Início Previsto<br/>do Gozo','Observação']);
@@ -61,6 +64,11 @@ if($acesso)
     $relatorio->set_numGrupo(2);
     $relatorio->set_saltoAposGrupo(TRUE);
     $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_funcaoFinalGrupo("textoEscalaFerias");
+    $relatorio->set_funcaoFinalGrupoParametro(NULL);
 
     $relatorio->set_formCampos(array(
                                array ('nome' => 'anoBase',

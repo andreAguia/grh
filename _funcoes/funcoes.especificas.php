@@ -249,3 +249,13 @@ function tituloRelatorio($texto){
 }
 
 ##########################################################
+/**
+ * Função que exibe um texto no final da escala de férias
+ * 
+ */
+
+function textoEscalaFerias(){
+    echo "Aqui vai o texto a ser exibido no fim de cada grupo";
+}
+
+##########################################################

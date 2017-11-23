@@ -54,17 +54,18 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if (is_null($orderCampo)) {
         $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
+    if (is_null($orderTipo)) {
         $orderTipo = 'desc';
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT dtInicial,
                                      dtFinal,
                                      dias,
-                                     DATEDIFF(dtfinal, dtInicial),
                                      empresa,
                                      CASE empresaTipo
                                         WHEN 1 THEN "Pública"
@@ -114,9 +115,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Data Final","Dias","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
+    $objeto->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
     #$objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("center","center","center","left"));
     $objeto->set_funcao(array("date_to_php","date_to_php"));
 
     # Classe do banco de dados

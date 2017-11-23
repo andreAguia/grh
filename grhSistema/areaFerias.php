@@ -103,7 +103,13 @@ if($acesso)
     
     # Verifica se existe o ano atual na combo e acrescenta caso não tenha
     if($anoExercicio[count($anoExercicio)-1][0] < date("Y")){
-        array_push($anoExercicio,date("Y"));
+        # Inclui o ano atual
+        array_push($anoExercicio,date("Y")); # Ano atual
+        
+        # e se o mês for novembro ou dezembro já inclui o próximo ano
+        if(date("m")>10){
+            array_push($anoExercicio,date("Y")+1); # Ano atual
+        }
     }
 
     $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);

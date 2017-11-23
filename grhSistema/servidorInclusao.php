@@ -364,7 +364,7 @@ if($acesso){
                 $form->add_item($controle);
                 
                 # Matrícula
-                $controle = new Input('matricula','texto','Matrícula: (sem o dígito verificador)',1);
+                $controle = new Input('matricula','hidden','Matrícula: (sem o dígito verificador)',1);
                 $controle->set_size(20);            
                 $controle->set_linha(3);
                 $controle->set_col(3);                

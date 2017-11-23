@@ -32,11 +32,11 @@ if($acesso)
     
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));
+        $parametro = retiraAspas(get_session('sessionAnoExercicio'));
     } # passa o parametro da session para a variavel parametro retirando as aspas
     else {
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
+        set_session('sessionAnoExercicio', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
     # Verifica a paginacão

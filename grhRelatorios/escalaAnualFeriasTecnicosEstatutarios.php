@@ -24,9 +24,9 @@ if($acesso)
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
-
-    # Pega os parâmetros dos relatórios
-    $anoBase = post('anoBase',date('Y'));
+    
+    # Pega o ano exercicio quando vem da área de férias
+    $anoBase = get("parametroAnoExercicio",date('Y'));
     
     ######
     
@@ -69,20 +69,6 @@ if($acesso)
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_funcaoFinalGrupo("textoEscalaFerias");
     $relatorio->set_funcaoFinalGrupoParametro(NULL);
-
-    $relatorio->set_formCampos(array(
-                               array ('nome' => 'anoBase',
-                                      'label' => 'Ano:',
-                                      'tipo' => 'texto',
-                                      'size' => 4,
-                                      'title' => 'Ano',
-                                      'padrao' => $anoBase,
-                                      'col' => 3,
-                                      'onChange' => 'formPadrao.submit();',
-                                      'linha' => 1)));
-
-    $relatorio->set_formFocus('anoBase');
-    $relatorio->set_formLink('?');
     $relatorio->show();
 
     $page->terminaPagina();

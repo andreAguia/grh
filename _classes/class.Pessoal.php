@@ -146,7 +146,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_periodoDisponivel
-     * informa o per�odo dispon�vel de f�rias de um servidor
+     * informa o per�odo dispon�vel de férias de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -358,7 +358,7 @@ class Pessoal extends Bd
      * muda a senha de um usu�rio para NULL (bloqueia o mesmo)
      * 
      * @param	string 	$idServidor 	-> idServidor do servidor
-     * @param 	string	$senha		-> senha (n�o criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
+     * @param 	string	$senha		-> senha (não criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
      */
     public function set_senhaNull($matr,$alert = TRUE)
     {
@@ -797,7 +797,7 @@ class Pessoal extends Bd
 
     function emFerias($idServidor)
 
-    # Fun��o que informa se a idServidor est� em f�rias na data atual
+    # Função que informa se a idServidor est� em férias na data atual
     #
     # Par�metro: a matrícula a ser pesquisada
 
@@ -822,7 +822,7 @@ class Pessoal extends Bd
     function emLicenca($idServidor)
 
 
-    # Fun��o que informa se a idServidor est� em licanca na data atual
+    # Função que informa se a idServidor est� em licanca na data atual
     #
     # Par�metro: a matrícula a ser pesquisada
 
@@ -869,7 +869,7 @@ class Pessoal extends Bd
     function get_licenca($idServidor)
 
 
-    # Fun��o que informa licenca de uma matrícula
+    # Função que informa licenca de uma matrícula
     #
     # Par�metro: a matrícula a ser pesquisada
 
@@ -892,7 +892,7 @@ class Pessoal extends Bd
     function get_licencaPeriodo($idLicenca)
 
 
-    # Fun��o que informa se a licen�a tem per�odo aquisitivo
+    # Função que informa se a licen�a tem per�odo aquisitivo
     #
     # Par�metro: id do tipo de licen�a
 
@@ -917,7 +917,7 @@ class Pessoal extends Bd
     function get_licencaProcesso($idLicenca)
 
 
-    # Fun��o que informa se a licen�a necessita um processo administrativo
+    # Função que informa se a licen�a necessita um processo administrativo
     #
     # Par�metro: id do tipo de licen�a
 
@@ -942,7 +942,7 @@ class Pessoal extends Bd
     function get_licencaPublicacao($idLicenca)
 
 
-    # Fun��o que informa se a licen�a necessita de publicação no DOERJ
+    # Função que informa se a licen�a necessita de publicação no DOERJ
     #
     # Par�metro: id do tipo de licen�a
 
@@ -967,7 +967,7 @@ class Pessoal extends Bd
     function get_licencaPericia($idLicenca)
 
 
-    # Fun��o que informa se esse tipo de licen�a necessita de per�cia (licen�a m�dica)
+    # Função que informa se esse tipo de licen�a necessita de per�cia (licen�a m�dica)
     #
     # Par�metro: id do tipo de licen�a
 
@@ -992,7 +992,7 @@ class Pessoal extends Bd
     function get_licencaNome($idLicenca)
 
 
-    # Fun��o que informa o nome do tipo de licen�a
+    # Função que informa o nome do tipo de licen�a
     #
     # Par�metro: id do tipo de licen�a
 
@@ -1017,7 +1017,7 @@ class Pessoal extends Bd
     function get_licencaSexo($idLicenca)
 
 
-    # Fun��o que informa limita��o por genero (sexo) do tipo de licen�a
+    # Função que informa limita��o por genero (sexo) do tipo de licen�a
     #
     # Par�metro: id do tipo de licen�a
 
@@ -1042,7 +1042,7 @@ class Pessoal extends Bd
     function get_licencaDias($idLicenca)
 
 
-    # Fun��o que informa a quantidade de dias fixos para esse tipo de licen�a
+    # Função que informa a quantidade de dias fixos para esse tipo de licen�a
     #
     # Par�metro: id do tipo de licen�a
 
@@ -1067,7 +1067,7 @@ class Pessoal extends Bd
     function get_tipoLicenca($idLicenca)
 
 
-    # Fun��o que informa o tipo da licen�a de uma licen�a de um servidor
+    # Função que informa o tipo da licen�a de uma licen�a de um servidor
     #
     # Par�metro: id da licen�a
 
@@ -1092,7 +1092,7 @@ class Pessoal extends Bd
     function get_nomeTipoLicenca($idTpLicenca)
 
 
-    # Fun��o que informa o nome de um tipo da licen�a
+    # Função que informa o nome de um tipo da licen�a
     #
     # Par�metro: id do tipo da licen�a
 
@@ -1985,7 +1985,7 @@ class Pessoal extends Bd
     public function mudaStatusFeriasConfirmadaFruida()        
 
     /**	
-     * Fun��o que procura no banco de dados as f�rias 
+     * Função que procura no banco de dados as férias 
      * que foram confirmadas cuja data inicial j� passou
      * e muda para fru�da
      */
@@ -2006,7 +2006,7 @@ class Pessoal extends Bd
     public function mudaStatusFeriasSolicitadaConfirmada($idFerias)        
 
     /**	
-     * Fun��o que muda uma f�rias espec�fica de Solicitada para Confirmada
+     * Função que muda uma férias específica de Solicitada para Confirmada
      */
 
     { 
@@ -2051,24 +2051,25 @@ class Pessoal extends Bd
 
     /**
      *
-     * informa se o servidor tem ou n�o cargo acumulado
+     * informa se o servidor tem ou não cargo acumulado
      * 
      * @param	string $idServidor idServidor do servidor
      */
 
 
     {
-            $select = 'SELECT acumulacao
-                         FROM tbdbv
-                        WHERE idServidor = '.$idServidor;
+        $select = 'SELECT acumulacao
+                     FROM tbdbv
+                    WHERE idServidor = '.$idServidor;
 
-            $row = parent::select($select,FALSE);
-            $count = parent::count($select);
+        $row = parent::select($select,FALSE);
+        $count = parent::count($select);
 
-            if($count == 0)
-                return NULL;
-            else
-                return $row[0];
+        if ($count == 0) {
+            return NULL;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -2482,7 +2483,7 @@ class Pessoal extends Bd
     function aniversariante($idServidor)
 
 
-    # Fun��o que informa se a idServidor est� fazendo anivers�rio na data atual
+    # Função que informa se a idServidor est� fazendo anivers�rio na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
 
@@ -2652,7 +2653,7 @@ class Pessoal extends Bd
     function get_licencaPremioNumDiasPublicadaPorId($idPublicacaoPremio)
 
     /**
-     * informa o n�mero de dias publicados para licen�a pr�mio de uma publicação espec�fica
+     * informa o n�mero de dias publicados para licen�a pr�mio de uma publicação específica
      * 
      * @param	string $idPublicacaoPremio id da Publica��o
      */
@@ -2677,7 +2678,7 @@ class Pessoal extends Bd
     function get_licencaPremioNumDiasFruidasPorId($idPublicacaoPremio)
 
     /**
-     * informa o número de dias fru�dos para licen�a pr�mio de uma publicação espec�fica
+     * informa o número de dias fru�dos para licen�a pr�mio de uma publicação específica
      * 
      * @param	string $idPublicacaoPremio id da Publica��o
      */
@@ -2702,7 +2703,7 @@ class Pessoal extends Bd
     function get_licencaPremioNumDiasDisponiveisPorId($idPublicacaoPremio)
 
     /**
-     * informa o n�mero de dias Dispon�veis para licen�a pr�mio de uma publicação espec�fica
+     * informa o n�mero de dias Dispon�veis para licen�a pr�mio de uma publicação específica
      * 
      * @param	string $idPublicacaoPremio id da Publica��o
      */
@@ -2750,7 +2751,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioPublicacao($idServidor)
 
-    # Fun��o que informa as publica��es para licen�a pr�mio de uma idServidor
+    # Função que informa as publica��es para licen�a pr�mio de uma idServidor
     #
     # Par�metro: idServidor do servidor
 
@@ -2778,7 +2779,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioPublicacaoDisponivel($idServidor)
 
-    # Fun��o que informa a publicação com dias dispon�veis para licen�a pr�mio de uma idServidor
+    # Função que informa a publicação com dias dispon�veis para licen�a pr�mio de uma idServidor
     #
     # Par�metro: idServidor do servidor
 
@@ -2820,7 +2821,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioDadosPublicacao($idpublicacaopremio)
 
-    # Fun��o que informa, de uma s� vez, v�rios dados de uma 
+    # Função que informa, de uma s� vez, v�rios dados de uma 
     # publicação de licen�a pr�mio de uma idServidor para grava��o
     # na rotina extra de cadastro de licen�a
     #
@@ -2849,7 +2850,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioNumPublicacao($idPublicacao)
 
-    # Fun��o que informa quantas licen�as foram lan�adas com essa publicação
+    # Função que informa quantas licen�as foram lan�adas com essa publicação
     #
     # Par�metro: id da Publica��o
 
@@ -2873,7 +2874,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioNumProcesso($idServidor)
 
-    # Fun��o que informa o N�mero do processo da última publicação
+    # Função que informa o N�mero do processo da última publicação
     # para sugerir para o pr�ximo cadastro de publica��es
     #
     # Par�metro: idServidor do servidor
@@ -2899,7 +2900,7 @@ class Pessoal extends Bd
 
     function get_licencaPremioNumProcessoPorId($idProcesso)
 
-    # Fun��o que informa o N�mero do processo de uma Publica��o de Licen�a Pr�mio
+    # Função que informa o N�mero do processo de uma Publica��o de Licen�a Pr�mio
     # para sugerir para o pr�ximo cadastro de Licen�a
     #
     # Par�metro: id da Publica��o
@@ -2925,9 +2926,9 @@ class Pessoal extends Bd
     function get_licencaDados($idLicenca)
 
 
-    # Fun��o que informa v�rios dados de uma licen�a
+    # Função que informa v�rios dados de uma licen�a
     #
-    # Fun��o usada na rotina tempor�rio que transforma uma licen�a em publicação de licen�a premio
+    # Função usada na rotina tempor�rio que transforma uma licen�a em publicação de licen�a premio
     # 
     # Par�metro: id da licen�a
 
@@ -3001,7 +3002,7 @@ class Pessoal extends Bd
     /**
      * 
      * Retorna uma string com o nome do feriado
-     * ou NULLo se n�o tiver feriado nessa data
+     * ou NULLo se não tiver feriado nessa data
      * 
      * @param date $data a data (no formato dia/m�s/ano) a ser pesquisada, se nulo pega a data atual
      * 
@@ -3034,7 +3035,7 @@ class Pessoal extends Bd
 
     function emFolgaTre($idServidor)
 
-    # Fun��o que informa se a idServidor est� folgando (TRE) na data atual
+    # Função que informa se a idServidor est� folgando (TRE) na data atual
     #
     # Par�metro: a matrícula a ser pesquisada
 

@@ -30,6 +30,15 @@ if($acesso)
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # Pega o parametro de pesquisa (se tiver)
+    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
+        $parametro = retiraAspas(get_session('sessionParametro'));
+    } # passa o parametro da session para a variavel parametro retirando as aspas
+    else {
+        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
+        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
+    }
+
     # Verifica a paginacão
     $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
     set_session('sessionPaginacao',$paginacao);		
@@ -59,6 +68,10 @@ if($acesso)
     }else{
         $objeto->set_voltarLista('servidorMenu.php');
     }
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Ano Exercicio:');
+    $objeto->set_parametroValue($parametro);
         
     # botão de voltar do formulário
     $objeto->set_linkListar('?fase=listar');
@@ -74,8 +87,9 @@ if($acesso)
                                      idFerias
                                 FROM tbferias
                                WHERE idServidor = '.$idServidorPesquisado.'
+                                 AND anoExercicio LIKE "%'.$parametro.'%" 
                             ORDER BY dtInicial desc');
-
+    
     # select do edita
     $objeto->set_selectEdita('SELECT anoExercicio,
                                      status,

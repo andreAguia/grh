@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){   
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -105,13 +104,13 @@ if($acesso)
     if($anoExercicio[count($anoExercicio)-1][0] < date("Y")){
         # Inclui o ano atual
         array_push($anoExercicio,date("Y")); # Ano atual
-        
-        # e se o mês for novembro ou dezembro já inclui o próximo ano
-        if(date("m")>10){
-            array_push($anoExercicio,date("Y")+1); # Ano atual
-        }
     }
-
+    
+    # Se o mês for novembro ou dezembro já inclui o próximo ano
+    if(intval(date("m")) > 10){
+        array_push($anoExercicio,date("Y")+1); # Ano atual
+    }
+    
     $controle = new Input('parametroAnoExercicio','combo','Ano Exercício:',1);
     $controle->set_size(8);
     $controle->set_title('Filtra por Ano exercício');

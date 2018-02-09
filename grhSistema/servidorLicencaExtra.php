@@ -8,6 +8,8 @@
 # pega o tipo da licença
 $idTpLicenca = $campoValor[0];
 
+echo $campoValor["numDias"];
+
 # se for licença prêmio ...
 if($idTpLicenca == 6){
     # pega o id da publicação

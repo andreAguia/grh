@@ -37,10 +37,12 @@ if($acesso)
                       tbservidor.dtAdmissao,
                       tbservidor.dtDemissao,
                       tbservidor.dtPublicExo,
+                      tbmotivo.motivo,
                       MONTH(tbservidor.dtDemissao)
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
+                                 LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
+                                 LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
+                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
                 WHERE YEAR(tbservidor.dtDemissao) = "'.$relatorioAno.'"
              ORDER BY MONTH(tbservidor.dtDemissao), dtDemissao';		
 
@@ -52,16 +54,16 @@ if($acesso)
     $relatorio->set_tituloLinha2('Demitidos da UENF');
     $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
 
-    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Mês'));
-    $relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Motivo','Mês'));
+    #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","date_to_php",NULL,"get_NomeMes"));
     
     $relatorio->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,"get_cargo"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(9);
+    $relatorio->set_numGrupo(10);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_dataImpressao(FALSE);
     #$relatorio->set_totalRegistro(FALSE);
@@ -107,7 +109,7 @@ if($acesso)
     $relatorio->set_subtitulo('Ordenado pela Data de Exoneração');
 
     $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Exoneração','Publicação','Mês'));
-    $relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+    #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center','left'));
     $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","get_NomeMes"));
 

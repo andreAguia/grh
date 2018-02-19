@@ -173,7 +173,7 @@ if($acesso)
             
             ###############################
             
-             ## Por Sexo 
+            ## Por Sexo 
             $grid2->abreColuna(12,6,4);
             
                 # Geral - Por Sexo
@@ -347,7 +347,7 @@ if($acesso)
                 $servidores = $pessoal->select($selectGrafico);
                 
                 # Chart
-                tituloTable("por Nacionalidade");
+                tituloTable("por Cidade de Moradia");
                 $chart = new Chart("Pie",$servidores);
                 $chart->set_idDiv("cidade");
                 $chart->set_legend(FALSE);
@@ -359,7 +359,7 @@ if($acesso)
                 # Tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($servidores);
-                $tabela->set_titulo("por Cidade de Moradia");
+                #$tabela->set_titulo("por Cidade de Moradia");
                 $tabela->set_label(array("Cidade","Servidores"));
                 $tabela->set_width(array(80,20));
                 $tabela->set_align(array("left","center"));

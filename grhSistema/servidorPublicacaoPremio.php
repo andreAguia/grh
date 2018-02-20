@@ -33,7 +33,7 @@ if($acesso)
 
     # Ordem da tabela
     $orderCampo = get('orderCampo',1);
-    $orderTipo = get('orderTipo','asc');
+    $orderTipo = get('orderTipo','desc');
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -107,7 +107,7 @@ if($acesso)
     $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
-    $objeto->set_numeroOrdem(TRUE);
+    #$objeto->set_numeroOrdem(TRUE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -237,7 +237,7 @@ if($acesso)
                                      dtFimPeriodo                                     
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE tblicenca.idTpLicenca = 6 AND idServidor='.$idServidorPesquisado.'
-                            ORDER BY tblicenca.dtInicial';
+                            ORDER BY tblicenca.dtInicial desc';
 
                 $result = $pessoal->select($select);
                 $count = $pessoal->count($select);

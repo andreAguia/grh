@@ -316,15 +316,17 @@ if($acesso){
 
             # Verifica se essa licença necessita processo
             if($pessoal->get_licencaProcesso($idTpLicenca) == "Sim"){
-                if(($idTpLicenca == 6) AND (is_null($id))){
+                if($idTpLicenca == 6){
+                    $tipo = "hidden";
                     $valor = $pessoal->get_licencaPremioNumProcessoPorId($diaPublicacao[0][0]);
                 }else{
+                    $tipo = "processo";
                     $valor = NULL;
                 }
                 
                 array_push($campos,array ( 'nome' => 'processo',
                                            'label' => 'Processo:',
-                                           'tipo' => 'processo',
+                                           'tipo' => $tipo,
                                            'size' => 30,
                                            'col' => 6,
                                            'padrao' => $valor,

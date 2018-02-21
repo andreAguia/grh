@@ -403,7 +403,7 @@ if($acesso)
             titulo('Servidores por Lotação');
             
             $grid3 = new Grid();
-            $grid3->abreColuna(4);
+            $grid3->abreColuna(12,4);
             br();
 
             # Tabela
@@ -415,9 +415,10 @@ if($acesso)
             $tabela->show();
 
             $grid3->fechaColuna();
-            $grid3->abreColuna(8);
+            $grid3->abreColuna(12,8);
 
             $chart = new Chart("Pie",$servidores);
+            $chart->set_tamanho(700,500);
             $chart->show();
 
             $grid3->fechaColuna();

@@ -227,16 +227,12 @@ if($acesso)
                 
                 # Exibe as licenças prêmio
                 $select = 'SELECT tbtipolicenca.nome,
-                                     dtPublicacao,
-                                     pgPublicacao,
-                                     dtInicial,
-                                     numdias,
-                                     ADDDATE(dtInicial,numDias-1),
-                                     tblicenca.processo,
-                                     dtInicioPeriodo,
-                                     dtFimPeriodo                                     
-                                FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                               WHERE tblicenca.idTpLicenca = 6 AND idServidor='.$idServidorPesquisado.'
+                                  dtPublicacao,
+                                  dtInicial,
+                                  numdias,
+                                  ADDDATE(dtInicial,numDias-1)
+                             FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                            WHERE tblicenca.idTpLicenca = 6 AND idServidor='.$idServidorPesquisado.'
                             ORDER BY tblicenca.dtInicial desc';
 
                 $result = $pessoal->select($select);
@@ -244,9 +240,9 @@ if($acesso)
 
                 # Cabeçalho da tabela
                 $titulo = 'Licenças Prêmio';
-                $label = array("Licença","Publicação","Pag.","Inicio","Dias","Término","Processo","Período Aquisitivo Início","Período Aquisitivo Término");
-                $width = array(13,10,6,10,6,10,15,15,15);
-                $funcao = array(NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php');
+                $label = array("Licença","Publicação","Inicio","Dias","Término");
+                #$width = array(13,10,6,10,6,10,15,15,15);
+                $funcao = array(NULL,'date_to_php','date_to_php',NULL,'date_to_php');
                 $align = array('center');
 
                 # Exibe a tabela
@@ -261,6 +257,30 @@ if($acesso)
                 $grid->abreColuna(12);
     
                 $tabela->show();
+                
+                echo "Dias fruídos".$pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);br();
+                echo "Dias publicados".$pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);br();
+                echo "Num Processo".$pessoal->get_licencaPremioNumProcesso($idServidorPesquisado);br();
+                echo "-----";br();
+                echo "Array com as Publicações:";br();
+                $publicacoes = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
+                var_dump($publicacoes);br();
+                echo "-----";br();
+                echo "Publicacao Disponível:";br();
+                print_r($pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado));br();
+                echo "-----";br();
+                echo "Número de Publicações:";
+                $numPublic = count($publicacoes);
+                echo $numPublic;br();
+                if($numPublic>0){
+                    foreach ($publicacoes as $pp){
+                        echo $pp[0];
+                        br();
+                    }
+                }
+                
+                echo "Primeira Publicação:";
+                
                 
                 $grid->fechaColuna();
                 $grid->fechaGrid();   

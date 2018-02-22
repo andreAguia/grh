@@ -315,16 +315,21 @@ if($acesso){
                                        'linha' => 3));
 
             # Verifica se essa licença necessita processo
-            if(($pessoal->get_licencaProcesso($idTpLicenca) == "Sim") AND ($idTpLicenca <> 6)){
-                if(($idTpLicenca == 6) AND (is_null($id))){
-                    $valor = $pessoal->get_licencaPremioNumProcessoPorId($diaPublicacao[0][0]);
+            if(($pessoal->get_licencaProcesso($idTpLicenca) == "Sim")){
+                if($idTpLicenca == 6){
+                        if(is_null($id)){
+                            $valor = $pessoal->get_licencaPremioNumProcessoPorId($diaPublicacao[0][0]);
+                        }else{
+                            $valor = NULL;
+                        }
+                     $tipoProcesso = "hidden";
                 }else{
-                    $valor = NULL;
+                    $tipoProcesso = "processo"; 
                 }
                 
                 array_push($campos,array ( 'nome' => 'processo',
                                            'label' => 'Processo:',
-                                           'tipo' => 'processo',
+                                           'tipo' => $tipoProcesso,
                                            'size' => 30,
                                            'col' => 6,
                                            'padrao' => $valor,
@@ -344,14 +349,10 @@ if($acesso){
                         $result2 = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
                     }
 
-                    # Adiciona o valor nulo
-                    #if(!is_null($result2))
-                    #    array_push($result2, array(NULL,NULL)); 
-
                     # cria o formulário
                     array_push($campos,array('nome' => 'idpublicacaoPremio',
                                              'label' => 'Publicação no DOERJ:',
-                                             'tipo' => 'combo',
+                                             'tipo' => 'hidden',
                                              'size' => 30,
                                              'col' => 6,
                                              'array' => $result2,

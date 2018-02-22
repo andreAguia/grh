@@ -15,25 +15,12 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
-
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    }else{ 
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
-    }
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo',1);
-    $orderTipo = get('orderTipo','desc');
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -58,7 +45,7 @@ if($acesso)
     $objeto->set_nome('Publicação de Licença Prêmio no DOERJ');
 
     # bot?o de voltar da lista
-    $objeto->set_voltarLista('servidorLicenca.php');
+    $objeto->set_voltarLista('servidorLicencaPremio.php');
 
     # controle de pesquisa
     #$objeto->set_parametroLabel('Pesquisar');
@@ -75,7 +62,7 @@ if($acesso)
                                       idPublicacaoPremio
                                  FROM tbpublicacaopremio
                                  WHERE idServidor = '.$idServidorPesquisado.'
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY dtPublicacao desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtPublicacao,
@@ -89,11 +76,6 @@ if($acesso)
                                 FROM tbpublicacaopremio
                                WHERE idPublicacaoPremio = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -102,12 +84,12 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
-    $objeto->set_width(array(10,5,14,14,20,8,8,8));
+    $objeto->set_width(array(15,5,15,15,15,10,10,10));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL));
+    $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
-    #$objeto->set_numeroOrdem(TRUE);
+    $objeto->set_exibeTempoPesquisa(FALSE);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -206,100 +188,125 @@ if($acesso)
     ################################################################
     switch ($fase)
     {
-            case "" :
-            case "listar" : 
-                # Exibe quadro de licença prêmio
-                Grh::quadroLicencaPremio($idServidorPesquisado);
-                
-                # pega os dados para o alerta
+        case "" :
+        case "listar" : 
+            # Exibe quadro de licença prêmio
+            #Grh::quadroLicencaPremio($idServidorPesquisado);
+
+            # pega os dados para o alerta
+            $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
+            $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
+            $diasDisponiveis = $diasPublicados - $diasFruidos;
+
+            # Exibe alerta se $diasDisponíveis for negativo
+            if($diasDisponiveis < 0){                    
+                $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                $objeto->set_rotinaExtraListar("callout");
+                $objeto->set_rotinaExtraListarParametro($mensagem1);
+            }
+
+            $objeto->listar();
+
+            # Exibe as licenças prêmio
+            $select = 'SELECT dtInicial,
+                              numdias,
+                              ADDDATE(dtInicial,numDias-1),
+                              idLicencaPremio,
+                              idLicencaPremio
+                         FROM tblicencaPremio 
+                        WHERE idServidor='.$idServidorPesquisado.'
+                     ORDER BY dtInicial desc';
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Cabeçalho da tabela
+            $titulo = 'Licenças Prêmio';
+            $label = array("Inicio","Dias","Término","Publicação");
+            #$width = array(13,10,6,10,6,10,15,15,15);
+            $funcao = array('date_to_php',NULL,'date_to_php');
+            $align = array('center');
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_align($align);
+            $tabela->set_label($label);
+            $tabela->set_titulo($titulo);
+            $tabela->set_funcao($funcao);
+            
+            hr();
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(3);
+            
                 $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
                 $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
-                $diasDisponiveis = $diasPublicados - $diasFruidos;
+                $diasDisponiveis = $diasPublicados - $diasFruidos;        
+
+                # Tabela de Serviços
+                $mesServico = date('m');
+                $array = array(array('Dias Publicados',$diasPublicados),
+                                array('Dias Fruídos',$diasFruidos),
+                                array('Disponíveis',$diasDisponiveis));
                 
-                # Exibe alerta se $diasDisponíveis for negativo
-                if($diasDisponiveis < 0){                    
-                    $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
-                    $objeto->set_rotinaExtraListar("callout");
-                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                $estatistica = new Tabela();
+                $estatistica->set_titulo("Resumo");
+                $estatistica->set_conteudo($array);
+                $estatistica->set_label(array("Dias","Valor"));
+                $estatistica->set_align(array("center"));
+                $estatistica->set_width(array(60,40));
+                $estatistica->set_totalRegistro(FALSE);
+                $estatistica->show();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
+
+            $tabela->show();
+
+            echo "Dias fruídos".$pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);br();
+            echo "Dias publicados".$pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);br();
+            echo "Num Processo".$pessoal->get_licencaPremioNumProcesso($idServidorPesquisado);br();
+            echo "-----";br();
+            echo "Array com as Publicações:";br();
+            $publicacoes = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
+            var_dump($publicacoes);br();
+            echo "-----";br();
+            echo "Publicacao Disponível:";br();
+            print_r($pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado));br();
+            echo "-----";br();
+            echo "Número de Publicações:";
+            $numPublic = count($publicacoes);
+            echo $numPublic;br();
+            if($numPublic>0){
+                foreach ($publicacoes as $pp){
+                    echo $pp[0];
+                    br();
                 }
+            }
 
-                $objeto->listar();
-                
-                # Exibe as licenças prêmio
-                $select = 'SELECT tbtipolicenca.nome,
-                                  dtPublicacao,
-                                  dtInicial,
-                                  numdias,
-                                  ADDDATE(dtInicial,numDias-1)
-                             FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                            WHERE tblicenca.idTpLicenca = 6 AND idServidor='.$idServidorPesquisado.'
-                            ORDER BY tblicenca.dtInicial desc';
+            echo "Primeira Publicação:";
 
-                $result = $pessoal->select($select);
-                $count = $pessoal->count($select);
 
-                # Cabeçalho da tabela
-                $titulo = 'Licenças Prêmio';
-                $label = array("Licença","Publicação","Inicio","Dias","Término");
-                #$width = array(13,10,6,10,6,10,15,15,15);
-                $funcao = array(NULL,'date_to_php','date_to_php',NULL,'date_to_php');
-                $align = array('center');
+            $grid->fechaColuna();
+            $grid->fechaGrid();   
+            break;
 
-                # Exibe a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($result);
-                $tabela->set_cabecalho($label,$width,$align);
-                $tabela->set_titulo($titulo);
-                $tabela->set_funcao($funcao);
-                
-                # Limita o tamanho da tela
-                $grid = new Grid();
-                $grid->abreColuna(12);
-    
-                $tabela->show();
-                
-                echo "Dias fruídos".$pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);br();
-                echo "Dias publicados".$pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);br();
-                echo "Num Processo".$pessoal->get_licencaPremioNumProcesso($idServidorPesquisado);br();
-                echo "-----";br();
-                echo "Array com as Publicações:";br();
-                $publicacoes = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
-                var_dump($publicacoes);br();
-                echo "-----";br();
-                echo "Publicacao Disponível:";br();
-                print_r($pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado));br();
-                echo "-----";br();
-                echo "Número de Publicações:";
-                $numPublic = count($publicacoes);
-                echo $numPublic;br();
-                if($numPublic>0){
-                    foreach ($publicacoes as $pp){
-                        echo $pp[0];
-                        br();
-                    }
-                }
-                
-                echo "Primeira Publicação:";
-                
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();   
-                break;
+        case "editar" :	
+        case "gravar" :		
+            $objeto->$fase($id);
+            break;
 
-            case "editar" :	
-            case "gravar" :		
-                $objeto->$fase($id);
-                break;
-
-            case "excluir" :
-                # verifica se tem licenças cadastradas com essa publicação antes de excluir
-                $numLicencas = $pessoal->get_LicencaPremioNumPublicacao($id);
-                if($numLicencas <= 0)
-                    $objeto->excluir($id);
-                else
-                    Alert::alert ('Essa publicação não pode ser excluída pois existe(m) '.$numLicencas.' licença(s) cadastrada(s) com essa publicação!!');
-                    back(1);
-                break;
+        case "excluir" :
+            # verifica se tem licenças cadastradas com essa publicação antes de excluir
+            $numLicencas = $pessoal->get_LicencaPremioNumPublicacao($id);
+            if($numLicencas <= 0)
+                $objeto->excluir($id);
+            else
+                Alert::alert ('Essa publicação não pode ser excluída pois existe(m) '.$numLicencas.' licença(s) cadastrada(s) com essa publicação!!');
+                back(1);
+            break;
     }									 	 		
 
     $page->terminaPagina();

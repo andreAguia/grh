@@ -84,6 +84,7 @@ if($acesso)
     $objeto->set_orderCampo($orderCampo);
     $objeto->set_orderTipo($orderTipo);
     $objeto->set_orderChamador('?fase=listar');
+    
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -214,8 +215,7 @@ if($acesso)
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorDiaria.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     
     $objeto->set_botaoListarExtra(array($botaoRel));
-    
-    
+       
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

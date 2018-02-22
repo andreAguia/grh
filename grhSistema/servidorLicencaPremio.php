@@ -109,16 +109,13 @@ if($acesso){
             $diaPublicacao = NULL;                    
 
             # pega a primeira publicação disponível dessa matrícula
-            $diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
+            #$diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
 
             # pega quantos dias estão disponíveis
-            if (!is_null($diaPublicacao)){
-                $diasDisponiveis = $pessoal->get_licencaPremioNumDiasDisponiveisPorId($diaPublicacao[0][0]);
-            }
+            $diasDisponiveis = $pessoal->get_NumDiasDisponiveis();
 
             # monta os valores
-            switch ($diasDisponiveis)
-            {
+            switch ($diasDisponiveis){
                 case 90 :
                     $array = array(90,60,30);
                     break;
@@ -183,8 +180,7 @@ if($acesso){
 
         ################################################################
 
-        switch ($fase)
-        {
+        switch ($fase){
             case "" :
             case "listar" :
             case "editar" :            

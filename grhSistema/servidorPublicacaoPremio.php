@@ -190,12 +190,11 @@ if($acesso){
     {
         case "" :
         case "listar" : 
-            # Exibe quadro de licença prêmio
-            #Grh::quadroLicencaPremio($idServidorPesquisado);
-
-            # pega os dados para o alerta
-            $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
-            $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
+            
+            # Pega os dados para o alerta
+            $licenca = new LicencaPremio($idServidorPesquisado);
+            $diasPublicados = $licenca->get_NumDiasPublicada($idServidorPesquisado);
+            $diasFruidos = $licenca->get_NumDiasFruidos($idServidorPesquisado);
             $diasDisponiveis = $diasPublicados - $diasFruidos;
 
             # Exibe alerta se $diasDisponíveis for negativo
@@ -240,16 +239,12 @@ if($acesso){
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(3);
-            
-                $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
-                $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
-                $diasDisponiveis = $diasPublicados - $diasFruidos;        
 
                 # Tabela de Serviços
                 $mesServico = date('m');
                 $array = array(array('Dias Publicados',$diasPublicados),
-                                array('Dias Fruídos',$diasFruidos),
-                                array('Disponíveis',$diasDisponiveis));
+                               array('Dias Fruídos',$diasFruidos),
+                               array('Disponíveis',$diasDisponiveis));
                 
                 $estatistica = new Tabela();
                 $estatistica->set_titulo("Resumo");
@@ -265,47 +260,14 @@ if($acesso){
 
             $tabela->show();
 
-            echo "Dias fruídos".$pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);br();
-            echo "Dias publicados".$pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);br();
-            echo "Num Processo".$pessoal->get_licencaPremioNumProcesso($idServidorPesquisado);br();
-            echo "-----";br();
-            echo "Array com as Publicações:";br();
-            $publicacoes = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
-            var_dump($publicacoes);br();
-            echo "-----";br();
-            echo "Publicacao Disponível:";br();
-            print_r($pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado));br();
-            echo "-----";br();
-            echo "Número de Publicações:";
-            $numPublic = count($publicacoes);
-            echo $numPublic;br();
-            if($numPublic>0){
-                foreach ($publicacoes as $pp){
-                    echo $pp[0];
-                    br();
-                }
-            }
-
-            echo "Primeira Publicação:";
-
-
             $grid->fechaColuna();
             $grid->fechaGrid();   
             break;
 
         case "editar" :	
-        case "gravar" :		
-            $objeto->$fase($id);
-            break;
-
+        case "gravar" :
         case "excluir" :
-            # verifica se tem licenças cadastradas com essa publicação antes de excluir
-            $numLicencas = $pessoal->get_LicencaPremioNumPublicacao($id);
-            if($numLicencas <= 0)
-                $objeto->excluir($id);
-            else
-                Alert::alert ('Essa publicação não pode ser excluída pois existe(m) '.$numLicencas.' licença(s) cadastrada(s) com essa publicação!!');
-                back(1);
+            $objeto->$fase($id);
             break;
     }									 	 		
 

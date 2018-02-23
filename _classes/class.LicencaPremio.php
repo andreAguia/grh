@@ -20,7 +20,7 @@ class LicencaPremio{
         
     ###########################################################    
     
-    function get_NumDiasFruidos($idServidor){
+    function get_numDiasFruidos($idServidor){
 
     /**
      * Informa a quantidade de dias fruídos
@@ -44,7 +44,7 @@ class LicencaPremio{
 
     ########################################################### 
 
-    function get_NumDiasPublicados($idServidor){
+    function get_numDiasPublicados($idServidor){
 
     /**
      * Informe o número de dias publicados
@@ -68,7 +68,7 @@ class LicencaPremio{
 
     ###########################################################
 
-    function get_NumDiasDisponiveis($idServidor){
+    function get_numDiasDisponiveis($idServidor){
 
     /**
      * Informe o número de dias disponíveis
@@ -80,6 +80,131 @@ class LicencaPremio{
         
         # Retorno
         return $diasDisponiveis;
+    }
+
+    ###########################################################
+
+    function get_idServidorPorPublicacao($idPublicacaoPremio){
+
+    /**
+     * Informe o idServidor de uma publicação
+     */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega array com os dias publicados
+        $select = 'SELECT idServidor
+                     FROM tbpublicacaopremio 
+                    WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
+        
+       $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        return $row[0];
+    }
+
+    ###########################################################
+
+    function get_idServidorPorLicenca($idLicencaPremio){
+
+    /**
+     * Informe o idServidor de uma licença
+     */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega array com os dias publicados
+        $select = 'SELECT idServidor
+                     FROM tblicencapremio 
+                    WHERE idLicencaPremio = '.$idLicencaPremio;
+        
+       $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        return $row[0];
+    }
+
+    ###########################################################                          
+
+    function get_publicacao($idLicencaPremio){
+
+    /**
+     * Informe a publicação de uma licença
+     */
+
+        # Pega o idServidor dessa Licença
+        $idServidor = $this->get_idServidorPorLicenca($idLicencaPremio);
+        
+        $diasPublicados = $this->get_numDiasPublicados($idServidor);
+        $diasFruidos = $this->get_numDiasFruidos($idServidor);
+        $diasDisponiveis = $this->get_numDiasDisponiveis($idServidor);
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega array com os dias publicados
+        $select = 'SELECT idPublicacaoPremio
+                     FROM tbpublicacaopremio 
+                    WHERE idServidor = '.$idServidor;
+        
+        $publicados = $pessoal->select($select);
+        
+        # Pega array com os dias fruídos
+        $select = 'SELECT idLicencaPremio,
+                          numDias 
+                     FROM tblicencapremio 
+                    WHERE idServidor = '.$idServidor.' 
+                 ORDER BY dtInicial';       
+                        
+        $fruidos = $pessoal->select($select);
+        
+        # Rotina que informa (matematicamente) a publicação de uma licença
+        $somador = 0; // Zera o somador
+        
+        # Percorre as licenças somando os dias e dividindo em grupos de 90 dias
+        foreach($fruidos as $arrayLicenca){
+            $somador += $arrayLicenca[1];   // soma
+            
+            # Verifica se é a licença solicitada
+            if($arrayLicenca[0] == $idLicencaPremio){
+                $divisao = ($somador/90);        // divide por 90
+                $indice = (int)($divisao - 0.01);  // acerta para que o valor fique perfeito para ser um índice de array
+                $idRetornado = $publicados[$indice][0]; // descobre a id da publicação.
+            }
+        }
+        
+        # Pega os dados dessa publicação
+        $dados = $this->get_dadosPublicacao($idRetornado);
+        
+        $retorno = "Publicado em:".date_to_php($dados[0])." (".date_to_php($dados[1])." - ".date_to_php($dados[2]).")";
+        # Retorno
+        return $retorno;
+    }
+
+    ###########################################################
+    
+    function get_dadosPublicacao($idPublicacaoPremio){
+
+    /**
+     * Informe a data e o período aquisitivo
+     */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega array com os dias publicados
+        $select = 'SELECT dtPublicacao,
+                          dtInicioPeriodo,
+                          dtFimPeriodo
+                     FROM tbpublicacaopremio 
+                    WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
+        
+        $retorno = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        return $retorno;
     }
 
     ###########################################################
@@ -115,9 +240,9 @@ class LicencaPremio{
         $fruidos = $pessoal->select($select);
         
         # Pega os somtórios
-        $diasPublicados = $this->get_NumDiasPublicados($idServidor);
-        $diasFruidos = $this->get_NumDiasFruidos($idServidor);
-        $diasDisponiveis = $this->get_NumDiasDisponiveis($idServidor);
+        $diasPublicados = $this->get_numDiasPublicados($idServidor);
+        $diasFruidos = $this->get_numDiasFruidos($idServidor);
+        $diasDisponiveis = $this->get_numDiasDisponiveis($idServidor);
         
         
         
@@ -139,27 +264,5 @@ class LicencaPremio{
         return $idPublicacaoPremio;
     }
 
-    ###########################################################
-
-    function get_idServidorPorPublicacao($idPublicacaoPremio){
-
-    /**
-     * Informe o idServidor de uma Publicação
-     */
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega array com os dias publicados
-        $select = 'SELECT idServidor
-                     FROM tbpublicacaopremio 
-                    WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
-        
-       $row = $pessoal->select($select,FALSE);
-        
-        # Retorno
-        return $row[0];
-    }
-
-    ###########################################################             
+    
 }

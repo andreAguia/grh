@@ -60,12 +60,11 @@ if($acesso){
         $objeto->set_selectLista('SELECT dtInicial,
                                          numdias,
                                          ADDDATE(dtInicial,numDias-1),
-                                         idPublicacaoPremio,
+                                         idLicencaPremio,
                                          idLicencaPremio
                                     FROM tblicencaPremio 
                                    WHERE idServidor='.$idServidorPesquisado.'
-                                ORDER BY dtInicial desc');
-        
+                                ORDER BY dtInicial desc');        
         
         # select do edita
         $objeto->set_selectEdita('SELECT dtInicial,
@@ -86,6 +85,8 @@ if($acesso){
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("center"));
         $objeto->set_funcao(array('date_to_php',NULL,'date_to_php'));
+        $objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
+        $objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
     
@@ -110,7 +111,7 @@ if($acesso){
 
             # Pega os dados para o alerta
             $licenca = new LicencaPremio($idServidorPesquisado);
-            $diasDisponiveis = $licenca->get_NumDiasDisponiveis($idServidorPesquisado);
+            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
             
             # monta os valores
             switch ($diasDisponiveis){

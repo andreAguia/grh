@@ -258,4 +258,3 @@ function textoEscalaFerias(){
     echo "Aqui vai o texto a ser exibido no fim de cada grupo";
 }
 
-##########################################################

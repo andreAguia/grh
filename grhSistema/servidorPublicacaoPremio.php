@@ -59,6 +59,7 @@ if($acesso){
                                       processo,
                                       numDias,
                                       idPublicacaoPremio,
+                                      idPublicacaoPremio,
                                       idPublicacaoPremio
                                  FROM tbpublicacaopremio
                                  WHERE idServidor = '.$idServidorPesquisado.'
@@ -87,8 +88,8 @@ if($acesso){
     $objeto->set_width(array(15,5,15,15,15,10,10,10));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_NumDiasFruidosPorPublicacao','get_NumDiasDisponiveisPorPublicacao'));
     $objeto->set_exibeTempoPesquisa(FALSE);
 
     # Classe do banco de dados
@@ -152,6 +153,7 @@ if($acesso){
                                 'label' => 'Dias:',
                                 'tipo' => 'numero',
                                 'padrao' => 90,
+                                'readOnly' => TRUE,
                                 'size' => 5,
                                 'col' => 3,
                                 'required' => TRUE,
@@ -192,10 +194,10 @@ if($acesso){
         case "listar" : 
             
             # Pega os dados para o alerta
-            $licenca = new LicencaPremio($idServidorPesquisado);
-            $diasPublicados = $licenca->get_NumDiasPublicada($idServidorPesquisado);
+            $licenca = new LicencaPremio();
+            $diasPublicados = $licenca->get_NumDiasPublicados($idServidorPesquisado);
             $diasFruidos = $licenca->get_NumDiasFruidos($idServidorPesquisado);
-            $diasDisponiveis = $diasPublicados - $diasFruidos;
+            $diasDisponiveis = $licenca->get_NumDiasDisponiveis($idServidorPesquisado);
 
             # Exibe alerta se $diasDisponíveis for negativo
             if($diasDisponiveis < 0){                    

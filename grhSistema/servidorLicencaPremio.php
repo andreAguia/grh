@@ -60,7 +60,7 @@ if($acesso){
         $objeto->set_selectLista('SELECT dtInicial,
                                          numdias,
                                          ADDDATE(dtInicial,numDias-1),
-                                         idLicencaPremio,
+                                         idPublicacaoPremio,
                                          idLicencaPremio
                                     FROM tblicencaPremio 
                                    WHERE idServidor='.$idServidorPesquisado.'
@@ -108,15 +108,13 @@ if($acesso){
             $array = NULL;
             $diaPublicacao = NULL;                    
 
-            # pega a primeira publicação disponível dessa matrícula
-            #$diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
-
-            # pega quantos dias estão disponíveis
-            $diasDisponiveis = $pessoal->get_NumDiasDisponiveis();
-
+            # Pega os dados para o alerta
+            $licenca = new LicencaPremio($idServidorPesquisado);
+            $diasDisponiveis = $licenca->get_NumDiasDisponiveis($idServidorPesquisado);
+            
             # monta os valores
             switch ($diasDisponiveis){
-                case 90 :
+                case ($diasDisponiveis >=90) :
                     $array = array(90,60,30);
                     break;
                 case 60 :

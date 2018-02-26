@@ -38,7 +38,7 @@ class Pessoal2 extends Bd
 ###########################################################
 	
 	/**
-	 * M�todo set_tabela
+	 * Método set_tabela
 	 * 
 	 * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que ser� utilizada
 	 */
@@ -50,7 +50,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo set_idCampo
+	 * Método set_idCampo
 	 * 
 	 * @param  	$idCampo)	-> Nome do campo chave da tabela
 	 */
@@ -62,7 +62,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo Gravar
+	 * Método Gravar
 	 */
 	public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = TRUE){
             
@@ -78,7 +78,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo Excluir
+	 * Método Excluir
 	 */
 	public function excluir($idValor = NULL,$tabela = NULL,$idCampo = 'id'){
             
@@ -91,7 +91,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_gratificacao
+	 * Método get_gratificacao
 	 * informa gratifica��o de uma matr�cula(se houver)
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -114,7 +114,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_gratificacaoDtFinal
+	 * Método get_gratificacaoDtFinal
 	 * informa a data de t�rmino da gratifica��o de uma matr�cula(se houver)
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -145,7 +145,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_periodoDisponivel
+	 * Método get_periodoDisponivel
 	 * informa o per�odo dispon�vel de f�rias de um servidor
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -190,7 +190,7 @@ class Pessoal2 extends Bd
 	###########################################################
 		
 	/**
-	 * M�todo get_ramais
+	 * Método get_ramais
 	 * Retorna um array com os setores e os ramais
 	 */
 	public function get_ramais()
@@ -212,7 +212,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_salarioBase
+	 * Método get_salarioBase
 	 * informa o sal�rio base de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -235,7 +235,7 @@ class Pessoal2 extends Bd
         ###########################################################
     
         /**
-         * M�todo get_salarioTotal
+         * Método get_salarioTotal
          * informa o sal�rio Total de uma matr�cula
          * 
          * @param	string $matricula matricula do servidor
@@ -258,7 +258,7 @@ class Pessoal2 extends Bd
         ###########################################################
 	
 	/**
-	 * M�todo get_salarioCessao
+	 * Método get_salarioCessao
 	 * informa o sal�rio recebido pelo �rg�o de origem de um cedido
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -279,7 +279,7 @@ class Pessoal2 extends Bd
 	###########################################################
         
 	/**
-	 * M�todo get_aniversariantes
+	 * Método get_aniversariantes
 	 * Exibe os niversariantes de um determinado m�s
 	 * 
 	 * @param	$mes	string	valor de 1 a 12 que informa o m�s
@@ -309,7 +309,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_senha
+	 * Método get_senha
 	 * Informa a senha (criptografada) 
 	 * 
 	 * @param	string $matricula	matricula do servidor
@@ -334,7 +334,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo set_senha
+	 * Método set_senha
 	 * muda a senha de um usu�rio
 	 * 
 	 * @param	string 	$matricula 	-> matricula do servidor
@@ -353,7 +353,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo set_senhaNull
+	 * Método set_senhaNull
 	 * muda a senha de um usu�rio para NULL (bloqueia o mesmo)
 	 * 
 	 * @param	string 	$matricula 	-> matricula do servidor
@@ -368,7 +368,7 @@ class Pessoal2 extends Bd
 	###########################################################
 		
 	/**
-	 * M�todo get_diasAusentes
+	 * Método get_diasAusentes
 	 * Informa, em dias, o per�odo entre a data atual
 	 * e o �ltimo acesso do usu�rio 
 	 *
@@ -396,7 +396,7 @@ class Pessoal2 extends Bd
 	######################################################################################
 	
 	/**
-	 * M�todo get_lotacao
+	 * Método get_lotacao
 	 * Informa a lota��o atual do servidor
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -421,7 +421,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_lotacaoNumServidores
+	 * Método get_lotacaoNumServidores
 	 * Informa o n�mero de servidores ativos nessa lota��o
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -445,7 +445,7 @@ class Pessoal2 extends Bd
 	###########################################################
 
 	/**
-	 * M�todo get_idlotacao
+	 * Método get_idlotacao
 	 * Informa o id da lota��o atual do servidor
 	 *
 	 * @param	string $matricula  matricula do servidor
@@ -498,7 +498,7 @@ class Pessoal2 extends Bd
 
 	
 	/**
-	 * M�todo get_perfil
+	 * Método get_perfil
 	 * Informa o perfil do servidor
 	 * 
 	 * @param   string $matricula  matricula do servidor
@@ -523,7 +523,7 @@ class Pessoal2 extends Bd
 
 	
 	/**
-	 * M�todo get_idCargo
+	 * Método get_idCargo
 	 * Informa o id do cargo do servidor
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -546,7 +546,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_idpessoa
+	 * Método get_idpessoa
 	 * fornece o id_pessoa de uma matricula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -566,7 +566,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_idpessoaCPF
+	 * Método get_idpessoaCPF
 	 * fornece o id_pessoa de um CPF
 	 * 
 	 * @param	string $cpf cpf do servidor
@@ -586,7 +586,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_idpessoaPis
+	 * Método get_idpessoaPis
 	 * fornece o id_pessoa de um PisF
 	 * 
 	 * @param	string $pis do servidor
@@ -607,7 +607,7 @@ class Pessoal2 extends Bd
 	##########################################################
 	
 	/**
-	 * M�todo get_anoAdmissao
+	 * Método get_anoAdmissao
 	 * informa o ano de admiss�o de um servidor
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -627,7 +627,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_dtAdmissao
+	 * Método get_dtAdmissao
 	 * informa o ano de admiss�o de um servidor
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -649,7 +649,7 @@ class Pessoal2 extends Bd
 	function get_idPerfil($matricula)
 	
 	/**
-	 * M�todo get_idPerfil
+	 * Método get_idPerfil
 	 * informa o id do perfil do servidor
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -671,7 +671,7 @@ class Pessoal2 extends Bd
 	function get_digito($matricula)
 	
 	/**
-	 * M�todo get_digito
+	 * Método get_digito
 	 * informa o d�gito verificador de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1047,7 +1047,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_situacao
+	 * Método get_situacao
 	 * informa a situa��o (ativo ou inativo) de um servidor
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1067,7 +1067,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_idPessoaAtiva
+	 * Método get_idPessoaAtiva
 	 * informa se a pessoa tem alguma matr�cula ativa
 	 * 
 	 * @param	integer $idPessoa   idPessoa do servidor
@@ -1087,7 +1087,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_nome
+	 * Método get_nome
 	 * fornece o nome de uma matricula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1111,7 +1111,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_sexo
+	 * Método get_sexo
 	 * informa o sexo de uma matricula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1135,7 +1135,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_nomeidPessoa
+	 * Método get_nomeidPessoa
 	 * fornece o nome de um idPessoa
 	 * 
      * @param   integer $idPessoa    idPessoa do servidor
@@ -1155,7 +1155,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_cargoComissao
+	 * Método get_cargoComissao
 	 * Informa o cargo em Comiss�o do Servidor (se tiver)
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -1192,7 +1192,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_cargoComissaoPorId
+	 * Método get_cargoComissaoPorId
 	 * Informa o id e o nome do cargo em Comiss�o do Servidor (se tiver)
          * usado na rotina de Cargo em comiss�o para preencher a combo
 	 * 
@@ -1216,7 +1216,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_salarioCargoComissao
+	 * Método get_salarioCargoComissao
 	 * Informa o sal�rio de um cargo em Comiss�o do Servidor (se tiver)
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -1251,7 +1251,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_trienioPercentual
+	 * Método get_trienioPercentual
 	 * informa o percentual atual do trienio de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1273,7 +1273,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_trienioValor
+	 * Método get_trienioValor
 	 * informa o valor atual do trienio de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1293,7 +1293,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_trienioDataInicial
+	 * Método get_trienioDataInicial
 	 * informa a data Inicial de um trienio de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1341,7 +1341,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_trienioPer�odoAquisitivo
+	 * Método get_trienioPer�odoAquisitivo
 	 * informa a per�odo Aquisitivo de um trienio de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1364,7 +1364,7 @@ class Pessoal2 extends Bd
         ###########################################################
 	
 	/**
-	 * M�todo get_trienioNumProcesso
+	 * Método get_trienioNumProcesso
 	 * informa a n� do processo de um trienio de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -1409,7 +1409,7 @@ class Pessoal2 extends Bd
         ###########################################################
 
 	/**
-	 * M�todo get_nomelotacao
+	 * Método get_nomelotacao
 	 * Informa o nome da lota��o a partir do id
 	 *
 	 * @param	string $id  id da lota��o
@@ -1435,7 +1435,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresCargo
+	 * Método get_servidoresCargo
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado cargo
 	 */
@@ -1454,7 +1454,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresCargoComissao
+	 * Método get_servidoresCargoComissao
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado cargo em comissao
 	 */
@@ -1474,7 +1474,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_cargoComissaoVagas
+	 * Método get_cargoComissaoVagas
 	 * 
 	 * Exibe o n�mero de vagas em um determinado cargo em comissao
 	 */
@@ -1492,7 +1492,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_cargoComissaoVagas
+	 * Método get_cargoComissaoVagas
 	 * 
 	 * Exibe o n�mero de vagas n�o ocupadas em um determinado cargo em comissao
 	 */
@@ -1509,7 +1509,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresConcurso
+	 * Método get_servidoresConcurso
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado concurso
 	 */
@@ -1528,7 +1528,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresPerfil
+	 * Método get_servidoresPerfil
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado concurso
 	 */
@@ -1547,7 +1547,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresSituacao
+	 * Método get_servidoresSituacao
 	 * 
 	 * Exibe o n�mero de servidores ativos em um determinado concurso
 	 */
@@ -1565,7 +1565,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_servidoresSite
+	 * Método get_servidoresSite
 	 * 
 	 * Exibe os servidores em cargo em comiss�o para o site da fenorte
          * 
@@ -1605,7 +1605,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilLicenca
+	 * Método get_perfilLicenca
 	 * informa se o perfil � permitido tirar licen�a
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1626,7 +1626,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilProgressao
+	 * Método get_perfilProgressao
 	 * informa se o perfil � permitido ter progressao
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1647,7 +1647,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilTrienio
+	 * Método get_perfilTrienio
 	 * informa se o perfil � permitido ter Tri�nios
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1668,7 +1668,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilComissao
+	 * Método get_perfilComissao
 	 * informa se o perfil � permitido ter Cargo em Comiss�o
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1689,7 +1689,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilMatricula
+	 * Método get_perfilMatricula
 	 * informa a matr�cula inicial e final permitida a um perfil
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1711,7 +1711,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilGratificacao
+	 * Método get_perfilGratificacao
 	 * informa se o perfil � permitido ter Gratifica��o Especial
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1732,7 +1732,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilQuantidade
+	 * Método get_perfilQuantidade
 	 * informa se o n�mero de servidores ativos nesse perfil
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1754,7 +1754,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilFerias
+	 * Método get_perfilFerias
 	 * informa se o perfil � permitido ter F�rias
 	 * 
 	 * @param   integer $id id do Perfil
@@ -1775,7 +1775,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_nivelCargo
+	 * Método get_nivelCargo
 	 * Informa o n�vel de escolaridade do cargo de uma matr�cula
          * 
 	 * @param   string $matricula do servidor
@@ -2058,7 +2058,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_nivelCargoCargo
+	 * Método get_nivelCargoCargo
 	 * Informa o n�vel de escolaridade do cargo de um idCargo
          * 
 	 * @param   string $idCargo
@@ -2078,7 +2078,7 @@ class Pessoal2 extends Bd
         ###########################################################
 	
 	/**
-	 * M�todo get_planoCargosAtual
+	 * Método get_planoCargosAtual
 	 * Informa o id do Plano de CArgos Atual (com a data de publica��o mais recente)
          * 	 
 	 */
@@ -2097,7 +2097,7 @@ class Pessoal2 extends Bd
         ###########################################################
 	
 	/**
-	 * M�todo get_classeInicial
+	 * Método get_classeInicial
 	 * Informa o idClasse inicial (sal�rio Inicial)
          * 
          * @param   string $plano
@@ -2121,7 +2121,7 @@ class Pessoal2 extends Bd
         ###########################################################
 	
 	/**
-	 * M�todo get_Pis
+	 * Método get_Pis
 	 * fornece o Pis de um id_pessoa
 	 * 
 	 * @param	string $idPessoa do servidor
@@ -2142,7 +2142,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_perfilNome
+	 * Método get_perfilNome
 	 * informa o nome do perfil
 	 * 
 	 * @param   integer $id id do Perfil
@@ -2162,7 +2162,7 @@ class Pessoal2 extends Bd
 	###########################################################
 
 	/**
-	 * M�todo get_nomeCargo
+	 * Método get_nomeCargo
 	 * Informa o nome do cargo a partir do id
 	 *
 	 * @param	string $id  id do cargo
@@ -2209,7 +2209,7 @@ class Pessoal2 extends Bd
 	###########################################################
 	
 	/**
-	 * M�todo get_ultimoAcesso
+	 * Método get_ultimoAcesso
 	 * informa a data do �ltimo acesso a �rea do servidor de uma matr�cula
 	 * 
 	 * @param	string $matricula matricula do servidor
@@ -2358,7 +2358,7 @@ class Pessoal2 extends Bd
    ###########################################################
 
     /**
-     * M�todo get_parentesco
+     * Método get_parentesco
      * Informa o parentesco
      * 
      * @param	string $id  id do parentesco
@@ -2710,7 +2710,7 @@ class Pessoal2 extends Bd
     ###########################################################
 
     /**
-     * M�todo get_cpf
+     * Método get_cpf
      * fornece o CPF de um id_pessoa
      * 
      * @param	string $idPessoa do servidor
@@ -2731,7 +2731,7 @@ class Pessoal2 extends Bd
     ###########################################################
 
     /**
-     * M�todo get_identidade
+     * Método get_identidade
      * fornece o n�mero, org�o e data de emiss�o da
      * carteira de identidade de um id_pessoa
      * 
@@ -2837,7 +2837,7 @@ class Pessoal2 extends Bd
 
 	
 	/**
-	 * M�todo get_idFuncional
+	 * Método get_idFuncional
 	 * Informa a idFuncional de um servidor
 	 * 
 	 * @param	string $matricula  matricula do servidor
@@ -2861,7 +2861,7 @@ class Pessoal2 extends Bd
 
 	
 	/**
-	 * M�todo get_idServidor
+	 * Método get_idServidor
 	 * Informa a idServidor de uma matrícula
 	 * 
 	 * @param	string $matricula  matricula do servidor

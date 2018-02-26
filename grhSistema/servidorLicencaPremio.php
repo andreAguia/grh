@@ -89,6 +89,7 @@ if($acesso){
         $objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
+        $objeto->set_exibeTempoPesquisa(FALSE);
     
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
@@ -172,8 +173,8 @@ if($acesso){
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
-        $botaoRel->set_title("Relatório de Licença");
-        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_title("Relatório de Licença Prêmio");
+        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         
         $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));
 
@@ -182,6 +183,134 @@ if($acesso){
         switch ($fase){
             case "" :
             case "listar" :
+            # Pega os dados para o alerta
+            $licenca = new LicencaPremio();
+            $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
+            $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
+            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
+
+            # Exibe alerta se $diasDisponíveis for negativo
+            if($diasDisponiveis < 0){                    
+                $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                $objeto->set_rotinaExtraListar("callout");
+                $objeto->set_rotinaExtraListarParametro($mensagem1);
+            }
+
+            $objeto->listar();
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            if(is_null($alertas)){
+                $caminhoVolta = 'servidor.php';
+            }else{
+                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alertas;
+            }
+
+            $linkBotao1 = new Link("Voltar",$caminhoVolta);
+            $linkBotao1->set_class('button');
+            $linkBotao1->set_title('Volta para a página anterior');
+            $linkBotao1->set_accessKey('V');
+            $menu->add_link($linkBotao1,"left");
+
+            # Relatórios
+            $linkBotao3 = new Link("Relatorios");
+            $linkBotao3->set_class('button');    
+            $linkBotao3->set_onClick("abreFechaDivId('RelServidor');");
+            $linkBotao3->set_title('Relatórios desse servidor');
+            $linkBotao3->set_accessKey('R');
+            $menu->add_link($linkBotao3,"right");
+
+            if(Verifica::acesso($idUsuario,1)){
+                # Histórico
+                $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);
+                $linkBotao4->set_class('button');
+                $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');        
+                $linkBotao4->set_accessKey('H');
+                $menu->add_link($linkBotao4,"right");
+
+                # Excluir
+                $linkBotao5 = new Link("Excluir","servidorExclusao.php");
+                $linkBotao5->set_class('alert button');
+                $linkBotao5->set_title('Excluir Servidor');
+                $linkBotao5->set_accessKey('x');
+                $menu->add_link($linkBotao5,"right");
+            }
+
+            $menu->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Exibe as Publicações
+            $select = 'SELECT dtPublicacao,
+                            pgPublicacao,
+                            dtInicioPeriodo,
+                            dtFimPeriodo,                                  
+                            processo,
+                            numDias,
+                            idPublicacaoPremio,
+                            idPublicacaoPremio,
+                            idPublicacaoPremio
+                       FROM tbpublicacaopremio
+                       WHERE idServidor = '.$idServidorPesquisado.'
+                   ORDER BY dtPublicacao desc';
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Cabeçalho da tabela
+            $titulo = 'Publicações';
+            $label = array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis");
+            #$width = array(13,10,6,10,6,10,15,15,15);
+            $funcao = array('date_to_php',NULL,'date_to_php','date_to_php');
+            $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
+            $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
+            $align = array('center');            
+            
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_align($align);
+            $tabela->set_label($label);
+            $tabela->set_titulo($titulo);
+            $tabela->set_funcao($funcao);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(3);
+
+                # Tabela de Serviços
+                $mesServico = date('m');
+                $array = array(array('Dias Publicados',$diasPublicados),
+                               array('Dias Fruídos',$diasFruidos),
+                               array('Disponíveis',$diasDisponiveis));
+                
+                $estatistica = new Tabela();
+                $estatistica->set_titulo("Resumo");
+                $estatistica->set_conteudo($array);
+                $estatistica->set_label(array("Dias","Valor"));
+                $estatistica->set_align(array("center"));
+                $estatistica->set_width(array(60,40));
+                $estatistica->set_totalRegistro(FALSE);
+                $estatistica->show();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
+
+            $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();   
+            break;
+            
             case "editar" :            
             case "excluir" :       
                 $objeto->$fase($id);  

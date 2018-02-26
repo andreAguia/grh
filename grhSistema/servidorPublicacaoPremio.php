@@ -89,7 +89,7 @@ if($acesso){
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_NumDiasFruidosPorPublicacao','get_NumDiasDisponiveisPorPublicacao'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao'));
     $objeto->set_exibeTempoPesquisa(FALSE);
 
     # Classe do banco de dados
@@ -195,9 +195,9 @@ if($acesso){
             
             # Pega os dados para o alerta
             $licenca = new LicencaPremio();
-            $diasPublicados = $licenca->get_NumDiasPublicados($idServidorPesquisado);
-            $diasFruidos = $licenca->get_NumDiasFruidos($idServidorPesquisado);
-            $diasDisponiveis = $licenca->get_NumDiasDisponiveis($idServidorPesquisado);
+            $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
+            $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
+            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
 
             # Exibe alerta se $diasDisponíveis for negativo
             if($diasDisponiveis < 0){                    
@@ -226,6 +226,8 @@ if($acesso){
             $label = array("Inicio","Dias","Término","Publicação");
             #$width = array(13,10,6,10,6,10,15,15,15);
             $funcao = array('date_to_php',NULL,'date_to_php');
+            $classe = array(NULL,NULL,NULL,'LicencaPremio');
+            $metodo = array(NULL,NULL,NULL,'get_publicacao');
             $align = array('center');
 
             # Exibe a tabela
@@ -235,6 +237,8 @@ if($acesso){
             $tabela->set_label($label);
             $tabela->set_titulo($titulo);
             $tabela->set_funcao($funcao);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
             
             hr();
             

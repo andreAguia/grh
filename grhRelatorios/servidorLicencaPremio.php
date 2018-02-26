@@ -15,8 +15,7 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
@@ -30,22 +29,15 @@ if($acesso)
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Relatório de Licenças Prêmio');
     
     br();    
-    ###### Licenças PrÊmio
+    ###### Licenças Prêmio
 
-    $select = "SELECT tbtipolicenca.nome,
-                    dtInicial,
-                    numdias,
-                    ADDDATE(dtInicial,numDias-1),
-                    tblicenca.processo,
-                    dtInicioPeriodo,
-                    dtFimPeriodo,
-                    dtPublicacao,
-                    pgPublicacao,
-                    idLicenca
-               FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-              WHERE idServidor = $idServidorPesquisado
-                AND tblicenca.idTpLicenca = 6  
-           ORDER BY tblicenca.dtInicial desc";
+    $select = "SELECT dtInicial,
+                      numdias,
+                      ADDDATE(dtInicial,numDias-1),
+                      idLicencaPremio
+                 FROM tblicencaPremio 
+                WHERE idServidor = $idServidorPesquisado
+             ORDER BY dtInicial desc";
 
     $result = $pessoal->select($select);
 
@@ -56,10 +48,12 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_subtitulo("Licenças Fruídas");
-    $relatorio->set_label(array("Licença","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
-    $relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
+    $relatorio->set_label(array("Inicio","Dias","Término","Publicação"));
+    #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
+    $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php'));
+    $relatorio->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
@@ -71,16 +65,17 @@ if($acesso)
     ###### Publicações
 
     $select = "SELECT dtPublicacao,
-                      pgPublicacao,
-                      dtInicioPeriodo,
-                      dtFimPeriodo,                                  
-                      processo,
-                      numDias,
-                      idPublicacaoPremio,
-                      idPublicacaoPremio
-                 FROM tbpublicacaopremio
-                WHERE idServidor = $idServidorPesquisado
-             ORDER BY dtPublicacao desc";
+                    pgPublicacao,
+                    dtInicioPeriodo,
+                    dtFimPeriodo,                                  
+                    processo,
+                    numDias,
+                    idPublicacaoPremio,
+                    idPublicacaoPremio,
+                    idPublicacaoPremio
+               FROM tbpublicacaopremio
+               WHERE idServidor = $idServidorPesquisado
+            ORDER BY dtPublicacao desc";
 
     $result = $pessoal->select($select);
 
@@ -90,12 +85,14 @@ if($acesso)
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_subtitulo("Publicações");
-    $relatorio->set_label(array("Data da Publicação","Pag.","P.Aq.Início","P.Aq.Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
-    $relatorio->set_width(array(10,5,14,14,20,8,8,8));
-    $relatorio->set_align(array('center'));    
-    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'Pessoal','Pessoal'));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_licencaPremioNumDiasFruidasPorId','get_licencaPremioNumDiasDisponiveisPorId'));
-    $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL));
+    
+    $relatorio->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
+    $relatorio->set_width(array(15,5,15,15,15,10,10,10));
+    $relatorio->set_align(array("center"));
+    $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao'));
+    
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
@@ -104,10 +101,10 @@ if($acesso)
     $relatorio->show();
     
     ###### Resumo
-    
-    $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
-    $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
-    $diasDisponiveis = $diasPublicados - $diasFruidos; 
+    $licenca = new LicencaPremio();
+    $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
+    $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
+    $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
     
     $tabela = array(array('Dias Publicados','Dias Fruídos','Disponíveis'),
                     array($diasPublicados,$diasFruidos,$diasDisponiveis));

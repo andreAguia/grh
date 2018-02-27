@@ -28,7 +28,7 @@ if($acesso)
 
     ######
     
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = '(SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tblicenca.dtInicioPeriodo,
                       tblicenca.dtFimPeriodo,
@@ -36,12 +36,27 @@ if($acesso)
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                       MONTH(tblicenca.dtInicial)
-                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tblicenca USING (idServidor)
                 WHERE tbservidor.situacao = 1
                   AND tblicenca.idTpLicenca = 6
                   AND YEAR(tblicenca.dtInicial) = '.$relatorioAno.'   
-             ORDER BY 5';
+             ORDER BY 5)
+             UNION 
+              (SELECT tbservidor.idfuncional,
+                      tbpessoa.nome,
+                      tblicenca.dtInicioPeriodo,
+                      tblicenca.dtFimPeriodo,
+                      tblicenca.dtInicial,
+                      tblicenca.numDias,
+                      ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                      MONTH(tblicenca.dtInicial)
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tblicenca USING (idServidor)
+                WHERE tbservidor.situacao = 1
+                  AND tblicenca.idTpLicenca = 6
+                  AND YEAR(tblicenca.dtInicial) = '.$relatorioAno.'   
+             ORDER BY 5)';
 
     $result = $pessoal->select($select);
 

@@ -42,7 +42,7 @@ if($acesso){
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Publicação de Licença Prêmio no DOERJ');
+    $objeto->set_nome('Cadastro de Publicações de Licença Prêmio');
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('servidorLicencaPremio.php');
@@ -84,7 +84,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
+    $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis"));
     $objeto->set_width(array(15,5,15,15,15,10,10,10));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
@@ -174,15 +174,6 @@ if($acesso){
                                 'title' => 'Matrícula',
                                 'linha' => 6)));
     
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Licença prêmio");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    
-    $objeto->set_botaoListarExtra(array($botaoRel));  
-
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -191,83 +182,8 @@ if($acesso){
     switch ($fase)
     {
         case "" :
-        case "listar" : 
-            
-            # Pega os dados para o alerta
-            $licenca = new LicencaPremio();
-            $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
-            $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
-            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
-
-            # Exibe alerta se $diasDisponíveis for negativo
-            if($diasDisponiveis < 0){                    
-                $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
-                $objeto->set_rotinaExtraListar("callout");
-                $objeto->set_rotinaExtraListarParametro($mensagem1);
-            }
-
+        case "listar" :
             $objeto->listar();
-
-            # Exibe as licenças prêmio
-            $select = 'SELECT dtInicial,
-                              numdias,
-                              ADDDATE(dtInicial,numDias-1),
-                              idLicencaPremio,
-                              idLicencaPremio
-                         FROM tblicencaPremio 
-                        WHERE idServidor='.$idServidorPesquisado.'
-                     ORDER BY dtInicial desc';
-
-            $result = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            # Cabeçalho da tabela
-            $titulo = 'Licenças Prêmio';
-            $label = array("Inicio","Dias","Término","Publicação");
-            #$width = array(13,10,6,10,6,10,15,15,15);
-            $funcao = array('date_to_php',NULL,'date_to_php');
-            $classe = array(NULL,NULL,NULL,'LicencaPremio');
-            $metodo = array(NULL,NULL,NULL,'get_publicacao');
-            $align = array('center');
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($result);
-            $tabela->set_align($align);
-            $tabela->set_label($label);
-            $tabela->set_titulo($titulo);
-            $tabela->set_funcao($funcao);
-            $tabela->set_classe($classe);
-            $tabela->set_metodo($metodo);
-            
-            hr();
-            
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(3);
-
-                # Tabela de Serviços
-                $mesServico = date('m');
-                $array = array(array('Dias Publicados',$diasPublicados),
-                               array('Dias Fruídos',$diasFruidos),
-                               array('Disponíveis',$diasDisponiveis));
-                
-                $estatistica = new Tabela();
-                $estatistica->set_titulo("Resumo");
-                $estatistica->set_conteudo($array);
-                $estatistica->set_label(array("Dias","Valor"));
-                $estatistica->set_align(array("center"));
-                $estatistica->set_width(array(60,40));
-                $estatistica->set_totalRegistro(FALSE);
-                $estatistica->show();
-            
-            $grid->fechaColuna();
-            $grid->abreColuna(9);
-
-            $tabela->show();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();   
             break;
 
         case "editar" :	

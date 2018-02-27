@@ -30,21 +30,35 @@ if($acesso)
     ######
 
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
-    $select = 'SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbperfil.nome,
-                      CONCAT(tbtipolicenca.nome,"@",IFNULL(lei,"")),
-                      tblicenca.dtInicial,
-                      tblicenca.numDias,
-                      ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
-                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
-                                    LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+    $select = '(SELECT tbservidor.idfuncional,
+                       tbpessoa.nome,
+                       tbperfil.nome,
+                       CONCAT(tbtipolicenca.nome,"@",IFNULL(lei,"")),
+                       tblicenca.dtInicial,
+                       tblicenca.numDias,
+                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
+                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                  LEFT JOIN tblicenca USING (idServidor)
+                                  LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
                   AND MONTH(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioMes.'
                   AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioAno.'   
-             ORDER BY 7';
+             ORDER BY 7)
+             UNION (SELECT tbservidor.idfuncional,
+                      tbpessoa.nome,
+                      tbperfil.nome,
+                      "Licença Prêmio",
+                      tblicencaPremio.dtInicial,
+                      tblicencaPremio.numDias,
+                      ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tblicencaPremio USING (idServidor)
+                                 LEFT JOIN tbperfil USING (idPerfil)
+                WHERE tbservidor.situacao = 1
+                  AND MONTH(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioMes.'
+                  AND YEAR(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioAno.'   
+             ORDER BY 7) ORDER BY 7';
 
     $result = $pessoal->select($select);
 

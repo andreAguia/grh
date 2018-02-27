@@ -130,10 +130,7 @@ if($acesso){
 
             # publicação no DOERJ
             if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim"){
-                if($idTpLicenca == 6){
-                    $selectEdita .= 'idpublicacaoPremio,';
-                }
-                $selectEdita .= 'dtPublicacao,pgPublicacao,';
+               $selectEdita .= 'dtPublicacao,pgPublicacao,';
             }
             
             # perícia
@@ -173,6 +170,8 @@ if($acesso){
 
         # Tipo de label do formulário
         $objeto->set_formLabelTipo(1);
+        
+        echo $idTpLicenca;
 
         if(($fase == 'editar') or ($fase == 'gravar')){
             # preenche a combo idTpLicenca
@@ -260,54 +259,12 @@ if($acesso){
             }else{
                 $valor = NULL;
             }
-            
-            # muda o tipo do controle quando é licença premio
-            if($idTpLicenca == 6){
-                # verifica se é inclusão
-                if(is_null($id)){
-                    # variáveis
-                    $diasDisponiveis = NULL;
-                    $array = NULL;
-                    $diaPublicacao = NULL;                    
-
-                    # pega a primeira publicação disponível dessa matrícula
-                    $diaPublicacao = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
-
-                    # pega quantos dias estão disponíveis
-                    if (!is_null($diaPublicacao)){
-                        $diasDisponiveis = $pessoal->get_licencaPremioNumDiasDisponiveisPorId($diaPublicacao[0][0]);
-                    }
-
-                    $tipo = 'combo';
-
-                    # monta os valores
-                    switch ($diasDisponiveis)
-                    {
-                        case 90 :
-                            $array = array(90,60,30);
-                            break;
-                        case 60 :
-                            $array = array(60,30);
-                            break;
-                        case 30 :
-                            $array = array(30);
-                            break;                        
-                    }                  
-                }else{
-                    $tipo = 'combo';
-                    $array = array(90,60,30);                   
-                }
-            }else{
-                $tipo = 'numero';
-                $array = NULL;
-            }
-            
+                        
             # monta o controle
             array_push($campos,array ( 'nome' => 'numDias',
                                        'label' => 'Dias:',
-                                       'tipo' => $tipo,
+                                       'tipo' => 'numero',
                                        'padrao' => $valor,
-                                       'array' => $array,
                                        'size' => 5,
                                        'required' => TRUE,
                                        'title' => 'Número de dias.',
@@ -316,20 +273,10 @@ if($acesso){
 
             # Verifica se essa licença necessita processo
             if(($pessoal->get_licencaProcesso($idTpLicenca) == "Sim")){
-                if($idTpLicenca == 6){
-                        if(is_null($id)){
-                            $valor = $pessoal->get_licencaPremioNumProcessoPorId($diaPublicacao[0][0]);
-                        }else{
-                            $valor = NULL;
-                        }
-                     $tipoProcesso = "hidden";
-                }else{
-                    $tipoProcesso = "processo"; 
-                }
                 
                 array_push($campos,array ( 'nome' => 'processo',
                                            'label' => 'Processo:',
-                                           'tipo' => $tipoProcesso,
+                                           'tipo' => 'processo',
                                            'size' => 30,
                                            'col' => 6,
                                            'padrao' => $valor,
@@ -339,47 +286,16 @@ if($acesso){
 
             # Verifica la se essa licença necessita Publicação
             if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim"){
-                # Data Inicial ou Publicação(para licença Prêmio)
-                if($idTpLicenca == 6){                
-                    # Preenche a combo do DOERJ
-                    # Se for inclusão
-                    if(is_null($id)){
-                        $result2 = $pessoal->get_licencaPremioPublicacaoDisponivel($idServidorPesquisado);
-                    }else{
-                        $result2 = $pessoal->get_licencaPremioPublicacao($idServidorPesquisado);
-                    }
-
-                    # cria o formulário
-                    array_push($campos,array('nome' => 'idpublicacaoPremio',
-                                             'label' => 'Publicação no DOERJ:',
-                                             'tipo' => 'hidden',
-                                             'size' => 30,
-                                             'col' => 6,
-                                             'array' => $result2,
-                                             'required' => TRUE,
-                                             'title' => 'Data da Publicação no DOERJ.',
-                                             'linha' => 4));
-                }
-
-                # oculta controle se for licença premio para pegar os dados da publicaçao
-                if($idTpLicenca == 6){
-                    $tipo1 = 'hidden';
-                    $tipo2 = 'hidden';
-                }else{
-                    $tipo1 = 'data';
-                    $tipo2 = 'texto';
-                }
-
 
                 array_push($campos,array ( 'nome' => 'dtPublicacao',
                                             'label' => 'Data da Pub. no DOERJ:',
-                                            'tipo' => $tipo1,
+                                            'tipo' => 'data',
                                             'size' => 20,
                                             'title' => 'Data da Publicação no DOERJ.',
                                             'linha' => 5),
                                     array ( 'nome' => 'pgPublicacao',
                                             'label' => 'Pág:',
-                                            'tipo' => $tipo2,
+                                            'tipo' => 'texto',
                                             'size' => 5,                         
                                             'title' => 'A Página do DOERJ',
                                             'linha' => 5));
@@ -424,12 +340,6 @@ if($acesso){
         # Log
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
-        # Publicação de Licença Prêmio
-        $botaoPremio = new Button("Licença Prêmio");
-        $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
-        $botaoPremio->set_url('servidorPublicacaoPremio.php');  
-        $botaoPremio->set_accessKey('L');
         
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
@@ -437,59 +347,19 @@ if($acesso){
         $botaoRel->set_title("Relatório de Licença");
         $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         
-        $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));
+        $objeto->set_botaoListarExtra(array($botaoRel));
 
         ################################################################
 
         switch ($fase)
         {
             case "" :
-            case "listar" :
-                # Exibe quadro de licença prêmio
-                #Grh::quadroLicencaPremio($idServidorPesquisado);
-                
-                # pega os dados para o alerta
-                $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
-                $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
-                $diasDisponiveis = $diasPublicados - $diasFruidos;
-                
-                # Exibe alerta se $diasDisponíveis for negativo
-                if($diasDisponiveis < 0){                    
-                    $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
-                    $objeto->set_rotinaExtraListar("callout");
-                    $objeto->set_rotinaExtraListarParametro($mensagem1);
-                }
-                
+            case "listar" :                
             case "editar" :
-                if($idTpLicenca == 6){                
-                    # Exibe quadro de licença prêmio
-                    Grh::quadroLicencaPremio($idServidorPesquisado);
-
-                    # pega os dados para critica abaixo
-                    $diasPublicados = $pessoal->get_licencaPremioNumDiasPublicadaPorMatricula($idServidorPesquisado);
-                    $diasFruidos = $pessoal->get_licencaPremioNumDiasFruidos($idServidorPesquisado);
-                    $diasDisponiveis = $diasPublicados - $diasFruidos;
-
-                    # Verifica se tem dias publicados e/ou disponíveis         
-                    if ((($diasDisponiveis < 1) AND (IS_NULL($id))) OR ($diasPublicados == 0)){
-                        $mensagem2 = 'Este Servidor não tem dias disponíveis para solicitar uma licença prêmio. É necessário cadastrar a publicação da licença prêmio antes de lançar a licença no sistema.';
-                        alert($mensagem2);
-                        back(1);
-                    }else{
-                        $objeto->$fase($id);
-                    }
-                }else{
-                    $objeto->$fase($id);
-                }
-                break;
-            
-            case "excluir" :       
-                $objeto->$fase($id);  
-                break;
-
+            case "excluir" :
             case "gravar" :
-                $objeto->gravar($id,'servidorLicencaExtra.php'); 	
-                break;  
+                $objeto->$fase($id);
+                break;
 
             case "incluir" :
                 # Botão voltar

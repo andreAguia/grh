@@ -86,7 +86,7 @@ if($acesso){
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_subtitulo("Publicações");
     
-    $relatorio->set_label(array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis"));
+    $relatorio->set_label(array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis"));
     $relatorio->set_width(array(15,5,15,15,15,10,10,10));
     $relatorio->set_align(array("center"));
     $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));

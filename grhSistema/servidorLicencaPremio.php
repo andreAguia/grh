@@ -82,7 +82,7 @@ if($acesso){
 
         # Parametros da tabela
         $objeto->set_label(array("Inicio","Dias","Término","Publicação"));
-        #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
+        $objeto->set_width(array(25,10,25,25));	
         $objeto->set_align(array("center"));
         $objeto->set_funcao(array('date_to_php',NULL,'date_to_php'));
         $objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
@@ -164,11 +164,6 @@ if($acesso){
         # Log
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
-        # Publicação de Licença Prêmio
-        $botaoPremio = new Button("Publicações");
-        $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
-        $botaoPremio->set_url('servidorPublicacaoPremio.php');  
                
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
@@ -176,7 +171,7 @@ if($acesso){
         $botaoRel->set_title("Relatório de Licença Prêmio");
         $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         
-        $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));
+        $objeto->set_botaoListarExtra(array($botaoRel));
 
         ################################################################
 
@@ -205,43 +200,12 @@ if($acesso){
             # Cria um menu
             $menu = new MenuBar();
 
-            # Voltar
-            if(is_null($alertas)){
-                $caminhoVolta = 'servidor.php';
-            }else{
-                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alertas;
-            }
-
-            $linkBotao1 = new Link("Voltar",$caminhoVolta);
-            $linkBotao1->set_class('button');
-            $linkBotao1->set_title('Volta para a página anterior');
-            $linkBotao1->set_accessKey('V');
-            $menu->add_link($linkBotao1,"left");
-
             # Relatórios
-            $linkBotao3 = new Link("Relatorios");
-            $linkBotao3->set_class('button');    
-            $linkBotao3->set_onClick("abreFechaDivId('RelServidor');");
-            $linkBotao3->set_title('Relatórios desse servidor');
-            $linkBotao3->set_accessKey('R');
+            $linkBotao3 = new Link("Publicações","servidorPublicacaoPremio.php");
+            $linkBotao3->set_class('button');
+            $linkBotao3->set_title("Acessa o Cadastro de Publicações");
             $menu->add_link($linkBotao3,"right");
-
-            if(Verifica::acesso($idUsuario,1)){
-                # Histórico
-                $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);
-                $linkBotao4->set_class('button');
-                $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');        
-                $linkBotao4->set_accessKey('H');
-                $menu->add_link($linkBotao4,"right");
-
-                # Excluir
-                $linkBotao5 = new Link("Excluir","servidorExclusao.php");
-                $linkBotao5->set_class('alert button');
-                $linkBotao5->set_title('Excluir Servidor');
-                $linkBotao5->set_accessKey('x');
-                $menu->add_link($linkBotao5,"right");
-            }
-
+            
             $menu->show();
 
             $grid->fechaColuna();
@@ -266,8 +230,8 @@ if($acesso){
 
             # Cabeçalho da tabela
             $titulo = 'Publicações';
-            $label = array("Data da Publicação","Pag.","Período Aquisitivo - Início","Período Aquisitivo - Fim","Processo","Dias Publicados","Dias Fruídos","Disponíveis");
-            #$width = array(13,10,6,10,6,10,15,15,15);
+            $label = array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
+            $width = array(15,10,15,15,15,10,10,10);
             $funcao = array('date_to_php',NULL,'date_to_php','date_to_php');
             $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
             $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
@@ -278,6 +242,7 @@ if($acesso){
             $tabela->set_conteudo($result);
             $tabela->set_align($align);
             $tabela->set_label($label);
+            $tabela->set_width($width);
             $tabela->set_titulo($titulo);
             $tabela->set_funcao($funcao);
             $tabela->set_classe($classe);

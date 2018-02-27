@@ -174,7 +174,7 @@ class LicencaPremio{
         # Pega os dados dessa publicação
         $dados = $this->get_dadosPublicacao($idRetornado);
         
-        $retorno = "Publicado em:".date_to_php($dados[0])." (".date_to_php($dados[1])." - ".date_to_php($dados[2]).")";
+        $retorno = date_to_php($dados[0]);
         
         # Retorno
         return $retorno;

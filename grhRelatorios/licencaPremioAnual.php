@@ -28,50 +28,33 @@ if($acesso)
 
     ######
     
-    $select = '(SELECT tbservidor.idfuncional,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
-                      tblicenca.dtInicioPeriodo,
-                      tblicenca.dtFimPeriodo,
-                      tblicenca.dtInicial,
-                      tblicenca.numDias,
-                      ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                      MONTH(tblicenca.dtInicial)
+                      tblicencaPremio.dtInicial,
+                      tblicencaPremio.numDias,
+                      ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1),
+                      MONTH(tblicencaPremio.dtInicial)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                 LEFT JOIN tblicenca USING (idServidor)
+                                 LEFT JOIN tblicencaPremio USING (idServidor)
                 WHERE tbservidor.situacao = 1
-                  AND tblicenca.idTpLicenca = 6
-                  AND YEAR(tblicenca.dtInicial) = '.$relatorioAno.'   
-             ORDER BY 5)
-             UNION 
-              (SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tblicenca.dtInicioPeriodo,
-                      tblicenca.dtFimPeriodo,
-                      tblicenca.dtInicial,
-                      tblicenca.numDias,
-                      ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                      MONTH(tblicenca.dtInicial)
-                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                 LEFT JOIN tblicenca USING (idServidor)
-                WHERE tbservidor.situacao = 1
-                  AND tblicenca.idTpLicenca = 6
-                  AND YEAR(tblicenca.dtInicial) = '.$relatorioAno.'   
-             ORDER BY 5)';
+                  AND YEAR(tblicencaPremio.dtInicial) = '.$relatorioAno.'   
+             ORDER BY 5';
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Anual de Licença Premio');
-    $relatorio->set_tituloLinha2($relatorioAno);
-    $relatorio->set_subtitulo('Ordem de Data Inicial da Licença');
+    $relatorio->set_subtitulo("Servidores com a Data Inicial da Licença em ".$relatorioAno);
+    #$relatorio->set_tituloLinha3($relatorioAno);
+    #$relatorio->set_subtitulo('Ordem de Data Inicial da Licença');
 
-    $relatorio->set_label(array('IdFuncional','Nome','P.Aquisitivo (Início)','P.Aquisitivo (Fim)','Data Inicial','Dias','Data Final','Mês'));
-    $relatorio->set_width(array(10,40,10,10,10,10,10,0));
+    $relatorio->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Mês'));
+    $relatorio->set_width(array(15,40,15,5,15,0));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,"date_to_php","date_to_php","date_to_php",NULL,"date_to_php","get_nomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php","get_nomeMes"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(7);
+    $relatorio->set_numGrupo(5);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'ano',

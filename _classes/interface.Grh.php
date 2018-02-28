@@ -731,11 +731,12 @@ class Grh
     
      public static function quadroLicencaPremio($idServidor)
     {
-        $servidor = new Pessoal();
-        $diasPublicados = $servidor->get_licencaPremioNumDiasPublicadaPorMatricula($idServidor);
-        $diasFruidos = $servidor->get_licencaPremioNumDiasFruidos($idServidor);
-        $diasDisponiveis = $diasPublicados - $diasFruidos;        
-        
+         # Pega os dados para o alerta
+        $licenca = new LicencaPremio();
+        $diasPublicados = $licenca->get_numDiasPublicados($idServidor);
+        $diasFruidos = $licenca->get_numDiasFruidos($idServidor);
+        $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidor);  
+
         # Div do numero de serviços
         $div = new Div('divQuadroLicenca');
         $div->set_title('Quadro de Licenças Prêmio e Publicações');

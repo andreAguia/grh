@@ -183,6 +183,9 @@ if($acesso){
     {
         case "" :
         case "listar" :
+            # Exibe quadro de licença prêmio
+            Grh::quadroLicencaPremio($idServidorPesquisado);
+            
             $objeto->listar();
             break;
 

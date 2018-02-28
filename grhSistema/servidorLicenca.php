@@ -351,8 +351,7 @@ if($acesso){
 
         ################################################################
 
-        switch ($fase)
-        {
+        switch ($fase){
             case "" :
             case "listar" :                
             case "editar" :

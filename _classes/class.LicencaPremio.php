@@ -145,7 +145,8 @@ class LicencaPremio{
                      FROM tbpublicacaopremio 
                     WHERE idServidor = '.$idServidor;
         
-        $publicados = $pessoal->select($select);
+        $publicados = $pessoal->select($select);    // Array com as publicações
+        $numPublicacao = $pessoal->count($select);  // Número de publicações
         
         # Pega array com os dias fruídos
         $select = 'SELECT idLicencaPremio,
@@ -159,6 +160,9 @@ class LicencaPremio{
         # Rotina que informa (matematicamente) a publicação de uma licença
         $somador = 0; // Zera o somador
         
+        # Variavel de retorno
+        $retorno = NULL;
+        
         # Percorre as licenças somando os dias e dividindo em grupos de 90 dias
         foreach($fruidos as $arrayLicenca){
             $somador += $arrayLicenca[1];   // soma
@@ -167,16 +171,17 @@ class LicencaPremio{
             if($arrayLicenca[0] == $idLicencaPremio){
                 $divisao = ($somador/90);        // divide por 90
                 $indice = (int)($divisao - 0.01);  // acerta para que o valor fique perfeito para ser um índice de array
-                $idRetornado = $publicados[$indice][0]; // descobre a id da publicação.
+                
+                if($numPublicacao > $indice){ // Desconsidera licença sem publicação
+                    $idRetornado = $publicados[$indice][0]; // descobre a id da publicação.
+                    
+                    # Pega os dados dessa publicação
+                    $dados = $this->get_dadosPublicacao($idRetornado);        
+                    $retorno = date_to_php($dados[0]);
+                }                    
             }
         }
-                        
-        # Pega os dados dessa publicação
-        $dados = $this->get_dadosPublicacao($idRetornado);
         
-        $retorno = date_to_php($dados[0]);
-        
-        # Retorno
         return $retorno;
     }
 
@@ -226,7 +231,8 @@ class LicencaPremio{
                      FROM tbpublicacaopremio 
                     WHERE idServidor = '.$idServidor;
         
-        $publicados = $pessoal->select($select);
+        $publicados = $pessoal->select($select);    // Array com as publicações
+        $numPublicacao = $pessoal->count($select);  // Número de publicações
         
         # Pega array com os dias fruídos
         $select = 'SELECT idLicencaPremio,
@@ -239,7 +245,7 @@ class LicencaPremio{
         
         # Zera os somatórios
         $somador = 0;
-        $somaPublic = 0; 
+        $somaPublic = 0;
         
         # Percorre as licenças somando os dias e dividindo em grupos de 90 dias
         foreach($fruidos as $arrayLicenca){
@@ -247,9 +253,13 @@ class LicencaPremio{
             
             $divisao = ($somador/90);        // divide por 90
             $indice = (int)($divisao - 0.01);  // acerta para que o valor fique perfeito para ser um índice de array
-            $idPublica = $publicados[$indice][0]; // descobre a id da publicação.
-            if($idPublica == $idPublicacaoPremio){
-                $somaPublic += $arrayLicenca[1];
+            
+            # Verifica se tem publicação para essa licença
+            if($numPublicacao > $indice){ // Desconsidera licença sem publicação
+                $idPublica = $publicados[$indice][0]; // descobre a id da publicação.
+                if($idPublica == $idPublicacaoPremio){
+                    $somaPublic += $arrayLicenca[1];
+                }
             }
         }
         

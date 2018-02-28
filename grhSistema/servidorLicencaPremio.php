@@ -178,103 +178,89 @@ if($acesso){
         switch ($fase){
             case "" :
             case "listar" :
-            # Pega os dados para o alerta
-            $licenca = new LicencaPremio();
-            $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
-            $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
-            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
+                # Exibe quadro de licença prêmio
+                Grh::quadroLicencaPremio($idServidorPesquisado);
 
-            # Exibe alerta se $diasDisponíveis for negativo
-            if($diasDisponiveis < 0){                    
-                $mensagem1 = "Este Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
-                $objeto->set_rotinaExtraListar("callout");
-                $objeto->set_rotinaExtraListarParametro($mensagem1);
-            }
+                # Pega os dados para o alerta
+                $licenca = new LicencaPremio();
+                $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
+                $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
+                $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
 
-            $objeto->listar();
-            
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
+                # Exibe alerta se $diasDisponíveis for negativo
+                if($diasDisponiveis < 0){                    
+                    $mensagem1 = "Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                    $objeto->set_rotinaExtraListar("callout");
+                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                    $objeto->set_botaoIncluir(FALSE);
+                }
 
-            # Cria um menu
-            $menu = new MenuBar();
+                if($diasDisponiveis == 0){
+                    $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma licença prêmio.";
+                    $objeto->set_rotinaExtraListar("callout");
+                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                    $objeto->set_botaoIncluir(FALSE);
+                }  
 
-            # Relatórios
-            $linkBotao3 = new Link("Publicações","servidorPublicacaoPremio.php");
-            $linkBotao3->set_class('button');
-            $linkBotao3->set_title("Acessa o Cadastro de Publicações");
-            $menu->add_link($linkBotao3,"right");
-            
-            $menu->show();
+                $objeto->listar();
 
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+                # Limita o tamanho da tela
+                $grid = new Grid();
+                $grid->abreColuna(12);
 
-            # Exibe as Publicações
-            $select = 'SELECT dtPublicacao,
-                            pgPublicacao,
-                            dtInicioPeriodo,
-                            dtFimPeriodo,                                  
-                            processo,
-                            numDias,
-                            idPublicacaoPremio,
-                            idPublicacaoPremio,
-                            idPublicacaoPremio
-                       FROM tbpublicacaopremio
-                       WHERE idServidor = '.$idServidorPesquisado.'
-                   ORDER BY dtPublicacao desc';
+                # Cria um menu
+                $menu = new MenuBar();
 
-            $result = $pessoal->select($select);
-            $count = $pessoal->count($select);
+                # Relatórios
+                $linkBotao3 = new Link("Publicações","servidorPublicacaoPremio.php");
+                $linkBotao3->set_class('button');
+                $linkBotao3->set_title("Acessa o Cadastro de Publicações");
+                $menu->add_link($linkBotao3,"right");
 
-            # Cabeçalho da tabela
-            $titulo = 'Publicações';
-            $label = array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
-            $width = array(15,10,15,15,15,10,10,10);
-            $funcao = array('date_to_php',NULL,'date_to_php','date_to_php');
-            $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
-            $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
-            $align = array('center');            
-            
-            # Exibe a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($result);
-            $tabela->set_align($align);
-            $tabela->set_label($label);
-            $tabela->set_width($width);
-            $tabela->set_titulo($titulo);
-            $tabela->set_funcao($funcao);
-            $tabela->set_classe($classe);
-            $tabela->set_metodo($metodo);
-            
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(3);
+                $menu->show();
 
-                # Tabela de Serviços
-                $mesServico = date('m');
-                $array = array(array('Dias Publicados',$diasPublicados),
-                               array('Dias Fruídos',$diasFruidos),
-                               array('Disponíveis',$diasDisponiveis));
-                
-                $estatistica = new Tabela();
-                $estatistica->set_titulo("Resumo");
-                $estatistica->set_conteudo($array);
-                $estatistica->set_label(array("Dias","Valor"));
-                $estatistica->set_align(array("center"));
-                $estatistica->set_width(array(60,40));
-                $estatistica->set_totalRegistro(FALSE);
-                $estatistica->show();
-            
-            $grid->fechaColuna();
-            $grid->abreColuna(9);
+                # Exibe as Publicações
+                $select = 'SELECT dtPublicacao,
+                                pgPublicacao,
+                                dtInicioPeriodo,
+                                dtFimPeriodo,                                  
+                                processo,
+                                numDias,
+                                idPublicacaoPremio,
+                                idPublicacaoPremio,
+                                idPublicacaoPremio
+                           FROM tbpublicacaopremio
+                           WHERE idServidor = '.$idServidorPesquisado.'
+                       ORDER BY dtPublicacao desc';
 
-            $tabela->show();
+                $result = $pessoal->select($select);
+                $count = $pessoal->count($select);
 
-            $grid->fechaColuna();
-            $grid->fechaGrid();   
-            break;
+                # Cabeçalho da tabela
+                $titulo = 'Publicações';
+                $label = array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
+                $width = array(15,10,15,15,15,10,10,10);
+                $funcao = array('date_to_php',NULL,'date_to_php','date_to_php');
+                $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
+                $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
+                $align = array('center');            
+
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($result);
+                $tabela->set_align($align);
+                $tabela->set_label($label);
+                $tabela->set_width($width);
+                $tabela->set_titulo($titulo);
+                $tabela->set_funcao($funcao);
+                $tabela->set_classe($classe);
+                $tabela->set_metodo($metodo);
+
+                $tabela->show();
+
+                $grid->fechaColuna();
+                $grid->fechaGrid();   
+                break;
             
             case "editar" :            
             case "excluir" :       

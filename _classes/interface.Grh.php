@@ -274,7 +274,7 @@ class Grh
             
         ##########################################################
             
-        # Aniversarintes
+        # Aniversariantes
         $grid1->abreColuna(12,12,4);
 
             titulo("Aniversariantes de ".get_nomeMes());
@@ -594,7 +594,7 @@ class Grh
             {
                 $botao = new BotaoGrafico();
                 $botao->set_label('Licenças e Afastamentos');
-                $botao->set_url('servidorLicenca.php');
+                $botao->set_url('servidorLicencaNova.php');
                 $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Licenças do Servidor');
                 $botao->set_accessKey('L');

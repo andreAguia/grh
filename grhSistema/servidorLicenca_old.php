@@ -35,6 +35,15 @@ if($acesso){
     # pega o tipo de licença
     $idTpLicenca = post('idTpLicenca');
 
+    # Pega o idTpLicenca
+    if($fase == 'editar') {
+        if(is_null($id)){
+            $idTpLicenca = get_session('sessionLicenca');
+        }else{
+            $idTpLicenca = $pessoal->get_tipoLicenca($id);
+        }
+    }
+
     # Verifica se o Servidor tem direito a licença
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
@@ -78,22 +87,50 @@ if($acesso){
                                WHERE idServidor='.$idServidorPesquisado.'
                             ORDER BY tblicenca.dtInicial desc');
         
-        # select do edita
-        $objeto->set_selectEdita('SELECT idTpLicenca,
-                                   tipo,
-                                   alta,
-                                   dtInicioPeriodo,
-                                   dtFimPeriodo,
-                                   dtInicial,
-                                   numDias,
-                                   processo,
-                                   dtPublicacao,
-                                   pgPublicacao,
-                                   dtPericia,
-                                   num_Bim,
-                                   obs,
-                                   idServidor
-                              FROM tblicenca WHERE idLicenca = '.$id);
+        # link para editar
+        $botao1 = new BotaoGrafico();
+        $botao1->set_title('Edita');
+        $botao1->set_label('');
+        $botao1->set_url('?fase=editar&id=');     
+        $botao1->set_image(PASTA_FIGURAS_GERAIS.'bullet_edit.png',20,20);
+    
+        ### select do edita
+        if(($fase == 'editar') or ($fase == 'gravar')){            
+            $selectEdita = 'SELECT idTpLicenca,';
+            
+            # campos tipo e alta
+            if($idTpLicenca == 1){
+                $selectEdita .= 'tipo,alta,';
+            }
+
+            # período aquisitivo
+            if($pessoal->get_licencaPeriodo($idTpLicenca) == "Sim"){
+                $selectEdita .= 'dtInicioPeriodo,dtFimPeriodo,';
+            }
+
+            # data inicial e numero de dias
+            $selectEdita .= 'dtInicial,numDias,';
+
+            # processo
+            if($pessoal->get_licencaProcesso($idTpLicenca) == "Sim"){
+                $selectEdita .= 'processo,';
+            }
+
+            # publicação no DOERJ
+            if($pessoal->get_licencaPublicacao($idTpLicenca) == "Sim"){
+               $selectEdita .= 'dtPublicacao,pgPublicacao,';
+            }
+            
+            # perícia
+            if($pessoal->get_licencaPericia($idTpLicenca) == "Sim"){
+                $selectEdita .= 'dtPericia,num_Bim,';
+            }
+            
+            # o resto do select
+            $selectEdita .= 'obs,idServidor FROM tblicenca WHERE idLicenca = '.$id;
+
+            $objeto->set_selectEdita($selectEdita);
+        }
         
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');    // Comentar caso não queira edição de licença prêmio

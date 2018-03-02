@@ -33,15 +33,20 @@ if($acesso)
     # Rotina jscript para ocultar controles a partir do tipo de licença
     $jscript='
         <script type="text/javascript" language="javascript">
+            
             $(document).ready(function(){
+                // Executa rotina sempre que o valor do select mudar
                 $("#idTpLicenca").change(function(){
-                    if($("#idTpLicenca").value = 1){
+                
+                    // Guarda na variável id o valor alterado
+                    var id = $("#idTpLicenca option:selected").val();
+                    
+                    if(id == 1){
                         $("#tipo").hide();
+                        $("#labeltipo").hide();
                     }else{
                         $("#tipo").show();
                     }
-                    alert($("#idTpLicenca").value);
-
                 });
             });
         </script>';

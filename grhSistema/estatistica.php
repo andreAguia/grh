@@ -93,6 +93,7 @@ if($acesso)
                 $menu->add_item('link','Por Cargo','?fase=cargo');
                 $menu->add_item('link','Por Lotação','?fase=lotacao');
                 $menu->add_item('link','Por Sexo','?fase=sexo');
+                $menu->add_item('link','Por Idade','?fase=idade');
                 $menu->show();
                 
             $grid->fechaColuna();
@@ -1021,7 +1022,116 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
-        #########################################
+        ####################################################################################################
+            
+        case "idade":
+            titulotable("Estatística por Idade");
+            br();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(3);
+            
+            # Número de Servidores
+            $painel = new Callout();
+            $painel->abre();
+
+                $numServidores = $pessoal->get_numServidoresAtivos();
+                p($numServidores,"estatisticaNumero");
+                p("Servidores Ativos","estatisticaTexto");
+
+            $painel->fecha(); 
+
+            ###############################
+            
+            # Geral - Por Idade
+            $select = 'SELECT count(tbservidor.idServidor) as jj,
+                                     TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                               WHERE situacao = 1
+                            GROUP BY idade
+                            ORDER BY 2';
+
+            $servidores = $pessoal->select($select);
+
+            # Separa os arrays para analise estatística
+            $idades = array();
+            foreach ($servidores as $item){
+                $idades[] = $item[1];
+            }
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));  
+
+            # Dados da tabela
+            $dados[] = array("Maior Idade",maiorValor($idades));
+            $dados[] = array("Menor Idade",menorValor($idades));
+            $dados[] = array("Idade Média",media_aritmetica($idades));
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($dados);
+            $tabela->set_titulo("por Idade");
+            $tabela->set_label(array("Descrição","Idade"));
+            $tabela->set_width(array(50,50));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->set_linkTituloTitle("Exibe detalhes");
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(4);            
+           
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_titulo("por Idade");
+            $tabela->set_label(array("Servidores","Idade"));
+            $tabela->set_align(array("center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(4); 
+            
+            $select = 'SELECT count(tbservidor.idServidor) as jj,
+                                     TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                               WHERE situacao = 1
+                            GROUP BY idade
+                            ORDER BY 2';
+             
+            
+            $select = "SELECT CASE 
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 20 AND 30 THEN 'de 20 a 30'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 30 AND 40 THEN 'de 30 a 40'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 40 AND 50 THEN 'de 40 a 50'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 50 AND 60 THEN 'de 50 a 60'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 60 AND 70 THEN 'de 60 a 70'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()))BETWEEN 70 AND 80 THEN 'de 70 a 80'
+                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 80 AND 90 THEN 'de 80 a 90'
+            END as faixa,
+            COUNT(*)
+            FROM tbpessoa
+            GROUP BY faixa";
+            
+            $servidores = $pessoal->select($select);
+            
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_titulo("por Faixa Etária");
+            $tabela->set_label(array("Faixa","Servidores"));
+            $tabela->set_align(array("center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+           
+            break;
+            
+####################################################################################################
     }
     
     # Fecha o grid

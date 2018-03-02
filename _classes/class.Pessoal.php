@@ -42,8 +42,7 @@ class Pessoal extends Bd
      * 
      * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que ser� utilizada
      */
-    public function set_tabela($nomeTabela)
-    {
+    public function set_tabela($nomeTabela){
         $this->tabela = $nomeTabela;
     }
 

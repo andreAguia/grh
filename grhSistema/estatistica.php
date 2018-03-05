@@ -1043,7 +1043,7 @@ if($acesso)
 
             ###############################
             
-            # Geral - Por Idade
+            # Resumo
             $select = 'SELECT count(tbservidor.idServidor) as jj,
                                      TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
@@ -1070,7 +1070,7 @@ if($acesso)
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
-            $tabela->set_titulo("por Idade");
+            $tabela->set_titulo("Resumo");
             $tabela->set_label(array("Descrição","Idade"));
             $tabela->set_width(array(50,50));
             $tabela->set_align(array("left","center"));
@@ -1079,50 +1079,249 @@ if($acesso)
             $tabela->show();
             
             $grid2->fechaColuna();
-            $grid2->abreColuna(4);            
-           
+            
+            ############################################################
+            
+            $grid2->abreColuna(3); 
+            
+            # Faixa Etária Geral
+            $select = "SELECT CASE 
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN 'de 21 a 30'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN 'de 31 a 40'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN 'de 41 a 50'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN 'de 51 a 60'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN 'de 61 a 70'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN 'de 71 a 80'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN 'de 81 a 90'
+            END,
+            COUNT(idPessoa),
+            ROUND((COUNT(idPessoa)*100)/".$total.",1)
+            FROM tbpessoa JOIN tbservidor USING (idPessoa)
+           WHERE situacao = 1
+            GROUP BY 1 ORDER BY 1";
+            
+            $servidores = $pessoal->select($select);
+            
+            # Chart
+            tituloTable("por Faixa Etária");
+            $chart = new Chart("Pie",$servidores);
+            $chart->set_idDiv("faixa");
+            $chart->set_legend(FALSE);
+            $chart->show();
+            
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_titulo("por Idade");
-            $tabela->set_label(array("Servidores","Idade"));
+            #$tabela->set_titulo("por Faixa Etária");
+            $tabela->set_label(array("Faixa","Servidores","%"));
+            $tabela->set_align(array("center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();   
+            
+            $grid2->fechaColuna();
+            
+            ############################################################
+            
+            $grid2->abreColuna(4); 
+            
+            # Faixa Etária por Sexo
+             $select = "SELECT CASE 
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN 'de 21 a 30'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN 'de 31 a 40'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN 'de 41 a 50'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN 'de 51 a 60'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN 'de 61 a 70'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN 'de 71 a 80'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN 'de 81 a 90'
+            END,
+            tbpessoa.sexo,
+            COUNT(idPessoa) as jj
+            FROM tbpessoa JOIN tbservidor USING (idPessoa)
+           WHERE situacao = 1
+            GROUP BY 1,2 ORDER BY 1";
+
+            $servidores = $pessoal->select($select);
+
+            # Novo array 
+            $novoArray = array();
+
+            # Valores anteriores
+            $diretoriaAnterior = NULL;
+            $sexoAnterior = NULL;
+            $contagemAnterior = NULL;
+
+            # Contador 
+            $contador = 1;
+
+            # Melhora a apresentação da tabela
+            foreach ($servidores as $value) {
+                # Carrega as variáveis de armazenamento para comparação 
+                $diretoria = $value[0];
+                $sexo = $value[1];
+                $contagem = $value[2];
+
+                # Verifica se mudou de diretoria
+                if($diretoria <> $diretoriaAnterior){
+                    # O normal é ser diferente no contador 1. Significa que tem servidores dos 2 generos (msculino e feminino)
+                    if($contador == 1){
+                        $contador = 2;
+
+                        # passa os valores para as variaveis anteriores
+                        $diretoriaAnterior = $diretoria;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                    }else{
+                        # Se for diferente no 2 significa que só tem servidores de um único genero nessa diretoria
+                        if($sexo == "feminino"){
+                            array_push($novoArray,array($diretoriaAnterior,$contagemAnterior,0,$contagemAnterior+$contagem));
+                        }else{
+                            array_push($novoArray,array($diretoriaAnterior,0,$contagemAnterior,$contagemAnterior+$contagem));
+                        }
+
+                        # passa os valores para as variaveis anteriores
+                        $diretoriaAnterior = $diretoria;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                        $contador = 1;
+                    }
+                }else{
+                    array_push($novoArray,array($diretoria,$contagemAnterior,$contagem,$contagemAnterior+$contagem));
+                    $contador = 1;
+                }
+            }
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Chart
+            #tituloTable("Por Diretoria");
+            #$chart = new Chart("Pie",$novoArray);
+            #$chart->set_idDiv("sexoPorLotacao");
+            #$chart->set_legend(FALSE);
+            #$chart->show();
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($novoArray);
+            $tabela->set_titulo("Faixa Etária por Sexo");
+            $tabela->set_label(array("Faixa Etária","Feminino","Masculino","Total"));
+            $tabela->set_width(array(25,25,25,25));
             $tabela->set_align(array("center"));
             $tabela->set_rodape("Total de Servidores: ".$total);
             $tabela->show();
             
-            $grid2->fechaColuna();
-            $grid2->abreColuna(4); 
+            ############################################################
             
-            $select = 'SELECT count(tbservidor.idServidor) as jj,
-                                     TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
+            # Faixa Etária por Tipo de Cargo
+             $select = "SELECT CASE 
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN 'de 21 a 30'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN 'de 31 a 40'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN 'de 41 a 50'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN 'de 51 a 60'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN 'de 61 a 70'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN 'de 71 a 80'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN 'de 81 a 90'
+            END,
+            tbtipoCargo.tipo,
+            COUNT(idPessoa) as jj
+            FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                          JOIN tbcargo USING (idCargo)
+                          JOIN tbtipocargo USING (idTipoCargo)
+           WHERE situacao = 1
+            GROUP BY 1,2 ORDER BY 1";
+
+            $servidores = $pessoal->select($select);
+
+            # Novo array 
+            $novoArray = array();
+
+            # Valores anteriores
+            $diretoriaAnterior = NULL;
+            $sexoAnterior = NULL;
+            $contagemAnterior = NULL;
+
+            # Contador 
+            $contador = 1;
+
+            # Melhora a apresentação da tabela
+            foreach ($servidores as $value) {
+                # Carrega as variáveis de armazenamento para comparação 
+                $diretoria = $value[0];
+                $sexo = $value[1];
+                $contagem = $value[2];
+
+                # Verifica se mudou de diretoria
+                if($diretoria <> $diretoriaAnterior){
+                    # O normal é ser diferente no contador 1. Significa que tem servidores dos 2 generos (msculino e feminino)
+                    if($contador == 1){
+                        $contador = 2;
+
+                        # passa os valores para as variaveis anteriores
+                        $diretoriaAnterior = $diretoria;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                    }else{
+                        # Se for diferente no 2 significa que só tem servidores de um único genero nessa diretoria
+                        if($sexo == "feminino"){
+                            array_push($novoArray,array($diretoriaAnterior,$contagemAnterior,0,$contagemAnterior+$contagem));
+                        }else{
+                            array_push($novoArray,array($diretoriaAnterior,0,$contagemAnterior,$contagemAnterior+$contagem));
+                        }
+
+                        # passa os valores para as variaveis anteriores
+                        $diretoriaAnterior = $diretoria;
+                        $sexoAnterior = $sexo;
+                        $contagemAnterior = $contagem;
+                        $contador = 1;
+                    }
+                }else{
+                    array_push($novoArray,array($diretoria,$contagemAnterior,$contagem,$contagemAnterior+$contagem));
+                    $contador = 1;
+                }
+            }
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Chart
+            #tituloTable("Por Diretoria");
+            #$chart = new Chart("Pie",$novoArray);
+            #$chart->set_idDiv("sexoPorLotacao");
+            #$chart->set_legend(FALSE);
+            #$chart->show();
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($novoArray);
+            $tabela->set_titulo("Faixa Etária por Tipo de Cargo");
+            $tabela->set_label(array("Faixa Etária","Admin. e Tec.","Professores","Total"));
+            $tabela->set_width(array(25,25,25,25));
+            $tabela->set_align(array("center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(2); 
+            
+            $select = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade,
+                              count(tbservidor.idServidor) as jj
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                WHERE situacao = 1
                             GROUP BY idade
-                            ORDER BY 2';
-             
-            
-            $select = "SELECT CASE 
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 20 AND 30 THEN 'de 20 a 30'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 30 AND 40 THEN 'de 30 a 40'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 40 AND 50 THEN 'de 40 a 50'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 50 AND 60 THEN 'de 50 a 60'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 60 AND 70 THEN 'de 60 a 70'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()))BETWEEN 70 AND 80 THEN 'de 70 a 80'
-                WHEN (TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW())) BETWEEN 80 AND 90 THEN 'de 80 a 90'
-            END as faixa,
-            COUNT(*)
-            FROM tbpessoa
-            GROUP BY faixa";
-            
+                            ORDER BY 1';
+
             $servidores = $pessoal->select($select);
             
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_titulo("por Faixa Etária");
-            $tabela->set_label(array("Faixa","Servidores"));
+            $tabela->set_titulo("por Cada Idade");
+            $tabela->set_label(array("Idade","Servidores"));
             $tabela->set_align(array("center"));
+            $tabela->set_width(array(50,50));
             $tabela->set_rodape("Total de Servidores: ".$total);
             $tabela->show();
             

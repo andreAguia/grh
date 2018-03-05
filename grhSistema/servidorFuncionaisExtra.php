@@ -64,12 +64,20 @@ if((is_null($dtSaida)) XOR (is_null($motivo))){
 }
 
 # Verifica se quando a data de saída estiver preenchida o motivo detalhado tb estará
-if((is_null($dtSaida)) AND (!is_null($motivoDetalhe))){
-    $erro = 1;
-    
-    if(is_null($dtSaida)){
-        $msgErro.='Se o motivo detalhado de saida está preenchido, a data de saída também deverá ser informada !\n';
+if($situacao<>1){
+    if((is_null($dtSaida)) AND (!is_null($motivoDetalhe))){
+        $erro = 1;
+
+        if(is_null($dtSaida)){
+            $msgErro.='Se o motivo detalhado de saida está preenchido, a data de saída também deverá ser informada !\n';
+        }
     }
+}
+
+# Verifica se um servidor ativo data de saida ou motivo preenchido
+if(($situacao == 1) AND ((!is_null($dtSaida)) OR (!is_null($motivo)))){
+    $erro = 1;
+    $msgErro.='Esse servidor está ativo no sistema. Deverá ter a data de saída e o motivo em branco!\n';
 }
 
 # Verifica se um servidor com situacao <> 1 tiver a data de saida ou motivo em branco
@@ -82,84 +90,40 @@ if(($situacao <> 1) AND ((is_null($dtSaida)) OR (is_null($motivo)))){
 if(!is_null($motivo)){
     switch ($perfil){
         case 1 :    // Estatutários
-            if(($motivo == 7) OR ($motivo == 8) OR ($motivo == 10) OR ($motivo == 12))
+            if(($motivo == 7) OR ($motivo == 8) OR ($motivo == 10) OR ($motivo == 12)){
                 $erro = 1;   
                 $msgErro.='Um servidor estatutário não pode sair da instituição por esse motivo!\n';
+            }
             break;
         
         case 2 :    // Cedidos
-            if(($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 12) AND ($motivo <> 13))
+            if(($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 12) AND ($motivo <> 13)){
                 $erro = 1;   
                 $msgErro.='Um servidor cedido não pode sair da instituição por esse motivo!\n';
+            }
             break;
             
         case 3 :    // Convidado
-            if(($motivo <> 1) AND ($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 13) AND ($motivo <> 14))
+            if(($motivo <> 1) AND ($motivo <> 2) AND ($motivo <> 11) AND ($motivo <> 13) AND ($motivo <> 14)){
                 $erro = 1;   
                 $msgErro.='Um servidor convidado não pode sair da instituição por esse motivo!\n';
+            }
             break; 
             
         case 4 :    // Celetista
-            if(($motivo == 1) OR ($motivo == 4) OR ($motivo == 7) OR ($motivo == 8) OR ($motivo == 12))
+            if(($motivo == 1) OR ($motivo == 4) OR ($motivo == 7) OR ($motivo == 8) OR ($motivo == 12)){
                 $erro = 1;   
                 $msgErro.='Um servidor celetista não pode sair da instituição por esse motivo!\n';
+            }
             break;
             
         case 5 :    // Contrato Nulo
         case 6 :    // Contrato Administrativo
         case 7 :    // Professor Visitante    
-            if(($motivo <> 2) AND ($motivo <> 7) AND ($motivo <> 8) AND ($motivo <> 11) AND ($motivo <> 13))
+            if(($motivo <> 2) AND ($motivo <> 7) AND ($motivo <> 8) AND ($motivo <> 11) AND ($motivo <> 13)){
                 $erro = 1;   
                 $msgErro.='Um servidor contratado não pode sair da instituição por esse motivo!\n';
+            }
             break;        
     }
-}
-
-# Preenche o campo situação de acordo com o motivo de saída do servidor
-if((!is_null($motivo)) AND (!is_null($dtSaida))){
-    switch ($motivo){
-        case 1 :
-            $novaSituacao = 3;
-            break;
-        
-        case 2 :
-            $novaSituacao = 5;
-            break;
-        
-        case 3 :
-        case 4 :
-        case 5 :
-        case 6 :  
-            $novaSituacao = 2;
-            break;
-        
-        case 7 :
-        case 8 :    
-            $novaSituacao = 3;
-            break;
-        
-        case 9 :
-        case 10 :
-        case 11 :    
-            $novaSituacao = 4;
-            break;
-        
-        case 12 :
-            $novaSituacao = 6;
-            break;
-        
-        case 13 :
-            $novaSituacao = 3;
-            break;
-        
-        case 14 :
-            $novaSituacao = 3;
-            break;
-    }
-    
-    # Grava a nova situação
-    $campoValor[$indiceSituacao] = $novaSituacao;
-    
-    # Preenche o log
-    $alteracoes.='[situacao] '.$situacao.'->'.$novaSituacao.'; ';   
 }

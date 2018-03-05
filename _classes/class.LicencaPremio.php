@@ -305,4 +305,28 @@ class LicencaPremio{
         return $retorno[0];
     }
     
+    ###########################################################
+
+    function get_numProcesso($idServidor){
+
+    /**
+     * Informe o número do processo da licença prêmio de um servidor
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT processoPremio
+                     FROM tbservidor
+                    WHERE idServidor = '.$idServidor;
+        
+        $retorno = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        return $retorno[0];
+    }
+    
+    ###########################################################
+
+    
 }

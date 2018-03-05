@@ -1177,4 +1177,33 @@ class Grh
         $grid->fechaColuna();
         $grid->fechaGrid();
     }
+    
+    ###########################################################
+    
+    public static function numeroProcessoPremio($idServidor){
+        
+     /**
+     * Exibe o número do processo da licença prêmio de um servidor
+     */
+        $licenca = new LicencaPremio();
+        $processoPremio = $licenca->get_numProcesso($idServidor);
+
+        # Div do numero de serviços
+        $div = new Div('divNumProcessoPremio');
+        $div->set_title('Número do Processo');
+        $div->abre();
+        
+        $painel = new Callout("primary");
+        $painel->set_title('Painel com tipo primary');
+        $painel->abre();
+        
+        p($processoPremio,"center","f16");
+        
+        $painel ->fecha();
+
+        $div->fecha();		
+
+    }	
+        
+    ###########################################################
 }

@@ -183,6 +183,17 @@ if($acesso)
                                    'col' => 3,
                                    'size' => 15));
     }
+    
+    # Situação
+    array_push($campos,  array ('linha' => 1,
+                               'nome' => 'situacao',
+                               'label' => 'Situação:',
+                               'tipo' => 'combo',
+                               'array' => $situacao,
+                               'col' => 2,
+                               'title' => 'Situação',                           
+                               'size' => 15));
+    
             
     # Somente se for estatutário ou cedido
     if (($perfilServidor == 1) || ($perfilServidor == 2))
@@ -198,12 +209,7 @@ if($acesso)
     }
 
     # os demais
-    array_push($campos, array ('linha' => 2,
-                               'nome' => 'situacao',
-                               'label' => 'Situação:',
-                               'tipo' => 'hidden',
-                               'title' => 'Concurso',                           
-                               'size' => 15),
+    array_push($campos,
                        array ( 'linha' => 3,
                                'nome' => 'dtAdmissao',
                                'label' => 'Data de Admissão:',

@@ -82,6 +82,12 @@ div#divQuadroLicenca{
     width: 200px;   
 }
 
+div#divNumProcessoPremio{
+    position: fixed;
+    top: 45px;
+    left: 23%;
+}
+
 /*******************************************
  * Rotina que lista dados do servidor
  *******************************************/

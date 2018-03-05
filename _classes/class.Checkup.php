@@ -1363,7 +1363,7 @@ class Checkup
         # Cabeçalho da tabela
         $label = array('IdFuncional','Matrícula','Nome','Perfil','Lotação','Cargo','Situação');
         $align = array('center','center','left','center','left','left','center');
-        $titulo = 'Servidor(es) SEM id funcional cadastrado no sistema';
+        $titulo = 'Servidor(es) sem id funcional cadastrado no sistema';
         $classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         $rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
         #$funcao = array(NULL,NULL,"date_to_php");

@@ -18,6 +18,7 @@ $acesso = Verifica::acesso($idUsuario,2);
 if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $licenca = new LicencaPremio();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -127,7 +128,7 @@ if($acesso){
                         array ( 'nome' => 'processo',
                                 'label' => 'Processo:',
                                 'tipo' => 'texto',
-                                'padrao' => $pessoal->get_licencaPremioNumProcesso($idServidorPesquisado),
+                                'padrao' => $licenca->get_numProcesso($idServidorPesquisado),
                                 'size' => 30,
                                 'col' => 4,
                                 'required' => TRUE,

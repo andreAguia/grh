@@ -30,30 +30,124 @@ if($acesso)
     $orderCampo = get('orderCampo');
     $orderTipo = get('orderTipo');
     
-    # Rotina jscript para ocultar controles a partir do tipo de licença
-    $jscript='
-        <script type="text/javascript" language="javascript">
+    # Cria dinamicamente uma rotina em jquery para exibir ou não 
+    # o input de acordo com as exgências na tbtipolicenca
+    
+        # Início do código 
+        $script = '<script type="text/javascript" language="javascript">
             
             $(document).ready(function(){
+                
+                $("#tipo").hide();
+                $("#labeltipo").hide();
+                $("#alta").hide();
+                $("#labelalta").hide();
+                $("#dtInicioPeriodo").hide();
+                $("#labeldtInicioPeriodo").hide();
+                $("#dtFimPeriodo").hide();
+                $("#labeldtFimPeriodo").hide();
+                $("#processo").hide();
+                $("#labelprocesso").hide();
+                $("#dtPublicacao").hide();
+                $("#labeldtPublicacao").hide();
+                $("#pgPublicacao").hide();
+                $("#labelpgPublicacao").hide();
+                $("#dtPericia").hide();
+                $("#labeldtPericia").hide();
+                $("#num_Bim").hide();
+                $("#labelnum_Bim").hide();
+                    
                 // Executa rotina sempre que o valor do select mudar
                 $("#idTpLicenca").change(function(){
                 
-                    // Guarda na variável id o valor alterado
-                    var id = $("#idTpLicenca option:selected").val();
-                    
-                    if(id == 1){
-                        $("#tipo").hide();
-                        $("#labeltipo").hide();
-                    }else{
-                        $("#tipo").show();
-                    }
-                });
-            });
-        </script>';
+                // Guarda na variável id o valor alterado
+                var id = $("#idTpLicenca option:selected").val();
+                ';
+    
+        # Pega o id de cada tipo de licençca
+        $selectTipo = $pessoal->select('SELECT idTpLicenca FROM tbtipolicenca ORDER BY idTpLicenca');
+        
+        # Licença Médica
+        $script .= '
+                        if(id == 1){
+                            $("#tipo").show();
+                            $("#labeltipo").show();
+                            $("#alta").show();
+                            $("#labelalta").show();
+                        }else{
+                            $("#tipo").hide();
+                            $("#labeltipo").hide();
+                            $("#alta").hide();
+                            $("#labelalta").hide();
+                        }
+                        ';
+        
+        # Percorre o resultado
+        foreach($selectTipo as $tipo) {
+            $script .= '
+                       if(id == '.$tipo[0].'){';
+            
+                # Exibe o período aquisitivo
+                if($pessoal->get_licencaPeriodo($tipo[0]) == "Sim"){
+                    $script .= ' $("#dtInicioPeriodo").show();
+                                 $("#labeldtInicioPeriodo").show();
+                                 $("#dtFimPeriodo").show();
+                                 $("#labeldtFimPeriodo").show();';
+                }else{
+                    $script .= ' $("#dtInicioPeriodo").hide();
+                                 $("#labeldtInicioPeriodo").hide();
+                                 $("#dtFimPeriodo").hide();
+                                 $("#labeldtFimPeriodo").hide();';
+                }
+                
+                # Exibe o processo
+                if($pessoal->get_licencaProcesso($tipo[0]) == "Sim"){
+                    $script .= ' $("#processo").show();
+                                 $("#labelprocesso").show();';
+                }else{
+                    $script .= ' $("#processo").hide();
+                                 $("#labelprocesso").hide();';
+                }
+                
+                # Exibe a publicação
+                if($pessoal->get_licencaPublicacao($tipo[0]) == "Sim"){
+                    $script .= ' $("#dtPublicacao").show();
+                                 $("#labeldtPublicacao").show();
+                                 $("#pgPublicacao").show();
+                                 $("#labelpgPublicacao").show();';
+                }else{
+                    $script .= ' $("#dtPublicacao").hide();
+                                 $("#labeldtPublicacao").hide();
+                                 $("#pgPublicacao").hide();
+                                 $("#labelpgPublicacao").hide();'; 
+                }
+                
+                 # Verifica se essa licença necessita de perícia
+                if($pessoal->get_licencaPericia($tipo[0]) == "Sim"){
+                    $script .= ' $("#dtPericia").show();
+                                 $("#labeldtPericia").show();
+                                 $("#num_Bim").show();
+                                 $("#labelnum_Bim").show();';
+                }else{
+                    $script .= ' $("#dtPericia").hide();
+                                 $("#labeldtPericia").hide();
+                                 $("#num_Bim").hide();
+                                 $("#labelnum_Bim").hide();';
+                }
+            
+            
+            $script .= '  
+                       }
+                       ';
+        }
+    
+         $script .= '});
+                     });
+                    </script>';
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_jscript($jscript);
+    $page->set_jscript($script);
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -172,12 +266,12 @@ if($acesso)
         $objeto->set_campos(array(array('nome' => 'idTpLicenca',
                                         'label' => 'Tipo de Afastamento ou Licença:',
                                         'tipo' => 'combo',
-                                        'size' => 20,
+                                        'size' => 50,
                                         'array' => $result,                      
                                         'readonly' => TRUE,
                                         'autofocus' => TRUE,
                                         'title' => 'Tipo do Adastamento/Licença.',
-                                        'col' => 6,
+                                        'col' => 12,
                                         'linha' => 1),
                                 array ( 'nome' => 'tipo',
                                         'label' => 'Tipo:',
@@ -188,7 +282,7 @@ if($acesso)
                                                          array(1,"Inicial"),
                                                          array(2,"Prorrogação")),
                                          'col' => 2,
-                                         'linha' => 1),
+                                         'linha' => 2),
                                  array ( 'nome' => 'alta',
                                          'label' => 'Alta:',
                                          'tipo' => 'combo',
@@ -197,21 +291,21 @@ if($acesso)
                                          'array' => array(array(2,"Não"),
                                                           array(1,"Sim")),
                                          'col' => 2,
-                                         'linha' => 1),
+                                         'linha' => 2),
                                  array ( 'nome' => 'dtInicioPeriodo',
                                          'label' => 'Período Aquisitivo Início:',
                                          'tipo' => 'data',
                                          'size' => 20,               
                                          'title' => 'Data de início do período aquisitivo',
                                          'col' => 3,
-                                         'linha' => 2),
+                                         'linha' => 3),
                                  array ( 'nome' => 'dtFimPeriodo',
                                          'label' => 'Período Aquisitivo Término:',
                                          'tipo' => 'data',
                                          'size' => 20,
                                          'col' => 3,              
                                          'title' => 'Data de término do período aquisitivo',
-                                         'linha' => 2),
+                                         'linha' => 3),
                                  array ( 'nome' => 'dtInicial',
                                          'label' => 'Data Inicial:',
                                          'tipo' => 'data',
@@ -219,7 +313,7 @@ if($acesso)
                                          'size' => 20,
                                          'col' => 3,
                                          'title' => 'Data do início.',
-                                         'linha' => 3),
+                                         'linha' => 4),
                                  array ( 'nome' => 'numDias',
                                          'label' => 'Dias:',
                                          'tipo' => 'numero',
@@ -227,53 +321,53 @@ if($acesso)
                                          'required' => TRUE,
                                          'title' => 'Número de dias.',
                                          'col' => 2,
-                                         'linha' => 3),
+                                         'linha' => 4),
                                  array ( 'nome' => 'processo',
                                          'label' => 'Processo:',
                                          'tipo' => 'processo',
                                          'size' => 30,
                                          'col' => 5,
                                          'title' => 'Número do Processo',
-                                         'linha' => 4),
+                                         'linha' => 5),
                                  array ( 'nome' => 'dtPublicacao',
                                          'label' => 'Data da Pub. no DOERJ:',
                                          'tipo' => 'data',
                                          'size' => 20,
                                          'title' => 'Data da Publicação no DOERJ.',
                                          'col' => 3,
-                                         'linha' => 5),
+                                         'linha' => 6),
                                  array ( 'nome' => 'pgPublicacao',
                                          'label' => 'Pág:',
                                          'tipo' => 'texto',
                                          'size' => 5,                         
                                          'title' => 'A Página do DOERJ',
                                          'col' => 2,
-                                         'linha' => 5),
+                                         'linha' => 6),
                                  array ( 'nome' => 'dtPericia',
                                          'label' => 'Data da Perícia:',
                                          'tipo' => 'data',
                                          'size' => 20,
                                          'title' => 'Data da Perícia.',
                                          'col' => 3,
-                                         'linha' => 6),
+                                         'linha' => 7),
                                  array ( 'nome' => 'num_Bim',
                                          'label' => 'Número da Bim:',
                                          'tipo' => 'texto',
                                          'size' => 30,
                                          'col' => 2,
                                          'title' => 'Número da Bim',
-                                         'linha' => 6),
-                                 array ( 'linha' => 7,
+                                         'linha' => 7),
+                                 array ( 'linha' => 8,
                                          'nome' => 'obs',
                                          'label' => 'Observação:',
                                          'tipo' => 'textarea',
-                                         'size' => array(80,5)),
+                                         'size' => array(80,3)),
                                  array ( 'nome' => 'idServidor',
                                          'label' => 'idServidor:',
                                          'tipo' => 'hidden',
                                          'padrao' => $idServidorPesquisado,
                                          'size' => 5,
-                                         'linha' => 8)));
+                                         'linha' => 9)));
 
         # Log
         $objeto->set_idUsuario($idUsuario);
@@ -299,7 +393,7 @@ if($acesso)
                 break;
 
             case "gravar" :
-                $objeto->$fase($id,"servidorGratificacaoExtra.php"); 
+                $objeto->$fase($id); 
                 break;
         }
     }

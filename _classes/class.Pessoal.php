@@ -798,7 +798,7 @@ class Pessoal extends Bd
 
     # Função que informa se a idServidor est� em férias na data atual
     #
-    # Par�metro: a matrícula a ser pesquisada
+    # Parâmetro: a matrícula a ser pesquisada
 
     {
         # Monta o select
@@ -823,7 +823,7 @@ class Pessoal extends Bd
 
     # Função que informa se a idServidor est� em licanca na data atual
     #
-    # Par�metro: a matrícula a ser pesquisada
+    # Parâmetro: a matrícula a ser pesquisada
 
     {
         # Monta o select
@@ -848,7 +848,7 @@ class Pessoal extends Bd
 
     # Função que informa se o servidor está cedido para outro órgão
     #
-    # Par�metro: a matrícula a ser pesquisada
+    # Parâmetro: a matrícula a ser pesquisada
 
     {
         # Monta o select		
@@ -870,7 +870,7 @@ class Pessoal extends Bd
 
     # Função que informa licenca de uma matrícula
     #
-    # Par�metro: a matrícula a ser pesquisada
+    # Parâmetro: a matrícula a ser pesquisada
 
     {
             # Monta o select		
@@ -891,9 +891,9 @@ class Pessoal extends Bd
     function get_licencaPeriodo($idLicenca)
 
 
-    # Função que informa se a licen�a tem per�odo aquisitivo
+    # Função que informa se a licença tem per�odo aquisitivo
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -916,9 +916,9 @@ class Pessoal extends Bd
     function get_licencaProcesso($idLicenca)
 
 
-    # Função que informa se a licen�a necessita um processo administrativo
+    # Função que informa se a licença necessita um processo administrativo
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -941,9 +941,9 @@ class Pessoal extends Bd
     function get_licencaPublicacao($idLicenca)
 
 
-    # Função que informa se a licen�a necessita de publicação no DOERJ
+    # Função que informa se a licença necessita de publicação no DOERJ
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -966,9 +966,9 @@ class Pessoal extends Bd
     function get_licencaPericia($idLicenca)
 
 
-    # Função que informa se esse tipo de licen�a necessita de per�cia (licen�a m�dica)
+    # Função que informa se esse tipo de licença necessita de perícia (licença m�dica)
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -991,9 +991,9 @@ class Pessoal extends Bd
     function get_licencaNome($idLicenca)
 
 
-    # Função que informa o nome do tipo de licen�a
+    # Função que informa o nome do tipo de licença
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -1016,9 +1016,9 @@ class Pessoal extends Bd
     function get_licencaSexo($idLicenca)
 
 
-    # Função que informa limita��o por genero (sexo) do tipo de licen�a
+    # Função que informa limitação por genero (sexo) do tipo de licença
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -1041,9 +1041,9 @@ class Pessoal extends Bd
     function get_licencaDias($idLicenca)
 
 
-    # Função que informa a quantidade de dias fixos para esse tipo de licen�a
+    # Função que informa a quantidade de dias fixos para esse tipo de licença
     #
-    # Par�metro: id do tipo de licen�a
+    # Parâmetro: id do tipo de licença
 
     {
             # valida par�metro
@@ -1066,9 +1066,9 @@ class Pessoal extends Bd
     function get_tipoLicenca($idLicenca)
 
 
-    # Função que informa o tipo da licen�a de uma licen�a de um servidor
+    # Função que informa o tipo da licença de uma licença de um servidor
     #
-    # Par�metro: id da licen�a
+    # Parâmetro: id da licença
 
     {
             # valida par�metro
@@ -1091,9 +1091,9 @@ class Pessoal extends Bd
     function get_nomeTipoLicenca($idTpLicenca)
 
 
-    # Função que informa o nome de um tipo da licen�a
+    # Função que informa o nome de um tipo da licença
     #
-    # Par�metro: id do tipo da licen�a
+    # Parâmetro: id do tipo da licença
 
     {
             # valida par�metro
@@ -1757,7 +1757,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_perfilLicenca
-     * informa se o perfil � permitido tirar licen�a
+     * informa se o perfil é permitido tirar licença
      * 
      * @param   integer $id id do Perfil
      */
@@ -2627,11 +2627,11 @@ class Pessoal extends Bd
     function get_licencaDados($idLicenca)
 
 
-    # Função que informa v�rios dados de uma licen�a
+    # Função que informa v�rios dados de uma licença
     #
-    # Função usada na rotina tempor�rio que transforma uma licen�a em publicação de licen�a premio
+    # Função usada na rotina tempor�rio que transforma uma licença em publicação de licença premio
     # 
-    # Par�metro: id da licen�a
+    # Parâmetro: id da licença
 
     {
             # valida par�metro
@@ -2738,7 +2738,7 @@ class Pessoal extends Bd
 
     # Função que informa se a idServidor est� folgando (TRE) na data atual
     #
-    # Par�metro: a matrícula a ser pesquisada
+    # Parâmetro: a matrícula a ser pesquisada
 
     {
         # Monta o select
@@ -2762,7 +2762,7 @@ class Pessoal extends Bd
 
     # Função que informa se a idServidor está afastada para o (TRE) na data atual
     #
-    # Par�metro: a matrícula a ser pesquisada
+    # Parâmetro: a matrícula a ser pesquisada
 
     {
         # Monta o select

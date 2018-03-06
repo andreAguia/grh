@@ -36,17 +36,12 @@ if($acesso)
     $id = soNumeros(get('id'));
     
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
 
     # Começa uma nova página
     $page = new Page();			
@@ -70,24 +65,21 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
-    if(is_null($orderCampo))
-            $orderCampo = "2 desc, 3 desc, 4";
-
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
-
     # select da lista
     $objeto->set_selectLista ('SELECT idClasse,
                                       tbplano.numDecreto,
                                       nivel,
                                       faixa,
-                                      valor,                                 
+                                      valor,
+                                      CASE tbplano.planoAtual                                        
+                                            WHEN 1 THEN "Vigente"
+                                            ELSE "Antigo"
+                                       end,                      
                                       idClasse
                                  FROM tbclasse JOIN tbplano USING (idPlano)
                                 WHERE nivel LIKE "%'.$parametro.'%"
                                    OR idClasse LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY tbplano.planoAtual desc,tbplano.numDecreto desc, nivel desc, faixa asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,
@@ -96,28 +88,27 @@ if($acesso)
                                       idPlano
                                 FROM tbclasse
                                WHERE idClasse = '.$id);
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
+    
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    # Dá acesso a exclusão somente ao administrador
+    if(Verifica::acesso($idUsuario,1)){
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Plano","Nível","Faixa","Valor"));
-    $objeto->set_width(array(5,22,22,22,22));
+    $objeto->set_label(array("id","Plano","Nível","Faixa","Valor","Status"));
+    #$objeto->set_width(array(5,20,20,20,20,8));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(NULL,NULL,NULL,NULL,"formataMoeda"));
 
     $planoAtual = $pessoal->get_numDecretoPlanoAtual();
 
-    $objeto->set_formatacaoCondicional(array(array('coluna' => 1,
-                                                   'valor' => $planoAtual,
+    $objeto->set_formatacaoCondicional(array(array('coluna' => 5,
+                                                   'valor' => "Vigente",
                                                    'operador' => '<>',
                                                    'id' => 'inativo')));
     # Classe do banco de dados
@@ -138,6 +129,7 @@ if($acesso)
                                       numDecreto
                                   FROM tbplano
                               ORDER BY idPlano desc');
+    array_unshift($result, array(0,NULL)); 
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -153,7 +145,7 @@ if($acesso)
                 'nome' => 'nivel',
                'label' => 'Nível:',
                'tipo' => 'combo',
-               'array' => array("Superior","Médio","Fundamental","Elementar"),
+               'array' => array(NULL,"Doutorado","Superior","Médio","Fundamental","Elementar"),
                'required' => TRUE,
                'size' => 20),
         array ('linha' => 1,

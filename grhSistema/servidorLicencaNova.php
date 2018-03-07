@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     
@@ -33,11 +32,16 @@ if($acesso)
     # Cria dinamicamente uma rotina em jquery para exibir ou não 
     # o input de acordo com as exgências na tbtipolicenca
     
+        # Pega o id de cada tipo de licençca
+        $selectTipo = $pessoal->select('SELECT idTpLicenca FROM tbtipolicenca ORDER BY idTpLicenca');
+    
         # Início do código 
         $script = '<script type="text/javascript" language="javascript">
             
-            $(document).ready(function(){
-                
+            $(document).ready(function(){';
+        
+        # Retira todos os controles
+        $script .= '    
                 $("#tipo").hide();
                 $("#labeltipo").hide();
                 $("#alta").hide();
@@ -56,16 +60,58 @@ if($acesso)
                 $("#labeldtPericia").hide();
                 $("#num_Bim").hide();
                 $("#labelnum_Bim").hide();
-                    
-                // Executa rotina sempre que o valor do select mudar
-                $("#idTpLicenca").change(function(){
                 
-                // Guarda na variável id o valor alterado
-                var id = $("#idTpLicenca option:selected").val();
                 ';
-    
-        # Pega o id de cada tipo de licençca
-        $selectTipo = $pessoal->select('SELECT idTpLicenca FROM tbtipolicenca ORDER BY idTpLicenca');
+        
+        if(!is_null($id)){
+            # Pega o tipo de licença desse id
+            $idTipo = $pessoal->get_tipoLicenca($id);
+            
+            # Percorre o resultado
+            foreach($selectTipo as $tipo) {
+               
+                  if($idTipo == $tipo[0]){
+
+                    # Exibe o período aquisitivo
+                    if($pessoal->get_licencaPeriodo($tipo[0]) == "Sim"){
+                        $script .= ' $("#dtInicioPeriodo").show();
+                                     $("#labeldtInicioPeriodo").show();
+                                     $("#dtFimPeriodo").show();
+                                     $("#labeldtFimPeriodo").show();';
+                    }
+
+                    # Exibe o processo
+                    if($pessoal->get_licencaProcesso($tipo[0]) == "Sim"){
+                        $script .= ' $("#processo").show();
+                                     $("#labelprocesso").show();';
+                    }
+
+                    # Exibe a publicação
+                    if($pessoal->get_licencaPublicacao($tipo[0]) == "Sim"){
+                        $script .= ' $("#dtPublicacao").show();
+                                     $("#labeldtPublicacao").show();
+                                     $("#pgPublicacao").show();
+                                     $("#labelpgPublicacao").show();';
+                    }
+
+                     # Verifica se essa licença necessita de perícia
+                    if($pessoal->get_licencaPericia($tipo[0]) == "Sim"){
+                        $script .= ' $("#dtPericia").show();
+                                     $("#labeldtPericia").show();
+                                     $("#num_Bim").show();
+                                     $("#labelnum_Bim").show();';
+                    }
+                }
+            }
+        }
+           
+        $script .= '    
+            // Executa rotina sempre que o valor do select mudar
+            $("#idTpLicenca").change(function(){
+
+            // Guarda na variável id o valor alterado
+            var id = $("#idTpLicenca option:selected").val();
+            ';
         
         # Licença Médica
         $script .= '
@@ -85,7 +131,7 @@ if($acesso)
         # Percorre o resultado
         foreach($selectTipo as $tipo) {
             $script .= '
-                       if(id == '.$tipo[0].'){';
+            if(id == '.$tipo[0].'){';
             
                 # Exibe o período aquisitivo
                 if($pessoal->get_licencaPeriodo($tipo[0]) == "Sim"){
@@ -135,19 +181,19 @@ if($acesso)
                                  $("#labelnum_Bim").hide();';
                 }
             
-            
             $script .= '  
                        }
                        ';
         }
     
          $script .= '});
-                     });
-                    </script>';
+                     });</script>';
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_jscript($script);
+    if($fase == "editar"){
+        $page->set_jscript($script);
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -388,9 +434,6 @@ if($acesso)
             case "listar" :
             case "editar" :			
             case "excluir" :
-                $objeto->$fase($id); 
-                break;
-
             case "gravar" :
                 $objeto->$fase($id); 
                 break;

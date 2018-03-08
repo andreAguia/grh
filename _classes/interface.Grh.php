@@ -38,7 +38,6 @@ class Grh
         }
         echo '</header>';
     }
-    
 
 ###########################################################
     
@@ -579,8 +578,7 @@ class Grh
             br();
 
             $menu = new MenuGrafico(3);
-            if($pessoa->get_perfilFerias($perfil) == "Sim")
-            {
+            if($pessoa->get_perfilFerias($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Férias');
                 $botao->set_url('servidorFerias.php');
@@ -590,11 +588,10 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoa->get_perfilLicenca($perfil) == "Sim")
-            {
+            if($pessoa->get_perfilLicenca($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Licenças e Afastamentos');
-                $botao->set_url('servidorLicencaNova.php');
+                $botao->set_url('servidorLicenca.php');
                 $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Licenças do Servidor');
                 $botao->set_accessKey('L');

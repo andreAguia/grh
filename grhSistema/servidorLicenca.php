@@ -146,8 +146,6 @@ if($acesso){
                 $numDias = $pessoal->get_licencaDias($tipo[0]);
                 if($numDias > 0){
                     $script .= ' $("#numDias").val('.$numDias.');';
-                }else{
-                    $script .= ' $("#numDias").val(0);';
                 }
             
                 # Exibe o período aquisitivo
@@ -439,13 +437,20 @@ if($acesso){
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
+        # Publicação de Licença Prêmio
+        $botaoPremio = new Button("Licença Prêmio");
+        $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
+        $botaoPremio->set_url('servidorLicencaPremio.php');  
+        $botaoPremio->set_accessKey('L');
+        
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Relatório de Licença");
         $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        
+        $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));
 
-        $objeto->set_botaoListarExtra(array($botaoRel));
 
         ################################################################
 

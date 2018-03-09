@@ -12,7 +12,7 @@ class LicencaPremio{
     public function __construct(){
                 
     /**
-     * Inicia a classe informando o id do servidor
+     * Inicia a classe 
      */    
     
         
@@ -28,8 +28,9 @@ class LicencaPremio{
         
         # Pega quantos dias foram fruídos
         $select = 'SELECT SUM(numDias) 
-                     FROM tblicencaPremio 
-                    WHERE idServidor = '.$idServidor;
+                     FROM tblicenca 
+                    WHERE idTpLicenca = 6
+                      AND idServidor = '.$idServidor;
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -106,7 +107,7 @@ class LicencaPremio{
 
     ###########################################################
 
-    function get_idServidorPorLicenca($idLicencaPremio){
+    function get_idServidorPorLicenca($idLicenca){
 
     /**
      * Informe o idServidor de uma licença
@@ -117,8 +118,8 @@ class LicencaPremio{
         
         # Pega array com os dias publicados
         $select = 'SELECT idServidor
-                     FROM tblicencapremio 
-                    WHERE idLicencaPremio = '.$idLicencaPremio;
+                     FROM tblicenca 
+                    WHERE idLicenca = '.$idLicenca;
         
        $row = $pessoal->select($select,FALSE);
         
@@ -128,61 +129,26 @@ class LicencaPremio{
 
     ###########################################################                          
 
-    function get_publicacao($idLicencaPremio){
+    function get_publicacao($idLicenca){
 
     /**
      * Informe a publicação de uma licença
      */
 
         # Pega o idServidor dessa Licença
-        $idServidor = $this->get_idServidorPorLicenca($idLicencaPremio);
+        $idServidor = $this->get_idServidorPorLicenca($idLicenca);
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
         # Pega array com os dias publicados
         $select = 'SELECT idPublicacaoPremio
-                     FROM tbpublicacaopremio 
-                    WHERE idServidor = '.$idServidor;
+                     FROM tblicenca
+                    WHERE idLicenca = '.$idLicenca;
         
-        $publicados = $pessoal->select($select);    // Array com as publicações
-        $numPublicacao = $pessoal->count($select);  // Número de publicações
+        $retorno = $pessoal->select($select,FALSE);
         
-        # Pega array com os dias fruídos
-        $select = 'SELECT idLicencaPremio,
-                          numDias 
-                     FROM tblicencapremio 
-                    WHERE idServidor = '.$idServidor.' 
-                 ORDER BY dtInicial';       
-                        
-        $fruidos = $pessoal->select($select);
-        
-        # Rotina que informa (matematicamente) a publicação de uma licença
-        $somador = 0; // Zera o somador
-        
-        # Variavel de retorno
-        $retorno = NULL;
-        
-        # Percorre as licenças somando os dias e dividindo em grupos de 90 dias
-        foreach($fruidos as $arrayLicenca){
-            $somador += $arrayLicenca[1];   // soma
-            
-            # Verifica se é a licença solicitada
-            if($arrayLicenca[0] == $idLicencaPremio){
-                $divisao = ($somador/90);        // divide por 90
-                $indice = (int)($divisao - 0.01);  // acerta para que o valor fique perfeito para ser um índice de array
-                
-                if($numPublicacao > $indice){ // Desconsidera licença sem publicação
-                    $idRetornado = $publicados[$indice][0]; // descobre a id da publicação.
-                    
-                    # Pega os dados dessa publicação
-                    $dados = $this->get_dadosPublicacao($idRetornado);        
-                    $retorno = date_to_php($dados[0]);
-                }                    
-            }
-        }
-        
-        return $retorno;
+        return $retorno[0];
     }
 
     ###########################################################
@@ -216,55 +182,19 @@ class LicencaPremio{
     /**
      * Informe o número de dias fruídos em uma Publicação
      */
-        # Pega o idServidor dessa Licença
-        $idServidor = $this->get_idServidorPorPublicacao($idPublicacaoPremio);
-        
-        $diasPublicados = $this->get_numDiasPublicados($idServidor);
-        $diasFruidos = $this->get_numDiasFruidos($idServidor);
-        $diasDisponiveis = $this->get_numDiasDisponiveis($idServidor);
-        
+       
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
-        # Pega array com os dias publicados
-        $select = 'SELECT idPublicacaoPremio
-                     FROM tbpublicacaopremio 
-                    WHERE idServidor = '.$idServidor;
-        
-        $publicados = $pessoal->select($select);    // Array com as publicações
-        $numPublicacao = $pessoal->count($select);  // Número de publicações
-        
-        # Pega array com os dias fruídos
-        $select = 'SELECT idLicencaPremio,
-                          numDias 
-                     FROM tblicencapremio 
-                    WHERE idServidor = '.$idServidor.' 
-                 ORDER BY dtInicial';       
+        #  Pega quantos dias foram fruídos
+        $select = 'SELECT SUM(numDias) 
+                     FROM tblicenca 
+                    WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
                         
-        $fruidos = $pessoal->select($select);
-        
-        # Zera os somatórios
-        $somador = 0;
-        $somaPublic = 0;
-        
-        # Percorre as licenças somando os dias e dividindo em grupos de 90 dias
-        foreach($fruidos as $arrayLicenca){
-            $somador += $arrayLicenca[1];   // soma
-            
-            $divisao = ($somador/90);        // divide por 90
-            $indice = (int)($divisao - 0.01);  // acerta para que o valor fique perfeito para ser um índice de array
-            
-            # Verifica se tem publicação para essa licença
-            if($numPublicacao > $indice){ // Desconsidera licença sem publicação
-                $idPublica = $publicados[$indice][0]; // descobre a id da publicação.
-                if($idPublica == $idPublicacaoPremio){
-                    $somaPublic += $arrayLicenca[1];
-                }
-            }
-        }
+        $fruidos = $pessoal->select($select,FALSE);
         
         # Retorna
-        return $somaPublic;
+        return $fruidos[0];
     }
 
     ###########################################################

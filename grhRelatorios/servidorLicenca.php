@@ -30,8 +30,15 @@ if($acesso)
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Licenças');
     
     br();
-    $select = "SELECT tbtipolicenca.nome,
-                    tbtipolicenca.lei,
+    $select = 'SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                    CASE tipo
+                        WHEN 1 THEN "Inicial"
+                        WHEN 2 THEN "Prorrogação"
+                        end,
+                     CASE alta
+                        WHEN 1 THEN "Sim"
+                        WHEN 2 THEN "Não"
+                        end,
                     dtInicial,
                     numdias,
                     ADDDATE(dtInicial,numDias-1),
@@ -42,8 +49,8 @@ if($acesso)
                     pgPublicacao,
                     idLicenca
                FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-              WHERE idServidor=$idServidorPesquisado
-           ORDER BY tblicenca.dtInicial desc";
+              WHERE idServidor='.$idServidorPesquisado.' 
+           ORDER BY tblicenca.dtInicial desc';
 
     $result = $pessoal->select($select);
 
@@ -51,12 +58,14 @@ if($acesso)
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
+    $relatorio->set_numeroOrdem(TRUE);
+    $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_totalRegistro(FALSE);
-    #$relatorio->set_subtitulo("Todas as Licenças");
-    $relatorio->set_label(array("Licença","Lei","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
+    $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_label(array("Licença","Tipo","Alta","Inicio","Dias","Término","Processo","P.Aq.Início","P.Aq.Fim","Publicação","Pag."));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('left'));
-    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

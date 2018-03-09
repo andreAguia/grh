@@ -187,6 +187,28 @@ if($acesso){
             # Exibe quadro de licença prêmio
             Grh::quadroLicencaPremio($idServidorPesquisado);
             
+            # Pega os dados para o alerta
+            $licenca = new LicencaPremio();
+            $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
+            $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
+            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
+
+            # Exibe alerta se $diasDisponíveis for negativo
+            if($diasDisponiveis < 0){                    
+                $mensagem1 = "Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                $objeto->set_rotinaExtraListar("callout");
+                $objeto->set_rotinaExtraListarParametro($mensagem1);
+                #$objeto->set_botaoIncluir(FALSE);
+            }
+
+            if($diasDisponiveis == 0){
+                $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma licença prêmio.";
+                $objeto->set_rotinaExtraListar("callout");
+                $objeto->set_rotinaExtraListarParametro($mensagem1);
+                #$objeto->set_botaoIncluir(FALSE);
+            }  
+
+            
             $objeto->listar();
             break;
 

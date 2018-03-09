@@ -54,16 +54,17 @@ if($acesso){
         $objeto->set_nome('Licença Prêmio');
 
         # botão de voltar da lista
-        $objeto->set_voltarLista('servidorMenu.php');
+        $objeto->set_voltarLista('servidorLicenca.php');
 
         # select da lista
         $objeto->set_selectLista('SELECT dtInicial,
                                          numdias,
                                          ADDDATE(dtInicial,numDias-1),
-                                         idLicencaPremio,
-                                         idLicencaPremio
-                                    FROM tblicencaPremio 
+                                         idPublicacaoPremio,
+                                         idLicenca
+                                    FROM tblicenca 
                                    WHERE idServidor='.$idServidorPesquisado.'
+                                     AND idTpLicenca = 6   
                                 ORDER BY dtInicial desc');        
         
         # select do edita
@@ -71,8 +72,8 @@ if($acesso){
                                          numdias,
                                          obs,
                                          idServidor
-                                    FROM tblicencapremio
-                                   WHERE idLicencaPremio = '.$id);
+                                    FROM tblicenca
+                                   WHERE idLicenca = '.$id);
         
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
@@ -95,10 +96,10 @@ if($acesso){
         $objeto->set_classBd('pessoal');
 
         # Nome da tabela
-        $objeto->set_tabela('tblicencapremio');
+        $objeto->set_tabela('tblicenca');
 
         # Nome do campo id
-        $objeto->set_idCampo('idLicencaPremio');
+        $objeto->set_idCampo('idLicenca');
 
         # Tipo de label do formulário
         $objeto->set_formLabelTipo(1);

@@ -23,7 +23,7 @@ $idServidor = $campoValor[13];
 # Conecta ao Banco de Dados
 $pessoal = new Pessoal();
     
-echo $idTpLicenca;
+#echo $idTpLicenca;
 # Verifica se o tipo de licença foi digitado
 if($idTpLicenca == "Inicial"){
     $msgErro.='O tipo de licença tem que ser informado!\n';

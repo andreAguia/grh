@@ -596,14 +596,6 @@ class Grh
                 $botao->set_title('Cadastro de Licenças do Servidor');
                 $botao->set_accessKey('L');
                 $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Licença Prêmio');
-                $botao->set_url('servidorLicencaPremio.php');
-                $botao->set_image(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Licenças Prêmio do Servidor');
-                #$botao->set_accessKey('L');
-                $menu->add_item($botao);
             }
 
             $botao = new BotaoGrafico();

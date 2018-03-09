@@ -329,13 +329,20 @@ if($acesso){
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
         
+        # Publicação de Licença Prêmio
+        $botaoPremio = new Button("Licença Prêmio");
+        $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
+        $botaoPremio->set_url('servidorPublicacaoPremio.php');  
+        $botaoPremio->set_accessKey('L');
+        
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Relatório de Licença");
         $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         
-        $objeto->set_botaoListarExtra(array($botaoRel));
+        $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));
+
 
         ################################################################
 

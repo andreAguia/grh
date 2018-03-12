@@ -28,9 +28,8 @@ class LicencaPremio{
         
         # Pega quantos dias foram fruídos
         $select = 'SELECT SUM(numDias) 
-                     FROM tblicenca 
-                    WHERE idTpLicenca = 6
-                      AND idServidor = '.$idServidor;
+                     FROM tblicencaPremio 
+                    WHERE idServidor = '.$idServidor;
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -107,7 +106,7 @@ class LicencaPremio{
 
     ###########################################################
 
-    function get_idServidorPorLicenca($idLicenca){
+    function get_idServidorPorLicenca($idLicencaPremio){
 
     /**
      * Informe o idServidor de uma licença
@@ -118,8 +117,8 @@ class LicencaPremio{
         
         # Pega array com os dias publicados
         $select = 'SELECT idServidor
-                     FROM tblicenca 
-                    WHERE idLicenca = '.$idLicenca;
+                     FROM tblicencaPremio 
+                    WHERE idLicencaPremio = '.$idLicencaPremio;
         
        $row = $pessoal->select($select,FALSE);
         
@@ -129,14 +128,11 @@ class LicencaPremio{
 
     ###########################################################                          
 
-    function get_publicacao($idLicenca){
+    function get_publicacao($idLicencaPremio){
 
     /**
      * Informe a publicação de uma licença
      */
-
-        # Pega o idServidor dessa Licença
-        $idServidor = $this->get_idServidorPorLicenca($idLicenca);
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -144,7 +140,7 @@ class LicencaPremio{
         # Pega array com os dias publicados
         $select = 'SELECT idPublicacaoPremio
                      FROM tblicenca
-                    WHERE idLicenca = '.$idLicenca;
+                    WHERE idLicenca = '.$idLicencaPremio;
         
         $retorno = $pessoal->select($select,FALSE);
         
@@ -188,7 +184,7 @@ class LicencaPremio{
         
         #  Pega quantos dias foram fruídos
         $select = 'SELECT SUM(numDias) 
-                     FROM tblicenca 
+                     FROM tblicencaPremio 
                     WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
                         
         $fruidos = $pessoal->select($select,FALSE);

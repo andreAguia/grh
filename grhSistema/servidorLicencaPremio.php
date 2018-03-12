@@ -58,22 +58,22 @@ if($acesso){
 
         # select da lista
         $objeto->set_selectLista('SELECT dtInicial,
-                                         numdias,
-                                         ADDDATE(dtInicial,numDias-1),
-                                         idPublicacaoPremio,
-                                         idLicenca
-                                    FROM tblicenca 
-                                   WHERE idServidor='.$idServidorPesquisado.'
-                                     AND idTpLicenca = 6   
+                                         tblicencaPremio.numdias,
+                                         ADDDATE(dtInicial,tblicencaPremio.numDias-1),
+                                         CONCAT(date_format(tbPublicacaoPremio.dtPublicacao,"%d/%m/%Y")," (",date_format(tbPublicacaoPremio.dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(tbPublicacaoPremio.dtFimPeriodo,"%d/%m/%Y"),")"),
+                                         idLicencaPremio
+                                    FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
+                                   WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.'
                                 ORDER BY dtInicial desc');        
         
         # select do edita
         $objeto->set_selectEdita('SELECT dtInicial,
-                                         numdias,
+                                         numDias,
+                                         idPublicacaoPremio,
                                          obs,
                                          idServidor
-                                    FROM tblicenca
-                                   WHERE idLicenca = '.$id);
+                                    FROM tblicencaPremio
+                                   WHERE idLicencaPremio = '.$id);
         
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
@@ -86,8 +86,8 @@ if($acesso){
         $objeto->set_width(array(25,10,25,25));	
         $objeto->set_align(array("center"));
         $objeto->set_funcao(array('date_to_php',NULL,'date_to_php'));
-        $objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
-        $objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
+        #$objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
+        #$objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
         $objeto->set_exibeTempoPesquisa(FALSE);
@@ -96,13 +96,21 @@ if($acesso){
         $objeto->set_classBd('pessoal');
 
         # Nome da tabela
-        $objeto->set_tabela('tblicenca');
+        $objeto->set_tabela('tblicencaPremio');
 
         # Nome do campo id
-        $objeto->set_idCampo('idLicenca');
+        $objeto->set_idCampo('idLicencaPremio');
 
         # Tipo de label do formulário
         $objeto->set_formLabelTipo(1);
+        
+        # Pega os dados da combo licenca
+        $publicacao = $pessoal->select('SELECT idPublicacaoPremio, 
+                                               CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
+                                      FROM tbPublicacaoPremio
+                                      WHERE idServidor = '.$idServidorPesquisado.' 
+                                  ORDER BY dtPublicacao desc');
+        array_unshift($publicacao, array(NULL,' -- Selecione uma Publicação')); # Adiciona o valor de nulo
         
         # verifica se é inclusão
         if(is_null($id)){
@@ -112,6 +120,7 @@ if($acesso){
             $diaPublicacao = NULL;                    
 
             # Pega os dados para o alerta
+            
             $licenca = new LicencaPremio($idServidorPesquisado);
             $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
             
@@ -129,8 +138,8 @@ if($acesso){
             }                  
         }else{
             $array = array(90,60,30);                   
-        }        
-
+        }
+        
         # Campos para o formulario
         $objeto->set_campos(array(array('nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
@@ -139,21 +148,32 @@ if($acesso){
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data do início.',
-                                       'linha' => 3),
+                                       'linha' => 1),
                                 array( 'nome' => 'numDias',
                                        'label' => 'Dias:',
                                        'tipo' => 'combo',
-                                       'array' => $array,
+                                       'array' => array(90,60,30),          
                                        'size' => 5,
                                        'required' => TRUE,
                                        'title' => 'Número de dias.',
                                        'col' => 2,
-                                       'linha' => 3),
-                                array ('linha' => 7,
+                                       'linha' => 1),
+                                 array('nome' => 'idPublicacaoPremio',
+                                        'label' => 'Publicação:',
+                                        'tipo' => 'combo',
+                                        'size' => 50,
+                                        'array' => $publicacao,
+                                        'required' => TRUE,
+                                        'autofocus' => TRUE,
+                                        'title' => 'Publicação.',
+                                        'col' => 12,
+                                        'linha' => 2),
+                                array ('linha' => 3,
                                        'nome' => 'obs',
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
-                                       'size' => array(80,5)),
+                                       'size' => array(80,5),
+                                       'linha' => 1),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',

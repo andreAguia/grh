@@ -249,7 +249,7 @@ if($acesso){
         }
 
         # select da lista
-        $objeto->set_selectLista('SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+        $objeto->set_selectLista('(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
                                      CASE tipo
                                         WHEN 1 THEN "Inicial"
                                         WHEN 2 THEN "Prorrogação"
@@ -262,13 +262,23 @@ if($acesso){
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
                                      tblicenca.processo,
-                                     dtInicioPeriodo,
-                                     dtFimPeriodo,
                                      dtPublicacao,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                               WHERE idServidor='.$idServidorPesquisado.'
-                            ORDER BY tblicenca.dtInicial desc');
+                               WHERE idServidor='.$idServidorPesquisado.')
+                               UNION
+                               (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                                       "",
+                                       "",
+                                       dtInicial,
+                                       tblicencaPremio.numdias,
+                                       ADDDATE(dtInicial,tblicencaPremio.numDias-1),
+                                       tblicencaPremio.idServidor,
+                                       tbPublicacaoPremio.dtPublicacao,
+                                       idLicencaPremio
+                                  FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
+                                 WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.')
+                              ORDER BY 4 desc');
 
         # select do edita
         $objeto->set_selectEdita('SELECT idTpLicenca,
@@ -298,10 +308,10 @@ if($acesso){
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","P.Aq. Início","P.Aq. Término","Publicação"));
+        $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php','date_to_php','date_to_php'));
+        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
 

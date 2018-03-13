@@ -60,7 +60,10 @@ if($acesso){
         $objeto->set_selectLista('SELECT dtInicial,
                                          tblicencaPremio.numdias,
                                          ADDDATE(dtInicial,tblicencaPremio.numDias-1),
-                                         CONCAT(date_format(tbPublicacaoPremio.dtPublicacao,"%d/%m/%Y")," (",date_format(tbPublicacaoPremio.dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(tbPublicacaoPremio.dtFimPeriodo,"%d/%m/%Y"),")"),
+                                         tbPublicacaoPremio.dtPublicacao,
+                                         tbPublicacaoPremio.pgPublicacao,
+                                         tbPublicacaoPremio.dtInicioPeriodo,
+                                         tbPublicacaoPremio.dtFimPeriodo,
                                          idLicencaPremio
                                     FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
                                    WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.'
@@ -82,10 +85,10 @@ if($acesso){
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(array("Inicio","Dias","Término","Publicação"));
-        $objeto->set_width(array(25,10,25,25));	
+        $objeto->set_label(array("Inicio","Dias","Término","Publicação","Página","Início do Período","Fim do Período"));
+        #$objeto->set_width(array(25,10,25,25));	
         $objeto->set_align(array("center"));
-        $objeto->set_funcao(array('date_to_php',NULL,'date_to_php'));
+        $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL,'date_to_php','date_to_php'));
         #$objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
         #$objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
         $objeto->set_numeroOrdem(TRUE);
@@ -106,21 +109,16 @@ if($acesso){
         
         # Pega os dados da combo licenca
         $publicacao = $pessoal->select('SELECT idPublicacaoPremio, 
-                                               CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
+                                               date_format(dtPublicacao,"%d/%m/%Y")
                                       FROM tbPublicacaoPremio
                                       WHERE idServidor = '.$idServidorPesquisado.' 
                                   ORDER BY dtPublicacao desc');
         array_unshift($publicacao, array(NULL,' -- Selecione uma Publicação')); # Adiciona o valor de nulo
         
-        # verifica se é inclusão
+        # Verifica se é inclusão
         if(is_null($id)){
-            # variáveis
-            $diasDisponiveis = NULL;
-            $array = NULL;
-            $diaPublicacao = NULL;                    
-
-            # Pega os dados para o alerta
-            
+           
+            # O sistema exibe somente os dias disponíveis
             $licenca = new LicencaPremio($idServidorPesquisado);
             $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
             
@@ -135,7 +133,10 @@ if($acesso){
                 case 30 :
                     $array = array(30);
                     break;                        
-            }                  
+            } 
+            
+            # O sistema exibe somente a publicação disponível
+            
         }else{
             $array = array(90,60,30);                   
         }
@@ -152,7 +153,7 @@ if($acesso){
                                 array( 'nome' => 'numDias',
                                        'label' => 'Dias:',
                                        'tipo' => 'combo',
-                                       'array' => array(90,60,30),          
+                                       'array' => $array,          
                                        'size' => 5,
                                        'required' => TRUE,
                                        'title' => 'Número de dias.',
@@ -166,14 +167,14 @@ if($acesso){
                                         'required' => TRUE,
                                         'autofocus' => TRUE,
                                         'title' => 'Publicação.',
-                                        'col' => 12,
-                                        'linha' => 2),
+                                        'col' => 3,
+                                        'linha' => 1),
                                 array ('linha' => 3,
                                        'nome' => 'obs',
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
-                                       'size' => array(80,5),
-                                       'linha' => 1),
+                                       'size' => array(80,4),
+                                       'linha' => 2),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
@@ -200,10 +201,7 @@ if($acesso){
             case "" :
             case "listar" :
                 # Exibe quadro de licença prêmio
-                Grh::quadroLicencaPremio($idServidorPesquisado);
-                
-                # Exibe o número do Processo
-                Grh::numeroProcessoPremio($idServidorPesquisado);
+                #Grh::quadroLicencaPremio($idServidorPesquisado);
 
                 # Pega os dados para o alerta
                 $licenca = new LicencaPremio();
@@ -234,59 +232,35 @@ if($acesso){
 
                 # Cria um menu
                 $menu = new MenuBar();
+                
+                # Número do processo
+                $linkBotao1 = new Link("Edita Processo","servidorProcessoPremio.php");
+                $linkBotao1->set_class('button');
+                $linkBotao1->set_title("Edita o número do processo de licença prêmio");
+                $menu->add_link($linkBotao1,"left");
 
-                # Relatórios
+                # Cadastro de Publicações
                 $linkBotao3 = new Link("Publicações","servidorPublicacaoPremio.php");
                 $linkBotao3->set_class('button');
                 $linkBotao3->set_title("Acessa o Cadastro de Publicações");
                 $menu->add_link($linkBotao3,"right");
-
                 $menu->show();
-
-                # Exibe as Publicações
-                $select = 'SELECT dtPublicacao,
-                                pgPublicacao,
-                                dtInicioPeriodo,
-                                dtFimPeriodo,                                  
-                                processo,
-                                numDias,
-                                idPublicacaoPremio,
-                                idPublicacaoPremio,
-                                idPublicacaoPremio
-                           FROM tbpublicacaopremio
-                           WHERE idServidor = '.$idServidorPesquisado.'
-                       ORDER BY dtPublicacao desc';
-
-                $result = $pessoal->select($select);
-                $count = $pessoal->count($select);
-
-                # Cabeçalho da tabela
-                $titulo = 'Publicações';
-                $label = array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
-                $width = array(15,10,15,15,15,10,10,10);
-                $funcao = array('date_to_php',NULL,'date_to_php','date_to_php');
-                $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
-                $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
-                $align = array('center');            
-
-                # Exibe a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($result);
-                $tabela->set_align($align);
-                $tabela->set_label($label);
-                $tabela->set_width($width);
-                $tabela->set_titulo($titulo);
-                $tabela->set_funcao($funcao);
-                $tabela->set_classe($classe);
-                $tabela->set_metodo($metodo);
-
-                $tabela->show();
+                
+                # Exibe as publicações de Licença Prêmio
+                Grh::exibePublicacoesPremio($idServidorPesquisado);
 
                 $grid->fechaColuna();
                 $grid->fechaGrid();   
                 break;
             
-            case "editar" :            
+            case "editar" :                
+                $objeto->$fase($id);
+                br();
+                
+                # Exibe as publicações de Licença Prêmio
+                Grh::exibePublicacoesPremio($idServidorPesquisado);
+                break;
+                
             case "excluir" :       
                 $objeto->$fase($id);  
                 break;

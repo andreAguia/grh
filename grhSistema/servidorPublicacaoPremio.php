@@ -185,7 +185,7 @@ if($acesso){
         case "" :
         case "listar" :
             # Exibe quadro de licença prêmio
-            Grh::quadroLicencaPremio($idServidorPesquisado);
+            #Grh::quadroLicencaPremio($idServidorPesquisado);
             
             # Pega os dados para o alerta
             $licenca = new LicencaPremio();

@@ -117,26 +117,34 @@ if($acesso){
         
         # Verifica se é inclusão
         if(is_null($id)){
+            
+            # Zera o array
+            $array = NULL;
            
-            # O sistema exibe somente os dias disponíveis
+            # Conecta o sistema
             $licenca = new LicencaPremio($idServidorPesquisado);
-            $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
             
-            # monta os valores
-            switch ($diasDisponiveis){
-                case ($diasDisponiveis >=90) :
-                    $array = array(90,60,30);
-                    break;
-                case 60 :
-                    $array = array(60,30);
-                    break;
-                case 30 :
-                    $array = array(30);
-                    break;                        
-            } 
+            # Pega a publicação disponível
+            $publicacao = $licenca->get_proximaPublicacaoDisponivel($idServidorPesquisado);
             
-            # O sistema exibe somente a publicação disponível
-            
+            # PEga os dias somente se tiver publicação disponível
+            if(!is_null($publicacao)){
+                # Pega os dias disponíveis
+                $diasDisponiveis = $licenca->get_numDiasDisponiveisPorPublicacao($publicacao[0][0]);
+                
+                # monta os valores
+                switch ($diasDisponiveis){
+                    case ($diasDisponiveis >=90) :
+                        $array = array(90,60,30);
+                        break;
+                    case 60 :
+                        $array = array(60,30);
+                        break;
+                    case 30 :
+                        $array = array(30);
+                        break;                        
+                }   
+            }
         }else{
             $array = array(90,60,30);                   
         }
@@ -146,6 +154,7 @@ if($acesso){
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'required' => TRUE,
+                                       'autofocus' => TRUE,
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data do início.',
@@ -165,7 +174,6 @@ if($acesso){
                                         'size' => 50,
                                         'array' => $publicacao,
                                         'required' => TRUE,
-                                        'autofocus' => TRUE,
                                         'title' => 'Publicação.',
                                         'col' => 3,
                                         'linha' => 1),

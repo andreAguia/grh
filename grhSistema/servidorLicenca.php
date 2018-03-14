@@ -261,7 +261,7 @@ if($acesso){
                                      dtInicial,
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
-                                     tblicenca.processo,
+                                     CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
                                      dtPublicacao,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
@@ -273,7 +273,7 @@ if($acesso){
                                        dtInicial,
                                        tblicencaPremio.numdias,
                                        ADDDATE(dtInicial,tblicencaPremio.numDias-1),
-                                       tblicencaPremio.idServidor,
+                                       CONCAT("6&",tblicencaPremio.idServidor),
                                        tbPublicacaoPremio.dtPublicacao,
                                        idLicencaPremio
                                   FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
@@ -311,7 +311,7 @@ if($acesso){
         $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php'));
+        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
 

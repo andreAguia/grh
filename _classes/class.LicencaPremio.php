@@ -254,5 +254,34 @@ class LicencaPremio{
     
     ###########################################################
 
+    function get_proximaPublicacaoDisponivel($idServidor){
+
+    /**
+     * Informe a primeira publicação de licença prêmio com dias disponíveis
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega as publicações desse servidor
+        $select = 'SELECT idPublicacaoPremio, 
+                          date_format(dtPublicacao,"%d/%m/%Y")
+                     FROM tbpublicacaopremio
+                    WHERE idServidor = '.$idServidor.'
+                 ORDER BY dtPublicacao';
+        
+        $result = $pessoal->select($select);
+        
+        # Percorre cada publicação para ver se tem dias disponíiveis
+        foreach ($result as $publicacao){
+            $dias = $this->get_numDiasDisponiveisPorPublicacao($publicacao[0]);
+            if($dias > 0){
+                return array(array($publicacao[0],$publicacao[1]));
+                break;
+            }
+        }
+    }
+    
+    ###########################################################
+
     
 }

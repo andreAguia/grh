@@ -247,3 +247,39 @@ function textoEscalaFerias(){
 }
 
 ##########################################################
+function exibeProcessoPremio($texto){
+/**
+ * Função que exibe o processo de licença Premio
+ * 
+ * A tabela de licença de um servidor recebe informação de 2
+ * tabelas unidas. Dessa forma foi criado uma codificação para
+ * exibir o processo ora da tabela tbLicenca ora da tbservidor.
+ * Essa função identifica e retorna o processo correto
+ * 
+ */
+    
+    # Divide o texto TIPO&ID
+    $pedaco = explode("&", $texto);
+    
+    if($pedaco[0] == 6){ 
+        ## Licença Prêmio
+        
+        # Inicia a classe
+        $licenca = new LicencaPremio();
+        
+        # Pega o processo 
+        $processo = $licenca->get_numProcesso($pedaco[1]);        
+    }else{
+        ## Outras Licenças
+        
+        # Inicia a classe
+        $pessoal = new Pessoal();
+        
+        # Pega o processo 
+        $processo = $pessoal->get_licencaNumeroProcesso($pedaco[1]);
+    }
+    
+    return $processo;
+}
+
+##########################################################

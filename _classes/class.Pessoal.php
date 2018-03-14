@@ -922,13 +922,40 @@ class Pessoal extends Bd
 
     {
             # valida par�metro
-            if(is_null($idLicenca))
+            if(is_null($idLicenca)){
                 return FALSE;
+            }
 
             # Monta o select
             $select = 'SELECT processo
                          FROM tbtipolicenca
                         WHERE idTpLicenca = '.$idLicenca;
+
+            $row = parent::select($select,FALSE);
+
+            return $row[0];		
+
+    }
+
+    ##########################################################################################
+
+    function get_licencaNumeroProcesso($idLicenca)
+
+
+    # Função que informa o Número do processo de uma licença
+    #
+    # Parâmetro: id do tipo de licença
+
+    {
+            # valida par�metro
+            if(is_null($idLicenca)){
+                return FALSE;
+            }
+
+            # Monta o select
+            $select = 'SELECT processo
+                         FROM tblicenca
+                        WHERE idLicenca = '.$idLicenca;
 
             $row = parent::select($select,FALSE);
 

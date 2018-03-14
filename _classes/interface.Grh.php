@@ -1235,11 +1235,13 @@ class Grh
         $tabela->set_conteudo($result);
         $tabela->set_align($align);
         $tabela->set_label($label);
-        $tabela->set_width($width);
+        #$tabela->set_width($width);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
+        $tabela->set_numeroOrdem(TRUE);
+        $tabela->set_numeroOrdemTipo("d");
 
         $tabela->show();
         

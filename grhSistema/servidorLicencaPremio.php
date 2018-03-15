@@ -51,7 +51,7 @@ if($acesso){
         $objeto->set_rotinaExtraParametro(array($idServidorPesquisado)); 
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-        $objeto->set_nome('Licença Prêmio');
+        $objeto->set_nome($pessoal->get_licencaNome(6));
 
         # botão de voltar da lista
         $objeto->set_voltarLista('servidorLicenca.php');

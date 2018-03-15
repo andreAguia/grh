@@ -43,7 +43,7 @@ if($acesso)
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
     
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Processo de Licença Prêmio');
+    $objeto->set_nome('Processo de '.$pessoal->get_licencaNome(6));
 
     # select do edita
     $selectEdita = 'SELECT processoPremio

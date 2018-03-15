@@ -303,9 +303,14 @@ if($acesso){
 
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
-        $objeto->set_linkExcluir('?fase=excluir');
+        #$objeto->set_linkExcluir('?fase=excluir');
         $objeto->set_linkGravar('?fase=gravar');
         $objeto->set_linkListar('?fase=listar');
+        $objeto->set_botaoEditar(FALSE);
+        
+        $licenca = new LicencaPremio();
+        $objeto->set_editarCondicional('?fase=editar',$licenca->get_numProcesso($idServidorPesquisado),6,"<>");
+        $objeto->set_excluirCondicional('?fase=excluir',$licenca->get_numProcesso($idServidorPesquisado),6,"<>");
 
         # Parametros da tabela
         $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
@@ -330,6 +335,7 @@ if($acesso){
         # Pega os dados da combo licenca
         $result = $pessoal->select('SELECT idTpLicenca,CONCAT(nome,IFNULL(concat(" (",lei,")"),""))
                                       FROM tbtipolicenca
+                                     WHERE idTpLicenca <> 6
                                   ORDER BY nome');
         array_unshift($result, array('Inicial',' -- Selecione o Tipo de Licença --')); # Adiciona o valor de nulo
         
@@ -448,7 +454,7 @@ if($acesso){
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
         # Publicação de Licença Prêmio
-        $botaoPremio = new Button("Licença Prêmio");
+        $botaoPremio = new Button($pessoal->get_licencaNome(6));
         $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
         $botaoPremio->set_url('servidorLicencaPremio.php');  
         $botaoPremio->set_accessKey('L');

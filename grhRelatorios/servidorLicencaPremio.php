@@ -26,7 +26,7 @@ if($acesso){
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Relatório de Licenças Prêmio');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Relatório de '.$pessoal->get_licencaNome(6));
     
     br(); 
     

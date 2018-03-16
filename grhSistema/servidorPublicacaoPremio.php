@@ -56,8 +56,7 @@ if($acesso){
     $objeto->set_selectLista ('SELECT dtPublicacao,
                                       pgPublicacao,
                                       dtInicioPeriodo,
-                                      dtFimPeriodo,                                  
-                                      processo,
+                                      dtFimPeriodo,
                                       numDias,
                                       idPublicacaoPremio,
                                       idPublicacaoPremio,
@@ -69,7 +68,6 @@ if($acesso){
     # select do edita
     $objeto->set_selectEdita('SELECT dtPublicacao,
                                      pgPublicacao,
-                                     processo,
                                      dtInicioPeriodo,
                                      dtFimPeriodo,
                                      numDias,
@@ -85,12 +83,12 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis"));
-    $objeto->set_width(array(15,5,15,15,15,10,10,10));
+    $objeto->set_label(array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis"));
+    #$objeto->set_width(array(15,5,15,15,15,10,10,10));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao'));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao'));
     $objeto->set_exibeTempoPesquisa(FALSE);
 
     # Classe do banco de dados
@@ -124,15 +122,6 @@ if($acesso){
                                 'col' => 2,
                                 'size' => 5,                         
                                 'title' => 'A Página do DOERJ',
-                                'linha' => 1),
-                        array ( 'nome' => 'processo',
-                                'label' => 'Processo:',
-                                'tipo' => 'texto',
-                                'padrao' => $licenca->get_numProcesso($idServidorPesquisado),
-                                'size' => 30,
-                                'col' => 4,
-                                'required' => TRUE,
-                                'title' => 'Número do Processo',
                                 'linha' => 1),
                         array ( 'nome' => 'dtInicioPeriodo',
                                 'label' => 'Período Aquisitivo Início:',

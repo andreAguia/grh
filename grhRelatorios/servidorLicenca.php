@@ -31,35 +31,35 @@ if($acesso)
     
     br();
     $select = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
-                    CASE tipo
-                       WHEN 1 THEN "Inicial"
-                       WHEN 2 THEN "Prorrogação"
-                       end,
-                    CASE alta
-                       WHEN 1 THEN "Sim"
-                       WHEN 2 THEN "Não"
-                       end,
-                    dtInicial,
-                    numdias,
-                    ADDDATE(dtInicial,numDias-1),
-                    tblicenca.processo,
-                    dtPublicacao,
-                    idLicenca
-               FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-              WHERE idServidor='.$idServidorPesquisado.')
-              UNION
-              (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                      "",
-                      "",
-                      dtInicial,
-                      tblicencaPremio.numdias,
-                      ADDDATE(dtInicial,tblicencaPremio.numDias-1),
-                      tblicencaPremio.idServidor,
-                      tbPublicacaoPremio.dtPublicacao,
-                      idLicencaPremio
-                 FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
-                WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.')
-             ORDER BY 4 desc';
+                        CASE tipo
+                           WHEN 1 THEN "Inicial"
+                           WHEN 2 THEN "Prorrogação"
+                           end,
+                        CASE alta
+                           WHEN 1 THEN "Sim"
+                           WHEN 2 THEN "Não"
+                           end,
+                        dtInicial,
+                        numdias,
+                        ADDDATE(dtInicial,numDias-1),
+                        CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
+                        dtPublicacao,
+                        idLicenca
+                   FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                  WHERE idServidor='.$idServidorPesquisado.')
+                  UNION
+                  (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                          "",
+                          "",
+                          dtInicial,
+                          tblicencaPremio.numdias,
+                          ADDDATE(dtInicial,tblicencaPremio.numDias-1),
+                          CONCAT("6&",tblicencaPremio.idServidor),
+                          tbPublicacaoPremio.dtPublicacao,
+                          idLicencaPremio
+                     FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
+                    WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.')
+                 ORDER BY 4 desc';
 
     $result = $pessoal->select($select);
 
@@ -74,7 +74,7 @@ if($acesso)
     $relatorio->set_label(array("Licença","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação","Pag."));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php',NULL,'date_to_php'));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

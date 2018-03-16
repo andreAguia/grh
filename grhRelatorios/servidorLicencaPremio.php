@@ -58,15 +58,7 @@ if($acesso){
     $relatorio->show();
     
     br();
-    ###### Licenças Prêmio
-
-    $select = "SELECT dtInicial,
-                      numdias,
-                      ADDDATE(dtInicial,numDias-1),
-                      idLicencaPremio
-                 FROM tblicencaPremio 
-                WHERE idServidor = $idServidorPesquisado
-             ORDER BY dtInicial desc";
+    ###### Licenças Prêmio Fruídas
     
     $select = 'SELECT dtInicial,
                       tblicencaPremio.numdias,
@@ -95,8 +87,8 @@ if($acesso){
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php',NULL,'date_to_php','date_to_php'));
-    $relatorio->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
+    #$relatorio->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
+    #$relatorio->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

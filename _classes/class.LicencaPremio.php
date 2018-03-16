@@ -139,8 +139,8 @@ class LicencaPremio{
         
         # Pega array com os dias publicados
         $select = 'SELECT idPublicacaoPremio
-                     FROM tblicenca
-                    WHERE idLicenca = '.$idLicencaPremio;
+                     FROM tblicencaPremio
+                    WHERE idLicencaPremio = '.$idLicencaPremio;
         
         $retorno = $pessoal->select($select,FALSE);
         

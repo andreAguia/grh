@@ -3015,24 +3015,6 @@ class Pessoal extends Bd
 	###########################################################
 	
 	/**
-	 * Método get_arquivoGaveta
-	 * 
-	 * Informa o Arquivo e gaveta, físicos, onde se encontra a pasta do servidor
-	 */
-	
-	public function get_arquivoGaveta($idServidor)
-	{
-            $select = 'SELECT arquivo,gaveta                             
-                         FROM tbservidor
-                        WHERE idservidor = '.$idServidor;
-           
-             $row = parent::select($select,FALSE);
-             return $row[0].$row[1];
-	}
-
-	###########################################################
-	
-	/**
 	 * Método get_nomeSituacao
 	 * 
 	 * Informa o nome de um idsituacao

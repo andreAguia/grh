@@ -3462,6 +3462,31 @@ class Pessoal extends Bd
             return $result[0];
         }
 
-        ###########################################################
+        ##########################################################################################
+
+        function get_licencaLei($idTipoLicenca)
+
+
+        # Função que informa o nome do tipo de licença
+        #
+        # Parâmetro: id do tipo de licença
+
+        {
+                # valida par�metro
+                if(is_null($idTipoLicenca))
+                    return FALSE;
+
+                # Monta o select		
+                $select = 'SELECT lei
+                             FROM tbtipolicenca
+                            WHERE idTpLicenca = '.$idTipoLicenca;
+
+                $row = parent::select($select,FALSE);
+
+                return $row[0];		
+
+        }
+
+    ##########################################################################################
 	
 }

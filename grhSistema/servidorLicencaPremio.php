@@ -54,7 +54,7 @@ if($acesso){
         $objeto->set_nome($pessoal->get_licencaNome(6));
 
         # botão de voltar da lista
-        $objeto->set_voltarLista('servidorLicenca.php');
+        $objeto->set_voltarLista('servidorMenu.php');
 
         # select da lista
         $objeto->set_selectLista('SELECT dtInicial,
@@ -216,17 +216,26 @@ if($acesso){
                 $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
+                $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
+                $nome = $pessoal->get_licencaNome(6);
 
                 # Exibe alerta se $diasDisponíveis for negativo
                 if($diasDisponiveis < 0){                    
-                    $mensagem1 = "Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
+                    $mensagem1 = "Servidor tem mais dias fruídos de $nome do que publicados.";
                     $objeto->set_rotinaExtraListar("callout");
                     $objeto->set_rotinaExtraListarParametro($mensagem1);
                     $objeto->set_botaoIncluir(FALSE);
                 }
 
                 if($diasDisponiveis == 0){
-                    $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma licença prêmio.";
+                    $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma $nome.";
+                    $objeto->set_rotinaExtraListar("callout");
+                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                    $objeto->set_botaoIncluir(FALSE);
+                }  
+                
+                if(is_null($numProcesso)){
+                    $mensagem1 = "Servidor sem número de processo de $nome cadastrado.";
                     $objeto->set_rotinaExtraListar("callout");
                     $objeto->set_rotinaExtraListarParametro($mensagem1);
                     $objeto->set_botaoIncluir(FALSE);

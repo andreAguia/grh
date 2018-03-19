@@ -36,6 +36,7 @@ if($acesso){
     $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
     $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
     $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
+    $nome = $pessoal->get_licencaNome(6);
     
     $tabela = array(array($numProcesso,$diasPublicados,$diasFruidos,$diasDisponiveis));
     
@@ -93,7 +94,7 @@ if($acesso){
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Licenças Prêmio");
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de $nome");
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
     
@@ -102,8 +103,7 @@ if($acesso){
     $select = "SELECT dtPublicacao,
                     pgPublicacao,
                     dtInicioPeriodo,
-                    dtFimPeriodo,                                  
-                    processo,
+                    dtFimPeriodo,
                     numDias,
                     idPublicacaoPremio,
                     idPublicacaoPremio,
@@ -121,14 +121,14 @@ if($acesso){
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_subtitulo("Publicações");
     
-    $relatorio->set_label(array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Processo","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis"));
+    $relatorio->set_label(array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis"));
     #$relatorio->set_width(array(15,5,15,15,15,10,10,10));
     $relatorio->set_align(array("center"));
     $relatorio->set_numeroOrdem(TRUE);
     $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php'));
-    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao'));
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio'));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao'));
     
     #$relatorio->set_dataImpressao(FALSE);
     $relatorio->set_conteudo($result);

@@ -308,9 +308,18 @@ if($acesso){
         $objeto->set_linkListar('?fase=listar');
         $objeto->set_botaoEditar(FALSE);
         
+        # Cria uma string para usar na comparação 
+        # do editar e excluir condicional de forma 
+        # permitir edição somente das licenças que 
+        # não forem licença premio.
+        $nome = $pessoal->get_licencaNome(6);
+        $lei = $pessoal->get_licencaLei(6);
+        $stringComparacao = $nome."<br/>".$lei;
+        
+        # Editar e excluir condicional
         $licenca = new LicencaPremio();
-        $objeto->set_editarCondicional('?fase=editar',$licenca->get_numProcesso($idServidorPesquisado),6,"<>");
-        $objeto->set_excluirCondicional('?fase=excluir',$licenca->get_numProcesso($idServidorPesquisado),6,"<>");
+        $objeto->set_editarCondicional('?fase=editar',$stringComparacao,0,"<>");
+        $objeto->set_excluirCondicional('?fase=excluir',$stringComparacao,0,"<>");
 
         # Parametros da tabela
         $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));

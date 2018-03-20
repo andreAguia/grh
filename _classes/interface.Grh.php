@@ -1256,6 +1256,11 @@ class Grh
         $tabela->set_metodo($metodo);
         $tabela->set_numeroOrdem(TRUE);
         $tabela->set_numeroOrdemTipo("d");
+        
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 1,
+                                                       'valor' => "27",
+                                                       'operador' => '=',
+                                                       'id' => 'alerta')));
 
         $tabela->show();
         

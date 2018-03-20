@@ -109,45 +109,11 @@ if($acesso){
         
         # Pega os dados da combo licenca
         $publicacao = $pessoal->select('SELECT idPublicacaoPremio, 
-                                               date_format(dtPublicacao,"%d/%m/%Y")
+                                               CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
                                       FROM tbPublicacaoPremio
                                       WHERE idServidor = '.$idServidorPesquisado.' 
-                                  ORDER BY dtPublicacao desc');
+                                  ORDER BY dtInicioPeriodo desc');
         array_unshift($publicacao, array(NULL,' -- Selecione uma Publicação')); # Adiciona o valor de nulo
-        
-        # Verifica se é inclusão
-        if(is_null($id)){
-            
-            # Zera o array
-            $array = NULL;
-           
-            # Conecta o sistema
-            $licenca = new LicencaPremio($idServidorPesquisado);
-            
-            # Pega a publicação disponível
-            $publicacao = $licenca->get_proximaPublicacaoDisponivel($idServidorPesquisado);
-            
-            # PEga os dias somente se tiver publicação disponível
-            if(!is_null($publicacao)){
-                # Pega os dias disponíveis
-                $diasDisponiveis = $licenca->get_numDiasDisponiveisPorPublicacao($publicacao[0][0]);
-                
-                # monta os valores
-                switch ($diasDisponiveis){
-                    case ($diasDisponiveis >=90) :
-                        $array = array(90,60,30);
-                        break;
-                    case 60 :
-                        $array = array(60,30);
-                        break;
-                    case 30 :
-                        $array = array(30);
-                        break;                        
-                }   
-            }
-        }else{
-            $array = array(90,60,30);                   
-        }
         
         # Campos para o formulario
         $objeto->set_campos(array(array('nome' => 'dtInicial',
@@ -162,7 +128,7 @@ if($acesso){
                                 array( 'nome' => 'numDias',
                                        'label' => 'Dias:',
                                        'tipo' => 'combo',
-                                       'array' => $array,          
+                                       'array' => $array = array(90,60,30),        
                                        'size' => 5,
                                        'required' => TRUE,
                                        'title' => 'Número de dias.',
@@ -175,7 +141,7 @@ if($acesso){
                                         'array' => $publicacao,
                                         'required' => TRUE,
                                         'title' => 'Publicação.',
-                                        'col' => 3,
+                                        'col' => 5,
                                         'linha' => 1),
                                 array ('linha' => 3,
                                        'nome' => 'obs',

@@ -63,7 +63,7 @@ if($acesso){
                                       idPublicacaoPremio
                                  FROM tbpublicacaopremio
                                  WHERE idServidor = '.$idServidorPesquisado.'
-                             ORDER BY dtPublicacao desc');
+                             ORDER BY dtInicioPeriodo desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtPublicacao,

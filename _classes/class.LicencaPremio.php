@@ -267,7 +267,7 @@ class LicencaPremio{
                           date_format(dtPublicacao,"%d/%m/%Y")
                      FROM tbpublicacaopremio
                     WHERE idServidor = '.$idServidor.'
-                 ORDER BY dtPublicacao';
+                 ORDER BY dtInicioPeriodo';
         
         $result = $pessoal->select($select);
         

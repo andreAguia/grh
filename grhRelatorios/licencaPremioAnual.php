@@ -33,9 +33,14 @@ if($acesso)
                       tblicencaPremio.dtInicial,
                       tblicencaPremio.numDias,
                       ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1),
+                      tbservidor.processoPremio,
+                      tbPublicacaoPremio.dtPublicacao,
+                      tbPublicacaoPremio.dtInicioPeriodo,
+                      tbPublicacaoPremio.dtFimPeriodo,
                       MONTH(tblicencaPremio.dtInicial)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tblicencaPremio USING (idServidor)
+                                 LEFT JOIN tbpublicacaoPremio USING (idPublicacaoPremio)
                 WHERE tbservidor.situacao = 1
                   AND YEAR(tblicencaPremio.dtInicial) = '.$relatorioAno.'   
              ORDER BY 5';
@@ -43,18 +48,18 @@ if($acesso)
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Licença Premio');
+    $relatorio->set_titulo('Relatório Anual de '.$pessoal->get_licencaNome(6));
     $relatorio->set_subtitulo("Servidores com a Data Inicial da Licença em ".$relatorioAno);
     #$relatorio->set_tituloLinha3($relatorioAno);
     #$relatorio->set_subtitulo('Ordem de Data Inicial da Licença');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Mês'));
-    $relatorio->set_width(array(15,40,15,5,15,0));
+    $relatorio->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Poocesso','Publicação','Início do Período','Fim do Período','Mês'));
+    #$relatorio->set_width(array(15,40,15,5,15,0));
     $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php","get_nomeMes"));
+    $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php",NULL,"date_to_php","date_to_php","date_to_php","get_nomeMes"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(5);
+    $relatorio->set_numGrupo(9);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'ano',

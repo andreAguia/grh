@@ -43,12 +43,11 @@ if($acesso)
                                   LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
                   AND MONTH(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioMes.'
-                  AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioAno.'   
-             ORDER BY 7)
+                  AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioAno.')
              UNION (SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                      (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                       tblicencaPremio.dtInicial,
                       tblicencaPremio.numDias,
                       ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)
@@ -57,8 +56,8 @@ if($acesso)
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
                   AND MONTH(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioMes.'
-                  AND YEAR(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioAno.'   
-             ORDER BY 7) ORDER BY 7';
+                  AND YEAR(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioAno.')  
+                  ORDER BY 7';
 
     $result = $pessoal->select($select);
 

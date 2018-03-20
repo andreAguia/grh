@@ -51,7 +51,7 @@ if($acesso)
              (SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      tbperfil.nome,
-                     CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                     (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                      tblicencaPremio.dtInicial,
                      tblicencaPremio.numDias,
                      ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)

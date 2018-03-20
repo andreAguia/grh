@@ -447,8 +447,8 @@ class Grh
             $botao->set_accessKey('o');
             $menu->add_item($botao);
 
-            $pessoa = new Pessoal();
-            $perfil = $pessoa->get_idPerfil($idServidor);
+            $pessoal = new Pessoal();
+            $perfil = $pessoal->get_idPerfil($idServidor);
 
             if ($perfil == 1)   // Ser for estatutário
             {
@@ -471,7 +471,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoa->get_perfilComissao($perfil) == "Sim")
+            if($pessoal->get_perfilComissao($perfil) == "Sim")
             {
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cargo em Comissão');
@@ -578,7 +578,7 @@ class Grh
             br();
 
             $menu = new MenuGrafico(3);
-            if($pessoa->get_perfilFerias($perfil) == "Sim"){
+            if($pessoal->get_perfilFerias($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Férias');
                 $botao->set_url('servidorFerias.php');
@@ -588,7 +588,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoa->get_perfilLicenca($perfil) == "Sim"){
+            if($pessoal->get_perfilLicenca($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Licenças e Afastamentos');
                 $botao->set_url('servidorLicenca.php');
@@ -598,7 +598,7 @@ class Grh
                 $menu->add_item($botao);
                 
                 $botao = new BotaoGrafico();
-                $botao->set_label('Licença Prêmio');
+                $botao->set_label($pessoal->get_licencaNome(6));
                 $botao->set_url('servidorLicencaPremio.php');
                 $botao->set_image(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Licenças Prêmio do Servidor');
@@ -648,7 +648,7 @@ class Grh
             br();
 
             $menu = new MenuGrafico(3);
-            if($pessoa->get_perfilProgressao($perfil) == "Sim")
+            if($pessoal->get_perfilProgressao($perfil) == "Sim")
             {
                 $botao = new BotaoGrafico();
                 $botao->set_label('Progressão e Enquadramento');
@@ -659,7 +659,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoa->get_perfilTrienio($perfil) == "Sim")
+            if($pessoal->get_perfilTrienio($perfil) == "Sim")
             {
                 $botao = new BotaoGrafico();
                 $botao->set_label('Triênio');
@@ -670,7 +670,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoa->get_perfilGratificacao($perfil) == "Sim")
+            if($pessoal->get_perfilGratificacao($perfil) == "Sim")
             {
                 $botao = new BotaoGrafico();
                 $botao->set_label('Gratificação Especial');
@@ -817,6 +817,7 @@ class Grh
         # Pega as situações
         $ferias = $pessoal->emFerias($idservidor);
         $licenca = $pessoal->emLicenca($idservidor);
+        $licencaPremio = $pessoal->emLicencaPremio($idservidor);
         $situacao = $pessoal->get_idSituacao($idservidor);
         $folgaTre = $pessoal->emFolgaTre($idservidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
@@ -830,6 +831,11 @@ class Grh
         # Licenca
         if($licenca){
             $mensagem[] = 'Servidor em licença '.$pessoal->get_licenca($idservidor);
+        }
+        
+        # Licenca Prêmio
+        if($licencaPremio){
+            $mensagem[] = 'Servidor em '.$pessoal->get_licencaNome(6);
         }
 
         # Situação
@@ -1224,7 +1230,7 @@ class Grh
                         idPublicacaoPremio
                    FROM tbpublicacaopremio
                    WHERE idServidor = '.$idServidor.'
-               ORDER BY dtPublicacao desc';
+               ORDER BY dtInicioPeriodo desc';
 
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);

@@ -821,7 +821,7 @@ class Pessoal extends Bd
     function emLicenca($idServidor)
 
 
-    # Função que informa se a idServidor est� em licanca na data atual
+    # Função que informa se a idServidor está em licanca na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
 
@@ -829,6 +829,30 @@ class Pessoal extends Bd
         # Monta o select
         $select = "SELECT idLicenca 
                      FROM tblicenca
+                    WHERE idServidor = '$idServidor'
+                      AND current_date() >= dtInicial 
+                      AND current_date() <= ADDDATE(dtInicial,numDias-1)";
+
+        $row = parent::select($select,FALSE);
+
+        if (is_null($row[0]))
+            return 0;
+        else 
+            return 1;
+    }
+    
+    ##########################################################################################
+
+    function emLicencaPremio($idServidor){
+
+
+    # Função que informa se a idServidor está em licanca Prêmio na data atual
+    #
+    # Parâmetro: a matrícula a ser pesquisada
+    
+        # Monta o select
+        $select = "SELECT idLicencaPremio 
+                     FROM tblicencaPremio
                     WHERE idServidor = '$idServidor'
                       AND current_date() >= dtInicial 
                       AND current_date() <= ADDDATE(dtInicial,numDias-1)";

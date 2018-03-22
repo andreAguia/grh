@@ -79,6 +79,7 @@ if($acesso)
                                  FROM tbclasse JOIN tbplano USING (idPlano)
                                 WHERE nivel LIKE "%'.$parametro.'%"
                                    OR idClasse LIKE "%'.$parametro.'%"
+                                   OR tbplano.numDecreto LIKE "%'.$parametro.'%"   
                              ORDER BY tbplano.planoAtual desc,tbplano.numDecreto desc, nivel desc, faixa asc');
 
     # select do edita
@@ -101,7 +102,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("id","Plano","Nível","Faixa","Valor","Status"));
-    #$objeto->set_width(array(5,20,20,20,20,8));
+    $objeto->set_width(array(5,30,20,10,10,10));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(NULL,NULL,NULL,NULL,"formataMoeda"));
 

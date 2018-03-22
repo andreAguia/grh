@@ -54,7 +54,7 @@ if($idTpLicenca == "Inicial"){
     }
     
     # Apaga a perícia quando não precisa
-    if($pessoal->get_licencaPublicacao($idTpLicenca) == "Não"){
+    if($pessoal->get_licencaPericia($idTpLicenca) == "Não"){
         $campoValor[10] = NULL;
         $campoValor[11] = NULL;
     }

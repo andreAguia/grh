@@ -30,7 +30,7 @@ if($acesso)
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Licenças');
     
     br();
-    $select = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+    $select = '(SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
                         CASE tipo
                            WHEN 1 THEN "Inicial"
                            WHEN 2 THEN "Prorrogação"
@@ -48,7 +48,7 @@ if($acesso)
                    FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                   WHERE idServidor='.$idServidorPesquisado.')
                   UNION
-                  (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                  (SELECT (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                           "",
                           "",
                           dtInicial,

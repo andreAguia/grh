@@ -34,7 +34,7 @@ if($acesso)
     $select = '(SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                      CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
@@ -51,7 +51,7 @@ if($acesso)
              (SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      tbperfil.nome,
-                     (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                     (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                      tblicencaPremio.dtInicial,
                      tblicencaPremio.numDias,
                      ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)

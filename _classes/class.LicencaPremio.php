@@ -28,7 +28,7 @@ class LicencaPremio{
         
         # Pega quantos dias foram fruídos
         $select = 'SELECT SUM(numDias) 
-                     FROM tblicencaPremio 
+                     FROM tblicencapremio 
                     WHERE idServidor = '.$idServidor;
 
         # Conecta ao Banco de Dados
@@ -117,7 +117,7 @@ class LicencaPremio{
         
         # Pega array com os dias publicados
         $select = 'SELECT idServidor
-                     FROM tblicencaPremio 
+                     FROM tblicencapremio 
                     WHERE idLicencaPremio = '.$idLicencaPremio;
         
        $row = $pessoal->select($select,FALSE);
@@ -139,7 +139,7 @@ class LicencaPremio{
         
         # Pega array com os dias publicados
         $select = 'SELECT idPublicacaoPremio
-                     FROM tblicencaPremio
+                     FROM tblicencapremio
                     WHERE idLicencaPremio = '.$idLicencaPremio;
         
         $retorno = $pessoal->select($select,FALSE);
@@ -184,7 +184,7 @@ class LicencaPremio{
         
         #  Pega quantos dias foram fruídos
         $select = 'SELECT SUM(numDias) 
-                     FROM tblicencaPremio 
+                     FROM tblicencapremio 
                     WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
                         
         $fruidos = $pessoal->select($select,FALSE);

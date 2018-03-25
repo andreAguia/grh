@@ -18,6 +18,9 @@ $acesso = Verifica::acesso($idUsuario,2);
 if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    
+    # Inicia a classe de licença
+    $licenca = new LicencaPremio();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -58,15 +61,15 @@ if($acesso){
 
         # select da lista
         $objeto->set_selectLista('SELECT dtInicial,
-                                         tblicencaPremio.numdias,
-                                         ADDDATE(dtInicial,tblicencaPremio.numDias-1),
-                                         tbPublicacaoPremio.dtPublicacao,
-                                         tbPublicacaoPremio.pgPublicacao,
-                                         tbPublicacaoPremio.dtInicioPeriodo,
-                                         tbPublicacaoPremio.dtFimPeriodo,
+                                         tblicencapremio.numdias,
+                                         ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                                         tbpublicacaopremio.dtPublicacao,
+                                         tbpublicacaopremio.pgPublicacao,
+                                         tbpublicacaopremio.dtInicioPeriodo,
+                                         tbpublicacaopremio.dtFimPeriodo,
                                          idLicencaPremio
-                                    FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
-                                   WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.'
+                                    FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                                   WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.'
                                 ORDER BY dtInicial desc');        
         
         # select do edita
@@ -75,7 +78,7 @@ if($acesso){
                                          idPublicacaoPremio,
                                          obs,
                                          idServidor
-                                    FROM tblicencaPremio
+                                    FROM tblicencapremio
                                    WHERE idLicencaPremio = '.$id);
         
         # Caminhos
@@ -99,7 +102,7 @@ if($acesso){
         $objeto->set_classBd('pessoal');
 
         # Nome da tabela
-        $objeto->set_tabela('tblicencaPremio');
+        $objeto->set_tabela('tblicencapremio');
 
         # Nome do campo id
         $objeto->set_idCampo('idLicencaPremio');
@@ -110,9 +113,10 @@ if($acesso){
         # Pega os dados da combo licenca
         $publicacao = $pessoal->select('SELECT idPublicacaoPremio, 
                                                CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
-                                      FROM tbPublicacaoPremio
-                                      WHERE idServidor = '.$idServidorPesquisado.' 
-                                  ORDER BY dtInicioPeriodo desc');
+                                          FROM tbpublicacaopremio
+                                         WHERE idServidor = '.$idServidorPesquisado.' 
+                                      ORDER BY dtInicioPeriodo desc');
+        
         array_unshift($publicacao, array(NULL,' -- Selecione uma Publicação')); # Adiciona o valor de nulo
         
         # Campos para o formulario
@@ -178,7 +182,6 @@ if($acesso){
                 #Grh::quadroLicencaPremio($idServidorPesquisado);
 
                 # Pega os dados para o alerta
-                $licenca = new LicencaPremio();
                 $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);

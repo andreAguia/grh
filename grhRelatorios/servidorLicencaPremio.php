@@ -62,15 +62,15 @@ if($acesso){
     ###### Licenças Prêmio Fruídas
     
     $select = 'SELECT dtInicial,
-                      tblicencaPremio.numdias,
-                      ADDDATE(dtInicial,tblicencaPremio.numDias-1),
-                      tbPublicacaoPremio.dtPublicacao,
-                      tbPublicacaoPremio.pgPublicacao,
-                      tbPublicacaoPremio.dtInicioPeriodo,
-                      tbPublicacaoPremio.dtFimPeriodo,
+                      tblicencapremio.numdias,
+                      ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                      tbpublicacaopremio.dtPublicacao,
+                      tbpublicacaopremio.pgPublicacao,
+                      tbpublicacaopremio.dtInicioPeriodo,
+                      tbpublicacaopremio.dtFimPeriodo,
                       idLicencaPremio
-                 FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
-                WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.'
+                 FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.'
              ORDER BY dtInicial desc';
 
     $result = $pessoal->select($select);

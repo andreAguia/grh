@@ -48,15 +48,15 @@ if($acesso)
                       tbpessoa.nome,
                       tbperfil.nome,
                       (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                      tblicencaPremio.dtInicial,
-                      tblicencaPremio.numDias,
-                      ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)
+                      tblicencapremio.dtInicial,
+                      tblicencapremio.numDias,
+                      ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)
                  FROM tbtipolicenca, tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                 LEFT JOIN tblicencaPremio USING (idServidor)
+                                 LEFT JOIN tblicencapremio USING (idServidor)
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
-                  AND MONTH(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioMes.'
-                  AND YEAR(ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)) = '.$relatorioAno.')  
+                  AND MONTH(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = '.$relatorioMes.'
+                  AND YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = '.$relatorioAno.')  
                   ORDER BY 7';
 
     $result = $pessoal->select($select);

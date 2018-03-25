@@ -52,17 +52,17 @@ if($acesso)
                      tbpessoa.nome,
                      tbperfil.nome,
                      (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                     tblicencaPremio.dtInicial,
-                     tblicencaPremio.numDias,
-                     ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)
+                     tblicencapremio.dtInicial,
+                     tblicencapremio.numDias,
+                     ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)
                 FROM tbTipoLicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                LEFT JOIN tblicencaPremio USING (idServidor)
+                                LEFT JOIN tblicencapremio USING (idServidor)
                                 LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
-                  AND (("'.$data.'" BETWEEN tblicencaPremio.dtInicial AND ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1))
-                   OR  (LAST_DAY("'.$data.'") BETWEEN tblicencaPremio.dtInicial AND ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1))
-                   OR  ("'.$data.'" < tblicencaPremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1)))
-             ORDER BY tblicencaPremio.dtInicial) ORDER BY 5';
+                  AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                   OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                   OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))
+             ORDER BY tblicencapremio.dtInicial) ORDER BY 5';
 
     $result = $pessoal->select($select);
 

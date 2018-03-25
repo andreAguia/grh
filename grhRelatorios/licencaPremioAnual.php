@@ -30,19 +30,19 @@ if($acesso)
     
     $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
-                      tblicencaPremio.dtInicial,
-                      tblicencaPremio.numDias,
-                      ADDDATE(tblicencaPremio.dtInicial,tblicencaPremio.numDias-1),
+                      tblicencapremio.dtInicial,
+                      tblicencapremio.numDias,
+                      ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
                       tbservidor.processoPremio,
-                      tbPublicacaoPremio.dtPublicacao,
-                      tbPublicacaoPremio.dtInicioPeriodo,
-                      tbPublicacaoPremio.dtFimPeriodo,
-                      MONTH(tblicencaPremio.dtInicial)
+                      tbpublicacaopremio.dtPublicacao,
+                      tbpublicacaopremio.dtInicioPeriodo,
+                      tbpublicacaopremio.dtFimPeriodo,
+                      MONTH(tblicencapremio.dtInicial)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                 LEFT JOIN tblicencaPremio USING (idServidor)
+                                 LEFT JOIN tblicencapremio USING (idServidor)
                                  LEFT JOIN tbpublicacaoPremio USING (idPublicacaoPremio)
                 WHERE tbservidor.situacao = 1
-                  AND YEAR(tblicencaPremio.dtInicial) = '.$relatorioAno.'   
+                  AND YEAR(tblicencapremio.dtInicial) = '.$relatorioAno.'   
              ORDER BY 5';
 
     $result = $pessoal->select($select);

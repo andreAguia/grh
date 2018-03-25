@@ -52,13 +52,13 @@ if($acesso)
                           "",
                           "",
                           dtInicial,
-                          tblicencaPremio.numdias,
-                          ADDDATE(dtInicial,tblicencaPremio.numDias-1),
-                          CONCAT("6&",tblicencaPremio.idServidor),
-                          tbPublicacaoPremio.dtPublicacao,
+                          tblicencapremio.numdias,
+                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          CONCAT("6&",tblicencapremio.idServidor),
+                          tbpublicacaopremio.dtPublicacao,
                           idLicencaPremio
-                     FROM tblicencaPremio LEFT JOIN tbPublicacaoPremio USING (idPublicacaoPremio)
-                    WHERE tblicencaPremio.idServidor = '.$idServidorPesquisado.')
+                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                    WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
                  ORDER BY 4 desc';
 
     $result = $pessoal->select($select);

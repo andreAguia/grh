@@ -852,7 +852,7 @@ class Pessoal extends Bd
     
         # Monta o select
         $select = "SELECT idLicencaPremio 
-                     FROM tblicencaPremio
+                     FROM tblicencapremio
                     WHERE idServidor = '$idServidor'
                       AND current_date() >= dtInicial 
                       AND current_date() <= ADDDATE(dtInicial,numDias-1)";

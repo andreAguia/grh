@@ -71,11 +71,13 @@ if($acesso)
     $objeto->set_parametroValue($parametro);
 
     # ordenaç?o
-    if(is_null($orderCampo))
-            $orderCampo = "1";
+    if(is_null($orderCampo)){
+        $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
+    if(is_null($orderTipo)){
+        $orderTipo = 'asc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT idmotivo,

@@ -139,6 +139,8 @@ if($acesso)
             $menu->add_item('linkWindow','Relatório de Cargos - Agrupados por Nível','../grhRelatorios/cargoNivel.php');
             $menu->add_item('linkWindow','Relatório de Estatutários - Por Cargo','../grhRelatorios/cargoEstatutarios.php');
             $menu->add_item('linkWindow','Relatório de Estatutários Administrativos e Técnicos por Lotação','../grhRelatorios/admTecporLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários Administrativos e Técnicos por Sexo','../grhRelatorios/admTecporSexo.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários Administrativos e Técnicos por Escolaridade do Cargo','../grhRelatorios/admTecporEscolaridadeCargo.php');
             $menu->add_item('linkWindow','Relatório de Professores por Lotação','../grhRelatorios/professorporLotacao.php');
             
             $menu->show();

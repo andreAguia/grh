@@ -280,4 +280,36 @@ class LicencaPremio{
             }
         }
     }
+    
+    ###########################################################
+
+    function get_publicacaoComDisponivelNegativo($idServidor){
+
+    /**
+     * Informe se o servidor tem alguma publicação com mais dias fruídos que publicados
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega as publicações desse servidor
+        $select = 'SELECT idPublicacaoPremio
+                     FROM tbpublicacaopremio
+                    WHERE idServidor = '.$idServidor.'
+                 ORDER BY dtInicioPeriodo';
+        
+        $result = $pessoal->select($select);
+        
+        # Percorre cada publicação para ver se tem dias disponíiveis
+        foreach ($result as $publicacao){
+            $dias = $this->get_numDiasDisponiveisPorPublicacao($publicacao[0]);
+            if($dias < 0){
+                # Retorna TRUE, ou seja, com problemas
+                return TRUE;
+                break;
+            }
+        }
+        
+        # Retorna FALSE, ou seja sem problemas
+        return FALSE;
+    }
 }

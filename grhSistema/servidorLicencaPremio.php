@@ -186,9 +186,10 @@ if($acesso){
                 $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
+                $problemaDisponivel = $licenca->get_publicacaoComDisponivelNegativo($idServidorPesquisado);
                 $nome = $pessoal->get_licencaNome(6);
 
-                # Exibe alerta se $diasDisponíveis for negativo
+                # Exibe alerta se $diasDisponíveis for negativo no geral
                 if($diasDisponiveis < 0){                    
                     $mensagem1 = "Servidor tem mais dias fruídos de $nome do que publicados.";
                     $objeto->set_rotinaExtraListar("callout");
@@ -196,19 +197,28 @@ if($acesso){
                     $objeto->set_botaoIncluir(FALSE);
                 }
 
-                if($diasDisponiveis == 0){
+                # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
+                if($diasDisponiveis < 1){
                     $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma $nome.";
                     $objeto->set_rotinaExtraListar("callout");
                     $objeto->set_rotinaExtraListarParametro($mensagem1);
                     $objeto->set_botaoIncluir(FALSE);
                 }  
                 
+                # Servidor sem processo cadastrado
                 if(is_null($numProcesso)){
                     $mensagem1 = "Servidor sem número de processo de $nome cadastrado.";
                     $objeto->set_rotinaExtraListar("callout");
                     $objeto->set_rotinaExtraListarParametro($mensagem1);
                     $objeto->set_botaoIncluir(FALSE);
-                }  
+                } 
+                
+                # Servidor com problemas de dias em publicação
+                if($problemaDisponivel){
+                    $mensagem1 = "Servidor com publicação com mais dias fruídos que publicados.";
+                    $objeto->set_rotinaExtraListar("callout");
+                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                }
 
                 $objeto->listar();
 

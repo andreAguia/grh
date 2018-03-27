@@ -86,7 +86,7 @@ if($acesso)
         # Exibe o Menu Inicial
         case "menu" :
             # acessa a rotina de atualizar os status das férias
-            $pessoal->mudaStatusFeriasConfirmadaFruida();
+            $pessoal->mudaStatusFeriasSolicitadaFruida();
 
             # monta o menu principal
             Grh::menu($idUsuario);

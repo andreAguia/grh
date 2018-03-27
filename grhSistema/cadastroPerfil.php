@@ -131,7 +131,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo em Comissão","Gratificação","Férias","Licença","Inicio","Fim","Próxima","Servidores","Novo<br/>Servidor","Ver"));
+    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo<br/>em Comissão","Gratificação","Férias","Licença","Inicio","Fim","Próxima","Servidores","Novo<br/>Servidor","Ver"));
     #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
     $objeto->set_align(array("center"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));

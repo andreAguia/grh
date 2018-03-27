@@ -2032,23 +2032,21 @@ class Pessoal extends Bd
 
     ##########################################################################################
 
-    public function mudaStatusFeriasConfirmadaFruida()        
+    public function mudaStatusFeriasSolicitadaFruida(){      
 
     /**	
      * Função que procura no banco de dados as férias 
-     * que foram confirmadas cuja data inicial j� passou
-     * e muda para fru�da
+     * que foram solicitadas cuja data inicial já passou
+     * e muda para fruída
      */
-
-    { 
+        
         # monta o update
         $sql = 'UPDATE tbferias SET status = "fruída"
-                 WHERE status = "confirmada"
+                 WHERE status = "solicitada"
                    AND dtInicial < current_date()';
 
         # executa
         parent::update($sql);
-
     }
 
     ##########################################################################################
@@ -3222,7 +3220,7 @@ class Pessoal extends Bd
 	/**
 	 * Método get_feriasSomaDias
 	 * 
-	 * Informa os dias de férias fruídas, solicitadas ou confirmadas de um servidor em um ano exercicio,
+	 * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
          */
 	
 	public function get_feriasSomaDias($anoExercicio,$idservidor,$id=NULL){

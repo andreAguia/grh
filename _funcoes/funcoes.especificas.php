@@ -124,15 +124,11 @@ function exibeDescricaoStatus($status){
     switch ($status)
     {
         case "solicitada" :
-            $texto = "Férias solicitadas pelo setor que ainda não foram recebidas oficialmente pelo GRH";
-            break;
-        
-        case "confirmada" :
-            $texto = "Férias Recebidas e verificadas oficialmente pelo GRH";
+            $texto = "Férias solicitadas pelo Servidor";
             break;
         
         case "fruída" :
-            $texto = "Férias já gozadas, desfrutadas. O sistema altera para fruídas todas as férias confirmadas em que a data de início já passou.";
+            $texto = "Férias já gozadas, desfrutadas. O sistema altera para fruídas todas as férias solicitadas em que a data de início já passou.";
             break;
     }
     echo "<abbr title='$texto'>$status</abbr>";

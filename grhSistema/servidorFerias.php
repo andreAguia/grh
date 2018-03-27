@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -151,7 +150,7 @@ if($acesso)
                                        'label' => 'Status:',
                                        'tipo' => 'combo',
                                        'required' => TRUE,
-                                       'array' => array('','solicitada','confirmada','fruída'),
+                                       'array' => array('','solicitada','fruída'),
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Status das férias',
@@ -224,8 +223,7 @@ if($acesso)
             case "editar" :  
                 $mensagem1 = "Tipos de Férias:<br/>"
                     . " Solicitada -> Férias solicitadas pelo servidor que ainda não foi fruída.<br/>"
-                    . " Confirmada -> Férias que foram emitidas o aviso de férias e assim sendo confirmadas pelo sistema.<br/>"
-                    . " Fruídas    -> Férias confirmadas cuja data de início ja passou.";
+                    . " Fruídas    -> Férias fruídas pelo servidor.";
                 #$objeto->set_rotinaExtraEditar("callout");
                 #$objeto->set_rotinaExtraEditarParametro($mensagem1);
                     

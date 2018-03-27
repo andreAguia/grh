@@ -45,7 +45,7 @@ if($acesso)
                WHERE tbservidor.situacao = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)             
                  AND year(tbferias.dtInicial) = '.$anoBase.'
-                 AND (status = "solicitada" OR status = "confirmada") 
+                 AND status = "solicitada" 
                  AND (month(tbferias.dtInicial)= 9 
                   OR month(tbferias.dtInicial)= 10
                   OR month(tbferias.dtInicial)= 11
@@ -58,7 +58,7 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Escala Semestral de Férias');
     $relatorio->set_tituloLinha2('Setembro / '.$anoBase.' a Janeiro / '.($anoBase+1));
-    $relatorio->set_subtitulo('Confirmadas e Solicitadas - Ordenados pela Data Inicial');
+    $relatorio->set_subtitulo('Solicitadas - Ordenados pela Data Inicial');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Dt Final','Folha'));
     $relatorio->set_width(array(10,30,20,5,9,8,9,10));

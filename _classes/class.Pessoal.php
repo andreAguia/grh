@@ -19,7 +19,6 @@ class Pessoal extends Bd
     private $servidor = "localhost";
     private $usuario = "intranet";
     private $senha = "txzVHnMdh53ZWX9p";
-    #private $banco = "pessoal";
     private $banco = "grh";
     private $sgdb = "mysql";
     private $tabela;
@@ -2047,24 +2046,6 @@ class Pessoal extends Bd
 
         # executa
         parent::update($sql);
-    }
-
-    ##########################################################################################
-
-    public function mudaStatusFeriasSolicitadaConfirmada($idFerias)        
-
-    /**	
-     * Função que muda uma férias específica de Solicitada para Confirmada
-     */
-
-    { 
-        # monta o update
-        $sql = 'UPDATE tbferias SET status = "confirmada"
-                 WHERE idFerias = '.$idFerias;
-
-        # executa
-        parent::update($sql);
-
     }
 
     ###########################################################

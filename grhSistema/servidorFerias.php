@@ -213,126 +213,123 @@ if($acesso){
 
 ################################################################
 
-    switch ($fase)
-    {
-            case "" :
-            case "listar" :
-                $objeto->listar();
-                break;
-            
-            case "editar" :  
-                $mensagem1 = "Tipos de Férias:<br/>"
-                    . " Solicitada -> Férias solicitadas pelo servidor que ainda não foi fruída.<br/>"
-                    . " Fruídas    -> Férias fruídas pelo servidor.";
-                #$objeto->set_rotinaExtraEditar("callout");
-                #$objeto->set_rotinaExtraEditarParametro($mensagem1);
-                    
-                $objeto->editar($id);
-                break;
-            case "gravar" :		
-                $objeto->gravar($id,"servidorFeriasExtra.php"); 			
-                break;
-            
-            case "excluir" :	
-                $objeto->excluir($id);
-                break;
-            case "resumo" :
-                botaoVoltar("?");
-                get_DadosServidor($idServidorPesquisado);
-                
-                $grid = new Grid();
-                $grid->abreColuna(12);
-                    titulo("Resumo das Férias");
-                    br();
-                $grid->fechaColuna();
-                $grid->fechaGrid();    
-                
-                $grid = new Grid("center");
-                $grid->abreColuna(4);
-                
-                    $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
-                    $tabela = new Tabela();
-                    $tabela->set_conteudo($lista);
-                    $tabela->set_label(array("Exercício","Dias"));
-                    $tabela->set_align(array("center"));
-                    $tabela->show();
-                    
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;
+    switch ($fase) {
+        
+        case "" :
+        case "listar" :
+            $objeto->listar();
+            break;
+
+        case "editar" :  
+            $mensagem1 = "Tipos de Férias:<br/>"
+                . " Solicitada -> Férias solicitadas pelo servidor que ainda não foi fruída.<br/>"
+                . " Fruídas    -> Férias fruídas pelo servidor.";
+            #$objeto->set_rotinaExtraEditar("callout");
+            #$objeto->set_rotinaExtraEditarParametro($mensagem1);
+
+            $objeto->editar($id);
+            break;
+        case "gravar" :		
+            $objeto->gravar($id,"servidorFeriasExtra.php"); 			
+            break;
+
+        case "excluir" :	
+            $objeto->excluir($id);
+            break;
+        case "resumo" :
+            botaoVoltar("?");
+            get_DadosServidor($idServidorPesquisado);
+
+            $grid = new Grid();
+            $grid->abreColuna(12);
+                titulo("Resumo das Férias");
+                br();
+            $grid->fechaColuna();
+            $grid->fechaGrid();    
+
+            $grid = new Grid("center");
+            $grid->abreColuna(4);
+
+                $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
+                $tabela = new Tabela();
+                $tabela->set_conteudo($lista);
+                $tabela->set_label(array("Exercício","Dias"));
+                $tabela->set_align(array("center"));
+                $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
 
 ################################################################
 
-            case 'solicitacaoFerias':
-                $id = get('id');
+        case 'solicitacaoFerias':
+            $id = get('id');
 
-                # pega os dados do servidor
-                $nome = $pessoal->get_nome($idServidorPesquisado);
-                $cargo = $pessoal->get_cargo($idServidorPesquisado);
-                $perfil = $pessoal->get_perfil($idServidorPesquisado);
-                $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
+            # pega os dados do servidor
+            $nome = $pessoal->get_nome($idServidorPesquisado);
+            $cargo = $pessoal->get_cargo($idServidorPesquisado);
+            $perfil = $pessoal->get_perfil($idServidorPesquisado);
+            $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
 
-                # Select das férias
-                $select = "SELECT anoExercicio,
-                                  DATE_FORMAT(dtInicial,'%d/%m/%Y'),
-                                  numDias,
-                                  DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal
-                             FROM tbferias
-                            WHERE tbferias.idFerias = ".$id;
+            # Select das férias
+            $select = "SELECT anoExercicio,
+                              DATE_FORMAT(dtInicial,'%d/%m/%Y'),
+                              numDias,
+                              DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal
+                         FROM tbferias
+                        WHERE tbferias.idFerias = ".$id;
 
-                # Acessa o Banco de dados
-                $ferias = new Pessoal();
-                $row = $ferias->select($select,FALSE);
-                $row = urlencode(serialize($row));  // Prepara para ser enviado por get
+            # Acessa o Banco de dados
+            $ferias = new Pessoal();
+            $row = $ferias->select($select,FALSE);
+            $row = urlencode(serialize($row));  // Prepara para ser enviado por get
 
-                # preenche outro array com o restante dos dados
-                $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
-                $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
+            # preenche outro array com o restante dos dados
+            $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
+            $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
 
-                loadPage('../grhRelatorios/solicitacaoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
-                
-                # Log
-                $atividade = "Emitiu Solicitação de Férias de ".$pessoal->get_nome($idServidorPesquisado);
-                $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
-    
-                loadPage('?');
-                break;
+            loadPage('../grhRelatorios/solicitacaoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
+
+            # Log
+            $atividade = "Emitiu Solicitação de Férias de ".$pessoal->get_nome($idServidorPesquisado);
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
+
+            loadPage('?');
+            break;
 
 ################################################################
 
-            case 'avisoFerias':
-                $id = get('id');
+        case 'avisoFerias':
+            $id = get('id');
 
-                # muda status das férias
-                $pessoal->mudaStatusFeriasSolicitadaConfirmada($id);
+            # pega os dados do servidor
+            $nome = $pessoal->get_nome($idServidorPesquisado);
+            $cargo = $pessoal->get_cargo($idServidorPesquisado);
+            $perfil = $pessoal->get_perfil($idServidorPesquisado);
+            $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
 
-                # pega os dados do servidor
-                $nome = $pessoal->get_nome($idServidorPesquisado);
-                $cargo = $pessoal->get_cargo($idServidorPesquisado);
-                $perfil = $pessoal->get_perfil($idServidorPesquisado);
-                $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
+            # Select das férias
+            $select = "SELECT anoExercicio,
+                              DATE_FORMAT(dtInicial,'%d/%m/%Y'),
+                              numDias,
+                              DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal
+                         FROM tbferias
+                        WHERE tbferias.idFerias = ".$id;
 
-                # Select das férias
-                $select = "SELECT anoExercicio,
-                                  DATE_FORMAT(dtInicial,'%d/%m/%Y'),
-                                  numDias,
-                                  DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal
-                             FROM tbferias
-                            WHERE tbferias.idFerias = ".$id;
+            # Acessa o Banco de dados
+            $ferias = new Pessoal();
+            $row = $ferias->select($select,FALSE);
+            $row = urlencode(serialize($row));  // Prepara para ser enviado por get
 
-                # Acessa o Banco de dados
-                $ferias = new Pessoal();
-                $row = $ferias->select($select,FALSE);
-                $row = urlencode(serialize($row));  // Prepara para ser enviado por get
+            # preenche outro array com o restante dos dados
+            $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
+            $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
 
-                # preenche outro array com o restante dos dados
-                $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
-                $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
-
-                loadPage('../relatorios/avisoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
-                loadPage('?');
-                break;
+            loadPage('../relatorios/avisoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
+            loadPage('?');
+            break;
     }									 	 		
 
     $page->terminaPagina();

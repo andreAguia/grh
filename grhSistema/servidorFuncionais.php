@@ -149,6 +149,7 @@ if($acesso)
                            'label' => 'id Funcional:',
                            'tipo' => 'texto',
                            'autofocus' => TRUE,
+                           'unique'=> TRUE,
                            'size' => 10,
                            'col' => 2,
                            'title' => 'Número da id funcional do servidor.'),

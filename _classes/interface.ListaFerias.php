@@ -1,6 +1,5 @@
 <?php
-class ListaFerias
-{
+class ListaFerias{
  /**
   * Exibe várias informações em forma de listas sobre as férias dos servidores
   * 

@@ -123,7 +123,8 @@ if($acesso){
     $form->add_item($controle);
 
     # Lotação
-    $result = $pessoal->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $result = $pessoal->select('SELECT idlotacao, 
+                                       concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
                                   FROM tblotacao
                                  WHERE ativo
                               ORDER BY ativo desc,lotacao');
@@ -143,8 +144,7 @@ if($acesso){
             
     ################################################################
     
-    switch ($fase)
-    {
+    switch ($fase){
         case "" : 
         case "porDia" :
         case "porSolicitacao" :
@@ -171,7 +171,7 @@ if($acesso){
             $grid2->abreColuna(3);
             
             # Informa a classe com os parâmetros
-            $lista1 = new listaFerias($parametroAnoExercicio);
+            $lista1 = new ListaFerias($parametroAnoExercicio);
             $lista1->set_lotacao($parametroLotacao);
             
             # resumo geral

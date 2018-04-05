@@ -58,20 +58,23 @@ if($acesso)
     $select = 'SELECT tbservidor.idFuncional,
                       tbservidor.matricula,
                       tbpessoa.nome,
+                      tbservidor.idServidor,
                       tbperfil.nome,
                       tbsituacao.situacao 
-                 FROM tbservidor left join tbpessoa on (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                    left join tbperfil on (tbservidor.idPerfil = tbperfil.idPerfil)
-                                    left join tbsituacao on (tbservidor.situacao = tbsituacao.idSituacao)
+                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                 LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                 WHERE tbservidor.idServidor = '.$idFicha;
 
     $result = $pessoal->select($select);   
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
     $relatorio->set_titulo('Ficha Cadastral');
-    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Perfil','Situação'));
-    $relatorio->set_width(array(15,10,40,15,20));
+    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Lotaçao','Perfil','Situação'));
+    #$relatorio->set_width(array(15,10,40,15,20));
     $relatorio->set_funcao(array(NULL,"dv"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);

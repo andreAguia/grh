@@ -80,7 +80,7 @@ if($acesso)
                 #$menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Licença','?fase=licenca','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
@@ -270,7 +270,7 @@ if($acesso)
 
         case "licenca";
             $menu = new Menu();
-            $menu->add_item('titulo','Licença');
+            $menu->add_item('titulo','Licença e Afastamentos');
             $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença','../grhRelatorios/licencaMensal.php');
             $menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');
             $menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');

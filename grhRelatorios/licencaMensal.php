@@ -26,10 +26,13 @@ if($acesso)
     # Pega os parâmetros dos relatórios
     $relatorioMes = post('mes',date('m'));
     $relatorioAno = post('ano',date('Y'));
+    $relatorioLotacao = post('lotacao');
 
     ######
 
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
+    
+    $relatorio = new Relatorio();
 
     $select = '(SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
@@ -39,14 +42,28 @@ if($acesso)
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                  LEFT JOIN tblicenca USING (idServidor)
                                  LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
                   AND (("'.$data.'" BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                   OR  ("'.$data.'" < dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))
-             ORDER BY tblicenca.dtInicial)
+                   OR  ("'.$data.'" < dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
+    # lotacao
+    if(!is_null($relatorioLotacao)){
+        # Verifica se o que veio é numérico
+        if(is_numeric($relatorioLotacao)){
+            $select .= ' AND (tblotacao.idlotacao = "'.$relatorioLotacao.'")';                
+            $relatorio->set_tituloLinha3 .= "Lotação: ".$pessoal->get_nomeLotacao($relatorioLotacao)." - ".$pessoal->get_nomeCompletoLotacao($relatorioLotacao)."<br/>";
+        }else{ # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "'.$relatorioLotacao.'")';                
+            $relatorio->set_tituloLinha3 .= "Lotação: ".$relatorioLotacao."<br/>";
+        }
+    }
+    
+    $select .= 'ORDER BY tblicenca.dtInicial)
              UNION
              (SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
@@ -55,18 +72,31 @@ if($acesso)
                      tblicencapremio.dtInicial,
                      tblicencapremio.numDias,
                      ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)
-                FROM tbTipoLicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                LEFT JOIN tblicencapremio USING (idServidor)
-                                LEFT JOIN tbperfil USING (idPerfil)
+                FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbhistlot USING (idServidor)
+                                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                              LEFT JOIN tblicencapremio USING (idServidor)
+                                              LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
                   AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
-                   OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))
-             ORDER BY tblicencapremio.dtInicial) ORDER BY 5';
+                   OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))';
+    
+    # lotacao
+    if(!is_null($relatorioLotacao)){
+        # Verifica se o que veio é numérico
+        if(is_numeric($relatorioLotacao)){
+            $select .= ' AND (tblotacao.idlotacao = "'.$relatorioLotacao.'")';
+        }else{ # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "'.$relatorioLotacao.'")';
+        }
+    }
+    
+    $select .= 'ORDER BY tblicencapremio.dtInicial) ORDER BY 5';
 
     $result = $pessoal->select($select);
 
-    $relatorio = new Relatorio();
+    
     $relatorio->set_titulo('Relatório Mensal de Servidores em Licença');
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Licença');
@@ -79,6 +109,15 @@ if($acesso)
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
+    
+    # Dados da combo lotacao
+    $lotacao = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                  FROM tblotacao
+                                 WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                  FROM tblotacao
+                                 WHERE ativo)
+                              ORDER BY 2');
+    array_unshift($lotacao,array('*','-- Todos --'));
     
     #$relatorio->set_bordaInterna(TRUE);
     #$relatorio->set_cabecalho(FALSE);
@@ -100,6 +139,16 @@ if($acesso)
                          'size' => 10,
                          'padrao' => $relatorioMes,
                          'title' => 'Mês do Ano.',
+                         'onChange' => 'formPadrao.submit();',
+                         'linha' => 1),
+                  array ('nome' => 'lotacao',
+                         'label' => 'Lotação',
+                         'tipo' => 'combo',
+                         'array' => $lotacao,
+                         'col' => 6,
+                         'size' => 50,
+                         'padrao' => $relatorioLotacao,
+                         'title' => 'Filtra por Lotação.',
                          'onChange' => 'formPadrao.submit();',
                          'linha' => 1)));
 

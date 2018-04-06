@@ -919,7 +919,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -944,7 +944,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca)){
                 return FALSE;
             }
@@ -970,7 +970,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca)){
                 return FALSE;
             }
@@ -996,7 +996,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -1021,7 +1021,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -1046,7 +1046,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -1071,7 +1071,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -1096,7 +1096,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo de licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -1121,7 +1121,7 @@ class Pessoal extends Bd
     # Parâmetro: id da licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -1146,7 +1146,7 @@ class Pessoal extends Bd
     # Parâmetro: id do tipo da licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idTpLicenca))
                 return FALSE;
 
@@ -2664,7 +2664,7 @@ class Pessoal extends Bd
     # Parâmetro: id da licença
 
     {
-            # valida par�metro
+            # Valida parametro
             if(is_null($idLicenca))
                 return FALSE;
 
@@ -3433,7 +3433,7 @@ class Pessoal extends Bd
                            AND data = "'.$data.'"';
             
             if(!is_null($idHistLot)){
-            $select .= ' AND idHistLot <> '.$idHistLot;
+                $select .= ' AND idHistLot <> '.$idHistLot;
             }
 
             $result = parent::count($select);
@@ -3475,7 +3475,7 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
 
         {
-                # valida par�metro
+                # Valida parametro
                 if(is_null($idTipoLicenca))
                     return FALSE;
 
@@ -3491,5 +3491,92 @@ class Pessoal extends Bd
         }
 
     ##########################################################################################
+
+        function get_contatos($idServidor){
+
+        # Função que retorna string com todos os contatos de um servidor separados por virgula
+        #
+        # Parâmetro: id do servidor
+        
+                # Valida parametro
+                if(is_null($idServidor)){
+                    return FALSE;
+                }
+                
+                # Pega o idPessoa desse idServidor
+                $idPessoa = $this->get_idPessoa($idServidor);
+                
+                # Monta o select		
+                $select = 'SELECT tipo,
+                                  numero
+                             FROM tbcontatos
+                            WHERE idPessoa = '.$idPessoa;
+
+                $row = parent::select($select);
+                $numero = parent::count($select);
+                $contador = 1;
+                $return = NULL;
+                
+                if($numero>0){
+                    # Percorre o array e preenche o $return
+                    foreach ($row as $valor) {
+                        $return .= $valor[0].": ".strtolower($valor[1]);
+
+                        if($contador < $numero){
+                            $return .= ",<br/>";
+                            $contador++;
+                        }
+                    }
+                }
+
+                return $return;		
+
+        }
+
+    ##########################################################################################
+
+        function get_email($idServidor){
+
+        # Função que retorna string com todos os emails de um servidor separados por virgula
+        #
+        # Parâmetro: id do servidor
+        
+                # Valida parametro
+                if(is_null($idServidor)){
+                    return FALSE;
+                }
+                
+                # Pega o idPessoa desse idServidor
+                $idPessoa = $this->get_idPessoa($idServidor);
+                
+                # Monta o select		
+                $select = 'SELECT numero
+                             FROM tbcontatos
+                            WHERE (tipo = "E-mail" OR tipo = "E-mail Principal")
+                              AND idPessoa = '.$idPessoa;
+
+                $row = parent::select($select);
+                $numero = parent::count($select);
+                $contador = 1;
+                $return = NULL;
+                
+                if($numero>0){
+                    # Percorre o array e preenche o $return
+                    foreach ($row as $valor) {
+                        $return .= strtolower($valor[0]);
+
+                        if($contador < $numero){
+                            $return .= ",<br/>";
+                            $contador++;
+                        }
+                    }
+                }
+
+                return $return;		
+
+        }
+
+    ##########################################################################################
+	
 	
 }

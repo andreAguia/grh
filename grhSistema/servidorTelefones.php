@@ -81,9 +81,9 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Tipo","Email / Telefone","Obs"));
-    $objeto->set_width(array(10,40,40));
-    $objeto->set_align(array("left","left","left"));
-    #$objeto->set_function(array ("date_to_php","get_nomelotacao"));
+    #$objeto->set_width(array(10,40,40));
+    $objeto->set_align(array("center","left","left"));
+    $objeto->set_funcao(array(NULL,"strtolower"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

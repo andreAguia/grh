@@ -508,8 +508,9 @@ if($acesso)
         tituloRelatorio('Contatos');
 
         $select = 'SELECT tipo,
-                            numero
-                        FROM tbcontatos
+                          numero,
+                          obs
+                     FROM tbcontatos
                     WHERE idPessoa = '.$idPessoa;
 
         $result = $pessoal->select($select);
@@ -517,10 +518,10 @@ if($acesso)
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Tipo','Número'));
-        $relatorio->set_width(array(50,50));
-        $relatorio->set_align(array('left','left'));
-        #$relatorio->set_funcao($funcao);
+        $relatorio->set_label(array('Tipo','Número','Obs'));
+        #$relatorio->set_width(array(50,50));
+        $relatorio->set_align(array('center','left'));
+        $relatorio->set_funcao(array(NULL,"strtolower"));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(FALSE);

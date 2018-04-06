@@ -50,9 +50,8 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Tipo","Email / Telefone","Obs"));
     #$relatorio->set_width(array(10,80));
-    $relatorio->set_align(array("left","left","left"));
-    #$relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
-
+    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_funcao(array(NULL,"strtolower"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);

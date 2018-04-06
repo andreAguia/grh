@@ -37,6 +37,7 @@ if($acesso)
     $select = '(SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
+                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                       CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
@@ -56,10 +57,10 @@ if($acesso)
         # Verifica se o que veio é numérico
         if(is_numeric($relatorioLotacao)){
             $select .= ' AND (tblotacao.idlotacao = "'.$relatorioLotacao.'")';                
-            $relatorio->set_tituloLinha3 .= "Lotação: ".$pessoal->get_nomeLotacao($relatorioLotacao)." - ".$pessoal->get_nomeCompletoLotacao($relatorioLotacao)."<br/>";
+            $relatorio->set_tituloLinha3($pessoal->get_nomeLotacao($relatorioLotacao)." - ".$pessoal->get_nomeCompletoLotacao($relatorioLotacao));
         }else{ # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "'.$relatorioLotacao.'")';                
-            $relatorio->set_tituloLinha3 .= "Lotação: ".$relatorioLotacao."<br/>";
+            $relatorio->set_tituloLinha3($relatorioLotacao);
         }
     }
     
@@ -68,6 +69,7 @@ if($acesso)
              (SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      tbperfil.nome,
+                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                      (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                      tblicencapremio.dtInicial,
                      tblicencapremio.numDias,
@@ -92,7 +94,7 @@ if($acesso)
         }
     }
     
-    $select .= 'ORDER BY tblicencapremio.dtInicial) ORDER BY 5';
+    $select .= 'ORDER BY tblicencapremio.dtInicial) ORDER BY 6';
 
     $result = $pessoal->select($select);
 
@@ -101,10 +103,10 @@ if($acesso)
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Licença');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Licença','Data Inicial','Dias','Data Final'));
-    $relatorio->set_width(array(10,30,10,25,10,5,10));
-    $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Lotaçao','Licença','Data Inicial','Dias','Data Final'));
+    #$relatorio->set_width(array(10,30,10,25,10,5,10));
+    $relatorio->set_align(array('center','left','center','left','left'));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

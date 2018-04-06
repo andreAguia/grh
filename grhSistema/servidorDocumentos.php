@@ -55,10 +55,12 @@ if($acesso)
                          dtId,
                          titulo,
                          zona,
-                         secao,';
+                         secao,
+                         tituloUf,';
 
-    if($idCargo == 63) // id do motorista
+    if($idCargo == 63){ // id do motorista
         $selectEdita.='motorista,dtVencMotorista,';
+    }
 
 
     $selectEdita.='conselhoClasse,
@@ -93,6 +95,13 @@ if($acesso)
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Pega os dados da combo de cidade
+    $estado = $pessoal->select('SELECT idEstado,
+                                       uf
+                                  FROM tbestado
+                              ORDER BY 2');
+    array_unshift($estado, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $campos = array(array('linha' => 1,
@@ -126,7 +135,7 @@ if($acesso)
                           'title' => 'Categoria de reservista',                           
                           'size' => 5),       
                    array ('linha' => 2,
-                          'col' => 4,
+                          'col' => 3,
                           'nome' => 'identidade',
                           'label' => 'Número:',
                           'tipo' => 'texto',
@@ -134,14 +143,14 @@ if($acesso)
                           'title' => 'Identidade do servidor',                           
                           'size' => 20),
                    array ('linha' => 2,
-                          'col' => 4,
+                          'col' => 3,
                           'nome' => 'orgaoId',
                           'label' => 'Órgão:',
                           'tipo' => 'texto', 
                           'title' => 'Órgão da identidade',                           
                           'size' => 10),
                   array ( 'linha' => 2,
-                          'col' => 4,
+                          'col' => 3,
                           'nome' => 'dtId',
                           'label' => 'Data de Emissão:',
                           'tipo' => 'data',                           
@@ -149,7 +158,7 @@ if($acesso)
                           'fieldset' => 'fecha', 
                           'title' => 'Data de Emissão.'),
                    array ('linha' => 3,
-                          'col' => 4,                            
+                          'col' => 3,                            
                           'nome' => 'titulo',
                           'label' => 'Título:',
                           'tipo' => 'texto',                          
@@ -157,23 +166,31 @@ if($acesso)
                           'fieldset' => 'Título Eleitoral',
                           'size' => 15),
                    array ('linha' => 3,
-                          'col' => 4,
+                          'col' => 2,
                           'nome' => 'zona',
                           'label' => 'Zona:',
                           'tipo' => 'texto',                          
                           'title' => 'Zona Eleitoral',
                           'size' => 5),
                    array ('linha' => 3,
-                          'col' => 4,
+                          'col' => 2,
                           'nome' => 'secao',
                           'label' => 'Seção:',
                           'tipo' => 'texto',                          
                           'title' => 'Seção Eleitoral',
+                          'size' => 5),
+                   array ('linha' => 3,
+                          'col' => 2,
+                          'nome' => 'tituloUf',
+                          'label' => 'UF:',
+                          'tipo' => 'combo',
+                          'array' => $estado,                           
+                          'title' => 'Unidade de Federaçao do Titulo Eleitoral',
                           'fieldset' => 'fecha', 
-                          'size' => 5));
+                          'size' => 3));
 
-    if($idCargo == 63) // id do motorista
-    {
+    if($idCargo == 63){ // id do motorista
+    
     array_push($campos, array ('linha' => 4,
                                'nome' => 'motorista',
                                'label' => 'Número:',

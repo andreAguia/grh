@@ -99,7 +99,7 @@ if($acesso)
     $result = $pessoal->select($select);
 
     
-    $relatorio->set_titulo('Relatório Mensal de Servidores em Licença');
+    $relatorio->set_titulo('Relatório Mensal de Servidores em Licença e/ou Afastamanto');
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Licença');
 

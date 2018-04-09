@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -75,10 +74,7 @@ if($acesso)
                                         WHEN 1 THEN "Celetista"
                                         WHEN 2 THEN "Estatutário"
                                      END,
-                                     CASE cargo
-                                        WHEN 1 THEN "Professor"
-                                        WHEN 2 THEN "Outros"
-                                     END,
+                                     cargo,
                                      CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
                                      processo,
                                      idAverbacao
@@ -140,7 +136,7 @@ if($acesso)
                                        'autofocus' => TRUE,
                                        'size' => 80,                                   
                                        'title' => 'Nome da Empresa.',
-                                       'col' => 6,
+                                       'col' => 9,
                                        'linha' => 1),
                                array ( 'nome' => 'empresaTipo',
                                        'label' => 'Tipo:',
@@ -205,7 +201,7 @@ if($acesso)
                                array ( 'nome' => 'regime',
                                        'label' => 'Regime:',
                                        'tipo' => 'combo',
-                                       'col' => 6,
+                                       'col' => 4,
                                        'required' => TRUE,
                                        'array' => Array(Array(1,"Celetista"),Array(2,"Estatutário")),
                                        'size' => 20,                               
@@ -213,10 +209,9 @@ if($acesso)
                                        'linha' => 4),
                                array ( 'nome' => 'cargo',
                                        'label' => 'Cargo:',
-                                       'tipo' => 'combo',
-                                       'col' => 6,
+                                       'tipo' => 'texto',
+                                       'col' => 8,
                                        'required' => TRUE,
-                                       'array' => Array(Array(1,"Professor"),Array(2,"Outros")),
                                        'size' => 20,                               
                                        'title' => 'Cargo',
                                        'linha' => 4),
@@ -246,15 +241,9 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Paginação
-    #$objeto->set_paginacao(TRUE);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
-
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :
         case "listar" :
         case "editar" :			

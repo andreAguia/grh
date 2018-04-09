@@ -53,23 +53,27 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
         $orderCampo = "3";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
         $orderTipo = 'desc';
+    }
+    
+    ## Rotina abaixo retirado para "tirar o gesso" 
     
     # Retira o botão de inclusão quando o servidor já tem cargo em comissão em aberto.
-    if(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){
-        # Retira o botão de incluir
-        $objeto->set_botaoIncluir(FALSE);
-        
-        # Informa o porquê
-        $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor já tem um cargo em comissão.<br/>"
-                   ."Somente será permitido a inserção de um novo cargo quanfo for informado a data de término do cargo atual.";
-        $objeto->set_rotinaExtraListar("callout");
-        $objeto->set_rotinaExtraListarParametro($mensagem);
-    }
+    #if(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){
+    #    # Retira o botão de incluir
+    #    $objeto->set_botaoIncluir(FALSE);
+    #    
+    #    # Informa o porquê
+    #    $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor já tem um cargo em comissão.<br/>"
+    #               ."Somente será permitido a inserção de um novo cargo quanfo for informado a data de término do cargo atual.";
+    #    $objeto->set_rotinaExtraListar("callout");
+    #    $objeto->set_rotinaExtraListarParametro($mensagem);
+    #}
 
     # select da lista
     $objeto->set_selectLista('SELECT CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
@@ -132,47 +136,18 @@ if($acesso)
     $objeto->set_formLabelTipo(1);
 
     # Pega os dados da combo tipo de Comissão
-    $result = $pessoal->select('SELECT idTipoComissao,
+    $comissao = $pessoal->select('SELECT idTipoComissao,
                                        CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
                                   FROM tbtipocomissao WHERE ativo
                               ORDER BY simbolo');    
-    
-    # Verifica cada cargo se tem vagas disponíveis se não tem retira do array
-    $novaLista = array();
-    foreach ($result as $listaCargo)
-    {
-        $vagas = $pessoal->get_cargoComissaoVagasDisponiveis($listaCargo[0]);
-        if($vagas > 0)
-            array_push($novaLista, array($listaCargo[0], $listaCargo[1]));
-    }
-    
-    # Se for edição
-    if(is_numeric($id))
-    {   
-        $cargoEditado = $pessoal->get_cargoComissaoPorId($id);
-        array_push($novaLista, $cargoEditado);
-    }           
-     
-    $quantidadeCargos = count($novaLista);          // pega a quantidade de cargos vagos
-    array_unshift($novaLista, array(NULL,NULL));       // adiciona o valor de nulo
-    
-    # combo lotacao
-    #$selectLotacao = 'SELECT idlotacao, 
-    #                         concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
-    #                    FROM tblotacao 
-    #                   WHERE ativo
-    #                ORDER BY lotacao';
-    # 
-    #$result = $pessoal->select($selectLotacao);
-    #array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
-        
+            
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
                                        'label' => 'Tipo da Cargo em Comissão:',
                                        'tipo' => 'combo',
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
-                                       'array' => $novaLista,
+                                       'array' => $comissao,
                                        'size' => 20,
                                        'col' => 4,
                                        'title' => 'Tipo dp Cargo em Comissão',
@@ -299,15 +274,9 @@ if($acesso)
         
     $objeto->set_botaoListarExtra(array($botaoRel,$botaoVagas));
     
-    # Paginação
-    #$objeto->set_paginacao(TRUE);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
-
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
         
         case "" :
         case "listar" :
@@ -319,24 +288,26 @@ if($acesso)
             $grid = new Grid();
             $grid->abreColuna(12);
            
+            ## Rotina abaixo retirado para "tirar o gesso" 
             # Verifica se é incluir
-            if(is_null($id)){
-                br(2);              
-                # Verifica se o número de vagas é 0
-                if($quantidadeCargos == 0){
-                    $msg = 'Não há vagas disponíveis nos cargos em Comissão.\nTodas as vagas estão ocupadas.';
-                    alert($msg);
-                    back(1);
-                }elseif(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){  // se o servidor já possui cargo
-                    $msg = 'Esse servidor já ocupa um cargo em comissão na data de hoje.\nSomente é permitido nomeação de servidor que não esteja ocupando cargo em comissão.';
-                    alert($msg);
-                    back(1);
-                }                    
-                else 
-                    $objeto->editar();
-            }
-            else // se é editar
-                $objeto->editar($id);
+            #if(is_null($id)){
+            #    br(2);              
+            #    # Verifica se o número de vagas é 0
+            #    if($quantidadeCargos == 0){
+            #        $msg = 'Não há vagas disponíveis nos cargos em Comissão.\nTodas as vagas estão ocupadas.';
+            #        alert($msg);
+            #        back(1);
+            #    }elseif(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){  // se o servidor já possui cargo
+            #        $msg = 'Esse servidor já ocupa um cargo em comissão na data de hoje.\nSomente é permitido nomeação de servidor que não esteja ocupando cargo em comissão.';
+            #        alert($msg);
+            #        back(1);
+            #    }                    
+            #    else 
+            #        $objeto->editar();
+            #}
+            #else // se é editar
+            
+            $objeto->editar($id);
     
             # Botões 
             $menu = new MenuGrafico(5,'servicoBotoes');

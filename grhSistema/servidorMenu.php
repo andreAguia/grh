@@ -124,10 +124,10 @@ if($acesso){
     
     # Ficha de Avaliação Funcional
     echo '<li>';
-    $link = new Link("FAF","#");
+    $link = new Link("FAF","../grhRelatorios/servidorAvaliacaoFuncional.php");
     $link->set_title("Exibe a ficha de avaliação funcional");
-    $link->set_class("disabled");
-    #$link->set_janela(TRUE);    
+    #$link->set_class("disabled");
+    $link->set_janela(TRUE);    
     $link->show();
     echo '</li>';
     

@@ -2820,9 +2820,7 @@ class Pessoal extends Bd
 	 * @param	string $idServidor  idServidor do servidor
 	 */
 
-	public function get_idFuncional($idServidor)
-	
-	{
+	public function get_idFuncional($idServidor){
             # Pega o cargo do servidor
             $select = 'SELECT idFuncional
                          FROM tbservidor
@@ -2831,7 +2829,6 @@ class Pessoal extends Bd
             $row = parent::select($select,FALSE);
             
             return $row[0];
-			
 	}
 		
     		

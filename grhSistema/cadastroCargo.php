@@ -105,7 +105,7 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id","Tipo","Cargo","Sigla","Nível","Vagas","Servidores<br/>Ativos","Vagas<br/>Disponíveis"]);
+    $objeto->set_label(["Id","Tipo","Cargo","Sigla","Nível","Vagas<br/>Publicadas","Servidores<br/>Ativos","Vagas<br/>Disponíveis"]);
     $objeto->set_align(["center","center","left"]);
     
     $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal']);
@@ -158,7 +158,7 @@ if($acesso)
         array ('linha' => 1,
                'col' => 2,
                'nome' => 'vagas',
-               'label' => 'Vagas:',
+               'label' => 'Vagas Publicadas:',
                'tipo' => 'numero',
                'size' => 10),
         array ('linha' => 2,

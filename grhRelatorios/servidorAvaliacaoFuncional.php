@@ -31,10 +31,10 @@ if($acesso){
     
     ######
     
-    $relatorio = new Relatorio();
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->show();
+    #$relatorio = new Relatorio();
+    #$relatorio->set_totalRegistro(FALSE);
+    #$relatorio->set_dataImpressao(FALSE);
+    #$relatorio->show();
     
     # Desempenho Profissional
     $grid = new Grid();
@@ -49,35 +49,35 @@ if($acesso){
     # Informação do Avaliador
     $grid = new Grid();
     $grid->abreColuna(2);
-        p('IdFuncional:','f12');
+        p('IdFuncional:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(3);
-        p('Nome:','f12');
+        p('Nome:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(4);
-        p('Cargo:','f12');
+        p('Cargo:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(2);
-        p('Lotação:','f12');
+        p('Lotação:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(1);
-        p('Admissão:','f12');
+        p('Admissão:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     
     $grid->abreColuna(2);
-        p($pessoal->get_idFuncional($idServidorPesquisado),'f14');
+        p($pessoal->get_idFuncional($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(3);
-        p($pessoal->get_nome($idServidorPesquisado),'f14');
+        p($pessoal->get_nome($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(4);
-        p($pessoal->get_cargo($idServidorPesquisado),'f14');
+        p($pessoal->get_cargo($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(2);
-         p($pessoal->get_lotacao($idServidorPesquisado),'f14');
+         p($pessoal->get_lotacao($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(1);
-         p($pessoal->get_dtAdmissao($idServidorPesquisado),'f14');
+         p($pessoal->get_dtAdmissao($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->fechaGrid();
     
@@ -88,16 +88,16 @@ if($acesso){
     # Informação do Avaliador
     $grid = new Grid();
     $grid->abreColuna(3);
-        p('Chefia Imediata:','f12');
+        p('Chefia Imediata:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(3);
-        p('IdFuncional:','f12');
+        p('IdFuncional:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(3);
-        p('Lotação:','f12');
+        p('Lotação:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(3);
-        p('Cargo:','f12');
+        p('Cargo:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     
     $grid->abreColuna(3);
@@ -119,17 +119,17 @@ if($acesso){
     # Período Avaliado
     $grid = new Grid();
     $grid->abreColuna(6);
-        p('Período Avaliado:','f12');
+        p('Período Avaliado:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(6);
-        p('Data da avaliação:','f12');
+        p('Data da avaliação:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     
     $grid->abreColuna(6);
-        p('_________/_________  a  _________/_________');
+        p('_________/_________  a  _________/_________','fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(6);
-        p('__________/_________/_________');
+        p('__________/_________/_________','fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->fechaGrid();
 
@@ -159,15 +159,15 @@ if($acesso){
     
     # Monta a tabela
     
-    echo '<table class="faf" id="faf" width="100%" border="1" cellspacing="0">';
+    echo '<table id="faf1">';
     foreach ($item as $key => $linha){
         echo '<tr>';
             if($key == 0){
-                echo '<th width="70%">';
+                echo '<th>';
                 p($linha,'f13');
                 echo '</th>';
             }else{
-                echo '<td width="70%">';
+                echo '<td>';
                 p($linha,'f13');
                 echo '</th>';
             }
@@ -200,7 +200,7 @@ if($acesso){
 
 
     # Monta a tabela
-    echo '<table id="tableFaf3">';
+    echo '<table id="faf2">';
     foreach ($criterio as $linha){
         echo '<tr>';
             for ($i = 0; $i < 4; $i++){

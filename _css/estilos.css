@@ -349,3 +349,37 @@ p#aim{
      text-align: left;
      font-size: 10px;     
   }
+  
+  /*******************************************
+ * Ficha de avaliação Funcional
+ *******************************************/
+  
+  p#fichaAvaliacaoLabel{
+     font-size: 10px;
+     padding: 2px;
+     margin: 0px;
+  }
+  
+  p#fichaAvaliacaoCampo{
+     font-size: 14px;
+     padding: 2px;
+     margin: 0px;
+  }
+  
+  table#faf1 th{
+     font-size: 14px;
+     text-align: center;
+     border: 2px solid black;
+ }
+ 
+ table#faf1 td{
+     font-size: 14px;
+     text-align: left;
+     border: 2px solid black;
+ }
+ 
+ table#faf2 td{
+     font-size: 14px;
+     text-align: center;
+     border: 2px solid black;
+ }

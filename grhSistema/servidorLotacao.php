@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{
+if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
@@ -61,6 +60,7 @@ if($acesso)
     $objeto->set_selectEdita('SELECT data,
                                      lotacao,
                                      motivo,
+                                     obs,
                                      idServidor
                                 FROM tbhistlot
                                WHERE idHistLot = '.$id);
@@ -137,6 +137,12 @@ if($acesso)
                                        'col' => 12,                                   
                                        'title' => 'Motivo da mudança de lotação.',
                                        'linha' => 2),
+                               array ('linha' => 2,
+                                       'col' => 12,
+                                       'nome' => 'obs',
+                                       'label' => 'Observação:',
+                                       'tipo' => 'textarea',
+                                       'size' => array(80,5)),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
@@ -144,6 +150,7 @@ if($acesso)
                                        'size' => 5,
                                        'title' => 'idServidor',
                                        'linha' => 4)));
+    
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();

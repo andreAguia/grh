@@ -64,13 +64,14 @@ if($acesso)
                      tbferias.numDias,
                      idFerias,
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y") as dtf,
-                     month(tbferias.dtInicial)
+                     month(tbferias.dtInicial),
+                     tbsituacao.situacao
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
                                      JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-               WHERE tbservidor.situacao = 1
-                 AND tbferias.status = "'.$status.'"
+                                     JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
+               WHERE tbferias.status = "'.$status.'"
                  AND anoExercicio = '.$anoBase.'
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
     
@@ -92,7 +93,7 @@ if($acesso)
     
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados pela Data Inicial');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Mês'));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Mês','Situação'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,"get_nomeMes"));

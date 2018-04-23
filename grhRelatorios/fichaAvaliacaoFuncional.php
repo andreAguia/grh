@@ -31,20 +31,14 @@ if($acesso){
     
     ######
     
-    #$relatorio = new Relatorio();
-    #$relatorio->set_totalRegistro(FALSE);
-    #$relatorio->set_dataImpressao(FALSE);
-    #$relatorio->show();
-    
-    # Desempenho Profissional
-    $grid = new Grid();
-    $grid->abreColuna(12);
-        p('Avaliação Funcional Anual','center','f16');
-    $grid->fechaColuna();
-    $grid->fechaGrid();
+    $relatorio = new Relatorio();
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_titulo('Avaliação Funcional Anual');
+    $relatorio->show();
     
     # 1) IDENTIFICAÇÃO:
-    p('1) IDENTIFICAÇÃO:','f14');
+    p('1) IDENTIFICAÇÃO:','fichaAvaliacaoCampo');
     
     # Informação do Avaliador
     $grid = new Grid();
@@ -54,13 +48,13 @@ if($acesso){
     $grid->abreColuna(3);
         p('Nome:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
-    $grid->abreColuna(4);
+    $grid->abreColuna(3);
         p('Cargo:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     $grid->abreColuna(2);
         p('Lotação:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
-    $grid->abreColuna(1);
+    $grid->abreColuna(2);
         p('Admissão:','fichaAvaliacaoLabel');
     $grid->fechaColuna();
     
@@ -70,20 +64,18 @@ if($acesso){
     $grid->abreColuna(3);
         p($pessoal->get_nome($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
-    $grid->abreColuna(4);
+    $grid->abreColuna(3);
         p($pessoal->get_cargo($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(2);
          p($pessoal->get_lotacao($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
-    $grid->abreColuna(1);
+    $grid->abreColuna(2);
          p($pessoal->get_dtAdmissao($idServidorPesquisado),'fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->fechaGrid();
     
     ######
-    
-    br();
 
     # Informação do Avaliador
     $grid = new Grid();
@@ -113,8 +105,6 @@ if($acesso){
         p('_____________________');
     $grid->fechaColuna();
     $grid->fechaGrid();
-
-    br();
     
     # Período Avaliado
     $grid = new Grid();
@@ -133,22 +123,11 @@ if($acesso){
     $grid->fechaColuna();
     $grid->fechaGrid();
 
-    br();
-
-    # Desempenho Profissional
-    $grid = new Grid();
-    $grid->abreColuna(12);
-        p('DESEMPENHO PROFISSIONAL','center','f16');
-    $grid->fechaColuna();
-    $grid->fechaGrid();
-    
-    br();
-
     # 2) FICHA DE AVALIA��O FUNCIONAL:
-    p('2) FICHA DE AVALIAÇÂO FUNCIONAL:','f14');
+    p('2) FICHA DE AVALIAÇÂO FUNCIONAL:','fichaAvaliacaoCampo');
     
     # Itens de Avaliação
-    $item[0] = 'Escala de Pontos&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;==>';
+    $item[0] = 'Escala de Pontos';
     $item[1] = '1 - ASSIDUIDADE - Comparecimento ao trabalho para execução das tarefas respeitando a jornada de trabalho exigida. ';
     $item[2] = '2 - RESPONSABILIDADE - Comprometimento no exercício das atribuições inerentes ao cargo, levando-se em conta a seriedade, a dedicação e o interesse demonstrados no seu desempenho.';
     $item[3] = '3 - DISCIPLINA - Reconhecer as hierarquias de trabalho dentro dos princípios do respeito, e da legalidade.';
@@ -164,11 +143,11 @@ if($acesso){
         echo '<tr>';
             if($key == 0){
                 echo '<th>';
-                p($linha,'f13');
+                echo $linha;
                 echo '</th>';
             }else{
                 echo '<td>';
-                p($linha,'f13');
+                echo $linha;
                 echo '</th>';
             }
 
@@ -185,10 +164,8 @@ if($acesso){
     }
     echo '</table>';
     
-    br();
-    
     # 3) RITÉRIOS DA AVALIAÇÂO FUNCIONAL:
-    p('3) CRITÉRIOS DA AVALIAÇÂO FUNCIONAL:','f14');
+    p('3) CRITÉRIOS DA AVALIAÇÂO FUNCIONAL:','fichaAvaliacaoCampo');
     
     # Itens
     $criterio[0] = Array('&nbsp;','GRAU','PONTOS','SÍMBOLO');
@@ -209,30 +186,26 @@ if($acesso){
         echo '</tr>';
     }
     echo '</table>';
-
-    br();
     
     # Assinaturas
-    p('Avaliador: ____________________________________________________','pFafItem');
-    p('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Avaliador (Assinatura e carimbo)','pFafItem');
+    p('____________________________________________________','fichaAvaliacaoCampo','center');
+    p('Assinatura e carimbo do Avaliador','fichaAvaliacaoLabel','center');
+   
+    br();
     
-    br(2);
-
-    echo '<table width="100%" border="0">';
-    echo '<tr><td>';
-        p('Ciente do Servidor: _____________________________________________');
-    echo '</td><td>';
-        p('_________/________/________','pFafItem');
-    echo '</td></tr>';
-    echo '<tr><td>';
-        p('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Assinatura e carimbo)','pFafItem');
-    echo '</td><td>';
-        p('&nbsp;&nbsp;&nbsp;&nbsp;Data da Ciência do Servidor','pFafItem');
-    echo '</td></tr>';
-    echo '</table>';
-
+    $grid = new Grid();
+    $grid->abreColuna(6);
+       p(' _____________________________________','fichaAvaliacaoCampo','center');
+       p('Assinatura e carimbo do Servidor','fichaAvaliacaoLabel','center');
+    $grid->fechaColuna();
+    $grid->abreColuna(6);
+       p('_________/________/________','fichaAvaliacaoCampo','center');
+       p('Data da Ciência do Servidor','fichaAvaliacaoLabel','center');
+    $grid->fechaColuna();
+    $grid->fechaGrid();
+    
     # data de impressão
-    p('Emitido em: '.date('d/m/Y - H:i:s'),'pRelatorioDataImpressao');
+    #p('Emitido em: '.date('d/m/Y - H:i:s'),'pRelatorioDataImpressao');
     
     $grid->fechaColuna();
     $grid->fechaGrid();

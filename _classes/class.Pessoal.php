@@ -64,11 +64,13 @@ class Pessoal extends Bd
      */
     public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = FALSE){
 
-        if(is_null($tabela))
+        if(is_null($tabela)){
             $tabela = $this->tabela;
+        }
 
-        if(is_null($idCampo))
+        if(is_null($idCampo)){
             $idCampo = $this->idCampo;
+        }
 
         parent::gravar($campos,$valor,$idValor,$tabela,$idCampo,$alerta);
     }
@@ -2034,17 +2036,21 @@ class Pessoal extends Bd
     public function mudaStatusFeriasSolicitadaFruida(){      
 
     /**	
-     * Função que procura no banco de dados as férias 
-     * que foram solicitadas cuja data inicial já passou
-     * e muda para fruída
+     * Função acerta o status das férias de acordo com a data atual. 
+     * Muda para fruídas as férias que foram solicitadas cuja data inicial já passou e
+     * Muda para solicitadas as férias que foram fruídas cuja data inicial ainda não passou
      */
         
-        # monta o update
+        # primeira alteração
         $sql = 'UPDATE tbferias SET status = "fruída"
                  WHERE status = "solicitada"
                    AND dtInicial < current_date()';
-
-        # executa
+        parent::update($sql);
+        
+        # segunda alteração
+        $sql = 'UPDATE tbferias SET status = "solicitada"
+                 WHERE status = "fruída"
+                   AND dtInicial > current_date()';
         parent::update($sql);
     }
 
@@ -3170,7 +3176,8 @@ class Pessoal extends Bd
                 }
             }
             
-            if(is_null($retorno) AND ($ultimo<>$anoAtual)){
+            # 
+            if(is_null($retorno)){
                 $retorno = $ultimo+1;
             }
             return $retorno;

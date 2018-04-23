@@ -355,7 +355,7 @@ p#aim{
  *******************************************/
   
   p#fichaAvaliacaoLabel{
-     font-size: 10px;
+     font-size: 11px;
      padding: 2px;
      margin: 0px;
   }
@@ -366,20 +366,30 @@ p#aim{
      margin: 0px;
   }
   
+  table#faf1{
+      width: 100%;
+      border: 2px solid black;
+ }
+ 
+ table#faf2{
+      width: 100%;
+      border: 2px solid black;
+ }
+  
   table#faf1 th{
-     font-size: 14px;
      text-align: center;
      border: 2px solid black;
+     font-size: 12px;
  }
  
  table#faf1 td{
-     font-size: 14px;
      text-align: left;
      border: 2px solid black;
+     font-size: 12px;
  }
  
  table#faf2 td{
-     font-size: 14px;
      text-align: center;
      border: 2px solid black;
+     font-size: 12px;
  }

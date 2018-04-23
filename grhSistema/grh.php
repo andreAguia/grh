@@ -86,7 +86,10 @@ if($acesso)
         # Exibe o Menu Inicial
         case "menu" :
             # acessa a rotina de atualizar os status das férias
-            $pessoal->mudaStatusFeriasSolicitadaFruida();
+            if($intra->get_variavel('dataVerificaFeriasSolicitada') <> date("d/m/Y")){
+                $pessoal->mudaStatusFeriasSolicitadaFruida();                       // muda as férias solicitadas na data de hoje para fruídas
+                $intra->set_variavel('dataVerificaFeriasSolicitada',date("d/m/Y")); // muda a variável para hoje
+            }
 
             # monta o menu principal
             Grh::menu($idUsuario);

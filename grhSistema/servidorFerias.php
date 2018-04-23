@@ -91,10 +91,10 @@ if($acesso){
     
     # select do edita
     $objeto->set_selectEdita('SELECT anoExercicio,
-                                     status,
                                      dtInicial,
                                      numDias,
-                                     obs,
+                                     obs,                                     
+                                     status,
                                      idServidor
                                 FROM tbferias
                                WHERE idFerias = '.$id);
@@ -109,7 +109,7 @@ if($acesso){
     $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","Data Final","Período"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php',NULL));
-    $objeto->set_width(array(15,15,15,15,15,15));
+    #$objeto->set_width(array(15,15,15,15,15,15));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
 
@@ -145,21 +145,12 @@ if($acesso){
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
                                        'title' => 'Ano de Exercício das Férias.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'status',
-                                       'label' => 'Status:',
-                                       'tipo' => 'combo',
-                                       'required' => TRUE,
-                                       'array' => array('','solicitada','fruída'),
-                                       'size' => 20,
-                                       'col' => 2,
-                                       'title' => 'Status das férias',
                                        'linha' => 1),      
                                array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'col' => 3,
+                                       'col' => 2,
                                        'required' => TRUE,
                                        'title' => 'Data do início das férias.',
                                        'linha' => 1),
@@ -173,18 +164,25 @@ if($acesso){
                                        'title' => 'Dias de Férias.',
                                        'linha' => 1),
                                array ( 'linha' => 3,
-                                       'col' => 12,
+                                       'col' => 10,
                                         'nome' => 'obs',
                                         'label' => 'Observação:',
                                         'tipo' => 'textarea',
-                                        'size' => array(80,5)),
+                                        'size' => array(40,5)),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
-                                       'linha' => 2)));
+                                       'linha' => 4),
+                               array ( 'nome' => 'status',
+                                       'label' => 'Status:',
+                                       'tipo' => 'hidden',
+                                       'size' => 20,
+                                       'col' => 2,
+                                       'title' => 'Status das férias',
+                                       'linha' => 1)));
 
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);

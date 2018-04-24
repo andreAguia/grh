@@ -86,6 +86,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
                 $menu->show();
             $callout->fecha();
             $divMenu2->fecha();
@@ -373,6 +374,15 @@ if($acesso)
             $menu->add_item('titulo','Professores');
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Com Data de Nascimento e Sexo','../grhRelatorios/professorIdadeSexo.php'); 
+            $menu->show();
+            break;
+        
+        ######################################
+
+        case "outros";        
+            $menu = new Menu();
+            $menu->add_item('titulo','Outros');
+            $menu->add_item('linkWindow','Relatório de Servidores Ativos Ex-Fenorte','../grhRelatorios/servidoresAtivosExFenorte.php');             
             $menu->show();
             break;
 

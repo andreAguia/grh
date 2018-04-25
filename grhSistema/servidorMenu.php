@@ -192,7 +192,6 @@ if($acesso){
             
             # Define a pasta
             $pasta = "../arquivo/".$idFuncional;
-            $pasta = utf8_encode($pasta);
             
             # Verifica se tem pasta desse servidor
             if(file_exists($pasta)){
@@ -218,8 +217,8 @@ if($acesso){
                     # VErifica se arquivo é da pasta
                     if(substr($arquivo, 0, 5) == "Pasta"){
                         $botao = new BotaoGrafico();
-                        $botao->set_label($partesArquivo[0]);
-                        $botao->set_url($pasta.'/'.$arquivo);
+                        $botao->set_label(utf8_encode($partesArquivo[0]));
+                        $botao->set_url($pasta.'/'.utf8_encode($arquivo));
                         $botao->set_target('_blank');
                         $botao->set_image(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
                         $menu->add_item($botao);
@@ -247,7 +246,6 @@ if($acesso){
             
             # Define a pasta
             $pasta = "../arquivo/".$idFuncional;
-            $pasta = utf8_encode($pasta);
             
             # Verifica se tem pasta desse servidor
             if(file_exists($pasta)){
@@ -269,12 +267,12 @@ if($acesso){
 
                     # Divide o nome do arquivos
                     $partesArquivo = explode('.',$arquivo);
-                    
+                                        
                     # VErifica se arquivo é da pasta
                     if(substr($arquivo, 0, 5) <> "Pasta"){
                         $botao = new BotaoGrafico();
-                        $botao->set_label($partesArquivo[0]);
-                        $botao->set_url($pasta.'/'.$arquivo);
+                        $botao->set_label(utf8_encode($partesArquivo[0]));
+                        $botao->set_url($pasta.'/'.utf8_encode($arquivo));
                         $botao->set_target('_blank');
                         $botao->set_image(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
                         $menu->add_item($botao);

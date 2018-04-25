@@ -207,8 +207,13 @@ if($acesso){
                 while ($arquivo = readdir($ponteiro)) {
 
                     # Desconsidera os diretorios 
-                    if($arquivo == ".." || $arquivo == "." || $arquivo == "exemplos"){
+                    if($arquivo == ".." || $arquivo == "."){
                         continue;
+                    }
+                    
+                    # Verifica a codificação do nome do arquivo
+                    if(codificacao($arquivo) == 'ISO-8859-1'){
+                        $arquivo = utf8_encode($arquivo);
                     }
 
                     # Divide o nome do arquivos
@@ -217,8 +222,8 @@ if($acesso){
                     # VErifica se arquivo é da pasta
                     if(substr($arquivo, 0, 5) == "Pasta"){
                         $botao = new BotaoGrafico();
-                        $botao->set_label(utf8_encode($partesArquivo[0]));
-                        $botao->set_url($pasta.'/'.utf8_encode($arquivo));
+                        $botao->set_label($partesArquivo[0]);
+                        $botao->set_url($pasta.'/'.$arquivo);
                         $botao->set_target('_blank');
                         $botao->set_image(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
                         $menu->add_item($botao);
@@ -261,18 +266,24 @@ if($acesso){
                 while ($arquivo = readdir($ponteiro)) {
 
                     # Desconsidera os diretorios 
-                    if($arquivo == ".." || $arquivo == "." || $arquivo == "exemplos"){
+                    if($arquivo == ".." || $arquivo == "."){
                         continue;
                     }
 
+                    # Verifica a codificação do nome do arquivo
+                    if(codificacao($arquivo) == 'ISO-8859-1'){
+                        $arquivo = utf8_encode($arquivo);
+                    }
+                    
                     # Divide o nome do arquivos
                     $partesArquivo = explode('.',$arquivo);
-                                        
+                    
+                    
                     # VErifica se arquivo é da pasta
                     if(substr($arquivo, 0, 5) <> "Pasta"){
                         $botao = new BotaoGrafico();
-                        $botao->set_label(utf8_encode($partesArquivo[0]));
-                        $botao->set_url($pasta.'/'.utf8_encode($arquivo));
+                        $botao->set_label($partesArquivo[0]);
+                        $botao->set_url($pasta.'/'.$arquivo);
                         $botao->set_target('_blank');
                         $botao->set_image(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
                         $menu->add_item($botao);

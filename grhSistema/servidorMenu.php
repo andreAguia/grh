@@ -192,7 +192,7 @@ if($acesso){
             
             # Define a pasta
             $pasta = "../arquivo/".$idFuncional;
-            $pasta = utf8_decode($pasta);
+            $pasta = utf8_encode($pasta);
             
             # Verifica se tem pasta desse servidor
             if(file_exists($pasta)){
@@ -247,7 +247,7 @@ if($acesso){
             
             # Define a pasta
             $pasta = "../arquivo/".$idFuncional;
-            $pasta = utf8_decode($pasta);
+            $pasta = utf8_encode($pasta);
             
             # Verifica se tem pasta desse servidor
             if(file_exists($pasta)){

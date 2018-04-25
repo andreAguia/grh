@@ -430,7 +430,7 @@ class Grh
             br();     
             $tamanhoImage = 50;
             
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             $botao = new BotaoGrafico();
             $botao->set_label('Funcionais');
             $botao->set_url('servidorFuncionais.php');
@@ -510,12 +510,12 @@ class Grh
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();
-            $botao->set_label('Arquivo');
-            $botao->set_url('servidorArquivo.php');
+            $botao->set_label('Pasta Funcional');
+            $botao->set_url('?fase=pasta');
             $botao->set_image(PASTA_FIGURAS.'arquivo.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Posição Física das Pastas Funcionais');                
+            $botao->set_title('Pasta funcional do servidor');                
             #$botao->set_accessKey('b');
-            #$menu->add_item($botao);
+            $menu->add_item($botao);
             
             $menu->show();
             br();
@@ -526,7 +526,7 @@ class Grh
             titulo('Pessoais');
             br();
 
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             $botao = new BotaoGrafico();
             $botao->set_label('Pessoais');
             $botao->set_url('servidorPessoais.php');
@@ -577,7 +577,7 @@ class Grh
             titulo('Afastamentos');
             br();
 
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             if($pessoal->get_perfilFerias($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Férias');
@@ -647,7 +647,7 @@ class Grh
             titulo('Financeiro');
             br();
 
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             if($pessoal->get_perfilProgressao($perfil) == "Sim")
             {
                 $botao = new BotaoGrafico();

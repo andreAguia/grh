@@ -72,7 +72,7 @@ if($acesso){
         $linkBotao3->set_class('button'); 
         $linkBotao3->set_title('Exibe a pasta funcional do servidor');
         $linkBotao3->set_accessKey('P');
-        $menu->add_link($linkBotao3,"right");
+        #$menu->add_link($linkBotao3,"right");
 
 
         # Relatórios
@@ -184,14 +184,12 @@ if($acesso){
             tituloTable('Pasta Funcional');
             
             br();
-            #$callout = new Callout();
-            #$callout->abre();
                         
             # Pega o idfuncional
             $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
             
             # Define a pasta
-            $pasta = "../arquivo/".$idFuncional;
+            $pasta = "../../_arquivo/".$idFuncional;
             
             # Verifica se tem pasta desse servidor
             if(file_exists($pasta)){
@@ -250,7 +248,7 @@ if($acesso){
             $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
             
             # Define a pasta
-            $pasta = "../arquivo/".$idFuncional;
+            $pasta = "../../_arquivo/".$idFuncional;
             
             # Verifica se tem pasta desse servidor
             if(file_exists($pasta)){

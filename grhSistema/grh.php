@@ -89,6 +89,7 @@ if($acesso)
             if($intra->get_variavel('dataVerificaFeriasSolicitada') <> date("d/m/Y")){
                 $pessoal->mudaStatusFeriasSolicitadaFruida();                       // muda as férias solicitadas na data de hoje para fruídas
                 $intra->set_variavel('dataVerificaFeriasSolicitada',date("d/m/Y")); // muda a variável para hoje
+                $intra->registraLog($idUsuario,date("Y-m-d H:i:s"),'Rotina de verificação de férias executada.',NULL,NULL,6);
             }
 
             # monta o menu principal

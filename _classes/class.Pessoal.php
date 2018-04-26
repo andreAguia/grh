@@ -3545,38 +3545,38 @@ class Pessoal extends Bd
         #
         # Parâmetro: id do servidor
         
-                # Valida parametro
-                if(is_null($idServidor)){
-                    return FALSE;
-                }
-                
-                # Pega o idPessoa desse idServidor
-                $idPessoa = $this->get_idPessoa($idServidor);
-                
-                # Monta o select		
-                $select = 'SELECT numero
-                             FROM tbcontatos
-                            WHERE (tipo = "E-mail" OR tipo = "E-mail Principal")
-                              AND idPessoa = '.$idPessoa;
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }
 
-                $row = parent::select($select);
-                $numero = parent::count($select);
-                $contador = 1;
-                $return = NULL;
-                
-                if($numero>0){
-                    # Percorre o array e preenche o $return
-                    foreach ($row as $valor) {
-                        $return .= strtolower($valor[0]);
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
 
-                        if($contador < $numero){
-                            $return .= ",<br/>";
-                            $contador++;
-                        }
+            # Monta o select		
+            $select = 'SELECT numero
+                         FROM tbcontatos
+                        WHERE (tipo = "E-mail" OR tipo = "E-mail Principal")
+                          AND idPessoa = '.$idPessoa;
+
+            $row = parent::select($select);
+            $numero = parent::count($select);
+            $contador = 1;
+            $return = NULL;
+
+            if($numero>0){
+                # Percorre o array e preenche o $return
+                foreach ($row as $valor) {
+                    $return .= strtolower($valor[0]);
+
+                    if($contador < $numero){
+                        $return .= ",<br/>";
+                        $contador++;
                     }
                 }
+            }
 
-                return $return;		
+            return $return;		
 
         }
 

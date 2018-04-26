@@ -116,7 +116,7 @@ if($acesso){
     $grid->fechaColuna();
     
     $grid->abreColuna(6);
-        p('_________/_________  a  _________/_________','fichaAvaliacaoCampo');
+        p('<u>&nbsp;&nbsp;JULHO / 2015&nbsp;&nbsp;</u>&nbsp;&nbsp;a&nbsp;&nbsp;<u>&nbsp;&nbsp;JUNHO / 2016&nbsp;&nbsp;</u>','fichaAvaliacaoCampo');
     $grid->fechaColuna();
     $grid->abreColuna(6);
         p('__________/_________/_________','fichaAvaliacaoCampo');

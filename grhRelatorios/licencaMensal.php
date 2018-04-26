@@ -27,6 +27,10 @@ if($acesso)
     $relatorioMes = post('mes',date('m'));
     $relatorioAno = post('ano',date('Y'));
     $relatorioLotacao = post('lotacao');
+    
+    if($relatorioLotacao == "*"){
+        $relatorioLotacao = NULL;
+    }
 
     ######
 
@@ -49,6 +53,7 @@ if($acesso)
                                  LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND (("'.$data.'" BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                    OR  ("'.$data.'" < dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
@@ -80,6 +85,7 @@ if($acesso)
                                               LEFT JOIN tblicencapremio USING (idServidor)
                                               LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                    OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                    OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))';
@@ -97,7 +103,6 @@ if($acesso)
     $select .= 'ORDER BY tblicencapremio.dtInicial) ORDER BY 6';
 
     $result = $pessoal->select($select);
-
     
     $relatorio->set_titulo('Relatório Mensal de Servidores em Licença e/ou Afastamanto');
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);

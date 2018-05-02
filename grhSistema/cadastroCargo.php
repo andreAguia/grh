@@ -40,7 +40,6 @@ if($acesso)
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_jscript('<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>');
     $page->iniciaPagina();
 
     # Cabeçalho da Página

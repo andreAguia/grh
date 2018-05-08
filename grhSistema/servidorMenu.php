@@ -189,19 +189,27 @@ if($acesso){
             $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
             
             # Define a pasta
-            $pasta = "../../_arquivo/".$idFuncional;
+            $pasta = "../../_arquivo/";
+            
+            $achei = NULL;
+            
+            # Encontra a pasta
+            foreach (glob($pasta.$idFuncional."*") as $escolhido) {
+                $achei = $escolhido;
+            }
             
             # Verifica se tem pasta desse servidor
-            if(file_exists($pasta)){
+            if(file_exists($achei)){
                 
                 $grupoarquivo = NULL;
+                $contador = 0;
                 
                 # Inicia o menu
                 $tamanhoImage = 60;
                 $menu = new MenuGrafico(1);
             
                 # pasta
-                $ponteiro  = opendir($pasta);
+                $ponteiro  = opendir($achei."/");
                 while ($arquivo = readdir($ponteiro)) {
 
                     # Desconsidera os diretorios 
@@ -221,13 +229,17 @@ if($acesso){
                     if(substr($arquivo, 0, 5) == "Pasta"){
                         $botao = new BotaoGrafico();
                         $botao->set_label($partesArquivo[0]);
-                        $botao->set_url($pasta.'/'.$arquivo);
+                        $botao->set_url($achei.'/'.$arquivo);
                         $botao->set_target('_blank');
                         $botao->set_image(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
                         $menu->add_item($botao);
+                        
+                        $contador++;
                     }
                 }
-                $menu->show();
+                if($contador >0){
+                    $menu->show();
+                }
             }else{                
                 p("Nenhum arquivo encontrado.","center");
             }
@@ -239,19 +251,10 @@ if($acesso){
             #############################################################
             
             tituloTable('Processos');
-            
             br();
-            #$callout = new Callout();
-            #$callout->abre();
-            
-            # Pega o idfuncional
-            $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-            
-            # Define a pasta
-            $pasta = "../../_arquivo/".$idFuncional;
             
             # Verifica se tem pasta desse servidor
-            if(file_exists($pasta)){
+            if(file_exists($achei)){
                 
                 $grupoarquivo = NULL;
                  
@@ -260,7 +263,7 @@ if($acesso){
                 $menu = new MenuGrafico(4);
             
                 # pasta
-                $ponteiro  = opendir($pasta);
+                $ponteiro  = opendir($achei."/");
                 while ($arquivo = readdir($ponteiro)) {
 
                     # Desconsidera os diretorios 
@@ -281,7 +284,7 @@ if($acesso){
                     if(substr($arquivo, 0, 5) <> "Pasta"){
                         $botao = new BotaoGrafico();
                         $botao->set_label($partesArquivo[0]);
-                        $botao->set_url($pasta.'/'.$arquivo);
+                        $botao->set_url($achei.'/'.$arquivo);
                         $botao->set_target('_blank');
                         $botao->set_image(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
                         $menu->add_item($botao);

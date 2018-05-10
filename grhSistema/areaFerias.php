@@ -190,6 +190,8 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório Anual de Férias Solicitadas','../grhRelatorios/feriasAnualStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=s&lotacaoArea='.$parametroLotacao);            
             $menu->add_item('linkWindow','Relatório Anual de Férias Fruídas','../grhRelatorios/feriasAnualStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=f&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Resumo Anual de Férias','../grhRelatorios/feriasResumoAnual.php?parametroAnoExercicio='.$parametroAnoExercicio.'&lotacaoArea='.$parametroLotacao);
+            $menu->add_item('linkWindow','Resumo Anual de Férias Por Lotação','../grhRelatorios/feriasResumoAnualLotacao.php?parametroAnoExercicio='.$parametroAnoExercicio.'&lotacaoArea='.$parametroLotacao);
+            $menu->add_item('linkWindow','Relatório Anual de Férias Pendentes','../grhRelatorios/feriasAnualPandentes.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=s&lotacaoArea='.$parametroLotacao);            
             $menu->add_item('titulo','Relatórios Mensais');
             $menu->add_item('linkWindow','Relatório Mensal de Férias Solicitadas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=s&lotacaoArea='.$parametroLotacao);
             $menu->add_item('linkWindow','Relatório Mensal de Férias Fruídas','../grhRelatorios/feriasMensalStatus.php?parametroAnoExercicio='.$parametroAnoExercicio.'&status=f&lotacaoArea='.$parametroLotacao);

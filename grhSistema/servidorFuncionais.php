@@ -51,15 +51,13 @@ if($acesso)
                            idPerfil,';
 
     # Somente se for estatutário
-    if ($perfilServidor == 1)
+    if ($perfilServidor == 1){
         $selectEdita .= 'idConcurso,';
-
-    # Somente se for estatutário ou cedido
-    if (($perfilServidor == 1) || ($perfilServidor == 2))
-        $selectEdita .= ' idCargo,';
+    }
 
     # os demais
-    $selectEdita .= 'situacao,
+    $selectEdita .= 'idCargo,
+                    situacao,
                     dtAdmissao,
                     processoAdm,
                     dtPublicAdm,
@@ -173,8 +171,7 @@ if($acesso)
                            'size' => 15));
 
     # Somente se for estatutário
-    if ($perfilServidor == 1)
-    {
+    if ($perfilServidor == 1){
         array_push($campos, array ('linha' => 1,
                                    'nome' => 'idConcurso',
                                    'label' => 'Concurso:',
@@ -194,23 +191,16 @@ if($acesso)
                                'col' => 2,
                                'title' => 'Situação',                           
                                'size' => 15));
-    
-            
-    # Somente se for estatutário ou cedido
-    if (($perfilServidor == 1) || ($perfilServidor == 2))
-    {
-         array_push($campos, array ('linha' => 2,
-                                    'nome' => 'idCargo',
-                                    'label' => 'Cargo / Área / Função:',
-                                    'tipo' => 'combo',
-                                    'array' => $cargo,
-                                    'title' => 'Cargo',
-                                    'col' => 12,
-                                    'size' => 15));
-    }
 
     # os demais
-    array_push($campos,
+    array_push($campos,array ( 'linha' => 2,
+                               'nome' => 'idCargo',
+                               'label' => 'Cargo / Área / Função:',
+                               'tipo' => 'combo',
+                               'array' => $cargo,
+                               'title' => 'Cargo',
+                               'col' => 12,
+                               'size' => 15),
                        array ( 'linha' => 3,
                                'nome' => 'dtAdmissao',
                                'label' => 'Data de Admissão:',

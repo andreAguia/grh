@@ -35,13 +35,13 @@ if($acesso){
         $lotacaoArea = NULL;
     }
 
-    /*
-    $select2 = "SELECT tbservidor.idFuncional,
+    # Monta o select
+    $select2 = "(SELECT tbservidor.idFuncional,
                        tbpessoa.nome,
                        concat(IFNULL(tblotacao.UADM,''),' - ',IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,'')) lotacao,
                        tbservidor.idServidor,
                        tbservidor.dtAdmissao,
-                       '-'
+                       '-' as soma
                   FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -73,11 +73,9 @@ if($acesso){
     $select2 .= "
             AND tbservidor.situacao = 1
        ORDER BY tbpessoa.nome asc)
-          ORDER BY tblotacao.uadm, tblotacao.dir, tblotacao.ger";        
-          
-     * 
-     */
-    $select2 = "SELECT tbservidor.idFuncional,
+          ORDER BY tblotacao.uadm, tblotacao.dir, tblotacao.ger)
+        UNION
+        (SELECT tbservidor.idFuncional,
                             tbpessoa.nome,
                             concat(IFNULL(tblotacao.UADM,''),' - ',IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,'')) lotacao,
                             tbservidor.idServidor,
@@ -99,7 +97,10 @@ if($acesso){
         $select2 .= "
               AND anoExercicio = $anoBase
         GROUP BY tbpessoa.nome
-         ORDER BY tblotacao.uadm, tblotacao.dir, tblotacao.ger"; 
+        HAVING soma < 30
+         ORDER BY tblotacao.uadm, tblotacao.dir, tblotacao.ger)
+         ORDER BY 3,2
+        "; 
     
     # Pega os dados do banco
     $result = $servidor->select($select2,TRUE);

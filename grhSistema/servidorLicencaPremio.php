@@ -143,7 +143,6 @@ if($acesso){
                                         'tipo' => 'combo',
                                         'size' => 50,
                                         'array' => $publicacao,
-                                        'required' => TRUE,
                                         'title' => 'Publicação.',
                                         'col' => 5,
                                         'linha' => 1),

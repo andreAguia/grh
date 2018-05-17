@@ -156,7 +156,7 @@ class ListaFerias{
                         
                 if(!is_null($this->lotacao)){
                     $select .= " AND tblotacao.idlotacao = ".$this->lotacao;
-                };
+                }
                 
                 $select .= " GROUP BY status ORDER BY status";
         

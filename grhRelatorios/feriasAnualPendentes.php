@@ -36,12 +36,14 @@ if($acesso){
     }
 
     # Monta o select
+    # primeiro select: servidores ativos que não tiraram ferias
     $select2 = "(SELECT tbservidor.idFuncional,
                        tbpessoa.nome,
                        concat(IFNULL(tblotacao.UADM,''),' - ',IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,'')) lotacao,
                        tbservidor.idServidor,
                        tbservidor.dtAdmissao,
-                       '-' as soma
+                       '-' as soma,
+                       tbsituacao.situacao
                   FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -70,6 +72,7 @@ if($acesso){
         $select2 .= ' AND (tblotacao.idlotacao = "'.$lotacaoArea.'")';
     }
 
+    # segundo select: servidores ativos e inativos tiraram ferias inferior a 30 dias
     $select2 .= "
             AND tbservidor.situacao = 1
        ORDER BY tbpessoa.nome asc)
@@ -80,7 +83,8 @@ if($acesso){
                             concat(IFNULL(tblotacao.UADM,''),' - ',IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,'')) lotacao,
                             tbservidor.idServidor,
                             tbservidor.dtAdmissao,
-                            sum(numDias) as soma
+                            sum(numDias) as soma,
+                            tbsituacao.situacao
                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                      LEFT JOIN tbferias USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
@@ -112,9 +116,9 @@ if($acesso){
         $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($lotacaoArea));
     }
     $relatorio->set_subtitulo('Agrupados por Lotação');
-    $relatorio->set_label(array("Id Funcional","Nome","Lotação","Cargo","Admissão","Dias de Férias"));
+    $relatorio->set_label(array("Id Funcional","Nome","Lotação","Cargo","Admissão","Dias de Férias","Situação"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
-    $relatorio->set_align(array("center","left",NULL,"left","left"));
+    $relatorio->set_align(array("center","left","left","left","center"));
     $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo"));
     $relatorio->set_conteudo($result);

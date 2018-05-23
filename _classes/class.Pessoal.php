@@ -3581,6 +3581,30 @@ class Pessoal extends Bd
         }
 
     ##########################################################################################
+
+        function get_idCedido($idServidor)
+
+        /**
+        * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
+        */
+
+        {
+            # Valida parametro
+            if(is_null($idServidor))
+                return FALSE;
+
+            # Monta o select		
+            $select = 'SELECT idCedido
+                         FROM tbcedido
+                        WHERE idServidor = '.$idServidor;
+
+            $row = parent::select($select,FALSE);
+
+            return $row[0];
+        }
+
+    ##########################################################################################
+
 	
 	
 }

@@ -279,3 +279,33 @@ function exibeProcessoPremio($texto){
 }
 
 ##########################################################
+/**
+ * Função que informa a pasta digitalizada de um servidor
+ * 
+ */
+
+function verificaPasta($idServidor){
+    # Pega o idfuncional
+    $pessoal = new Pessoal();
+    $idFuncional = $pessoal->get_idFuncional($idServidor);
+
+    # Define a pasta
+    $pasta = "../../_arquivo/";
+
+    $achei = NULL;
+
+    # Encontra a pasta
+    foreach (glob($pasta.$idFuncional."*") as $escolhido) {
+        $achei = $escolhido;
+    }
+
+    # Verifica se tem pasta desse servidor
+    if(file_exists($achei)){
+        # Botão de editar
+        $botao = new BotaoGrafico();
+        $botao->set_url('?fase=pasta&idServidor='.$idServidor);
+        $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+        $botao->show();
+    }
+    
+}

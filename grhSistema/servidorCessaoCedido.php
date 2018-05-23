@@ -10,13 +10,16 @@ $idUsuario = NULL;              # Servidor logado
 $idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
-include ("_config.php");
+include("_config.php");
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+# Pega o valor do idCedido 
+$pessoal = new Pessoal();
+$idCedido = $pessoal->get_idCedido($idServidorPesquisado);
+
+if($acesso){    
     # Verifica a fase do programa
     $fase = get('fase','editar');
     
@@ -51,7 +54,7 @@ if($acesso)
                                      obs,
                                      idServidor
                                 FROM tbcedido
-                               WHERE idServidor = '.$idServidorPesquisado);
+                               WHERE idCedido = '.$idCedido);
 
 
     # Caminhos
@@ -72,7 +75,7 @@ if($acesso)
     $objeto->set_tabela('tbcedido');
 
     # Nome do campo id
-    $objeto->set_idCampo('idServidor');
+    $objeto->set_idCampo('idCedido');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -158,12 +161,12 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         case "editar" :            
         case "excluir" :	
         case "gravar" :
-            $objeto->$fase($idServidorPesquisado);
+            
+            $objeto->$fase($idCedido);
             break;	
     }									 	 		
 

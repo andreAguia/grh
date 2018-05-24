@@ -31,7 +31,7 @@ if($acesso)
     
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
 
-    $select = 'SELECT tbservidor.idServidor,
+    $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       data,                                    

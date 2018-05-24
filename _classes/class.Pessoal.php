@@ -2461,16 +2461,14 @@ class Pessoal extends Bd
 
     ###########################################################
 
-    function get_numServidoresAtivos($idLotacao = NULL)
+    function get_numServidoresAtivos($idLotacao = NULL){
 
     /**
      * informa o número de Servidores Ativos
      * 
      * @param integer $idPessoa do servidor
      */
-
-
-    {
+        
         $select = 'SELECT idServidor
                      FROM tbservidor
                      JOIN tbhistlot USING (idServidor)

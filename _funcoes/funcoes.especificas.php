@@ -284,10 +284,10 @@ function exibeProcessoPremio($texto){
  * 
  */
 
-function verificaPasta($idServidor){
+function verificaPasta($idServidorPesquisado){
     # Pega o idfuncional
     $pessoal = new Pessoal();
-    $idFuncional = $pessoal->get_idFuncional($idServidor);
+    $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
 
     # Define a pasta
     $pasta = "../../_arquivo/";
@@ -300,12 +300,16 @@ function verificaPasta($idServidor){
     }
 
     # Verifica se tem pasta desse servidor
-    if(file_exists($achei)){
-        # Botão de editar
-        $botao = new BotaoGrafico();
-        $botao->set_url('?fase=pasta&idServidor='.$idServidor);
-        $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-        $botao->show();
+    if(file_exists($achei)){        
+        $link = new Link('Editar','?fase=pasta&idServidorPesquisado='.$idServidorPesquisado);
+        $link->set_image(PASTA_FIGURAS.'accept.png',20,20);
+        $link->set_title("Pasta encontrada");
+        $link->show();
+    }else{
+        $link = new Link('Editar','?fase=pasta&idServidorPesquisado='.$idServidorPesquisado);
+        $link->set_image(PASTA_FIGURAS.'bloqueado2.png',20,20);
+        $link->set_title("Pasta não encontrada");
+        $link->show();
     }
     
 }

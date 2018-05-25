@@ -2239,7 +2239,68 @@ class Checkup
         }
     }
 
-    ##########################################################
+    ###########################################################
+
+    /**
+     * Método get_feriasAntesAdmissao
+     * 
+     * Servidores com Férias anteriores a data de admissão
+     */
+    
+    public function get_feriasAntesAdmissao(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+       
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          tbferias.anoExercicio,
+                          tbferias.dtInicial,
+                          tbferias.numDias,
+                          tbservidor.dtAdmissao,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbferias USING (idServidor)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                     WHERE tbservidor.situacao = 1
+                       AND dtInicial < dtAdmissao
+                       ORDER BY 2,4 desc';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Férias anteriores a data de Admissão do servidor';
+        $label = ['IdFuncional','Nome','Perfil','Ano Exercicio','Data Inicial','Dias','Admissão'];
+        $funcao = [NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"];
+        $align = ['center','left'];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+        
+        if ($count > 0){
+            if($this->lista){
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
+    ###########################################################
     
     
     

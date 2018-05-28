@@ -20,9 +20,9 @@ $data2 = DateTime::createFromFormat ('Y/m/d', date("Y/m/d"), $timeZone);
 
 
 if($data1 <= $data2){
-    $campoValor[5] = "Fruída";
+    $campoValor[5] = "fruída";
 }else{
-    $campoValor[5] = "Solicitada";
+    $campoValor[5] = "solicitada";
 }
 
 # Verifica quantos dias o servidor já pediu nesse exercicio

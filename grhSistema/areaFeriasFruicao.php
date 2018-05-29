@@ -74,16 +74,16 @@ if($acesso){
     $menu1->add_link($botaoVoltar,"left");
     
     # Ano Exercício
-    $botaoVoltar = new Link("Ano Exercício","areaFeriasExercicio.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Férias por Ano Exercício');
-    $menu1->add_link($botaoVoltar,"right");
+    $botaoExercicio = new Link("Ano Exercício","areaFeriasExercicio.php");
+    $botaoExercicio->set_class('hollow button');
+    $botaoExercicio->set_title('Férias por Ano Exercício');
+    $menu1->add_link($botaoExercicio,"right");
     
     # Ano por Fruíção
-    $botaoVoltar = new Link("Ano de Fruição","areaFeriasFruicao.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Férias por Ano em que foi realmente fruído');
-    #$menu1->add_link($botaoVoltar,"right");
+    $botaoFruicao = new Link("Ano de Fruição");
+    $botaoFruicao->set_class('button');
+    $botaoFruicao->set_title('Férias por Ano em que foi realmente fruído');
+    $menu1->add_link($botaoFruicao,"right");
 
     $menu1->show();
     
@@ -104,7 +104,6 @@ if($acesso){
     $controle->set_size(8);
     $controle->set_title('Filtra por Ano em que as férias foi/será fruída');
     $controle->set_array($anos);
-    $controle->set_valor(date("Y"));
     $controle->set_valor($parametroAno);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
@@ -172,14 +171,14 @@ if($acesso){
                         WHERE YEAR(tbferias.dtInicial)= $parametroAno
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-                    if($parametroLotacao <> "*"){
+                    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
 
                     $select .= " GROUP BY anoExercicio ORDER BY anoExercicio";
 
             $resumo = $servidor->select($select);
-
+            
             # Pega a soma dos campos
             $soma = 0;
             foreach ($resumo as $value){

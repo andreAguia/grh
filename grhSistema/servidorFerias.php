@@ -27,20 +27,7 @@ if($acesso){
     $areaFerias = get_session("areaFerias");
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));
-    
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('parametroAnoExercicio'));
-    } # passa o parametro da session para a variavel parametro retirando as aspas
-    else {
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('parametroAnoExercicio', $parametro);    # transfere para a session para poder recuperá-lo depois
-    }
-
-    # Verifica a paginacão
-    $paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    set_session('sessionPaginacao',$paginacao);		
+    $id = soNumeros(get('id'));	
     
     # Começa uma nova página
     $page = new Page();			
@@ -63,15 +50,11 @@ if($acesso){
 
     # botão de voltar da lista
     if($areaFerias){
-        $objeto->set_voltarLista('areaFerias.php');
+        $objeto->set_voltarLista('areaFeriasExercicio.php');
     }else{
         $objeto->set_voltarLista('servidorMenu.php');
     }
     
-    # controle de pesquisa
-    $objeto->set_parametroLabel('Ano Exercicio:');
-    $objeto->set_parametroValue($parametro);
-        
     # botão de voltar do formulário
     $objeto->set_linkListar('?fase=listar');
 
@@ -86,7 +69,6 @@ if($acesso){
                                      idFerias
                                 FROM tbferias
                                WHERE idServidor = '.$idServidorPesquisado.'
-                                 AND anoExercicio LIKE "%'.$parametro.'%" 
                             ORDER BY dtInicial desc');
     
     # select do edita
@@ -127,13 +109,6 @@ if($acesso){
     
     # Pega o valor para o anoexercicio
     $exercícioDisponivel = $pessoal->get_feriasExercicioDisponivel($idServidorPesquisado);
-    
-    # Pega o ano atual
-    if($areaFerias){
-        $anoPadrao = get_session('parametroAnoExercicio');
-    }else{
-        $anoPadrao = $exercícioDisponivel;
-    }
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'anoExercicio',
@@ -141,7 +116,7 @@ if($acesso){
                                        'tipo' => 'numero',
                                        'size' => 7,
                                        'col' => 2,
-                                       'padrao' => $anoPadrao,
+                                       'padrao' => $exercícioDisponivel,
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
                                        'title' => 'Ano de Exercício das Férias.',
@@ -203,11 +178,6 @@ if($acesso){
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Paginação
-    $objeto->set_paginacao(FALSE);
-    $objeto->set_paginacaoInicial($paginacao);
-    $objeto->set_paginacaoItens(6);
-
 
 ################################################################
 
@@ -218,15 +188,10 @@ if($acesso){
             $objeto->listar();
             break;
 
-        case "editar" :  
-            $mensagem1 = "Tipos de Férias:<br/>"
-                . " Solicitada -> Férias solicitadas pelo servidor que ainda não foi fruída.<br/>"
-                . " Fruídas    -> Férias fruídas pelo servidor.";
-            #$objeto->set_rotinaExtraEditar("callout");
-            #$objeto->set_rotinaExtraEditarParametro($mensagem1);
-
+        case "editar" : 
             $objeto->editar($id);
             break;
+        
         case "gravar" :		
             $objeto->gravar($id,"servidorFeriasExtra.php"); 			
             break;
@@ -234,6 +199,7 @@ if($acesso){
         case "excluir" :	
             $objeto->excluir($id);
             break;
+        
         case "resumo" :
             botaoVoltar("?");
             get_DadosServidor($idServidorPesquisado);

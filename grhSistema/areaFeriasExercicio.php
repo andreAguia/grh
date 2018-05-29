@@ -74,14 +74,14 @@ if($acesso){
     $menu1->add_link($botaoVoltar,"left");
     
     # Ano Exercício
-    $botaoVoltar = new Link("Ano Exercício","areaFeriasExercicio.php");
+    $botaoVoltar = new Link("Ano Exercício");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Férias por Ano Exercício');
-    #$menu1->add_link($botaoVoltar,"right");
+    $menu1->add_link($botaoVoltar,"right");
     
     # Ano por Fruíção
     $botaoVoltar = new Link("Ano de Fruição","areaFeriasFruicao.php");
-    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_class('hollow button');
     $botaoVoltar->set_title('Férias por Ano em que foi realmente fruído');
     $menu1->add_link($botaoVoltar,"right");
 
@@ -176,7 +176,7 @@ if($acesso){
                         WHERE anoExercicio = $parametroAnoExercicio
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-                    if($parametroLotacao <> "*"){
+                    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
 

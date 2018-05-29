@@ -77,7 +77,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Diárias','?fase=diarias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Estatutários','?fase=estatutarios','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Faltas','?fase=faltas','','','divMenuRelatorioGrh');
-                #$menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');

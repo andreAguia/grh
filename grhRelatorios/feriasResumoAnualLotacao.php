@@ -64,12 +64,11 @@ if($acesso){
     $result = $servidor->select($select2,TRUE);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Resumo Anual de Férias');
-    $relatorio->set_tituloLinha2($anoBase);
-    if(!is_null($lotacaoArea)){
-        $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($lotacaoArea));
+    $relatorio->set_titulo('Resumo Anual de Férias Solicitadas e Fruídas');
+    $relatorio->set_tituloLinha2("Exercício: ".$anoBase);
+    if(is_null($lotacaoArea)){
+        $relatorio->set_subtitulo('Agrupados por Lotação');
     }
-    $relatorio->set_subtitulo('Agrupados por Lotação');
     $relatorio->set_label(array("Id Funcional","Nome","Lotação","Cargo","Admissão","Dias de Férias"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
     $relatorio->set_align(array("center","left",NULL,"left","left"));

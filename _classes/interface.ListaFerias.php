@@ -219,7 +219,7 @@ class ListaFerias{
         if($totalServidores > 0){
             
             $tabela = new Tabela();
-            $tabela->set_titulo("Por Dia");
+            $tabela->set_titulo("Por Total de Dias");
             $tabela->set_label(array("Id","Servidor","Lotação","Admissão","Dias","Situação"));
             $tabela->set_classe(array(NULL,NULL,"pessoal"));
             $tabela->set_metodo(array(NULL,"get_cargo","get_lotacaoSimples"));

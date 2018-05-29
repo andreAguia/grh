@@ -74,8 +74,8 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Resumo Anual de Férias');
-    $relatorio->set_tituloLinha2($anoBase);
+    $relatorio->set_titulo('Resumo Anual de Férias Solicitadas e Fruídas');
+    $relatorio->set_tituloLinha2("Exercício: ".$anoBase);
     if(!is_null($lotacaoArea)){
         $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($lotacaoArea));
     }

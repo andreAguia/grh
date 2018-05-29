@@ -85,7 +85,7 @@ if($acesso)
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Anual de Férias '.ucwords($status)."s");
-    $relatorio->set_tituloLinha2($anoBase);
+    $relatorio->set_tituloLinha2("Exercício: ".$anoBase);
     
     if(!is_null($lotacaoArea)){
         $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($lotacaoArea));

@@ -313,3 +313,24 @@ function verificaPasta($idServidorPesquisado){
     }
     
 }
+
+##########################################################
+function acertaDataFerias($texto){
+/**
+ * Função que acerta o nome do mês e exibe junto do ano
+ * 
+ * Usado no relatório que lista solicitações de férias de um ano exercício
+ * 
+ */
+    
+    # Divide o texto mes/ano
+    $pedaco = explode("/", $texto);
+    
+    $mes = get_nomeMes($pedaco[0]);
+    
+    $retorno = $mes." / ".$pedaco[1];
+    
+    return $retorno;
+}
+
+##########################################################

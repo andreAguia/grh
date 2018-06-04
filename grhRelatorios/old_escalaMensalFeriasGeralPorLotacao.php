@@ -56,9 +56,7 @@ if($acesso)
     $relatorio->set_titulo('Escala Mensal de Férias Geral');
     $relatorio->set_tituloLinha2(get_nomeMes($mesBase).' / '.$anoBase);
     $relatorio->set_subtitulo('Agrupados por Lotação e Ordenados pelo Nome do Servidor');
-
-
-
+    
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Ano','Dt Inicial','Dias','Período','Dt Final','Status'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10,10));
     $relatorio->set_align(array("center","left"));

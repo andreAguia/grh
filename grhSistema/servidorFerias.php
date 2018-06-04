@@ -49,8 +49,10 @@ if($acesso){
     $objeto->set_nome('Histórico de Férias');
 
     # botão de voltar da lista
-    if($areaFerias){
+    if($areaFerias == "exercicio"){
         $objeto->set_voltarLista('areaFeriasExercicio.php');
+    }elseif($areaFerias == "fruicao"){
+        $objeto->set_voltarLista('areaFeriasFruicao.php');
     }else{
         $objeto->set_voltarLista('servidorMenu.php');
     }

@@ -38,14 +38,6 @@ if($acesso){
     # Pega os parâmetros
     $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
-    
-    # Agrupamento do Relatório
-    $agrupamentoEscolhido = post('agrupamento',0);
-    
-    # Session do Relatório
-    $select = get_session('sessionSelect');
-    $titulo = get_session('sessionTitulo');
-    $subTitulo = get_session('sessionSubTitulo');
         
     # Joga os parâmetros par as sessions    
     set_session('parametroAno',$parametroAno);
@@ -56,9 +48,7 @@ if($acesso){
     $page->iniciaPagina();
     
     # Cabeçalho da Página
-    if($fase <> "relatorio"){
-        AreaServidor::cabecalho();
-    }
+    AreaServidor::cabecalho();
     
     $grid = new Grid();
     $grid->abreColuna(12);
@@ -88,7 +78,7 @@ if($acesso){
     $menu1->show();
     
     # Título
-    titulo("Área de Férias - Ano de Fruição (Data Inicial)");
+    titulo("Área de Férias");
     
     ################################################################
     
@@ -130,7 +120,7 @@ if($acesso){
 
     $form->show();
             
-    ################################################################
+################################################################
     
     switch ($fase){
         case "" : 
@@ -147,6 +137,8 @@ if($acesso){
 
             loadPage('?fase=exibeLista');
             break;
+        
+################################################################
         
         case "exibeLista" :
         
@@ -193,7 +185,48 @@ if($acesso){
             $tabela->set_rodape("Total de Solicitações: ".$soma);
             $tabela->set_align(array("center"));
             #$tabela->set_funcao(array("exibeDescricaoStatus"));
-            $tabela->set_titulo("Solicitações Por Ano Exercício");
+            $tabela->set_titulo("Ano Exercício");
+            $tabela->show();
+            
+            #######################################
+            
+            # Resumo por Mês
+            
+            # Conecta com o banco de dados
+            $servidor = new Pessoal();
+
+            # Pega os dados
+            $select = "SELECT month(dtInicial),
+                              count(*) as tot                          
+                         FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
+                                       JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE YEAR(tbferias.dtInicial)= $parametroAno
+                          AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+                    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+                        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+                    }
+
+                    $select .= " GROUP BY month(dtInicial) ORDER BY month(dtInicial)";
+
+            $resumo = $servidor->select($select);
+
+            # Pega a soma dos campos
+            $soma = 0;
+            foreach ($resumo as $value){
+                $soma += $value['tot'];
+            }
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Mês","Solicitações"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_rodape("Total de Solicitações: ".$soma);
+            $tabela->set_align(array("center"));
+            $tabela->set_funcao(array("get_nomeMes"));
+            $tabela->set_titulo("Mensal");
             $tabela->show();
             
             #######################################
@@ -212,7 +245,7 @@ if($acesso){
                         WHERE YEAR(tbferias.dtInicial)= $parametroAno
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-                    if($parametroLotacao <> "*"){
+                    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
 
@@ -234,7 +267,7 @@ if($acesso){
             $tabela->set_rodape("Total de Solicitações: ".$soma);
             $tabela->set_align(array("center"));
             $tabela->set_funcao(array("exibeDescricaoStatus"));
-            $tabela->set_titulo("Solicitações Por Status");
+            $tabela->set_titulo("Status");
             $tabela->show();
             
             #######################################
@@ -242,8 +275,9 @@ if($acesso){
             # Relatórios
             $menu = new Menu();
             $menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow','Relatório Anual de Férias','../grhRelatorios/feriasAnual.php?parametroAno='.$parametroAno.'&lotacaoArea='.$parametroLotacao);  
-            
+            $menu->add_item('linkWindow','Anual Agrupado por Mês','../grhRelatorios/ferias.fruicao.anual.porMes.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
+            $menu->add_item('linkWindow','Anual Agrupado por Lotação','../grhRelatorios/ferias.fruicao.anual.porLotacao.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
+            $menu->add_item('linkWindow','Mensal Agrupado por Lotação','../grhRelatorios/ferias.fruicao.mensal.porLotacao.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
             $menu->show();
             
             #######################################
@@ -255,23 +289,24 @@ if($acesso){
                 # Conecta com o banco de dados
                 $servidor = new Pessoal();
 
-                $select ='SELECT tbservidor.idfuncional,        
-                             tbpessoa.nome,
+                $select ='SELECT tbpessoa.nome,
                              tbservidor.idServidor,
                              tbferias.anoExercicio,
                              tbferias.dtInicial,
                              tbferias.numDias,
-                             idFerias,
                              date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y") as dtf,
-                             tbferias.status
+                             idFerias,
+                             tbferias.status,
+                             tbsituacao.situacao
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                                             JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        AND YEAR(tbferias.dtInicial)= '.$parametroAno;
 
-                    if($parametroLotacao <> "*"){
+                    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
 
@@ -280,20 +315,35 @@ if($acesso){
                 $result = $servidor->select($select);
 
                 $tabela = new Tabela();
-                $tabela->set_titulo("Por Solicitação");
-                $tabela->set_label(array('IdFuncional','Nome','Lotação','Exercício','Dt Inicial','Dias','Período','Dt Final','Status'));
-                $tabela->set_align(array("center","left","left"));
-                $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
-                $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,"pessoal"));
-                $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,"get_feriasPeriodo"));
+                $tabela->set_titulo("Ano de Fruíção: ".$parametroAno." (Data Inicial)");
+                $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status','Situação'));
+                $tabela->set_align(array("left","left"));
+                $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
+                $tabela->set_classe(array(NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
+                $tabela->set_metodo(array(NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
                 $tabela->set_conteudo($result);
+                
+                $tabela->set_editar('?fase=editaServidorFerias&id=');
+                $tabela->set_nomeColunaEditar("Acessar");
+                $tabela->set_editarBotao("ver.png");
+                $tabela->set_idCampo('idServidor');
                 $tabela->show();
                                    
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
 
-        ###############################
+################################################################
+
+        # Chama o menu do Servidor que se quer editar
+        case "editaServidorFerias" :
+            set_session('idServidorPesquisado',$id);
+            set_session('areaFerias',"fruicao");
+            loadPage('servidorFerias.php');
+            break; 
+        
+################################################################
+        
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

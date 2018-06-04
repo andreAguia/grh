@@ -57,7 +57,6 @@ if($acesso)
                                      endereco,
                                      bairro,
                                      idCidade,
-                                     uf,
                                      cep,
                                      nomePai,
                                      nomeMae

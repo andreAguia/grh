@@ -302,13 +302,8 @@ function verificaPasta($idServidorPesquisado){
     # Verifica se tem pasta desse servidor
     if(file_exists($achei)){        
         $link = new Link('Editar','?fase=pasta&idServidorPesquisado='.$idServidorPesquisado);
-        $link->set_image(PASTA_FIGURAS.'accept.png',20,20);
+        $link->set_image(PASTA_FIGURAS.'pastaDigitalizada.png',20,20);
         $link->set_title("Pasta encontrada");
-        $link->show();
-    }else{
-        $link = new Link('Editar','?fase=pasta&idServidorPesquisado='.$idServidorPesquisado);
-        $link->set_image(PASTA_FIGURAS.'bloqueado2.png',20,20);
-        $link->set_title("Pasta não encontrada");
         $link->show();
     }
     

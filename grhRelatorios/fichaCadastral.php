@@ -944,10 +944,7 @@ if($acesso)
                         WHEN 1 THEN "Celetista"
                         WHEN 2 THEN "Estatutário"
                         END,
-                        CASE cargo
-                        WHEN 1 THEN "Professor"
-                        WHEN 2 THEN "Outros"
-                        END,
+                        cargo,
                         dtPublicacao,
                         pgPublicacao,
                         processo
@@ -960,11 +957,13 @@ if($acesso)
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);        
         $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Pag.","Processo"));
-        $relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
+        #$relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
         $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
         $relatorio->set_align(array('left','left','left','left','left','left','left','left','left','Left'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
+        $relatorio->set_colunaSomatorio(2);
+        $relatorio->set_textoSomatorio("Total de Dias Averbados:");
+        $relatorio->set_exibeSomatorioGeral(FALSE);
         $relatorio->set_botaoVoltar(FALSE);
         #$relatorio->set_bordaInterna(TRUE);
         $relatorio->set_subTotal(FALSE);
@@ -1004,7 +1003,7 @@ if($acesso)
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array("Saída","Chegada","CI","Processo","Data","Origem","Destino","Valor"));
-        $relatorio->set_width(array(10,10,10,10,10,20,20,10));
+        #$relatorio->set_width(array(10,10,10,10,10,20,20,10));
         $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,"date_to_php",NULL,NULL,"formataMoeda"));
         $relatorio->set_align(array("center"));
         $relatorio->set_conteudo($result);

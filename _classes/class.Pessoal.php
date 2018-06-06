@@ -3601,7 +3601,28 @@ class Pessoal extends Bd
             return $row[0];
         }
 
-    ##########################################################################################
+    ###########################################################
+
+    /**
+     * Método get_totalAverbado
+     * informa o total de dias de tempo averbado
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    function get_totalAverbado($idServidor)
+    {
+        $select = 'SELECT SUM(dias) as total
+                     FROM tbAverbacao
+                    WHERE idServidor = '.$idServidor.'
+                         ORDER BY total';
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+    }
+
+    ###########################################################
 
 	
 	

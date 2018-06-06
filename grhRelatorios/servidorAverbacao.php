@@ -42,10 +42,7 @@ if($acesso){
                            WHEN 1 THEN 'Celetista'
                            WHEN 2 THEN 'Estatutário'
                         END,
-                        CASE cargo
-                           WHEN 1 THEN 'Professor'
-                           WHEN 2 THEN 'Outros'
-                        END,
+                        cargo,
                         CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
                         processo,
                         idAverbacao
@@ -61,8 +58,10 @@ if($acesso){
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
-    #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array('center'));
+    $relatorio->set_colunaSomatorio(2);
+    $relatorio->set_textoSomatorio("Total de Dias Averbados:");
+    $relatorio->set_exibeSomatorioGeral(FALSE);
+    $relatorio->set_align(array('center','center','center','left'));
     $relatorio->set_funcao(array("date_to_php","date_to_php"));
 
     $relatorio->set_conteudo($result);

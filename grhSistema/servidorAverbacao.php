@@ -246,6 +246,16 @@ if($acesso){
     switch ($fase){
         case "" :
         case "listar" :
+            $objeto->listar();
+            
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            callout("Total de dias:".$pessoal->get_totalAverbado($idServidorPesquisado));
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            break;
+            
         case "editar" :			
         case "excluir" :	
         case "gravar" :

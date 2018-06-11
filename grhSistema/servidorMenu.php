@@ -156,8 +156,12 @@ if($acesso){
         botaoVoltar("?");
     }
     
-    # Exibe os dados do Servidor
-    Grh::listaDadosServidor($idServidorPesquisado);
+    $grid = new Grid();
+    $grid->abreColuna(12);
+        # Exibe os dados do Servidor
+        Grh::listaDadosServidor($idServidorPesquisado);
+    $grid->fechaColuna();
+    $grid->fechaGrid();
     
     switch ($fase){	
         # Exibe o Menu Inicial

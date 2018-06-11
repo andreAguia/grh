@@ -521,12 +521,14 @@ class Grh
             br();
 
         $grid2->fechaColuna();
+        
         # Pessoais 
-        $grid2->abreColuna(12,6);        
+        
+        $grid2->abreColuna(12,4);        
             titulo('Pessoais');
             br();
 
-            $menu = new MenuGrafico(4);
+            $menu = new MenuGrafico(3);
             $botao = new BotaoGrafico();
             $botao->set_label('Pessoais');
             $botao->set_url('servidorPessoais.php');
@@ -572,7 +574,38 @@ class Grh
             
         $grid2->fechaColuna();
         
+        # Foto 
+        
+        $grid2->abreColuna(12,2); 
+            titulo('Foto do Servidor');
+            
+            # Pega o idfuncional
+            $idFuncional = $pessoal->get_idFuncional($idServidor);
+
+            # Define a pasta
+            $pasta = "../../_arquivo/";
+
+            $achei = NULL;
+
+            # Encontra a pasta
+            foreach (glob($pasta.$idFuncional."*") as $escolhido) {
+                $achei = $escolhido;
+            }
+
+            # Verifica se tem pasta desse servidor
+            if(file_exists($achei."/foto.jpg")){
+                $foto = new Imagem($achei."/foto.jpg",'Foto do Servidor',150,100);
+                $foto->set_id('foto');
+                $foto->show();
+            }else{
+                $foto = new Imagem(PASTA_FIGURAS.'foto.png','Foto do Servidor',150,100);
+                $foto->set_id('foto');
+                $foto->show();
+            }
+        $grid2->fechaColuna();
+        
         # Ocorrências
+        
         $grid2->abreColuna(12,6);
             titulo('Afastamentos');
             br();

@@ -211,7 +211,6 @@ if($acesso){
                                        'label' => 'Cargo:',
                                        'tipo' => 'texto',
                                        'col' => 8,
-                                       'required' => TRUE,
                                        'size' => 20,                               
                                        'title' => 'Cargo',
                                        'linha' => 4),

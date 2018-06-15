@@ -120,8 +120,7 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    public function get_gratificacaoDtFinal($idServidor)
-    {
+    public function get_gratificacaoDtFinal($idServidor){
         $select = 'SELECT dtFinal
                      FROM tbgratificacao
                     WHERE idServidor = '.$idServidor.'
@@ -131,15 +130,16 @@ class Pessoal extends Bd
 
 
         # For�a como NULL caso seja em branco
-        if((is_null($row[0])) OR ($row == ''))
+        if((is_null($row[0])) OR ($row == '')){
             $row[0] = NULL;
-
+        }
 
         # Verifica se j� tem alguma graificação ou se nunca teve
-        if($numero == 0)
+        if($numero == 0){
             return FALSE; # nunca teve graificação
-        else
+        }else{
             return $row[0]; # Informa se tem graificação em aberto
+        }
     }
 
     ###########################################################
@@ -151,8 +151,7 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    public function get_periodoDisponivel($idServidor)
-    {
+    public function get_periodoDisponivel($idServidor){
             $select = "SELECT anoExercicio,
                       sum(numDias) as dias,
                       status
@@ -192,8 +191,7 @@ class Pessoal extends Bd
      * Método get_ramais
      * Retorna um array com os setores e os ramais
      */
-    public function get_ramais()
-    {
+    public function get_ramais(){
             $select =' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
                           ramais
                      FROM tblotacao
@@ -217,8 +215,7 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    public function get_salarioBase($idServidor)
-    {
+    public function get_salarioBase($idServidor){
             $select = 'SELECT tbclasse.valor
                          FROM tbprogressao, tbclasse
                          WHERE idServidor = '.$idServidor.'
@@ -240,8 +237,7 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    public function get_salarioTotal($idServidor)
-    {
+    public function get_salarioTotal($idServidor){
 
         # Resumo financeira
         $salario = $this->get_salarioBase($idServidor);
@@ -263,8 +259,7 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    public function get_salarioCessao($idServidor)
-    {
+    public function get_salarioCessao($idServidor){
             $select = 'SELECT salario
                          FROM tbcedido
                         WHERE idServidor = '.$idServidor;

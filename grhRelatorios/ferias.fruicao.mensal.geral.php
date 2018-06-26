@@ -83,6 +83,10 @@ if($acesso)
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
     $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+    
+    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+        $relatorio->set_numGrupo(2);
+    }
 
     $relatorio->set_conteudo($result);
     

@@ -194,49 +194,6 @@ if($acesso){
             
             #######################################
             
-            # Resumo por Mês
-            
-            # Conecta com o banco de dados
-            $servidor = new Pessoal();
-
-            # Pega os dados
-            $select = "SELECT CONCAT(month(dtInicial),'/',year(dtInicial)) as tt,
-                              count(*) as tot                          
-                         FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
-                                       JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                         WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
-                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
-                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
-                          AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-
-                    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
-                    }
-
-                    $select .= " GROUP BY year(dtInicial),month(dtInicial) ORDER BY year(dtInicial),month(dtInicial)";
-
-            $resumo = $servidor->select($select);
-
-            # Pega a soma dos campos
-            $soma = 0;
-            foreach ($resumo as $value){
-                $soma += $value['tot'];
-            }
-
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Mês","Solicitações"));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->set_rodape("Total de Solicitações: ".$soma);
-            $tabela->set_align(array("center"));
-            $tabela->set_funcao(array("get_nomeMesAno"));
-            $tabela->set_titulo("Mensal (Data Inicial)");
-            #$tabela->show();
-            
-            #######################################
-            
             # Resumo por status
             
             # Conecta com o banco de dados

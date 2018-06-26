@@ -1,6 +1,8 @@
 <?php
 /**
  * Área de Férias
+ * 
+ * Por data de fruição
  *  
  * By Alat
  */
@@ -160,7 +162,9 @@ if($acesso){
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE YEAR(tbferias.dtInicial)= $parametroAno
+                        WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
+                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
+                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
@@ -196,19 +200,21 @@ if($acesso){
             $servidor = new Pessoal();
 
             # Pega os dados
-            $select = "SELECT month(dtInicial),
+            $select = "SELECT CONCAT(month(dtInicial),'/',year(dtInicial)) as tt,
                               count(*) as tot                          
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE YEAR(tbferias.dtInicial)= $parametroAno
+                         WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
+                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
+                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
 
-                    $select .= " GROUP BY month(dtInicial) ORDER BY month(dtInicial)";
+                    $select .= " GROUP BY year(dtInicial),month(dtInicial) ORDER BY year(dtInicial),month(dtInicial)";
 
             $resumo = $servidor->select($select);
 
@@ -225,9 +231,9 @@ if($acesso){
             $tabela->set_totalRegistro(FALSE);
             $tabela->set_rodape("Total de Solicitações: ".$soma);
             $tabela->set_align(array("center"));
-            $tabela->set_funcao(array("get_nomeMes"));
-            $tabela->set_titulo("Mensal");
-            $tabela->show();
+            $tabela->set_funcao(array("get_nomeMesAno"));
+            $tabela->set_titulo("Mensal (Data Inicial)");
+            #$tabela->show();
             
             #######################################
             
@@ -242,7 +248,9 @@ if($acesso){
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE YEAR(tbferias.dtInicial)= $parametroAno
+                         WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
+                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
+                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
@@ -277,6 +285,7 @@ if($acesso){
             $menu->add_item('titulo','Relatórios');
             $menu->add_item('linkWindow','Anual Agrupado por Mês','../grhRelatorios/ferias.fruicao.anual.porMes.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
             $menu->add_item('linkWindow','Anual Agrupado por Lotação','../grhRelatorios/ferias.fruicao.anual.porLotacao.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
+            $menu->add_item('linkWindow','Mensal Geral','../grhRelatorios/ferias.fruicao.mensal.geral.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
             $menu->add_item('linkWindow','Mensal Agrupado por Lotação','../grhRelatorios/ferias.fruicao.mensal.porLotacao.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
             $menu->show();
             
@@ -289,12 +298,12 @@ if($acesso){
                 # Conecta com o banco de dados
                 $servidor = new Pessoal();
 
-                $select ='SELECT tbpessoa.nome,
+                $select ="SELECT tbpessoa.nome,
                              tbservidor.idServidor,
                              tbferias.anoExercicio,
                              tbferias.dtInicial,
                              tbferias.numDias,
-                             date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y") as dtf,
+                             date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
                              idFerias,
                              tbferias.status,
                              tbsituacao.situacao
@@ -304,18 +313,20 @@ if($acesso){
                                              JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                                              JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND YEAR(tbferias.dtInicial)= '.$parametroAno;
+                         AND ((YEAR(tbferias.dtInicial) = $parametroAno)
+                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
+                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))";
 
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+                        $select .= " AND (tblotacao.idlotacao = '$parametroLotacao')";
                     }
 
-                    $select .= ' ORDER BY dtInicial';
+                    $select .= " ORDER BY dtInicial";
 
                 $result = $servidor->select($select);
 
                 $tabela = new Tabela();
-                $tabela->set_titulo("Ano de Fruíção: ".$parametroAno." (Data Inicial)");
+                $tabela->set_titulo("Ano de Fruição: ".$parametroAno." (Data Inicial)");
                 $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status','Situação'));
                 $tabela->set_align(array("left","left"));
                 $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));

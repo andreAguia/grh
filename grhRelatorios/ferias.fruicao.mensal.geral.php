@@ -36,6 +36,9 @@ if($acesso)
         $parametroLotacao = NULL;
     }
     
+    # Pega o mes
+    $parametroMes = post('parametroMes',1);
+    
     ######
     
     $select ="SELECT tbservidor.idfuncional,        
@@ -53,22 +56,26 @@ if($acesso)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
                WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
-                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
-                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
+                  OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
+                  OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
+                 AND ((MONTH(tbferias.dtInicial) = $parametroMes)
+                  OR (MONTH(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroMes)
+                  OR (MONTH(tbferias.dtInicial) < $parametroMes AND MONTH(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroMes))
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
     
-    if(!is_null($parametroLotacao)){
+    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
         $select .= " AND tbhistlot.lotacao = ".$parametroLotacao;
     }
     
-    $select .= " ORDER BY lotacao, tbferias.dtInicial";
+    $select .= " ORDER BY tbferias.dtInicial";
     
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Férias');
-    $relatorio->set_tituloLinha2($parametroAno);    
-    $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pela Data Inicial');
+    $relatorio->set_titulo('Relatório Mensal de Servidores em Férias');
+    $relatorio->set_tituloLinha2(get_nomeMes($parametroMes)." / ".$parametroAno);
+    
+    $relatorio->set_subtitulo('Ordenados pela Data Inicial');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Exercício','Dt Inicial','Dias','Dt Final','Período','Situação'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
@@ -78,7 +85,22 @@ if($acesso)
     $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(2);
+    
+    $relatorio->set_formCampos(array(
+                               array ('nome' => 'parametroMes',
+                                      'label' => 'Mês:',
+                                      'tipo' => 'combo',
+                                      'array' => $mes,
+                                      'size' => 10,
+                                      'padrao' => $parametroMes,
+                                      'title' => 'Mês',
+                                      'onChange' => 'formPadrao.submit();',
+                                      'col' => 3,
+                                      'linha' => 1)));
+
+    $relatorio->set_formFocus('mesBase');
+    $relatorio->set_formLink('?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
+    
     $relatorio->show();
 
     $page->terminaPagina();

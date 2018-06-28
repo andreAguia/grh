@@ -52,9 +52,7 @@ if($acesso)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
-               WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
-                            OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
-                            OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
+               WHERE YEAR(tbferias.dtInicial) = $parametroAno
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
     
     if(!is_null($parametroLotacao)){

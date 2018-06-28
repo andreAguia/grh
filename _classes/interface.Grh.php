@@ -184,7 +184,7 @@ class Grh
             br();
             
             $tamanhoImage = 60;
-            $menu = new MenuGrafico(2);
+            $menu = new MenuGrafico(3);
             
             $botao = new BotaoGrafico();
             $botao->set_label('Férias');
@@ -192,6 +192,14 @@ class Grh
             $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Área de Férias');
             $botao->set_accesskey('F');
+            $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Licença Prêmio');
+            $botao->set_url('areaLicencaPremio.php');
+            $botao->set_image(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Área de Licença Prêmio');
+            #$botao->set_accesskey('F');
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();

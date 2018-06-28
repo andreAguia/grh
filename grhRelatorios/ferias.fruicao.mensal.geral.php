@@ -55,27 +55,23 @@ if($acesso)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
-               WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
-                  OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
-                  OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
-                 AND ((MONTH(tbferias.dtInicial) = $parametroMes)
-                  OR (MONTH(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroMes)
-                  OR (MONTH(tbferias.dtInicial) < $parametroMes AND MONTH(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroMes))
+               WHERE YEAR(tbferias.dtInicial) = $parametroAno
+                 AND MONTH(tbferias.dtInicial) = $parametroMes
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
     
     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
         $select .= " AND tbhistlot.lotacao = ".$parametroLotacao;
     }
     
-    $select .= " ORDER BY tbferias.dtInicial";
+    $select .= " ORDER BY tbpessoa.nome";
     
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Mensal de Servidores em Férias');
+    $relatorio->set_titulo('Relatório Mensal Geral de Férias');
     $relatorio->set_tituloLinha2(get_nomeMes($parametroMes)." / ".$parametroAno);
     
-    $relatorio->set_subtitulo('Ordenados pela Data Inicial');
+    $relatorio->set_subtitulo('Ordenados pelo Nome do Servidor');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Exercício','Dt Inicial','Dias','Dt Final','Período','Situação'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));

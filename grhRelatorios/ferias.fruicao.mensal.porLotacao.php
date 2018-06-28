@@ -55,12 +55,8 @@ if($acesso)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
-               WHERE ((YEAR(tbferias.dtInicial) = $parametroAno)
-                  OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroAno)
-                  OR (YEAR(tbferias.dtInicial) < $parametroAno AND YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroAno))
-                 AND ((MONTH(tbferias.dtInicial) = $parametroMes)
-                  OR (MONTH(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $parametroMes)
-                  OR (MONTH(tbferias.dtInicial) < $parametroMes AND MONTH(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $parametroMes))
+               WHERE YEAR(tbferias.dtInicial) = $parametroAno
+                 AND MONTH(tbferias.dtInicial) = $parametroMes
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
     
     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
@@ -72,7 +68,7 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Mensal de Servidores em Férias');
+    $relatorio->set_titulo('Relatório Mensal de Férias');
     $relatorio->set_tituloLinha2(get_nomeMes($parametroMes)." / ".$parametroAno);
     
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pela Data Inicial');

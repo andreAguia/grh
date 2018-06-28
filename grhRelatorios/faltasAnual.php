@@ -31,15 +31,19 @@ if($acesso)
     $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
+                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(dtInicial,numDias-1)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                 LEFT JOIN tblicenca USING (idServidor)                                
+                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                                 LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)                             
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
                   AND ((YEAR(tblicenca.dtInicial)='.$anoBase.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))='.$anoBase.'))
-                  AND tblicenca.idTpLicenca = 25     
+                  AND tblicenca.idTpLicenca = 25
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
              ORDER BY dtInicial desc';		
 
     $result = $servidor->select($select);
@@ -49,10 +53,10 @@ if($acesso)
     $relatorio->set_tituloLinha2($anoBase);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Falta');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Data Inicial','Dias','Data Final'));
-    $relatorio->set_width(array(10,40,20,10,10,10));
-    $relatorio->set_align(array("center","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Lotação','Data Inicial','Dias','Data Final'));
+    #$relatorio->set_width(array(10,40,20,10,10,10));
+    $relatorio->set_align(array("center","left","center","left"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

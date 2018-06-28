@@ -33,20 +33,22 @@ if($acesso)
 
     $select = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
-                      tbperfil.nome,
-                      data,                                    
-                      dias,
-                      ADDDATE(data,dias-1),
-                      folgas,
-                      documento
+                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                      tbtrabalhotre.data,                                    
+                      tbtrabalhotre.dias,
+                      ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
+                      tbtrabalhotre.folgas,
+                      tbtrabalhotre.documento
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                    LEFT JOIN tbtrabalhotre ON (tbservidor.idServidor = tbtrabalhotre.idServidor)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil=tbperfil.idPerfil)
+                                 LEFT JOIN tbtrabalhotre ON (tbservidor.idServidor = tbtrabalhotre.idServidor)                                
+                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                 WHERE tbservidor.situacao = 1
-                  AND (("'.$data.'" BETWEEN data AND ADDDATE(data,dias-1))
-                   OR  (LAST_DAY("'.$data.'") BETWEEN data AND ADDDATE(data,dias-1))
-                   OR  ("'.$data.'" < data AND LAST_DAY("'.$data.'") > ADDDATE(data,dias-1)))
-             ORDER BY data desc';		
+                  AND (("'.$data.'" BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
+                   OR  (LAST_DAY("'.$data.'") BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
+                   OR  ("'.$data.'" < tbtrabalhotre.data AND LAST_DAY("'.$data.'") > ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)))
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)        
+             ORDER BY tbtrabalhotre.data desc';		
 
 
     $result = $pessoal->select($select);
@@ -56,9 +58,9 @@ if($acesso)
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
     $relatorio->set_subtitulo('Ordem de Data Inicial do Afastamento');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Data Inicial','Dias','Data Final'));
-    $relatorio->set_width(array(10,30,20,10,10,10));
-    $relatorio->set_align(array('center'));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Data Inicial','Dias','Data Final'));
+    #$relatorio->set_width(array(10,30,20,10,10,10));
+    $relatorio->set_align(array('center','left','left'));
     $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
 
     $relatorio->set_conteudo($result);

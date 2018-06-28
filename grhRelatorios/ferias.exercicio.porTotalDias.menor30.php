@@ -79,7 +79,7 @@ if($acesso)
     $result = $servidor->select($select2);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Férias');
+    $relatorio->set_titulo('Relatório de Férias de Servidores Com Menos de 30 Dias');
     $relatorio->set_tituloLinha2('Ano Exercício: '.$parametroAno);
     
     if(!is_null($parametroLotacao)){
@@ -122,7 +122,8 @@ if($acesso)
     }
 
     $select1 .= " GROUP BY tbpessoa.nome
-                 ORDER BY soma,tbpessoa.nome)";          
+                  HAVING sum(numDias) < 30)
+                  ORDER BY soma,tbpessoa.nome";          
 
     $result = $servidor->select($select1);
 

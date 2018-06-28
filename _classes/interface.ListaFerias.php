@@ -165,7 +165,7 @@ class ListaFerias{
         # Exibe os servidores desse setor
         $servset1 = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
         $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
-        $servset3 = array_merge_recursive($servset1,$servset2); // Junta os dois
+        $servset3 = array_merge_recursive($servset2,$servset1); // Junta os dois
         $totalServidores = count($servset3);                    // Conta o número de servidores
                 
         # Monta a tabela de Servidores.
@@ -310,7 +310,7 @@ class ListaFerias{
         $select1 .= "
               AND anoExercicio = $this->anoExercicio
         GROUP BY tbpessoa.nome
-         ORDER BY soma desc,tbpessoa.nome)";
+         ORDER BY soma,tbpessoa.nome)";
         
         # Pega os dados do banco
         $retorno = $servidor->select($select1,TRUE);

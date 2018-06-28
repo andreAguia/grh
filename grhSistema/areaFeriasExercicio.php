@@ -168,6 +168,7 @@ if($acesso){
             $menu = new Menu();
             $menu->add_item('titulo','Relatórios');
             $menu->add_item('linkWindow','Agrupado pelo Total de Dias','../grhRelatorios/ferias.exercicio.porTotalDias.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
+            $menu->add_item('linkWindow','Agrupado pelo Total de Dias (menor que 30)','../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
             $menu->add_item('linkWindow','Solicitações Agrupadas por Mês','../grhRelatorios/ferias.exercicio.solicitacoes.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
             $menu->show();
             

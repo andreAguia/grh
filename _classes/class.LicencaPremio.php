@@ -312,4 +312,72 @@ class LicencaPremio{
         # Retorna FALSE, ou seja sem problemas
         return FALSE;
     }
+    
+    ########################################################### 
+
+    function get_numPublicacoes($idServidor){
+
+    /**
+     * Informe o número de publicações de Licença Prêmio de um servidor
+     */
+
+        # Pega quantos dias foram publicados
+        $select = 'SELECT idPublicacaoPremio
+                     FROM tbpublicacaopremio 
+                    WHERE idServidor = '.$idServidor;
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->count($select);
+        return $row;
+    }
+
+    ########################################################### 
+
+    function get_numPublicacoesPossiveis($idServidor){
+
+    /**
+     * Informe o número de publicações Possíveis de Licença Prêmio de um servidor, O número que ele deveria ter desde a data de admissão.
+     */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega o ano da Admissão
+        $da = $pessoal->get_dtAdmissao($idServidor);
+        $parte = explode("/",$da);
+        $anoAdmissao = $parte[2];
+        
+        # Pega a ano atual
+        $anoAtual = date("Y");
+        
+        # Calcula a quantidade de publicações possíveis
+        $pp = intval(($anoAtual - $anoAdmissao) / 5);
+        
+        return $pp;
+    }
+
+    ########################################################### 
+
+    function get_numPublicacoesFaltantes($idServidor){
+
+    /**
+     * Informe o número de publicações Que faltam ser publicadas.
+     */
+
+        # Pega publicações feitas 
+        $pf = $this->get_numPublicacoes($idServidor);
+        
+        # Pega o número de Publicações Possíveis
+        $pp = $this->get_numPublicacoesPossiveis($idServidor);
+                
+        # Calcula o número de publicações faltantes
+        $pfalt = $pp - $pf;
+        
+        # Retorna o valor
+        return $pfalt;
+        
+    }
+
+    ###########################################################
 }

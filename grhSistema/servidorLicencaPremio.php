@@ -24,6 +24,9 @@ if($acesso){
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica se veio da área de Licença Premio
+    $areaPremio = get_session("areaPremio");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -55,9 +58,13 @@ if($acesso){
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome($pessoal->get_licencaNome(6));
-
+        
         # botão de voltar da lista
-        $objeto->set_voltarLista('servidorMenu.php');
+        if($areaPremio){
+            $objeto->set_voltarLista('areaLicencaPremio.php');
+        }else{
+            $objeto->set_voltarLista('servidorMenu.php');
+        }
 
         # select da lista
         $objeto->set_selectLista('SELECT dtInicial,

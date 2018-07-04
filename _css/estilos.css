@@ -8,7 +8,6 @@ p#grhTitulo{
     color: #02548b;
     padding: 0px;
     margin: 0px;
-    
 }
 
 p#versao{
@@ -258,6 +257,14 @@ p#estatisticaTexto{
 
 tr#alerta{
     background-color:#ffdcc3;
+}
+
+/*******************************************
+ * Área de Licença Premio
+ *******************************************/
+
+span#negativo{
+    color: #ff0000;
 }
 
 /*******************************************

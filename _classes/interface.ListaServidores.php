@@ -187,7 +187,6 @@ class ListaServidores
         
         # lotacao
         if(!is_null($this->lotacao)){
-            
             # Verifica se o que veio é numérico
             if(is_numeric($this->lotacao)){
                 $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';                

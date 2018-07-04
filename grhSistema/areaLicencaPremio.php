@@ -33,75 +33,28 @@ if($acesso){
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaLicencaPremio',FALSE);
+    set_session('areaPremio',FALSE);
     
     # Pega os parâmetros
     $parametroNome = post('parametroNome',get_session('parametroNome'));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
+    $parametroProcesso = post('parametroProcesso',get_session('parametroProcesso'));
+    $selectRelatorio = get_session('selectRelatorio');
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNome',$parametroNome);
     set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroProcesso',$parametroProcesso);
     
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
     
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "relatorio"){
+        AreaServidor::cabecalho();
+    }
     
-    $grid = new Grid();
-    $grid->abreColuna(12);
-
-    # Cria um menu
-    $menu1 = new MenuBar();
-
-    # Voltar
-    $botaoVoltar = new Link("Voltar","grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu1->add_link($botaoVoltar,"left");
-
-    $menu1->show();
-    
-    # Título
-    titulo("Área de Licença Premio");
-    
-    ################################################################
-    
-    # Formulário de Pesquisa
-    $form = new Form('?');
-    
-    $controle = new Input('parametroNome','texto','Nome:',1);
-    $controle->set_size(8);
-    $controle->set_title('Nome do servidor');
-    $controle->set_valor($parametroNome);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(5);
-    $form->add_item($controle);
-
-    # Lotação
-    $result = $pessoal->select('SELECT idlotacao, 
-                                       concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                  FROM tblotacao
-                                 WHERE ativo
-                              ORDER BY ativo desc,lotacao');
-    array_unshift($result,array("*",'Todas'));
-    
-    $controle = new Input('parametroLotacao','combo','Lotação:',1);
-    $controle->set_size(30);
-    $controle->set_title('Filtra por Lotação');
-    $controle->set_array($result);
-    $controle->set_valor($parametroLotacao);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(7);
-    $form->add_item($controle);
-
-    $form->show();
-            
 ################################################################
     
     switch ($fase){
@@ -123,22 +76,216 @@ if($acesso){
 ################################################################
         
         case "exibeLista" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel,"right");
+
+            $menu1->show();
+
+            # Título
+            titulo("Área de Licença Premio");
+
+            ################################################################
+
+            # Formulário de Pesquisa
+            $form = new Form('?');
+
+            $controle = new Input('parametroNome','texto','Nome:',1);
+            $controle->set_size(8);
+            $controle->set_title('Nome do servidor');
+            $controle->set_valor($parametroNome);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                                      FROM tblotacao
+                                                     WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                                      FROM tblotacao
+                                                     WHERE ativo)
+                                                  ORDER BY 2');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(5);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroProcesso','combo','Processo:',1);
+            $controle->set_size(30);
+            $controle->set_title('Escolhe se tem ou não processo cadastrado');
+            $controle->set_array(array("-- Todos --","Cadastrado","Em Branco"));
+            $controle->set_valor($parametroProcesso);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            # Pega o time inicial
+            $time_start = microtime(TRUE);
+            
+            # Conecta com o banco de dados
+            $servidor = new Pessoal();
+
+            # Pega os dados
+            $select = "SELECT idFuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              concat(IFNULL(tblotacao.UADM,''),' - ',IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,'')) lotacao,
+                              tbservidor.dtAdmissao,
+                              tbservidor.processoPremio,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor               
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1
+                          AND situacao = 1";
+            
+            # Nome
+            $select .= ' AND tbpessoa.nome LIKE "%'.$parametroNome.'%"';
+            
+            # Lotação
+            if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+                if(is_numeric($parametroLotacao)){
+                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+                }else{ # senão é uma diretoria genérica
+                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
+                }
+            }
+            
+            # Processo
+            switch ($parametroProcesso){
+                case "Cadastrado":
+                    $select .= ' AND tbservidor.processoPremio IS NOT NULL';
+                    break;
+                
+                case "Em Branco":
+                    $select .= ' AND tbservidor.processoPremio IS NULL';
+                    break;
+            }
+
+            $select .= "  ORDER BY tbpessoa.nome";
+            
+            # Guarde o select para o relatório
+            set_session('selectRelatorio',$select);
+            
+            $resumo = $servidor->select($select);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Id","Nome","Cargo","Lotação","Admissão","Processo","Número de Dias<br/>Publ./ Fruídos / Disp.","Número de Publicações<br/>Reais / Possíveis / Faltantes"));
+            $tabela->set_align(array("center","left","left","left"));
+            $tabela->set_width(array(5,15,15,15,8,15,15,15));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"exibeDiasLicencaPremio","exibeNumPublicacoesLicencaPremio"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_Cargo"));
+            $tabela->set_titulo("Licença Prêmio");
+            
+            if(!is_null($parametroNome)){
+                $tabela->set_textoRessaltado($parametroNome);
+            }
+            
+            $tabela->set_editar('?fase=editaServidorPremio&id=');
+            $tabela->set_nomeColunaEditar("Acessar");
+            $tabela->set_editarBotao("ver.png");
+            $tabela->set_idCampo('idServidor');
+            $tabela->show();
+            
+            # Pega o time final
+            $time_end = microtime(TRUE);
+            $time = $time_end - $time_start;
+            p(number_format($time, 4, '.', ',')." segundos","right","f10");
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
         
 ################################################################
 
         # Chama o menu do Servidor que se quer editar
-        case "editaServidorFerias" :
+        case "editaServidorPremio" :
             set_session('idServidorPesquisado',$id);
-            set_session('areaFerias',"exercicio");
-            loadPage('servidorFerias.php');
+            set_session('areaPremio',TRUE);
+            loadPage('servidorLicencaPremio.php');
+            break; 
+        
+################################################################
+
+        # Relatório
+        case "relatorio" :
+            $result = $pessoal->select($selectRelatorio);
+            
+            # Inicia a variável do subtítulo
+            $subtitulo = NULL;
+            
+            # Lotação
+            if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao)."<br/>";
+            }
+            
+            # Processo
+            switch ($parametroProcesso){
+                case "Cadastrado":
+                    $subtitulo .= "Processos Cadastrados<br/>";
+                    break;
+                
+                case "Em Branco":
+                    $subtitulo .= "Processos Em Branco<br/>";
+                    break;
+            }
+
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo('Relatório de Licença Prêmio');
+            
+            # Acrescenta o subtítulo de tiver filtro
+            if($subtitulo <> NULL){
+                $relatorio->set_subtitulo($subtitulo);
+            }
+            
+            $relatorio->set_label(array("Id","Nome","Cargo","Lotação","Admissão","Processo","Número de Dias<br/>Publ./ Fruídos / Disp.","Número de Publicações<br/>Reais / Possíveis / Faltantes"));
+            $relatorio->set_align(array("center","left","left","left"));
+            $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"exibeDiasLicencaPremio","exibeNumPublicacoesLicencaPremio"));
+            $relatorio->set_classe(array(NULL,NULL,"pessoal"));
+            $relatorio->set_metodo(array(NULL,NULL,"get_Cargo"));
+
+            $relatorio->set_conteudo($result);
+            $relatorio->show();
             break; 
         
 ################################################################
         
     }
-    $grid->fechaColuna();
-    $grid->fechaGrid();
     
     $page->terminaPagina();
 }else{

@@ -20,8 +20,7 @@ Function dv($matricula)
         $ndig = 0;
         $npos = 0;
 
-        switch (strlen($matricula))
-        {
+        switch (strlen($matricula)){
             case 4:
                 $matricula = "0".$matricula;
                 break;
@@ -37,10 +36,11 @@ Function dv($matricula)
 
         $npos = substr($matricula,4,1);
         $npos = $npos * 2;
-        if ($npos < 10) 
+        if ($npos < 10){
            $ndig = $ndig + $npos;
-        else
+        }else{
            $ndig = $ndig + 1 + ($npos - 10);
+        }
 
         # 4º Dígito
 
@@ -51,10 +51,11 @@ Function dv($matricula)
 
         $npos = substr($matricula,2,1);
         $npos = $npos * 2;
-        if ($npos < 10)
+        if ($npos < 10){
            $ndig = $ndig + $npos;
-        else
+        }else{
            $ndig = $ndig + 1 + ($npos - 10);
+        }
 
         # 2º Dígito
 
@@ -65,10 +66,11 @@ Function dv($matricula)
 
         $npos = substr($matricula,0,1);
         $npos = $npos * 2;
-        if ($npos < 10)
+        if ($npos < 10){
            $ndig = $ndig + $npos;
-        else
+        }else{
            $ndig = $ndig + 1 + ($npos - 10);
+        }
 
         # Finalmente o resultado
         $divisao = $ndig/10;
@@ -76,10 +78,11 @@ Function dv($matricula)
         $fra_div = $divisao - $int_div;
         $mod = $fra_div * 10;
 
-        if ($mod == 0)
+        if ($mod == 0){
             $ndig = 0;
-        else
+        }else{
             $ndig = 10 - $mod;
+        }
 
         return $matricula.'-'.$ndig;
     }
@@ -329,3 +332,46 @@ function acertaDataFerias($texto){
 }
 
 ##########################################################
+
+function exibeDiasLicencaPremio($idServidor){
+/**
+ * Função exibe os dias Publicados, Fruídos e Disponíveis de licença premio
+ * 
+ * Usado na tabela da área de licença premio
+ */
+    
+    # Pega os dados
+    $licenca = new LicencaPremio;
+    $diasPublicados = $licenca->get_numDiasPublicados($idServidor);
+    $diasFruidos = $licenca->get_numDiasFruidos($idServidor);
+    $diasDisponíveis = $diasPublicados - $diasFruidos;
+    
+    $retorno = $diasPublicados." / ".$diasFruidos." / ";
+    
+    if($diasDisponíveis < 0){
+        $retorno .= "<span id='negativo'><B>".$diasDisponíveis."</B></span>";
+    }else{
+        $retorno .= $diasDisponíveis;
+    }
+    
+    return $retorno;
+}
+
+##########################################################
+
+function exibeNumPublicacoesLicencaPremio($idServidor){
+/**
+ * Função exibe o número de publicações de licença premio Reais, Possiveis e Faltantes
+ * 
+ * Usado na tabela da área de licença premio
+ */
+    
+    # Pega os dados
+    $licenca = new LicencaPremio;
+    $numPublicacao = $licenca->get_numPublicacoes($idServidor);
+    $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveis($idServidor);
+    $numPublicacaoFaltante = $numPublicacaoPossivel - $numPublicacao;
+    
+    $retorno = $numPublicacao." / ".$numPublicacaoPossivel." / ".$numPublicacaoFaltante;
+    return $retorno;
+}

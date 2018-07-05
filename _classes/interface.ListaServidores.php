@@ -149,7 +149,8 @@ class ListaServidores
 		             OR (tbservidor.idfuncional LIKE "%'.$this->matNomeId.'%"))';        
             }
             $this->subTitulo .= "pesquisa: ".$this->matNomeId."<br/>";
-        }    
+        } 
+        
         # situação
         if(!is_null($this->situacao)){
             $select .= ' AND (tbsituacao.idsituacao '.$this->situacaoSinal.' "'.$this->situacao.'")';

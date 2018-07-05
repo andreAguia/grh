@@ -80,8 +80,7 @@ if($acesso){
 ##################################################################
     
     # Menu
-    switch ($fase)
-    {	
+    switch ($fase){	
         # Exibe o Menu Inicial
         case "menu" :
             # acessa a rotina de atualizar os status das férias

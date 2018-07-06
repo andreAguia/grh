@@ -7,8 +7,7 @@
  * @author Alat
  */
 
-class ListaServidores
-{    
+class ListaServidores{    
     
     # Título
     private $nomeLista = NULL;  # Nome da lista que aparece no título
@@ -97,8 +96,7 @@ class ListaServidores
      * Exibe a lista
      *
      */	
-    private function prepara()
-    {
+    private function prepara(){
         # Pega o time inicial
         #$this->time_start = microtime(TRUE);
         
@@ -200,7 +198,7 @@ class ListaServidores
         
         # ordenação
         $select .= ' ORDER BY tbpessoa.nome';
-        #echo $select;
+        
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,TRUE);
         $totalRegistros = count($conteudo);

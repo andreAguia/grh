@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
@@ -100,7 +99,7 @@ if($acesso)
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado); 	
+            $objeto->gravar($idServidorPesquisado,"servidorProcessoPremioExtra.php");  
             break;
     }
     $page->terminaPagina();

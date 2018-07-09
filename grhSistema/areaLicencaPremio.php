@@ -102,7 +102,7 @@ if($acesso){
             $menu1->show();
 
             # Título
-            titulo("Área de Licença Premio");
+            #titulo("Área de Licença Premio");
 
             ################################################################
 

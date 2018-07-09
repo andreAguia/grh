@@ -49,7 +49,6 @@ if($acesso){
                       FROM tbservidor
                      WHERE idServidor = '.$idServidorPesquisado;
 
-
     $objeto->set_selectEdita($selectEdita);
 
     # Caminhos

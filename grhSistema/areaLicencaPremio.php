@@ -325,8 +325,8 @@ if($acesso){
             $relatorio->set_label(array("Id","Matrícula","Nome","Cargo","Lotação","Admissão","Processo","Número de Dias<br/>Publ./ Fruídos / Disp.","Número de Publicações<br/>Reais / Possíveis / Faltantes","Situação"));
             $relatorio->set_align(array("center","center","left","left","left","center","left"));
             $relatorio->set_funcao(array(NULL,"dv",NULL,NULL,NULL,"date_to_php",NULL,"exibeDiasLicencaPremio","exibeNumPublicacoesLicencaPremio"));
-            $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal",NULL,NULL,NULL,NULL,NULL,"pessoal"));
-            $relatorio->set_metodo(array(NULL,NULL,NULL,"get_Cargo",NULL,NULL,NULL,NULL,NULL,"get_Situacao"));
+            $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
+            $relatorio->set_metodo(array(NULL,NULL,NULL,"get_Cargo"));
 
             $relatorio->set_conteudo($result);
             $relatorio->show();

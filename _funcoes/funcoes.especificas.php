@@ -277,14 +277,12 @@ function exibeProcessoPremio($texto){
         # Pega o processo 
         $processo = $pessoal->get_licencaNumeroProcesso($pedaco[1]);
     }
-    
     return $processo;
 }
 
 ##########################################################
 /**
  * Função que informa a pasta digitalizada de um servidor
- * 
  */
 
 function verificaPasta($idServidorPesquisado){

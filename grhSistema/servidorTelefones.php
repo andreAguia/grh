@@ -81,7 +81,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Tipo","Email / Telefone","Obs"));
-    #$objeto->set_width(array(10,40,40));
+    $objeto->set_width(array(10,40,40));
     $objeto->set_align(array("center","left","left"));
     $objeto->set_funcao(array(NULL,"strtolower"));
 

@@ -110,7 +110,7 @@ if($acesso){
             $form = new Form('?');
 
             $controle = new Input('parametroNomeMat','texto','Nome, Matrícula ou id:',1);
-            $controle->set_size(8);
+            $controle->set_size(100);
             $controle->set_title('Nome do servidor');
             $controle->set_valor($parametroNomeMat);
             $controle->set_autofocus(TRUE);

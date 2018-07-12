@@ -38,6 +38,10 @@ class ListaServidores{
     private $itemFinal = NULL;
     private $itemInicial = NULL;
     
+    # Ordenação
+    private $ordenacao = 3;                     # ordenação da listagem. Padrão 3 por nome
+    private $ordenacaoCombo = array();          # Array da combo de ordanação
+    
     # Parâmetros do relatório
     private $select = NULL;     // Guarda o select para ser recuperado pela rotina de relatório
     private $selectPaginacao = NULL;  // Guarda o texto acrescido ao select quando se tem paginação
@@ -55,6 +59,22 @@ class ListaServidores{
     
     public function __construct($nome){
         $this->nomeLista = $nome;
+        
+        $this->ordenacaoCombo = array(array(1,"por Id Funcional asc"),
+                                array("1 desc","por Id Funcional desc"),
+                                array(2,"por Matrícula asc"),
+                                array("2 desc","por Matrícula desc"),
+                                array(3,"por Nome asc"),
+                                array("3 desc","por Nome desc"),
+                                array("tbtipocargo.sigla asc,tbcargo.nome asc","por Cargo asc"),
+                                array("tbtipocargo.sigla desc,tbcargo.nome desc","por Cargo desc"),
+                                array(5,"por Lotação asc"),
+                                array("5 desc","por Lotação desc"),
+                                array(6,"por Perfil asc"),
+                                array("6 desc","por Perfil desc"),
+                                array(7,"por Admissão asc"),
+                                array("7 desc","por Admissão desc")
+                );
     }
     
     ###########################################################
@@ -73,8 +93,7 @@ class ListaServidores{
     * @param 	$parametros	Os parâmetros inseridos  
     */
     
-    public function __call ($metodo, $parametros)
-    {
+    public function __call ($metodo, $parametros){
         ## Se for set, atribui um valor para a propriedade
         if (substr($metodo, 0, 3) == 'set'){
             $var = substr($metodo, 4);
@@ -197,7 +216,13 @@ class ListaServidores{
         }
         
         # ordenação
-        $select .= ' ORDER BY tbpessoa.nome';
+        $select .= " ORDER BY $this->ordenacao";
+        
+        foreach($this->ordenacaoCombo as $value){
+            if($value[0] == $this->ordenacao){
+                $this->subTitulo .= "Ordenado ".$value[1]."<br/>";
+            }
+        }
         
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select,TRUE);
@@ -215,8 +240,7 @@ class ListaServidores{
                 
         # Calculos da paginaçao
         $this->texto = NULL;
-        if($this->paginacao)
-        {
+        if($this->paginacao){
             # Calcula o total de páginas
             $totalPaginas = ceil($totalRegistros/$this->paginacaoItens);
 
@@ -404,13 +428,13 @@ class ListaServidores{
      * Exibe a lista
      *
      */	
-    public function showRelatorio()
-    {
+    public function showRelatorio(){
         # Executa rotina interna
         $this->prepara();
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
+        #echo $this->select;
         
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($this->select,TRUE);

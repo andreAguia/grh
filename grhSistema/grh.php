@@ -36,6 +36,24 @@ if($acesso){
     if($fase <> 'resumoAlertas'){  
         AreaServidor::cabecalho();
     }
+    
+    # Zera sessions
+    set_session('parametroNomeMat');
+    set_session('parametroCargo');
+    set_session('parametroCargoComissao');
+    set_session('parametroLotacao');
+    set_session('parametroPerfil');
+    set_session('parametroSituacao');
+    set_session('parametroPaginacao');   
+    set_session('parametroOrdenacao');   
+    set_session('sessionSelect');                      // Select para gerar relatório
+    set_session('sessionTítulo');                      // Título do relatório
+    set_session('sessionSubTítulo');                   // SubTítulo do relatório
+    
+    set_session('sessionParametro');	# Zera a session do parâmetro de pesquisa da classe modelo
+    set_session('sessionPaginacao');	# Zera a session de paginação da classe modelo
+    set_session('sessionLicenca');      # Zera a session do tipo de licença
+    set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
      
     # Menu
     if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes')){       

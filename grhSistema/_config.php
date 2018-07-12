@@ -72,29 +72,6 @@ define("CHAMADOR",$arquivo);
 setlocale (LC_ALL, 'pt_BR');
 setlocale (LC_CTYPE, 'pt_BR');
 
-# Servidor logado
-if((CHAMADOR == 'areaServidor.php') OR (CHAMADOR == 'grh.php'))
-{    
-    set_session('sessionParametro');	# Zera a session do parâmetro de pesquisa da classe modelo
-    set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
-    set_session('sessionLicenca');      # Zera a session do tipo de licen�a
-    set_session('sessionDiariaMes');    # Zera a session do Pesquisa M�s Cadastro de di�rias daa �rea do Servidor
-    set_session('sessionDiariaAno');    # Zera a session do Pesquisa Ano Cadastro de di�rias daa �rea do Servidor
-    set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
-    
-    # Zera os parâmetros da pesquisa da classe listaServidores
-    set_session('parametroNomeMat');
-    set_session('parametroCargo');
-    set_session('parametroCargoComissao');
-    set_session('parametroLotacao');
-    set_session('parametroPerfil');
-    set_session('parametroSituacao');
-    set_session('parametroPaginacao');    
-    set_session('sessionSelect');                      // Select para gerar relatório
-    set_session('sessionTítulo');                      // Título do relatório
-    set_session('sessionSubTítulo');                   // SubTítulo do relatório
-}
-
 # carrega as session
 $idUsuario = get_session('idUsuario');                       # Servidor Logado
 $idServidorPesquisado = get_session('idServidorPesquisado'); # Servidor Editado na pesquisa do sistema do GRH	

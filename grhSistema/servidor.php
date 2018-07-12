@@ -41,6 +41,7 @@ if($acesso){
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','*'));
     $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
     $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
+    $parametroOrdenacao = post('parametroOrdenacao',get_session('parametroOrdenacao',3));
     
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento',0);
@@ -57,6 +58,7 @@ if($acesso){
     set_session('parametroLotacao',$parametroLotacao);
     set_session('parametroPerfil',$parametroPerfil);
     set_session('parametroSituacao',$parametroSituacao);
+    set_session('parametroOrdenacao',$parametroOrdenacao);
     
     # Verifica a paginacão
     $paginacao = get('paginacao',get_session('parametroPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
@@ -116,6 +118,9 @@ if($acesso){
             $linkBotao2->set_accessKey('N');
             $menu1->add_link($linkBotao2,"right");
             $menu1->show();
+            
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores');
 
             # Parâmetros
             $form = new Form('?');
@@ -179,7 +184,7 @@ if($acesso){
                 $controle->set_valor($parametroCargoComissao);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(2);
-                $controle->set_col(4);
+                $controle->set_col(3);
                 $form->add_item($controle);
 
                 # Lotação
@@ -198,7 +203,7 @@ if($acesso){
                 $controle->set_valor($parametroLotacao);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(2);
-                $controle->set_col(5);
+                $controle->set_col(4);
                 $form->add_item($controle);
 
                 # Perfil
@@ -217,6 +222,19 @@ if($acesso){
                 $controle->set_col(3);
                 $form->add_item($controle);
                 
+                # Ordenação
+                $result = $lista->get_ordenacaoCombo();
+                
+                $controle = new Input('parametroOrdenacao','combo','Ordenado:',1);
+                $controle->set_size(30);
+                $controle->set_title('Ordenado');
+                $controle->set_array($result);
+                $controle->set_valor($parametroOrdenacao);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(2);
+                $controle->set_col(2);
+                $form->add_item($controle);
+                
                 # submit
                 #$controle = new Input('submit','submit');
                 #$controle->set_valor('Pesquisar');
@@ -228,8 +246,7 @@ if($acesso){
 
                 $form->show();
 
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores');
+                
                 if(!is_null($parametroNomeMat)){
                     $lista->set_matNomeId($parametroNomeMat);
                 }
@@ -259,6 +276,8 @@ if($acesso){
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(12);
                 
+                # Ordenação
+                $lista->set_ordenacao($parametroOrdenacao);
                 $lista->showTabela();
 
             $grid->fechaColuna();
@@ -305,6 +324,7 @@ if($acesso){
                 $lista->set_situacao($parametroSituacao);
             }
             
+            $lista->set_ordenacao($parametroOrdenacao);            
             $lista->showRelatorio();
             break; 
     }

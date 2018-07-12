@@ -127,3 +127,6 @@ if(!is_null($motivo)){
             break;        
     }
 }
+
+# Retira os zeros à esquerda do idFuncional passando para inteiro
+$campoValor[0] = intval($campoValor[0]);

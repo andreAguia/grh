@@ -39,7 +39,7 @@ class ListaServidores{
     private $itemInicial = NULL;
     
     # Ordenação
-    private $ordenacao = 3;                     # ordenação da listagem. Padrão 3 por nome
+    private $ordenacao = "3 asc";               # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordanação
     
     # Parâmetros do relatório
@@ -60,19 +60,20 @@ class ListaServidores{
     public function __construct($nome){
         $this->nomeLista = $nome;
         
-        $this->ordenacaoCombo = array(array(1,"por Id Funcional asc"),
+        $this->ordenacaoCombo = array(
+                                array("1 asc","por Id Funcional asc"),
                                 array("1 desc","por Id Funcional desc"),
-                                array(2,"por Matrícula asc"),
+                                array("2 asc","por Matrícula asc"),
                                 array("2 desc","por Matrícula desc"),
-                                array(3,"por Nome asc"),
+                                array("3 asc","por Nome asc"),
                                 array("3 desc","por Nome desc"),
                                 array("tbtipocargo.sigla asc,tbcargo.nome asc","por Cargo asc"),
                                 array("tbtipocargo.sigla desc,tbcargo.nome desc","por Cargo desc"),
-                                array(5,"por Lotação asc"),
+                                array("5 asc","por Lotação asc"),
                                 array("5 desc","por Lotação desc"),
-                                array(6,"por Perfil asc"),
+                                array("6 asc","por Perfil asc"),
                                 array("6 desc","por Perfil desc"),
-                                array(7,"por Admissão asc"),
+                                array("7 asc","por Admissão asc"),
                                 array("7 desc","por Admissão desc")
                 );
     }
@@ -217,7 +218,7 @@ class ListaServidores{
         
         # ordenação
         $select .= " ORDER BY $this->ordenacao";
-        
+                
         foreach($this->ordenacaoCombo as $value){
             if($value[0] == $this->ordenacao){
                 $this->subTitulo .= "Ordenado ".$value[1]."<br/>";
@@ -438,7 +439,6 @@ class ListaServidores{
         
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($this->select,TRUE);
-        $totalRegistros = count($conteudo);
         
         if($this->situacao == 1){
             $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");

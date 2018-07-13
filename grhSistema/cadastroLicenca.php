@@ -36,10 +36,9 @@ if($acesso)
     $id = soNumeros(get('id'));
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -71,11 +70,13 @@ if($acesso)
     $objeto->set_parametroValue($parametro);
 
     # ordenação
-    if(is_null($orderCampo))
-            $orderCampo = "1";
+    if(is_null($orderCampo)){
+        $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
+    if(is_null($orderTipo)){
+        $orderTipo = 'asc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT idTpLicenca,
@@ -87,6 +88,7 @@ if($acesso)
                                       processo,                                  
                                       dtPeriodo,
                                       limite_sexo,
+                                      if(tempoServico = 1,"Sim","Não"),
                                       idTpLicenca
                                  FROM tbtipolicenca
                                 WHERE nome LIKE "%'.$parametro.'%"
@@ -102,6 +104,7 @@ if($acesso)
                                      processo,                                  
                                      dtPeriodo,
                                      limite_sexo,
+                                     tempoServico,
                                      documentacao,
                                      obs
                                 FROM tbtipolicenca
@@ -119,9 +122,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Licença","Lei","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero"));
+    $objeto->set_label(array("id","Licença","Lei","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero","Interrompe TS"));
     #$objeto->set_width(array(5,38,7,10,10,10,10,10));
-    $objeto->set_align(array("center","left","left","center","center","center","center","center","center","left"));
+    $objeto->set_align(array("center","left","left"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
     # Classe do banco de dados
@@ -195,6 +198,13 @@ if($acesso)
                'tipo' => 'combo',
                'array' => array ("Todos","Masculino","Feminino"),
                'size' => 20),
+        array ('linha' => 4,
+               'nome' => 'tempoServico',
+               'title' => 'informa se essa licença/afastamento interrompe a contagem do tempo de serviço',
+               'label' => 'Interrompe contagem de TS:',
+               'tipo' => 'combo',
+               'array' => array(array(1,"Sim"),array(0,"Não")),
+               'size' => 10),
          array ('linha' => 5,
                'nome' => 'documentacao',
                'label' => 'Documentação:',

@@ -688,6 +688,26 @@ class Pessoal extends Bd
 
     ###########################################################
 
+    /**
+     * Método get_dtSaida
+     * informa o ano de admiss�o de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    function get_dtSaida($idServidor)
+    {
+            $select = 'SELECT dtDemissao
+                         FROM tbservidor
+                        WHERE idServidor = '.$idServidor;
+
+            $dt = parent::select($select,FALSE);
+
+            return date_to_php($dt[0]);
+    }
+
+    ###########################################################
+
     function get_idPerfil($idServidor)
 
     /**
@@ -3599,26 +3619,113 @@ class Pessoal extends Bd
     ###########################################################
 
     /**
-     * Método get_totalAverbado
-     * informa o total de dias de tempo averbado
+     * Método get_totalAverbadoPublico
+     * informa o total de dias de tempo averbado em empresa Pública
      * 
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_totalAverbado($idServidor)
+    function get_totalAverbadoPublico($idServidor)
     {
         $select = 'SELECT SUM(dias) as total
                      FROM tbAverbacao
-                    WHERE idServidor = '.$idServidor.'
+                    WHERE empresaTipo = 1 AND idServidor = '.$idServidor.'
                          ORDER BY total';
 
         $row = parent::select($select,FALSE);
-
-        return $row[0];
+        
+        if(is_null($row[0])){
+            return 0;
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
 
-	
-	
+    /**
+     * Método get_totalAverbadoPrivado
+     * informa o total de dias de tempo averbado em empresa privada
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    function get_totalAverbadoPrivado($idServidor)
+    {
+        $select = 'SELECT SUM(dias) as total
+                     FROM tbAverbacao
+                    WHERE empresaTipo = 2 AND idServidor = '.$idServidor.'
+                         ORDER BY total';
+
+        $row = parent::select($select,FALSE);
+
+        if(is_null($row[0])){
+            return 0;
+        }else{
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_tempoServicoUenf
+     * informa o total de dias corridos de tempo de serviço dentro da uenf
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    function get_tempoServicoUenf($idServidor){
+        
+        # Data de admissão
+        $dtAdmissao = $this->get_dtAdmissao($idServidor);
+        $dtSaida = $this->get_dtSaida($idServidor);
+        $dtHoje = date("Y-m-d");
+        
+        # Define a data inicial
+        $dtInicial = date_to_bd($dtAdmissao);
+        
+        # Define a data final
+        if(is_null($dtSaida)){
+            $dtFinal = $dtHoje;
+        }else{
+            $dtFinal = date_to_bd($dtSaida);
+        }
+
+        # Calcula a diferença em segundos entre as datas
+        $diferenca = strtotime($dtFinal) - strtotime($dtInicial);
+
+        # Calcula a diferença em dias
+        $dias = floor($diferenca / (60 * 60 * 24));
+
+        return $dias;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_totalDiasLicencaAfastamento
+     * informa o total de dias de Um afastamento ou licença
+     * 
+     * @param string  $idServidor    idServidor do servidor
+     * @param integer $idtipoLicenca o id do tipo de licença
+     */
+
+    function get_totalDiasLicencaAfastamento($idServidor,$idTipoLicenca)
+    {
+        $select = 'SELECT SUM(dias) as total
+                     FROM tblicenca
+                    WHERE idTipoLicenca = '.$idTipoLicenca.' AND idServidor = '.$idServidor.'
+                         ORDER BY total';
+
+        $row = parent::select($select,FALSE);
+
+        if(is_null($row[0])){
+            return 0;
+        }else{
+            return $row[0];
+        }
+    }
+
+    ###########################################################	
 }

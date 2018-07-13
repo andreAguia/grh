@@ -60,27 +60,29 @@ if($acesso){
     if (is_null($orderTipo)) {
         $orderTipo = 'desc';
     }
+    
+    $select = 'SELECT dtInicial,
+                    dtFinal,
+                    dias,
+                    empresa,
+                    CASE empresaTipo
+                       WHEN 1 THEN "Pública"
+                       WHEN 2 THEN "Privada"
+                    END,
+                    CASE regime
+                       WHEN 1 THEN "Celetista"
+                       WHEN 2 THEN "Estatutário"
+                    END,
+                    cargo,
+                    CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
+                    processo,
+                    idAverbacao
+               FROM tbaverbacao
+              WHERE idServidor = '.$idServidorPesquisado.'
+           ORDER BY '.$orderCampo.' '.$orderTipo;
 
     # select da lista
-    $objeto->set_selectLista('SELECT dtInicial,
-                                     dtFinal,
-                                     dias,
-                                     empresa,
-                                     CASE empresaTipo
-                                        WHEN 1 THEN "Pública"
-                                        WHEN 2 THEN "Privada"
-                                     END,
-                                     CASE regime
-                                        WHEN 1 THEN "Celetista"
-                                        WHEN 2 THEN "Estatutário"
-                                     END,
-                                     cargo,
-                                     CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
-                                     processo,
-                                     idAverbacao
-                                FROM tbaverbacao
-                               WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY '.$orderCampo.' '.$orderTipo);
+    $objeto->set_selectLista($select);
 
     # select do edita
     $objeto->set_selectEdita('SELECT empresa,
@@ -109,12 +111,16 @@ if($acesso){
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
+    $align = array("center","center","center","left");
+    $funcao = array("date_to_php","date_to_php");
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
+    $objeto->set_label($label);
     #$objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
-    $objeto->set_align(array("center","center","center","left"));
-    $objeto->set_funcao(array("date_to_php","date_to_php"));
+    $objeto->set_align($align);
+    $objeto->set_funcao($funcao);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -158,7 +164,6 @@ if($acesso){
                                array ( 'nome' => 'pgPublicacao',
                                        'label' => 'Pág:',
                                        'tipo' => 'texto',
-                                       'required' => TRUE,
                                        'col' => 2,
                                        'size' => 5,                         
                                        'title' => 'A Página do DOERJ',
@@ -245,14 +250,122 @@ if($acesso){
     switch ($fase){
         case "" :
         case "listar" :
-            $objeto->listar();
-            
+            #$objeto->listar();
+            # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-            callout("Total de dias:".$pessoal->get_totalAverbado($idServidorPesquisado));
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $linkBotaoVoltar = new Button('Voltar','servidorMenu.php');
+            $linkBotaoVoltar->set_title('Volta para a página anterior');
+            $linkBotaoVoltar->set_accessKey('V');
+            $menu->add_link($linkBotaoVoltar,"left");
+
+            $linkBotaoIncluir = new Button('Incluir','?fase=editar');
+            $linkBotaoIncluir->set_title('Incluir um Registro');
+            $linkBotaoIncluir->set_accessKey('I');
+            $menu->add_link($linkBotaoIncluir,"right");
+            $menu->show();
+            
+            # Exibe os dados do servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            $grid1 = new Grid();
+            $grid1->abreColuna(6);
+            
+            # Pega o sexo do servidor
+            $sexo = $pessoal->get_sexo($idServidorPesquisado);
+            
+            # Tempo de Serviço
+            $uenf = $pessoal->get_tempoServicoUenf($idServidorPesquisado);
+            $publica = $pessoal->get_totalAverbadoPublico($idServidorPesquisado);
+            $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
+            $total = $uenf + $publica + $privada;
+            
+            # Define a idade que dá direito para cada gênero
+            switch ($sexo){
+                case "Masculino" :
+                    $ii = 12775;
+                    break;
+                case "Feminino" :
+                    $ii = 10950;
+                    break;
+            }
+            
+            $dados = array(
+                    array("Tempo de Serviço na UENF ",$uenf),
+                    array("Tempo Averbado Empresa Pública",$publica),
+                    array("Tempo Averbado Empresa Privada",$privada),
+                    array("Total",$total),
+                    array("Dias até a aposentadoria ($ii dias)",$ii-$total)
+            );
+            
+            # Monta a tabela do resumo de tempo
+            $tabela = new Tabela();
+            $tabela->set_titulo('Resumo do Tempo de Serviço');
+            $tabela->set_conteudo($dados);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->show();
+            
+            $grid1->fechaColuna();
+            $grid1->abreColuna(6);
+            
+            # Aposentadoria
+            $dtNascimento = $pessoal->get_dataNascimento($idServidorPesquisado);
+            $idade = $pessoal->get_idade($idServidorPesquisado);
+            $aposentadoria = $pessoal->get_dataAposentadoria($idServidorPesquisado);
+            $Compulsoria = $pessoal->get_dataCompulsoria($idServidorPesquisado);
+            
+            # Define a idade que dá direito para cada gênero
+            switch ($sexo){
+                case "Masculino" :
+                    $ii = 60;
+                    break;
+                case "Feminino" :
+                    $ii = 55;
+                    break;
+            }
+            
+            $dados = array(
+                    array("Idade do Servidor ",$idade),
+                    array("Data de Nascimento ",$dtNascimento),
+                    array("Data com Direito a Aposentadoria ($ii anos)",$aposentadoria),
+                    array("Data da Compulsória (75 anos)",$Compulsoria)
+            );
+            
+            # Monta a tabela do resumo de tempo
+            $tabela = new Tabela();
+            $tabela->set_titulo('Idade para Aposentadoria');
+            $tabela->set_conteudo($dados);
+            $tabela->set_label(array("Descrição","Valor"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->show();
+            
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            
+            # Pega os dados
+            $result = $pessoal->select($select);
+            
+            # Monta a tabela de tempo averbado
+            $tabela = new Tabela();
+            $tabela->set_titulo('Cadastro de Tempo de Serviço Averbado');
+            $tabela->set_conteudo($result);
+            $tabela->set_label($label);
+            $tabela->set_align($align);
+            $tabela->set_funcao($funcao);
+            $tabela->set_idCampo('idAverbacao');
+            $tabela->set_editar('?fase=editar&id=');
+            $tabela->show();
+            
             $grid->fechaColuna();
             $grid->fechaGrid();
-            
             break;
             
         case "editar" :			

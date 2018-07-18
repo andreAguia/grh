@@ -50,7 +50,7 @@ if($acesso)
                                      dtFim,
                                      orgao,
                                      processo,
-                                     CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
+                                     dtPublicacao,
                                      idHistCessao
                                 FROM tbhistcessao
                           WHERE idServidor='.$idServidorPesquisado.'
@@ -59,10 +59,9 @@ if($acesso)
     # select do edita
     $objeto->set_selectEdita('SELECT dtInicio,
                                      dtFim,
-                                     orgao,
                                      processo,                                 
                                      dtPublicacao,
-                                     pgPublicacao,
+                                     orgao,
                                      obs,
                                      idServidor
                                 FROM tbhistcessao
@@ -83,7 +82,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Data Término","Órgão Cessionário","Processo","Publicação no DOERJ"));
     $objeto->set_width(array(10,10,30,20,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php","date_to_php",NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -112,41 +111,35 @@ if($acesso)
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'title' => 'Data do término da cessão.',
-                                        'col' => 3,
-                                       'linha' => 1),
-                               array ( 'nome' => 'orgao',
-                                       'label' => 'Órgão Cessionário:',
-                                       'tipo' => 'texto',
-                                       'required' => TRUE,
-                                       'size' => 100,
-                                       'col' => 6,
-                                       'title' => 'O órgão cessionário',
+                                       'col' => 3,
                                        'linha' => 1),
                                array ( 'nome' => 'processo',
                                        'label' => 'Número do Processo de Cessão:',
                                        'tipo' => 'texto',
                                        'size' => 50,
-                                       'col' => 6,
-                                       'title' => 'O órgão cessionário',
-                                       'linha' => 2),
+                                       'col' => 3,
+                                       'title' => 'O Número do processo de cessao',
+                                       'linha' => 1),
                                array ( 'nome' => 'dtPublicacao',
                                        'label' => 'Data da Pub. no DOERJ:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'pgPublicacao',
-                                       'label' => 'Pág:',
+                                       'linha' => 1),
+                                array ( 'nome' => 'orgao',
+                                       'label' => 'Órgão Cessionário:',
                                        'tipo' => 'texto',
-                                       'size' => 5,
-                                       'col' => 3,
-                                       'title' => 'A Página do DOERJ',
+                                       'required' => TRUE,
+                                       'size' => 100,
+                                       'col' => 12,
+                                       'title' => 'O órgão cessionário',
                                        'linha' => 2),
-                                array ('linha' => 5,
+                                array ('linha' => 3,
                                        'nome' => 'obs',
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
+                                        'col' => 12,
                                        'size' => array(80,5)),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',

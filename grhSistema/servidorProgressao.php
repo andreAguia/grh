@@ -61,7 +61,7 @@ if($acesso)
                                      tbtipoprogressao.nome,
                                      CONCAT(tbclasse.faixa," - ",tbclasse.valor) as vv,
                                      numProcesso,
-                                     CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
+                                     date_format(dtPublicacao,"%d/%m/%Y"),
                                      documento,
                                      tbprogressao.idProgressao
                                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
@@ -76,7 +76,6 @@ if($acesso)
                                      documento,
                                      numProcesso,
                                      dtPublicacao,
-                                     pgPublicacao,
                                      obs,
                                      idServidor
                                 FROM tbprogressao
@@ -97,7 +96,7 @@ if($acesso)
     $objeto->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
     $objeto->set_width(array(10,20,15,15,15,15));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",NULL,NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -141,7 +140,7 @@ if($acesso)
                                array ( 'nome' => 'idTpProgressao',
                                        'label' => 'Tipo:',
                                        'tipo' => 'combo',
-                                       'col' => 6,
+                                       'col' => 4,
                                        'required' => TRUE,
                                        'array' => $result1,
                                        'size' => 20,                               
@@ -152,10 +151,10 @@ if($acesso)
                                        'tipo' => 'combo',
                                        'array' => $result2,
                                        'size' => 20,
-                                       'col' => 6,
+                                       'col' => 5,
                                        'required' => TRUE,
                                        'title' => 'Valor',
-                                       'linha' => 2), 
+                                       'linha' => 1), 
                                array ( 'nome' => 'documento',
                                        'label' => 'Documento:',
                                        'tipo' => 'texto',
@@ -167,23 +166,16 @@ if($acesso)
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
-                                       'col' => 4,
+                                       'col' => 3,
                                        'title' => 'Número do Processo',
-                                       'linha' => 3), 
+                                       'linha' => 2), 
                                array ( 'nome' => 'dtPublicacao',
                                        'label' => 'Data da Pub. no DOERJ:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'pgPublicacao',
-                                       'label' => 'Pág:',
-                                       'tipo' => 'texto',
-                                       'col' => 2,
-                                       'size' => 5,                         
-                                       'title' => 'A Página do DOERJ',
-                                       'linha' => 3),
+                                       'linha' => 2),
                                 array ('linha' => 3,
                                        'nome' => 'obs',
                                        'col' => 12,

@@ -458,8 +458,7 @@ class Grh
             $pessoal = new Pessoal();
             $perfil = $pessoal->get_idPerfil($idServidor);
 
-            if ($perfil == 1)   // Ser for estatutário
-            {
+            if ($perfil == 1){   // Ser for estatutário
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cessão');
                 $botao->set_url('servidorCessao.php');
@@ -467,9 +466,7 @@ class Grh
                 $botao->set_title('Histórico de Cessões do Servidor');
                 $botao->set_accessKey('C');
                 $menu->add_item($botao);
-            }
-            elseif($perfil == 2) // se for cedido
-            {
+            }elseif($perfil == 2){ // se for cedido
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cessão');
                 $botao->set_url('servidorCessaoCedido.php');
@@ -479,8 +476,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoal->get_perfilComissao($perfil) == "Sim")
-            {
+            if($pessoal->get_perfilComissao($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cargo em Comissão');
                 $botao->set_url('servidorComissao.php');
@@ -490,10 +486,9 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if ($perfil == 1)   // Ser for estatutário
-            {
+            if ($perfil == 1){   // Ser for estatutário
                 $botao = new BotaoGrafico();
-                $botao->set_label('Tempo de Serviço Averbado');
+                $botao->set_label('Tempo de Serviço');
                 $botao->set_url('servidorAverbacao.php');
                 $botao->set_image(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Tempo de Serviço Averbado');                
@@ -871,7 +866,7 @@ class Grh
 
         # Licenca
         if($licenca){
-            $mensagem[] = 'Servidor em licença '.$pessoal->get_licenca($idservidor);
+            $mensagem[] = 'Servidor em '.$pessoal->get_licenca($idservidor);
         }
         
         # Licenca Prêmio
@@ -1262,7 +1257,6 @@ class Grh
     
         # Exibe as Publicações
         $select = 'SELECT dtPublicacao,
-                        pgPublicacao,
                         dtInicioPeriodo,
                         dtFimPeriodo,
                         numDias,
@@ -1278,11 +1272,11 @@ class Grh
 
         # Cabeçalho da tabela
         $titulo = 'Publicações';
-        $label = array("Data da Publicação","Pag.","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
+        $label = array("Data da Publicação","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
         $width = array(15,10,15,15,15,10,10,10);
-        $funcao = array('date_to_php',NULL,'date_to_php','date_to_php');
-        $classe = array(NULL,NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
-        $metodo = array(NULL,NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
+        $funcao = array('date_to_php','date_to_php','date_to_php');
+        $classe = array(NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
+        $metodo = array(NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
         $align = array('center');            
 
         # Exibe a tabela
@@ -1298,7 +1292,7 @@ class Grh
         $tabela->set_numeroOrdem(TRUE);
         $tabela->set_numeroOrdemTipo("d");
         
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
                                                        'valor' => 0,
                                                        'operador' => '<',
                                                        'id' => 'alerta')));

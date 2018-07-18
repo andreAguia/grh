@@ -5,6 +5,9 @@
  * 
  */
 
+# Conecta ao Banco de Dados
+$pessoal = new Pessoal();
+
 $idTpLicenca = $campoValor[0];
 $tipo = $campoValor[1];
 $alta = $campoValor[2];
@@ -20,8 +23,27 @@ $num_Bim = $campoValor[11];
 $obs = $campoValor[12];
 $idServidor = $campoValor[13];
 
-# Conecta ao Banco de Dados
-$pessoal = new Pessoal();
+# Pega o sexo do servidor
+$sexo = $pessoal->get_sexo($idServidor);
+
+# Verifica restrição de genero para esse afastamento
+$restricao = $pessoal->get_licencaSexo($idTpLicenca);
+
+# Feminino
+if($restricao == "Feminino"){
+    if($sexo <> "Feminino"){
+        $msgErro.='Esse tipo de licença só é permitido para servidores do sexo feminino!\n';
+        $erro = 1;
+    }
+}
+
+# Masculino
+if($restricao == "Masculino"){
+    if($sexo <> "Masculino"){
+        $msgErro.='Esse tipo de licença só é permitido para servidores do sexo masculino!\n';
+        $erro = 1;
+    }
+}
     
 #echo $idTpLicenca;
 # Verifica se o tipo de licença foi digitado

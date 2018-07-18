@@ -68,7 +68,6 @@ if($acesso){
 
         # select da lista
         $objeto->set_selectLista('SELECT tbpublicacaopremio.dtPublicacao,
-                                         tbpublicacaopremio.pgPublicacao,
                                          tbpublicacaopremio.dtInicioPeriodo,
                                          tbpublicacaopremio.dtFimPeriodo,
                                          dtInicial,
@@ -95,10 +94,10 @@ if($acesso){
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(array("Data da Publicação","Pág.","Período Aquisitivo<br/>Início","Período Aquisitivo<br/>Fim","Inicio","Dias","Término"));
+        $objeto->set_label(array("Data da Publicação","Período Aquisitivo<br/>Início","Período Aquisitivo<br/>Fim","Inicio","Dias","Término"));
         #$objeto->set_width(array(25,10,25,25));	
         $objeto->set_align(array("center"));
-        $objeto->set_funcao(array('date_to_php',NULL,'date_to_php','date_to_php','date_to_php',NULL,'date_to_php'));
+        $objeto->set_funcao(array('date_to_php','date_to_php','date_to_php','date_to_php',NULL,'date_to_php'));
         #$objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
         #$objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
         $objeto->set_numeroOrdem(TRUE);

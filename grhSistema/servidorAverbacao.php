@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Averbações no SAPE
+ * Cadastro de Tempo de Serviço
  *  
  * By Alat
  */
@@ -74,7 +74,7 @@ if($acesso){
                        WHEN 2 THEN "Estatutário"
                     END,
                     cargo,
-                    CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
+                    dtPublicacao,
                     processo,
                     idAverbacao
                FROM tbaverbacao
@@ -88,7 +88,6 @@ if($acesso){
     $objeto->set_selectEdita('SELECT empresa,
                                      empresaTipo,
                                      dtPublicacao,
-                                     pgPublicacao,
                                      processo,
                                      dtInicial,
                                      dtFinal,
@@ -114,7 +113,7 @@ if($acesso){
     
     $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
     $align = array("center","center","center","left");
-    $funcao = array("date_to_php","date_to_php");
+    $funcao = array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
 
     # Parametros da tabela
     $objeto->set_label($label);
@@ -142,7 +141,7 @@ if($acesso){
                                        'autofocus' => TRUE,
                                        'size' => 80,                                   
                                        'title' => 'Nome da Empresa.',
-                                       'col' => 9,
+                                       'col' => 4,
                                        'linha' => 1),
                                array ( 'nome' => 'empresaTipo',
                                        'label' => 'Tipo:',
@@ -150,7 +149,7 @@ if($acesso){
                                        'required' => TRUE,
                                        'array' => Array(Array(1,"Pública"),Array(2,"Privada")),
                                        'size' => 20,
-                                       'col' => 3,
+                                       'col' => 2,
                                        'title' => 'Tipo da Empresa',
                                        'linha' => 1),
                                array ( 'nome' => 'dtPublicacao',
@@ -160,22 +159,15 @@ if($acesso){
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'pgPublicacao',
-                                       'label' => 'Pág:',
-                                       'tipo' => 'texto',
-                                       'col' => 2,
-                                       'size' => 5,                         
-                                       'title' => 'A Página do DOERJ',
-                                       'linha' => 2),
+                                       'linha' => 1),
                                array ( 'nome' => 'processo',
                                        'label' => 'Processo:',
                                        'tipo' => 'texto',
                                        'required' => TRUE,
                                        'size' => 30,
-                                       'col' => 4,
+                                       'col' => 3,
                                        'title' => 'Número do Processo',
-                                       'linha' => 2), 
+                                       'linha' => 1), 
                                array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
@@ -273,8 +265,11 @@ if($acesso){
             # Exibe os dados do servidor
             get_DadosServidor($idServidorPesquisado);
             
+            #############################################################
+            # Tempo de Serviço
+            
             $grid1 = new Grid();
-            $grid1->abreColuna(6);
+            $grid1->abreColuna(3);
             
             # Pega o sexo do servidor
             $sexo = $pessoal->get_sexo($idServidorPesquisado);
@@ -283,37 +278,125 @@ if($acesso){
             $uenf = $pessoal->get_tempoServicoUenf($idServidorPesquisado);
             $publica = $pessoal->get_totalAverbadoPublico($idServidorPesquisado);
             $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
-            $total = $uenf + $publica + $privada;
+            $totalTempo = $uenf + $publica + $privada;
+            
+            $dados1 = array(
+                    array("Tempo de Serviço na UENF ",$uenf),
+                    array("Tempo Averbado Empresa Pública",$publica),
+                    array("Tempo Averbado Empresa Privada",$privada),
+                    array("Total",$totalTempo)
+            );
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo('Tempo de Serviço');
+            $tabela->set_conteudo($dados1);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'totalTempo')));
+            
+            $tabela->show();
+            
+            $grid1->fechaColuna();
+            
+            #############################################################
+            # Ocorrências que reduzem do Tempo de Serviço
+            
+            $grid1->abreColuna(3);
+            
+            $reducao = "SELECT tbtipolicenca.nome as tipo,
+                              SUM(numDias) as dias
+                         FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                        WHERE idServidor = $idServidorPesquisado
+                          AND tbtipolicenca.tempoServico IS TRUE
+                       GROUP BY tbtipolicenca.nome";
+            
+            $dados2 = $pessoal->select($reducao);
+            
+            # Somatório
+            $totalOcorrencias = array_sum (array_column($dados2, 'dias') );
+            
+            # Adiciona na tabela
+            if($totalOcorrencias == 0){
+                array_push($dados2,array("Sem Ocorrências","---"));
+            }else{
+                array_push($dados2,array("Total",$totalOcorrencias));
+            }
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo('Ocorrências');
+            $tabela->set_conteudo($dados2);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'totalTempo')));
+            $tabela->show();
+            
+            $grid1->fechaColuna();
+            
+            #############################################################
+            # Resumo
+            
+            $grid1->abreColuna(3);            
             
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
                 case "Masculino" :
-                    $ii = 12775;
+                    $diasAposentadoria = 12775;
                     break;
                 case "Feminino" :
-                    $ii = 10950;
+                    $diasAposentadoria = 10950;
                     break;
             }
             
-            $dados = array(
-                    array("Tempo de Serviço na UENF ",$uenf),
-                    array("Tempo Averbado Empresa Pública",$publica),
-                    array("Tempo Averbado Empresa Privada",$privada),
-                    array("Total",$total),
-                    array("Dias até a aposentadoria ($ii dias)",$ii-$total)
+            # Calcula o tempo de serviço geral
+            $totalTempoGeral = $totalTempo - $totalOcorrencias;
+            
+            # Dias que faltam
+            $faltam = $diasAposentadoria - $totalTempoGeral;
+            
+            #
+            
+            $dados3 = array(
+                      array("Tempo de Serviço ",$totalTempo),
+                      array("Ocorrências","($totalOcorrencias)"),
+                      array("Total",$totalTempoGeral),
+                      array("Dias para aposentadoria",$diasAposentadoria),
+                      array("Total",$faltam." dias<br/>(".dias_to_diasMesAno($faltam).")")
             );
             
-            # Monta a tabela do resumo de tempo
+            # Monta a tabela
             $tabela = new Tabela();
-            $tabela->set_titulo('Resumo do Tempo de Serviço');
-            $tabela->set_conteudo($dados);
+            $tabela->set_titulo('Resumo Geral');
+            $tabela->set_conteudo($dados3);
             $tabela->set_label(array("Descrição","Dias"));
             $tabela->set_align(array("left","center"));
             $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                        'valor' => "Total",
+                                                        'operador' => '=',
+                                                        'id' => 'totalTempo'),
+                                                    array('coluna' => 0,
+                                                        'valor' => "Ocorrências",
+                                                        'operador' => '=',
+                                                        'id' => 'ocorrencia'))
+                    );
             $tabela->show();
             
             $grid1->fechaColuna();
-            $grid1->abreColuna(6);
+            
+            #############################################################
+            # Aposentadoria
+            
+            $grid1->abreColuna(3);
             
             # Aposentadoria
             $dtNascimento = $pessoal->get_dataNascimento($idServidorPesquisado);
@@ -331,7 +414,7 @@ if($acesso){
                     break;
             }
             
-            $dados = array(
+            $dados4 = array(
                     array("Idade do Servidor ",$idade),
                     array("Data de Nascimento ",$dtNascimento),
                     array("Data com Direito a Aposentadoria ($ii anos)",$aposentadoria),
@@ -341,7 +424,7 @@ if($acesso){
             # Monta a tabela do resumo de tempo
             $tabela = new Tabela();
             $tabela->set_titulo('Idade para Aposentadoria');
-            $tabela->set_conteudo($dados);
+            $tabela->set_conteudo($dados4);
             $tabela->set_label(array("Descrição","Valor"));
             $tabela->set_align(array("left","center"));
             $tabela->set_totalRegistro(FALSE);
@@ -349,6 +432,32 @@ if($acesso){
             
             $grid1->fechaColuna();
             $grid1->fechaGrid();
+            
+            #############################################################
+            # Análise
+            
+            $painel = new Callout("primary");
+            $painel->abre();
+                # Análise por dia
+                if($diasAposentadoria > $totalTempoGeral){
+                    echo "Servidor ainda não alcançou os ".$diasAposentadoria." dias de serviço para solicitar aposentadoria.";
+                }else{
+                    echo "Servidor já alcançou os ".$diasAposentadoria." dias de serviço para solicitar aposentadoria.";
+                }
+                
+                br();
+                
+                # Análise por idade
+                if($ii > $idade){
+                    echo "Servidor ainda não alcançou a idade para solicitar aposentadoria.";
+                }else{
+                    echo "Servidor já alcançou a idade para solicitar aposentadoria.";
+                }
+                
+            
+            $painel->fecha();
+            
+            #############################################################
             
             # Pega os dados
             $result = $pessoal->select($select);

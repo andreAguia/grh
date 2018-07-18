@@ -53,11 +53,13 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
         $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
         $orderTipo = 'desc';
+    }
 
     # Evita que um servidor que já esteja recebendo gratificação passe a receber outra.
     # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
@@ -151,10 +153,10 @@ if($acesso)
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
-                                       'col' => 5,
+                                       'col' => 3,
                                        'title' => 'Número do Processo',
-                                       'linha' => 2),
-                                array ('linha' => 3,
+                                       'linha' => 1),
+                                array ('linha' => 2,
                                        'col' => 12,
                                        'nome' => 'obs',
                                        'label' => 'Observação:',

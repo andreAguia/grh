@@ -78,7 +78,7 @@ if($acesso)
                                      dtInicioPeriodo,
                                      dtFimPeriodo,
                                      numProcesso,
-                                     concat(date_format(dtPublicacao,"%d/%m/%Y")," - Pag ",pgPublicacao),
+                                     date_format(dtPublicacao,"%d/%m/%Y"),
                                      documento,
                                      idTrienio
                                 FROM tbtrienio
@@ -92,8 +92,6 @@ if($acesso)
                                      dtFimPeriodo,
                                      documento,
                                      numProcesso,
-                                     dtPublicacao,
-                                     pgPublicacao,
                                      obs,
                                      idServidor
                                 FROM tbtrienio
@@ -114,7 +112,7 @@ if($acesso)
     $objeto->set_label(array("a partir de","%","P.Aq.Início","P.Aq.Fim","Processo","DOERJ","Documento"));
     #$objeto->set_width(array(10,5,10,10,20,15,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -157,7 +155,7 @@ if($acesso)
                                        'autofocus' => TRUE,
                                        'array' => $percentuais,
                                        'size' => 20,
-                                       'col' => 3,
+                                       'col' => 2,
                                        'title' => 'período de férias',
                                        'linha' => 1),     	 
                                array ( 'nome' => 'dtInicial',
@@ -198,7 +196,7 @@ if($acesso)
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
-                                       'col' => 4,
+                                       'col' => 3,
                                        'title' => 'Número do Processo',
                                        'linha' => 3), 
                                array ( 'nome' => 'dtPublicacao',
@@ -207,13 +205,6 @@ if($acesso)
                                        'size' => 20,
                                         'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'pgPublicacao',
-                                       'label' => 'Pág:',
-                                       'tipo' => 'texto',
-                                       'col' => 2,
-                                       'size' => 5,                         
-                                       'title' => 'A Página do DOERJ',
                                        'linha' => 3),
                                 array ('linha' => 4,
                                        'nome' => 'obs',

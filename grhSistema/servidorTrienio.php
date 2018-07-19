@@ -134,23 +134,21 @@ if($acesso)
     # Monta o array para o campo percentual
     $percentuaisPossiveis = array ("10","15","20","25","30","35","40","45","50","55","60");
 
-    #if (is_null($id)) // se for novo triênio
-    #{
-    #
-    #    if(is_null($ultimoPercentual)){
-    #        $percentuais = $percentuaisPossiveis;
-    #    }else{
-    #        $percentuais = array();
-    #        $indice = array_search($ultimoPercentual, $percentuaisPossiveis);
-    #
-    #        if ($ultimoPercentual <> "60"){
-    #            array_push($percentuais,$percentuaisPossiveis[$indice+1]);
-    #        }
-    #    }
-    #}else{
-    #    $percentuais = $percentuaisPossiveis;
-    #}
-    # Retirado a pedido de Rose para tirar o gesso
+    if (is_null($id)) // se for novo triênio
+    {
+        if(is_null($ultimoPercentual)){
+            $percentuais = $percentuaisPossiveis;
+        }else{
+            $percentuais = array();
+            $indice = array_search($ultimoPercentual, $percentuaisPossiveis);
+    
+            if ($ultimoPercentual <> "60"){
+                array_push($percentuais,$percentuaisPossiveis[$indice+1]);
+            }
+        }
+    }else{
+        $percentuais = $percentuaisPossiveis;
+    }
     
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'percentual',

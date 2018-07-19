@@ -50,14 +50,16 @@ if($acesso)
     $ultimoPercentual = $pessoal->get_trienioPercentual($idServidorPesquisado);
     $ultimoTrienio = $pessoal->get_trienioDataInicial($idServidorPesquisado);
     $dataAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    if(is_null($ultimoTrienio))
+    if(is_null($ultimoTrienio)){
         $proximoTrienio = addAnos($dataAdmissao, 3);
-    else
+    }else{
         $proximoTrienio = addAnos($ultimoTrienio, 3);
+    }
 
     # retira o botão de incluir triênio quando estiver no máximo
-    if ($ultimoPercentual == "60")
+    if ($ultimoPercentual == "60"){
         $objeto->set_botaoIncluir(FALSE);
+    }
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Triênios do Servidor');
@@ -66,11 +68,13 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
         $orderCampo = "2";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
         $orderTipo = 'desc';
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT dtInicial,
@@ -78,7 +82,7 @@ if($acesso)
                                      dtInicioPeriodo,
                                      dtFimPeriodo,
                                      numProcesso,
-                                     date_format(dtPublicacao,"%d/%m/%Y"),
+                                     dtPublicacao,
                                      documento,
                                      idTrienio
                                 FROM tbtrienio
@@ -92,6 +96,7 @@ if($acesso)
                                      dtFimPeriodo,
                                      documento,
                                      numProcesso,
+                                     dtPublicacao,
                                      obs,
                                      idServidor
                                 FROM tbtrienio
@@ -129,31 +134,31 @@ if($acesso)
     # Monta o array para o campo percentual
     $percentuaisPossiveis = array ("10","15","20","25","30","35","40","45","50","55","60");
 
-    if (is_null($id)) // se for novo triênio
-    {
-
-        if(is_null($ultimoPercentual))
-            $percentuais = $percentuaisPossiveis;
-        else
-        {
-            $percentuais = array();
-            $indice = array_search($ultimoPercentual, $percentuaisPossiveis);
-
-            if ($ultimoPercentual <> "60")
-                array_push($percentuais,$percentuaisPossiveis[$indice+1]);
-        }
-
-    }
-    else
-        $percentuais = $percentuaisPossiveis;
-
+    #if (is_null($id)) // se for novo triênio
+    #{
+    #
+    #    if(is_null($ultimoPercentual)){
+    #        $percentuais = $percentuaisPossiveis;
+    #    }else{
+    #        $percentuais = array();
+    #        $indice = array_search($ultimoPercentual, $percentuaisPossiveis);
+    #
+    #        if ($ultimoPercentual <> "60"){
+    #            array_push($percentuais,$percentuaisPossiveis[$indice+1]);
+    #        }
+    #    }
+    #}else{
+    #    $percentuais = $percentuaisPossiveis;
+    #}
+    # Retirado a pedido de Rose para tirar o gesso
+    
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'percentual',
                                        'label' => 'Percentual:',
                                        'tipo' => 'combo',
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
-                                       'array' => $percentuais,
+                                       'array' => $percentuaisPossiveis,
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'período de férias',

@@ -284,8 +284,7 @@ if($acesso)
     $idPerfil = $pessoal->get_idPerfil($idFicha);
 
     # Verifica se é Cedido
-    if ($idPerfil == '2')
-    {
+    if ($idPerfil == '2'){
         tituloRelatorio('Dados dos Cedidos');
 
         $select = 'SELECT orgaoOrigem,
@@ -293,7 +292,6 @@ if($acesso)
                           onus,
                           salario,
                           processo,
-                          dtPublicacao,
                           pgPublicacao
                      FROM tbcedido
                     WHERE idServidor = '.$idFicha;
@@ -303,8 +301,8 @@ if($acesso)
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Órgão de Origem','Matrícula Externa','Cedido com Ônus','Salário','Processo de Cessão','Publicação','Pag.'));
-        $relatorio->set_width(array(15,15,15,10,20,15,5));    
+        $relatorio->set_label(array('Órgão de Origem','Matrícula Externa','Cedido com Ônus','Salário','Processo de Cessão','Publicação'));
+        $relatorio->set_width(array(15,15,15,10,20,15));    
         $relatorio->set_align(array('cener'));
         $relatorio->set_funcao(array(NULL,NULL,NULL,'formataMoeda',NULL,"date_to_php"));
         $relatorio->set_conteudo($result);
@@ -331,11 +329,12 @@ if($acesso)
     tituloRelatorio('Dados Pessoais');
 
     $select = 'SELECT dtNasc,
-                        nacionalidade,
-                        naturalidade,
-                        tbestciv.estCiv,
-                        sexo
-                    FROM tbpessoa join tbestciv on (tbpessoa.estCiv = tbestciv.idEstCiv)
+                      tbnacionalidade.nacionalidade,
+                      naturalidade,
+                      tbestciv.estCiv,
+                      sexo
+                 FROM tbpessoa JOIN tbestciv ON (tbpessoa.estCiv = tbestciv.idEstCiv)
+                               JOIN tbnacionalidade ON (tbpessoa.nacionalidade = tbnacionalidade.idNacionalidade)
                 WHERE idPessoa = '.$idPessoa;
 
     $result = $pessoal->select($select);
@@ -367,19 +366,19 @@ if($acesso)
     tituloRelatorio('Filiação');
 
     $select = 'SELECT nomePai,
-                        nomeMae 
-                    FROM tbpessoa
+                      nomeMae 
+                 FROM tbpessoa
                 WHERE idPessoa = '.$idPessoa;
 
     $result = $pessoal->select($select);
-
+    
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(NULL);
     #$relatorio->set_subtitulo($subtitulo);
     $relatorio->set_label(array('Nome do Pai','Nome da Mãe'));
     $relatorio->set_width(array(50,50));
     $relatorio->set_align(array('center'));
-    #$relatorio->set_funcao($funcao);
+    $relatorio->set_funcao(array("trataNulo","trataNulo"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(FALSE);
@@ -400,12 +399,12 @@ if($acesso)
     tituloRelatorio('Documentação');
 
     $select = 'SELECT CPF,
-                        concat(identidade," - ",
-                        orgaoId," - ",
-                        date_format(tbdocumentacao.dtId,"%d/%m/%Y")),
-                        pisPasep,
-                        concat(titulo," - ",zona," - ",secao)				         
-                    FROM tbdocumentacao
+                      concat(identidade," - ",
+                      orgaoId," - ",
+                      date_format(tbdocumentacao.dtId,"%d/%m/%Y")),
+                      pisPasep,
+                      concat(titulo," - ",zona," - ",secao)				         
+                 FROM tbdocumentacao
                 WHERE idPessoa = '.$idPessoa;
 
     $result = $pessoal->select($select);
@@ -433,11 +432,11 @@ if($acesso)
     ##
 
     $select = 'SELECT motorista,
-                        dtVencMotorista,
-                        conselhoClasse,
-                        registroClasse,
-                        reservista 
-                    FROM tbdocumentacao
+                      dtVencMotorista,
+                      conselhoClasse,
+                      registroClasse,
+                      reservista 
+                 FROM tbdocumentacao
                 WHERE idPessoa = '.$idPessoa;
 
     $result = $pessoal->select($select);

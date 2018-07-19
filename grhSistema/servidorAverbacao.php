@@ -453,7 +453,6 @@ if($acesso){
                 }else{
                     echo "Servidor já alcançou a idade para solicitar aposentadoria.";
                 }
-                
             
             $painel->fecha();
             
@@ -471,6 +470,7 @@ if($acesso){
             $tabela->set_funcao($funcao);
             $tabela->set_idCampo('idAverbacao');
             $tabela->set_editar('?fase=editar&id=');
+            $tabela->set_excluir('?fase=excluir&id=');
             $tabela->show();
             
             $grid->fechaColuna();

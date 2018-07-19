@@ -60,7 +60,7 @@ if($acesso)
                                      idFormacao
                                 FROM tbformacao JOIN tbescolaridade ON (tbformacao.escolaridade = tbescolaridade.idEscolaridade)
                           WHERE idPessoa='.$idPessoa.'
-                       ORDER BY anoTerm');
+                       ORDER BY anoTerm desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT escolaridade,

@@ -134,8 +134,7 @@ if($acesso)
     # Monta o array para o campo percentual
     $percentuaisPossiveis = array ("10","15","20","25","30","35","40","45","50","55","60");
 
-    if (is_null($id)) // se for novo triênio
-    {
+    if (is_null($id)){ // se for novo triênio
         if(is_null($ultimoPercentual)){
             $percentuais = $percentuaisPossiveis;
         }else{

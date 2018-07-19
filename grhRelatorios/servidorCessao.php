@@ -31,14 +31,14 @@ if($acesso)
     
     br();
     $select = "SELECT dtInicio,
-                        dtFim,
-                        orgao,
-                        processo,
-                        CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
-                        idHistCessao
-                   FROM tbhistcessao
-             WHERE idServidor = $idServidorPesquisado
-          ORDER BY dtInicio desc";
+                      dtFim,
+                      orgao,
+                      processo,
+                      dtPublicacao,
+                      idHistCessao
+                 FROM tbhistcessao
+                WHERE idServidor = $idServidorPesquisado
+             ORDER BY dtInicio desc";
 
     $result = $pessoal->select($select);
 
@@ -50,7 +50,7 @@ if($acesso)
     $relatorio->set_label(array("Data Inicial","Data Término","Órgão Cessionário","Processo","Publicação no DOERJ"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array("center"));
-    $relatorio->set_funcao(array ("date_to_php","date_to_php"));
+    $relatorio->set_funcao(array ("date_to_php","date_to_php",NULL,NULL,"date_to_php"));
     #$relatorio->set_classe(array(NULL,"pessoal"));
     #$relatorio->set_metodo(array(NULL,"get_nomelotacao"));    
 

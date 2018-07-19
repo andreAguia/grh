@@ -447,7 +447,7 @@ if($acesso)
     $relatorio->set_label(array('Carteira Motorista','Vencimento','Conselho de Classe','Registro','Reservista'));
     $relatorio->set_width(array(20,20,20,20,20));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(NULL,"date_to_php"));
+    $relatorio->set_funcao(array("trataNulo","date_to_php","trataNulo","trataNulo","trataNulo"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(FALSE);
@@ -502,8 +502,7 @@ if($acesso)
      * Contatos
      */
 
-    if($postContatos)
-    {
+    if($postContatos){
         tituloRelatorio('Contatos');
 
         $select = 'SELECT tipo,
@@ -539,8 +538,7 @@ if($acesso)
      * Dependentes
      */
 
-    if($postDependentes)
-    {
+    if($postDependentes){
         tituloRelatorio('Dependentes');
 
         $select = 'SELECT nome,
@@ -563,7 +561,7 @@ if($acesso)
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array("Nome","Nascimento","Parentesco","Sexo","Depend. no IR","Auxílio Creche","Término do Aux. Creche"));
-        $relatorio->set_width(array(30,10,10,10,10,10,10));
+        #$relatorio->set_width(array(30,10,10,10,10,10,10));
         $relatorio->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,"date_to_php"));
         $relatorio->set_align(array('left','center'));
         $relatorio->set_conteudo($result);
@@ -584,8 +582,7 @@ if($acesso)
      * Formação
      */
 
-    if($postFormacao)
-    {
+    if($postFormacao){
         tituloRelatorio('Formação');
 
         $select = 'SELECT tbescolaridade.Escolaridade,
@@ -602,8 +599,8 @@ if($acesso)
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Nível','Curso','Instituição','Término'));
-        $relatorio->set_width(array(20,35,35,10));
-        $relatorio->set_align(array('left','left','left','left'));
+        #$relatorio->set_width(array(20,35,35,10));
+        $relatorio->set_align(array('left','left','left'));
         #$relatorio->set_funcao($funcao);
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
@@ -623,8 +620,7 @@ if($acesso)
      * Histórico de Lotações
      */
 
-    if($postLotacao)
-    {
+    if($postLotacao){
         tituloRelatorio('Histórico de Lotações');
 
         $select ='SELECT tbhistlot.data,
@@ -640,7 +636,7 @@ if($acesso)
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Data','Lotação','Motivo'));
-        $relatorio->set_width(array(20,40,40));
+        #$relatorio->set_width(array(20,40,40));
         $relatorio->set_funcao(array("date_to_php"));
         $relatorio->set_align(array('center','left','left'));
         $relatorio->set_conteudo($result);
@@ -661,8 +657,7 @@ if($acesso)
      * Histórico de Cargo em Comissão
      */
 
-    if($postCargo)
-    {
+    if($postCargo){
         tituloRelatorio('Histórico de Cargos em Comissão');
 
         $select = 'SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
@@ -685,7 +680,7 @@ if($acesso)
         $relatorio->set_label(array('Cargo','Valor','Nomeação','Processo','Exoneração','Processo'));
         $relatorio->set_width(array(20,10,15,20,15,20));
         $relatorio->set_funcao(array(NULL,'formataMoeda','date_to_php',NULL,'date_to_php'));
-        $relatorio->set_align(array('left','left','left','left','left','left'));
+        $relatorio->set_align(array('left'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(FALSE);
@@ -704,16 +699,14 @@ if($acesso)
      * Histórico de Progressão e Enquadramento 
      */
 
-    if($postProgressao)
-    {
+    if($postProgressao){
         tituloRelatorio('Histórico de Progressões e Enquadramentos');
 
         $select ='SELECT tbprogressao.dtInicial,
                          tbtipoprogressao.nome,
                          CONCAT(tbclasse.faixa," - ",tbclasse.valor) as vv,
                          tbprogressao.numProcesso,
-                         tbprogressao.dtPublicacao,
-                         tbprogressao.pgPublicacao
+                         tbprogressao.dtPublicacao
                     FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
                                       JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
                     WHERE idServidor = '.$idFicha.'
@@ -724,8 +717,8 @@ if($acesso)
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Data Inicial','Tipo','Valor','Processo','DOERJ','Pág.'));
-        $relatorio->set_width(array(10,25,20,20,10,5));
+        $relatorio->set_label(array('Data Inicial','Tipo','Valor','Processo','DOERJ'));
+        #$relatorio->set_width(array(10,25,20,20,10,5));
         $relatorio->set_funcao(array('date_to_php',NULL,NULL,NULL,'date_to_php'));
         $relatorio->set_align(array('center','left','center'));
         $relatorio->set_conteudo($result);
@@ -746,15 +739,13 @@ if($acesso)
      * Histórico de Triênio
      */
 
-    if($postTrienio)
-    {
+    if($postTrienio){
         tituloRelatorio('Histórico de Triênio');
 
         $select = 'SELECT dtInicial,
                           percentual,
                           numProcesso,
-                          dtPublicacao,
-                          pgPublicacao
+                          dtPublicacao
                      FROM tbtrienio
                     WHERE idServidor = '.$idFicha.'
                     ORDER BY dtInicial desc';
@@ -764,8 +755,8 @@ if($acesso)
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Data Inicial','Percentual (%)','Processo','DOERJ','Pág.'));
-        $relatorio->set_width(array(20,20,20,20,20));
+        $relatorio->set_label(array('Data Inicial','Percentual (%)','Processo','DOERJ'));
+        #$relatorio->set_width(array(20,20,20,20,20));
         $relatorio->set_funcao(array('date_to_php',NULL,NULL,'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
@@ -786,8 +777,7 @@ if($acesso)
      * Histórico de Gratificação Especial
      */
 
-    if($postGratificacao)
-    {
+    if($postGratificacao){
         tituloRelatorio('Histórico de Gratificação Especial');
 
         $select = 'SELECT dtInicial,
@@ -804,7 +794,7 @@ if($acesso)
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array('Data Inicial','Data Final','Valor','Processo'));
-        $relatorio->set_width(array(25,25,25,25));
+        #$relatorio->set_width(array(25,25,25,25));
         $relatorio->set_funcao(array('date_to_php','date_to_php','formataMoeda'));
         $relatorio->set_align(array('left','left','left','left'));
         $relatorio->set_conteudo($result);
@@ -825,8 +815,7 @@ if($acesso)
      * Histórico de Férias
      */
     
-    if($postFerias)
-    {
+    if($postFerias){
         tituloRelatorio('Histórico de Férias');
 
         $select = 'SELECT anoExercicio,
@@ -865,8 +854,7 @@ if($acesso)
      * Histórico de Afastamentos 
      */
     
-    if($postLicenca)
-    {
+    if($postLicenca){
         tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
         $select = '(SELECT CONCAT(tbtipolicenca.nome," - ",IFNULL(tbtipolicenca.lei,"")),
@@ -927,8 +915,7 @@ if($acesso)
      * Tempo de Serviço Averbado
      */
 
-    if($postAverbacao)
-    {
+    if($postAverbacao){
         tituloRelatorio('Tempo de Serviço Averbado');
 
         $select = 'SELECT dtInicial,
@@ -945,7 +932,6 @@ if($acesso)
                         END,
                         cargo,
                         dtPublicacao,
-                        pgPublicacao,
                         processo
                 FROM tbaverbacao
                     WHERE idServidor='.$idFicha.'
@@ -955,10 +941,10 @@ if($acesso)
         $relatorio = new Relatorio();
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);        
-        $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Pag.","Processo"));
+        $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
         #$relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
         $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
-        $relatorio->set_align(array('left','left','left','left','left','left','left','left','left','Left'));
+        #$relatorio->set_align(array('left','left','left','left','left','left','left','left','left','Left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_colunaSomatorio(2);
         $relatorio->set_textoSomatorio("Total de Dias Averbados:");
@@ -978,8 +964,7 @@ if($acesso)
      * Histórico de Diária
      */
 
-    if($postDiaria)
-    {
+    if($postDiaria){
         tituloRelatorio('Histórico de Diária');
 
         $select = 'SELECT dataSaida,
@@ -990,9 +975,9 @@ if($acesso)
                           origem,
                           destino,                                     
                           valor,
-                         iddiaria
-                   FROM tbdiaria 
-                   WHERE idServidor='.$idFicha.'
+                          iddiaria
+                     FROM tbdiaria 
+                    WHERE idServidor='.$idFicha.'
                     ORDER BY dataSaida desc';
 
 

@@ -210,7 +210,7 @@ if($acesso)
                        array ( 'linha' => 3,
                                'nome' => 'processoAdm',
                                'label' => 'Processo de Admissão:',
-                               'tipo' => 'texto',
+                               'tipo' => 'processoNovissimo',
                                'col' => 3,
                                'size' => 25,
                                'title' => 'Número do processo de admissão.'),

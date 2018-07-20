@@ -34,20 +34,20 @@ if($acesso)
     
     br();
     $select = "SELECT nome,
-                    dtNasc,
-                    tbparentesco.parentesco,
-                    CASE sexo
-                       WHEN 'F' THEN 'Feminino'
-                       WHEN 'M' THEN 'Masculino'
-                    end,
-                    TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),
-                    dependente,
-                    auxCreche,
-                    dtTermino,
-                    idDependente
-               FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-         WHERE idPessoa = $idPessoa
-      ORDER BY dtNasc desc";
+                      dtNasc,
+                      tbparentesco.parentesco,
+                      CASE sexo
+                           WHEN 'F' THEN 'Feminino'
+                           WHEN 'M' THEN 'Masculino'
+                      end,
+                      TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),
+                      dependente,
+                      auxCreche,
+                      dtTermino,
+                      idDependente
+                 FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+                WHERE idPessoa = $idPessoa
+             ORDER BY dtNasc desc";
 
     $result = $pessoal->select($select);
 
@@ -58,7 +58,7 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array('center'));
+    $relatorio->set_align(array('left'));
     $relatorio->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     
     $relatorio->set_conteudo($result);

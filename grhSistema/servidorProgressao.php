@@ -61,7 +61,7 @@ if($acesso)
                                      tbtipoprogressao.nome,
                                      CONCAT(tbclasse.faixa," - ",tbclasse.valor) as vv,
                                      numProcesso,
-                                     date_format(dtPublicacao,"%d/%m/%Y"),
+                                     dtPublicacao,
                                      documento,
                                      tbprogressao.idProgressao
                                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)

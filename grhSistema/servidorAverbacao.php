@@ -98,7 +98,6 @@ if($acesso){
                                      idServidor
                                 FROM tbaverbacao
                                WHERE idAverbacao = '.$id);
-    ####### Parei Aqui /########
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);

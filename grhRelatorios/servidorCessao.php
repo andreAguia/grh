@@ -47,7 +47,7 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Data Inicial","Data Término","Órgão Cessionário","Processo","Publicação no DOERJ"));
+    $relatorio->set_label(array("Data Inicial","Data Término","Órgão Cessionário","Processo","Publicação"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array("center"));
     $relatorio->set_funcao(array ("date_to_php","date_to_php",NULL,NULL,"date_to_php"));

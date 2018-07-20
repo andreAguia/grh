@@ -15,8 +15,7 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
@@ -71,7 +70,7 @@ if($acesso)
     $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_label(array("Licença","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação","Pag."));
+    $relatorio->set_label(array("Licença","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('left'));
     $relatorio->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));

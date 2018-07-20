@@ -35,7 +35,7 @@ if($acesso)
                       dtInicioPeriodo,
                       dtFimPeriodo,
                       numProcesso,
-                      concat(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
+                      dtPublicacao,
                       documento,
                       idTrienio
                  FROM tbtrienio
@@ -51,9 +51,9 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     #$relatorio->set_subtitulo("Todas as Licenças");
     $relatorio->set_label(array("a partir de","%","P.Aq.Início","P.Aq.Fim","Processo","DOERJ","Documento"));
-    $relatorio->set_width(array(10,5,10,10,20,25,20));
+    #$relatorio->set_width(array(10,5,10,10,20,25,20));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array ("date_to_php",NULL,"date_to_php","date_to_php"));
+    $relatorio->set_funcao(array("date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

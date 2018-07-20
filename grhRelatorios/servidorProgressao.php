@@ -34,7 +34,7 @@ if($acesso)
                       tbtipoprogressao.nome,
                       CONCAT(tbclasse.faixa,' - ',tbclasse.valor) as vv,
                       numProcesso,
-                      CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
+                      dtPublicacao,
                       documento,
                       tbprogressao.idProgressao
                  FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
@@ -51,8 +51,8 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
     $relatorio->set_width(array(10,25,15,18,17,15));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array ('date_to_php'));
+    $relatorio->set_align(array('center','left','left'));
+    $relatorio->set_funcao(array ('date_to_php',NULL,NULL,NULL,'date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

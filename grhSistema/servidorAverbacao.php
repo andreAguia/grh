@@ -161,7 +161,7 @@ if($acesso){
                                        'linha' => 1),
                                array ( 'nome' => 'processo',
                                        'label' => 'Processo:',
-                                       'tipo' => 'texto',
+                                       'tipo' => 'processo',
                                        'required' => TRUE,
                                        'size' => 30,
                                        'col' => 3,
@@ -283,7 +283,7 @@ if($acesso){
                     array("Tempo de Serviço na UENF ",$uenf),
                     array("Tempo Averbado Empresa Pública",$publica),
                     array("Tempo Averbado Empresa Privada",$privada),
-                    array("Total",$totalTempo)
+                    array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
             );
             
             # Monta a tabela

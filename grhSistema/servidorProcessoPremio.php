@@ -78,7 +78,7 @@ if($acesso){
     $campos = array(array('linha' => 1,
                           'nome' => 'processoPremio',
                           'label' => 'Processo:',
-                          'tipo' => 'texto',
+                          'tipo' => 'processo',
                           'autofocus' => TRUE,
                           'size' => 25,
                           'col' => 3,
@@ -98,7 +98,7 @@ if($acesso){
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado,"servidorProcessoPremioExtra.php");  
+            $objeto->gravar($idServidorPesquisado);  
             break;
     }
     $page->terminaPagina();

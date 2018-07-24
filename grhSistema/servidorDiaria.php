@@ -55,13 +55,13 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista('SELECT idDiaria,
-                                CONCAT("CI Diária nº ",numeroCi,"/",YEAR(dataCi)),
-                                origem,
-                                 destino,
-                                 dataSaida,
-                                 dataChegada,
-                                 valor,
-                                 iddiaria
+                                     CONCAT("CI Diária nº ",numeroCi,"/",YEAR(dataCi)),
+                                     origem,
+                                     destino,
+                                     dataSaida,
+                                     dataChegada,
+                                     valor,
+                                     iddiaria
                                 FROM tbdiaria
                                WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);

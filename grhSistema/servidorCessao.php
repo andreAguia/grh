@@ -115,7 +115,7 @@ if($acesso)
                                        'linha' => 1),
                                array ( 'nome' => 'processo',
                                        'label' => 'Número do Processo de Cessão:',
-                                       'tipo' => 'texto',
+                                       'tipo' => 'processo',
                                        'size' => 50,
                                        'col' => 3,
                                        'title' => 'O Número do processo de cessao',

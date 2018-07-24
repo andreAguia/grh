@@ -17,11 +17,10 @@ $dtInicial = $campoValor[5];
 $numDias = $campoValor[6];
 $processo = $campoValor[7];
 $dtPublicacao = $campoValor[8];
-$pgPublicacao = $campoValor[9];
-$dtPericia = $campoValor[10];
-$num_Bim = $campoValor[11];
-$obs = $campoValor[12];
-$idServidor = $campoValor[13];
+$dtPericia = $campoValor[9];
+$num_Bim = $campoValor[10];
+$obs = $campoValor[11];
+$idServidor = $campoValor[12];
 
 # Pega o sexo do servidor
 $sexo = $pessoal->get_sexo($idServidor);

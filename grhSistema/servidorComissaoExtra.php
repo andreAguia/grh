@@ -6,8 +6,8 @@
  */
 
 $nomeacao = $campoValor[3];     // Data de Nomeação
-$exoneracao = $campoValor[8];   // Data de Exoneração
-$idServidor = $campoValor[14];  // Matrícula do servidor
+$exoneracao = $campoValor[7];   // Data de Exoneração
+$idServidor = $campoValor[12];  // Matrícula do servidor
 
 $pessoal = new Pessoal();
 $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));

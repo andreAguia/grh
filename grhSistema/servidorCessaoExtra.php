@@ -6,8 +6,8 @@
  */
 
 $dtInicial = $campoValor[0];
-$idServidor = $campoValor[7];
-$orgao = $campoValor[2];
+$idServidor = $campoValor[6];
+$orgao = $campoValor[4];
 
 $pessoal = new Pessoal();
 $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));

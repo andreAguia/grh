@@ -499,11 +499,9 @@ if($acesso){
                     $erro = 1;
                 }
                 
-                # formata as datas quando vier de um controle html5 (vem yyyy/mm/dd)
-                if(HTML5){
-                    $dtAdmissao = date_to_php($dtAdmissao);
-                    $dtNasc = date_to_php($dtNasc);
-                }
+                # formata as datas quando vier de um controle data (vem yyyy/mm/dd)
+                $dtAdmissao = date_to_php($dtAdmissao);
+                $dtNasc = date_to_php($dtNasc);
                 
                 # verifica a validade da data de admissao
                 if (!validaData($dtAdmissao)){

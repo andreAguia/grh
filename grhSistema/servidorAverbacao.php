@@ -25,6 +25,9 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega o parametro de pesquisa (se tiver)
+    $parametro = retiraAspas(post('parametro',get('parametro')));
 
     # Ordem da tabela
     $orderCampo = get('orderCampo');
@@ -265,16 +268,66 @@ if($acesso){
             get_DadosServidor($idServidorPesquisado);
             
             #############################################################
-            # Tempo de Serviço
+            # Controle
             
             $grid1 = new Grid();
             $grid1->abreColuna(3);
+            
+            # Analisa o $parametro
+            $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
+            $dtHoje = date("Y-m-d");                                      # Data de hoje
+            $dtFinal = NULL;                                              # Data a ser usada como final
+            $dtDigitado = $parametro;
+            
+            # Tem saída
+            if(!vazio($dtSaida)){                   # Tem Saída ?
+               $dtSaida = date_to_bd($dtSaida);
+                if(!vazio($dtDigitado)){            # Tem digitado ?
+                    if($dtDigitado > $dtSaida){     # Digitado > Saída ?
+                        echo "ERRO";                # Não pode ser o digitado pois seria depois da saída
+                    }else{                          
+                        $dtFinal = $dtDigitado;     # Digitado não é maior que a saída, então pode ser o digitado
+                    }
+                }else{
+                    $dtFinal = $dtSaida;            # Não tem digitado, então é a saída
+                }
+            }elseif(!vazio($dtDigitado)){
+                $dtFinal = $dtDigitado;     # Não tendo saída e tem digitado, então é o digitado
+            }else{
+                $dtFinal = $dtHoje;         # Não tem saída nem digitado então é hoje
+            }
+            
+            # Finalmente define o valor
+            $parametro = $dtFinal;
+            
+            # Inicia o form
+            $form = new Form('?');
+
+            $controle = new Input('parametro','data','Data Final',1);
+            $controle->set_size(30);
+            $controle->set_title('Data final para contagem de dias. (Padrão: HOJE)');
+            $controle->set_valor($parametro);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+            
+            $grid1->fechaColuna();            
+            $grid1->abreColuna(9);
+            
+            #############################################################
+            # Cálculos
+            
+            ####
+            # Tempo de Serviço
             
             # Pega o sexo do servidor
             $sexo = $pessoal->get_sexo($idServidorPesquisado);
             
             # Tempo de Serviço
-            $uenf = $pessoal->get_tempoServicoUenf($idServidorPesquisado);
+            $uenf = $pessoal->get_tempoServicoUenf($idServidorPesquisado,$parametro);
             $publica = $pessoal->get_totalAverbadoPublico($idServidorPesquisado);
             $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
             $totalTempo = $uenf + $publica + $privada;
@@ -283,30 +336,11 @@ if($acesso){
                     array("Tempo de Serviço na UENF ",$uenf),
                     array("Tempo Averbado Empresa Pública",$publica),
                     array("Tempo Averbado Empresa Privada",$privada),
-                    array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
+                    array("Total (".date_to_php($parametro).")",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
             );
             
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo('Tempo de Serviço');
-            $tabela->set_conteudo($dados1);
-            $tabela->set_label(array("Descrição","Dias"));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                    'valor' => "Total",
-                                                    'operador' => '=',
-                                                    'id' => 'totalTempo')));
-            
-            $tabela->show();
-            
-            $grid1->fechaColuna();
-            
-            #############################################################
-            # Ocorrências que reduzem do Tempo de Serviço
-            
-            $grid1->abreColuna(3);
-            
+            ####
+            # Ocorrências
             $reducao = "SELECT tbtipolicenca.nome as tipo,
                               SUM(numDias) as dias
                          FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
@@ -319,32 +353,8 @@ if($acesso){
             # Somatório
             $totalOcorrencias = array_sum (array_column($dados2, 'dias') );
             
-            # Adiciona na tabela
-            if($totalOcorrencias == 0){
-                array_push($dados2,array("Sem Ocorrências","---"));
-            }else{
-                array_push($dados2,array("Total",$totalOcorrencias));
-            }
-            
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo('Ocorrências');
-            $tabela->set_conteudo($dados2);
-            $tabela->set_label(array("Descrição","Dias"));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                    'valor' => "Total",
-                                                    'operador' => '=',
-                                                    'id' => 'totalTempo')));
-            $tabela->show();
-            
-            $grid1->fechaColuna();
-            
-            #############################################################
+            ####
             # Resumo
-            
-            $grid1->abreColuna(3);            
             
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
@@ -362,8 +372,6 @@ if($acesso){
             # Dias que faltam
             $faltam = $diasAposentadoria - $totalTempoGeral;
             
-            #
-            
             $dados3 = array(
                       array("Tempo de Serviço ",$totalTempo),
                       array("Ocorrências","($totalOcorrencias)"),
@@ -372,31 +380,7 @@ if($acesso){
                       array("Total",$faltam." dias<br/>(".dias_to_diasMesAno($faltam).")")
             );
             
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo('Resumo Geral');
-            $tabela->set_conteudo($dados3);
-            $tabela->set_label(array("Descrição","Dias"));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                        'valor' => "Total",
-                                                        'operador' => '=',
-                                                        'id' => 'totalTempo'),
-                                                    array('coluna' => 0,
-                                                        'valor' => "Ocorrências",
-                                                        'operador' => '=',
-                                                        'id' => 'ocorrencia'))
-                    );
-            $tabela->show();
-            
-            $grid1->fechaColuna();
-            
-            #############################################################
-            # Aposentadoria
-            
-            $grid1->abreColuna(3);
-            
+            ####
             # Aposentadoria
             $dtNascimento = $pessoal->get_dataNascimento($idServidorPesquisado);
             $idade = $pessoal->get_idade($idServidorPesquisado);
@@ -420,23 +404,12 @@ if($acesso){
                     array("Data da Compulsória (75 anos)",$Compulsoria)
             );
             
-            # Monta a tabela do resumo de tempo
-            $tabela = new Tabela();
-            $tabela->set_titulo('Idade para Aposentadoria');
-            $tabela->set_conteudo($dados4);
-            $tabela->set_label(array("Descrição","Valor"));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->show();
-            
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            
-            #############################################################
+            ####
             # Análise
             
             $painel = new Callout("primary");
             $painel->abre();
+            
                 # Análise por dia
                 if($diasAposentadoria > $totalTempoGeral){
                     echo "Servidor ainda não alcançou os ".$diasAposentadoria." dias de serviço para solicitar aposentadoria.";
@@ -454,6 +427,102 @@ if($acesso){
                 }
             
             $painel->fecha();
+            
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            
+            #############################################################
+            # Tempo de Serviço
+            
+            $grid1 = new Grid();
+            $grid1->abreColuna(3);
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo('Tempo de Serviço');
+            $tabela->set_conteudo($dados1);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'totalTempo')));
+            
+            $tabela->show();            
+            $grid1->fechaColuna();
+            
+            #############################################################
+            # Ocorrências que reduzem do Tempo de Serviço
+            
+            $grid1->abreColuna(3);
+            
+            # Adiciona na tabela
+            if($totalOcorrencias == 0){
+                array_push($dados2,array("Sem Ocorrências","---"));
+            }else{
+                array_push($dados2,array("Total",$totalOcorrencias));
+            }
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo('Ocorrências');
+            $tabela->set_conteudo($dados2);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'totalTempo')));
+            $tabela->show();            
+            $grid1->fechaColuna();
+            
+            #############################################################
+            # Resumo
+            
+            $grid1->abreColuna(3); 
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo('Resumo Geral');
+            $tabela->set_conteudo($dados3);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                        'valor' => "Total",
+                                                        'operador' => '=',
+                                                        'id' => 'totalTempo'),
+                                                    array('coluna' => 0,
+                                                        'valor' => "Ocorrências",
+                                                        'operador' => '=',
+                                                        'id' => 'ocorrencia'))
+                    );
+            $tabela->show();            
+            $grid1->fechaColuna();
+            
+            #############################################################
+            # Aposentadoria
+            
+            $grid1->abreColuna(3);
+            
+            
+            
+            # Monta a tabela do resumo de tempo
+            $tabela = new Tabela();
+            $tabela->set_titulo('Idade para Aposentadoria');
+            $tabela->set_conteudo($dados4);
+            $tabela->set_label(array("Descrição","Valor"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->show();
+            
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            
+            #############################################################
+            
             
             #############################################################
             

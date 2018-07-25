@@ -12,18 +12,18 @@ define("PASTA_CLASSES","../_classes/");                             # Classes Es
 
 # Funções
 define("PASTA_FUNCOES_GERAIS","../../_framework/_funcoesGerais/"); # Funções Gerais
-define("PASTA_FUNCOES","../_funcoes/");                 # Funções Específicas
+define("PASTA_FUNCOES","../_funcoes/");                            # Funções Específicas
 
 # Figuras
 define("PASTA_FIGURAS_GERAIS","../../_framework/_imgGerais/");     # Figuras Gerais
-define("PASTA_FIGURAS","../_img/");                     # Figuras Específicas
+define("PASTA_FIGURAS","../_img/");                                # Figuras Específicas
 
 # Estilos
 define("PASTA_ESTILOS_GERAIS","../../_framework/_cssGerais/");     # Estilos Gerais (Foundation)
-define("PASTA_ESTILOS","../_css/");                     # Estilos Específicos
+define("PASTA_ESTILOS","../_css/");                                # Estilos Específicos
 
 # Fontes para PDF
-define('FPDF_FONTPATH','../../_framework/_pdfFont/');
+#define('FPDF_FONTPATH','../../_framework/_pdfFont/');
 
 # Tags aceitas em campos com htmlTag = TRUE
 define('TAGS','<p></p><a></a><br/><br><div></div><table></table><tr></tr><td></td><th></th><strong></strong><em></em><u></u><sub></sub><sup></sup><ol></ol><li></li><ul></ul><hr><span></span><h3></h3>');       
@@ -74,17 +74,7 @@ setlocale (LC_CTYPE, 'pt_BR');
 
 # carrega as session
 $idUsuario = get_session('idUsuario');                       # Servidor Logado
-$idServidorPesquisado = get_session('idServidorPesquisado'); # Servidor Editado na pesquisa do sistema do GRH	
-
-# Define se usa o input type data do html5 ou se usa o javascript
-# Se usar o html 5 o controle não trabalha com formato brasileiro
-# mas browsers exibem no format brasileiro ao 'perceber' o idioma do usuário
-$browser = array('CHROME','OPR','VIVALDI','FIREFOX');
-if (in_array(BROWSER_NAME, $browser)){ 
-    define('HTML5',TRUE);
-}else{
-    define('HTML5',FALSE);
-}
+$idServidorPesquisado = get_session('idServidorPesquisado'); # Servidor Editado na pesquisa do sistema do GRH
 
 # Define o horário
 date_default_timezone_set("America/Sao_Paulo");
@@ -98,8 +88,7 @@ setlocale(LC_ALL, 'pt_BR');
  * @param  $classe = a classe instanciada
  */
 
-function __autoload($classe)
-{
+function __autoload($classe){
     # Verifica se existe essa classe nas classes gerais
     if (file_exists(PASTA_CLASSES_GERAIS."/class.{$classe}.php")){
         include_once PASTA_CLASSES_GERAIS."/class.{$classe}.php";
@@ -125,8 +114,9 @@ function __autoload($classe)
         include_once PASTA_CLASSES_GERAIS."/rel.{$classe}.php"; 
     }
     
-    if (file_exists(PASTA_CLASSES_GERAIS."/bd.{$classe}.php"))
-        include_once PASTA_CLASSES_GERAIS."/bd.{$classe}.php";   
+    if (file_exists(PASTA_CLASSES_GERAIS."/bd.{$classe}.php")){
+        include_once PASTA_CLASSES_GERAIS."/bd.{$classe}.php";
+    }
 
     # Verifica se existe a classe nas classes específicas
     if (file_exists(PASTA_CLASSES."/class.{$classe}.php")){

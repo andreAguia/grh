@@ -690,7 +690,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_dtSaida
-     * informa o ano de admiss�o de um servidor
+     * informa a data de saída do servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -702,7 +702,7 @@ class Pessoal extends Bd
                         WHERE idServidor = '.$idServidor;
 
             $dt = parent::select($select,FALSE);
-
+            
             return date_to_php($dt[0]);
     }
 
@@ -3672,25 +3672,17 @@ class Pessoal extends Bd
      * Método get_tempoServicoUenf
      * informa o total de dias corridos de tempo de serviço dentro da uenf
      * 
-     * @param	string $idServidor idServidor do servidor
+     * @param string $idServidor idServidor do servidor
+     * @param date   $dtFinal    Data até quando vai ser feito o calculo. 
      */
 
-    function get_tempoServicoUenf($idServidor){
+    function get_tempoServicoUenf($idServidor,$dtFinal){
         
         # Data de admissão
-        $dtAdmissao = $this->get_dtAdmissao($idServidor);
-        $dtSaida = $this->get_dtSaida($idServidor);
-        $dtHoje = date("Y-m-d");
+        $dtAdmissao = $this->get_dtAdmissao($idServidor);   # Data de entrada na UENF
         
         # Define a data inicial
         $dtInicial = date_to_bd($dtAdmissao);
-        
-        # Define a data final
-        if(is_null($dtSaida)){
-            $dtFinal = $dtHoje;
-        }else{
-            $dtFinal = date_to_bd($dtSaida);
-        }
 
         # Calcula a diferença em segundos entre as datas
         $diferenca = strtotime($dtFinal) - strtotime($dtInicial);

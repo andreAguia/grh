@@ -1182,7 +1182,7 @@ class Pessoal extends Bd
 
     /**
      * Método get_situacao
-     * informa a situa��o de um servidor
+     * informa a situação de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */

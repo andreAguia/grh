@@ -182,6 +182,14 @@ tr#ocorrencia{
      color:#ff0000;
 }
 
+tr#diasSobrando{
+     background-color:#8FBC8F;
+}
+
+tr#diasFaltando{
+     background-color:#FFA07A;
+}
+
 /*******************************************
  * Div Sobre
  *******************************************/

@@ -279,22 +279,21 @@ if($acesso){
             $dtFinal = NULL;                                              # Data a ser usada como final
             $dtDigitado = $parametro;
             
-            # Tem saída
-            if(!vazio($dtSaida)){                   # Tem Saída ?
-               $dtSaida = date_to_bd($dtSaida);
-                if(!vazio($dtDigitado)){            # Tem digitado ?
-                    if($dtDigitado > $dtSaida){     # Digitado > Saída ?
-                        echo "ERRO";                # Não pode ser o digitado pois seria depois da saída
-                    }else{                          
-                        $dtFinal = $dtDigitado;     # Digitado não é maior que a saída, então pode ser o digitado
-                    }
-                }else{
-                    $dtFinal = $dtSaida;            # Não tem digitado, então é a saída
-                }
-            }elseif(!vazio($dtDigitado)){
-                $dtFinal = $dtDigitado;     # Não tendo saída e tem digitado, então é o digitado
-            }else{
-                $dtFinal = $dtHoje;         # Não tem saída nem digitado então é hoje
+            # Dados para o controle
+            $disabled = FALSE;
+            $tipoControle = "data";
+            $autofocus = TRUE;
+            
+            # Analisa a data
+            if(!vazio($dtSaida)){           // Se tem saída é a saída
+                $dtFinal = $dtSaida;
+                $disabled = TRUE;
+                $tipoControle = "texto";
+                $autofocus = FALSE;
+            }elseif(!vazio($dtDigitado)){   // Não tem saída e tem digitado, então é o digitado
+                $dtFinal = $dtDigitado;     
+            }else{                          // Não tem saída nem digitado então é hoje
+                $dtFinal = $dtHoje;         
             }
             
             # Finalmente define o valor
@@ -303,13 +302,14 @@ if($acesso){
             # Inicia o form
             $form = new Form('?');
 
-            $controle = new Input('parametro','data','Data Final',1);
+            $controle = new Input('parametro',$tipoControle,'Data Final',1);
             $controle->set_size(30);
             $controle->set_title('Data final para contagem de dias. (Padrão: HOJE)');
             $controle->set_valor($parametro);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus($autofocus);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
+            $controle->set_disabled($disabled);
             $controle->set_col(12);
             $form->add_item($controle);
             $form->show();
@@ -336,7 +336,7 @@ if($acesso){
                     array("Tempo de Serviço na UENF ",$uenf),
                     array("Tempo Averbado Empresa Pública",$publica),
                     array("Tempo Averbado Empresa Privada",$privada),
-                    array("Total (".date_to_php($parametro).")",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
+                    array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
             );
             
             ####
@@ -351,7 +351,7 @@ if($acesso){
             $dados2 = $pessoal->select($reducao);
             
             # Somatório
-            $totalOcorrencias = array_sum (array_column($dados2, 'dias') );
+            $totalOcorrencias = array_sum(array_column($dados2, 'dias') );
             
             ####
             # Resumo
@@ -372,12 +372,18 @@ if($acesso){
             # Dias que faltam
             $faltam = $diasAposentadoria - $totalTempoGeral;
             
+            if($faltam < 0){
+                $texto = "Dias Sobrando";
+            }else{
+                $texto = "Dias Faltando";
+            }
+            
             $dados3 = array(
                       array("Tempo de Serviço ",$totalTempo),
                       array("Ocorrências","($totalOcorrencias)"),
                       array("Total",$totalTempoGeral),
                       array("Dias para aposentadoria",$diasAposentadoria),
-                      array("Total",$faltam." dias<br/>(".dias_to_diasMesAno($faltam).")")
+                      array($texto,$faltam." dias<br/>(".dias_to_diasMesAno($faltam).")")
             );
             
             ####
@@ -407,23 +413,35 @@ if($acesso){
             ####
             # Análise
             
-            $painel = new Callout("primary");
+            $painel = new Callout("primary","center");
             $painel->abre();
-            
-                # Análise por dia
-                if($diasAposentadoria > $totalTempoGeral){
-                    echo "Servidor ainda não alcançou os ".$diasAposentadoria." dias de serviço para solicitar aposentadoria.";
-                }else{
-                    echo "Servidor já alcançou os ".$diasAposentadoria." dias de serviço para solicitar aposentadoria.";
-                }
                 
-                br();
+                # Verifica se servidor é ativo
+                $select2 = 'SELECT tbsituacao.idSituacao,
+                                  tbsituacao.situacao
+                             FROM tbsituacao LEFT JOIN tbservidor ON (tbservidor.situacao = tbsituacao.idsituacao)
+                            WHERE idServidor = '.$idServidorPesquisado;
+
+                $situacao = $pessoal->select($select2,FALSE);
                 
-                # Análise por idade
-                if($ii > $idade){
-                    echo "Servidor ainda não alcançou a idade para solicitar aposentadoria.";
-                }else{
-                    echo "Servidor já alcançou a idade para solicitar aposentadoria.";
+                if($situacao[0] <> 1){
+                    echo "Servidor $situacao[1] com $totalTempo dias registrados até a data de saída ($dtSaida)";
+                }else{            
+                    # Análise por dia
+                    if($diasAposentadoria > $totalTempoGeral){
+                        echo "Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoria</b> dias de serviço necessários para solicitar a aposentadoria.";
+                    }else{
+                        echo "O servidor já alcançou os <b>$diasAposentadoria</b> dias de serviço para solicitar aposentadoria.";
+                    }
+
+                    br();
+
+                    # Análise por idade
+                    if($ii > $idade){
+                        echo "O servidor ainda não alcançou os <b>$ii</b> anos de idade de para solicitar aposentadoria.";
+                    }else{
+                        echo "O servidor já alcançou a idade para solicitar aposentadoria.";
+                    }
                 }
             
             $painel->fecha();
@@ -472,9 +490,10 @@ if($acesso){
             $tabela->set_align(array("left","center"));
             $tabela->set_totalRegistro(FALSE);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                    'valor' => "Total",
-                                                    'operador' => '=',
-                                                    'id' => 'totalTempo')));
+                                                           'valor' => "Total",
+                                                           'operador' => '=',
+                                                           'id' => 'totalTempo')
+                ));
             $tabela->show();            
             $grid1->fechaColuna();
             
@@ -497,8 +516,15 @@ if($acesso){
                                                     array('coluna' => 0,
                                                         'valor' => "Ocorrências",
                                                         'operador' => '=',
-                                                        'id' => 'ocorrencia'))
-                    );
+                                                        'id' => 'ocorrencia'),
+                                                     array('coluna' => 0,
+                                                           'valor' => "Dias Sobrando",
+                                                           'operador' => '=',
+                                                           'id' => 'diasSobrando'),
+                                                     array('coluna' => 0,
+                                                           'valor' => "Dias Faltando",
+                                                           'operador' => '=',
+                                                           'id' => 'diasFaltando')));
             $tabela->show();            
             $grid1->fechaColuna();
             
@@ -519,10 +545,7 @@ if($acesso){
             $tabela->show();
             
             $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            
-            #############################################################
-            
+            $grid1->fechaGrid();            
             
             #############################################################
             

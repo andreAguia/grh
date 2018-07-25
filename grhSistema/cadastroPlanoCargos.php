@@ -102,7 +102,7 @@ if($acesso)
     # Parametros da tabela
     $objeto->set_label(array("id","Decreto / Lei","Data do Decreto / Lei","Publicação no DOERJ","Plano Atual"));
     #$objeto->set_width(array(5,20,20,20,10,10));
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
 
     $objeto->set_formatacaoCondicional(array(

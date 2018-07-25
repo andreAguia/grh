@@ -2301,7 +2301,67 @@ class Checkup
     }
 
     ###########################################################
+
+    /**
+     * Método get_licencaPremioEstranha
+     * 
+     * Servidores com Licença Prêmio com dias diferente de 30, 60 e 90 dias
+     */
     
-    
-    
+    public function get_licencaPremioEstranha(){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+       
+        $select = 'SELECT tbservidor.idFuncional,
+                          tbpessoa.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tblicencapremio.numDias,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tblicencapremio USING (idServidor)
+                     WHERE tbservidor.situacao = 1
+                       AND idPerfil = 1
+                       AND tblicencapremio.numDias <> 30
+                       AND tblicencapremio.numDias <> 60
+                       AND tblicencapremio.numDias <> 90
+                       ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidores com Licença Prêmio diferente de 30,60 e 90 dias';
+        $label = ['IdFuncional','Nome','Cargo','Lotação','Dias'];
+        $classe = array(NULL,NULL,"Pessoal","Pessoal");
+        $rotina = array(NULL,NULL,"get_cargo","get_lotacao");
+        $align = ['center','left'];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+        
+        if ($count > 0){
+            if($this->lista){
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
+    ###########################################################
 }

@@ -10,7 +10,7 @@ class Checkup
   * By Alat
   */
 	
-    private $lista = TRUE;       //informa se será listagem ou somente contagem dos registros
+    private $lista = TRUE;       // Informa se será listagem ou somente contagem dos registros
         
     ###########################################################
 
@@ -29,7 +29,7 @@ class Checkup
     /**
      * Método get_all
      * 
-     * Executa todos os métodos desta classe (menos é claro o get_all eo construct
+     * Executa todos os métodos desta classe (menos é claro o get_all e o construct
      */
     
     public function get_all(){
@@ -73,7 +73,7 @@ class Checkup
      * Servidores com Licença vencendo este ano
      */
     
-    public function get_licencaVencendo(){
+    public function get_licencaVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 3;
         
@@ -93,8 +93,11 @@ class Checkup
                              LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
                              LEFT JOIN tbperfil USING (idPerfil)
             WHERE tbservidor.situacao = 1
-              AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "'.date('Y').'"
-              ORDER BY 7';
+              AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "'.date('Y').'"';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY 7';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
@@ -117,7 +120,9 @@ class Checkup
         $tabela->set_idCampo('idServidor');
         
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -135,7 +140,7 @@ class Checkup
      * Servidores com Licença Premio vencendo este ano
      */
     
-    public function get_licencaPremioVencendo(){
+    public function get_licencaPremioVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 3;
         
@@ -153,8 +158,11 @@ class Checkup
                              LEFT JOIN tblicencapremio USING (idServidor)
                              LEFT JOIN tbperfil USING (idPerfil)
             WHERE tbservidor.situacao = 1
-              AND YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = "'.date('Y').'"
-              ORDER BY 7';
+              AND YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = "'.date('Y').'"';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY 7';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
@@ -177,7 +185,9 @@ class Checkup
         $tabela->set_idCampo('idServidor');
         
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -195,7 +205,7 @@ class Checkup
      * Servidores com trênio vencendo este ano
      */
     
-    public function get_trienioVencendo(){
+    public function get_trienioVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 3;
         
@@ -212,7 +222,11 @@ class Checkup
              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
-              AND idPerfil = 1
+              AND idPerfil = 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' 
          GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = '.date('Y').'
          ORDER BY 6)
@@ -227,7 +241,11 @@ class Checkup
              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
-              AND idPerfil = 1              
+              AND idPerfil = 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= '        
          GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = '.date('Y').'
              AND MAX(tbtrienio.dtInicial) IS NULL
@@ -255,7 +273,9 @@ class Checkup
         $tabela->set_idCampo('idServidor');
         
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -273,7 +293,7 @@ class Checkup
      * Servidores com trênio vencido anterior a esse ano
      */
     
-    public function get_trienioVencido(){
+    public function get_trienioVencido($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 3;
         
@@ -290,7 +310,11 @@ class Checkup
              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
-              AND idPerfil = 1
+              AND idPerfil = 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= '        
          GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) < '.date('Y').'
          ORDER BY 6)
@@ -305,7 +329,11 @@ class Checkup
              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
-              AND idPerfil = 1              
+              AND idPerfil = 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= '                      
          GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) < '.date('Y').'
              AND MAX(tbtrienio.dtInicial) IS NULL
@@ -331,9 +359,11 @@ class Checkup
         $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
-
+        
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -351,7 +381,7 @@ class Checkup
      * Servidores com o auxílio creche vencendo este ano
      */
     
-    public function get_auxilioCrecheVencido(){
+    public function get_auxilioCrecheVencido($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 3;
         
@@ -369,7 +399,11 @@ class Checkup
              FROM tbdependente JOIN tbpessoa USING (idpessoa)
                                JOIN tbservidor USING (idpessoa)
             WHERE tbservidor.situacao = 1
-              AND YEAR(dtTermino) = "'.date('Y').'"
+              AND YEAR(dtTermino) = "'.date('Y').'"';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= '        
          ORDER BY dtTermino';
 
         $result = $servidor->select($select);
@@ -393,7 +427,9 @@ class Checkup
         $tabela->set_idCampo('idServidor');
         
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -2247,7 +2283,7 @@ class Checkup
      * Servidores com Férias anteriores a data de admissão
      */
     
-    public function get_feriasAntesAdmissao(){
+    public function get_feriasAntesAdmissao($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 1;
         
@@ -2266,8 +2302,11 @@ class Checkup
                                      LEFT JOIN tbferias USING (idServidor)
                                      LEFT JOIN tbperfil USING (idPerfil)
                      WHERE tbservidor.situacao = 1
-                       AND dtInicial < dtAdmissao
-                       ORDER BY 2,4 desc';
+                       AND dtInicial < dtAdmissao';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY 2,4 desc';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
@@ -2290,7 +2329,9 @@ class Checkup
         $tabela->set_idCampo('idServidor');
         
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -2308,7 +2349,7 @@ class Checkup
      * Servidores com Licença Prêmio com dias diferente de 30, 60 e 90 dias
      */
     
-    public function get_licencaPremioEstranha(){
+    public function get_licencaPremioEstranha($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 1;
         
@@ -2327,8 +2368,11 @@ class Checkup
                        AND idPerfil = 1
                        AND tblicencapremio.numDias <> 30
                        AND tblicencapremio.numDias <> 60
-                       AND tblicencapremio.numDias <> 90
-                       ORDER BY tbpessoa.nome';
+                       AND tblicencapremio.numDias <> 90';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
@@ -2353,7 +2397,10 @@ class Checkup
         $tabela->set_idCampo('idServidor');
         
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                callout("A licença prêmio deve ter 30, 60 ou 90 dias. Valores diferentes podem ter sido causados na importação dos dados onde outro tipo de licença foi atribuido, erroneamente, como licença prêmio.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{

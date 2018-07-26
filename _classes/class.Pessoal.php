@@ -3719,5 +3719,41 @@ class Pessoal extends Bd
         }
     }
 
-    ###########################################################	
+    ##########################################################################################
+
+        function get_endereco($idServidor){
+
+        # Função que retorna string com o endereço cadastrado do servidor
+        #
+        # Parâmetro: id do servidor
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = 'SELECT endereco,
+                              bairro,
+                              tbcidade.nome,
+                              cep
+                         FROM tbpessoa JOIN tbcidade USING (idCidade)
+                        WHERE idPessoa = '.$idPessoa;
+
+            $row = parent::select($select,FALSE);
+            $numero = parent::count($select);
+            $return = NULL;
+
+            if($numero > 0){
+                $return = $row[0]." - ".$row[1]." - ".$row[2]." Cep: ".$row[3];
+            }
+
+            return $return;		
+
+        }
+
+    ##########################################################################################	
 }

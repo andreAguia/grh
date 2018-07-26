@@ -896,38 +896,16 @@ class Grh
         
         ##### Ocorrências
         
-        $ocorrencia = new Checkup();
-        
-        # Define as rotinas a serem verificadas
-        $rotinas = array("get_motoristaCarteiraVencida",
-            "get_motoristaSemDataCarteira",
-            "get_motoristaSemCarteira",
-            "get_servidorCom74",
-            "get_servidorComMais75",
-            "get_servidorComPerfilOutros",
-            "get_servidorTecnicoEstatutarioSemConcurso",
-            "get_servidorProfessorEstatutarioSemConcurso",
-            "get_cargoComissaoNomeacaoIgualExoneracao",
-            "get_servidorCom10MesesLicencaSemVencimento",
-            "get_servidorComMaisde1AnoLicencaSemVencimento",
-            "get_servidorSemIdFuncional",
-            "get_servidorSemDtNasc",
-            "get_servidorCedidoLotacaoErrada",
-            "get_servidorEstatutarioSemCargo",
-            "get_servidorSemCargo",
-            "get_servidorDuplicado",
-            "get_servidorCedidoSemInfoCedente",
-            "get_servidorInativoComPerfilOutros",
-            "get_servidorInativoSemMotivoSaida",
-            );
-        
-        # Percorre as rotinas e preenche as mensagens 
-        foreach ($rotinas as $rr) {
-            $texto = $ocorrencia->$rr($idservidor);
-            
-            # Verifica se texto não é nullo e acrecenta as mensagens
-            if(!is_null($texto)){
-                $mensagem[] = $texto;
+        $metodos = get_class_methods('Checkup');
+        $ocorrencia = new Checkup(FALSE);
+                
+        foreach ($metodos as $nomeMetodo) {
+            if (($nomeMetodo <> 'get_all') AND ($nomeMetodo <> '__construct')){
+                $texto = $ocorrencia->$nomeMetodo($idservidor);
+                
+                if(!is_null($texto)){
+                    $mensagem[] = $texto;
+                }
             }
         }
         

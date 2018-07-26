@@ -76,6 +76,7 @@ if($acesso)
                 $menu->add_item('linkAjax','Dependentes & Auxílio Creche','?fase=dependentes','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Diárias','?fase=diarias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Estatutários','?fase=estatutarios','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Endereço','?fase=endereco','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Faltas','?fase=faltas','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
@@ -385,6 +386,16 @@ if($acesso)
             $menu = new Menu();
             $menu->add_item('titulo','Outros');
             $menu->add_item('linkWindow','Relatório de Servidores Ativos Ex-Fenorte','../grhRelatorios/servidoresAtivosExFenorte.php');             
+            $menu->show();
+            break;
+
+        ######################################
+
+         case "endereco";
+            $menu = new Menu();
+            $menu->add_item('titulo','Endereço');
+            $menu->add_item('linkWindow','Relatório de Ativos e Aposentados Com Endereço','../grhRelatorios/enderecoAtivoAposentado.php');
+
             $menu->show();
             break;
 

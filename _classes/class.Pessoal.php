@@ -3755,5 +3755,30 @@ class Pessoal extends Bd
 
         }
 
-    ##########################################################################################	
+    ##########################################################################################
+
+        function get_numVinculos($idServidor){
+
+        # Função que retorna quantos vinculos esse servidor teve com a uenf.
+        #
+        # Parâmetro: id do servidor
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }            
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = '.$idPessoa;
+
+            $numero = parent::count($select);
+            return $numero;
+        }
+
+    ##########################################################################################		
 }

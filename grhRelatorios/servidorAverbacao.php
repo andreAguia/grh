@@ -44,10 +44,10 @@ if($acesso){
     $totalTempo = $uenf + $totalAverbado;
 
     $dados1 = array(
-            array("Tempo de Serviço na UENF ",$uenf),
-            array("Tempo Averbado Empresa Pública",$publica),
-            array("Tempo Averbado Empresa Privada",$privada),
-            array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
+              array("Tempo de Serviço na UENF ",$uenf),
+              array("Tempo Averbado Empresa Pública",$publica),
+              array("Tempo Averbado Empresa Privada",$privada),
+              array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
     );
     
     ####

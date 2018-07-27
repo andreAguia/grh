@@ -858,6 +858,7 @@ class Grh
         $folgaTre = $pessoal->emFolgaTre($idservidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
         $cedido = $pessoal->emCessao($idservidor);
+        $numVinculos = $pessoal->get_numVinculos($idServidor);
             
         # Férias
         if($ferias){
@@ -894,6 +895,11 @@ class Grh
             $mensagem[] = 'Servidor Cedido a(o) '.$cedido;
         }
         
+        # Número de Vinculos
+        if($numVinculos > 1){
+            $mensagem[] = "Servidor com $numVinculos na uenf.";
+        }
+        echo $numVinculos;
         ##### Ocorrências
         
         $metodos = get_class_methods('Checkup');

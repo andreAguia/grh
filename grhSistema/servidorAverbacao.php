@@ -225,16 +225,6 @@ if($acesso){
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 10)));
-
-
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAverbacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $objeto->set_botaoListarExtra(array($botaoRel));
-        
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -248,30 +238,6 @@ if($acesso){
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-            
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar
-            $linkBotaoVoltar = new Button('Voltar','servidorMenu.php');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar,"left");
-
-            $linkBotaoIncluir = new Button('Incluir','?fase=editar');
-            $linkBotaoIncluir->set_title('Incluir um Registro');
-            $linkBotaoIncluir->set_accessKey('I');
-            $menu->add_link($linkBotaoIncluir,"right");
-            $menu->show();
-            
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-            
-            #############################################################
-            # Controle
-            
-            $grid1 = new Grid();
-            $grid1->abreColuna(3);
             
             # Analisa o $parametro
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
@@ -298,6 +264,40 @@ if($acesso){
             
             # Finalmente define o valor
             $parametro = $dtFinal;
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $linkBotaoVoltar = new Button('Voltar','servidorMenu.php');
+            $linkBotaoVoltar->set_title('Volta para a página anterior');
+            $linkBotaoVoltar->set_accessKey('V');
+            $menu->add_link($linkBotaoVoltar,"left");
+            
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
+            $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAverbacao.php?data='$parametro,'_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $menu->add_link($botaoRel,"right");
+            
+            # Botão Incluir
+            $linkBotaoIncluir = new Button('Incluir','?fase=editar');
+            $linkBotaoIncluir->set_title('Incluir um Registro');
+            $linkBotaoIncluir->set_accessKey('I');
+            $menu->add_link($linkBotaoIncluir,"right");
+            
+            $menu->show();
+            
+            # Exibe os dados do servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            #############################################################
+            # Controle
+            
+            $grid1 = new Grid();
+            $grid1->abreColuna(3);
             
             # Inicia o form
             $form = new Form('?');

@@ -279,7 +279,7 @@ if($acesso){
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
-            $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAverbacao.php?data='$parametro,'_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAverbacao.php?data=$parametro','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $menu->add_link($botaoRel,"right");
             
             # Botão Incluir

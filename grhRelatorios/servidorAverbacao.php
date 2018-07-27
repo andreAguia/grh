@@ -16,7 +16,6 @@ include ("../grhSistema/_config.php");
 $acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso){
-    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
@@ -24,12 +23,12 @@ if($acesso){
     $page = new Page();			
     $page->iniciaPagina();
     
-    $parametro = retiraAspas(get('parametro'));
-
+    $parametro = retiraAspas(get('data'));
+    
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Tempo de Serviço Averbado');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Tempo de Serviço');
     
     ####
     # Tempo de Serviço
@@ -41,7 +40,8 @@ if($acesso){
     $uenf = $pessoal->get_tempoServicoUenf($idServidorPesquisado,$parametro);
     $publica = $pessoal->get_totalAverbadoPublico($idServidorPesquisado);
     $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
-    $totalTempo = $uenf + $publica + $privada;
+    $totalAverbado = $publica + $privada;
+    $totalTempo = $uenf + $totalAverbado;
 
     $dados1 = array(
             array("Tempo de Serviço na UENF ",$uenf),
@@ -123,8 +123,11 @@ if($acesso){
     
     ####
     # Análise
+    br();
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
 
-    $painel = new Callout("primary","center");
+    $painel = new Callout("secondary","center");
     $painel->abre();
 
         # Verifica se servidor é ativo
@@ -156,22 +159,24 @@ if($acesso){
         }
 
     $painel->fecha();
+    $grid1->fechaColuna();
     
     #############################################################
     # Tempo de Serviço
-
-    $grid1 = new Grid();
-    $grid1->abreColuna(3);
+    
+    $grid1->abreColuna(6);
 
     # Monta a tabela
     $tabela = new Relatorio();
     $tabela->set_cabecalhoRelatorio(FALSE);
     $tabela->set_menuRelatorio(FALSE);
-    $tabela->set_titulo('Tempo de Serviço');
+    $tabela->set_subTotal(FALSE);
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->set_dataImpressao(FALSE);
+    $tabela->set_subtitulo('Tempo de Serviço');
     $tabela->set_conteudo($dados1);
     $tabela->set_label(array("Descrição","Dias"));
     $tabela->set_align(array("left","center"));
-    $tabela->set_totalRegistro(FALSE);
     $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                                             'valor' => "Total",
                                             'operador' => '=',
@@ -183,7 +188,7 @@ if($acesso){
     #############################################################
     # Ocorrências que reduzem do Tempo de Serviço
 
-    $grid1->abreColuna(3);
+    $grid1->abreColuna(6);
 
     # Adiciona na tabela
     if($totalOcorrencias == 0){
@@ -196,7 +201,10 @@ if($acesso){
     $tabela = new Relatorio();
     $tabela->set_cabecalhoRelatorio(FALSE);
     $tabela->set_menuRelatorio(FALSE);
-    $tabela->set_titulo('Ocorrências');
+    $tabela->set_subTotal(FALSE);
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->set_dataImpressao(FALSE);
+    $tabela->set_subtitulo('Ocorrências');
     $tabela->set_conteudo($dados2);
     $tabela->set_label(array("Descrição","Dias"));
     $tabela->set_align(array("left","center"));
@@ -208,17 +216,21 @@ if($acesso){
         ));
     $tabela->show();            
     $grid1->fechaColuna();
-
+    br();
     #############################################################
     # Resumo
 
-    $grid1->abreColuna(3); 
-
+    $grid1->abreColuna(6);
+    br();
+    
     # Monta a tabela
-     $tabela = new Relatorio();
+    $tabela = new Relatorio();
     $tabela->set_cabecalhoRelatorio(FALSE);
     $tabela->set_menuRelatorio(FALSE);
-    $tabela->set_titulo('Resumo Geral');
+    $tabela->set_subTotal(FALSE);
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->set_dataImpressao(FALSE);
+    $tabela->set_subtitulo('Resumo Geral');
     $tabela->set_conteudo($dados3);
     $tabela->set_label(array("Descrição","Dias"));
     $tabela->set_align(array("left","center"));
@@ -245,15 +257,17 @@ if($acesso){
     #############################################################
     # Aposentadoria
 
-    $grid1->abreColuna(3);
-
-
+    $grid1->abreColuna(6);
+    br();
 
     # Monta a tabela do resumo de tempo
     $tabela = new Relatorio();
     $tabela->set_cabecalhoRelatorio(FALSE);
     $tabela->set_menuRelatorio(FALSE);
-    $tabela->set_titulo('Idade para Aposentadoria');
+    $tabela->set_subTotal(FALSE);
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->set_dataImpressao(FALSE);
+    $tabela->set_subtitulo('Idade para Aposentadoria');
     $tabela->set_conteudo($dados4);
     $tabela->set_label(array("Descrição","Valor"));
     $tabela->set_align(array("left","center"));
@@ -264,7 +278,6 @@ if($acesso){
     $grid1->fechaGrid();            
 
     #############################################################
-            
 
     br();
     $select = "SELECT dtInicial,
@@ -288,8 +301,11 @@ if($acesso){
                ORDER BY 1 desc";
 
     $result = $pessoal->select($select);
+    #array_push($result,array(NULL,NULL,$publica + $privada,NULL,NULL,NULL,NULL,NULL,NULL));
+    #array_push($result,array(NULL,NULL,$publica + $privada,NULL,NULL,NULL,NULL,NULL,NULL));
 
-    $relatorio = new Relatorio();   
+    $relatorio = new Relatorio();
+    $relatorio->set_subtitulo('Tempo de Serviço Averbado');
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
@@ -307,6 +323,8 @@ if($acesso){
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Tempo de Serviço Averbado");
     $relatorio->show();
+    
+    #p('Total de Dias Averbados:'.$totalAverbado,'pRelatorioDataImpressao');
 
     $page->terminaPagina();
 }

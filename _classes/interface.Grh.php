@@ -679,7 +679,7 @@ class Grh
         $grid2->fechaColuna();
 
         # Financeiro                                    
-        $grid2->abreColuna(12,6);
+        $grid2->abreColuna(12,4); 
             titulo('Financeiro');
             br();
 
@@ -751,6 +751,21 @@ class Grh
 
             $menu->show();
             br();
+        $grid2->fechaColuna();
+        
+        # Relatórios
+        
+        $grid2->abreColuna(12,2); 
+            titulo('Relatórios');
+            br();
+            
+            $menu = new Menu();
+            $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
+            $menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
+            $menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
+            $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
+            $menu->show();
+            
         $grid2->fechaColuna();
         $grid2->fechaGrid();
      }     
@@ -840,8 +855,7 @@ class Grh
      * Div que ressalta situação do servidor (licença, férias, etc)
      */
     
-    public static function exibeOcorênciaServidor($idservidor)
-    {
+    public static function exibeOcorênciaServidor($idServidor){
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
@@ -851,13 +865,13 @@ class Grh
         ##### Situação do servidor
         
         # Pega as situações
-        $ferias = $pessoal->emFerias($idservidor);
-        $licenca = $pessoal->emLicenca($idservidor);
-        $licencaPremio = $pessoal->emLicencaPremio($idservidor);
-        $situacao = $pessoal->get_idSituacao($idservidor);
-        $folgaTre = $pessoal->emFolgaTre($idservidor);
-        $afastadoTre = $pessoal->emAfastamentoTre($idservidor);
-        $cedido = $pessoal->emCessao($idservidor);
+        $ferias = $pessoal->emFerias($idServidor);
+        $licenca = $pessoal->emLicenca($idServidor);
+        $licencaPremio = $pessoal->emLicencaPremio($idServidor);
+        $situacao = $pessoal->get_idSituacao($idServidor);
+        $folgaTre = $pessoal->emFolgaTre($idServidor);
+        $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
+        $cedido = $pessoal->emCessao($idServidor);
         $numVinculos = $pessoal->get_numVinculos($idServidor);
             
         # Férias
@@ -867,7 +881,7 @@ class Grh
 
         # Licenca
         if($licenca){
-            $mensagem[] = 'Servidor em '.$pessoal->get_licenca($idservidor);
+            $mensagem[] = 'Servidor em '.$pessoal->get_licenca($idServidor);
         }
         
         # Licenca Prêmio
@@ -877,7 +891,7 @@ class Grh
 
         # Situação
         if($situacao <> 1){
-            $mensagem[] = $pessoal->get_motivo($idservidor);
+            $mensagem[] = $pessoal->get_motivo($idServidor);
         }
 
         # Folga TRE
@@ -897,9 +911,9 @@ class Grh
         
         # Número de Vinculos
         if($numVinculos > 1){
-            $mensagem[] = "Servidor com $numVinculos na uenf.";
+            $mensagem[] = "Servidor com $numVinculos vínculos na uenf.";
         }
-        echo $numVinculos;
+        
         ##### Ocorrências
         
         $metodos = get_class_methods('Checkup');
@@ -907,7 +921,7 @@ class Grh
                 
         foreach ($metodos as $nomeMetodo) {
             if (($nomeMetodo <> 'get_all') AND ($nomeMetodo <> '__construct')){
-                $texto = $ocorrencia->$nomeMetodo($idservidor);
+                $texto = $ocorrencia->$nomeMetodo($idServidor);
                 
                 if(!is_null($texto)){
                     $mensagem[] = $texto;

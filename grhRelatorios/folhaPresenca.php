@@ -87,6 +87,8 @@ if($acesso){
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a Folha de Presença");
     $relatorio->show();
+    
+    br();
 
     # Monta o relatório da folha de Presença
 
@@ -111,8 +113,7 @@ if($acesso){
     $dias = date("j",mktime(0,0,0,$mesBase+1,0,$anoBase));
 
     $contador=0;
-    while ($contador<$dias)
-    {	
+    while ($contador<$dias){	
         $contador++;
         echo '<tr>';
 
@@ -125,6 +126,7 @@ if($acesso){
         # Verifica se nesta data existe um feriado
         #$feriado = $pessoal->get_feriado($data); 
         $feriado = NULL;
+        
         # Verifica se nesta data o servidor está em férias
         $ferias = $pessoal->emFerias($idServidorPesquisado, $data);
 
@@ -137,31 +139,23 @@ if($acesso){
         echo '<td align="center">'.$contador.'</td>';
 
         # Verifica se é o dia do feriado
-        if(!(is_null($feriado)))
-        {        
+        if(!(is_null($feriado))){        
             echo '<td align="center">FERIADO</td>';
             echo '<td align="center">-------</td>';
             echo '<td align="center">-------</td>';
             echo '<td align="center">'.$feriado.'</td>';
-        }
-        else if (!(is_null($licenca)))
-        {
+        }elseif(!is_null($licenca)){
             echo '<td align="center">LICENÇA</td>';
             echo '<td align="center">-------</td>';
             echo '<td align="center">-------</td>';
             echo '<td align="center">'.$licenca.'</td>';
-        }
-        else if($ferias)
-        {
+        }elseif($ferias){
             echo '<td align="center">FÉRIAS</td>';
             echo '<td align="center">-------</td>';
             echo '<td align="center">-------</td>';
             echo '<td align="center">FÉRIAS</td>';
-        }
-        else
-        {	
-            switch ($wday)
-            {
+        }else{	
+            switch ($wday){
                 case 0:
                     echo '<td align="center">Domingo</td>';
                     echo '<td align="center">-------</td>';

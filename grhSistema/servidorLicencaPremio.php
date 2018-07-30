@@ -169,6 +169,12 @@ if($acesso){
         # Log
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
+        
+        $imagem = new Imagem(PASTA_FIGURAS.'ajuda.png',NULL,15,15);
+        $botaoHelp = new Button();
+        $botaoHelp->set_imagem($imagem);
+        $botaoHelp->set_title("Ajuda");
+        $botaoHelp->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
                
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();

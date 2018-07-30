@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
@@ -237,8 +236,7 @@ if($acesso)
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
         case "editar" :
             # Post it informando da porcentagem do triênio
             if (is_null($id)){ // se for inclusão

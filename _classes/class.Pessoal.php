@@ -730,7 +730,7 @@ class Pessoal extends Bd
 
     ###########################################################
 
-    function get_digito($idServidor)
+    function get_digito($idServidor){
 
     /**
      * Método get_digito
@@ -739,97 +739,96 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    {
+    
+        $ndig = 0;
 
+        switch (strlen($idServidor)){
+            case 4:
+                $idServidor = "0".$idServidor;
+                break;
+            case 3:
+                $idServidor = "00".$idServidor;
+                break;
+            case 2:
+                $idServidor = "000".$idServidor;
+                break;
+        }
+
+        $npos = substr($idServidor,4,1);
+        $npos = $npos * 2;
+        if ($npos < 10){ 
+           $ndig = $ndig + $npos;
+        }else{
+           $ndig = $ndig + 1 + ($npos - 10);
+        }
+
+        $npos = substr($idServidor,3,1);
+        $ndig = $ndig + $npos;
+
+        $npos = substr($idServidor,2,1);
+        $npos = $npos * 2;
+
+        if ($npos < 10){
+           $ndig = $ndig + $npos;
+        }else{
+           $ndig = $ndig + 1 + ($npos - 10);
+        }
+
+        $npos = substr($idServidor,1,1);
+        $ndig = $ndig + $npos;
+
+        $npos = substr($idServidor,0,1);
+        $npos = $npos * 2;
+        
+        if ($npos < 10){
+           $ndig = $ndig + $npos;
+        }else{
+           $ndig = $ndig + 1 + ($npos - 10);
+        }
+
+        $divisao = $ndig/10;
+        $int_div = intval($divisao);
+        $fra_div = $divisao - $int_div;
+        $mod = $fra_div * 10;
+
+        if ($mod == 0){
             $ndig = 0;
-
-
-            switch (strlen($idServidor))
-            {
-                case 4:
-                    $idServidor = "0".$idServidor;
-                    break;
-                case 3:
-                    $idServidor = "00".$idServidor;
-                    break;
-                case 2:
-                    $idServidor = "000".$idServidor;
-                    break;
-            }
-
-
-
-            $npos = substr($idServidor,4,1);
-            $npos = $npos * 2;
-            if ($npos < 10) 
-               $ndig = $ndig + $npos;
-            else
-               $ndig = $ndig + 1 + ($npos - 10);
-
-
-
-            $npos = substr($idServidor,3,1);
-            $ndig = $ndig + $npos;
-
-
-
-            $npos = substr($idServidor,2,1);
-            $npos = $npos * 2;
-            if ($npos < 10)
-               $ndig = $ndig + $npos;
-            else
-               $ndig = $ndig + 1 + ($npos - 10);
-
-
-
-            $npos = substr($idServidor,1,1);
-            $ndig = $ndig + $npos;
-
-
-
-            $npos = substr($idServidor,0,1);
-            $npos = $npos * 2;
-            if ($npos < 10)
-               $ndig = $ndig + $npos;
-            else
-               $ndig = $ndig + 1 + ($npos - 10);
-
-
-            $divisao = $ndig/10;
-            $int_div = intval($divisao);
-            $fra_div = $divisao - $int_div;
-            $mod = $fra_div * 10;
-
-            if ($mod == 0)
-                $ndig = 0;
-            else
-                $ndig = 10 - $mod;
-
-            return $ndig;
+        }else{
+            $ndig = 10 - $mod;
+        }
+        
+        return $ndig;
     }
 
     ##########################################################################################
 
-    function emFerias($idServidor)
+    function emFerias($idServidor, $data = NULL){
 
     # Função que informa se a idServidor est� em férias na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
-
-    {
+        
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+        
         # Monta o select
         $select = "SELECT idFerias 
                      FROM tbferias
                     WHERE idServidor = '$idServidor'
-                      AND current_date() >= dtInicial 
-                      AND current_date() <= ADDDATE(dtInicial,numDias-1)";
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
         $row = parent::select($select,FALSE);
 
-        if (is_null($row[0]))
+        if (is_null($row[0])){
             return 0;
-        else 
+        }else{ 
             return 1;
+        }
     }
 
     ##########################################################################################
@@ -851,10 +850,11 @@ class Pessoal extends Bd
 
         $row = parent::select($select,FALSE);
 
-        if (is_null($row[0]))
+        if (is_null($row[0])){
             return 0;
-        else 
+        }else{ 
             return 1;
+        }
     }
     
     ##########################################################################################
@@ -905,50 +905,53 @@ class Pessoal extends Bd
 
     ##########################################################################################
 
-    function get_licenca($idServidor)
+    function get_licenca($idServidor,$data = NULL){
 
 
     # Função que informa licenca de uma matrícula
     #
     # Parâmetro: a matrícula a ser pesquisada
+    #             a data no formato dd/mm/aaaa
+    
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+        
+        # Monta o select		
+        $select = "SELECT tbtipolicenca.nome 
+                     FROM tblicenca JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
+                    WHERE idServidor = '$idServidor'
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-    {
-            # Monta o select		
-            $select = "SELECT tbtipolicenca.nome 
-                         FROM tblicenca JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                        WHERE idServidor = '$idServidor'
-                          AND current_date() >= dtInicial 
-                          AND current_date() <= ADDDATE(dtInicial,numDias-1)";
-
-            $row = parent::select($select,FALSE);
-
-            return $row[0];		
-
+        $row = parent::select($select,FALSE);
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaPeriodo($idLicenca)
+    function get_licencaPeriodo($idLicenca){
 
 
     # Função que informa se a licença tem per�odo aquisitivo
     #
     # Parâmetro: id do tipo de licença
+    
+        # Valida parametro
+        if(is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
+        # Monta o select
+        $select = 'SELECT dtPeriodo
+                     FROM tbtipolicenca
+                    WHERE idTpLicenca = '.$idLicenca;
 
-            # Monta o select
-            $select = 'SELECT dtPeriodo
-                         FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+        $row = parent::select($select,FALSE);
 
-            $row = parent::select($select,FALSE);
-
-            return $row[0];		
-
+        return $row[0];	
     }
 
     ##########################################################################################
@@ -2748,7 +2751,7 @@ class Pessoal extends Bd
 
     ###########################################################
 
-    public function get_feriado($data = NULL)
+    public function get_feriado($data = NULL){
     /**
      * 
      * Retorna uma string com o nome do feriado
@@ -2757,24 +2760,21 @@ class Pessoal extends Bd
      * @param date $data a data (no formato dia/m�s/ano) a ser pesquisada, se nulo pega a data atual
      * 
      */
-    {
-        if(is_null($data))
-        {
+    
+        if(is_null($data)){
             # Monta o select
             $select = 'SELECT descricao
                          FROM tbferiado 
                         WHERE (tipo = "anual" AND MONTH(data) = MONTH(current_date()) AND DAY(data) = DAY(current_date())
-                           OR (tipo = "data �nica" and  data = current_date()))';
-        }
-        else
-        {
+                           OR (tipo = "data única" and  data = current_date()))';
+        }else{
             $data = date_to_bd($data);
 
             # Monta o select
             $select = 'SELECT descricao
                          FROM tbferiado 
                         WHERE (tipo = "anual" AND MONTH(data) = MONTH("'.$data.'") AND DAY(data) = DAY("'.$data.'")
-                           OR (tipo = "data �nica" and  data = "'.$data.'"))';
+                           OR (tipo = "data única" and  data = "'.$data.'"))';
         }
         
         $row = parent::select($select,FALSE);       

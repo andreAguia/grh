@@ -274,6 +274,13 @@ if($acesso){
             $linkBotaoVoltar->set_accessKey('V');
             $menu->add_link($linkBotaoVoltar,"left");
             
+            $imagem = new Imagem(PASTA_FIGURAS.'ajuda.png',NULL,15,15);
+            $botaoHelp = new Button();
+            $botaoHelp->set_imagem($imagem);
+            $botaoHelp->set_title("Ajuda");
+            $botaoHelp->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vSH4_OkFekLul3KY6AlTHP0WjDblvsQXdX1uA319UV4REs3d9YklhQJqSFoL_yrHfYEaSmX94RtQ47Q/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $menu->add_link($botaoHelp,"right");
+            
             # Relatório
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();

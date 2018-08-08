@@ -75,6 +75,7 @@ if($acesso){
                     CASE regime
                        WHEN 1 THEN "Celetista"
                        WHEN 2 THEN "Estatutário"
+                       WHEN 3 THEN "Próprio"
                     END,
                     cargo,
                     dtPublicacao,
@@ -202,7 +203,7 @@ if($acesso){
                                        'tipo' => 'combo',
                                        'col' => 4,
                                        'required' => TRUE,
-                                       'array' => Array(Array(1,"Celetista"),Array(2,"Estatutário")),
+                                       'array' => Array(Array(1,"Celetista"),Array(2,"Estatutário"),Array(3,"Próprio")),
                                        'size' => 20,                               
                                        'title' => 'Tipo do Regime',
                                        'linha' => 4),
@@ -349,11 +350,11 @@ if($acesso){
             ####
             # Ocorrências
             $reducao = "SELECT tbtipolicenca.nome as tipo,
-                              SUM(numDias) as dias
-                         FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                        WHERE idServidor = $idServidorPesquisado
-                          AND tbtipolicenca.tempoServico IS TRUE
-                       GROUP BY tbtipolicenca.nome";
+                               SUM(numDias) as dias
+                          FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                         WHERE idServidor = $idServidorPesquisado
+                           AND tbtipolicenca.tempoServico IS TRUE
+                      GROUP BY tbtipolicenca.nome";
             
             $dados2 = $pessoal->select($reducao);
             
@@ -425,9 +426,9 @@ if($acesso){
                 
                 # Verifica se servidor é ativo
                 $select2 = 'SELECT tbsituacao.idSituacao,
-                                  tbsituacao.situacao
-                             FROM tbsituacao LEFT JOIN tbservidor ON (tbservidor.situacao = tbsituacao.idsituacao)
-                            WHERE idServidor = '.$idServidorPesquisado;
+                                   tbsituacao.situacao
+                              FROM tbsituacao LEFT JOIN tbservidor ON (tbservidor.situacao = tbsituacao.idsituacao)
+                             WHERE idServidor = '.$idServidorPesquisado;
 
                 $situacao = $pessoal->select($select2,FALSE);
                 

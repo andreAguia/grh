@@ -1,7 +1,6 @@
 <?php
 
-class Pessoal extends Bd
-{
+class Pessoal extends Bd {
     /** 
      * Classe de acesso ao Banco de Dados Pessoal
      * 
@@ -3628,7 +3627,7 @@ class Pessoal extends Bd
     function get_totalAverbadoPublico($idServidor)
     {
         $select = 'SELECT SUM(dias) as total
-                     FROM tbAverbacao
+                     FROM tbaverbacao
                     WHERE empresaTipo = 1 AND idServidor = '.$idServidor.'
                          ORDER BY total';
 
@@ -3650,10 +3649,9 @@ class Pessoal extends Bd
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_totalAverbadoPrivado($idServidor)
-    {
+    function get_totalAverbadoPrivado($idServidor) {
         $select = 'SELECT SUM(dias) as total
-                     FROM tbAverbacao
+                     FROM tbaverbacao
                     WHERE empresaTipo = 2 AND idServidor = '.$idServidor.'
                          ORDER BY total';
 

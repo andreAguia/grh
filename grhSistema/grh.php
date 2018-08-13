@@ -38,6 +38,8 @@ if($acesso){
     }
     
     # Zera sessions
+    set_session('sessionParametroPlano');
+    set_session('sessionParametroNivel');
     set_session('parametroNomeMat');
     set_session('parametroCargo');
     set_session('parametroCargoComissao');

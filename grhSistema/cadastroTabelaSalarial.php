@@ -34,12 +34,19 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
+    
+    if (is_null(post('parametroPlano'))){					# Se o parametro n?o vier por post (for nulo)
+        $parametroPlano = retiraAspas(get_session('sessionParametroPlano'));	# passa o parametro da session para a variavel parametro retirando as aspas
     }else{ 
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
+        $parametroPlano = post('parametroPlano');                # Se vier por post, retira as aspas e passa para a variavel parametro
+        set_session('sessionParametroPlano',$parametroPlano);    # transfere para a session para poder recuperá-lo depois
+    }
+    
+    if (is_null(post('parametroNivel'))){					# Se o parametro n?o vier por post (for nulo)
+        $parametroNivel = retiraAspas(get_session('sessionParametroNivel'));	# passa o parametro da session para a variavel parametro retirando as aspas
+    }else{ 
+        $parametroNivel = post('parametroNivel');                # Se vier por post, retira as aspas e passa para a variavel parametro
+        set_session('sessionParametroNivel',$parametroNivel);    # transfere para a session para poder recuperá-lo depois
     }
 
     # Começa uma nova página
@@ -60,26 +67,21 @@ if($acesso){
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
-    # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
-    $objeto->set_parametroValue($parametro);
-
     # select da lista
     $objeto->set_selectLista ('SELECT idClasse,
-                                      tbplano.numDecreto,
-                                      nivel,
-                                      faixa,
-                                      valor,
-                                      CASE tbplano.planoAtual                                        
-                                            WHEN 1 THEN "Vigente"
-                                            ELSE "Antigo"
-                                       end,                      
-                                      idClasse
-                                 FROM tbclasse JOIN tbplano USING (idPlano)
-                                WHERE nivel LIKE "%'.$parametro.'%"
-                                   OR idClasse LIKE "%'.$parametro.'%"
-                                   OR tbplano.numDecreto LIKE "%'.$parametro.'%"   
-                             ORDER BY tbplano.planoAtual desc,tbplano.numDecreto desc, nivel desc, faixa asc');
+                                    tbplano.numDecreto,
+                                    nivel,
+                                    faixa,
+                                    valor,
+                                    CASE tbplano.planoAtual                                        
+                                          WHEN 1 THEN "Vigente"
+                                          ELSE "Antigo"
+                                     end,                      
+                                    idClasse
+                               FROM tbclasse JOIN tbplano USING (idPlano)
+                              WHERE nivel LIKE "%'.$parametroNivel.'%"
+                                 AND tbplano.idPlano LIKE "%'.$parametroPlano.'%"   
+                           ORDER BY tbplano.planoAtual desc,tbplano.numDecreto desc, nivel desc, faixa asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,
@@ -128,7 +130,7 @@ if($acesso){
     $result = $tabela->select('SELECT idPlano, 
                                       numDecreto
                                   FROM tbplano
-                              ORDER BY idPlano desc');
+                              ORDER BY dtPublicacao desc');
     array_unshift($result, array(0,NULL)); 
 
     # Campos para o formulario
@@ -168,7 +170,32 @@ if($acesso){
     switch ($fase) {
         case "" :
         case "listar" :
+            
+            $form = new Form('?fase=listar');
+            
+            $controle = new Input('parametroPlano','combo','Plano:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Nivel');
+            $controle->set_array($result);
+            $controle->set_valor($parametroPlano);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(5);
+            $form->add_item($controle);
+            
+            $controle = new Input('parametroNivel','combo','Nivel:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Nivel');
+            $controle->set_array(array(NULL,"Doutorado","Superior","Médio","Fundamental","Elementar"));
+            $controle->set_valor($parametroNivel);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(5);
+            $form->add_item($controle);
+            
+            $form->show();
             $objeto->listar();
+            
             break;
 
         case "editar" :	

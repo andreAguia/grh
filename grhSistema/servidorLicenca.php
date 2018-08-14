@@ -68,7 +68,7 @@ if($acesso){
             # Pega o tipo de licença desse id
             $idTipo = $pessoal->get_tipoLicenca($id);
             
-            # Exibe campos de tipo e alta se fo Licença Médica
+            # Exibe campos de tipo e alta se for Licença Médica
             if($idTipo == 1){
             $script .= '$("#tipo").show();
                         $("#labeltipo").show();

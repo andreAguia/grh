@@ -211,7 +211,7 @@ if($acesso){
                                        'label' => 'Cargo:',
                                        'tipo' => 'texto',
                                        'col' => 8,
-                                       'size' => 20,                               
+                                       'size' => 100,                               
                                        'title' => 'Cargo',
                                        'linha' => 4),
                                 array ('linha' => 9,

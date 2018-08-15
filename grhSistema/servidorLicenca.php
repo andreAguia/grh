@@ -1,6 +1,6 @@
 <?php
 /**
- * Histórico de Gratificações Especiais
+ * Licença 
  *  
  * By Alat
  */

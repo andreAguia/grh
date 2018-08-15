@@ -683,7 +683,7 @@ class Grh
             titulo('Financeiro');
             br();
 
-            $menu = new MenuGrafico(4);
+            $menu = new MenuGrafico(3);
             if($pessoal->get_perfilProgressao($perfil) == "Sim")
             {
                 $botao = new BotaoGrafico();

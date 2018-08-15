@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -55,7 +54,9 @@ if($acesso)
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "relatorio"){
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -237,8 +238,7 @@ if($acesso)
     $objeto->set_botaoListarExtra($arrayBotoes);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();

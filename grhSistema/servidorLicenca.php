@@ -41,9 +41,7 @@ if($acesso){
             $(document).ready(function(){';
         
         # Retira todos os controles
-        $script .= '    
-                $("#tipo").hide();
-                $("#labeltipo").hide();
+        $script .= '
                 $("#alta").hide();
                 $("#labelalta").hide();
                 $("#dtInicioPeriodo").hide();
@@ -68,11 +66,9 @@ if($acesso){
             # Pega o tipo de licença desse id
             $idTipo = $pessoal->get_tipoLicenca($id);
             
-            # Exibe campos de tipo e alta se for Licença Médica
-            if($idTipo == 1){
-            $script .= '$("#tipo").show();
-                        $("#labeltipo").show();
-                        $("#alta").show();
+            # Exibe campos de tipo e alta se for Licença Médica (Inicial e Prorrogaçao)
+            if(($idTipo == 1) OR ($idTipo == 30)){
+            $script .= '$("#alta").show();
                         $("#labelalta").show();
                         ';
             }
@@ -125,14 +121,10 @@ if($acesso){
         
         # Licença Médica
         $script .= '
-                        if(id == 1){
-                            $("#tipo").show();
-                            $("#labeltipo").show();
+                        if(id == 1 || id == 30) {
                             $("#alta").show();
                             $("#labelalta").show();
                         }else{
-                            $("#tipo").hide();
-                            $("#labeltipo").hide();
                             $("#alta").hide();
                             $("#labelalta").hide();
                         }
@@ -250,10 +242,6 @@ if($acesso){
 
         # select da lista
         $objeto->set_selectLista('(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
-                                     CASE tipo
-                                        WHEN 1 THEN "Inicial"
-                                        WHEN 2 THEN "Prorrogação"
-                                        end,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
@@ -269,7 +257,6 @@ if($acesso){
                                UNION
                                (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                                        "",
-                                       "",
                                        dtInicial,
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -278,11 +265,10 @@ if($acesso){
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
-                              ORDER BY 4 desc');
+                              ORDER BY 3 desc');
 
         # select do edita
         $objeto->set_selectEdita('SELECT idTpLicenca,
-                                   tipo,
                                    alta,
                                    dtInicioPeriodo,
                                    dtFimPeriodo,
@@ -321,10 +307,10 @@ if($acesso){
         $objeto->set_excluirCondicional('?fase=excluir',$stringComparacao,0,"<>");
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
+        $objeto->set_label(array("Licença ou Afastamento","Alta","Inicio","Dias","Término","Processo","Publicação"));
         #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+        $objeto->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
 
@@ -341,10 +327,10 @@ if($acesso){
         $objeto->set_formLabelTipo(1);
         
         # Pega os dados da combo licenca
-        $result = $pessoal->select('SELECT idTpLicenca,CONCAT(nome,IFNULL(concat(" (",lei,")"),""))
+        $result = $pessoal->select('SELECT idTpLicenca, CONCAT(IFNULL(tbtipolicenca.lei,"")," ",tbtipolicenca.nome)
                                       FROM tbtipolicenca
                                      WHERE idTpLicenca <> 6
-                                  ORDER BY nome');
+                                  ORDER BY 2');
         array_unshift($result, array('Inicial',' -- Selecione o Tipo de Licença --')); # Adiciona o valor de nulo
         
         # Habilita ou não os controles de acordo com a licença
@@ -361,17 +347,8 @@ if($acesso){
                                         'title' => 'Tipo do Adastamento/Licença.',
                                         'col' => 12,
                                         'linha' => 1),
-                                array ( 'nome' => 'tipo',
-                                        'label' => 'Tipo:',
-                                        'tipo' => 'combo',
-                                        'size' => 20,
-                                        'array' => array(array(NULL,""),
-                                                         array(1,"Inicial"),
-                                                         array(2,"Prorrogação")),
-                                         'col' => 2,
-                                         'linha' => 2),
                                  array ( 'nome' => 'alta',
-                                         'label' => 'Alta:',
+                                         'label' => 'Alta: *',
                                          'tipo' => 'combo',
                                          'size' => 20,
                                          'array' => array(array(NULL,NULL),

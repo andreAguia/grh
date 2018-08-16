@@ -2410,5 +2410,79 @@ class Checkup
         }
     }
 
+    ##########################################################
+    
+     /**
+     * Método get_estatutarioComLicencaMedicaClt
+     * 
+     * Servidor estatutario ativo com licença medica CLT
+     */
+    
+    public function get_estatutarioComLicencaMedicaClt($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          CASE alta
+                            WHEN 1 THEN "Sim"
+                            WHEN 2 THEN "Não"
+                            end,
+                         dtInicial,
+                         numdias,
+                         ADDDATE(dtInicial,numDias-1),
+                         idServidor
+                     FROM tblicenca JOIN tbservidor USING (idServidor)
+                               LEFT JOIN tbpessoa USING (idPessoa)                                     
+                    WHERE idTpLicenca = 21 
+                      AND dtInicial>"2003-09-09"
+                      AND idPerfil = 1';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Matrícula','Nome','Alta','Data Inicial','Dias','Data Final');
+        $align = array('center','center','left','center','left');
+        $titulo = 'Servidor(es) estatutário(s) com licença medica CLT';
+        #$classe = array(NULL,NULL,NULL,"Pessoal","Pessoal","Pessoal");
+        #$rotina = array(NULL,NULL,NULL,"get_perfil","get_cargo","get_situacao");
+        #$funcao = array(NULL,NULL,"date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("Servidor sem Id Funcional cadastrado no Sistema");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
     ###########################################################
 }

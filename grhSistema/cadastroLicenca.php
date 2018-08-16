@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -80,8 +79,7 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista ('SELECT idTpLicenca,
-                                      nome,
-                                      lei,
+                                      CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
                                       periodo,
                                       pericia,
                                       publicacao,
@@ -124,9 +122,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Licença","Lei","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero","Interrompe TS"));
+    $objeto->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero","Interrompe TS"));
     #$objeto->set_width(array(5,38,7,10,10,10,10,10));
-    $objeto->set_align(array("center","left","left"));
+    $objeto->set_align(array("center","left"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
     # Classe do banco de dados

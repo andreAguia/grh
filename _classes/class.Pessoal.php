@@ -163,21 +163,19 @@ class Pessoal extends Bd {
             $row = parent::select($select,FALSE);
 
             # Informa o status
-            if (is_null($row[0]))
+            if (is_null($row[0])){
                 $primeira = 1;
-            else 
+            }else{ 
                 $primeira = 0;
+            }
 
             # Dias que sobram para serem 'gozados'
-            if ($row[1] < 30)
-        {
-            $dias = (30 - $row[1]);
-            $ano = $row[0];
-        }
-            else
-            {
-                    $dias = 30;
-                    $ano = ($row[0] + 1);
+            if ($row[1] < 30){
+                $dias = (30 - $row[1]);
+                $ano = $row[0];
+            }else{
+                $dias = 30;
+                $ano = ($row[0] + 1);
             }
 
             return array($ano,$dias,$primeira);
@@ -209,7 +207,7 @@ class Pessoal extends Bd {
 
     /**
      * Método get_salarioBase
-     * informa o sal�rio base de uma matrícula
+     * informa o salario base de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */

@@ -1,7 +1,6 @@
 <?php
 
-class Checkup
-{
+class Checkup {
  /**
   * Classe Checup
   * 
@@ -1599,6 +1598,7 @@ class Checkup
                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE current_date() > tbhistcessao.dtFim
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbhistcessao.dtInicio = (select max(dtInicio) from tbhistcessao where tbhistcessao.idServidor = tbservidor.idServidor)
                       AND situacao = 1
                       AND tbhistlot.lotacao = 113';
                 if(!is_null($idServidor)){

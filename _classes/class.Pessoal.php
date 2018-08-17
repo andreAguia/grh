@@ -397,20 +397,29 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
 
-    public function get_lotacao($idServidor)
+    public function get_lotacao($idServidor){
+        $select = 'SELECT UADM,
+                          DIR,
+                          GER,
+                          idLotacao 
+                      FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
+                     WHERE tbhistlot.idServidor = '.$idServidor.'
+                     ORDER BY data DESC';
 
-    {
-            $select = 'SELECT  tblotacao.UADM,
-                               tblotacao.DIR,
-                               tblotacao.GER
-                          FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                         WHERE tbhistlot.idServidor = '.$idServidor.'
-                         ORDER BY data DESC';
+        $row = parent::select($select,FALSE);
 
-            $row = parent::select($select,FALSE);
+        # Verifica se está cedido para exibir onde o servidor está
+        if($row[3] == 113){
+            $orgao = $this->emCessao($idServidor);
+            if($orgao == ""){
+                $orgao = "-";
+            }
+            $retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span)';
+        }else{
+            $retorno = $row[0].'-'.$row[1].'-'.$row[2];
+        }
 
-            return $row[0].'-'.$row[1].'-'.$row[2];
-
+        return $retorno;
     }
 
     ######################################################################################
@@ -470,17 +479,14 @@ class Pessoal extends Bd {
      * @param	string $idServidor  id do servidor
      */
 
-    public function get_idlotacao($idServidor)
+    public function get_idlotacao($idServidor){
+        $select = 'SELECT  tblotacao.idlotacao
+                      FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
+                     WHERE tbhistlot.idServidor = '.$idServidor.'
+                     ORDER BY data DESC';
 
-    {
-            $select = 'SELECT  tblotacao.idlotacao
-                          FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                         WHERE tbhistlot.idServidor = '.$idServidor.'
-                         ORDER BY data DESC';
-
-            $row = parent::select($select,FALSE);
-            return $row[0];
-
+        $row = parent::select($select,FALSE);
+        return $row[0];
     }
 
     ###########################################################

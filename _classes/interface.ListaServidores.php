@@ -127,7 +127,7 @@ class ListaServidores{
                           tbservidor.matricula,
                           tbpessoa.nome,
                           tbservidor.idServidor,
-                          concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                          tbservidor.idServidor,
                           tbperfil.nome,
                           tbservidor.dtAdmissao,';
         
@@ -370,8 +370,8 @@ class ListaServidores{
         }else{
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
         }            
-        $classe = array(NULL,NULL,NULL,"pessoal");
-        $metodo = array(NULL,NULL,NULL,"get_Cargo");
+        $classe = array(NULL,NULL,NULL,"pessoal","pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao");
         
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select.$this->selectPaginacao,TRUE);

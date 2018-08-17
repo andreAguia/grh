@@ -1502,7 +1502,7 @@ class Checkup
      /**
      * Método get_servidorCedidoLotacaoErrada
      * 
-     * Servidor cedido pela UENF que não está lotado na reitoria cedidos
+     * Servidor DA UENF cedido a outro orgão que não está lotado na reitoria cedidos
      */
     
     public function get_servidorCedidoLotacaoErrada($idServidor = NULL){
@@ -1561,7 +1561,80 @@ class Checkup
             if(!is_null($idServidor)){
                 return $titulo;
             }elseif($this->lista){
-                callout("O servidor cedido pela deve estar cadastrado no setor Reitoria - Cessão.");
+                callout("O servidor cedido pela UENF deve estar cadastrado no setor Reitoria - Cessão.");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+    
+    ##########################################################
+    
+     /**
+     * Método get_servidorCedidoDataExpirada
+     * 
+     * Servidor DA UENF cedido a outro orgão onde a dta de término de cassão já passou mas continua cedido na reitoria cedidos
+     */
+    
+    public function get_servidorCedidoDataExpirada($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+        $select = 'SELECT tbservidor.idFuncional,  
+                          tbpessoa.nome,
+                          tbhistcessao.orgao,
+                          tbhistcessao.dtInicio,
+                          tbhistcessao.dtFim,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                    FROM tbhistcessao LEFT JOIN tbservidor USING (idServidor)
+                                           JOIN tbpessoa USING (idPessoa)
+                                           JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE current_date() > tbhistcessao.dtFim
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND situacao = 1
+                      AND tbhistlot.lotacao = 113';
+                if(!is_null($idServidor)){
+                    $select .= ' AND tbservidor.idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome'; 
+        
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional','Nome','Órgão','Início','Término','Lotação');
+        $align = array('center','left','left','center','center','left');
+        $titulo = 'Servidor(es) cedido(s) pela UENF que terminaram a cessão mas ainda lotados na Reitoria - Cedidos';
+        $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");
+        $rotina = array(NULL,NULL,NULL,NULL,NULL,"get_lotacao");
+        $funcao = array(NULL,NULL,NULL,"date_to_php","date_to_php");
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_funcao($funcao);
+        $tabela->set_metodo($rotina);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                callout("O servidor cedido pela UENF que já terminou o período de cessão e continua lotado no setor Reitoria - Cessão.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
@@ -1734,7 +1807,7 @@ class Checkup
                           tbservidor.idServidor,
                           tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbcedido USING (idServidor)
-                                           JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbpessoa USING (idPessoa)
                     WHERE (tbcedido.orgaoOrigem is NULL
                        OR tbcedido.orgaoOrigem = "")
                       AND situacao = 1

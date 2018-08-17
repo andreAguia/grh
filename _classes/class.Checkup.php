@@ -2464,8 +2464,8 @@ class Checkup
         $tabela->set_label($label);
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        #$tabela->set_classe($classe);
+        #$tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');

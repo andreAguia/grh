@@ -136,7 +136,7 @@ if($acesso)
                'array' => array("anual","data única"),
                'size' => 30)));
 
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################

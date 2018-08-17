@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -141,7 +140,7 @@ if($acesso)
                'array' => array("---","América do Sul","América Central","América do Norte","Europa","África","Ásia","Oceania"),
                'size' => 10)));
 
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################

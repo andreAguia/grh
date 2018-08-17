@@ -147,7 +147,7 @@ if($acesso)
                'col' => 2,
                'size' => 10)));
 
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################

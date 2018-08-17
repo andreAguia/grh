@@ -70,11 +70,13 @@ if($acesso){
     $objeto->set_parametroValue($parametro);
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
             $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
             $orderTipo = 'asc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT idPerfil,
@@ -254,6 +256,9 @@ if($acesso){
                'tipo' => 'textarea',
                'size' => array(80,5))));
     
+    # idUsuário para o Log
+    $objeto->set_idUsuario($idUsuario);
+    
     # Gráfico
     $imagem = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);            
     $botaoGra = new Button();
@@ -274,8 +279,7 @@ if($acesso){
     $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel));
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :            
         case "listar" :
             $objeto->listar();
@@ -421,6 +425,23 @@ if($acesso){
 
             $grid3->fechaColuna();
             $grid3->fechaGrid();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "historico" :
+            # Botão voltar
+            botaoVoltar('?');
+            
+            # Exibe o Título
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            $historico = new ListaHistorico();
+            $historico->set_tabela("tbperfil");
+            $historico->set_id($id);
+            $historico->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

@@ -167,7 +167,7 @@ if($acesso)
                'col' => 12,
                'size' => array(80,5))));
 
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
     
     # Gráfico

@@ -218,7 +218,7 @@ if($acesso)
                'tipo' => 'textarea',
                'size' => array(40,15))));
 
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
     
     # Paginação

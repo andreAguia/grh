@@ -163,7 +163,7 @@ if($acesso){
 	       'required' => TRUE,
                'size' => 10)));
 
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################

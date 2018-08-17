@@ -231,7 +231,7 @@ if($acesso)
                'tipo' => 'textarea',
                'size' => array(80,5))));
     
-    # Matrícula para o Log
+    # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
        
     # Grafico
@@ -285,8 +285,7 @@ if($acesso)
     $objeto->set_botaoListarExtra($arrayBotoes); 
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :            
         case "listar" :            
             $objeto->listar();

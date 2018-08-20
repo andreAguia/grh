@@ -30,6 +30,12 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','menu');
     
+    # Pega os parâmetros
+    $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
+        
+    # Joga os parâmetros par as sessions    
+    set_session('parametroAno',$parametroAno);
+    
     # Registra no log
     $origem = get('origem',FALSE);
     if($origem){
@@ -242,6 +248,187 @@ if($acesso){
             $grid->fechaColuna();
             $grid->abreColuna(8);
             break;
+            
+        ##################################################################
+            
+            case "timeline" :
+                
+            # Nome
+            tituloTable("Afastamentos Anuais");
+            
+            # Formulário de Pesquisa
+            $form = new Form('?fase=timeline');
+
+            # Cria um array com os anos possíveis
+            $anoInicial = 1999;
+            $anoAtual = date('Y');
+            $anos = arrayPreenche($anoInicial,$anoAtual+2);
+
+            $controle = new Input('parametroAno','combo','Ano:',1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano');
+            $controle->set_array($anos);
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid = new Grid();
+            $grid->abreColuna(8);
+            
+            # Define a data de hoje
+            $hoje = date("d/m/Y");
+
+            # Gráfico
+            $select1 = "(SELECT CONCAT('Férias',' - ',anoExercicio) as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tbFerias
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(dtInicial) = $parametroAno  
+                     ORDER BY dtInicial) UNION 
+                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFNULL(tbtipolicenca.lei,'')) as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicenca LEFT JOIN tbtipolicenca USING(idTpLicenca) 
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(dtInicial) = $parametroAno  
+                     ORDER BY dtInicial) UNION 
+                       (SELECT 'Licença Prêmio' as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicencapremio
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(dtInicial) = $parametroAno  
+                     ORDER BY dtInicial) order by 2";
+
+            # Acessa o banco
+            $pessoal = new Pessoal();
+            $atividades1 = $pessoal->select($select1);
+            $numAtividades = $pessoal->count($select1);
+            $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
+
+            tituloTable("Gráfico");
+
+            if($numAtividades > 0){
+
+                # Carrega a rotina do Google
+                echo '<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>';
+
+                # Inicia o script
+                echo "<script type='text/javascript'>";
+                echo "google.charts.load('current', {'packages':['timeline'], 'language': 'pt-br'});
+                      google.charts.setOnLoadCallback(drawChart);
+                      function drawChart() {
+                            var container = document.getElementById('timeline');
+                            var chart = new google.visualization.Timeline(container);
+                            var dataTable = new google.visualization.DataTable();";
+
+                echo "dataTable.addColumn({ type: 'string' });
+                      dataTable.addColumn({ type: 'date' });
+                      dataTable.addColumn({ type: 'date' });";
+
+                echo "dataTable.addRows([";
+
+                $separador = '-';
+                
+                foreach ($atividades1 as $row){
+
+                    # Trata a data inicial
+                    $dt1 = explode($separador,$row['dtInicial']);
+                    $dt2 = explode($separador,$row['dtFinal']);
+                    
+                    echo "['".$row['descricao']."', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+                    
+                    $contador--;
+                    
+                    if($contador > 0){
+                        echo ",";
+                    }
+                }
+                echo "]);";
+                
+                echo "var options = { 
+                             timeline: { colorByRowLabel: true},
+                             backgroundColor: '#f2f2f2',
+                             };";
+                echo "chart.draw(dataTable, options);";
+                echo "}";
+                echo "</script>";
+
+                #[ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+                #[ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+                #[ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+                
+                $altura = ($numAtividades * 45) + 50;
+                echo '<div id="timeline" style="height: '.$altura.'px; width: 100%;"></div>';
+                
+            }else{
+                br();
+                p("Não há dados para serem exibidos.","f14","center");
+            }
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+            
+            # Tabela
+            $select2 = "(SELECT CONCAT('Férias',' - ',anoExercicio) as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tbFerias
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(dtInicial) = $parametroAno  
+                     ORDER BY dtInicial) UNION 
+                       (SELECT CONCAT(tbtipolicenca.nome,'<br/>',IFNULL(tbtipolicenca.lei,'')) as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicenca LEFT JOIN tbtipolicenca USING(idTpLicenca) 
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(dtInicial) = $parametroAno  
+                     ORDER BY dtInicial) UNION 
+                       (SELECT 'Licença Prêmio' as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicencapremio
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(dtInicial) = $parametroAno  
+                     ORDER BY dtInicial) order by 2";
+            
+            # Acessa o banco
+            $atividades2 = $pessoal->select($select2);
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($atividades2);
+            $tabela->set_label(array("Afastamento","Inicial","Dias","Final"));
+            $tabela->set_align(array("left","center"));
+            #$tabela->set_totalRegistro(FALSE);
+            $tabela->set_funcao(array(NULL,"date_to_php",NULL,"date_to_php"));
+            $tabela->set_titulo("Tabela");
+            
+            $numAtividades = $pessoal->count($select2);
+            if($numAtividades > 0){
+                $tabela->show();
+            }else{
+                tituloTable("Tabela");
+                br();
+                p("Não há dados para serem exibidos.","f14","center");
+            }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();    
+            break;
+        
+        ##################################################################	
     }
 
     $grid->fechaColuna();

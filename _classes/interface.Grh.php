@@ -674,6 +674,14 @@ class Grh
             #$botao->set_accessKey('i');
             $menu->add_item($botao);
             
+            $botao = new BotaoGrafico();
+            $botao->set_label('Afastamento Anual');
+            $botao->set_url('?fase=timeline');
+            $botao->set_image(PASTA_FIGURAS.'timeline.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Resumo gráfico do tempo de vida funcional do servidor dentro da Universidade');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+            
             $menu->show();
         
         $grid2->fechaColuna();

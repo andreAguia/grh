@@ -1634,7 +1634,7 @@ class Checkup {
             if(!is_null($idServidor)){
                 return $titulo;
             }elseif($this->lista){
-                callout("O servidor cedido pela UENF que já terminou o período de cessão e continua lotado no setor Reitoria - Cessão.");
+                callout("Os servidores cedidos pela UENF que já terminaram o período de cessão deverão ser (re)lotados na universidade ou devem ter seu período de cessão renovado.");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{

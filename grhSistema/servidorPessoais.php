@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
@@ -232,14 +231,17 @@ if($acesso)
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         case "editar" :            
-        case "excluir" :	
-        case "gravar" :
+        case "excluir" :
             $objeto->$fase($idPessoa);
             break;
+        
+        case "gravar" :
+            $objeto->$fase($idPessoa,"servidorPessoaisExtra.php"); 
+            break;
     }
+    
     $page->terminaPagina();
 }else{
     loadPage("../../areaServidor/sistema/login.php");

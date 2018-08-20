@@ -51,7 +51,7 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Professores Ativos');
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
-    $relatorio->set_width(array(10,30,30,0,10,10,10));
+    #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     

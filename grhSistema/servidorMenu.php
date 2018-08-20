@@ -126,127 +126,137 @@ if($acesso){
         
         case "pasta" :
             # Pasta Funcional
-            $grid = new Grid();
-            $grid->abreColuna(4);
             
-            # Título
-            tituloTable('Pasta Funcional');
-            
-            br();
-                        
-            # Pega o idfuncional
+            # Pega o idfuncional do servidor Pesquisado
             $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
             
-            # Define a pasta
-            $pasta = "../../_arquivo/";
+             # So continua se tiver id cadastrado
+            if(is_null($idFuncional)){
+                br(3);
+                p("Servidor sem idFuncional cadastrada no sistema","center");
+                p("E necessario ter a idfuncional cadastrada para poder vizualizar a pasta.","center");
+            }else{
             
-            $achei = NULL;
-            
-            # Encontra a pasta
-            foreach (glob($pasta.$idFuncional."*") as $escolhido) {
-                $achei = $escolhido;
-            }
-            
-            # Verifica se tem pasta desse servidor
-            if(file_exists($achei)){
-                
-                $grupoarquivo = NULL;
-                $contador = 0;
-                
-                # Inicia o menu
-                $tamanhoImage = 60;
-                $menu = new MenuGrafico(1);
-            
-                # pasta
-                $ponteiro  = opendir($achei."/");
-                while ($arquivo = readdir($ponteiro)) {
+                $grid = new Grid();
+                $grid->abreColuna(4);
 
-                    # Desconsidera os diretorios 
-                    if($arquivo == ".." || $arquivo == "."){
-                        continue;
-                    }
-                    
-                    # Verifica a codificação do nome do arquivo
-                    if(codificacao($arquivo) == 'ISO-8859-1'){
-                        $arquivo = utf8_encode($arquivo);
-                    }
+                # Título
+                tituloTable('Pasta Funcional');
 
-                    # Divide o nome do arquivos
-                    $partesArquivo = explode('.',$arquivo);
-                    
-                    # VErifica se arquivo é da pasta
-                    if(substr($arquivo, 0, 5) == "Pasta"){
-                        $botao = new BotaoGrafico();
-                        $botao->set_label($partesArquivo[0]);
-                        $botao->set_url($achei.'/'.$arquivo);
-                        $botao->set_target('_blank');
-                        $botao->set_image(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
-                        $menu->add_item($botao);
-                        
-                        $contador++;
-                    }
+                br();
+            
+                # Define a pasta
+                $pasta = "../../_arquivo/";
+
+                $achei = NULL;
+
+                # Encontra a pasta
+                foreach (glob($pasta.$idFuncional."*") as $escolhido) {
+                    $achei = $escolhido;
                 }
-                if($contador >0){
+
+                # Verifica se tem pasta desse servidor
+                if(file_exists($achei)){
+
+                    $grupoarquivo = NULL;
+                    $contador = 0;
+
+                    # Inicia o menu
+                    $tamanhoImage = 60;
+                    $menu = new MenuGrafico(1);
+
+                    # pasta
+                    $ponteiro  = opendir($achei."/");
+                    while ($arquivo = readdir($ponteiro)) {
+
+                        # Desconsidera os diretorios 
+                        if($arquivo == ".." || $arquivo == "."){
+                            continue;
+                        }
+
+                        # Verifica a codificação do nome do arquivo
+                        if(codificacao($arquivo) == 'ISO-8859-1'){
+                            $arquivo = utf8_encode($arquivo);
+                        }
+
+                        # Divide o nome do arquivos
+                        $partesArquivo = explode('.',$arquivo);
+
+                        # VErifica se arquivo é da pasta
+                        if(substr($arquivo, 0, 5) == "Pasta"){
+                            $botao = new BotaoGrafico();
+                            $botao->set_label($partesArquivo[0]);
+                            $botao->set_url($achei.'/'.$arquivo);
+                            $botao->set_target('_blank');
+                            $botao->set_image(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
+                            $menu->add_item($botao);
+
+                            $contador++;
+                        }
+                    }
+                    if($contador >0){
+                        $menu->show();
+                    }
+                }else{                
+                    p("Nenhum arquivo encontrado.","center");
+                }
+
+                #$callout->fecha();
+                $grid->fechaColuna();
+                $grid->abreColuna(8);
+
+                #############################################################
+
+                tituloTable('Processos');
+                br();
+
+                # Verifica se tem pasta desse servidor
+                if(file_exists($achei)){
+
+                    $grupoarquivo = NULL;
+
+                    # Inicia o menu
+                    $tamanhoImage = 60;
+                    $menu = new MenuGrafico(4);
+
+                    # pasta
+                    $ponteiro  = opendir($achei."/");
+                    while ($arquivo = readdir($ponteiro)) {
+
+                        # Desconsidera os diretorios 
+                        if($arquivo == ".." || $arquivo == "."){
+                            continue;
+                        }
+
+                        # Verifica a codificação do nome do arquivo
+                        if(codificacao($arquivo) == 'ISO-8859-1'){
+                            $arquivo = utf8_encode($arquivo);
+                        }
+
+                        # Divide o nome do arquivos
+                        $partesArquivo = explode('.',$arquivo);
+
+
+                        # VErifica se arquivo é da pasta
+                        if(substr($arquivo, 0, 5) <> "Pasta"){
+                            $botao = new BotaoGrafico();
+                            $botao->set_label($partesArquivo[0]);
+                            $botao->set_url($achei.'/'.$arquivo);
+                            $botao->set_target('_blank');
+                            $botao->set_image(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
+                            $menu->add_item($botao);
+                        }
+                    }
                     $menu->show();
+                }else{               
+                    p("Nenhum arquivo encontrado.","center");
                 }
-            }else{                
-                p("Nenhum arquivo encontrado.","center");
-            }
-            
-            #$callout->fecha();
-            $grid->fechaColuna();
-            $grid->abreColuna(8);
-            
-            #############################################################
-            
-            tituloTable('Processos');
-            br();
-            
-            # Verifica se tem pasta desse servidor
-            if(file_exists($achei)){
                 
-                $grupoarquivo = NULL;
-                 
-                # Inicia o menu
-                $tamanhoImage = 60;
-                $menu = new MenuGrafico(4);
-            
-                # pasta
-                $ponteiro  = opendir($achei."/");
-                while ($arquivo = readdir($ponteiro)) {
-
-                    # Desconsidera os diretorios 
-                    if($arquivo == ".." || $arquivo == "."){
-                        continue;
-                    }
-
-                    # Verifica a codificação do nome do arquivo
-                    if(codificacao($arquivo) == 'ISO-8859-1'){
-                        $arquivo = utf8_encode($arquivo);
-                    }
-                    
-                    # Divide o nome do arquivos
-                    $partesArquivo = explode('.',$arquivo);
-                    
-                    
-                    # VErifica se arquivo é da pasta
-                    if(substr($arquivo, 0, 5) <> "Pasta"){
-                        $botao = new BotaoGrafico();
-                        $botao->set_label($partesArquivo[0]);
-                        $botao->set_url($achei.'/'.$arquivo);
-                        $botao->set_target('_blank');
-                        $botao->set_image(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
-                        $menu->add_item($botao);
-                    }
-                }
-                $menu->show();
-            }else{               
-                p("Nenhum arquivo encontrado.","center");
-            }
-            
-            #$callout->fecha();
+                 #$callout->fecha();
             $grid->fechaColuna();
             $grid->abreColuna(8);
+            }
+            
             break;
             
         ##################################################################
@@ -254,7 +264,11 @@ if($acesso){
             case "timeline" :
                 
             # Nome
-            tituloTable("Afastamentos Anuais");
+            
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            #tituloTable("Afastamentos Anuais");
             
             # Formulário de Pesquisa
             $form = new Form('?fase=timeline');
@@ -276,9 +290,6 @@ if($acesso){
 
             $form->show();
             
-            $grid = new Grid();
-            $grid->abreColuna(8);
-            
             # Define a data de hoje
             $hoje = date("d/m/Y");
 
@@ -287,7 +298,7 @@ if($acesso){
                               dtInicial,
                               numDias,
                               ADDDATE(dtInicial,numDias-1) as dtFinal
-                         FROM tbFerias
+                         FROM tbferias
                         WHERE idServidor = $idServidorPesquisado
                           AND YEAR(dtInicial) = $parametroAno  
                      ORDER BY dtInicial) UNION 
@@ -306,7 +317,33 @@ if($acesso){
                          FROM tblicencapremio
                         WHERE idServidor = $idServidorPesquisado
                           AND YEAR(dtInicial) = $parametroAno  
-                     ORDER BY dtInicial) order by 2";
+                     ORDER BY dtInicial) UNION 
+                       (SELECT 'Trabalho TRE' as descricao,
+                              data,
+                              dias,
+                              ADDDATE(data,dias-1) as dtFinal
+                         FROM tbtrabalhotre
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(data) = $parametroAno  
+                     ORDER BY data) UNION 
+                       (SELECT 'Folga TRE' as descricao,
+                              data,
+                              dias,
+                              ADDDATE(data,dias-1) as dtFinal
+                         FROM tbfolga
+                        WHERE idServidor = $idServidorPesquisado
+                          AND YEAR(data) = $parametroAno  
+                     ORDER BY data) UNION 
+                       (SELECT 'Outros' as descricao,
+                              '$parametroAno-01-01' as dtInicial,
+                              NULL,
+                              '$parametroAno-01-01' as dtFinal
+                         FROM tblicencapremio) UNION 
+                       (SELECT 'Outros' as descricao,
+                              '$parametroAno-12-31' as dtInicial,
+                              NULL,
+                              '$parametroAno-12-31' as dtFinal
+                         FROM tblicencapremio) order by 2";
 
             # Acessa o banco
             $pessoal = new Pessoal();
@@ -314,7 +351,7 @@ if($acesso){
             $numAtividades = $pessoal->count($select1);
             $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
 
-            tituloTable("Gráfico");
+            tituloTable("Afastamentos de $parametroAno");
 
             if($numAtividades > 0){
 
@@ -374,15 +411,15 @@ if($acesso){
                 p("Não há dados para serem exibidos.","f14","center");
             }
             
-            $grid->fechaColuna();
-            $grid->abreColuna(4);
+            #$grid->fechaColuna();
+            #$grid->abreColuna(4);
             
             # Tabela
             $select2 = "(SELECT CONCAT('Férias',' - ',anoExercicio) as descricao,
                               dtInicial,
                               numDias,
                               ADDDATE(dtInicial,numDias-1) as dtFinal
-                         FROM tbFerias
+                         FROM tbferias
                         WHERE idServidor = $idServidorPesquisado
                           AND YEAR(dtInicial) = $parametroAno  
                      ORDER BY dtInicial) UNION 
@@ -415,14 +452,14 @@ if($acesso){
             $tabela->set_funcao(array(NULL,"date_to_php",NULL,"date_to_php"));
             $tabela->set_titulo("Tabela");
             
-            $numAtividades = $pessoal->count($select2);
-            if($numAtividades > 0){
-                $tabela->show();
-            }else{
-                tituloTable("Tabela");
-                br();
-                p("Não há dados para serem exibidos.","f14","center");
-            }
+            #$numAtividades = $pessoal->count($select2);
+            #if($numAtividades > 0){
+            #    $tabela->show();
+            #}else{
+            #    tituloTable("Tabela");
+            #    br();
+            #    p("Não há dados para serem exibidos.","f14","center");
+            #}
             
             $grid->fechaColuna();
             $grid->fechaGrid();    

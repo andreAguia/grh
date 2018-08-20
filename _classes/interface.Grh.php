@@ -680,7 +680,7 @@ class Grh
             $botao->set_image(PASTA_FIGURAS.'timeline.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Resumo gráfico do tempo de vida funcional do servidor dentro da Universidade');                
             #$botao->set_accessKey('i');
-            $menu->add_item($botao);
+            #$menu->add_item($botao);
             
             $menu->show();
         

@@ -238,7 +238,7 @@ if($acesso){
             break;
         
         case "gravar" :
-            $objeto->$fase($idPessoa,"servidorPessoaisExtra.php"); 
+            $objeto->$fase($idPessoa); 
             break;
     }
     

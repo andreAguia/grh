@@ -609,11 +609,11 @@ class Grh
         
         # Ocorrências
         
-        $grid2->abreColuna(12,6);
+        $grid2->abreColuna(12,5);
             titulo('Afastamentos');
             br();
 
-            $menu = new MenuGrafico(4);
+            $menu = new MenuGrafico(3);
             if($pessoal->get_perfilFerias($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Férias');
@@ -687,13 +687,12 @@ class Grh
         $grid2->fechaColuna();
 
         # Financeiro                                    
-        $grid2->abreColuna(12,4); 
+        $grid2->abreColuna(12,5); 
             titulo('Financeiro');
             br();
 
-            $menu = new MenuGrafico(3);
-            if($pessoal->get_perfilProgressao($perfil) == "Sim")
-            {
+            $menu = new MenuGrafico(4);
+            if($pessoal->get_perfilProgressao($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Progressão e Enquadramento');
                 $botao->set_url('servidorProgressao.php');
@@ -703,8 +702,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoal->get_perfilTrienio($perfil) == "Sim")
-            {
+            if($pessoal->get_perfilTrienio($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Triênio');
                 $botao->set_url('servidorTrienio.php');
@@ -714,8 +712,7 @@ class Grh
                 $menu->add_item($botao);
             }
 
-            if($pessoal->get_perfilGratificacao($perfil) == "Sim")
-            {
+            if($pessoal->get_perfilGratificacao($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Gratificação Especial');
                 $botao->set_url('servidorGratificacao.php');
@@ -732,7 +729,18 @@ class Grh
             $botao->set_image(PASTA_FIGURAS.'diaria.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Controle de Diárias');
             $menu->add_item($botao);
+            
+            if ($perfil == 1){   // Ser for estatutário
+                # Abono Permanencia    
+                $botao = new BotaoGrafico();
+                $botao->set_label('Abono Permanencia');
+                $botao->set_url('servidorAbono.php');
+                $botao->set_image(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Abono Permanencia');                
+                $menu->add_item($botao);
+            }
 
+            # Dados BAncarios
             $botao = new BotaoGrafico();
             $botao->set_label('Dados Bancários');
             $botao->set_url('servidorBancario.php');

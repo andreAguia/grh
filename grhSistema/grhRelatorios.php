@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -66,7 +65,7 @@ if($acesso)
                 # Menu de tipos de relatórios
                 $menu = new Menu();
                 $menu->add_item('titulo','Categorias de Relatórios');
-                $menu->add_item('linkAjax','Aposentadoria','?fase=aposentadoria','','','divMenuRelatorioGrh');  
+                $menu->add_item('linkAjax','Aposentadoria & Abono Permanencia','?fase=aposentadoria','','','divMenuRelatorioGrh');  
                 $menu->add_item('linkAjax','Atestado','?fase=atestado','','','divMenuRelatorioGrh');  
                 $menu->add_item('linkAjax','Cargo Efetivo','?fase=cargoEfetivo','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cargo em Comissão','?fase=cargoEmComissao','','','divMenuRelatorioGrh');
@@ -129,6 +128,7 @@ if($acesso)
             $menu->add_item('titulo','Aposentadoria');
             $menu->add_item('linkWindow','Relatório de Estatutários com Idade para Aposentadoria','../grhRelatorios/servIdadeAposent.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
+            $menu->add_item('linkWindow','Relatório Geral de Estatutarios com Abono Permanencia','../grhRelatorios/geralAbono.php');
             
             $menu->show();
             break;

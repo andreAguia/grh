@@ -36,13 +36,13 @@ if($acesso)
                       if(status = 1,'Deferido','Indeferido')
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                  JOIN tbabono USING (idServidor)
-                WHERE tbabono.status = 1 AND situacao = 1
+                WHERE tbabono.status = 2 AND situacao = 1
              ORDER BY 2";
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Geral de Servidores Ativos com Abono Permanencia');
+    $relatorio->set_titulo('Relatório Geral de Servidores Ativos com Abono Permanencia Indeferido');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Data","Processo","Publicaçao","Status"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));

@@ -293,7 +293,7 @@ if($acesso){
                            WHEN 2 THEN 'Estatutário'
                         END,
                         cargo,
-                        CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' - Pag ',pgPublicacao),
+                        dtPublicacao,
                         processo,
                         idAverbacao
                    FROM tbaverbacao
@@ -315,7 +315,7 @@ if($acesso){
     #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
     $relatorio->set_exibeSomatorioGeral(FALSE);
     $relatorio->set_align(array('center','center','center','left'));
-    $relatorio->set_funcao(array("date_to_php","date_to_php"));
+    $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

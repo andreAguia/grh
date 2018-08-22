@@ -242,7 +242,18 @@ function tituloRelatorio($texto){
  */
 
 function textoEscalaFerias(){
-    echo "Aqui vai o texto a ser exibido no fim de cada grupo";
+    br();
+    $grid = new Grid();
+    $grid->abreColuna(4);
+        p("01- De acordo com o Decreto 2479 Art. 91 §2., é  proibida a acumulação de férias, salvo imperiosa necessidade de serviço, não podendo a acumulação, neste caso, abranger mais de dois períodos.","justify","f14");
+    $grid->fechaColuna();
+    $grid->abreColuna(4);    
+        p("02- Esta Escala deverá ser devolvida à Gerência de Recursos Humanos - GRH até o dia 01/11/2018. É imprescindível a assinatura do chefe imediato, e na impossibilidade do mesmo, deverá ser assinada pelo chefe superior.","justify","f14");
+    $grid->fechaColuna();
+    $grid->abreColuna(4);    
+        p("03- Eventuais alterações deverão ser comunicadas a esta gerência com antecedência mínima de 60 (sessenta dias) a contar da data de início das férias","justify","f14");
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 }
 
 ##########################################################

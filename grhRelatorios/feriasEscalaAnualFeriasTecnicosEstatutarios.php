@@ -16,8 +16,7 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
@@ -34,10 +33,10 @@ if($acesso)
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                      tbservidor.dtAdmissao,
-                     "01/01/'.$anoBase.'",
-                     "31/12/'.$anoBase.'",
+                     "01/01/'.$anoBase.' - 31/12/'.$anoBase.'",
                      "___ /___ /_____",
-                     "<br/>__________________________"
+                     "_______",
+                     "__________________________"
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -51,11 +50,11 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Escala Anual de Férias dos Técnicos Estatutários');
-    $relatorio->set_tituloLinha2('Janeiro - Dezembro '.$anoBase);
+    $relatorio->set_titulo('Escala Anual de Férias dos Técnicos Estatutários - Ano Exercicio: '.$anoBase);
+    #$relatorio->set_tituloLinha2('Ano Exercicio:'.$anoBase);
 
-    $relatorio->set_label(['IdFuncional','Nome','Lotação','Admissão','Início do Prazo<br/>para o Gozo','Ultimo Prazo<br/>para o Gozo','Início Previsto<br/>do Gozo','Observação']);
-    $relatorio->set_width([10,20,10,10,10,10,10,20]);
+    $relatorio->set_label(['IdFuncional','Nome','Lotação','Admissão','Prazo para o Gozo','Início Previsto<br/>do Gozo','Dias','Observação']);
+    $relatorio->set_width([10,25,0,10,15,10,10,20]);
     $relatorio->set_align(["center","left"]);
     $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php"]);
     #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));

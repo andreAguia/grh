@@ -228,7 +228,7 @@ if($acesso){
         case "ferias";
             $menu = new Menu();
             $menu->add_item('titulo','Férias');
-            #$menu->add_item('linkWindow','Escala Anual de Férias UENF','../grhRelatorios/escalaAnualFeriasTecnicosSandra.php');
+            $menu->add_item('linkWindow','Escala Anual de Férias Dos Tecnicos Estatutarios','../grhRelatorios/feriasEscalaAnualFeriasTecnicosEstatutarios.php');
             #$menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');

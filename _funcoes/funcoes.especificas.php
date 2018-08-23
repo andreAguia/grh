@@ -12,8 +12,7 @@
 # Parâmetro: a matrícula
 # Retorno: a matrícula mais o dígito
 
-Function dv($matricula)
-{
+Function dv($matricula){
     if(vazio($matricula)){
         return $matricula;
     }else{
@@ -124,8 +123,7 @@ function exibeDescricaoStatus($status){
  */
     
     $texto = "";
-    switch ($status)
-    {
+    switch ($status){
         case "solicitada" :
             $texto = "Férias solicitadas pelo Servidor";
             break;
@@ -257,6 +255,7 @@ function textoEscalaFerias(){
 }
 
 ##########################################################
+
 function exibeProcessoPremio($texto){
 /**
  * Função que exibe o processo de licença Premio
@@ -292,6 +291,7 @@ function exibeProcessoPremio($texto){
 }
 
 ##########################################################
+
 function acertaDataFerias($texto){
 /**
  * Função que acerta o nome do mês e exibe junto do ano
@@ -354,3 +354,63 @@ function exibeNumPublicacoesLicencaPremio($idServidor){
     $retorno = $numPublicacao." / ".$numPublicacaoPossivel." / ".$numPublicacaoFaltante;
     return $retorno;
 }
+
+##########################################################
+
+function exibePrazoParaGozoEscalaFerias($texto){
+    /**
+     * Função que exibe o prazo para gozo ou fruição de uma determinada férias do servidor
+     * 
+     * Função criada pois quando o servidor está em sua primeira férias a data do início do gozo é diferente
+     */
+        
+        # Divide o texto idServidor&Ano
+        $pedaco = explode("&", $texto);
+
+        # Pega os valores
+        $idServidor = $pedaco[0];
+        $anoPesquisado = $pedaco[1];
+
+        # Pega o ano de admissão do servidor
+        $pessoal = new Pessoal;
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+        $anoAdmissao = year($dtAdmissao);
+
+        # Define a variável de retorno
+        $retorno = NULL;
+        
+        # Se o ano pesquisado for o mesmo da admissão
+        if($anoPesquisado == $anoAdmissao){
+            $retorno = "Ainda não fez um ano !";
+        }
+
+        # Se o ano pesquisado for anterior da admissão
+        if( $anoPesquisado < $anoAdmissao){
+            $retorno = "Ainda não tinha sido admitido !!";
+        }
+
+        # Se o ano pesquisado for o imediatamente posterior
+        if($anoPesquisado == ($anoAdmissao+1)){
+
+            # Pega o dia da admissão
+            $dia = day($dtAdmissao);
+
+            # Pega o mês da admissão
+            $mes = month($dtAdmissao);
+
+            $dataInicial = $dia."/".$mes."/".$anoPesquisado;
+            $dataFinal = "31/12/".$anoPesquisado;
+            $retorno = $dataInicial." - ".$dataFinal;
+        }
+
+        # Se o ano pesquisado for depois da admissão
+        if($anoPesquisado > ($anoAdmissao+1)){
+            $dataInicial = "01/01/$anoPesquisado";
+            $dataFinal = "31/12/".$anoPesquisado;
+            $retorno = $dataInicial." - ".$dataFinal;
+        }
+
+        return $retorno;
+    }
+    
+    ##########################################################

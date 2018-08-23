@@ -33,7 +33,7 @@ if($acesso){
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                      tbservidor.dtAdmissao,
-                     "01/01/'.$anoBase.' - 31/12/'.$anoBase.'",
+                     concat(tbservidor.idServidor,"&",'.$anoBase.'),
                      "___ /___ /_____",
                      "_______",
                      "__________________________"
@@ -43,6 +43,7 @@ if($acesso){
                                      JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
                WHERE tbservidor.situacao = 1
+                 AND idPerfil = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND tbtipocargo.tipo = "Adm/Tec"
             ORDER BY 3,tbpessoa.nome';
@@ -56,7 +57,7 @@ if($acesso){
     $relatorio->set_label(['IdFuncional','Nome','Lotação','Admissão','Prazo para o Gozo','Início Previsto<br/>do Gozo','Dias','Observação']);
     $relatorio->set_width([10,25,0,10,15,10,10,20]);
     $relatorio->set_align(["center","left"]);
-    $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php"]);
+    $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php","exibePrazoParaGozoEscalaFerias"]);
     #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
     #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
     $relatorio->set_conteudo($result);

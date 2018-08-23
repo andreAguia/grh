@@ -145,7 +145,7 @@ class Pessoal extends Bd {
 
     /**
      * Método get_periodoDisponivel
-     * informa o per�odo dispon�vel de férias de um servidor
+     * informa o período disponível de férias de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -658,8 +658,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_anoAdmissao($idServidor)
-    {
+    function get_anoAdmissao($idServidor){
             $select = 'SELECT YEAR(dtAdmissao)
                                  FROM tbservidor
                                 WHERE idServidor = '.$idServidor;
@@ -678,8 +677,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_dtAdmissao($idServidor)
-    {
+    function get_dtAdmissao($idServidor){
             $select = 'SELECT dtAdmissao
                          FROM tbservidor
                         WHERE idServidor = '.$idServidor;

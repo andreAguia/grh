@@ -10,20 +10,21 @@ $dias = $campoValor[2];         // Dias solicitado
 $servidor = $campoValor[4];     // idServidor
 $dataInicial = $campoValor[1];   // dataInicial 
 
-# Conecta ao banco de dados
-$pessoal = new Pessoal();
+# Define a data de hoje
+$hoje = date("Y-m-d");
+
 
 # Muda o status para solicitada ou fruída de acordo com a data Inicial e a data de hoje
-$timeZone = new DateTimeZone('UTC');
-$data1 = DateTime::createFromFormat ('Y/m/d', $dataInicial, $timeZone);
-$data2 = DateTime::createFromFormat ('Y/m/d', date("Y/m/d"), $timeZone);
+alert($dataInicial);
 
-
-if($data1 <= $data2){
+if($dataInicial <= $hoje){
     $campoValor[5] = "fruída";
 }else{
     $campoValor[5] = "solicitada";
 }
+
+# Conecta ao banco de dados
+$pessoal = new Pessoal();
 
 # Verifica quantos dias o servidor já pediu nesse exercicio
 $diasFerias = $pessoal->get_feriasSomaDias($exercicio,$servidor,$id);

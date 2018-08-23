@@ -3236,7 +3236,8 @@ class Pessoal extends Bd {
             
             $select .= ' GROUP BY anoexercicio
                          ORDER BY anoexercicio asc';
-           
+           echo $select;
+           echo "pppppppppppppppppppppppp";
              $row = parent::select($select,FALSE);
              return $row[1];
 	}

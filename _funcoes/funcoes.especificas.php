@@ -413,4 +413,41 @@ function exibePrazoParaGozoEscalaFerias($texto){
         return $retorno;
     }
     
-    ##########################################################
+##########################################################
+
+function exibeFeriasAtrasadas($idServidor){
+/**
+ * Função o numero de dias de ferias pendentes de um servidor
+ * 
+ * Usado no relatorio de escala de ferias
+ */
+    
+    # Define as variaveis 
+    $retorno = NULL;
+    $anoAtual = date("Y");
+            
+    # Conecta o banco de dados
+    $pessoal = new Pessoal();
+    
+    # Pega os dados do servidor
+    $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);    // Data de admissao
+    $anoAdmissao = year($dtAdmissao);
+    echo $anoAdmissao;
+    echo $anoAtual;
+    # Monta o retorno
+    for ($i = $anoAdmissao+1; $i <= $anoAtual; $i++) {
+        $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
+              
+              
+        # Verifica se tem pendencia 
+        if($dias < 30){
+            $pendencia = 30 - $dias;
+            
+            $retorno .= "($i) - $dias Dias,";
+        }
+    }
+    
+    return $retorno;
+}
+
+##########################################################

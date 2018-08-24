@@ -228,7 +228,9 @@ if($acesso){
         case "ferias";
             $menu = new Menu();
             $menu->add_item('titulo','Férias');
-            $menu->add_item('linkWindow','Escala Anual de Férias Dos Tecnicos Estatutarios','../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
+            $menu->add_item('linkWindow','Escala Anual de Férias de Servidores Tecnicos Estatutarios','../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
+            $menu->add_item('linkWindow','Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao','../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
+            $menu->add_item('linkWindow','Escala Anual de Férias de Docentes Com Regencia de Turma','../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
             #$menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');

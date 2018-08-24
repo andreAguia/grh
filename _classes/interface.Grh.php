@@ -927,7 +927,9 @@ class Grh
         
         # Número de Vinculos
         if($numVinculos > 1){
-            $mensagem[] = "Servidor com $numVinculos vínculos na uenf.";
+            $numVinculos -= 1;
+            
+            $mensagem[] = "Alem desse registro, o servidor possui mais $numVinculos registro(s) nao ativo(s) na universidade.";
         }
         
         ##### Ocorrências

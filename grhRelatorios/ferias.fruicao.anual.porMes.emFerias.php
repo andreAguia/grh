@@ -16,8 +16,7 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
@@ -69,7 +68,7 @@ if($acesso)
     
     $relatorio->set_formCampos(array(
                                array ('nome' => 'parametroAno',
-                                      'label' => 'Mês:',
+                                      'label' => 'Ano:',
                                       'tipo' => 'texto',
                                       'size' => 10,
                                       'padrao' => $parametroAno,

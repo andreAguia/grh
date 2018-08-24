@@ -805,7 +805,7 @@ class Pessoal extends Bd {
 
     function emFerias($idServidor, $data = NULL){
 
-    # Função que informa se a idServidor est� em férias na data atual
+    # Função que informa se a idServidor esta em férias na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
         
@@ -1337,31 +1337,29 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
 
-    function get_cargoComissao($idServidor)
+    function get_cargoComissao($idServidor){
+        
+        # Pega o id do cargo em comissão (se houver)		 
+        $select = 'SELECT idComissao
+                     FROM tbcomissao
+                    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+                       OR (dtExo is NULL))
+                    AND idServidor = '.$idServidor;
 
-    {
-            # Pega o id do cargo em comissão (se houver)		 
-            $select = 'SELECT idComissao
-                         FROM tbcomissao
-                        WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                           OR (dtExo is NULL))
-                        AND idServidor = '.$idServidor;
+        $row = parent::select($select,FALSE);
+        $idCargo = $row[0];
 
-            $row = parent::select($select,FALSE);
-            $idCargo = $row[0];
+        # Pega o nome do id do cargo em comissão
+        if (!is_null($idCargo)){
+                $select ='SELECT tbtipocomissao.descricao 
+                            FROM tbcomissao 
+                            JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                           WHERE idcomissao = '.$idCargo;
 
-            # Pega o nome do id do cargo em comissão
-            if (!is_null($idCargo))
-            {
-                    $select ='SELECT tbtipocomissao.descricao 
-                                FROM tbcomissao 
-                                JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                               WHERE idcomissao = '.$idCargo;
+                $row = parent::select($select,FALSE);
+        }
 
-                    $row = parent::select($select,FALSE);
-            }
-
-            return $row[0];	
+        return $row[0];	
 
     }
 
@@ -3148,7 +3146,7 @@ class Pessoal extends Bd {
                         WHERE idservidor = '.$idservidor.'
                           AND (status = "fruída" OR status = "solicitada" OR status = "confirmada")
                      GROUP BY anoexercicio
-                     ORDER BY anoexercicio asc';
+                     ORDER BY anoexercicio desc';
            
              $row = parent::select($select);
              return $row;
@@ -3236,10 +3234,9 @@ class Pessoal extends Bd {
             
             $select .= ' GROUP BY anoexercicio
                          ORDER BY anoexercicio asc';
-           echo $select;
-           echo "pppppppppppppppppppppppp";
-             $row = parent::select($select,FALSE);
-             return $row[1];
+            echo $select;
+            $row = parent::select($select,FALSE);
+            return $row[1];
 	}
         
         #####################################################################################

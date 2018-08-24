@@ -202,6 +202,8 @@ if($acesso){
             $objeto->excluir($id);
             break;
         
+################################################################
+        
         case "resumo" :
             botaoVoltar("?");
             get_DadosServidor($idServidorPesquisado);

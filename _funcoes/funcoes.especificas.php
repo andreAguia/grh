@@ -251,6 +251,9 @@ function textoEscalaFerias(){
     $grid->abreColuna(4);    
         p("03- Eventuais alterações deverão ser comunicadas a esta gerência com antecedência mínima de 60 (sessenta dias) a contar da data de início das férias","justify","f14");
     $grid->fechaColuna();
+    $grid->abreColuna(12); 
+        p("Data: _____/_____/_____&ensp;&ensp;&ensp;&ensp;Local: _____________________________&ensp;&ensp;&ensp;&ensp;Assinatura: ___________________________________","f14");
+    $grid->fechaColuna();
     $grid->fechaGrid();
 }
 
@@ -415,16 +418,23 @@ function exibePrazoParaGozoEscalaFerias($texto){
     
 ##########################################################
 
-function exibeFeriasAtrasadas($idServidor){
+function exibeFeriasPendentes($texto){
 /**
  * Função o numero de dias de ferias pendentes de um servidor
  * 
  * Usado no relatorio de escala de ferias
  */
     
+    # Divide o texto idServidor&Ano
+    $pedaco = explode("&", $texto);
+
+    # Pega os valores
+    $idServidor = $pedaco[0];
+    $anoPesquisado = $pedaco[1];
+    
     # Define as variaveis 
     $retorno = NULL;
-    $anoAtual = date("Y");
+    $linhas = 0;    // numero de linhas para saber se for mais de um tere que ter br
             
     # Conecta o banco de dados
     $pessoal = new Pessoal();
@@ -432,18 +442,46 @@ function exibeFeriasAtrasadas($idServidor){
     # Pega os dados do servidor
     $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);    // Data de admissao
     $anoAdmissao = year($dtAdmissao);
-    echo $anoAdmissao;
-    echo $anoAtual;
+    
+    # As ferias estao cadastradas somente apartir desse ano
+    # Entao a busca sera a partir desse ano. Cadastrando-se mais anos
+    # Altera-se esse valor
+    $feriasCadastradas = 2014;
+    
     # Monta o retorno
-    for ($i = $anoAdmissao+1; $i <= $anoAtual; $i++) {
-        $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
-              
-              
-        # Verifica se tem pendencia 
-        if($dias < 30){
-            $pendencia = 30 - $dias;
+    for ($i = $anoAdmissao+1; $i <= $anoPesquisado; $i++) {
+        if($i >= $feriasCadastradas){
+            $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
             
-            $retorno .= "($i) - $dias Dias,";
+            # Transforma o nullo em zero
+            if(is_null($dias)){ 
+                $dias = 0;
+            }
+            
+            # Verifica se e o ano atual e informa que nao tem mais ferias
+            # a serem tiradas esse ano quando ja tirou 30 dias
+            if($i == $anoPesquisado){
+                if($dias > 0){
+                    if($linhas >0){
+                        $retorno.="<br/>";
+                    }
+                    
+                    $retorno .= "Ja solicitou os $dias dias de ".$anoPesquisado;
+                    $linhas++;
+                }
+            }else{
+                # Verifica se tem pendencia 
+                if($dias < 30){
+                    $pendencia = 30 - $dias;
+                    
+                    if($linhas >0){
+                        $retorno.="<br/>";
+                    }
+
+                    $retorno .= "($i) - pendente $pendencia Dias,";
+                    $linhas++;
+                }
+            }
         }
     }
     

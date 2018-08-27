@@ -40,21 +40,17 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-    
-    # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Histórico de Férias');
 
     # botão de voltar da lista
     if($areaFerias == "exercicio"){
-        $objeto->set_voltarLista('areaFeriasExercicio.php');
+        $voltarLista = 'areaFeriasExercicio.php';
     }elseif($areaFerias == "fruicao"){
-        $objeto->set_voltarLista('areaFeriasFruicao.php');
+        $voltarLista = 'areaFeriasFruicao.php';
     }else{
-        $objeto->set_voltarLista('servidorMenu.php');
+        $voltarLista = 'servidorMenu.php';
     }
     
     # botão de voltar do formulário
@@ -160,26 +156,15 @@ if($acesso){
                                        'col' => 2,
                                        'title' => 'Status das férias',
                                        'linha' => 1)));
-
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Férias");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-        
-    # Resumo
-    $botaoResumo = new Button("Resumo");
-    $botaoResumo->set_title("Resumo das Férias");
-    $botaoResumo->set_url("?fase=resumo");
-    $botaoResumo->set_accessKey('R');
     
-    $objeto->set_botaoListarExtra(array($botaoRel,$botaoResumo));
-        
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
+    
+    # Retira os botoes da classe modelo
+    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoVoltarLista(FALSE);
+    $objeto->set_comGridLista(FALSE);
 
 ################################################################
 
@@ -187,7 +172,63 @@ if($acesso){
         
         case "" :
         case "listar" :
-            $objeto->listar();
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
+            
+            # Limita a tela
+            $grid1 = new Grid();
+            $grid1->abreColuna(12);
+    
+            # Voltar
+            $linkVoltar = new Link("Voltar",$voltarLista);
+            $linkVoltar->set_class('button');
+            $menu1->add_link($linkVoltar,"left");
+
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir Relatório de Histórico de Férias");
+            $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $menu1->add_link($botaoRel,"right");
+
+            # Incluir
+            $linkIncluir = new Link("Incluir",'?fase=editar');
+            $linkIncluir->set_class('button');
+            $linkIncluir->set_title('Incluir novas ferias');
+            $menu1->add_link($linkIncluir,"right");
+
+            $menu1->show();
+            
+            # Exibe os dados do servidor pesquisado
+            get_DadosServidor($idServidorPesquisado);
+            
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(3);
+
+                $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
+                $tabela = new Tabela();
+                $tabela->set_conteudo($lista);
+                $tabela->set_titulo('Resumo');
+                $tabela->set_label(array("Exercício","Dias"));
+                $tabela->set_align(array("center"));
+                $tabela->set_formatacaoCondicional(array( array('coluna' => 1,
+                                                                'valor' => 30,
+                                                                'operador' => '<>',
+                                                                'id' => 'problemas')));       
+                $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(9);
+            
+                $objeto->listar();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
 
         case "editar" : 
@@ -227,44 +268,6 @@ if($acesso){
 
             $grid->fechaColuna();
             $grid->fechaGrid();
-            break;
-
-################################################################
-
-        case 'solicitacaoFerias':
-            $id = get('id');
-
-            # pega os dados do servidor
-            $nome = $pessoal->get_nome($idServidorPesquisado);
-            $cargo = $pessoal->get_cargo($idServidorPesquisado);
-            $perfil = $pessoal->get_perfil($idServidorPesquisado);
-            $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
-
-            # Select das férias
-            $select = "SELECT anoExercicio,
-                              DATE_FORMAT(dtInicial,'%d/%m/%Y'),
-                              numDias,
-                              DATE_FORMAT(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtFinal
-                         FROM tbferias
-                        WHERE tbferias.idFerias = ".$id;
-
-            # Acessa o Banco de dados
-            $ferias = new Pessoal();
-            $row = $ferias->select($select,FALSE);
-            $row = urlencode(serialize($row));  // Prepara para ser enviado por get
-
-            # preenche outro array com o restante dos dados
-            $servidor = array($nome,$cargo,$perfil,$lotacao,$idServidorPesquisado);
-            $servidor = urlencode(serialize($servidor));  // Prepara para ser enviado por get        
-
-            loadPage('../grhRelatorios/solicitacaoFerias.php?row='.$row.'&servidor='.$servidor,'_blank');  // envia um array pelo get
-
-            # Log
-            $atividade = "Emitiu Solicitação de Férias de ".$pessoal->get_nome($idServidorPesquisado);
-            $data = date("Y-m-d H:i:s");
-            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
-
-            loadPage('?');
             break;
 
 ################################################################

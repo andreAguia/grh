@@ -3141,7 +3141,7 @@ class Pessoal extends Bd {
          */
 	
 	public function get_feriasResumo($idservidor){
-            $select = 'SELECT anoexercicio, SUM(numDias)                          
+            $select = 'SELECT anoexercicio, SUM(numDias) as total                         
                          FROM tbferias
                         WHERE idservidor = '.$idservidor.'
                           AND (status = "fruída" OR status = "solicitada" OR status = "confirmada")
@@ -3149,7 +3149,28 @@ class Pessoal extends Bd {
                      ORDER BY anoexercicio desc';
            
              $row = parent::select($select);
-             return $row;
+             $quantos = count($row);
+             
+             # Pga o menor ano cadastrado
+             $menorValor = $row[$quantos-1];
+             $menorAno = $menorValor['anoexercicio'];
+             
+             # Pega o maior ano (anoatual +1)
+             $maiorAno = date("Y")+1;
+             
+             $novoArray = NULL;
+             
+             # Verifica ano a ano
+             for($i = $maiorAno;$i >= $menorAno;$i--){
+                if(array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
+                    $novoArray[]=array($i,0);               // Acrescenta o ano com valor 0
+                }else{
+                    
+                    $novoArray[]=array($i,$this->get_feriasSomaDias($i, $idservidor));  // Acrescenta o ano com valor 0
+                }
+             }
+             
+             return $novoArray;
 	}
 
 	#####################################################################################
@@ -3234,7 +3255,7 @@ class Pessoal extends Bd {
             
             $select .= ' GROUP BY anoexercicio
                          ORDER BY anoexercicio asc';
-            echo $select;
+            
             $row = parent::select($select,FALSE);
             return $row[1];
 	}

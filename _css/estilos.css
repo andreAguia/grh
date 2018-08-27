@@ -77,6 +77,13 @@ ul.checkupResumo li{
     margin: 0px 0px 0px 0px;
 }
 
+p#exibeOcorrencia{
+    padding: 0px 0px 0px 0px;
+    text-align: left;
+    font-size: 14px;
+     margin: 0px;
+}
+
 /*******************************************
  * Cadastro de Publicação de Licenças Prêmio de um servidor
  *******************************************/

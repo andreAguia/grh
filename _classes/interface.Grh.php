@@ -607,87 +607,8 @@ class Grh
             }
         $grid2->fechaColuna();
         
-        # Ocorrências
-        
-        $grid2->abreColuna(12,5);
-            titulo('Afastamentos');
-            br();
-
-            $menu = new MenuGrafico(3);
-            if($pessoal->get_perfilFerias($perfil) == "Sim"){
-                $botao = new BotaoGrafico();
-                $botao->set_label('Férias');
-                $botao->set_url('servidorFerias.php');
-                $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro das Férias do Servidor');
-                $botao->set_accessKey('i');
-                $menu->add_item($botao);
-            }
-
-            if($pessoal->get_perfilLicenca($perfil) == "Sim"){
-                $botao = new BotaoGrafico();
-                $botao->set_label('Licenças e Afastamentos');
-                $botao->set_url('servidorLicenca.php');
-                $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Licenças do Servidor');
-                $botao->set_accessKey('L');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label($pessoal->get_licencaNome(6));
-                $botao->set_url('servidorLicencaPremio.php');
-                $botao->set_image(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Licenças Prêmio do Servidor');
-                #$botao->set_accessKey('L');
-                $menu->add_item($botao);
-            }
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Atestados (Faltas Abonadas)');
-            $botao->set_url('servidorAtestado.php');
-            $botao->set_image(PASTA_FIGURAS.'atestado.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Atestados do Servidor');                
-            #$botao->set_accessKey('i');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Faltas');
-            $botao->set_url('servidorFaltas.php');
-            $botao->set_image(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Faltas do Servidor');                
-            #$botao->set_accessKey('i');
-            #$menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('TRE - Afastamentos');
-            $botao->set_url('servidorAfastamentoTre.php');
-            $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de dias afastados do trabalho para prestar serviços ao TRE');                
-            #$botao->set_accessKey('i');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('TRE - Folgas Recebidas');
-            $botao->set_url('servidorFolga.php');
-            $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de folgas recebidas por ter trabalhado no TRE');                
-            #$botao->set_accessKey('i');
-            $menu->add_item($botao);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Afastamento Anual');
-            $botao->set_url('?fase=timeline');
-            $botao->set_image(PASTA_FIGURAS.'timeline.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Resumo gráfico do tempo de vida funcional do servidor dentro da Universidade');                
-            #$botao->set_accessKey('i');
-            #$menu->add_item($botao);
-            
-            $menu->show();
-        
-        $grid2->fechaColuna();
-
         # Financeiro                                    
-        $grid2->abreColuna(12,5); 
+        $grid2->abreColuna(12,6); 
             titulo('Financeiro');
             br();
 
@@ -769,6 +690,85 @@ class Grh
             br();
         $grid2->fechaColuna();
         
+        # Ocorrências
+        
+        $grid2->abreColuna(12,4);
+        titulo('Afastamentos');
+        br();
+
+        $menu = new MenuGrafico(3);
+        if($pessoal->get_perfilFerias($perfil) == "Sim"){
+            $botao = new BotaoGrafico();
+            $botao->set_label('Férias');
+            $botao->set_url('servidorFerias.php');
+            $botao->set_image(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro das Férias do Servidor');
+            $botao->set_accessKey('i');
+            $menu->add_item($botao);
+        }
+
+        if($pessoal->get_perfilLicenca($perfil) == "Sim"){
+            $botao = new BotaoGrafico();
+            $botao->set_label('Licenças e Afastamentos');
+            $botao->set_url('servidorLicenca.php');
+            $botao->set_image(PASTA_FIGURAS.'licenca.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Licenças do Servidor');
+            $botao->set_accessKey('L');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label($pessoal->get_licencaNome(6));
+            $botao->set_url('servidorLicencaPremio.php');
+            $botao->set_image(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Licenças Prêmio do Servidor');
+            #$botao->set_accessKey('L');
+            $menu->add_item($botao);
+        }
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Atestados (Faltas Abonadas)');
+        $botao->set_url('servidorAtestado.php');
+        $botao->set_image(PASTA_FIGURAS.'atestado.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Atestados do Servidor');                
+        #$botao->set_accessKey('i');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Faltas');
+        $botao->set_url('servidorFaltas.php');
+        $botao->set_image(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Faltas do Servidor');                
+        #$botao->set_accessKey('i');
+        #$menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('TRE - Afastamentos');
+        $botao->set_url('servidorAfastamentoTre.php');
+        $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de dias afastados do trabalho para prestar serviços ao TRE');                
+        #$botao->set_accessKey('i');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('TRE - Folgas Recebidas');
+        $botao->set_url('servidorFolga.php');
+        $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de folgas recebidas por ter trabalhado no TRE');                
+        #$botao->set_accessKey('i');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Afastamento Anual');
+        $botao->set_url('?fase=timeline');
+        $botao->set_image(PASTA_FIGURAS.'timeline.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Resumo gráfico do tempo de vida funcional do servidor dentro da Universidade');                
+        #$botao->set_accessKey('i');
+        #$menu->add_item($botao);
+
+        $menu->show();
+        
+        $grid2->fechaColuna();
+        
         # Relatórios
         
         $grid2->abreColuna(12,2); 
@@ -778,7 +778,7 @@ class Grh
             $menu = new Menu();
             $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
             $menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
-            $menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
+            #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
             $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
             $menu->show();
             
@@ -979,9 +979,8 @@ class Grh
             
             # Percorre o array 
             foreach ($mensagem as $mm) {
-                echo "- ".$mm;
+                p("- ".$mm,"exibeOcorrencia");
                 if($contador < $qtdMensagem){
-                    br();
                     $contador++;
                 }
             }

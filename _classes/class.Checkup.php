@@ -789,10 +789,10 @@ class Checkup {
      /**
      * Método get_servidorComMaisde1MatriculaAtiva
      * 
-     * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
+     * Servidor estatutário com mais de uma matriculka ativa
      */
     
-    public function get_servidorComMaisde1MatriculaAtiva(){
+    public function get_servidorComMaisde1MatriculaAtiva($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 1;
         
@@ -810,9 +810,17 @@ class Checkup {
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                    WHERE idPessoa IN (SELECT idpessoa FROM tbservidor WHERE tbservidor.situacao = 1 GROUP BY idPessoa HAVING COUNT(*) > 1 ORDER BY idpessoa)
-                      AND tbservidor.situacao = 1
-                 ORDER BY tbpessoa.nome';
+                    WHERE idPessoa IN 
+                    (SELECT idpessoa 
+                       FROM tbservidor 
+                      WHERE tbservidor.situacao = 1 GROUP BY idPessoa HAVING COUNT(*) > 1 
+                   ORDER BY idpessoa)
+                      AND tbservidor.situacao = 1';
+        if(!is_null($idServidor)){
+            $select .= ' AND idServidor = "'.$idServidor.'"';
+        }
+        
+        $select .= ' ORDER BY tbpessoa.nome';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
@@ -837,14 +845,17 @@ class Checkup {
         #$tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
-       
+        
         if ($count > 0){
-            if($this->lista){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
                 callout("Algum erro no sistema, favor verificar. Somente uma matrícula deveria estar ativa");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                echo $count;
                 return $retorna;
             }
         }

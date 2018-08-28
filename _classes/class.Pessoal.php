@@ -1191,8 +1191,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_situacao($idServidor)
-    {
+    function get_situacao($idServidor){
             $select = 'SELECT tbsituacao.situacao
                          FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                         WHERE idServidor = '.$idServidor;
@@ -1211,8 +1210,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_idSituacao($idServidor)
-    {
+    function get_idSituacao($idServidor){
             $select = 'SELECT idsituacao
                          FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                         WHERE idServidor = '.$idServidor;
@@ -1231,8 +1229,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_motivo($idServidor)
-    {
+    function get_motivo($idServidor){
             $select = 'SELECT tbmotivo.motivo
                          FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
                         WHERE idServidor = '.$idServidor;
@@ -3799,5 +3796,82 @@ class Pessoal extends Bd {
             return $numero;
         }
 
-    ##########################################################################################		
+    ##########################################################################################
+
+        function get_numVinculosAtivos($idServidor){
+
+        # Função que retorna quantos vinculos ativos esse servidor tem com a uenf
+        #
+        # Parâmetro: id do servidor
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }            
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = $idPessoa
+                          AND situacao = 1";
+
+            $numero = parent::count($select);
+            return $numero;
+        }
+
+    ##########################################################################################
+
+        function get_numVinculosNaoAtivos($idServidor){
+
+        # Função que retorna quantos vinculos nao ativos esse servidor tem com a uenf
+        #
+        # Parâmetro: id do servidor
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }            
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+           $select = "SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = $idPessoa
+                          AND situacao <> 1";
+
+            $numero = parent::count($select);
+            return $numero;
+        }
+
+    ##########################################################################################
+
+        function get_vinculos($idServidor){
+
+        # Função que retorna o idServidor de cada vinculos esse servidor teve com a uenf.
+        #
+        # Parâmetro: id do servidor
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }            
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = '.$idPessoa;
+
+            $row = parent::select($select);
+            return $row;
+        }
+
+    ##########################################################################################						
 }

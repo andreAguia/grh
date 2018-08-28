@@ -144,8 +144,7 @@ if($acesso){
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :
         case "listar" :
             $objeto->listar();

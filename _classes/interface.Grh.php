@@ -889,6 +889,9 @@ class Grh
         $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
         $cedido = $pessoal->emCessao($idServidor);
         $numVinculos = $pessoal->get_numVinculos($idServidor);
+        $numVinculosAtivos = $pessoal->get_numVinculosAtivos($idServidor);
+        $numVinculosNaoAtivos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        
             
         # Férias
         if($ferias){
@@ -926,10 +929,24 @@ class Grh
         }
         
         # Número de Vinculos
-        if($numVinculos > 1){
-            $numVinculos -= 1;
+        if($numVinculos > 1){               // So entra se tiver mais de um vinculo
+            if($numVinculosAtivos == 1){    //  sendo somente um ativo
+                if($situacao == "Ativo"){ 
+                    $mensagem[] = "Alem desse registro, o servidor possui mais $numVinculosNaoAtivos registro(s) nao ativo(s) na universidade.";
+                }else{
+                    $mensagem[] = "Alem desse registro, o servidor possui mais um registro ativo na universidade.";
+                }
+            }
             
-            $mensagem[] = "Alem desse registro, o servidor possui mais $numVinculos registro(s) nao ativo(s) na universidade.";
+            $vinculos = $pessoal->get_vinculos($idServidor);
+            foreach($vinculos as $rr){
+                if($rr[0] <> $idServidor){
+                    echo $pessoal->get_situacao($rr[0]);
+                    echo $pessoal->get_perfil($rr[0]);
+                    br();
+                }
+            }
+                
         }
         
         ##### Ocorrências

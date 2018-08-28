@@ -891,7 +891,6 @@ class Grh
         $numVinculos = $pessoal->get_numVinculos($idServidor);
         $numVinculosAtivos = $pessoal->get_numVinculosAtivos($idServidor);
         $numVinculosNaoAtivos = $pessoal->get_numVinculosNaoAtivos($idServidor);
-        
             
         # Férias
         if($ferias){
@@ -931,22 +930,41 @@ class Grh
         # Número de Vinculos
         if($numVinculos > 1){               // So entra se tiver mais de um vinculo
             if($numVinculosAtivos == 1){    //  sendo somente um ativo
-                if($situacao == "Ativo"){ 
-                    $mensagem[] = "Alem desse registro, o servidor possui mais $numVinculosNaoAtivos registro(s) nao ativo(s) na universidade.";
+                if($situacao == 1){ 
+                    $texto = "Alem desse registro, o servidor possui mais $numVinculosNaoAtivos registro(s) NAO ATIVO(S) na universidade:";
                 }else{
-                    $mensagem[] = "Alem desse registro, o servidor possui mais um registro ativo na universidade.";
+                    $texto = "Alem desse registro, o servidor possui mais um registro ativo na universidade:";
                 }
+                
+                # Exibe os vinculos
+                $vinculos = $pessoal->get_vinculos($idServidor);
+                foreach($vinculos as $rr){
+                    if($rr[0] <> $idServidor){
+                        $texto .= "&nbsp;&nbsp;<a href='servidor.php?fase=editar&id=$rr[0]]'>[".$pessoal->get_perfil($rr[0])."&nbsp;(".$pessoal->get_situacao($rr[0]).")]</a>";
+                        
+                    }
+                }
+                
+                # Passa o texto para mensagem
+                $mensagem[] = $texto;
             }
             
-            $vinculos = $pessoal->get_vinculos($idServidor);
-            foreach($vinculos as $rr){
-                if($rr[0] <> $idServidor){
-                    echo $pessoal->get_situacao($rr[0]);
-                    echo $pessoal->get_perfil($rr[0]);
-                    br();
-                }
-            }
+            if($numVinculos == $numVinculosNaoAtivos){    //  sendo todos nao ativos
+                $nn = $numVinculosNaoAtivos-1;
+                $texto = "Alem desse registro, o servidor possui mais $nn registro(s) nao ativo(s) na universidade:";
                 
+                # Exibe os vinculos
+                $vinculos = $pessoal->get_vinculos($idServidor);
+                foreach($vinculos as $rr){
+                    if($rr[0] <> $idServidor){
+                        $texto .= "&nbsp;&nbsp;<a href='servidor.php?fase=editar&id=$rr[0]]'>[".$pessoal->get_perfil($rr[0])."&nbsp;(".$pessoal->get_situacao($rr[0]).")]</a>";
+                        
+                    }
+                }
+                
+                # Passa o texto para mensagem
+                $mensagem[] = $texto;
+            }
         }
         
         ##### Ocorrências

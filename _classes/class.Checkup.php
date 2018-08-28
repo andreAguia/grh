@@ -850,12 +850,11 @@ class Checkup {
             if(!is_null($idServidor)){
                 return $titulo;
             }elseif($this->lista){
-                callout("Algum erro no sistema, favor verificar. Somente uma matrícula deveria estar ativa");
+                callout("Servidor com 2 matriculas Ativas !! Houve algum erro no sistema, favor verificar. Somente uma matrícula deveria estar ativa");
                 $tabela->show();
                 set_session('alertas',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
-                echo $count;
                 return $retorna;
             }
         }

@@ -205,15 +205,12 @@ if($acesso){
             
             $select ='SELECT DAY(tbpessoa.dtNasc),
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                     tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor
                 FROM tbpessoa LEFT JOIN tbservidor ON (tbpessoa.idPessoa = tbservidor.idPessoa)
-                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
-                 AND MONTH(tbpessoa.dtNasc) = '.$parametroMes.'    
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                 AND MONTH(tbpessoa.dtNasc) = '.$parametroMes.'
              ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
 
             $result = $pessoal->select($select);
@@ -223,8 +220,8 @@ if($acesso){
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
             $tabela->set_align(array("center","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,NULL,'Pessoal','Pessoal'));
-            $tabela->set_metodo(array(NULL,NULL,NULL,'get_cargo','get_perfil'));
+            $tabela->set_classe(array(NULL,NULL,'Pessoal','Pessoal','Pessoal'));
+            $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfil'));
             $tabela->set_titulo("Aniversariantes de ".get_nomeMes($parametroMes));
             if(date("m") == $parametroMes){
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));

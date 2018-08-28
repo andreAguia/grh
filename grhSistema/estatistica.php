@@ -103,8 +103,58 @@ if($acesso)
             
             ###############################
             
-            ## Por Pefil
+            ## Por Idade 
             $grid2 = new Grid();
+            $grid2->abreColuna(12);
+
+            # Geral - Por Idade
+            $selectGrafico = 'SELECT count(tbservidor.idServidor) as jj,
+                                     TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                               WHERE situacao = 1
+                            GROUP BY idade
+                            ORDER BY 2';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Separa os arrays para analise estatística
+            $idades = array();
+            foreach ($servidores as $item){
+                $idades[] = $item[1];
+            }
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));  
+
+            # Dados da tabela
+            $dados[] = array("Maior Idade",maiorValor($idades));
+            $dados[] = array("Menor Idade",menorValor($idades));
+            $dados[] = array("Idade Média",media_aritmetica($idades));
+
+            # Chart
+            tituloTable("por Idade");
+            $chart = new Chart("ColumnChart",$dados);
+            $chart->set_idDiv("idade");
+            $chart->set_legend(FALSE);
+            $chart->show();
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($dados);
+            #$tabela->set_titulo("por Idade");
+            $tabela->set_label(array("Descrição","Idade"));
+            $tabela->set_width(array(50,50));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->set_linkTituloTitle("Exibe detalhes");
+            $tabela->show();
+
+            $grid2->fechaColuna();
+
+            #################################
+            
+            ## Por Pefil
+            
             $grid2->abreColuna(12,6,4);
             
                 # Geral - Por Perfil
@@ -284,57 +334,8 @@ if($acesso)
             
             #################################
             
-                ## Por Idade        
-                $grid2->abreColuna(12,6,4);
-
-                # Geral - Por Idade
-                $selectGrafico = 'SELECT count(tbservidor.idServidor) as jj,
-                                         TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
-                                    FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                                   WHERE situacao = 1
-                                GROUP BY idade
-                                ORDER BY 2';
-
-                $servidores = $pessoal->select($selectGrafico);
-                
-                # Separa os arrays para analise estatística
-                $idades = array();
-                foreach ($servidores as $item){
-                    $idades[] = $item[1];
-                }
-
-                # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));  
-
-                # Dados da tabela
-                $dados[] = array("Maior Idade",maiorValor($idades));
-                $dados[] = array("Menor Idade",menorValor($idades));
-                $dados[] = array("Idade Média",media_aritmetica($idades));
-                
-                # Chart
-                tituloTable("por Idade");
-                $chart = new Chart("ColumnChart",$dados);
-                $chart->set_idDiv("idade");
-                $chart->set_legend(FALSE);
-                $chart->show();
-                
-                # Tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($dados);
-                #$tabela->set_titulo("por Idade");
-                $tabela->set_label(array("Descrição","Idade"));
-                $tabela->set_width(array(50,50));
-                $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total de Servidores: ".$total);
-                $tabela->set_linkTituloTitle("Exibe detalhes");
-                $tabela->show();
-                
-                $grid2->fechaColuna();
-                
-                #################################
-            
                 ## Por Cidade        
-                $grid2->abreColuna(12);
+                $grid2->abreColuna(12,6,4);
                 
                 # Geral - Por Cidade
                 $selectGrafico = 'SELECT CONCAT(tbcidade.nome," (",tbestado.uf,")"), count(tbservidor.idServidor) as jj
@@ -368,9 +369,9 @@ if($acesso)
                 $tabela->show();
                 
                 $grid2->fechaColuna();
-                
+
                 #################################
-                
+            
               $grid2->fechaGrid();  
                 
             $grid->fechaColuna();    

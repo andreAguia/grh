@@ -325,6 +325,23 @@ p#aim{
      padding: 4px 2px 2px 10px;
 }
 
+/*******************************************
+ * Ato de Nomeacao
+ *******************************************/
+ 
+ p#preambulo{
+     text-align: justify;
+}
+
+p#principal{
+     text-align: justify;
+     text-indent: 10em;
+}
+
+p#reitor{
+     text-align: center;
+}
+
  
  /*******************************************
  * CI Diária

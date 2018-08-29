@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -137,8 +136,7 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :
         case "listar" :
             $objeto->listar();

@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     
@@ -80,6 +79,7 @@ if($acesso)
                                      idComissao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
+                                     idComissao,
                                      idComissao
                                 FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -112,9 +112,18 @@ if($acesso)
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    # Ato de Nomeaçao
+    $botao = new Link(NULL,'../grhRelatorios/nomeacao.AtoNomeacao.php?idNomeacao=','Imprime o Ato de Nomeaçao');
+    $botao->set_janela(TRUE);
+    $botao->set_target('_blank');
+    $botao->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array("","","","",$botao));
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
+    $objeto->set_label(array("Cargo","Descrição","Data de<br/>Nomeação","Data de<br/>Exoneração","Ato de<br/>Nomeaçao"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
     $objeto->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
@@ -247,7 +256,7 @@ if($acesso)
     # Botão Extra
     $botaoVagas = new Button("Vagas","?fase=vagas");
     $botaoVagas->set_title('Exibe a disponibilidade dos cargos em comissão');
-    $botaoVagas->set_accessKey('a');
+    $botaoVagas->set_accessKey('a');    
     
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);

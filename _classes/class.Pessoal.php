@@ -2410,13 +2410,10 @@ class Pessoal extends Bd {
      * @param	string $id  id do cargo
      */
 
-    public function get_nomeCargoComissao($id)
-
-    {
-        if (!is_numeric($id))
+    public function get_nomeCargoComissao($id){
+        if (!is_numeric($id)){
             return $id;
-        else
-        {
+        }else{
            $select ='SELECT tbtipocomissao.descricao 
                             FROM tbtipocomissao 
                            WHERE idTipoComissao = '.$id;
@@ -3873,5 +3870,24 @@ class Pessoal extends Bd {
             return $row;
         }
 
-    ##########################################################################################						
+    ##########################################################################################
+
+        function get_nomeReitor(){
+
+        # Função que retorna o nome do reitor atual
+
+            # Monta o select		
+            $select ='SELECT tbpessoa.nome 
+                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                      LEFT JOIN tbcomissao USING (idServidor)
+                                      LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                       WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+                          OR (dtExo is NULL))                 
+                         AND idTipoComissao = 13';
+
+            $row = parent::select($select,FALSE);
+            return $row[0];
+        }
+
+    ##########################################################################################								
 }

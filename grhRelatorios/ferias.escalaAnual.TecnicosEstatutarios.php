@@ -25,7 +25,7 @@ if($acesso){
     $page->iniciaPagina();
     
     # Pega o ano exercicio
-    $parametroAno = post("parametroAno",date('Y'));
+    $parametroAno = post("parametroAno",date('Y')+1);
     
     ######
     

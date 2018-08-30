@@ -25,8 +25,9 @@ if($acesso){
     $page->iniciaPagina();
     
     # Pega o ano exercicio
-    $parametroAno = post("parametroAno",date('Y'));
-    $parametroPrazo = post("parametroPrazo","___/___ - ___/___");
+    $parametroAno = post("parametroAno",date('Y')+1);
+    $parametroPrazoInicio = post("parametroPrazoInicio");
+    $parametroPrazoTermino = post("parametroPrazoTermino");
     
     ######
     
@@ -34,8 +35,8 @@ if($acesso){
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                      tbservidor.dtAdmissao,
-                     "'.$parametroPrazo.'",
-                     "___/___/___ (___)&nbsp;&nbsp;&nbsp;___/___/___ (___)&nbsp;&nbsp;&nbsp;___/___/___ (___)",
+                     "'.date_to_php($parametroPrazoInicio).' - '.date_to_php($parametroPrazoTermino).'",
+                     "___/___/___ (___)",
                      concat(tbservidor.idServidor,"&",'.$parametroAno.')
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
@@ -69,7 +70,7 @@ if($acesso){
     #$relatorio->set_tituloLinha2('Ano Exercicio:'.$anoBase);
 
     $relatorio->set_label(['Id','Nome','Lotação','Admissão','Prazo para<br/>o Gozo','Início Previsto (Dias)','Observação']);
-    $relatorio->set_width([6,25,0,10,10,35,25]);
+    $relatorio->set_width([6,25,0,10,20,25,25]);
     $relatorio->set_align(["center","left","center","center","center","center","right"]);
     $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php",NULL,NULL,"exibeFeriasPendentes"]);
     #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
@@ -93,14 +94,23 @@ if($acesso){
                                       'onChange' => 'formPadrao.submit();',
                                       'col' => 3,
                                       'linha' => 1),
-                                array ('nome' => 'parametroPrazo',
-                                      'label' => 'Prazo para Gozo (DD/MM - DD/MM):',
-                                      'tipo' => 'texto',
+                               array ('nome' => 'parametroPrazoInicio',
+                                      'label' => 'Inicio do Prazo para Gozo:',
+                                      'tipo' => 'data',
                                       'size' => 30,
-                                      'padrao' => $parametroPrazo,
-                                      'title' =>  'Prazo para Gozo (DD/MM - DD/MM)',
+                                      'padrao' => $parametroPrazoInicio,
+                                      'title' =>  'Inicio do Prazo para Gozo',
                                       'onChange' => 'formPadrao.submit();',
-                                      'col' => 5,
+                                      'col' => 4,
+                                      'linha' => 1),
+                                array ('nome' => 'parametroPrazoTermino',
+                                      'label' => 'Término do Prazo para Gozo:',
+                                      'tipo' => 'data',
+                                      'size' => 30,
+                                      'padrao' => $parametroPrazoTermino,
+                                      'title' =>  'Término do Prazo para Gozo',
+                                      'onChange' => 'formPadrao.submit();',
+                                      'col' => 4,
                                       'linha' => 1)));
 
     $relatorio->set_formFocus('mesBase');

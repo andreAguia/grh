@@ -11,20 +11,20 @@
 include ("../grhSistema/_config.php");
 
 # Pega o idComissao 
-$idComissao = get('idComissao');
+$idComissao = get('id');
 
 # Conecta ao Banco de Dados    
 $pessoal = new Pessoal();
+$dados = $pessoal->get_dadosComissao($idComissao);
 
 # Preenche as variaveis
-$nome = NULL;
-$idFuncional = NULL;
-$dtInicial = NULL;
-$cargo = NULL;
-$simbolo = NULL;
-$curso = NULL;
-$centro = NULL;
+$nome = strtoupper($pessoal->get_nome($dados['idServidor']));
+$idFuncional = $pessoal->get_idFuncional($dados['idServidor']);
+$dtInicial = dataExtenso(date_to_php($dados['dtNom']));
+$cargo = $dados['descricao'];
+$simbolo = $pessoal->get_cargoComissaoSimbolo($dados['idTipoComissao']);
 $reitor = $pessoal->get_nomeReitor();
+$ocupanteAnterior = NULL;
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -46,10 +46,10 @@ if($acesso){
     $ato->set_dataImpressao(FALSE);
     $ato->show();
     
-    $grid->fechaColuna();
-    $grid->abreColuna(4);
-    $grid->fechaColuna();
-    $grid->abreColuna(8);
+    #$grid->fechaColuna();
+    #$grid->abreColuna(4);
+    #$grid->fechaColuna();
+    #$grid->abreColuna(8);
     
     # Preambulo
     p("O REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;","preambulo");
@@ -59,7 +59,7 @@ if($acesso){
     br(3);
     
     # Principal
-    p("NOMEIA $nome, ID Funcional n $idFuncional, para exercer, com validade a contar de $dtInicial, o cargo em comissao de $cargo, simbolo $simbolo, do $curso do $centro, da Universidade Estadual do Nortte Fluminense - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI, do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro, em vaga anteriormente ocupada oelo mesmo.","principal");
+    p("NOMEIA $nome, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial, o cargo em comissao de $cargo, simbolo $simbolo, da Universidade Estadual do Nortte Fluminense - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI, do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro, em vaga anteriormente ocupada pelo $ocupanteAnterior.","principal");
     br(3);
     
     # Data
@@ -67,10 +67,7 @@ if($acesso){
     br(3);
     
     # Reitor
-    p($reitor,"reitor");
-    br();
-    p("REITOR","reitor");
-    
+    p($reitor."<br/>REITOR","reitor");    
     
     $grid->fechaColuna();
     $grid->fechaGrid();

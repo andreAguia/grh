@@ -2622,7 +2622,7 @@ class Pessoal extends Bd {
 		
     ##########################################################################################
 
-    function get_dadosDiaria($iddiaria)
+    function get_dadosDiaria($idDiaria)
     
      /**
       * 
@@ -2639,7 +2639,7 @@ class Pessoal extends Bd {
                           assuntoCi,
                           valor
                      FROM tbdiaria
-                    WHERE iddiaria = '$iddiaria'";
+                    WHERE idDiaria = '$idDiaria'";
         
         $row = parent::select($select,FALSE);
         return $row;
@@ -3889,5 +3889,31 @@ class Pessoal extends Bd {
             return $row[0];
         }
 
-    ##########################################################################################								
+    ##########################################################################################
+
+    function get_dadosComissao($idComissao){
+    
+     /**
+      * 
+      * Retorna dados de uma comissao de um servidor
+      * 
+      * @param $idComissao integer o id da comissao
+      * 
+      */
+    
+        # Monta o select
+        $select = "SELECT idServidor,
+                          idTipoComissao,
+                          descricao,
+                          dtNom,
+                          dtExo,
+                          protempore
+                     FROM tbcomissao
+                    WHERE idComissao = $idComissao";
+        
+        $row = parent::select($select,FALSE);
+        return $row;
+    }
+
+   ###########################################################								
 }

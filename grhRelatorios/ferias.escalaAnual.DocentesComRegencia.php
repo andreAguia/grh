@@ -26,6 +26,7 @@ if($acesso){
     
     # Pega o ano exercicio
     $parametroAno = post("parametroAno",date('Y'));
+    $parametroPrazo = post("parametroPrazo","___/___ - ___/___");
     
     ######
     
@@ -33,8 +34,8 @@ if($acesso){
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                      tbservidor.dtAdmissao,
-                     concat(tbservidor.idServidor,"&",'.$parametroAno.'),
-                     "___ /___ /____  (_____)",
+                     "'.$parametroPrazo.'",
+                     "___/___/___ (___)&nbsp;&nbsp;&nbsp;___/___/___ (___)&nbsp;&nbsp;&nbsp;___/___/___ (___)",
                      concat(tbservidor.idServidor,"&",'.$parametroAno.')
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
@@ -64,13 +65,13 @@ if($acesso){
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Escala Anual de Férias de Docentes com Regencia de Turma - Ano Exercicio: '.$parametroAno);
+    $relatorio->set_titulo('Escala Anual de Férias de Docentes com Regência de Turma - Ano Exercício: '.$parametroAno);
     #$relatorio->set_tituloLinha2('Ano Exercicio:'.$anoBase);
 
-    $relatorio->set_label(['IdFuncional','Nome','Lotação','Admissão','Prazo para o Gozo','Início Previsto (Dias)','Observação']);
-    $relatorio->set_width([10,25,0,10,15,15,30]);
-    $relatorio->set_align(["center","left"]);
-    $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php","exibePrazoParaGozoEscalaFerias",NULL,"exibeFeriasPendentes"]);
+    $relatorio->set_label(['Id','Nome','Lotação','Admissão','Prazo para<br/>o Gozo','Início Previsto (Dias)','Observação']);
+    $relatorio->set_width([8,25,0,10,10,28,30]);
+    $relatorio->set_align(["center","left","center","center","center","center","right"]);
+    $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php",NULL,NULL,"exibeFeriasPendentes"]);
     #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
     #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
     $relatorio->set_conteudo($result);
@@ -91,6 +92,15 @@ if($acesso){
                                       'title' => 'Ano',
                                       'onChange' => 'formPadrao.submit();',
                                       'col' => 3,
+                                      'linha' => 1),
+                                array ('nome' => 'parametroPrazo',
+                                      'label' => 'Prazo para Gozo (DD/MM - DD/MM):',
+                                      'tipo' => 'texto',
+                                      'size' => 30,
+                                      'padrao' => $parametroPrazo,
+                                      'title' =>  'Prazo para Gozo (DD/MM - DD/MM)',
+                                      'onChange' => 'formPadrao.submit();',
+                                      'col' => 5,
                                       'linha' => 1)));
 
     $relatorio->set_formFocus('mesBase');

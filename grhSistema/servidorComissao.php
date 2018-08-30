@@ -114,7 +114,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
     
     # Ato de Nomeaçao
-    $botao = new Link(NULL,'../grhRelatorios/nomeacao.AtoNomeacao.php?idNomeacao=','Imprime o Ato de Nomeaçao');
+    $botao = new Link(NULL,'../grhRelatorios/comissao.AtoNomeacao.php?id=','Imprime o Ato de Nomeaçao');
     $botao->set_janela(TRUE);
     $botao->set_target('_blank');
     $botao->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);

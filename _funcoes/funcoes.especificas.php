@@ -401,15 +401,15 @@ function exibePrazoParaGozoEscalaFerias($texto){
             # Pega o mês da admissão
             $mes = month($dtAdmissao);
 
-            $dataInicial = $dia."/".$mes."/".$anoPesquisado;
-            $dataFinal = "31/12/".$anoPesquisado;
+            $dataInicial = $dia."/".$mes;
+            $dataFinal = "31/12";
             $retorno = $dataInicial." - ".$dataFinal;
         }
 
         # Se o ano pesquisado for depois da admissão
         if($anoPesquisado > ($anoAdmissao+1)){
-            $dataInicial = "01/01/$anoPesquisado";
-            $dataFinal = "31/12/".$anoPesquisado;
+            $dataInicial = "01/01";
+            $dataFinal = "31/12";
             $retorno = $dataInicial." - ".$dataFinal;
         }
 
@@ -446,7 +446,10 @@ function exibeFeriasPendentes($texto){
     # As ferias estao cadastradas somente apartir desse ano
     # Entao a busca sera a partir desse ano. Cadastrando-se mais anos
     # Altera-se esse valor
-    $feriasCadastradas = 2014;
+    #$feriasCadastradas = 2014;
+    
+    # Atualizaçao: SAndra pediu para ser a partir de 2016 para nao exibir alguns problemas antigos no cadastro de ferias
+    $feriasCadastradas = 2016;
     
     # Monta o retorno
     for ($i = $anoAdmissao+1; $i <= $anoPesquisado; $i++) {
@@ -466,7 +469,7 @@ function exibeFeriasPendentes($texto){
                         $retorno.="<br/>";
                     }
                     
-                    $retorno .= "Ja solicitou os $dias dias de ".$anoPesquisado;
+                    $retorno .= "Já solicitou os $dias dias de ".$anoPesquisado;
                     $linhas++;
                 }
             }else{

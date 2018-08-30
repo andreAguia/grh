@@ -69,7 +69,7 @@ if($acesso){
     #$relatorio->set_tituloLinha2('Ano Exercicio:'.$anoBase);
 
     $relatorio->set_label(['Id','Nome','Lotação','Admissão','Prazo para<br/>o Gozo','Início Previsto (Dias)','Observação']);
-    $relatorio->set_width([8,25,0,10,10,28,30]);
+    $relatorio->set_width([6,25,0,10,10,35,25]);
     $relatorio->set_align(["center","left","center","center","center","center","right"]);
     $relatorio->set_funcao([NULL,NULL,NULL,"date_to_php",NULL,NULL,"exibeFeriasPendentes"]);
     #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));

@@ -3904,16 +3904,45 @@ class Pessoal extends Bd {
         # Monta o select
         $select = "SELECT idServidor,
                           idTipoComissao,
+                          ocupanteAnterior,
                           descricao,
                           dtNom,
                           dtExo,
                           protempore
                      FROM tbcomissao
                     WHERE idComissao = $idComissao";
+        echo $sistema;
+        $row = parent::select($select,FALSE);
+        return $row;
+    }
+
+   ##########################################################################################
+
+    function get_dadosTipoComissao($idTipoComissao){
+    
+     /**
+      * 
+      * Retorna dados de um tipo de comissao
+      * 
+      * @param $idTipoComissao integer o id do tipo de comissao
+      * 
+      * @note Usada na rotina que gera o ato de nomeaçao 
+      * 
+      */
+    
+        # Monta o select
+        $select = "SELECT descricao,
+                          simbolo,
+                          valsal,
+                          vagas,
+                          lei,
+                          ativo
+                     FROM tbtipocomissao
+                    WHERE idTipoComissao = $idTipoComissao";
         
         $row = parent::select($select,FALSE);
         return $row;
     }
 
-   ###########################################################								
+   ###########################################################										
 }

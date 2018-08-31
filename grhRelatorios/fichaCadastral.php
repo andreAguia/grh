@@ -38,8 +38,7 @@ $postDiaria = post('diaria');
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
     

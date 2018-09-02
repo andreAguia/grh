@@ -101,24 +101,28 @@ if($acesso){
         botaoVoltar("?");
     }
     
-    $grid = new Grid();
-    $grid->abreColuna(12);
-        # Exibe os dados do Servidor
-        Grh::listaDadosServidor($idServidorPesquisado);
+    
+    # Exibe os dados do Servidor
+    Grh::listaDadosServidor($idServidorPesquisado);
+    
     $grid->fechaColuna();
     $grid->fechaGrid();
     
     switch ($fase){	
         # Exibe o Menu Inicial
         case "menu" :
+            
             # Ocorrencias do servidor
             Grh::exibeOcorênciaServidor($idServidorPesquisado);
             
             # monta o menu do servidor
             Grh::menuServidor($idServidorPesquisado);
+            br();
+            
+            # Exibe os vinculos anteriores do servidor na uenf (se tiver)
+            Grh::exibeVinculos($idServidorPesquisado);
             
             # Exibe o rodapé da página
-            br();
             Grh::rodape($idUsuario,$idServidorPesquisado,$pessoal->get_idPessoa($idServidorPesquisado));
             break;
         

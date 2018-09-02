@@ -433,7 +433,7 @@ class Grh
         $grid2 = new Grid();        
         
         # Funcionais 
-        $grid2->abreColuna(12,6);        
+        $grid2->abreColuna(12,5);        
             titulo('Funcionais');
             br();     
             $tamanhoImage = 50;
@@ -527,7 +527,7 @@ class Grh
         
         # Pessoais 
         
-        $grid2->abreColuna(12,4);        
+        $grid2->abreColuna(12,5);        
             titulo('Pessoais');
             br();
 
@@ -575,7 +575,7 @@ class Grh
             $menu->show();
             br();
             
-        $grid2->fechaColuna();
+        $grid2->fechaColuna();        
         
         # Foto 
         
@@ -608,7 +608,7 @@ class Grh
         $grid2->fechaColuna();
         
         # Financeiro                                    
-        $grid2->abreColuna(12,6); 
+        $grid2->abreColuna(12,5); 
             titulo('Financeiro');
             br();
 
@@ -692,7 +692,7 @@ class Grh
         
         # Ocorrências
         
-        $grid2->abreColuna(12,4);
+        $grid2->abreColuna(12,5);
         titulo('Afastamentos');
         br();
 
@@ -782,9 +782,9 @@ class Grh
             $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
             $menu->show();
             
-        $grid2->fechaColuna();
+        $grid2->fechaColuna(); 
         $grid2->fechaGrid();
-     }     
+    }     
     
     ###########################################################
      
@@ -888,9 +888,6 @@ class Grh
         $folgaTre = $pessoal->emFolgaTre($idServidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
         $cedido = $pessoal->emCessao($idServidor);
-        $numVinculos = $pessoal->get_numVinculos($idServidor);
-        $numVinculosAtivos = $pessoal->get_numVinculosAtivos($idServidor);
-        $numVinculosNaoAtivos = $pessoal->get_numVinculosNaoAtivos($idServidor);
             
         # Férias
         if($ferias){
@@ -907,8 +904,8 @@ class Grh
             $mensagem[] = 'Servidor em '.$pessoal->get_licencaNome(6);
         }
 
-        # Situação
-        if($situacao <> 1){
+        # Motivo de Saída
+        if(($situacao <> 1) AND ($pessoal->get_motivo($idServidor) <> "Outros")){
             $mensagem[] = $pessoal->get_motivo($idServidor);
         }
 
@@ -925,46 +922,6 @@ class Grh
         # Cedido
         if(!is_null($cedido)){
             $mensagem[] = 'Servidor Cedido a(o) '.$cedido;
-        }
-        
-        # Número de Vinculos
-        if($numVinculos > 1){               // So entra se tiver mais de um vinculo
-            if($numVinculosAtivos == 1){    //  sendo somente um ativo
-                if($situacao == 1){ 
-                    $texto = "Alem desse registro, o servidor possui mais $numVinculosNaoAtivos registro(s) NAO ATIVO(S) na universidade:";
-                }else{
-                    $texto = "Alem desse registro, o servidor possui mais um registro ativo na universidade:";
-                }
-                
-                # Exibe os vinculos
-                $vinculos = $pessoal->get_vinculos($idServidor);
-                foreach($vinculos as $rr){
-                    if($rr[0] <> $idServidor){
-                        $texto .= "&nbsp;&nbsp;<a href='servidor.php?fase=editar&id=$rr[0]]'>[".$pessoal->get_perfil($rr[0])."&nbsp;(".$pessoal->get_situacao($rr[0]).")]</a>";
-                        
-                    }
-                }
-                
-                # Passa o texto para mensagem
-                $mensagem[] = $texto;
-            }
-            
-            if($numVinculos == $numVinculosNaoAtivos){    //  sendo todos nao ativos
-                $nn = $numVinculosNaoAtivos-1;
-                $texto = "Alem desse registro, o servidor possui mais $nn registro(s) nao ativo(s) na universidade:";
-                
-                # Exibe os vinculos
-                $vinculos = $pessoal->get_vinculos($idServidor);
-                foreach($vinculos as $rr){
-                    if($rr[0] <> $idServidor){
-                        $texto .= "&nbsp;&nbsp;<a href='servidor.php?fase=editar&id=$rr[0]]'>[".$pessoal->get_perfil($rr[0])."&nbsp;(".$pessoal->get_situacao($rr[0]).")]</a>";
-                        
-                    }
-                }
-                
-                # Passa o texto para mensagem
-                $mensagem[] = $texto;
-            }
         }
         
         ##### Ocorrências
@@ -992,7 +949,7 @@ class Grh
             $grid->abreColuna(12);
 
             # Exibe a mensagem
-            $callout = new Callout('warning');
+            $callout = new Callout("warning");
             $callout->abre();
             
             # Percorre o array 
@@ -1004,43 +961,9 @@ class Grh
             }
             
             $callout->fecha();
-            
             $grid->fechaColuna();
             $grid->fechaGrid();  
         }
-        
-        
-       /* 
-        
-        
-                        
-        # Verifica pendencia de motorista com carteira vencida no sistema grh
-        $perfil = $pessoal->get_perfil($idservidor);
-        $cargo = $pessoal->get_cargo($idservidor);
-        $idPessoa = $pessoal->get_idPessoa($idservidor);
-        $dataCarteira = $pessoal->get_dataVencimentoCarteiraMotorista($idPessoa);
-
-        # Se é motorista estatutário
-        if($perfil == 'Estatutário'){
-            if($cargo == 'Motorista'){
-                if(jaPassou($dataCarteira)){
-                    $mensagem = 'Motorista com Carteira de Habilitação Vencida !! ('.$dataCarteira.')';
-                    
-                    $grid = new Grid();
-                    $grid->abreColuna(12);
-
-                    # Exibe a mensagem
-                    $callout = new Callout('warning');
-                    $callout->abre();
-                        p($mensagem);
-                    $callout->fecha();
-
-                    $grid->fechaColuna();
-                    $grid->fechaGrid();  
-                }
-            }
-        }
-        */
     }
     
     ###########################################################
@@ -1347,6 +1270,54 @@ class Grh
         
         $grid->fechaColuna();
         $grid->fechaGrid();   
+    }
+
+    ###########################################################
+    
+    public static function exibeVinculos($idServidor){
+        
+     /**
+     * Exibe Um menu com os vinculos do servidor na uenf
+     */
+        
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+        
+        # Vinculos do servidor
+        $numVinculos = $pessoal->get_numVinculos($idServidor);
+
+        # Número de Vinculos
+        if($numVinculos > 1){               // So entra se tiver mais de um vinculo
+            $grid = new Grid();
+            $grid->abreColuna(12);        
+             
+            titulo("Outros Registros Desse Servidor no Sistema");
+            
+            $callout = new Callout();
+            $callout->abre();
+
+            # Monta o menu
+            $menu = new Menu();
+
+            # Exibe os vinculos
+            $vinculos = $pessoal->get_vinculos($idServidor);
+            foreach($vinculos as $rr){
+                # Verifica se não é o registro que está sendo editado
+                if($rr[0]<>$idServidor){
+                    $dtAdm = $pessoal->get_dtAdmissao($rr[0]);
+                    $dtSai = $pessoal->get_dtSaida($rr[0]);
+                    $menu->add_item("link",$pessoal->get_perfil($rr[0])."&nbsp;(".$dtAdm." - ".$dtSai.")",'servidor.php?fase=editar&id='.$rr[0]);
+                }
+            }
+
+            # Exibe o menu
+            $menu->show();
+            
+            $callout->fecha();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+        }
     }
 
     ###########################################################

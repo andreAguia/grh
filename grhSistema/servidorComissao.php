@@ -75,13 +75,15 @@ if($acesso){
     #}
 
     # select da lista
-    $objeto->set_selectLista('SELECT CONCAT(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
-                                     idComissao,
+    $objeto->set_selectLista('SELECT idComissao,
+                                     tbcomissao.descricao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
+                                     dtPublicNom,
+                                     dtPublicExo,
                                      idComissao,
                                      idComissao
-                                FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                                FROM tbcomissao
                                WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY 3 desc');
 
@@ -121,13 +123,13 @@ if($acesso){
     $botao->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","",$botao));
+    $objeto->set_link(array("","","","","","",$botao));
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Descrição","Data de<br/>Nomeação","Data de<br/>Exoneração","Ato de<br/>Nomeaçao"));
+    $objeto->set_label(array("Cargo","Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria","Data de<br/>Nomeação","Data de<br/>Exoneração","Publicação de<br/>Nomeação","Publicação de<br/>Exoneração","Ato de<br/>Nomeaçao"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
+    $objeto->set_funcao(array("tipoComissaoProtempore",NULL,"date_to_php","date_to_php","date_to_php","date_to_php"));
     #$objeto->set_classe(array(NULL,"pessoal"));
     #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 
@@ -163,9 +165,11 @@ if($acesso){
                                 array ('linha' => 1,
                                        'col' => 8,
                                        'nome' => 'descricao',
-                                       'label' => 'Nome do Laboratorio, da Coordenadoria, da Gerencia, da Diretoria ou da Pro Reitoria:',
+                                       'label' => 'Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria:',
                                        'tipo' => 'texto',
-                                       'title' => 'Em alguns cargos é necessário uma descrição mais detalhada.&#013;Exemplo: Coordenador de curso.',
+                                       'title' => 'Em cargos onde exista mais de uma vaga deve-se diferenciá-los usando este campo informando o '
+                                                . 'nome do laboratório, do curso, da gerência, da diretoria ou da pró reitoria em que'
+                                                . 'o servidor irá exercê-lo.',
                                        'size' => 100),
                                array ('linha' => 2,
                                        'col' => 10,

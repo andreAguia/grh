@@ -412,7 +412,7 @@ class Pessoal extends Bd {
             if($orgao == ""){
                 $orgao = "-";
             }
-            $retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span)';
+            $retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
         }else{
             $retorno = $row[0].'-'.$row[1].'-'.$row[2];
         }
@@ -497,9 +497,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
 
-    public function get_cargo($idServidor)
-
-    {
+    public function get_cargo($idServidor){
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
@@ -534,7 +532,7 @@ class Pessoal extends Bd {
         }
 
         if(!empty($comissao)){
-             $retorno .= ' ('.$comissao.')'; 
+             $retorno .= '<br/><span id="orgaoCedido">('.$comissao.')</span)';
         }
         return $retorno;
     }
@@ -3908,10 +3906,11 @@ class Pessoal extends Bd {
                           descricao,
                           dtNom,
                           dtExo,
-                          protempore
+                          protempore,
+                          dtPublicNom
                      FROM tbcomissao
                     WHERE idComissao = $idComissao";
-        echo $sistema;
+        
         $row = parent::select($select,FALSE);
         return $row;
     }

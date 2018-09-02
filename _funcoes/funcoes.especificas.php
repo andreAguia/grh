@@ -137,83 +137,37 @@ function exibeDescricaoStatus($status){
 
 ##################################################################
     
-function descricaoComissao($idComissao){
+function tipoComissaoProtempore($idComissao){
  /**
- * Exibe informações sobre a descrição do Cargo em comissão
+ * Exibe informações sobre a o tipo de cargo mais informando se é protempore
  * 
- * @note Quando o cargo tiver referència a lotação será exibida a lotação, quando for uma descrição será exibida uma descrição
+ * @note Usado na rotina de cadastro de Cargo em comissão de um detrerminado servidor
  * 
- * @syntax descricaoComissao($idComissao);
+ * @syntax tipoComissaoProtempore($idComissao);
  * 
  * @param $idComissao integer NULL o id do cargo em comissão
  */
 
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-
-    #########################################
-
-    # Pega os dados da tabela tbcomissao
-    $select = 'SELECT idTipoComissao,
-                      descricao,
-                      protempore                          
-                 FROM tbcomissao
-                WHERE idComissao = '.$idComissao;
-
-    $comissao = $pessoal->select($select,FALSE);
-
-    $idTipoComissao = $comissao[0];
-    $descricao = $comissao[1];
-    #$idLotacao = $comissao[2];
-    $protempore = $comissao[2];
-
-    #########################################
-
-    #if(!is_null($idLotacao)){
-    #    # Pega os dados da lotação
-    #    $select = 'SELECT UADM,
-    #                      DIR,
-    #                      GER,
-    #                      nome
-    #                 FROM tblotacao
-    #                WHERE idLotacao = '.$idLotacao;
-    #
-    #    $lotacao = $pessoal->select($select,FALSE);
-    #    
-    #    $uadm = $lotacao[0];
-    #    $dir = $lotacao[1];
-    #    $ger = $lotacao[2];
-    #    $nome = $lotacao[3];
-    #}
-    #
-    #########################################
-
-    # Pega os dados da tabela de tipo de cargo em comissão
-    #$select ='SELECT tbtipocomissao.descricao 
-    #            FROM tbtipocomissao 
-    #           WHERE idTipoComissao = '.$idTipoComissao;
-    #
-    #$tipoCargo = $pessoal->select($select,FALSE);
-    #
-    #$tipoComissao = $tipoCargo[0];
-    #
-    #########################################
-
-    # Lotação ou descrição
-    #if(is_null($idLotacao)){
-    #    $retorno = $descricao;
-    #}else{
-    #    if($uadm == "UENF"){
-    #        $retorno = $dir.'/'.$ger.' - '.$nome;
-    #    }else{
-    #        $retorno = $uadm.' - '.$dir.'/'.$ger.' - '.$nome;
-    #    }
-    #}
-    $retorno = $descricao;
-
+    
+    # Pega os dados da comissão
+    $comissao = $pessoal->get_dadosComissao($idComissao);
+    $idTipoComissao = $comissao['idTipoComissao'];
+    
+    # Pega os dados do tipo de comissão
+    $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);
+    
+    # Separa os dados
+    $cargo = $tipoComissao['descricao'];
+    $simbolo = $tipoComissao['simbolo'];
+    $protempore = $comissao['protempore'];
+    
+    $retorno = $cargo." (".$simbolo.")";
+    
     # Informa se é protempore
     if($protempore){
-        $retorno .= " (pro tempore)";
+        $retorno .= "<br/><span id='orgaoCedido'>(pro tempore)</span>";
     }
 
     return $retorno;

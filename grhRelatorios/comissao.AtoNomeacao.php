@@ -14,7 +14,7 @@ include ("../grhSistema/_config.php");
 $idComissao = get('id');
 
 # Pega os parâmetros do relatório
-$postData = post('dataEmissao');
+$postData = post('dataEmissao',date("Y-m-d"));
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -40,6 +40,7 @@ if($acesso){
     $descricao = $comissao['descricao'];
     $ocupanteAnterior = $comissao['ocupanteAnterior'];
     $protempore = $comissao['protempore'];
+    $publicacao = date_to_php($comissao['dtPublicNom']);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -103,18 +104,18 @@ if($acesso){
     }
     
     # Preenche o ocupante anterior
-    if(is_null($ocupanteAnterior)){
+    if(vazio($ocupanteAnterior)){
         $principal .= ".";
     }else{
         $principal .= ", em vaga anteriormente ocupada por $ocupanteAnterior.";
     }
     
     p($principal,"principal");
-    br(3);
+    br(2);
     
     # Data
     p("Campos dos Goytacazes, ".dataExtenso(date_to_php($postData)).".","principal");
-    br(3);
+    br(4);
     
     # Reitor
     p("<b>".$reitor."<br/>REITOR</b>","reitor");
@@ -123,9 +124,19 @@ if($acesso){
     $grid->abreColuna(8);
     $grid->fechaColuna();
     $grid->abreColuna(4);
+        if(!vazio($publicacao)){
+            callout("Publicado no DOERJ<br/>".dataExtenso($publicacao),"secondary");
+        }
+    $grid->fechaColuna();
     
+    # Rodapé
+    $grid->abreColuna(12);
+    hr();
     
+    $texto1 = "Av. Alberto Lamego 2000";
     
+    p($texto1,"f10","center");
+   
     $grid->fechaColuna();
     $grid->fechaGrid();
     

@@ -30,15 +30,15 @@ if($acesso)
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Cargo em Comissão');
     
     br();
-    $select = "SELECT concat(tbtipocomissao.descricao,' - (',tbtipocomissao.simbolo,')') as comissao,
-                      idComissao,
+    $select = "SELECT idComissao,
+                      tbcomissao.descricao,
                       tbcomissao.dtNom,
                       tbcomissao.dtExo,
-                      idComissao
-                 FROM tbcomissao, tbtipocomissao
-                WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
-                  AND idServidor = $idServidorPesquisado
-             ORDER BY 3 desc";
+                      dtPublicNom,
+                      dtPublicExo
+                FROM tbcomissao
+               WHERE idServidor = $idServidorPesquisado
+            ORDER BY 3 desc";
 
     $result = $pessoal->select($select);
 
@@ -47,10 +47,10 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Cargo","Descrição","Data de Nomeação","Data de Exoneração"));
+    $relatorio->set_label(array("Cargo","Nome do Laboratório, do Curso, da Gerência,<br/>da Diretoria ou da Pró Reitoria","Data de<br/>Nomeação","Data de<br/>Exoneração","Publicação de<br/>Nomeação","Publicação de<br/>Exoneração"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array("left","left","center"));
-    $relatorio->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
+    $relatorio->set_funcao(array("tipoComissaoProtempore",NULL,"date_to_php","date_to_php","date_to_php","date_to_php"));
     #$relatorio->set_classe(array(NULL,"pessoal"));
     #$relatorio->set_metodo(array(NULL,"get_nomelotacao"));    
 

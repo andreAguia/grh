@@ -28,7 +28,7 @@ if($acesso){
     # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
      
-    # pega os dados da comissao
+    # pega os dados ta comissao
     $comissao = $pessoal->get_dadosComissao($idComissao);           // dados da comissao
     $idTipoComissao = $comissao['idTipoComissao'];
     $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
@@ -36,11 +36,9 @@ if($acesso){
     # Preenche as variaveis da comissao
     $nome = strtoupper($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($comissao['idServidor']);  // idFuncional
-    $dtInicial = dataExtenso(date_to_php($comissao['dtNom']));
+    $dtExo = dataExtenso(date_to_php($comissao['dtExo']));
     $descricao = $comissao['descricao'];
-    $ocupanteAnterior = $comissao['ocupanteAnterior'];
-    $protempore = $comissao['protempore'];
-    $publicacao = date_to_php($comissao['dtPublicNom']);
+    $publicacao = date_to_php($comissao['dtPublicExo']);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -83,33 +81,19 @@ if($acesso){
     $grid->abreColuna(12);
     br(3);
     
-    # inclui ou nao o protempore e junta no nome
-    if($protempore){
-        $nome = ", <i>pro-tempore</i>, <b>".$nome."</b>";
-    }else{
-        $nome = " <b>".$nome."</b>";
-    }
-    
     # Cargos que so tem uma vaga na universidade
     if($vagas == 1){ 
         # Se tem uma unica vaga nao e necessario informar a o local pois e de toda a universidade
-        $principal = "<b>NOMEIA</b>$nome, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
+        $principal = "<b>EXONERA $nome</b>, ID Funcional n° $idFuncional, a contar de $dtExo,"
            . " o cargo em comissao de $cargo, simbolo $simbolo, da Universidade Estadual do Norte Fluminense"
            . " - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI,"
-           . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro";
+           . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro.";
     }else{
         # Se tem uma mais de uma vaga e necessario informar o nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria
-        $principal = "<b>NOMEIA</b>$nome, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
+        $principal = "<b>EXONERA</b> $nome, ID Funcional n° $idFuncional, a contar de $dtExo,"
            . " o cargo em comissao de $cargo, simbolo $simbolo, do(a) $descricao da Universidade Estadual do Norte Fluminense"
            . " - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI,"
-           . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro";
-    }
-    
-    # Preenche o ocupante anterior
-    if(vazio($ocupanteAnterior)){
-        $principal .= ".";
-    }else{
-        $principal .= ", em vaga anteriormente ocupada por $ocupanteAnterior.";
+           . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro.";
     }
     
     p($principal,"principal");

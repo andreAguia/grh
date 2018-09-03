@@ -79,8 +79,6 @@ if($acesso){
                                      tbcomissao.descricao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
-                                     dtPublicNom,
-                                     dtPublicExo,
                                      idComissao,
                                      idComissao
                                 FROM tbcomissao
@@ -116,20 +114,28 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
-    # Ato de Nomeaçao
-    $botao = new Link(NULL,'../grhRelatorios/comissao.AtoNomeacao.php?id=','Imprime o Ato de Nomeaçao');
-    $botao->set_janela(TRUE);
-    $botao->set_target('_blank');
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
-
+    # Ato de Nomeação
+    $botao1 = new Link(NULL,'?fase=atoNomeacao&id=','Imprime o Ato de Nomeação');
+    $botao1->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+    
+    # Termo de Posse
+    $botao2 = new Link(NULL,'../grhRelatorios/comissao.TermodePosse.php?id=','Imprime o Termo de Posse');
+    $botao2->set_janela(TRUE);
+    $botao2->set_target('_blank');
+    $botao2->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+    
+    # Ato de Exoneração
+    $botao3 = new Link(NULL,'?fase=atoExoneracao&id=','Imprime o Ato de Exoneração');
+    $botao3->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+    
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","",$botao));
+    $objeto->set_link(array("","","","",$botao1,$botao2,$botao3));
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria","Data de<br/>Nomeação","Data de<br/>Exoneração","Publicação de<br/>Nomeação","Publicação de<br/>Exoneração","Ato de<br/>Nomeaçao"));
+    $objeto->set_label(array("Cargo","Nome do Laboratório, do Curso,<br/>da Gerência, da Diretoria ou da Pró Reitoria","Data de<br/>Nomeação","Data de<br/>Exoneração","Ato de<br/>Nomeaçao","Termo de<br/>Posse","Ato de<br/>Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array("tipoComissaoProtempore",NULL,"date_to_php","date_to_php","date_to_php","date_to_php"));
+    $objeto->set_funcao(array("tipoComissaoProtempore",NULL,"date_to_php","date_to_php"));
     #$objeto->set_classe(array(NULL,"pessoal"));
     #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 
@@ -147,9 +153,9 @@ if($acesso){
 
     # Pega os dados da combo tipo de Comissão
     $comissao = $pessoal->select('SELECT idTipoComissao,
-                                       CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
-                                  FROM tbtipocomissao WHERE ativo
-                              ORDER BY simbolo');    
+                                         CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
+                                    FROM tbtipocomissao WHERE ativo
+                                ORDER BY simbolo');    
             
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -328,6 +334,36 @@ if($acesso){
         case "gravar" :
             $objeto->gravar($id,'servidorComissaoExtra.php');
             break;
+        
+        case "atoNomeacao" :
+            # Verifica se o campo ocupante anterior foi preenchido
+            $comissao = $pessoal->get_dadosComissao($id);
+            $ocupanteAnterior = $comissao['ocupanteAnterior'];
+            
+            # Verifica se tem ocupante anterior esta preenchido
+            if(is_null($ocupanteAnterior)){
+                alert("Para imprimir o Ato de Nomeaçao o campo Ocupante Anterior deve estar preenchido!!");
+            }else{
+                loadPage('../grhRelatorios/comissao.AtoNomeacao.php?id='.$id,'_blank');
+            }
+            
+            loadPage('?');
+            break;
+        
+        case "atoExoneracao" :
+            # Verifica se o campo ocupante anterior foi preenchido
+            $comissao = $pessoal->get_dadosComissao($id);
+            $dtExo = $comissao['dtExo'];
+                        
+            # Verifica se data de exoneraçao esta preenchida
+            if(is_null($dtExo)){
+                alert("A data de exoneração esta em branco!!");
+            }else{
+                loadPage('../grhRelatorios/comissao.AtoExoneracao.php?id='.$id,'_blank');
+            }
+            
+            loadPage('?');
+            break;    
         
         case "vagas" :
             # Limita o tamanho da tela

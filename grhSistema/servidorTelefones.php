@@ -143,8 +143,7 @@ if($acesso)
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :
         case "listar" :
         case "editar" :			
@@ -152,8 +151,8 @@ if($acesso)
             $objeto->$fase($id);             
             break;
         case "gravar" :
-                $objeto->gravar($id,'servidorTelefonesExtra.php'); 	
-                break;
+            $objeto->gravar($id,'servidorTelefonesExtra.php'); 	
+            break;
     }
     $page->terminaPagina();
 }else{

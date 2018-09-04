@@ -15,8 +15,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -152,11 +151,22 @@ if($acesso)
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
+    
+    # Libera Inclusao, ediçao e exclusao somente para servidores autorizados na regra 6
+    if(Verifica::acesso($idUsuario,6)){
+        $objeto->set_botaoIncluir(TRUE);
+        $objeto->set_botaoEditar(TRUE);
+        $objeto->set_botaoExcluir(TRUE);
+    }else{
+        $objeto->set_botaoIncluir(FALSE);
+        $objeto->set_botaoEditar(FALSE);
+        $objeto->set_botaoExcluir(FALSE);
+    }
+    
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :
         case "listar" :
         case "editar" :

@@ -2891,10 +2891,9 @@ class Pessoal extends Bd {
 	 * @param	string $matricula  matricula do servidor
 	 */
 
-	public function get_idServidor($matricula)
+	public function get_idServidor($matricula){
 	
-	{
-            # Pega o cargo do servidor
+	    # Pega o cargo do servidor
             $select = 'SELECT idServidor
                          FROM tbservidor
                         WHERE matricula = '.$matricula;
@@ -2915,10 +2914,9 @@ class Pessoal extends Bd {
 	 * @param	string $idFerias  matricula do servidor
 	 */
 
-	public function get_idServidorFerias($idFerias)
+	public function get_idServidorFerias($idFerias){
 	
-	{
-            # Pega o cargo do servidor
+	    # Pega o cargo do servidor
             $select = 'SELECT idServidor
                          FROM tbferias
                         WHERE idFerias = '.$idFerias;
@@ -2931,14 +2929,12 @@ class Pessoal extends Bd {
 		
     ###########################################################
 	
-	function get_numCargoComissaoAtivo()
+	function get_numCargoComissaoAtivo(){
 	
 	/**
 	 * informa o número de Lotações ativas
 	 */
 
-
-	{
             $select = 'SELECT idTipoComissao
                          FROM tbtipocomissao
                         WHERE ativo';		
@@ -2951,14 +2947,12 @@ class Pessoal extends Bd {
 	###########################################################
         
 	
-	function get_numLotacaoAtiva()
+	function get_numLotacaoAtiva(){
 	
 	/**
 	 * informa o número de Lotações ativas
 	 */
-
-
-	{
+            
             $select = 'SELECT idLotacao
                          FROM tblotacao
                         WHERE ativo';		
@@ -2976,8 +2970,7 @@ class Pessoal extends Bd {
 	 * Exibe o n�mero de vagas em um determinado cargo em comissao
 	 */
 	
-	public function get_TipoCargoVagas($id)
-	{
+	public function get_TipoCargoVagas($id){
             $select = 'SELECT vagas                             
                          FROM tbtipocargo 
                         WHERE idTipoCargo = '.$id;
@@ -2994,8 +2987,7 @@ class Pessoal extends Bd {
 	 * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
 	 */
 	
-	public function get_tipoCargoVagasDisponiveis($id)
-	{
+	public function get_tipoCargoVagasDisponiveis($id){
             $vagas = $this->get_TipoCargoVagas($id);
             $ocupadas = $this->get_servidoresTipoCargo($id);
             $disponiveis = $vagas - $ocupadas;
@@ -3011,8 +3003,7 @@ class Pessoal extends Bd {
 	 * Exibe o número de servidores ativos em uma determinada area
 	 */
 	
-	public function get_servidoresArea($id)
-	{
+	public function get_servidoresArea($id){
             $select = 'SELECT idServidor                             
                          FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                         WHERE situacao = 1 AND 
@@ -3030,8 +3021,7 @@ class Pessoal extends Bd {
 	 * Informa o nome de um idsituacao
 	 */
 	
-	public function get_nomeSituacao($idsituacao)
-	{
+	public function get_nomeSituacao($idsituacao){
             $select = 'SELECT situacao                            
                          FROM tbsituacao
                         WHERE idsituacao = '.$idsituacao;
@@ -3048,8 +3038,7 @@ class Pessoal extends Bd {
 	 * Informa o nome de um idperfil
 	 */
 	
-	public function get_nomePerfil($idperfil)
-	{
+	public function get_nomePerfil($idperfil){
             $select = 'SELECT nome                            
                          FROM tbperfil
                         WHERE idperfil = '.$idperfil;
@@ -3067,13 +3056,10 @@ class Pessoal extends Bd {
 	 * @param	string $id  id do cargo
 	 */
 
-	public function get_nomeCompletoCargo($id)
-
-	{
-		if (!is_numeric($id))
+	public function get_nomeCompletoCargo($id){
+		if (!is_numeric($id)){
                     return $id;
-                else
-                {
+                }else{
                     $select = 'SELECT tbtipocargo.cargo,
                                       tbarea.area,
                                       tbcargo.nome

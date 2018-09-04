@@ -77,9 +77,9 @@ if($acesso){
     # Preambulo
     $principal = "Aos $dtNom ,na Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
                . "$nome, identidade Funcional n° $idFuncional, nomeado(a), de acordo com o Inciso VII "
-               . "do artigo 20° do Decreto Estadual n° 30.672, de 18 de fevereiro de 2002,"
-               . "para exercer, o Cargo em Comissão de $cargo, simbolo $simbolo,"
-               . "da Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF,"
+               . "do artigo 20° do Decreto Estadual n° 30.672, de 18 de fevereiro de 2002, "
+               . "para exercer, o Cargo em Comissão de $cargo, simbolo $simbolo, "
+               . "da Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
                . "com validade de $dtNom, por Ato de Investidura do Magnífico Reitor, de [12 de maio de 2016], "
                . "publicado no Diário Oficial de [13 de maio de 2016], "
                . "compareceu perante o Magnífico Reitor da Universidade Estadual do Norte Fluminense Darcy Ribeiro e, "
@@ -94,18 +94,18 @@ if($acesso){
     br(2);
     
     p($principal,"termodePosse");
-    br(4);
+    br(3);
     
     # Data
     p("Campos dos Goytacazes, ".$dtNom.".","termodePosse");
     br(3);
     
     # Reitor
-    p("<b>".$reitor."<br/>REITOR</b>","reitor");
+    p("______________________________________<br/><b>".$reitor."<br/>REITOR</b>","reitor");
     br(3);
     
     # Servidor
-    p("<b>".$nome."<br/>REITOR</b>","reitor");
+    p("______________________________________<br/><b>".$nome."</b>","reitor");
     $grid->fechaColuna();
     
     # Rodapé

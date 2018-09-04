@@ -173,6 +173,37 @@ function tipoComissaoProtempore($idComissao){
     return $retorno;
 }
 
+##################################################################
+    
+function descricaoComissao($idComissao){
+ /**
+ * Exibe informações sobre a Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria	
+ * 
+ * @note Usado na rotina de cadastro de Cargo em comissão de um detrerminado servidor
+ * 
+ * @syntax descricaoComissao($idComissao);
+ * 
+ * @param $idComissao integer NULL o id do cargo em comissão
+ */
+
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
+    
+    # Pega os dados da comissão
+    $comissao = $pessoal->get_dadosComissao($idComissao);
+    $descricao = $comissao['descricao'];
+    $protempore = $comissao['protempore'];
+    
+    $retorno = $descricao;
+    
+    # Informa se é protempore
+    if($protempore){
+        $retorno .= "<br/><span id='orgaoCedido'>(pro tempore)</span>";
+    }
+
+    return $retorno;
+}
+
 ##########################################################
 /**
  * Função que exibe um subtitulo na ficha cadastral

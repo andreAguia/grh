@@ -49,14 +49,11 @@ if($acesso){
                                      dtNasc,
                                      sexo,
                                      estCiv,
+                                     conjuge,
                                      naturalidade,
                                      nacionalidade,
                                      paisOrigem,
                                      anoChegada,
-                                     endereco,
-                                     bairro,
-                                     idCidade,
-                                     cep,
                                      nomePai,
                                      nomeMae
                                 FROM tbpessoa
@@ -106,13 +103,6 @@ if($acesso){
                                   FROM tbpais
                               ORDER BY pais');
     array_unshift($paisOrigem, array(NULL,NULL)); # Adiciona o valor de nulo
-    
-    # Pega os dados da combo de cidade
-    $cidade = $pessoal->select('SELECT idCidade,
-                                       CONCAT(tbcidade.nome," (",tbestado.uf,")")
-                                  FROM tbcidade JOIN tbestado USING (idEstado)
-                              ORDER BY proximidade,tbestado.uf,tbcidade.nome');
-    array_unshift($cidade, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -123,23 +113,23 @@ if($acesso){
                                'required' => TRUE,
                                'autofocus' => TRUE,
                                'title' => 'Nome do servidor',
-                               'col' => 12,
+                               'col' => 6,
                                'size' => 50),
-                       array ( 'linha' => 2,
+                       array ( 'linha' => 1,
                                'nome' => 'dtNasc',
                                'label' => 'Data de Nascimento:',
                                'tipo' => 'data',                           
                                'size' => 20,
-                               'col' => 4,
+                               'col' => 3,
                                'title' => 'Data de Nascimento.'),
-                        array ('linha' => 2,
+                        array ('linha' => 1,
                                'nome' => 'sexo',
                                'label' => 'Sexo:',
                                'tipo' => 'combo',
                                'array' => array(NULL,"Masculino","Feminino"),
                                'title' => 'Sexo do Servidor',
                                'required' => TRUE,
-                               'col' => 4,
+                               'col' => 3,
                                'size' => 15),
                         array ('linha' => 2,
                                'nome' => 'estCiv',
@@ -147,8 +137,15 @@ if($acesso){
                                'tipo' => 'combo',
                                'array' => $estadoCivil,
                                'title' => 'Estado Civil do Servidor',
-                               'col' => 4,
-                               'size' => 15),        
+                               'col' => 3,
+                               'size' => 15),
+                        array ('linha' => 2,
+                               'nome' => 'conjuge',
+                               'label' => 'Conjuge:',
+                               'tipo' => 'texto',
+                               'title' => 'Nome do conjuge',
+                               'col' => 6,
+                               'size' => 50),
                         array ('linha' => 3,
                                'nome' => 'naturalidade',
                                'label' => 'Naturalidade: (Cidade)',
@@ -178,38 +175,8 @@ if($acesso){
                                'tipo' => 'texto',
                                'title' => 'Ano de chegada ao Brasil',
                                'col' => 3,
-                               'size' => 5),                                        
-                        array ('linha' => 5,
-                               'nome' => 'endereco',
-                               'label' => 'Endereço:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Endereço do Servidor',
-                               'fieldset' => 'Endereço',
-                               'col' => 12,
-                               'size' => 50),
-                        array ('linha' => 6,
-                               'nome' => 'bairro',
-                               'label' => 'Bairro:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Bairro',
-                               'col' => 4,
-                               'size' => 50),
-                        array ('linha' => 6,
-                               'nome' => 'idCidade',
-                               'label' => 'Cidade:',
-                               'tipo' => 'combo',
-                               'array' => $cidade,                        
-                               'title' => 'Cidade de Moradia do Servidor',                           
-                               'col' => 5,
-                               'size' => 30),
-                        array ('linha' => 6,
-                               'nome' => 'cep',
-                               'label' => 'Cep:',
-                               'tipo' => 'cep',                          
-                               'title' => 'Cep',
-                               'col' => 3,
-                               'size' => 10),
-                        array ('linha' => 8,
+                               'size' => 5),
+                        array ('linha' => 4,
                                'nome' => 'nomePai',
                                'label' => 'Nome do Pai:',
                                'tipo' => 'texto',                          
@@ -217,7 +184,7 @@ if($acesso){
                                'fieldset' => 'Filiação',
                                'col' => 6,
                                'size' => 50),
-                        array ('linha' => 8,
+                        array ('linha' => 4,
                                'nome' => 'nomeMae',
                                'label' => 'Nome da Mãe:',
                                'tipo' => 'texto',                          
@@ -238,7 +205,7 @@ if($acesso){
             break;
         
         case "gravar" :
-            $objeto->$fase($idPessoa); 
+            $objeto->$fase($idPessoa,"servidorPessoaisExtra.php"); 
             break;
     }
     

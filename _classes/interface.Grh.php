@@ -536,10 +536,17 @@ class Grh
             $botao->set_label('Pessoais');
             $botao->set_url('servidorPessoais.php');
             $botao->set_image(PASTA_FIGURAS.'pessoais.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Dados Pessoais do Servidor');
+            $botao->set_title('Dados Pessoais Gerais do Servidor');
             $botao->set_accessKey('P');
             $menu->add_item($botao);
 
+            $botao = new BotaoGrafico();
+            $botao->set_label('Endereço');
+            $botao->set_url('servidorEndereco.php');
+            $botao->set_image(PASTA_FIGURAS.'bens.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Endereço do Servidor');            
+            $menu->add_item($botao);
+            
             $botao = new BotaoGrafico();
             $botao->set_label('Telefones & Emails');
             $botao->set_url('servidorTelefones.php');

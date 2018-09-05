@@ -42,7 +42,7 @@ if($acesso){
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro do servidor ".$pessoal->get_nome($idServidorPesquisado);
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
     }
 
     # Começa uma nova página
@@ -97,16 +97,14 @@ if($acesso){
         }
 
         $menu->show();
+        $grid->fechaColuna();
+        $grid->fechaGrid();
     }else{
         botaoVoltar("?");
     }
     
-    
     # Exibe os dados do Servidor
     Grh::listaDadosServidor($idServidorPesquisado);
-    
-    $grid->fechaColuna();
-    $grid->fechaGrid();
     
     switch ($fase){	
         # Exibe o Menu Inicial

@@ -34,6 +34,7 @@ if($acesso){
     $relatorio = new Relatorio();
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_titulo('Avaliação Funcional Anual');
     $relatorio->show();
     

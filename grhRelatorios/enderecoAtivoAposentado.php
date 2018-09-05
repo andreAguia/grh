@@ -56,7 +56,7 @@ if($acesso)
     $relatorio->set_funcao(array(NULL,"dv"));
     
     $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal",NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_Cargo",NULL,"get_endereco"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo",NULL,"get_endereco"));
     
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(7);

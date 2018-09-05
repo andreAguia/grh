@@ -26,7 +26,7 @@ if($acesso){
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Licenças');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Licenças e Afastamentos');
     
     br();
     $select = '(SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
@@ -78,7 +78,7 @@ if($acesso){
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Licenças");
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Licenças e Afastamentos");
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
 

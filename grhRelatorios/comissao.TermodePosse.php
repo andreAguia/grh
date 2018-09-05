@@ -36,10 +36,9 @@ if($acesso){
     # Preenche as variaveis da comissao
     $nome = strtoupper($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($comissao['idServidor']);  // idFuncional
-    $dtNom = dataExtenso(date_to_php($comissao['dtNom']));
+    $dtNom = dataExtenso2(date_to_php($comissao['dtNom']));
     $descricao = $comissao['descricao'];
-    $publicacao = date_to_php($comissao['dtPublicExo']);
-    
+        
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
     $simbolo = $tipoComissao['simbolo'];
@@ -75,7 +74,7 @@ if($acesso){
     $ato->show();
     
     # Preambulo
-    $principal = "Aos $dtNom ,na Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
+    $principal = "$dtNom, na Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
                . "$nome, identidade Funcional n° $idFuncional, nomeado(a), de acordo com o Inciso VII "
                . "do artigo 20° do Decreto Estadual n° 30.672, de 18 de fevereiro de 2002, "
                . "para exercer, o Cargo em Comissão de $cargo, simbolo $simbolo, "

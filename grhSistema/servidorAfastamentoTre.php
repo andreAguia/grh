@@ -169,14 +169,26 @@ if($acesso){
     switch ($fase){
         case "" :
         case "listar" :
-        case "editar" :
+            Grh::listaFolgasTre($idServidorPesquisado);
+            $objeto->listar();
+            break;
+        
+        case "editar" : 
             Grh::listaFolgasTre($idServidorPesquisado);
         case "excluir" :
-            $objeto->$fase($id);  
+            if(Verifica::acesso($idUsuario,6)){
+                $objeto->$fase($id);
+            }else{
+                $objeto->listar();
+            }
             break;
 
         case "gravar" :
-            $objeto->gravar($id,"servidorAfastamentoTreExtra.php"); 	
+             if(Verifica::acesso($idUsuario,6)){
+                 $objeto->gravar($id,"servidorAfastamentoTreExtra.php"); 
+            }else{
+                $objeto->listar();
+            }	
             break;
     }
     $page->terminaPagina();

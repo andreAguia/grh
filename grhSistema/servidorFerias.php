@@ -211,16 +211,26 @@ if($acesso){
             $grid2->abreColuna(3);
 
                 $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
-                $tabela = new Tabela();
-                $tabela->set_conteudo($lista);
-                $tabela->set_titulo('Resumo');
-                $tabela->set_label(array("Exercício","Dias"));
-                $tabela->set_align(array("center"));
-                $tabela->set_formatacaoCondicional(array( array('coluna' => 1,
-                                                                'valor' => 30,
-                                                                'operador' => '<>',
-                                                                'id' => 'problemas')));       
-                $tabela->show();
+                if(is_null($lista)){
+                    br();
+                    tituloTable('Resumo');
+                    $callout = new Callout();
+                    $callout->abre();
+                        p('Nenhum item encontrado !!','center');
+                    $callout->fecha();
+                }else{
+                    # Exibe a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($lista);
+                    $tabela->set_titulo('Resumo');
+                    $tabela->set_label(array("Exercício","Dias"));
+                    $tabela->set_align(array("center"));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 1,
+                                                                    'valor' => 30,
+                                                                    'operador' => '<>',
+                                                                    'id' => 'problemas')));       
+                    $tabela->show();
+                }
 
             $grid2->fechaColuna();
             $grid2->abreColuna(9);

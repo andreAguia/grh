@@ -3129,22 +3129,23 @@ class Pessoal extends Bd {
              $row = parent::select($select);
              $quantos = count($row);
              
-             # Pga o menor ano cadastrado
-             $menorValor = $row[$quantos-1];
-             $menorAno = $menorValor['anoexercicio'];
-             
-             # Pega o maior ano (anoatual +1)
-             $maiorAno = date("Y")+1;
-             
              $novoArray = NULL;
              
-             # Verifica ano a ano
-             for($i = $maiorAno;$i >= $menorAno;$i--){
-                if(array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
-                    $novoArray[]=array($i,0);               // Acrescenta o ano com valor 0
-                }else{
-                    
-                    $novoArray[]=array($i,$this->get_feriasSomaDias($i, $idservidor));  // Acrescenta o ano com valor 0
+             # Pga o menor ano cadastrado
+             if($quantos > 0){
+                $menorValor = $row[$quantos-1];
+                $menorAno = $menorValor['anoexercicio'];
+                          
+                # Pega o maior ano (anoatual +1)
+                $maiorAno = date("Y")+1;
+
+                # Verifica ano a ano
+                for($i = $maiorAno;$i >= $menorAno;$i--){
+                   if(array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
+                       $novoArray[]=array($i,0);               // Acrescenta o ano com valor 0
+                   }else{
+                       $novoArray[]=array($i,$this->get_feriasSomaDias($i, $idservidor));  // Acrescenta o ano com valor 0
+                   }
                 }
              }
              

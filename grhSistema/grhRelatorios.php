@@ -217,8 +217,10 @@ if($acesso){
         case "tre";
             $menu = new Menu();
             $menu->add_item('titulo','TRE');
-            $menu->add_item('linkWindow','Relatório Mensal de Afastamentos para Serviço Eleitoral (TRE)','../grhRelatorios/treAfastamentoMensal.php'); 
+            $menu->add_item('linkWindow','Relatório Mensal de Afastamentos para Serviço Eleitoral (TRE)','../grhRelatorios/treAfastamentoMensal.php');
+            $menu->add_item('linkWindow','Relatório Anual de Afastamentos para Serviço Eleitoral (TRE)','../grhRelatorios/treAfastamentoAnual.php'); 
             $menu->add_item('linkWindow','Relatório Mensal de Folgas Fruídas (TRE)','../grhRelatorios/treFolgaMensal.php'); 
+            $menu->add_item('linkWindow','Relatório Anual de Folgas Fruídas (TRE)','../grhRelatorios/treFolgaAnual.php'); 
 
             $menu->show();
             break;

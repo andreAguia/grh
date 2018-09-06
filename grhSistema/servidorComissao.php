@@ -121,9 +121,7 @@ if($acesso){
     $botao1->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
     
     # Termo de Posse
-    $botao2 = new Link(NULL,'../grhRelatorios/comissao.TermodePosse.php?id=','Imprime o Termo de Posse');
-    $botao2->set_janela(TRUE);
-    $botao2->set_target('_blank');
+    $botao2 = new Link(NULL,'?fase=termoPosse&id=','Imprime o Termo de Posse');
     $botao2->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
     
     # Ato de Exoneração
@@ -209,7 +207,6 @@ if($acesso){
                                        'title' => 'Data do Ato do Reitor da Nomeação',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'required' => TRUE,
                                        'col' => 2,
                                        'linha' => 3),
                                array ( 'nome' => 'numProcNom',
@@ -220,7 +217,7 @@ if($acesso){
                                        'col' => 3,
                                        'linha' => 3), 
                                array ( 'nome' => 'dtPublicNom',
-                                       'label' => 'Data da Pub. no DOERJ:',
+                                       'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 2,
@@ -246,7 +243,6 @@ if($acesso){
                                        'title' => 'Data do Ato do Reitor da Exoneraçao',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'required' => TRUE,
                                        'col' => 2,
                                        'linha' => 4),
                                array ( 'nome' => 'numProcExo',
@@ -257,7 +253,7 @@ if($acesso){
                                        'title' => 'Processo de Exoneração',
                                        'linha' => 4), 
                                array ( 'nome' => 'dtPublicExo',
-                                       'label' => 'Data da Pub. no DOERJ:',
+                                       'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 2,
@@ -357,31 +353,89 @@ if($acesso){
             # Verifica se o campo ocupante anterior foi preenchido
             $comissao = $pessoal->get_dadosComissao($id);
             $ocupanteAnterior = $comissao['ocupanteAnterior'];
+            $dtAtoNom = date_to_php($comissao['dtAtoNom']);
             
             # Verifica se tem ocupante anterior esta preenchido
             if(is_null($ocupanteAnterior)){
-                alert("Para imprimir o Ato de Nomeaçao o campo Ocupante Anterior deve estar preenchido!!");
-            }else{
-                loadPage('../grhRelatorios/comissao.AtoNomeacao.php?id='.$id,'_blank');
+                $msgErro.='O campo Ocupante Anterior deve estar preenchido!\n';
+                $erro = 1;
             }
+            
+            # Verifica se a data do ato do reitor de nomeaçao esta preenchido
+            if(is_null($dtAtoNom)){
+                $msgErro.='A data do ato do reitor de nomeaçao deve estar preenchida!\n';
+                $erro = 1;
+            }
+            
+            # Verifica se tem algum erro
+            if ($erro == 0){
+                loadPage('../grhRelatorios/comissao.AtoNomeacao.php?id='.$id,'_blank');
+            }else{
+                alert($msgErro);
+                back(1);
+            }	
             
             loadPage('?');
             break;
+            
+        case "termoPosse" :
+            # Verifica se o campo ocupante anterior foi preenchido
+            $comissao = $pessoal->get_dadosComissao($id);
+            $publicacao = $comissao['dtPublicNom'];
+            $dtAtoNom = $comissao['dtAtoNom'];
+            
+            # Verifica se tem ocupante anterior esta preenchido
+            if(is_null($publicacao)){
+                $msgErro.='O campo da data de publicaçao da nomeaçao deve estar preenchido!\n';
+                $erro = 1;
+            }
+            
+            # Verifica se a data do ato do reitor de nomeaçao esta preenchido
+            if(is_null($dtAtoNom)){
+                $msgErro.='A data do ato do reitor de nomeaçao deve estar preenchida!\n';
+                $erro = 1;
+            }
+            
+            # Verifica se tem algum erro
+            if ($erro == 0){
+                
+                loadPage('../grhRelatorios/comissao.TermodePosse.php?id='.$id,'_blank');
+            }else{
+                alert($msgErro);
+                back(1);
+            }	
+            
+            loadPage('?');
+            break;    
         
         case "atoExoneracao" :
             # Verifica se o campo ocupante anterior foi preenchido
             $comissao = $pessoal->get_dadosComissao($id);
             $dtExo = $comissao['dtExo'];
-                        
-            # Verifica se data de exoneraçao esta preenchida
+            $dtAtoExo = date_to_php($comissao['dtAtoExo']);
+            
+            # Verifica se tem ocupante anterior esta preenchido
             if(is_null($dtExo)){
-                alert("A data de exoneração esta em branco!!");
-            }else{
-                loadPage('../grhRelatorios/comissao.AtoExoneracao.php?id='.$id,'_blank');
+                $msgErro.='A data de exoneração esta em branco!!\n';
+                $erro = 1;
             }
             
+            # Verifica se a data do ato do reitor de nomeaçao esta preenchido
+            if(is_null($dtAtoExo)){
+                $msgErro.='A data do ato do reitor de exoneraçao esta em branco!\n';
+                $erro = 1;
+            }
+            
+            # Verifica se tem algum erro
+            if ($erro == 0){
+                loadPage('../grhRelatorios/comissao.AtoExoneracao.php?id='.$id,'_blank');
+            }else{
+                alert($msgErro);
+                back(1);
+            }	
+            
             loadPage('?');
-            break;    
+            break;
         
         case "vagas" :
             # Limita o tamanho da tela

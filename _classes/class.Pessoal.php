@@ -3894,7 +3894,10 @@ class Pessoal extends Bd {
                           dtNom,
                           dtExo,
                           protempore,
-                          dtPublicNom
+                          dtPublicNom,
+                          dtPublicExo,
+                          dtAtoNom,
+                          dtAtoExo
                      FROM tbcomissao
                     WHERE idComissao = $idComissao";
         

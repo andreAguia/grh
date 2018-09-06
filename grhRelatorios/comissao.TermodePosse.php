@@ -34,10 +34,13 @@ if($acesso){
     $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
    
     # Preenche as variaveis da comissao
-    $nome = strtoupper($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
+    $nome = strtolower($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($comissao['idServidor']);  // idFuncional
-    $dtNom = dataExtenso2(date_to_php($comissao['dtNom']));
+    $inicio = dataExtenso2(date_to_php($comissao['dtNom']));
+    $dtNom = dataExtenso(date_to_php($comissao['dtNom']));
     $descricao = $comissao['descricao'];
+    $publicacao = strtolower(dataExtenso(date_to_php($comissao['dtPublicNom'])));
+    $dtAtoNom = strtolower(dataExtenso(date_to_php($comissao['dtAtoNom'])));
         
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -74,13 +77,13 @@ if($acesso){
     $ato->show();
     
     # Preambulo
-    $principal = "$dtNom, na Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
+    $principal = "$inicio, na Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
                . "$nome, identidade Funcional n° $idFuncional, nomeado(a), de acordo com o Inciso VII "
                . "do artigo 20° do Decreto Estadual n° 30.672, de 18 de fevereiro de 2002, "
                . "para exercer, o Cargo em Comissão de $cargo, simbolo $simbolo, "
                . "da Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
-               . "com validade de $dtNom, por Ato de Investidura do Magnífico Reitor, de [12 de maio de 2016], "
-               . "publicado no Diário Oficial de [13 de maio de 2016], "
+               . "com validade de $dtNom, por Ato de Investidura do Magnífico Reitor, de $dtAtoNom, "
+               . "publicado no Diário Oficial de $publicacao, "
                . "compareceu perante o Magnífico Reitor da Universidade Estadual do Norte Fluminense Darcy Ribeiro e, "
                . "tendo exibido o título de provimento, prestado a declaração de bens e valores "
                . "e a declaração de acumulação de cargos e/ou emprego público, foi empossado(a) e "

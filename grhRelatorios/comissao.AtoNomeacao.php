@@ -13,9 +13,6 @@ include ("../grhSistema/_config.php");
 # Pega o idComissao 
 $idComissao = get('id');
 
-# Pega os parâmetros do relatório
-$postData = post('dataEmissao',date("Y-m-d"));
-
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
 
@@ -41,6 +38,7 @@ if($acesso){
     $ocupanteAnterior = $comissao['ocupanteAnterior'];
     $protempore = $comissao['protempore'];
     $publicacao = date_to_php($comissao['dtPublicNom']);
+    $dtAtoNom = date_to_php($comissao['dtAtoNom']);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -59,19 +57,6 @@ if($acesso){
     $ato->set_titulo("ATO DO REITOR");
     $ato->set_totalRegistro(FALSE);
     $ato->set_dataImpressao(FALSE);
-    $ato->set_formCampos(array(
-              array ('nome' => 'dataEmissao',
-                     'label' => 'Data do Documento',
-                     'tipo' => 'date',
-                     'valor' => $postData,
-                     'size' => 5,
-                     'title' => 'Data do Documento',
-                     'onChange' => 'formPadrao.submit();',
-                     'col' => 4,
-                     'linha' => 1)));
-
-    $ato->set_formFocus('dataEmissao');		
-    $ato->set_formLink('?id='.$idComissao);
     #$ato->set_logServidor($idFicha);
     #$ato->set_logDetalhe("Visualizou a Ficha Cadastral");
     $ato->show();
@@ -116,7 +101,7 @@ if($acesso){
     br(2);
     
     # Data
-    p("Campos dos Goytacazes, ".dataExtenso(date_to_php($postData)).".","principal");
+    p("Campos dos Goytacazes, ".dataExtenso($dtAtoNom).".","principal");
     br(4);
     
     # Reitor

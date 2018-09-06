@@ -39,6 +39,7 @@ if($acesso){
     $dtExo = dataExtenso(date_to_php($comissao['dtExo']));
     $descricao = $comissao['descricao'];
     $publicacao = date_to_php($comissao['dtPublicExo']);
+    $dtAtoExo = date_to_php($comissao['dtAtoExo']);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -57,19 +58,6 @@ if($acesso){
     $ato->set_titulo("ATO DO REITOR");
     $ato->set_totalRegistro(FALSE);
     $ato->set_dataImpressao(FALSE);
-    $ato->set_formCampos(array(
-              array ('nome' => 'dataEmissao',
-                     'label' => 'Data do Documento',
-                     'tipo' => 'date',
-                     'valor' => $postData,
-                     'size' => 5,
-                     'title' => 'Data do Documento',
-                     'onChange' => 'formPadrao.submit();',
-                     'col' => 4,
-                     'linha' => 1)));
-
-    $ato->set_formFocus('dataEmissao');		
-    $ato->set_formLink('?id='.$idComissao);
     #$ato->set_logServidor($idFicha);
     #$ato->set_logDetalhe("Visualizou a Ficha Cadastral");
     $ato->show();
@@ -100,7 +88,7 @@ if($acesso){
     br(2);
     
     # Data
-    p("Campos dos Goytacazes, ".dataExtenso(date_to_php($postData)).".","principal");
+    p("Campos dos Goytacazes, ".dataExtenso($dtAtoExo).".","principal");
     br(4);
     
     # Reitor

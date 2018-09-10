@@ -1048,15 +1048,15 @@ class Grh
     * método listaFolgasTre
     * Exibe os dados de Folgas do TRE
     * 
-    * @param    string $matricula -> matricula do servidor
+    * @param    string $idServidor -> idServidor do servidor
     */
-    public static function listaFolgasTre($matricula)
+    public static function listaFolgasTre($idServidor)
     {       
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
-        $folgasConcedidas = $servidor->get_folgasConcedidas($matricula);
-        $folgasFruidas = $servidor->get_folgasFruidas($matricula);
+        $folgasConcedidas = $servidor->get_folgasConcedidas($idServidor);
+        $folgasFruidas = $servidor->get_folgasFruidas($idServidor);
         $folgasPendentes = $folgasConcedidas - $folgasFruidas;
 
         # Div do numero de folgas

@@ -66,8 +66,7 @@ if($acesso)
     
     ################################################################
     
-    switch ($fase)
-    {   
+    switch ($fase){   
         case "geral":
             titulo("Estatística Geral");
             br();

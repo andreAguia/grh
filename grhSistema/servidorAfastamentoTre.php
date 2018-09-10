@@ -84,7 +84,7 @@ if($acesso){
     # Parametros da tabela
     $objeto->set_label(array("Data Inícial do Trabalho","Dias Trabalhados","Data de Término do Trabalho","Folgas Concedidas","Descrição do Trabalho Efetuado","Documento"));
     $objeto->set_width(array(10,10,10,10,30,20));	
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array('center','center','center','center','left','left'));
     $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
@@ -147,6 +147,15 @@ if($acesso){
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 4)));
+    
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorTreAfastamento.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    
+    $objeto->set_botaoListarExtra(array($botaoRel));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

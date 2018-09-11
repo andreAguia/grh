@@ -35,7 +35,8 @@ if($acesso){
 
     $select = "SELECT data,                                    
                       dias,
-                      ADDDATE(data,dias-1)
+                      ADDDATE(data,dias-1),
+                      year(data)
                  FROM tbfolga
                 WHERE idServidor = $idServidorPesquisado
              ORDER BY data";				
@@ -59,7 +60,7 @@ if($acesso){
     #$relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));  
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(3);
+    $relatorio->set_numGrupo(3);
     $relatorio->show();
     
     p($folgasFruidas." dias","f11","center");

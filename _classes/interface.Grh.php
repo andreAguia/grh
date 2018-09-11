@@ -184,7 +184,7 @@ class Grh
             br();
             
             $tamanhoImage = 60;
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             
             $botao = new BotaoGrafico();
             $botao->set_label('Férias');
@@ -199,6 +199,14 @@ class Grh
             $botao->set_url('areaLicencaPremio.php');
             $botao->set_image(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Área de Licença Prêmio');
+            #$botao->set_accesskey('F');
+            $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('TRE');
+            $botao->set_url('tre.php');
+            $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Área de Controle de Folgas do TRE');
             #$botao->set_accesskey('F');
             $menu->add_item($botao);
             
@@ -697,7 +705,7 @@ class Grh
             br();
         $grid2->fechaColuna();
         
-        # Ocorrências
+        # Afastamentos
         
         $grid2->abreColuna(12,5);
         titulo('Afastamentos');
@@ -749,18 +757,10 @@ class Grh
         #$menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('TRE - Afastamentos');
-        $botao->set_url('servidorAfastamentoTre.php');
+        $botao->set_label('TRE');
+        $botao->set_url('servidorTre.php');
         $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de dias afastados do trabalho para prestar serviços ao TRE');                
-        #$botao->set_accessKey('i');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('TRE - Folgas Recebidas');
-        $botao->set_url('servidorFolga.php');
-        $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de folgas recebidas por ter trabalhado no TRE');                
+        $botao->set_title('Cadastro de dias trabalhados no TRE com controle de folgas');                
         #$botao->set_accessKey('i');
         $menu->add_item($botao);
 
@@ -918,7 +918,7 @@ class Grh
 
         # Folga TRE
         if($folgaTre){
-            $mensagem[] = 'Folga TRE';
+            $mensagem[] = 'Servidor em Folga TRE';
         }
 
         # Afastamento TRE
@@ -1050,13 +1050,12 @@ class Grh
     * 
     * @param    string $idServidor -> idServidor do servidor
     */
-    public static function listaFolgasTre($idServidor)
-    {       
+    public static function listaFolgasTre($idServidor){       
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
-        $folgasConcedidas = $servidor->get_folgasConcedidas($idServidor);
-        $folgasFruidas = $servidor->get_folgasFruidas($idServidor);
+        $folgasConcedidas = $servidor->get_treFolgasConcedidas($idServidor);
+        $folgasFruidas = $servidor->get_treFolgasFruidas($idServidor);
         $folgasPendentes = $folgasConcedidas - $folgasFruidas;
 
         # Div do numero de folgas

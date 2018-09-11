@@ -2147,52 +2147,74 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-    function get_folgasConcedidas($idServidor)
+    function get_treDiasTrabalhados($idServidor){
 
+    /**
+     * informa a quantidade de dias trabalhados no TRE
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+        $select = 'SELECT IFNULL(sum(dias),0)
+                     FROM tbtrabalhotre
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+        $count = parent::count($select);
+
+        if($count == 0){
+            return '0';
+        }else{
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    function get_treFolgasConcedidas($idServidor){
+        
     /**
      * informa a quantidade de dias de folga que o servidor tem direito
      * 
      * @param	string $idServidor idServidor do servidor
      */
 
+        $select = 'SELECT IFNULL(sum(folgas),0)
+                     FROM tbtrabalhotre
+                    WHERE idServidor = '.$idServidor;
 
-    {
-            $select = 'SELECT IFNULL(sum(folgas),0)
-                         FROM tbtrabalhotre
-                        WHERE idServidor = '.$idServidor;
+        $row = parent::select($select,FALSE);
+        $count = parent::count($select);
 
-            $row = parent::select($select,FALSE);
-            $count = parent::count($select);
-
-            if($count == 0)
-                return '0';
-            else
-                return $row[0];
+        if($count == 0){
+            return '0';
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
 
-    function get_folgasFruidas($idServidor)
+    function get_treFolgasFruidas($idServidor){
 
     /**
      * informa a quantidade de folga que o servidor fruiu (tirou)
      * 
      * @param	string $idServidor idServidor do servidor
      */
+    
+        $select = 'SELECT IFNULL(sum(dias), 0)
+                     FROM tbfolga
+                    WHERE idServidor = '.$idServidor;
 
+        $row = parent::select($select,FALSE);
+        $count = parent::count($select);
 
-    {
-            $select = 'SELECT IFNULL(sum(dias), 0)
-                         FROM tbfolga
-                        WHERE idServidor = '.$idServidor;
-
-            $row = parent::select($select,FALSE);
-            $count = parent::count($select);
-
-            if($count == 0)
-                return '0';
-            else
-                return $row[0];
+        if($count == 0){
+            return '0';
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################

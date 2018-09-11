@@ -35,7 +35,8 @@ if($acesso){
                       dias,
                       folgas,
                       descricao,
-                      documento
+                      documento,
+                      year(data)
                  FROM tbtrabalhotre 
                 WHERE idServidor = $idServidorPesquisado
              ORDER BY data desc";		
@@ -52,7 +53,7 @@ if($acesso){
     $relatorio->set_funcao(array("date_to_php","date_to_php"));
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(6);
+    $relatorio->set_numGrupo(6);
     $relatorio->show();
 
     $page->terminaPagina();

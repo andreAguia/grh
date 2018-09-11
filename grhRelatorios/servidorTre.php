@@ -34,8 +34,8 @@ if($acesso){
     $grid = new Grid();
     $grid->abreColuna(4);
     
-    $folgasConcedidas = $pessoal->get_folgasConcedidas($idServidorPesquisado);
-    $folgasFruidas = $pessoal->get_folgasFruidas($idServidorPesquisado);
+    $folgasConcedidas = $pessoal->get_treFolgasConcedidas($idServidorPesquisado);
+    $folgasFruidas = $pessoal->get_treFolgasFruidas($idServidorPesquisado);
     $folgasPendentes = $folgasConcedidas - $folgasFruidas;
      
      $select = "SELECT YEAR(data) as ano,

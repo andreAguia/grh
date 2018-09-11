@@ -1,7 +1,6 @@
 <?php
 
-class Grh
-{
+class Grh{
     /**
      * Encapsula as rotivas de interface do sistema de pessoal
      * 
@@ -204,7 +203,7 @@ class Grh
             
             $botao = new BotaoGrafico();
             $botao->set_label('TRE');
-            $botao->set_url('tre.php');
+            $botao->set_url('areaTre.php?origem=1');
             $botao->set_image(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Área de Controle de Folgas do TRE');
             #$botao->set_accesskey('F');

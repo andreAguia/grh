@@ -28,6 +28,9 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # Verifica se veio da área de Licença Premio
+    $areaTre = get_session("areaTre");
+    
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -47,12 +50,19 @@ if($acesso){
             $folgasConcedidas = $pessoal->get_treFolgasConcedidas($idServidorPesquisado);
             $folgasFruidas = $pessoal->get_treFolgasFruidas($idServidorPesquisado);
             $folgasPendentes = $folgasConcedidas - $folgasFruidas;
+            
+            # botão de voltar da lista
+            if($areaTre){
+                $voltar = 'areaTre.php';
+            }else{
+                $voltar = 'servidorMenu.php';
+            }
 
             # Cria um menu
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar","servidorMenu.php");
+            $botaoVoltar = new Link("Voltar",$voltar);
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');

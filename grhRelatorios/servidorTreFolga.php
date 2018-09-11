@@ -33,9 +33,9 @@ if($acesso){
     
     #####################################
 
-    $select = "SELECT data,                                    
-                      dias,
-                      ADDDATE(data,dias-1)
+    $select = "SELECT data,
+                      ADDDATE(data,dias-1),
+                      dias
                  FROM tbfolga
                 WHERE idServidor = $idServidorPesquisado
              ORDER BY data";				
@@ -47,22 +47,12 @@ if($acesso){
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(FALSE);
-    #$relatorio->set_titulo('Relatório Mensal de Folgas Fruídas do TRE');
-    #$relatorio->set_tituloLinha2($relatorioAno);
-    #$relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
-
-    $relatorio->set_label(array('Data Inicial','Dias','Data Final'));
-    #$relatorio->set_width(array(10,30,20,10,10,10));
+    $relatorio->set_label(array('Data Inicial','Data Final','Dias'));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php",NULL,"date_to_php"));
-    #$relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));  
-
+    $relatorio->set_funcao(array("date_to_php","date_to_php"));
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(3);
+    $relatorio->set_colunaSomatorio(2);
     $relatorio->show();
-    
-    p($folgasFruidas." dias","f11","center");
 
     $page->terminaPagina();
 }

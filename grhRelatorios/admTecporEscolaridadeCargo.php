@@ -61,7 +61,6 @@ if($acesso)
     
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();

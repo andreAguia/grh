@@ -69,6 +69,7 @@ if($acesso)
     $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
+    $relatorio->set_subTotal(FALSE);
     
     if($exibeCombo){
         $listaCargo = $servidor->select('SELECT idcargo, CONCAT(tbtipocargo.cargo," - ",tbcargo.nome)

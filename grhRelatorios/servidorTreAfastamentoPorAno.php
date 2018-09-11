@@ -51,7 +51,7 @@ if($acesso){
     $relatorio->set_label(array('Data Inicial','Data Final','Dias','Folgas<br/>Concedidas','Descriçao','Documentaçao'));
     $relatorio->set_align(array('center','center','center','center','left','left'));
     $relatorio->set_funcao(array("date_to_php","date_to_php"));
-
+    $relatorio->set_colunaSomatorio(3);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
     $relatorio->show();

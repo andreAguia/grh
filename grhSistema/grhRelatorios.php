@@ -85,7 +85,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
+                #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
                 $menu->show();
             $callout->fecha();

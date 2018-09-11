@@ -135,7 +135,6 @@ if($acesso){
                                array ( 'nome' => 'descricao',
                                        'label' => 'Descrição do Trabalho Efetuado:',
                                        'tipo' => 'textarea',
-                                       'required' => TRUE,
                                        'size' => array(80,5),                                                                 
                                        'title' => 'Descrição do Trabalho Efetuado',
                                        'col' => 12,

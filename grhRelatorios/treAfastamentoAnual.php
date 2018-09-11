@@ -30,9 +30,9 @@ if($acesso){
     $select = "SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       tbservidor.idServidor,
-                      tbtrabalhotre.data,                                    
-                      tbtrabalhotre.dias,
+                      tbtrabalhotre.data,
                       ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
+                      tbtrabalhotre.dias,
                       tbtrabalhotre.folgas,
                       tbtrabalhotre.documento
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -49,10 +49,10 @@ if($acesso){
     $relatorio->set_tituloLinha2($relatorioAno);
     $relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Data Inicial','Dias<br/>Trabalhados','Data Final','Folgas<br/>Concedidas'));
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Data Inicial','Data Final','Dias<br/>Trabalhados','Folgas<br/>Concedidas'));
     #$relatorio->set_width(array(10,30,20,10,10,10));
     $relatorio->set_align(array('center','left','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
     $relatorio->set_classe(array(NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));  
 

@@ -79,7 +79,7 @@ if($acesso){
         
         case "exibeLista" :
             $grid = new Grid();
-            $grid->abreColuna(12);
+            $grid->abreColuna(6);
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -97,10 +97,26 @@ if($acesso){
             $botaoRel->set_title("Relatório Tre");
             $botaoRel->set_onClick("window.open('../grhRelatorios/treGeral.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel,"right");
+            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+            
+                # Relatórios
+                $menu = new Menu('horizontal');
+                #$menu->add_item('titulo','Relatórios');
+                $menu->add_item('linkWindow','Resumo Geral','../grhRelatorios/treGeral.php');
+                #$menu->add_item('linkWindow','Mensal de Dias Trabalhados','../grhRelatorios/treAfastamentoMensal.php');
+                $menu->add_item('linkWindow','Anual de Dias Trabalhados','../grhRelatorios/treAfastamentoAnual.php'); 
+                #$menu->add_item('linkWindow','Mensal de Folgas Fruídas','../grhRelatorios/treFolgaMensal.php'); 
+                $menu->add_item('linkWindow','Anual de Folgas Fruídas','../grhRelatorios/treFolgaAnual.php'); 
+                $menu->show();
+                
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
+                
             # Pega o time inicial
             $time_start = microtime(TRUE);
             

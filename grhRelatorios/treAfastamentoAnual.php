@@ -57,8 +57,6 @@ if($acesso){
     $relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));  
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'ano',
                          'label' => 'Ano:',

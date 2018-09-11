@@ -94,10 +94,10 @@ if($acesso){
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_title("Relatório Tre");
+            $botaoRel->set_onClick("window.open('../grhRelatorios/treGeral.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
+            $menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
@@ -159,59 +159,6 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             set_session('areaTre',TRUE);
             loadPage('servidorTre.php');
-            break; 
-        
-################################################################
-
-        # Relatório
-        case "relatorio" :
-            $result = $pessoal->select($selectRelatorio);
-            
-            # Inicia a variável do subtítulo
-            $subtitulo = NULL;
-            
-            # Lotação
-            if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao)."<br/>";
-            }
-            
-            # Processo
-            switch ($parametroProcesso){
-                case "Cadastrado":
-                    $subtitulo .= "Processos Cadastrados<br/>";
-                    break;
-                
-                case "Em Branco":
-                    $subtitulo .= "Processos Em Branco<br/>";
-                    break;
-            }
-            
-            # Situação
-            if(($parametroSituacao <> "*") AND ($parametroSituacao <> "")){
-                $subtitulo .= "Servidores ".$pessoal->get_nomeSituacao($parametroSituacao)."s<br/>";
-            }
-            
-            # Nome, MAtricula e id
-            if(!is_null($parametroNomeMat)){
-                $subtitulo .= "Pesquisa: ".$parametroNomeMat;
-            }
-
-            $relatorio = new Relatorio();
-            $relatorio->set_titulo('Relatório de Licença Prêmio');
-            
-            # Acrescenta o subtítulo de tiver filtro
-            if($subtitulo <> NULL){
-                $relatorio->set_subtitulo($subtitulo);
-            }
-            
-            $relatorio->set_label(array("Id","Matrícula","Nome","Cargo","Lotação","Admissão","Processo","Número de Dias<br/>Publ./ Fruídos / Disp.","Número de Publicações<br/>Reais / Possíveis / Faltantes","Situação"));
-            $relatorio->set_align(array("center","center","left","left","left","center","left"));
-            $relatorio->set_funcao(array(NULL,"dv",NULL,NULL,NULL,"date_to_php",NULL,"exibeDiasLicencaPremio","exibeNumPublicacoesLicencaPremio"));
-            $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
-            $relatorio->set_metodo(array(NULL,NULL,NULL,"get_Cargo"));
-
-            $relatorio->set_conteudo($result);
-            $relatorio->show();
             break; 
         
 ################################################################

@@ -16,8 +16,7 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
@@ -47,7 +46,7 @@ if($acesso)
     $relatorio->set_funcao(array(NULL,NULL,'formataMoeda'));
     
     $relatorio->set_colunaSomatorio(3);
-    $relatorio->set_textoSomatorio('Total de Vagas:');
+    #$relatorio->set_textoSomatorio('Total de Vagas:');
     $relatorio->set_exibeSomatorioGeral(FALSE);
     $relatorio->set_totalRegistro(FALSE);
 

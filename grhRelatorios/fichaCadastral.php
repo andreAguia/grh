@@ -946,7 +946,7 @@ if($acesso){
         #$relatorio->set_align(array('left','left','left','left','left','left','left','left','left','Left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_colunaSomatorio(2);
-        $relatorio->set_textoSomatorio("Total de Dias Averbados:");
+        #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
         $relatorio->set_exibeSomatorioGeral(FALSE);
         $relatorio->set_botaoVoltar(FALSE);
         #$relatorio->set_bordaInterna(TRUE);

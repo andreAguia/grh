@@ -97,7 +97,7 @@ if($acesso){
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_onClick("window.open('?fase=relatorio','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
             $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel,"right");
+            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             

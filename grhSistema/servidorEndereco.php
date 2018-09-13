@@ -93,7 +93,7 @@ if($acesso){
                                'title' => 'Endereço do Servidor',
                                'fieldset' => 'Endereço',
                                'col' => 12,
-                               'size' => 50),
+                               'size' => 150),
                         array ('linha' => 6,
                                'nome' => 'bairro',
                                'label' => 'Bairro:',

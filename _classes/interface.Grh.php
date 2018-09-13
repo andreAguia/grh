@@ -502,7 +502,7 @@ class Grh{
             $botao->set_url('servidorReadaptacao.php');
             $botao->set_image(PASTA_FIGURAS.'readaptacao.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Controle de Readaptaçao do Servidor');
-            $menu->add_item($botao);
+            #$menu->add_item($botao);
 
             $botao = new BotaoGrafico();
             $botao->set_label('Elogios / Advertências');

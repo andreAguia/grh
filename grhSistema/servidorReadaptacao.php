@@ -51,7 +51,7 @@ if($acesso){
     $objeto->set_selectLista('SELECT tipo,
                                      processo,
                                      dtProcesso,
-                                     dtPericia,
+                                     dtEnvio,
                                      dtInicial,
                                      ADDDATE(dtInicial,INTERVAL anos-1 YEAR),
                                      anos,
@@ -64,7 +64,7 @@ if($acesso){
     $objeto->set_selectEdita('SELECT tipo,
                                      processo,
                                      dtProcesso,
-                                     dtPericia,
+                                     dtEnvio,
                                      dtInicial,
                                      anos,
                                      obs,
@@ -79,7 +79,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Processo","Data do Processo","Data da Pericia","Data Inicial","Data Final","Anos"));
+    $objeto->set_label(array("Tipo","Processo","Data do Processo","Enviado em","Data Inicial","Data Final","Anos"));
     #$objeto->set_width(array(20,20,20,30));	
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php","date_to_php","date_to_php"));
@@ -120,28 +120,28 @@ if($acesso){
                                        'col' => 3,
                                        'title' => 'Data do Processo.',
                                        'linha' => 1),
-                               array ( 'nome' => 'dtPericia',
-                                       'label' => 'Data da Pericia:',
+                               array ( 'nome' => 'dtEnvio',
+                                       'label' => 'Data de Envio a SPMSO/SES:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Pericia.',
-                                       'linha' => 1),
+                                       'linha' => 2),
                                array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data de Inicio da readaptaçao.',
-                                       'linha' => 2),
+                                       'linha' => 3),
                                array ( 'nome' => 'anos',
                                        'label' => 'Anos:',
                                        'tipo' => 'processo',
                                        'size' => 5,
                                        'col' => 2,
                                        'title' => 'Quantidade de anos definidos para ser readaptado',
-                                       'linha' => 2),
-                                array ('linha' => 2,
+                                       'linha' => 3),
+                                array ('linha' => 4,
                                        'col' => 12,
                                        'nome' => 'obs',
                                        'label' => 'Observação:',

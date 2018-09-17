@@ -161,15 +161,21 @@ if($acesso){
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de readaptação");
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorGratificacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+
+    # Legislação
+    $botaoLegis = new Link("Legislação");
+    $botaoLegis->set_class('button');
+    $botaoLegis->set_title('Exibe as Legislação pertinente');
+    $botaoLegis->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRfb7P06MCBHAwd15hKm6KWV4-y0I8yBzlac58uAA-xCHeaL9aCbtSGCgGguZzaPQafvXYvGqWhwG0r/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
     
     # Fluxograma
     $imagem = new Imagem(PASTA_FIGURAS.'fluxograma.png',NULL,15,15);
     $botaoFluxo = new Button();
     $botaoFluxo->set_imagem($imagem);
     $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo de readaptação");
-    $botaoFluxo->set_onClick("window.open('../../../areaServidor/_diagramas/readaptacao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoFluxo->set_onClick("window.open('../_diagramas/readaptacao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=900,height=800');");
     
-    $objeto->set_botaoListarExtra(array($botaoRel,$botaoFluxo));
+    $objeto->set_botaoListarExtra(array($botaoRel,$botaoFluxo,$botaoLegis));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

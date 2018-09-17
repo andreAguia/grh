@@ -34,19 +34,6 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
-    }
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -64,35 +51,20 @@ if($acesso){
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
-
-    # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
-    $objeto->set_parametroValue($parametro);
-
-    # ordenação
-    if(is_null($orderCampo))
-            $orderCampo = "1";
-
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
-
+    
     # select da lista
-    $objeto->set_selectLista ('SELECT idbanco,banco,obs,
+    $objeto->set_selectLista ('SELECT idbanco,
+                                      banco,
+                                      obs,
                                       idbanco
                                  FROM tbbanco
-                                WHERE banco LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY banco');
 
     # select do edita
     $objeto->set_selectEdita('SELECT banco,
                                      obs
                                 FROM tbbanco
                                WHERE idbanco = '.$id);
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');

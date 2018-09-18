@@ -183,7 +183,7 @@ class Grh{
             br();
             
             $tamanhoImage = 60;
-            $menu = new MenuGrafico(4);
+            $menu = new MenuGrafico(5);
             
             $botao = new BotaoGrafico();
             $botao->set_label('Férias');
@@ -216,7 +216,15 @@ class Grh{
             $botao->set_title('Análise estatísticas');
             #$botao->set_accesskey('F');
             $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Recadastramento');
+            $botao->set_url('areaRecadastramento.php');
+            $botao->set_image(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Recadastramento de Servidores');
+            $menu->add_item($botao);
             $menu->show();
+            br();
             
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -428,7 +436,7 @@ class Grh{
         
 ##########################################################
 
-    public static function menuServidor($idServidor){
+    public static function menuServidor($idServidor,$idUsuario){
             
     /**
      * método menuServidor
@@ -551,9 +559,18 @@ class Grh{
             $botao->set_title('Endereço do Servidor');            
             $menu->add_item($botao);
             
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                $botao = new BotaoGrafico();
+                $botao->set_label('Telefones & Emails');
+                $botao->set_url('servidorTelefones.php');
+                $botao->set_image(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Dados dos Contatos do Servidor');
+                $menu->add_item($botao);
+            }
+            
             $botao = new BotaoGrafico();
-            $botao->set_label('Telefones & Emails');
-            $botao->set_url('servidorTelefones.php');
+            $botao->set_label('Contatos');
+            $botao->set_url('servidorContatos.php');
             $botao->set_image(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Dados dos Contatos do Servidor');
             $menu->add_item($botao);

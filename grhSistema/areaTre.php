@@ -38,15 +38,10 @@ if($acesso){
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
-    $parametroProcesso = post('parametroProcesso',get_session('parametroProcesso'));
-    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao',1));
-    $selectRelatorio = get_session('selectRelatorio');
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
     set_session('parametroLotacao',$parametroLotacao);
-    set_session('parametroProcesso',$parametroProcesso);
-    set_session('parametroSituacao',$parametroSituacao);
     
     # Começa uma nova página
     $page = new Page();
@@ -116,6 +111,44 @@ if($acesso){
                 
             $grid->fechaColuna();
             $grid->abreColuna(12);
+            
+            ###
+            
+            # Formulário de Pesquisa
+            $form = new Form('?');
+
+            $controle = new Input('parametroNomeMat','texto','Nome, Matrícula ou id:',1);
+            $controle->set_size(100);
+            $controle->set_title('Nome do servidor');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                                      FROM tblotacao
+                                                     WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                                      FROM tblotacao
+                                                     WHERE ativo)
+                                                  ORDER BY 2');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            
+            $form->show();
+            
+            ###
                 
             # Pega o time inicial
             $time_start = microtime(TRUE);
@@ -133,8 +166,37 @@ if($acesso){
                               (SELECT IFNULL(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor) as fruidas,
                               (SELECT IFNULL(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) - (SELECT IFNULL(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor)
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                        WHERE situacao = 1
-                          AND (SELECT sum(dias) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) > 0
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND situacao = 1";
+            
+            # Matrícula, nome ou id
+            if(!is_null($parametroNomeMat)){
+                if(is_numeric($parametroNomeMat)){
+                    $select .= ' AND ((';
+                }else{
+                    $select .= ' AND (';
+                }
+
+                $select .= 'tbpessoa.nome LIKE "%'.$parametroNomeMat.'%")';
+
+                if(is_numeric($parametroNomeMat)){
+                    $select .= ' OR (tbservidor.matricula LIKE "%'.$parametroNomeMat.'%")
+                                 OR (tbservidor.idfuncional LIKE "%'.$parametroNomeMat.'%"))';        
+                }
+            }
+            
+            # Lotação
+            if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+                if(is_numeric($parametroLotacao)){
+                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+                }else{ # senão é uma diretoria genérica
+                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
+                }
+            }
+            
+            $select .= " AND (SELECT sum(dias) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) > 0
                      ORDER BY tbpessoa.nome";
             
             # Guarde o select para o relatório
@@ -152,6 +214,10 @@ if($acesso){
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
             $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_lotacao"));
             $tabela->set_titulo("TRE");
+            
+            if(!is_null($parametroNomeMat)){
+                $tabela->set_textoRessaltado($parametroNomeMat);
+            }
             
             $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->set_nomeColunaEditar("Acessar");

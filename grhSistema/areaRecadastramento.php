@@ -34,6 +34,14 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # Pega os parâmetros
+    $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
+    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
+        
+    # Joga os parâmetros par as sessions    
+    set_session('parametroNomeMat',$parametroNomeMat);
+    set_session('parametroLotacao',$parametroLotacao);
+    
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -54,6 +62,44 @@ if($acesso){
             # Botao voltar
             botaoVoltar("grh.php");
             
+            ###
+            
+            # Formulário de Pesquisa
+            $form = new Form('?');
+
+            $controle = new Input('parametroNomeMat','texto','Nome, Matrícula ou id:',1);
+            $controle->set_size(100);
+            $controle->set_title('Nome do servidor');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                                      FROM tblotacao
+                                                     WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                                      FROM tblotacao
+                                                     WHERE ativo)
+                                                  ORDER BY 2');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            
+            $form->show();
+            
+            ###
+            
             # Monta o select
             $select ='SELECT tbservidor.idFuncional,
                              tbpessoa.nome,
@@ -65,13 +111,42 @@ if($acesso){
                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                         LEFT JOIN tbrecadastramento USING (idServidor)
                                         LEFT JOIN tbperfil USING (idPerfil)
-                      WHERE tbservidor.situacao = 1
-                   ORDER BY tbpessoa.nome';
+                                        JOIN tbhistlot USING (idServidor)
+                                        JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND tbservidor.situacao = 1';
+                      
+            # Matrícula, nome ou id
+            if(!is_null($parametroNomeMat)){
+                if(is_numeric($parametroNomeMat)){
+                    $select .= ' AND ((';
+                }else{
+                    $select .= ' AND (';
+                }
+
+                $select .= 'tbpessoa.nome LIKE "%'.$parametroNomeMat.'%")';
+
+                if(is_numeric($parametroNomeMat)){
+                    $select .= ' OR (tbservidor.matricula LIKE "%'.$parametroNomeMat.'%")
+                                 OR (tbservidor.idfuncional LIKE "%'.$parametroNomeMat.'%"))';        
+                }
+            }
+            
+            # Lotação
+            if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+                if(is_numeric($parametroLotacao)){
+                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+                }else{ # senão é uma diretoria genérica
+                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
+                }
+            }
+
+            $select .= ' ORDER BY tbpessoa.nome';
 
             $result = $pessoal->select($select);
             
             $tabela = new Tabela();
-            $tabela->set_titulo('Área de Recadastramento');
+            $tabela->set_titulo('Recadastramento');
             $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:','Usuario','Editar'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center","left","left","left"));
@@ -79,6 +154,10 @@ if($acesso){
 
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
             $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+            
+            if(!is_null($parametroNomeMat)){
+                $tabela->set_textoRessaltado($parametroNomeMat);
+            }
 
             # Botão de exibição dos servidores com permissão a essa regra
             $botao = new BotaoGrafico();
@@ -108,7 +187,7 @@ if($acesso){
                 
             # Titulo
             tituloTable("Recadastramento");
-            
+                                   
             # Monta o select
             $select ="SELECT tbpessoa.telResidencial,
                              tbpessoa.telCelular,
@@ -118,90 +197,256 @@ if($acesso){
                              tbpessoa.endereco,
                              tbpessoa.bairro,
                              tbpessoa.idCidade,
-                             tbpessoa.cep  
+                             tbpessoa.cep,
+                             tbdocumentacao.cpf,
+                             tbdocumentacao.identidade,
+                             tbdocumentacao.orgaoId,
+                             tbdocumentacao.dtId,
+                             tbpessoa.conjuge
                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                             JOIN tbdocumentacao USING (idPessoa)
                        WHERE tbservidor.idServidor = $id";
 
             $result = $pessoal->select($select,false);
             
+            # Envia o valor original por session para produzir
+            # o log de atividades na rotina de validaçao
+            set_session('oldValue', $result);
             
             # Formuário exemplo de login
             $form = new Form('?fase=valida','Atualiza dados?');
+            
+            # Pega o tipo do cargo
+            $tipoCargo = $pessoal->get_cargoTipo($id);
+            
+            if($tipoCargo == "Professor"){
+                # SISGEN
+                $controle = new Input('sisgen','combo','Realizou as atividades descritas no Anexo III?:',1);
+                $controle->set_size(100);
+                $controle->set_linha(1);
+                $controle->set_array(array("---","Realizei","Não Realizei"));
+                $controle->set_valor("---");            
+                $controle->set_col(4);
+                $controle->set_fieldset("Declaração de Conformidade com o SISGEN");
+                $form->add_item($controle);
+            }
+            
+            # CPF
+            $controle = new Input('cpf','cpf','CPF:',1);
+            $controle->set_size(20);
+            $controle->set_linha(2);
+            $controle->set_valor($result['cpf']);
+            $controle->set_col(3);
+            $controle->set_autofocus(TRUE); 
+            $controle->set_fieldset("Documentos");
+            $form->add_item($controle);
+            
+            # Identidade
+            $controle = new Input('identidade','texto','Identidade:',1);
+            $controle->set_size(20);
+            $controle->set_linha(2);
+            $controle->set_valor($result['identidade']);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            # Identidade Órgão
+            $controle = new Input('orgaoId','texto','Órgão:',1);
+            $controle->set_size(20);
+            $controle->set_linha(2);
+            $controle->set_valor($result['orgaoId']);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            # Identidade Data de Emissão
+            $controle = new Input('dtId','data','Data de Emissão:',1);
+            $controle->set_size(15);
+            $controle->set_linha(2);
+            $controle->set_valor($result['identidade']);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            # Endereço
+            $controle = new Input('endereco','texto','Endereço do Servidor:',1);
+            $controle->set_size(150);
+            $controle->set_linha(3);
+            $controle->set_valor(ucwords(strtolower($result['endereco'])));
+            $controle->set_col(12);
+            $controle->set_fieldset("Endereço");
+            $form->add_item($controle);
+            
+            # Bairro
+            $controle = new Input('bairro','texto','Bairro:',1);
+            $controle->set_size(50);
+            $controle->set_linha(4);
+            $controle->set_valor(ucwords(strtolower($result['bairro'])));
+            $controle->set_col(5);
+            $form->add_item($controle);
+            
+            # Pega os dados da combo de cidade
+            $cidade = $pessoal->select('SELECT idCidade,
+                                               CONCAT(tbcidade.nome," (",tbestado.uf,")")
+                                          FROM tbcidade JOIN tbestado USING (idEstado)
+                                      ORDER BY proximidade,tbestado.uf,tbcidade.nome');
+            array_unshift($cidade, array(NULL,NULL)); # Adiciona o valor de nulo
+            
+            # Cidade
+            $controle = new Input('idCidade','combo','Cidade:',1);
+            $controle->set_size(50);
+            $controle->set_linha(4);
+            $controle->set_array($cidade);
+            $controle->set_valor($result['idCidade']);
+            $controle->set_col(5);
+            $form->add_item($controle);
+            
+            # Cep
+            $controle = new Input('cep','cep','Cep:',1);
+            $controle->set_size(10);
+            $controle->set_linha(4);
+            $controle->set_valor($result['cep']);
+            $controle->set_col(2);
+            $form->add_item($controle);
 
             # Telefone Residencial
             $controle = new Input('telResidencial','texto','Telefone Residencial:',1);
             $controle->set_size(30);
-            $controle->set_linha(2);
-            $controle->set_autofocus(TRUE); 
+            $controle->set_linha(5);
             $controle->set_valor($result['telResidencial']);
-            $controle->set_col(6);
+            $controle->set_col(4);
+            $controle->set_fieldset("Telefones");
             $form->add_item($controle);
             
             # Telefone Celular
             $controle = new Input('telCelular','texto','Telefone Celular:',1);
             $controle->set_size(30);
-            $controle->set_linha(3);
+            $controle->set_linha(5);
             $controle->set_valor($result['telCelular']);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $form->add_item($controle);
             
             # Outro telefone para recado
             $controle = new Input('telRecados','texto','Outro telefone para recado:',1);
             $controle->set_size(30);
-            $controle->set_linha(4);
+            $controle->set_linha(5);
             $controle->set_valor($result['telRecados']);
-            $controle->set_col(6);
+            $controle->set_col(4);            
             $form->add_item($controle);
             
             # Email institucional da Uenf
             $controle = new Input('emailUenf','texto','Email institucional da Uenf:',1);
             $controle->set_size(30);
-            $controle->set_linha(5);
-            $controle->set_valor($result['emailUenf']);
+            $controle->set_linha(6);
+            $controle->set_valor(strtolower($result['emailUenf']));
             $controle->set_col(6);
+            $controle->set_fieldset("Email");
             $form->add_item($controle);
             
             # Email Pessoal
             $controle = new Input('emailPessoal','texto','Email Pessoal:',1);
             $controle->set_size(30);
             $controle->set_linha(6);
-            $controle->set_valor($result['emailPessoal']);
-            $controle->set_col(6);
+            $controle->set_valor(strtolower($result['emailPessoal']));
+            $controle->set_col(6);            
             $form->add_item($controle);
             
-            # Endereço
-            $controle = new Input('endereco','texto','Endereço do Servidor:',1);
-            $controle->set_size(150);
+            # Conjuge
+            $controle = new Input('conjuge','texto','Nome do Conjuge:',1);
+            $controle->set_size(100);
             $controle->set_linha(7);
-            $controle->set_valor($result['endereco']);
-            $controle->set_col(12);
+            $controle->set_valor(ucwords(strtolower($result['conjuge'])));
+            $controle->set_col(6);
+            $controle->set_fieldset("Certidão de Casamento");
             $form->add_item($controle);
             
-            # Bairro
-            $controle = new Input('bairro','texto','Bairro:',1);
-            $controle->set_size(50);
+            # idServidor
+            $controle = new Input('idServidor','hidden','idServidor:',1);
+            $controle->set_size(10);
             $controle->set_linha(8);
-            $controle->set_valor($result['bairro']);
-            $controle->set_col(4);
-            $form->add_item($controle);
-            
-            # Bairro
-            $controle = new Input('bairro','texto','Bairro:',1);
-            $controle->set_size(50);
-            $controle->set_linha(8);
-            $controle->set_valor($result['bairro']);
-            $controle->set_col(4);
+            $controle->set_valor($id);
+            $controle->set_col(3);
             $form->add_item($controle);
             
             # submit
             $controle = new Input('submit','submit');
             $controle->set_valor('Atualizar');
-            $controle->set_linha(3);
+            $controle->set_fieldset("fecha");
+            $controle->set_linha(8);
             $controle->set_tabIndex(3);
             $controle->set_accessKey('E');
             $form->add_item($controle);
 
             $form->show();
+            break;
+        
+        ###
+        
+        case "valida" :
+            # Pega os dados digitados
+            $idServidor = post("idServidor");
+            $sisgen = post("sisgen");
+            $cpf = post("cpf");
+            $identidade = post("identidade");
+            $orgaoId = post("orgaoId");
+            $dtId = post("dtId");
+            $endereco = post("endereco");
+            $bairro = post("bairro");
+            $idCidade = post("idCidade");
+            $cep = post("cep");
+            $telResidencial = post("telResidencial");
+            $telCelular = post("telCelular");
+            $telRecados = post("telRecados");
+            $emailUenf = post("emailUenf");
+            $emailPessoal = post("emailPessoal");
+            $conjuge = post("conjuge");
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+            $oldValue = get_session('oldValue'); 
+            
+            $erro = 0;
+            
+            # Cpf
+            if(vazio($cpf)){
+                $msgErro.='O cpf nao pode estar em branco!\n';
+                $erro = 1;
+            }
+            
+            # Email Institucional
+            if(!vazio($emailUenf)){                
+                if(!filter_var($emailUenf, FILTER_VALIDATE_EMAIL)){
+                    $msgErro.='Email Institucional Inválido!\n';
+                    $erro = 1;
+                }
+            }
+            
+            # Email Pessoal
+            if(!vazio($emailPessoal)){                
+                if(!filter_var($emailPessoal, FILTER_VALIDATE_EMAIL)){
+                    $msgErro.='Email Pessoal Inválido!\n';
+                    $erro = 1;
+                }
+            }   
+            
+            if($erro == 0){
+                # Grava na tabela tbpessoa
+                $campos = array('endereco','bairro','idCidade','cep','telResidencial','telCelular','telRecados','emailUenf','emailPessoal','conjuge');
+                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencial,$telCelular,$telRecados,$emailUenf,$emailPessoal,$conjuge);
+                $pessoal->gravar($campos,$valor,$idPessoa,"tbpessoa","idPessoa",FALSE);
+                
+                # Grava na tabela tbdocumentacao
+                $campos = array('cpf','identidade','orgaoId','dtId');
+                $valor = array($cpf,$identidade,$orgaoId,$dtId);
+                $pessoal->gravar($campos,$valor,$idPessoa,"tbdocumentacao","idPessoa",FALSE);
+                
+                # Grava no log a atividade
+                $data = date("Y-m-d H:i:s");
+                $tipoLog = 2;
+                
+                # Grava o log tbpessoa
+                $intra->registraLog($idUsuario,$data,$atividade,"tbpessoa",$idPessoa,$tipoLog,$idServidor);
+                
+            }else{
+                alert($msgErro);
+                back(1);
+            }		   	
+            
             break;
         
 ################################################################

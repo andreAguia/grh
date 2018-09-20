@@ -58,7 +58,24 @@ if($acesso){
 ################################################################
     
     switch ($fase){
-        case "" :
+        case "" : 
+            br(4);
+            aguarde();
+            br();
+            
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+                p("Aguarde...","center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+        
+################################################################
+        
+        case "exibeLista" :
             # Botao voltar
             botaoVoltar("grh.php");
             
@@ -152,8 +169,8 @@ if($acesso){
             $tabela->set_align(array("center","left","left","left"));
             $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
 
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Intra"));
+            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_usuario"));
             
             if(!is_null($parametroNomeMat)){
                 $tabela->set_textoRessaltado($parametroNomeMat);
@@ -162,7 +179,7 @@ if($acesso){
             # Botão de exibição dos servidores com permissão a essa regra
             $botao = new BotaoGrafico();
             $botao->set_label('');
-            $botao->set_title('Editar Usuário');
+            $botao->set_title('Recadastrar Servidor');
             $botao->set_url('?fase=editar&id=');
             $botao->set_image(PASTA_FIGURAS.'bullet_edit.png',20,20);
             
@@ -398,9 +415,25 @@ if($acesso){
             $emailPessoal = post("emailPessoal");
             $conjuge = post("conjuge");
             $idPessoa = $pessoal->get_idPessoa($idServidor);
-            $oldValue = get_session('oldValue'); 
             
+            # Pega os valores antigos
+            $oldValue = get_session('oldValue');
+            $oldNomes = array_keys($oldValue);
+            $atividade = "Recadastramento: ";
+            
+            
+            # Percorre o array oldVersio comparando com o que
+            # foi digitado para definir as diferenças
+            #foreach ($oldNomes as $val){
+            #    # Verifica se teve alteração
+            ##    if($oldValue[$val] <> $$val){
+            #        $atividade .= "[$val]: $oldValue[$val] -> $$val";
+            #    }
+            #}
+                       
+            # Variáveis dos erros
             $erro = 0;
+            $msgErro = NULL;
             
             # Cpf
             if(vazio($cpf)){
@@ -425,6 +458,9 @@ if($acesso){
             }   
             
             if($erro == 0){
+                # Data de Hoje
+                $data = date("Y-m-d H:i:s");
+                
                 # Grava na tabela tbpessoa
                 $campos = array('endereco','bairro','idCidade','cep','telResidencial','telCelular','telRecados','emailUenf','emailPessoal','conjuge');
                 $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencial,$telCelular,$telRecados,$emailUenf,$emailPessoal,$conjuge);
@@ -435,18 +471,27 @@ if($acesso){
                 $valor = array($cpf,$identidade,$orgaoId,$dtId);
                 $pessoal->gravar($campos,$valor,$idPessoa,"tbdocumentacao","idPessoa",FALSE);
                 
-                # Grava no log a atividade
-                $data = date("Y-m-d H:i:s");
+                # Grava na tabela tbrecadastramento                
+                $campos = array('idServidor','dataAtualizacao','idUsuario');
+                $valor = array($idServidor,$data,$idUsuario);
+                
+                # Antes de gravar verifica se já 
+                # não existe um registro desse servidor
+                $idRecadastramento = $pessoal->select('SELECT idRecadastramento FROM tbrecadastramento WHERE idServidor = '.$idServidor,FALSE);
+                #echo $idRecadastramento[0];
+                $pessoal->gravar($campos,$valor,$idRecadastramento[0],"tbrecadastramento","idRecadastramento",FALSE);
+                
+                # Grava no log a atividade                
                 $tipoLog = 2;
+                
                 
                 # Grava o log tbpessoa
                 $intra->registraLog($idUsuario,$data,$atividade,"tbpessoa",$idPessoa,$tipoLog,$idServidor);
-                
+                loadPage("?");
             }else{
                 alert($msgErro);
                 back(1);
-            }		   	
-            
+            }
             break;
         
 ################################################################

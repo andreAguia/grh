@@ -154,7 +154,6 @@ if($acesso){
                           'label' => 'Data de Emissão:',
                           'tipo' => 'data',                           
                           'size' => 15,
-                          'fieldset' => 'fecha', 
                           'title' => 'Data de Emissão.'),
                    array ('linha' => 3,
                           'col' => 3,                            
@@ -185,7 +184,6 @@ if($acesso){
                           'tipo' => 'combo',
                           'array' => $estado,                           
                           'title' => 'Unidade de Federaçao do Titulo Eleitoral',
-                          'fieldset' => 'fecha', 
                           'size' => 3));
 
     if($idCargo == 63){ // id do motorista
@@ -220,7 +218,6 @@ if($acesso){
                                'label' => 'Número:',
                                'tipo' => 'texto',                          
                                'title' => 'Número do registro',
-                             'fieldset' => 'fecha', 
                                'size' => 20)
                                 );
 

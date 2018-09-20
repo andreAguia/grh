@@ -2029,41 +2029,7 @@ class Pessoal extends Bd {
         return $row[0];
     }
 
-    ###########################################################
-
-    public function get_telefones($idServidor)
-
-    /**	
-     * Informa os telefones de um servidor
-     * 
-     * @param   string $idServidor do servidor
-     */
-
-
-    {
-        $select = 'SELECT tbcontatos.numero
-                     FROM tbcontatos 
-                LEFT JOIN tbpessoa on tbcontatos.idPessoa = tbpessoa.idPessoa
-                LEFT JOIN tbservidor on tbpessoa.idPessoa = tbservidor.idPessoa
-                    WHERE tbcontatos.tipo <> "E-mail" 
-                      AND tbservidor.idServidor = '.$idServidor;		
-
-        $row = parent::select($select);            
-        $numTelefones = parent::count($select)-1;
-        $telefone = NULL;
-
-        # percorre o array
-        foreach($row as $campo)
-        {
-            $telefone .= $campo[0];
-            if ($numTelefones > 0)
-                    $telefone.= ' - ';
-            $numTelefones -=1;	
-        }
-
-    return $telefone;	
-    }
-
+   
     ##########################################################################################
 
     public function mudaStatusFeriasSolicitadaFruida(){      
@@ -3246,10 +3212,10 @@ class Pessoal extends Bd {
 	 * Informa se o servidor tem email principal e qual seria
          */
 	
-	public function get_emailPrincipalServidor($idServidor){
-            $select = 'SELECT numero
-                         FROM tbcontatos LEFT JOIN tbservidor USING (idPessoa)
-                        WHERE tipo = "E-mail Principal" AND idservidor = '.$idServidor;
+	public function get_emailIUenfServidor($idServidor){
+            $select = 'SELECT emailUenf
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = '.$idServidor;
            
              $row = parent::select($select,FALSE);
              return $row[0];
@@ -3557,38 +3523,39 @@ class Pessoal extends Bd {
         #
         # Parâmetro: id do servidor
         
-                # Valida parametro
-                if(is_null($idServidor)){
-                    return FALSE;
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = 'SELECT telResidencial,
+                              telCelular,
+                              telRecados,
+                              emailUenf,
+                              emailPessoal
+                         FROM tbpessoa
+                        WHERE idPessoa = '.$idPessoa;
+
+            $row = parent::select($select,false);
+            $numero = parent::count($select);
+            $contador = 1;
+            $return = NULL;
+            echo $select;
+            # Percorre o array e preenche o $return
+            foreach ($row as $valor) {
+                $return .= strtolower($valor);
+
+                if($contador < $numero){
+                    $return .= ",<br/>";
+                    $contador++;
                 }
-                
-                # Pega o idPessoa desse idServidor
-                $idPessoa = $this->get_idPessoa($idServidor);
-                
-                # Monta o select		
-                $select = 'SELECT tipo,
-                                  numero
-                             FROM tbcontatos
-                            WHERE idPessoa = '.$idPessoa;
+            }
 
-                $row = parent::select($select);
-                $numero = parent::count($select);
-                $contador = 1;
-                $return = NULL;
-                
-                if($numero>0){
-                    # Percorre o array e preenche o $return
-                    foreach ($row as $valor) {
-                        $return .= $valor[0].": ".strtolower($valor[1]);
-
-                        if($contador < $numero){
-                            $return .= ",<br/>";
-                            $contador++;
-                        }
-                    }
-                }
-
-                return $return;		
+            return $return;		
 
         }
 

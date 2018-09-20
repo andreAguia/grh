@@ -37,10 +37,12 @@ if($acesso){
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
+    $parametroCargo = post('parametroCargo',get_session('parametroCargo'));
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
     set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroCargo',$parametroCargo);
     
     # Começa uma nova página
     $page = new Page();
@@ -113,6 +115,20 @@ if($acesso){
             $controle->set_col(4);
             $form->add_item($controle);
             
+            # Cargo
+            $result = $pessoal->select('SELECT distinct tipo,tipo FROM tbtipocargo ORDER BY 1');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroCargo','combo','Cargo:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo de Cargo');
+            $controle->set_array($result);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            
             $form->show();
             
             ###
@@ -130,6 +146,8 @@ if($acesso){
                                         LEFT JOIN tbperfil USING (idPerfil)
                                         JOIN tbhistlot USING (idServidor)
                                         JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                                        JOIN tbcargo USING (idCargo)
+                                        JOIN tbtipocargo USING (idTipoCargo)
                       WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                         AND tbservidor.situacao = 1';
                       
@@ -157,8 +175,15 @@ if($acesso){
                     $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
                 }
             }
+            
+            # Tipo de Cargo
+            if(($parametroCargo <> "*") AND ($parametroCargo <> "")){
+                $select .= ' AND tbtipocargo.tipo = "'.$parametroCargo.'"';
+            }
 
             $select .= ' ORDER BY tbpessoa.nome';
+            
+            #echo $select;
 
             $result = $pessoal->select($select);
             
@@ -219,9 +244,11 @@ if($acesso){
                              tbdocumentacao.identidade,
                              tbdocumentacao.orgaoId,
                              tbdocumentacao.dtId,
-                             tbpessoa.conjuge
+                             tbpessoa.conjuge,
+                             tbrecadastramento.sisgen
                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                              JOIN tbdocumentacao USING (idPessoa)
+                                             LEFT JOIN tbrecadastramento USING (idServidor)
                        WHERE tbservidor.idServidor = $id";
 
             $result = $pessoal->select($select,false);
@@ -241,9 +268,10 @@ if($acesso){
                 $controle = new Input('sisgen','combo','Realizou as atividades descritas no Anexo III?:',1);
                 $controle->set_size(100);
                 $controle->set_linha(1);
-                $controle->set_array(array("---","Realizei","Não Realizei"));
-                $controle->set_valor("---");            
-                $controle->set_col(4);
+                $controle->set_array(array(array(1,"Realizei"),array(0,"Não Realizei"),array(NULL,"---")));
+                $controle->set_valor($result['sisgen']);    
+                $controle->set_col(3);
+                $controle->set_autofocus(TRUE); 
                 $controle->set_fieldset("Declaração de Conformidade com o SISGEN");
                 $form->add_item($controle);
             }
@@ -380,12 +408,12 @@ if($acesso){
             $controle->set_linha(8);
             $controle->set_valor($id);
             $controle->set_col(3);
+            $controle->set_fieldset("fecha");
             $form->add_item($controle);
             
             # submit
             $controle = new Input('submit','submit');
             $controle->set_valor('Atualizar');
-            $controle->set_fieldset("fecha");
             $controle->set_linha(8);
             $controle->set_tabIndex(3);
             $controle->set_accessKey('E');
@@ -472,8 +500,8 @@ if($acesso){
                 $pessoal->gravar($campos,$valor,$idPessoa,"tbdocumentacao","idPessoa",FALSE);
                 
                 # Grava na tabela tbrecadastramento                
-                $campos = array('idServidor','dataAtualizacao','idUsuario');
-                $valor = array($idServidor,$data,$idUsuario);
+                $campos = array('idServidor','dataAtualizacao','idUsuario','sisgen');
+                $valor = array($idServidor,$data,$idUsuario,$sisgen);
                 
                 # Antes de gravar verifica se já 
                 # não existe um registro desse servidor

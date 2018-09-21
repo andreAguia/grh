@@ -33,7 +33,11 @@ if($acesso)
                       tbservidor.idServidor,
                       tbservidor.dtAdmissao,
                       tbservidor.dtDemissao,
-                      tbservidor.idServidor
+                      tbpessoa.telResidencial,
+                      tbpessoa.telCelular,
+                      tbpessoa.telRecados,
+                      tbpessoa.emailUenf,
+                      tbpessoa.emailPessoal                      
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                 WHERE YEAR(tbservidor.dtDemissao) = "'.$relatorioAno.'"
                   AND situacao = 2   
@@ -47,13 +51,13 @@ if($acesso)
     $relatorio->set_tituloLinha2('Com Informaçao de Contatos');
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída','Contato'));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída','Tel Residencial','Tel Celular','Tel Recado','Email Uenf','Email Pessoal'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center','left','left','center','center','left'));
     $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
     
-    $relatorio->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_cargo",NULL,NULL,"get_contatos"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_cargo"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(5);

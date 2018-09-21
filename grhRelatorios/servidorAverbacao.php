@@ -143,18 +143,16 @@ if($acesso){
         }else{            
             # Análise por dia
             if($diasAposentadoria > $totalTempoGeral){
-                echo "Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoria</b> dias de serviço necessários para solicitar a aposentadoria.";
+                p("Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoria</b> dias de serviço necessários para solicitar a aposentadoria.","exibeOcorrencia");
             }else{
-                echo "O servidor já alcançou os <b>$diasAposentadoria</b> dias de serviço para solicitar aposentadoria.";
+                p("O servidor já alcançou os <b>$diasAposentadoria</b> dias de serviço para solicitar aposentadoria.","exibeOcorrencia");
             }
-
-            br();
 
             # Análise por idade
             if($ii > $idade){
-                echo "O servidor ainda não alcançou os <b>$ii</b> anos de idade de para solicitar aposentadoria.";
+                p("O servidor ainda não alcançou os <b>$ii</b> anos de idade de para solicitar aposentadoria.","exibeOcorrencia");
             }else{
-                echo "O servidor já alcançou a idade para solicitar aposentadoria.";
+                p("O servidor já alcançou a idade para solicitar aposentadoria.","exibeOcorrencia");
             }
         }
 

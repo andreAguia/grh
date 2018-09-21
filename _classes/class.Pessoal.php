@@ -3207,12 +3207,12 @@ class Pessoal extends Bd {
 	#####################################################################################
 	
 	/**
-	 * Método get_emailPrincipalServidor(idServidor)
+	 * Método get_emailUenf(idServidor)
 	 * 
 	 * Informa se o servidor tem email principal e qual seria
          */
 	
-	public function get_emailIUenfServidor($idServidor){
+	public function get_emailUenf($idServidor){
             $select = 'SELECT emailUenf
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = '.$idServidor;
@@ -3492,7 +3492,7 @@ class Pessoal extends Bd {
 
         ##########################################################################################
 
-        function get_licencaLei($idTipoLicenca)
+        public function get_licencaLei($idTipoLicenca)
 
 
         # Função que informa o nome do tipo de licença
@@ -3516,95 +3516,24 @@ class Pessoal extends Bd {
         }
 
     ##########################################################################################
+       
+        public function get_emailPessoal($idServidor){
 
-        function get_contatos($idServidor){
-
-        # Função que retorna string com todos os contatos de um servidor separados por virgula
+        # Função que retorna o email pessoal do servidor cadastrado no sistema
         #
         # Parâmetro: id do servidor
         
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
+            $select = 'SELECT emailPessoalUenf
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = '.$idServidor;
+           
+             $row = parent::select($select,FALSE);
+             return $row[0];
             }
-
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
-
-            # Monta o select		
-            $select = 'SELECT telResidencial,
-                              telCelular,
-                              telRecados,
-                              emailUenf,
-                              emailPessoal
-                         FROM tbpessoa
-                        WHERE idPessoa = '.$idPessoa;
-
-            $row = parent::select($select,false);
-            $numero = parent::count($select);
-            $contador = 1;
-            $return = NULL;
-            echo $select;
-            # Percorre o array e preenche o $return
-            foreach ($row as $valor) {
-                $return .= strtolower($valor);
-
-                if($contador < $numero){
-                    $return .= ",<br/>";
-                    $contador++;
-                }
-            }
-
-            return $return;		
-
-        }
 
     ##########################################################################################
 
-        function get_email($idServidor){
-
-        # Função que retorna string com todos os emails de um servidor separados por virgula
-        #
-        # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }
-
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
-
-            # Monta o select		
-            $select = 'SELECT numero
-                         FROM tbcontatos
-                        WHERE (tipo = "E-mail" OR tipo = "E-mail Principal")
-                          AND idPessoa = '.$idPessoa;
-
-            $row = parent::select($select);
-            $numero = parent::count($select);
-            $contador = 1;
-            $return = NULL;
-
-            if($numero>0){
-                # Percorre o array e preenche o $return
-                foreach ($row as $valor) {
-                    $return .= strtolower($valor[0]);
-
-                    if($contador < $numero){
-                        $return .= ",<br/>";
-                        $contador++;
-                    }
-                }
-            }
-
-            return $return;		
-
-        }
-
-    ##########################################################################################
-
-        function get_idCedido($idServidor)
+        public function get_idCedido($idServidor)
 
         /**
         * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
@@ -3634,8 +3563,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_totalAverbadoPublico($idServidor)
-    {
+    public function get_totalAverbadoPublico($idServidor){
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
                     WHERE empresaTipo = 1 AND idServidor = '.$idServidor.'
@@ -3659,7 +3587,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_totalAverbadoPrivado($idServidor) {
+    public function get_totalAverbadoPrivado($idServidor) {
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
                     WHERE empresaTipo = 2 AND idServidor = '.$idServidor.'
@@ -3684,7 +3612,7 @@ class Pessoal extends Bd {
      * @param date   $dtFinal    Data até quando vai ser feito o calculo. 
      */
 
-    function get_tempoServicoUenf($idServidor,$dtFinal){
+    public function get_tempoServicoUenf($idServidor,$dtFinal){
         
         # Data de admissão
         $dtAdmissao = $this->get_dtAdmissao($idServidor);   # Data de entrada na UENF
@@ -3711,7 +3639,7 @@ class Pessoal extends Bd {
      * @param integer $idtipoLicenca o id do tipo de licença
      */
 
-    function get_totalDiasLicencaAfastamento($idServidor,$idTipoLicenca)
+    public function get_totalDiasLicencaAfastamento($idServidor,$idTipoLicenca)
     {
         $select = 'SELECT SUM(dias) as total
                      FROM tblicenca
@@ -3729,7 +3657,7 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-        function get_endereco($idServidor){
+    public function get_endereco($idServidor){
 
         # Função que retorna string com o endereço cadastrado do servidor
         #
@@ -3765,7 +3693,7 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-        function get_numVinculos($idServidor){
+    public function get_numVinculos($idServidor){
 
         # Função que retorna quantos vinculos esse servidor teve com a uenf.
         #

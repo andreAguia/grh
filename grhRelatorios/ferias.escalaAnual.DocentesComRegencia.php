@@ -48,7 +48,6 @@ if($acesso){
                  AND idPerfil = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND tbtipocargo.tipo = "Professor"
-                 AND CURRENT_DATE > tbcomissao.dtExo
                  AND tbservidor.idServidor NOT IN(SELECT tbservidor.idServidor
                                                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                                          JOIN tbhistlot USING (idServidor)

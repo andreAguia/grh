@@ -223,7 +223,7 @@ class Grh{
             $botao->set_image(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Recadastramento de Servidores');
             $menu->add_item($botao);
-            $menu->show();
+            #$menu->show();
             br();
             
             $grid->fechaColuna();

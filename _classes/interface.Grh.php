@@ -219,10 +219,11 @@ class Grh{
 
             $botao = new BotaoGrafico();
             $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php');
+            #$botao->set_url('areaRecadastramento.php');
+            $botao->set_url('#');
             $botao->set_image(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Recadastramento de Servidores');
-            #$menu->add_item($botao);
+            $menu->add_item($botao);
             $menu->show();
             br();
             

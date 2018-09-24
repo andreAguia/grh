@@ -153,7 +153,7 @@ if($acesso){
             break;
         
         case "gravar" :
-            $objeto->$fase($idPessoa); 
+            $objeto->gravar($idPessoa,'servidorContatosExtra.php'); 	
             break;
     }
     

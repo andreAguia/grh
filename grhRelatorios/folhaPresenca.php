@@ -51,7 +51,7 @@ if($acesso){
     $relatorio->set_titulo('Folha de Presença');
     $relatorio->set_tituloLinha2(get_nomeMes($mesBase).'/'.$anoBase);
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Admissão'));
-    $relatorio->set_width(array(12,30,28,20,10));
+    #$relatorio->set_width(array(12,30,28,20,10));
     $relatorio->set_align(array("center"));
     $relatorio->set_funcao(array("dv",NULL,NULL,NULL,"date_to_php"));
     $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));

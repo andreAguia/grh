@@ -92,7 +92,6 @@ if($acesso){
                      'size' => 5,
                      'title' => 'Exibe os Contatos do Servidor (Telefones, Emails, etc)',
                      'onChange' => 'formPadrao.submit();',
-                     'fieldset' => 'Escolha a Área a ser Exibida na Ficha Cadastral',
                      'col' => 3,
                      'linha' => 1),              
               array ('nome' => 'formacao',
@@ -192,7 +191,6 @@ if($acesso){
                      'title' => 'Exibe o Tempo de Serviço Averbado e Cadastrado no SAPE',
                      'valor' => $postAverbacao,
                      'onChange' => 'formPadrao.submit();',
-                     'formFieldset' => 'fecha',
                      'col' => 3,
                      'linha' => 3)));
 
@@ -520,7 +518,7 @@ if($acesso){
         $relatorio->set_label(array('Tel Residencial','Tel Celular','Tel Recado','Email Uenf','Email Pessoal'));
         #$relatorio->set_width(array(50,50));
         $relatorio->set_align(array('center'));
-        #$relatorio->set_funcao(array(NULL,"strtolower"));
+        $relatorio->set_funcao(array("trataNulo","trataNulo","trataNulo","trataNulo","trataNulo"));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(FALSE);

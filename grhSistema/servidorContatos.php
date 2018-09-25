@@ -130,6 +130,9 @@ if($acesso){
             
             # Exibe os contatos antigos
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                $grid = new Grid();
+                $grid->abreColuna(12);
+    
                 $select = 'SELECT tipo,
                                      numero,
                                      obs,
@@ -145,6 +148,9 @@ if($acesso){
                 $tabela->set_label(array("Tipo","Email / Telefone","Obs"));
                 $tabela->set_align(array("center"));
                 $tabela->show();
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
                 
             }
             break;

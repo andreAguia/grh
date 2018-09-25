@@ -52,10 +52,7 @@ if($acesso){
     AreaServidor::cabecalho();
     
     $grid = new Grid();
-    $grid->abreColuna(12);
-    
-    # Título
-    #titulo("Área de Recadastramento");       
+    $grid->abreColuna(12);      
             
 ################################################################
     
@@ -80,8 +77,9 @@ if($acesso){
         case "exibeLista" :
             # Botao voltar
             botaoVoltar("grh.php");
-            
-            ###
+    
+            # Título
+            titulo("Área de Recadastramento"); 
             
             # Formulário de Pesquisa
             $form = new Form('?');
@@ -93,7 +91,7 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Lotação
@@ -112,7 +110,7 @@ if($acesso){
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(5);
             $form->add_item($controle);
             
             # Cargo
@@ -187,8 +185,99 @@ if($acesso){
 
             $result = $pessoal->select($select);
             
+            $grid2 = new Grid();
+            
+            ######################################################
+            
+            # Área Lateral
+            $grid2->abreColuna(3);
+            
+            # Resumo
+            $resumo = array();
+            $totalServidores = $pessoal->count($select);
+            
+            # Calcula quantos atualizaram
+            $select2 = "select idRecadastramento from tbrecadastramento";
+            
+            $atualizados = $pessoal->count($select2);
+            
+            $resumo[] = array("Servidores",$totalServidores);
+            $resumo[] = array("Recadastrados",$atualizados);
+            $faltam = $totalServidores - $atualizados;
+            $resumo[] = array("Faltam",$faltam);
+
+            # Monta a tabela
             $tabela = new Tabela();
-            $tabela->set_titulo('Recadastramento');
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Descrição","Nº de Servidores"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("center"));
+            $tabela->set_titulo("Resumo Geral");
+            #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
+            $tabela->show();
+            
+            # Professores
+            
+            # Calcula quantos professores existem
+            $select3 = "SELECT idServidor FROM tbservidor JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2)";
+            $numProfessores = $pessoal->count($select3);
+            
+            # Calcula quantos atualizaram
+            $select4 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2)";
+            $atualizados = $pessoal->count($select4);
+                        
+            $resumo = array();
+            
+            $resumo[] = array("Professores",$numProfessores);
+            $resumo[] = array("Recadastrados",$atualizados);
+            $faltam = $numProfessores - $atualizados;
+            $resumo[] = array("Faltam",$faltam);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Descrição","Nº de Servidores"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("center"));
+            $tabela->set_titulo("Professores");
+            #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
+            $tabela->show();
+            
+            # Sisgem
+            
+            # Calcula quantos realizaram
+            $select5 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen";
+            $realizaram = $pessoal->count($select5);
+            
+            # Calcula quantos nao realizaram
+            $select6 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND NOT sisgen";
+            $naoRealizaram = $pessoal->count($select6);
+                        
+            $resumo = array();
+            
+            $resumo[] = array("Realizaram",$realizaram);
+            $resumo[] = array("Nao Realizaram",$naoRealizaram);
+            $total = $realizaram + $naoRealizaram;
+            $resumo[] = array("Total",$total);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Descrição","Nº de Servidores"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("center"));
+            $tabela->set_titulo("Sisgen");
+            #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            
+            ######################################################
+            
+            $grid2->abreColuna(9);
+            
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores');
             $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:','Usuario','Editar'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center","left","left","left"));
@@ -214,7 +303,9 @@ if($acesso){
 
             $tabela->set_conteudo($result);
             $tabela->show();
-
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
         
 ################################################################
@@ -231,8 +322,11 @@ if($acesso){
             tituloTable("Recadastramento");
                                    
             # Monta o select
-            $select ="SELECT tbpessoa.telResidencial,
+            $select ="SELECT tbpessoa.telResidencialDDD,
+                             tbpessoa.telResidencial,
+                             tbpessoa.telCelularDDD,
                              tbpessoa.telCelular,
+                             tbpessoa.telRecadosDDD,
                              tbpessoa.telRecados,
                              tbpessoa.emailUenf,
                              tbpessoa.emailPessoal,
@@ -350,22 +444,46 @@ if($acesso){
             $controle->set_valor($result['cep']);
             $controle->set_col(2);
             $form->add_item($controle);
+            
+            # DDD
+            $controle = new Input('telResidencialDDD','texto','DDD:',1);
+            $controle->set_size(2);
+            $controle->set_linha(5);
+            $controle->set_valor($result['telResidencialDDD']);
+            $controle->set_col(1);
+            $controle->set_fieldset("Telefones");
+            $form->add_item($controle);
 
             # Telefone Residencial
-            $controle = new Input('telResidencial','texto','Telefone Residencial:',1);
+            $controle = new Input('telResidencial','telefone','Telefone Residencial:',1);
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telResidencial']);
-            $controle->set_col(4);
-            $controle->set_fieldset("Telefones");
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            # DDD
+            $controle = new Input('telCelularDDD','texto','DDD:',1);
+            $controle->set_size(2);
+            $controle->set_linha(5);
+            $controle->set_valor($result['telCelularDDD']);
+            $controle->set_col(1);
             $form->add_item($controle);
             
             # Telefone Celular
-            $controle = new Input('telCelular','texto','Telefone Celular:',1);
+            $controle = new Input('telCelular','celular','Telefone Celular:',1);
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telCelular']);
-            $controle->set_col(4);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            # DDD
+            $controle = new Input('telRecados','texto','DDD:',1);
+            $controle->set_size(2);
+            $controle->set_linha(5);
+            $controle->set_valor($result['telRecadosDDD']);
+            $controle->set_col(1);
             $form->add_item($controle);
             
             # Outro telefone para recado
@@ -373,11 +491,11 @@ if($acesso){
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telRecados']);
-            $controle->set_col(4);            
+            $controle->set_col(3);            
             $form->add_item($controle);
             
             # Email institucional da Uenf
-            $controle = new Input('emailUenf','texto','Email institucional da Uenf:',1);
+            $controle = new Input('emailUenf','texto','E-mail institucional da Uenf:',1);
             $controle->set_size(30);
             $controle->set_linha(6);
             $controle->set_valor(strtolower($result['emailUenf']));
@@ -386,7 +504,7 @@ if($acesso){
             $form->add_item($controle);
             
             # Email Pessoal
-            $controle = new Input('emailPessoal','texto','Email Pessoal:',1);
+            $controle = new Input('emailPessoal','texto','E-mail Pessoal:',1);
             $controle->set_size(30);
             $controle->set_linha(6);
             $controle->set_valor(strtolower($result['emailPessoal']));
@@ -436,8 +554,11 @@ if($acesso){
             $bairro = post("bairro");
             $idCidade = post("idCidade");
             $cep = post("cep");
+            $telResidencialDDD = post("telResidencialDDD");
             $telResidencial = post("telResidencial");
+            $telCelularDDD = post("telCelularDDD");
             $telCelular = post("telCelular");
+            $telRecadosDDD = post("telRecadosDDD");
             $telRecados = post("telRecados");
             $emailUenf = post("emailUenf");
             $emailPessoal = post("emailPessoal");
@@ -472,15 +593,24 @@ if($acesso){
             # Email Institucional
             if(!vazio($emailUenf)){                
                 if(!filter_var($emailUenf, FILTER_VALIDATE_EMAIL)){
-                    $msgErro.='Email Institucional Inválido!\n';
+                    $msgErro.='E-mail Institucional Inválido!\n';
                     $erro = 1;
+                }else{
+                # Verifica se e realmente @uenf
+                $pos = stripos($emailUenf, "@uenf");
+
+                # se tem @uenf
+                if($pos === false) {  
+                    $msgErro.='O e-mail institucional nao é @uenf!\n';
+                    $erro = 1; 
                 }
+            }
             }
             
             # Email Pessoal
             if(!vazio($emailPessoal)){                
                 if(!filter_var($emailPessoal, FILTER_VALIDATE_EMAIL)){
-                    $msgErro.='Email Pessoal Inválido!\n';
+                    $msgErro.='E-mail Pessoal Inválido!\n';
                     $erro = 1;
                 }
             }   
@@ -490,8 +620,8 @@ if($acesso){
                 $data = date("Y-m-d H:i:s");
                 
                 # Grava na tabela tbpessoa
-                $campos = array('endereco','bairro','idCidade','cep','telResidencial','telCelular','telRecados','emailUenf','emailPessoal','conjuge');
-                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencial,$telCelular,$telRecados,$emailUenf,$emailPessoal,$conjuge);
+                $campos = array('endereco','bairro','idCidade','cep','telResidencialDDD','telResidencial','telCelularDDD','telCelular','telRecadosDDD','telRecados','emailUenf','emailPessoal','conjuge');
+                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencialDDD,$telResidencial,$telCelularDDD,$telCelular,$telRecados,$telRecados,$emailUenf,$emailPessoal,$conjuge);
                 $pessoal->gravar($campos,$valor,$idPessoa,"tbpessoa","idPessoa",FALSE);
                 
                 # Grava na tabela tbdocumentacao

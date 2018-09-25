@@ -560,15 +560,6 @@ class Grh{
             $botao->set_title('Endereço do Servidor');            
             $menu->add_item($botao);
             
-            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                $botao = new BotaoGrafico();
-                $botao->set_label('Telefones & Emails');
-                $botao->set_url('servidorTelefones.php');
-                $botao->set_image(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Dados dos Contatos do Servidor');
-                $menu->add_item($botao);
-            }
-            
             $botao = new BotaoGrafico();
             $botao->set_label('Contatos');
             $botao->set_url('servidorContatos.php');

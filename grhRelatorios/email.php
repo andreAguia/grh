@@ -42,7 +42,7 @@ if($acesso)
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional','Nome','Email UENF','Email Pessoal'));
     #$relatorio->set_width(array(10,40,50));
-    $relatorio->set_align(array("center","left","left"));
+    $relatorio->set_align(array("center","left","left","left"));
     
     $relatorio->set_conteudo($result);
     $relatorio->show();

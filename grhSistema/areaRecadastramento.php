@@ -270,6 +270,20 @@ if($acesso){
             #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
             $tabela->show();
             
+            # Relatórios
+            $menu = new Menu();
+            $menu->add_item('titulo','Relatórios');
+            $menu->add_item('titulo1','por Lotaçao');
+            $menu->add_item('linkWindow','Servidores Recadastrados','../grhRelatorios/recadastramentoLotacao.php');
+            $menu->add_item('linkWindow','Servidores que Faltam Recadastrar','../grhRelatorios/recadastramentoFaltamLotacao.php');
+            $menu->add_item('titulo1','por Cargo');
+            $menu->add_item('linkWindow','Servidores Recadastrados','../grhRelatorios/recadastramentoCargo.php');
+            $menu->add_item('linkWindow','Servidores que Faltam Recadastrar','../grhRelatorios/recadastramentoFaltamCargo.php');
+            $menu->add_item('titulo1','por Sisgen (Docentes)');
+            $menu->add_item('linkWindow','Realizou Sisgen','../grhRelatorios/recadastramentoSisgen.php?sisgen=1');
+            $menu->add_item('linkWindow','Nao Realizou Sisgem','../grhRelatorios/recadastramentoSisgen.php?sisgen=0');
+            $menu->show();
+            
             $grid2->fechaColuna();
             
             ######################################################

@@ -541,6 +541,56 @@ class Pessoal extends Bd {
 
 
     /**
+     * Método get_cargoRel
+     * Informa o cargo do servidor versao para impressao
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+
+    public function get_cargoRel($idServidor){
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.sigla,
+                          tbcargo.nome
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+
+        if(($row[0] == 1)OR($row[0] == 2)){ // Se é professor
+            $tipoCargo = NULL;
+        }else{
+            $tipoCargo = $row[1];      
+        }
+
+        $nomeCargo = $row[2];
+        $comissao = $this->get_cargoComissao($idServidor);
+
+        $retorno = NULL;
+
+        if(!empty($tipoCargo)){
+            $retorno = $tipoCargo;             
+        }
+
+        if(!empty($nomeCargo)){
+            if(!empty($tipoCargo)){
+                $retorno .= ' - '.$nomeCargo;
+            }else{
+                $retorno = $nomeCargo;
+            }
+        }
+
+        if(!empty($comissao)){
+             $retorno .= ' <span id="orgaoCedido">('.$comissao.')</span)';
+        }
+        return $retorno;
+    }
+
+    ###########################################################
+
+
+    /**
      * Método get_cargo
      * Informa o tipo do cargo do servidor (Professor ou Adm/Tec)
      * 

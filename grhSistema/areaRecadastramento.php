@@ -493,7 +493,7 @@ if($acesso){
             $form->add_item($controle);
             
             # DDD
-            $controle = new Input('telRecados','texto','DDD:',1);
+            $controle = new Input('telRecadosDDD','texto','DDD:',1);
             $controle->set_size(2);
             $controle->set_linha(5);
             $controle->set_valor($result['telRecadosDDD']);

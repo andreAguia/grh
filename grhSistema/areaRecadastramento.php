@@ -635,7 +635,7 @@ if($acesso){
                 
                 # Grava na tabela tbpessoa
                 $campos = array('endereco','bairro','idCidade','cep','telResidencialDDD','telResidencial','telCelularDDD','telCelular','telRecadosDDD','telRecados','emailUenf','emailPessoal','conjuge');
-                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencialDDD,$telResidencial,$telCelularDDD,$telCelular,$telRecados,$telRecados,$emailUenf,$emailPessoal,$conjuge);
+                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencialDDD,$telResidencial,$telCelularDDD,$telCelular,$telRecadosDDD,$telRecados,$emailUenf,$emailPessoal,$conjuge);
                 $pessoal->gravar($campos,$valor,$idPessoa,"tbpessoa","idPessoa",FALSE);
                 
                 # Grava na tabela tbdocumentacao

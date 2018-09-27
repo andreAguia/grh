@@ -598,6 +598,11 @@ if($acesso){
             $erro = 0;
             $msgErro = NULL;
             
+            # dtId
+            if(vazio($dtId)){
+                $dtId = NULL;
+            }            
+            
             # Cpf
             if(vazio($cpf)){
                 $msgErro.='O cpf nao pode estar em branco!\n';
@@ -627,7 +632,7 @@ if($acesso){
                     $msgErro.='E-mail Pessoal Inválido!\n';
                     $erro = 1;
                 }
-            }   
+            }
             
             if($erro == 0){
                 # Data de Hoje

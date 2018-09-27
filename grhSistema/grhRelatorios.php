@@ -360,7 +360,8 @@ if($acesso){
          case "contatos";
             $menu = new Menu();
             $menu->add_item('titulo','Contatos');
-            $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php'); 
+            $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php');
+            $menu->add_item('linkWindow','Telefones dos Servidores','../grhRelatorios/telefone.php');
 
             $menu->show();
             break;

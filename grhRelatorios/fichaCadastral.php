@@ -502,9 +502,9 @@ if($acesso){
     if($postContatos){
         tituloRelatorio('Contatos');
 
-        $select = 'SELECT telResidencial,
-                          telCelular,
-                          telRecados,
+        $select = 'SELECT CONCAT("(",IFNULL(telResidencialDDD,"--"),") ",IFNULL(telResidencial,"---")),
+                          CONCAT("(",IFNULL(telCelularDDD,"--"),") ",IFNULL(telCelular,"---")),
+                          CONCAT("(",IFNULL(telRecadosDDD,"--"),") ",IFNULL(telRecados,"---")),
                           emailUenf,
                           emailPessoal          
                      FROM tbpessoa

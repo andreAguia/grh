@@ -563,9 +563,8 @@ if($acesso){
             $controle = new Input('nomeMae','texto','Nome do Mãe:',1);
             $controle->set_size(50);
             $controle->set_linha(8);
-            $controle->set_valor($result['conjuge']);
+            $controle->set_valor($result['nomeMae']);
             $controle->set_col(6);
-            $controle->set_fieldset("nomeMae");
             $form->add_item($controle);
             
             # idServidor

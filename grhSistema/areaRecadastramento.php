@@ -201,6 +201,10 @@ if($acesso){
             
             $atualizados = $pessoal->count($select2);
             
+            # Calcula quantos servidores existem
+            $select9 = "SELECT idServidor FROM tbservidor WHERE situacao = 1";
+            $totalServidores = $pessoal->count($select9);
+            
             $resumo[] = array("Servidores",$totalServidores);
             $resumo[] = array("Recadastrados",$atualizados);
             $faltam = $totalServidores - $atualizados;

@@ -422,7 +422,7 @@ if($acesso){
             $controle = new Input('endereco','texto','Endereço do Servidor:',1);
             $controle->set_size(150);
             $controle->set_linha(3);
-            $controle->set_valor(ucwords(strtolower($result['endereco'])));
+            $controle->set_valor($result['endereco']);
             $controle->set_col(12);
             $controle->set_fieldset("Endereço");
             $form->add_item($controle);

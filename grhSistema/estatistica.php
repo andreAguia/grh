@@ -333,6 +333,43 @@ if($acesso)
             
             #################################
             
+                ## Por Estado Civil        
+                $grid2->abreColuna(12,6,4);
+
+                # Geral - Por Estado Civil
+                    $selectGrafico = 'SELECT tbestciv.estciv, count(tbservidor.idServidor) as jj
+                                        FROM tbestciv JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
+                                                      JOIN tbservidor USING (idPessoa)
+                                       WHERE situacao = 1
+                                    GROUP BY tbestciv.estciv
+                                    ORDER BY 2 desc';
+
+                    $servidores = $pessoal->select($selectGrafico);
+
+                    # Chart
+                    tituloTable("por Estado Civil");
+                    $chart = new Chart("Pie",$servidores);
+                    $chart->set_idDiv("estCiv");
+                    $chart->set_legend(FALSE);
+                    $chart->show();
+
+                    # Soma a coluna do count
+                    $total = array_sum(array_column($servidores, "jj"));            
+
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($servidores);
+                    #$tabela->set_titulo("por Nacionalidade");
+                    $tabela->set_label(array("Estado Civil","Servidores"));
+                    $tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_rodape("Total de Servidores: ".$total);
+                    $tabela->show();
+
+                    $grid2->fechaColuna();
+            
+            #################################
+            
                 ## Por Cidade        
                 $grid2->abreColuna(12,6,4);
                 

@@ -352,7 +352,10 @@ if($acesso){
                              tbdocumentacao.identidade,
                              tbdocumentacao.orgaoId,
                              tbdocumentacao.dtId,
+                             tbpessoa.estCiv,
                              tbpessoa.conjuge,
+                             tbpessoa.nomePai,
+                             tbpessoa.nomeMae,
                              tbrecadastramento.sisgen
                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                              JOIN tbdocumentacao USING (idPessoa)
@@ -525,13 +528,44 @@ if($acesso){
             $controle->set_col(6);            
             $form->add_item($controle);
             
+            # Pega os dados da combo de estado civil
+            $estadoCivil = $pessoal->select('SELECT idestCiv,estciv FROM tbestciv ORDER BY estciv');
+            array_unshift($estadoCivil, array(NULL,NULL)); # Adiciona o valor de nulo
+            
+            # Estado Civil
+            $controle = new Input('estCiv','combo','Estado Civil:',1);
+            $controle->set_size(15);
+            $controle->set_linha(7);
+            $controle->set_valor($result['estCiv']);
+            $controle->set_array($estadoCivil);
+            $controle->set_col(4);
+            $controle->set_fieldset("Estado Civil");
+            $form->add_item($controle);
+            
             # Conjuge
             $controle = new Input('conjuge','texto','Nome do Conjuge:',1);
             $controle->set_size(100);
             $controle->set_linha(7);
-            $controle->set_valor(ucwords(strtolower($result['conjuge'])));
+            $controle->set_valor($result['conjuge']);
             $controle->set_col(6);
-            $controle->set_fieldset("Certidão de Casamento");
+            $form->add_item($controle);
+            
+            # Nome do Pai
+            $controle = new Input('nomePai','texto','Nome do Pai:',1);
+            $controle->set_size(50);
+            $controle->set_linha(8);
+            $controle->set_valor($result['nomePai']);
+            $controle->set_col(6);
+            $controle->set_fieldset("Filiaçao");
+            $form->add_item($controle);
+            
+            # Nome da Mae
+            $controle = new Input('nomeMae','texto','Nome do Mãe:',1);
+            $controle->set_size(50);
+            $controle->set_linha(8);
+            $controle->set_valor($result['conjuge']);
+            $controle->set_col(6);
+            $controle->set_fieldset("nomeMae");
             $form->add_item($controle);
             
             # idServidor
@@ -576,23 +610,13 @@ if($acesso){
             $telRecados = post("telRecados");
             $emailUenf = post("emailUenf");
             $emailPessoal = post("emailPessoal");
+            $estCiv = post("estCiv");
             $conjuge = post("conjuge");
+            $nomePai = post("nomePai");
+            $nomeMae = post("nomeMae");
             $idPessoa = $pessoal->get_idPessoa($idServidor);
             
-            # Pega os valores antigos
-            $oldValue = get_session('oldValue');
-            $oldNomes = array_keys($oldValue);
             $atividade = "Recadastramento: ";
-            
-            
-            # Percorre o array oldVersio comparando com o que
-            # foi digitado para definir as diferenças
-            #foreach ($oldNomes as $val){
-            #    # Verifica se teve alteração
-            ##    if($oldValue[$val] <> $$val){
-            #        $atividade .= "[$val]: $oldValue[$val] -> $$val";
-            #    }
-            #}
                        
             # Variáveis dos erros
             $erro = 0;
@@ -639,8 +663,8 @@ if($acesso){
                 $data = date("Y-m-d H:i:s");
                 
                 # Grava na tabela tbpessoa
-                $campos = array('endereco','bairro','idCidade','cep','telResidencialDDD','telResidencial','telCelularDDD','telCelular','telRecadosDDD','telRecados','emailUenf','emailPessoal','conjuge');
-                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencialDDD,$telResidencial,$telCelularDDD,$telCelular,$telRecadosDDD,$telRecados,$emailUenf,$emailPessoal,$conjuge);
+                $campos = array('endereco','bairro','idCidade','cep','telResidencialDDD','telResidencial','telCelularDDD','telCelular','telRecadosDDD','telRecados','emailUenf','emailPessoal','estCiv','conjuge','nomePai','nomeMae');
+                $valor = array($endereco,$bairro,$idCidade,$cep,$telResidencialDDD,$telResidencial,$telCelularDDD,$telCelular,$telRecadosDDD,$telRecados,$emailUenf,$emailPessoal,$estCiv,$conjuge,$nomePai,$nomeMae);
                 $pessoal->gravar($campos,$valor,$idPessoa,"tbpessoa","idPessoa",FALSE);
                 
                 # Grava na tabela tbdocumentacao

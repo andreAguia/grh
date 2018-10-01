@@ -385,7 +385,7 @@ if($acesso){
                 $controle->set_linha(1);
                 $controle->set_array(array(array(1,"Realizei"),array(0,"Não Realizei"),array(NULL,"---")));
                 $controle->set_valor($result['sisgen']);    
-                $controle->set_col(3);
+                $controle->set_col(4);
                 $controle->set_autofocus(TRUE); 
                 $controle->set_fieldset("Declaração de Conformidade com o SISGEN");
                 $form->add_item($controle);

@@ -601,8 +601,8 @@ if($acesso){
             $identidade = post("identidade");
             $orgaoId = post("orgaoId");
             $dtId = post("dtId");
-            $endereco = post("endereco");
-            $bairro = post("bairro");
+            $endereco = ucwords(mb_strtolower(post("endereco")));
+            $bairro = ucwords(mb_strtolower(post("bairro")));
             $idCidade = post("idCidade");
             $cep = post("cep");
             $telResidencialDDD = post("telResidencialDDD");
@@ -611,12 +611,12 @@ if($acesso){
             $telCelular = post("telCelular");
             $telRecadosDDD = post("telRecadosDDD");
             $telRecados = post("telRecados");
-            $emailUenf = post("emailUenf");
-            $emailPessoal = post("emailPessoal");
+            $emailUenf = strtolower(post("emailUenf"));
+            $emailPessoal = strtolower(post("emailPessoal"));
             $estCiv = post("estCiv");
-            $conjuge = post("conjuge");
-            $nomePai = post("nomePai");
-            $nomeMae = post("nomeMae");
+            $conjuge = ucwords(mb_strtolower(post("conjuge")));
+            $nomePai = ucwords(mb_strtolower(post("nomePai")));
+            $nomeMae = ucwords(mb_strtolower(post("nomeMae")));
             $idPessoa = $pessoal->get_idPessoa($idServidor);
             
             $atividade = "Recadastramento: ";

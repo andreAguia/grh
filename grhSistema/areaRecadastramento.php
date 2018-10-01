@@ -421,7 +421,7 @@ if($acesso){
             $controle = new Input('dtId','data','Data de Emissão:',1);
             $controle->set_size(15);
             $controle->set_linha(2);
-            $controle->set_valor($result['identidade']);
+            $controle->set_valor($result['dtId']);
             $controle->set_col(3);
             $form->add_item($controle);
             
@@ -624,7 +624,7 @@ if($acesso){
             # Variáveis dos erros
             $erro = 0;
             $msgErro = NULL;
-            
+           
             # dtId
             if(vazio($dtId)){
                 $dtId = NULL;

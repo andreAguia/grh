@@ -429,7 +429,7 @@ if($acesso){
             $controle = new Input('endereco','texto','Endereço do Servidor:',1);
             $controle->set_size(150);
             $controle->set_linha(3);
-            $controle->set_valor($result['endereco']);
+            $controle->set_valor(ucwords(mb_strtolower($result['endereco'])));
             $controle->set_col(12);
             $controle->set_fieldset("Endereço");
             $form->add_item($controle);
@@ -438,7 +438,7 @@ if($acesso){
             $controle = new Input('bairro','texto','Bairro:',1);
             $controle->set_size(50);
             $controle->set_linha(4);
-            $controle->set_valor(ucwords(strtolower($result['bairro'])));
+            $controle->set_valor(ucwords(mb_strtolower($result['bairro'])));
             $controle->set_col(5);
             $form->add_item($controle);
             
@@ -550,7 +550,7 @@ if($acesso){
             $controle = new Input('conjuge','texto','Nome do Conjuge:',1);
             $controle->set_size(100);
             $controle->set_linha(7);
-            $controle->set_valor($result['conjuge']);
+            $controle->set_valor(ucwords(mb_strtolower($result['conjuge'])));
             $controle->set_col(6);
             $form->add_item($controle);
             
@@ -558,7 +558,7 @@ if($acesso){
             $controle = new Input('nomePai','texto','Nome do Pai:',1);
             $controle->set_size(50);
             $controle->set_linha(8);
-            $controle->set_valor($result['nomePai']);
+            $controle->set_valor(ucwords(mb_strtolower($result['nomePai'])));
             $controle->set_col(6);
             $controle->set_fieldset("Filiaçao");
             $form->add_item($controle);
@@ -567,7 +567,7 @@ if($acesso){
             $controle = new Input('nomeMae','texto','Nome do Mãe:',1);
             $controle->set_size(50);
             $controle->set_linha(8);
-            $controle->set_valor($result['nomeMae']);
+            $controle->set_valor(ucwords(mb_strtolower($result['nomeMae'])));
             $controle->set_col(6);
             $form->add_item($controle);
             

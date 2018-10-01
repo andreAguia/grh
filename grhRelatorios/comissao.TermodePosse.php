@@ -34,13 +34,13 @@ if($acesso){
     $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
    
     # Preenche as variaveis da comissao
-    $nome = strtolower($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
+    $nome = mb_strtolower($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($comissao['idServidor']);  // idFuncional
     $inicio = dataExtenso2(date_to_php($comissao['dtNom']));
     $dtNom = dataExtenso(date_to_php($comissao['dtNom']));
     $descricao = $comissao['descricao'];
-    $publicacao = strtolower(dataExtenso(date_to_php($comissao['dtPublicNom'])));
-    $dtAtoNom = strtolower(dataExtenso(date_to_php($comissao['dtAtoNom'])));
+    $publicacao = mb_strtolower(dataExtenso(date_to_php($comissao['dtPublicNom'])));
+    $dtAtoNom = mb_strtolower(dataExtenso(date_to_php($comissao['dtAtoNom'])));
         
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];

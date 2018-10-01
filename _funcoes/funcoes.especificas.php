@@ -506,11 +506,11 @@ function importaContatos($idPessoa){
         
         # Se não tiver joga no array contatos
         if($pos === false) {
-            $contatos[] = strtolower($value[0]);
+            $contatos[] = mb_strtolower($value[0]);
         }else{  // Se tiver explode
             $pedaco = explode(" ",$value[0]);
             foreach ($pedaco as $pp) {
-                $contatos[] = strtolower($pp);
+                $contatos[] = mb_strtolower($pp);
             }
         }
     }

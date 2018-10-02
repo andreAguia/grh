@@ -17,32 +17,35 @@ $acesso = Verifica::acesso($idUsuario,2);
 if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    
+    # Pega os parâmetros
+    $selectRelatorio = get_session('selectRelatorio');
+    $parametroNomeMat = get_session('parametroNomeMat');
+    $parametroLotacao = get_session('parametroLotacao');
 
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
 
-    ######
-    
-    $select = "SELECT idFuncional,
-                    tbpessoa.nome,
-                    idServidor,
-                    idServidor,
-                    (SELECT IFNULL(sum(dias),0) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as trabalhados,
-                    (SELECT IFNULL(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as concedidas,
-                    (SELECT IFNULL(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor) as fruidas,
-                    (SELECT IFNULL(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) - (SELECT IFNULL(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor)
-               FROM tbservidor JOIN tbpessoa USING (idPessoa)
-              WHERE situacao = 1
-                AND (SELECT sum(dias) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) > 0
-           ORDER BY tbpessoa.nome";		
-
-
-    $result = $pessoal->select($select);
+    $result = $pessoal->select($selectRelatorio);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral TRE');
     $relatorio->set_subtitulo('Ordenado pelo Nome');
+    
+    $titulo2 = NULL;
+    
+    if(!is_null($parametroLotacao) AND ($parametroLotacao <> "*")){
+        $titulo2 .= $pessoal->get_nomeLotacao($parametroLotacao);
+    }
+    
+    if(!is_null($parametroNomeMat)){
+         $titulo2 .= "Filtro: ".$parametroNomeMat;
+    }
+    
+    if(!is_null($titulo2)){
+        $relatorio->set_tituloLinha2($titulo2);
+    }
 
     $relatorio->set_label(array("Id","Nome","Cargo","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
     $relatorio->set_align(array("center","left","left","left"));

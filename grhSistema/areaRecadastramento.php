@@ -43,6 +43,7 @@ if($acesso){
     set_session('parametroNomeMat',$parametroNomeMat);
     set_session('parametroLotacao',$parametroLotacao);
     set_session('parametroCargo',$parametroCargo);
+    set_session('areaRecadastramento',FALSE);
     
     # Começa uma nova página
     $page = new Page();
@@ -138,6 +139,7 @@ if($acesso){
                              tbservidor.idServidor,
                              tbrecadastramento.dataAtualizacao,
                              tbrecadastramento.idUsuario,
+                             tbservidor.idServidor,
                              tbservidor.idServidor
                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                         LEFT JOIN tbrecadastramento USING (idServidor)
@@ -296,7 +298,7 @@ if($acesso){
             
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores');
-            $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:','Usuario','Editar'));
+            $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:','Usuario','Editar','Formaçao'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center","left","left","left"));
             $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
@@ -309,15 +311,22 @@ if($acesso){
             }
 
             # Botão de exibição dos servidores com permissão a essa regra
-            $botao = new BotaoGrafico();
-            $botao->set_label('');
-            $botao->set_title('Recadastrar Servidor');
-            $botao->set_url('?fase=editar&id=');
-            $botao->set_image(PASTA_FIGURAS.'bullet_edit.png',20,20);
+            $botao1 = new BotaoGrafico();
+            $botao1->set_label('');
+            $botao1->set_title('Recadastrar Servidor');
+            $botao1->set_url('?fase=editar&id=');
+            $botao1->set_image(PASTA_FIGURAS.'bullet_edit.png',20,20);
+            
+            # Botão para ao cadastro de servidor
+            $botao2 = new BotaoGrafico();
+            $botao2->set_label('');
+            $botao2->set_title('Cadastro Servidor');
+            $botao2->set_url('?fase=editaServidor&id=');
+            $botao2->set_image(PASTA_FIGURAS.'diploma.jpg',20,20);
             
             # Coloca o objeto link na tabela			
             $tabela->set_idCampo('idServidor');
-            $tabela->set_link(array("","","","","","",$botao));
+            $tabela->set_link(array("","","","","","",$botao1,$botao2));
 
             $tabela->set_conteudo($result);
             $tabela->show();
@@ -591,7 +600,16 @@ if($acesso){
             $form->show();
             break;
         
-        ###
+     ################################################################
+
+        # Chama o menu do Servidor que se quer editar
+        case "editaServidor" :
+            set_session('idServidorPesquisado',$id);
+            set_session('areaRecadastramento',TRUE);
+            loadPage('servidorFormacao.php');
+            break; 
+    
+    ################################################################
         
         case "valida" :
             # Pega os dados digitados

@@ -23,6 +23,9 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica se veio do recadastramento
+    $areaRecadastramento = get_session("areaRecadastramento");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -50,7 +53,11 @@ if($acesso)
     $objeto->set_nome('Cadastro da Formação Escolar do Servidor');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
+    if($areaRecadastramento){
+        $objeto->set_voltarLista('areaRecadastramento.php');
+    }else{
+        $objeto->set_voltarLista('servidorMenu.php');
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT tbescolaridade.escolaridade,

@@ -87,7 +87,7 @@ if($acesso)
     # Parametros da tabela
     $objeto->set_label(array("Nível","Curso","Instituição","Ano de Término"));
     #$objeto->set_width(array(15,30,35,10));	
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("center","left","left"));
     #$objeto->set_function(array (NULL,"date_to_php"));
 
     # Classe do banco de dados

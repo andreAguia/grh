@@ -123,7 +123,7 @@ class ListaServidores{
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select = 'SELECT tbservidor.idFuncional,
+        $select = 'SELECT CAST(tbservidor.idFuncional AS UNSIGNED),
                           tbservidor.matricula,
                           tbpessoa.nome,
                           tbservidor.idServidor,

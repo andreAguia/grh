@@ -619,7 +619,7 @@ if($acesso){
             $nomeMae = ucwords(mb_strtolower(post("nomeMae")));
             $idPessoa = $pessoal->get_idPessoa($idServidor);
             
-            $atividade = "Recadastramento: ";
+            $atividade = "Recadastramento de ".$pessoal->get_nome($idServidor);
                        
             # Variáveis dos erros
             $erro = 0;

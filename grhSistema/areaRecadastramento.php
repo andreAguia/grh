@@ -517,7 +517,7 @@ if($acesso){
             
             # Email institucional da Uenf
             $controle = new Input('emailUenf','texto','E-mail institucional da Uenf:',1);
-            $controle->set_size(30);
+            $controle->set_size(100);
             $controle->set_linha(6);
             $controle->set_valor(strtolower($result['emailUenf']));
             $controle->set_col(6);
@@ -526,7 +526,7 @@ if($acesso){
             
             # Email Pessoal
             $controle = new Input('emailPessoal','texto','E-mail Pessoal:',1);
-            $controle->set_size(30);
+            $controle->set_size(100);
             $controle->set_linha(6);
             $controle->set_valor(strtolower($result['emailPessoal']));
             $controle->set_col(6);            

@@ -142,7 +142,7 @@ if($acesso)
     # Parametros da tabela
     $objeto->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
     #$objeto->set_width(array(20,10,10,10,10,10,10,10));	
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("left"));
     $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados

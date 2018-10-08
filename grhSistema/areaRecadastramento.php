@@ -506,7 +506,7 @@ if($acesso){
             
             # Telefone Celular
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                $controle = new Input('telCelular','telefone','Telefone Celular:',1);
+                $controle = new Input('telCelular','celular','Telefone Celular:',1);
             }else{
                 $controle = new Input('telCelular','texto','Telefone Celular:',1);
             }

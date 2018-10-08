@@ -156,7 +156,6 @@ if($acesso)
                                        'tipo' => 'numero',
                                        'size' => 5,
                                        'col' => 3,
-                                       'required' => TRUE,
                                        'title' => 'Nome da Instituição de Ensino.',
                                        'linha' => 2),
                                 array ('linha' => 3,

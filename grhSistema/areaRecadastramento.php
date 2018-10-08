@@ -485,7 +485,11 @@ if($acesso){
             $form->add_item($controle);
 
             # Telefone Residencial
-            $controle = new Input('telResidencial','texto','Telefone Residencial:',1);
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                $controle = new Input('telResidencial','telefone','Telefone Residencial:',1);
+            }else{
+                $controle = new Input('telResidencial','texto','Telefone Residencial:',1);
+            }
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telResidencial']);
@@ -501,7 +505,11 @@ if($acesso){
             $form->add_item($controle);
             
             # Telefone Celular
-            $controle = new Input('telCelular','texto','Telefone Celular:',1);
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                $controle = new Input('telCelular','telefone','Telefone Celular:',1);
+            }else{
+                $controle = new Input('telCelular','texto','Telefone Celular:',1);
+            }
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telCelular']);

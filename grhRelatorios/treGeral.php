@@ -47,10 +47,11 @@ if($acesso){
         $relatorio->set_tituloLinha2($titulo2);
     }
 
-    $relatorio->set_label(array("Id","Nome","Cargo","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
-    $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_cargo","get_lotacao"));
+    $relatorio->set_label(array("Id","Matricula","Nome","Cargo","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
+    $relatorio->set_align(array("center","center","left","left","left"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacao"));
+    $relatorio->set_funcao(array(NULL,"dv"));
     
     $relatorio->set_conteudo($result);
     $relatorio->show();

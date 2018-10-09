@@ -158,6 +158,7 @@ if($acesso){
 
             # Pega os dados
             $select = "SELECT idFuncional,
+                              matricula,
                               tbpessoa.nome,
                               idServidor,
                               idServidor,
@@ -207,12 +208,12 @@ if($acesso){
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Id","Nome","Cargo","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
-            $tabela->set_align(array("center","left","left","left"));
+            $tabela->set_label(array("Id","Matricula","Nome","Cargo","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
+            $tabela->set_align(array("center","center","left","left","left"));
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            #$tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_lotacao"));
+            $tabela->set_funcao(array(NULL,"dv"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacao"));
             $tabela->set_titulo("TRE");
             
             if(!is_null($parametroNomeMat)){

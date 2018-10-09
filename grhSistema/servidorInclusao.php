@@ -341,9 +341,9 @@ if($acesso){
                 }
 
                 # Cargo                
-                $cargo = $pessoal->select('SELECT idcargo, CONCAT(tbTipoCargo.cargo," - ",tbcargo.nome)'
-                        . '                  FROM tbcargo JOIN tbTipoCargo USING (idTipoCargo)'
-                        . '              ORDER BY tbTipoCargo.cargo,tbcargo.nome');
+                $cargo = $pessoal->select('SELECT idcargo, CONCAT(tbtipocargo.cargo," - ",tbcargo.nome)'
+                        . '                  FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)'
+                        . '              ORDER BY tbtipocargo.cargo,tbcargo.nome');
 
                 array_push($cargo, array(NULL,NULL)); 
 

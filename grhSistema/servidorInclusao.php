@@ -561,6 +561,12 @@ if($acesso){
                     ###################################
 
                     # Grava na tbservidor
+                    
+                    # Passa o cargo para null quando for vazio
+                    if(vazio($cargo)){
+                        $cargo = NULL;
+                    }
+                    
                     # dados
                     $campos = array('matricula','idPerfil','idPessoa','idCargo','dtAdmissao','situacao','idFuncional');
                     $valor = array($matricula,$perfil,$idPessoa,$cargo,$dtAdmissao,1,$idFuncional);

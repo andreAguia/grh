@@ -118,7 +118,7 @@ if($acesso){
                           'label' => 'Pis/Pasep:',
                           'tipo' => 'texto',                               
                           'title' => 'Pis Pasep do Servidor',                           
-                          'size' => 15),
+                          'size' => 20),
                    array ('linha' => 1,
                           'col' => 3,
                           'nome' => 'reservista',

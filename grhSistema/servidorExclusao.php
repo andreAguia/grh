@@ -123,7 +123,7 @@ if($acesso)
             #####################################################
             # Tabelas vinculadas pelo idservidor
             #####################################################
-            $tabelas = array("tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaoPremio","tbtrabalhoTre","tbtrienio");
+            $tabelas = array("tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaopremio","tbtrabalhotre","tbtrienio");
             $idCampo = array("idAtestado","idAverbacao","idCedido","idComissao","idDiaria","idElogio","idFerias","idFolga","idGratificacao","idHistCessao","idhistlot","idLicenca","idProgressao","idPublicacaoPremio","idTrabalhoTre","idTrienio");
             
             # Apaga os dados das tabelas

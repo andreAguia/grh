@@ -124,7 +124,7 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             # Lotação
@@ -143,7 +143,7 @@ if($acesso){
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(6);
             $form->add_item($controle);
             
             $form->show();
@@ -160,7 +160,6 @@ if($acesso){
             $select = "SELECT idFuncional,
                               matricula,
                               tbpessoa.nome,
-                              idServidor,
                               idServidor,
                               (SELECT IFNULL(sum(dias),0) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as trabalhados,
                               (SELECT IFNULL(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as concedidas,
@@ -208,12 +207,12 @@ if($acesso){
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Id","Matricula","Nome","Cargo","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
-            $tabela->set_align(array("center","center","left","left","left"));
+            $tabela->set_label(array("Id","Matricula","Nome","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
+            $tabela->set_align(array("center","center","left","left"));
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
             $tabela->set_funcao(array(NULL,"dv"));
-            $tabela->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_lotacao"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
             $tabela->set_titulo("TRE");
             
             if(!is_null($parametroNomeMat)){

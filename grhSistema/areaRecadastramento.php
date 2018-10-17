@@ -675,7 +675,7 @@ if($acesso){
                     $erro = 1;
                 }else{
                 # Verifica se e realmente @uenf
-                $pos = stripos($emailUenf, "@uenf");
+                $pos = stripos($emailUenf, "uenf");
 
                 # se tem @uenf
                 if($pos === false) {  

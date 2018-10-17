@@ -252,18 +252,23 @@ if($acesso){
             # Sisgem
             
             # Calcula quantos realizaram
-            $select5 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen";
+            $select5 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen = 1";
             $realizaram = $pessoal->count($select5);
             
             # Calcula quantos nao realizaram
-            $select6 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND NOT sisgen";
+            $select6 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen = 0";
             $naoRealizaram = $pessoal->count($select6);
+            
+            # Calcula quantos nao responderam
+            $select7 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen = 2";
+            $naoResponderam = $pessoal->count($select7);
                         
             $resumo = array();
             
             $resumo[] = array("Realizaram",$realizaram);
             $resumo[] = array("Nao Realizaram",$naoRealizaram);
-            $total = $realizaram + $naoRealizaram;
+            $resumo[] = array("Nao Responderam",$naoResponderam);
+            $total = $realizaram + $naoRealizaram+$naoResponderam;
             $resumo[] = array("Total",$total);
 
             # Monta a tabela
@@ -288,6 +293,7 @@ if($acesso){
             $menu->add_item('titulo1','por Sisgen (Docentes)');
             $menu->add_item('linkWindow','Realizou Sisgen','../grhRelatorios/recadastramentoSisgen.php?sisgen=1');
             $menu->add_item('linkWindow','Nao Realizou Sisgem','../grhRelatorios/recadastramentoSisgen.php?sisgen=0');
+            $menu->add_item('linkWindow','Nao Responderam o Anexo III','../grhRelatorios/recadastramentoSisgen.php?sisgen=2');
             $menu->show();
             
             $grid2->fechaColuna();
@@ -392,7 +398,7 @@ if($acesso){
                 $controle = new Input('sisgen','combo','Realizou as atividades descritas no Anexo III?:',1);
                 $controle->set_size(100);
                 $controle->set_linha(1);
-                $controle->set_array(array(array(1,"Realizei"),array(0,"Não Realizei"),array(NULL,"---")));
+                $controle->set_array(array(array(1,"Realizei"),array(0,"Não Realizei"),array(2,"Não Respondeu"),array(NULL,"---")));
                 $controle->set_valor($result['sisgen']);    
                 $controle->set_col(4);
                 $controle->set_autofocus(TRUE); 

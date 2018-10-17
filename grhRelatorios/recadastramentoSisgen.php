@@ -35,6 +35,10 @@ if($acesso)
     if($sisgen == 0){
         $titulo = "Relatório De Docentes que Responderam NÃO REALIZEI no Anexo III do Recadastramento";
     }
+    
+    if($sisgen == 2){
+        $titulo = "Relatório De Docentes que NÃO RESPONDERAM o Anexo III do Recadastramento";
+    }
 
     ######
     

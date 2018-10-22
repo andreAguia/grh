@@ -507,8 +507,10 @@ if($acesso){
                 if ((isset($_POST["submit"])) && (! empty($_FILES['foto']))){
                     $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idServidorPesquisado);
                     echo $upload->salvar();
-                    loadPage("?");
+                    #loadPage("?");
                 }
+                
+                br();                
                 callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg.");
                 $grid->fechaColuna();
                 $grid->fechaGrid();

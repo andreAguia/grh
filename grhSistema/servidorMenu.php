@@ -507,7 +507,7 @@ if($acesso){
                 if ((isset($_POST["submit"])) && (! empty($_FILES['foto']))){
                     $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idServidorPesquisado);
                     echo $upload->salvar();
-                    #loadPage("?");
+                    loadPage("?");
                 }
                 
                 br();                

@@ -602,25 +602,19 @@ class Grh{
             $idFuncional = $pessoal->get_idFuncional($idServidor);
 
             # Define a pasta
-            $pasta = "../../_arquivo/";
-
-            $achei = NULL;
-
-            # Encontra a pasta
-            foreach (glob($pasta.$idFuncional."*") as $escolhido) {
-                $achei = $escolhido;
-            }
-
+            $arquivo = "../../_arquivo/fotos/".$idServidor.".jpg";
+            
             # Verifica se tem pasta desse servidor
-            if(file_exists($achei."/foto.jpg")){
-                $foto = new Imagem($achei."/foto.jpg",'Foto do Servidor',150,100);
+            if(file_exists($arquivo)){
+                $foto = new Imagem($arquivo,'Foto do Servidor',150,100);
                 $foto->set_id('foto');
-                $foto->show();
-            }else{
+                $foto->show();                
+            }else{                
                 $foto = new Imagem(PASTA_FIGURAS.'foto.png','Foto do Servidor',150,100);
                 $foto->set_id('foto');
                 $foto->show();
             }
+           
         $grid2->fechaColuna();
         
         # Financeiro                                    

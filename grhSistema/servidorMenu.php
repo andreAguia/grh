@@ -46,16 +46,24 @@ if($acesso){
     }
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    if($fase == "uploadFoto"){
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
     $page->iniciaPagina();
     
     # Cabeçalho da Página
     AreaServidor::cabecalho();
     
-    if($fase == "menu"){    
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(12);
+    # Limita o tamanho da tela
+    $grid = new Grid();
+    $grid->abreColuna(12);
+    
+    if($fase == "menu"){  
 
         # Cria um menu
         $menu = new MenuBar();
@@ -79,6 +87,12 @@ if($acesso){
         $linkBotao3->set_title('Exibe a pasta funcional do servidor');
         $linkBotao3->set_accessKey('P');
         #$menu->add_link($linkBotao3,"right");
+        
+        # Foto
+        $linkBotao3 = new Link("Foto","?fase=uploadFoto");
+        $linkBotao3->set_class('button'); 
+        $linkBotao3->set_title('Upload uma nova foto');
+        $menu->add_link($linkBotao3,"right");
 
         if(Verifica::acesso($idUsuario,1)){
             # Histórico
@@ -467,7 +481,38 @@ if($acesso){
             $grid->fechaGrid();    
             break;
         
-        ##################################################################	
+        ##################################################################
+            
+            case "uploadFoto" :
+                $grid = new Grid("center");
+                $grid->abreColuna(6);
+                
+                
+                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='foto'>
+                        <p>Click aqui ou arraste o arquivo para escolher a foto.</p>
+                        <button type='submit' name='submit'>Upload</button>
+                    </form>";
+                
+                /*
+                echo '<form class="upload" action="?fase=uploadFoto" method="POST" enctype="multipart/form-data">
+                        <input name="foto" type="file">
+                        <p>Drag your files here or click in this area.</p>
+                        <button type="submit">Upload</button>
+                      </form>';
+                */
+                                
+                $pasta = "../../_arquivo/fotos/";
+                     
+                if ((isset($_POST["submit"])) && (! empty($_FILES['foto']))){
+                    $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idServidorPesquisado);
+                    echo $upload->salvar();
+                    loadPage("?");
+                }
+                callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg.");
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
     }
 
     $grid->fechaColuna();

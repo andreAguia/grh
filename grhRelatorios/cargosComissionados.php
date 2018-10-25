@@ -24,6 +24,12 @@ if($acesso)
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
+    
+    # Pega os parâmetros dos relatórios
+    $comissao = post('comissao');
+    if($comissao == '*'){
+        $comissao = NULL;
+    }
 
     ######
 
@@ -39,8 +45,14 @@ if($acesso)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
               WHERE tbservidor.situacao = 1
-                AND tbcomissao.dtExo is NULL
-           ORDER BY 6, tbpessoa.nome';
+                AND tbcomissao.dtExo is NULL';
+    
+    # cargo em comissão
+    if(!is_null($comissao)){
+        $select .= ' AND tbtipocomissao.idTipoComissao = '.$comissao; 
+    }
+        
+    $select .= ' ORDER BY 6, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
@@ -56,6 +68,27 @@ if($acesso)
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+    
+    $result = $pessoal->select('SELECT tbtipocomissao.idTipoComissao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                                              FROM tbtipocomissao
+                                              WHERE ativo
+                                          ORDER BY tbtipocomissao.simbolo');
+    array_unshift($result,array('*','-- Todos --'));
+
+    $relatorio->set_formCampos(array(
+                               array ('nome' => 'comissao',
+                                      'label' => 'Cargo em Comissão:',
+                                      'tipo' => 'combo',
+                                      'array' => $result,
+                                      'size' => 30,
+                                      'padrao' => $comissao,
+                                      'title' => 'Filtra por Cargo em Comissão',
+                                      'onChange' => 'formPadrao.submit();',
+                                      'linha' => 1)));
+
+    $relatorio->set_formFocus('comissao');
+    $relatorio->set_formLink('?');
+    
     $relatorio->show();
 
     $page->terminaPagina();

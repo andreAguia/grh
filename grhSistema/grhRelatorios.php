@@ -84,6 +84,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Sispatri','?fase=sispatri','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
@@ -329,6 +330,15 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório Anual de Servidores Admitidos','../grhRelatorios/sigFisAnualAdmitidos.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Demitidos e Exonerados','../grhRelatorios/sigFisAnualDemitidos.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Nomeados','../grhRelatorios/sigFisAnualNomeados.php'); 
+            $menu->show();
+            break; 
+        
+        ######################################
+
+         case "sispatri";
+            $menu = new Menu();
+            $menu->add_item('titulo','Sispatri');
+            $menu->add_item('linkWindow','CI dos Servidores que Nao Entregaram o Sispatri','../grhRelatorios/sispatriLotacao.php'); 
             $menu->show();
             break; 
         

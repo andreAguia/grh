@@ -423,6 +423,25 @@ class Pessoal extends Bd {
     ######################################################################################
 
     /**
+     * Método get_lotacaoDiretoria
+     * Informa a diretoria de uma lotaçao
+     * 
+     * @param	string $idLotacao  o id da lotaçao
+     */
+
+    public function get_lotacaoDiretoria($idLotacao){
+        $select = 'SELECT DIR
+                     FROM tblotacao
+                    WHERE idLotacao = '.$idLotacao;
+
+        $row = parent::select($select,FALSE);
+        
+        return $row[0];
+    }
+
+    ######################################################################################
+
+    /**
      * Método get_lotacao
      * Informa a lotação atual do servidor sem o UADM
      * 
@@ -3399,6 +3418,28 @@ class Pessoal extends Bd {
 	}
         
         ###########################################################
+
+	
+	/**
+	 * Método get_idServidoridPessoa
+	 * Informa a idServidor de um idPessoa
+	 * 
+	 * @param	string $idFuncional  idFuncional do servidor
+	 */
+
+	public function get_idServidoridPessoa($idPessoa){
+            # Pega o cargo do servidor
+            $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = '.$idPessoa;
+
+            $row = parent::select($select,FALSE);
+            
+            return $row[0];
+			
+	}
+        
+        ###########################################################
 	
 	/**
 	 * Método get_dataAposentadoria
@@ -3921,5 +3962,61 @@ class Pessoal extends Bd {
         return $row;
     }
 
-   ###########################################################										
+   ##########################################################################################
+
+    function get_gerente($idLotacao){
+    
+     /**
+      * 
+      * Retorna o idServidor do gerente/chefe de laboratorio do setor
+      * 
+      * @param $idLotacao integer o id da lotaçao
+      * 
+      */
+    
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbcomissao.dtExo is NULL AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
+                     AND (tblotacao.idlotacao = $idLotacao)";
+        
+        $row = parent::select($select,false);
+        return $row[0];
+    }
+
+   ###########################################################	
+    
+    ##########################################################################################
+
+    function get_diretor($diretoria){
+    
+     /**
+      * 
+      * Retorna o idServidor do diretor do setor
+      * 
+      * @param $diretoria varchar  sigla da diretoria
+      * 
+      */
+    
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbcomissao.dtExo is NULL AND tbtipocomissao.idTipoComissao = 16
+                     AND (tblotacao.DIR = '$diretoria')";
+        
+        $row = parent::select($select,false);
+        return $row[0];
+    }
+
+   ###########################################################	
 }

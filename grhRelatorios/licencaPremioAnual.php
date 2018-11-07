@@ -40,10 +40,10 @@ if($acesso)
                       MONTH(tblicencapremio.dtInicial)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tblicencapremio USING (idServidor)
-                                 LEFT JOIN tbpublicacaoPremio USING (idPublicacaoPremio)
+                                 LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                 WHERE tbservidor.situacao = 1
                   AND YEAR(tblicencapremio.dtInicial) = '.$relatorioAno.'   
-             ORDER BY 5';
+             ORDER BY 3';
 
     $result = $pessoal->select($select);
 

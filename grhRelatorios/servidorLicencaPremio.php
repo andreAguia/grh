@@ -108,7 +108,7 @@ if($acesso){
                     idPublicacaoPremio
                FROM tbpublicacaopremio
                WHERE idServidor = $idServidorPesquisado
-            ORDER BY dtPublicacao desc";
+            ORDER BY dtInicioPeriodo desc";
 
     $result = $pessoal->select($select);
 

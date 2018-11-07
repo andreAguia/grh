@@ -33,8 +33,10 @@ if($acesso)
     $data = $relatorioAno.'-'.$relatorioMes.'-01';
     
     $relatorio = new Relatorio();
+    
+    if($relatorioLicenca <> 6){
 
-    $select = 'SELECT tbservidor.idfuncional,
+        $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       idServidor,
@@ -52,6 +54,24 @@ if($acesso)
                    OR  (LAST_DAY("'.$data.'") BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                    OR  ("'.$data.'" < dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))) 
              ORDER BY tblicenca.dtInicial';
+    }else{
+        $select = 'SELECT tbservidor.idfuncional,
+                     tbpessoa.nome,
+                     tbperfil.nome,
+                     idServidor,
+                     (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                     tblicencapremio.dtInicial,
+                     tblicencapremio.numDias,
+                     ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)
+                FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              LEFT JOIN tblicencapremio USING (idServidor)
+                                              LEFT JOIN tbperfil USING (idPerfil)
+                WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
+                  AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                   OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                   OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))
+                 ORDER BY tblicencapremio.dtInicial';
+    }
 
     $result = $pessoal->select($select);
     
@@ -65,7 +85,7 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Perfil','Lotaçao','Licença','Data Inicial','Dias','Data Final'));
     
     $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_Lotacao"));    
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_LotacaoRel"));    
     
     $relatorio->set_align(array('center','left','center','left','left'));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
@@ -77,8 +97,7 @@ if($acesso)
     # Dados da combo licena
     $licenca = $pessoal->select('SELECT idTpLicenca,
                                          CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) as licenca
-                                    FROM tbtipolicenca 
-                                   WHERE idTpLicenca <> 6
+                                    FROM tbtipolicenca
                                 ORDER BY 2');
     array_unshift($licenca,array('800','Escolha um tipo de Licença ou Afastamento'));
     

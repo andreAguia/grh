@@ -390,7 +390,7 @@ class Pessoal extends Bd {
 
     /**
      * Método get_lotacao
-     * Informa a lota��o atual do servidor
+     * Informa a lotaçao atual do servidor
      * 
      * @param	string $idServidor  idServidor do servidor
      */
@@ -413,6 +413,40 @@ class Pessoal extends Bd {
                 $orgao = "-";
             }
             $retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
+        }else{
+            $retorno = $row[0].'-'.$row[1].'-'.$row[2];
+        }
+
+        return $retorno;
+    }
+
+    ######################################################################################
+
+    /**
+     * Método get_lotacao
+     * Informa a lotaçao atual do servidor para um relatorio
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+
+    public function get_lotacaoRel($idServidor){
+        $select = 'SELECT UADM,
+                          DIR,
+                          GER,
+                          idLotacao 
+                      FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
+                     WHERE tbhistlot.idServidor = '.$idServidor.'
+                     ORDER BY data DESC';
+
+        $row = parent::select($select,FALSE);
+
+        # Verifica se está cedido para exibir onde o servidor está
+        if($row[3] == 113){
+            $orgao = $this->emCessao($idServidor);
+            if($orgao == ""){
+                $orgao = "-";
+            }
+            $retorno = $row[0].'-'.$row[1].'-'.$row[2].' ('.$orgao.')</span>';
         }else{
             $retorno = $row[0].'-'.$row[1].'-'.$row[2];
         }

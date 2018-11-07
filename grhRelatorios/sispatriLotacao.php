@@ -60,6 +60,7 @@ if($acesso)
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
             p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>","left");
 
+            /*
             if(is_numeric($lotacao)){
                 $chefe = $servidor->get_Nome($servidor->get_gerente($lotacao));
                 if(is_null($chefe)){
@@ -73,11 +74,14 @@ if($acesso)
                 $chefe = $servidor->get_Nome($servidor->get_diretor($lotacao));
                 p("Para: $chefe<br/>Diretor do(a) $lotacao","left");
             }
+             * 
+             */
+            p("Para: Simonne Teixeira<br/>Casa de Cultura Vila Maria","left");
             
             p("Prezado(a) Senhor(a)","left");
             
             
-            $texto = "Conforme resolução conjunta CGE/SEFAZ nº 01 de 15 de agosto de 2018, em cumprimento ao disposto no art. 9º do Decreto nº 46.634, de 17 de julho de 2018, e tendo em vista o que consta no Processo Administrativo nº E-32/001/100001/2018 foi implantado o SISPATRI no âmbito do Poder Executivo Estadual. O agente público deve acessar www.servidor.rj.gov.br e fazer a declaração de bens e valores (DBV) on-line. Informamos abaixo em epígrafe relação dos agentes públicos da sua unidade administrativa que não entregaram a declaração até a presente data. <b>Salientamos que o prazo encerra em 09 de novembro de 2018.</b> Conforme art.6º §2º a não apresentação por parte do agente público acarretará a abertura de Processo Administrativo Disciplinar.";
+            $texto = "Conforme resolução conjunta CGE/SEFAZ nº 01 de 15 de agosto de 2018, em cumprimento ao disposto no art. 9º do Decreto nº 46.634, de 17 de julho de 2018, e tendo em vista o que consta no Processo Administrativo nº E-32/001/100001/2018 foi implantado o SISPATRI no âmbito do Poder Executivo Estadual. O agente público deve acessar www.servidor.rj.gov.br e fazer a declaração de bens e valores (DBV) on-line. Informamos abaixo em epígrafe relação dos agentes públicos da sua unidade administrativa que não entregaram a declaração até a presente data. <b>Salientamos que o prazo encerra em 08 de novembro de 2018.</b> Conforme art.6º §2º a não apresentação por parte do agente público acarretará a abertura de Processo Administrativo Disciplinar.";
             p($texto,"justify");
         }
     }

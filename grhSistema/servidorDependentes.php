@@ -36,6 +36,7 @@ if($acesso)
                     {                    
                         case "2":
                             document.formDependente.auxCreche.disabled = FALSE;
+                            
                             switch(document.formDependente.auxCreche.value)
                             {                    
                                 case "Sim":

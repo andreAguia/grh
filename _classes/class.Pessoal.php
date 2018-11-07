@@ -3592,8 +3592,9 @@ class Pessoal extends Bd {
 
         {
                 # Valida parametro
-                if(is_null($idTipoLicenca))
+                if(is_null($idTipoLicenca)){
                     return FALSE;
+                }
 
                 # Monta o select		
                 $select = 'SELECT lei

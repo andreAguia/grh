@@ -41,7 +41,6 @@ if($acesso)
                             {                    
                                 case "Sim":
                                     abreDivId("div7");
-                                    abreDivId("boxCreche");
                                     document.formDependente.dtTermino.disabled = FALSE;
                                     document.formDependente.processo.disabled = FALSE;
                                     document.formDependente.ciExclusao.disabled = FALSE;
@@ -49,7 +48,6 @@ if($acesso)
                                 default:
                                 case "Não":
                                     fechaDivId("div7");
-                                    fechaDivId("boxCreche");
                                     document.formDependente.dtTermino.disabled = TRUE;
                                     document.formDependente.processo.disabled = TRUE;
                                     document.formDependente.ciExclusao.disabled = TRUE;
@@ -58,18 +56,23 @@ if($acesso)
                             break;
                         default:
                             fechaDivId("div7");
-                            fechaDivId("boxCreche");
                             document.formDependente.auxCreche.value = "Não";
                             document.formDependente.auxCreche.disabled = TRUE;
                             break;
                     }
                 }                        
                 </script>';
+    
+    $jquery = '$(#auxCreche).change(function() {
+                alert("oi");
+
+                }';
 
     # Começa uma nova página
     $page = new Page();
     $page->set_jscript($jscript);
-    $page->set_bodyOnLoad("exibeEscondeCampos();");
+    #$page->set_bodyOnLoad("exibeEscondeCampos();");
+    $page->set_ready($jquery);
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -226,7 +229,6 @@ if($acesso)
                                        'array' => array("Não","Sim"),                                   
                                        'size' => 20,                                       
                                        'title' => 'Dependente tem Auxílio Creche.',
-                                       'onChange' => 'exibeEscondeCampos();',
                                        'col' => 2,
                                        'linha' => 2),
                                array ( 'nome' => 'dtTermino',

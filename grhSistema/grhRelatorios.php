@@ -413,6 +413,7 @@ if($acesso){
             $menu = new Menu();
             $menu->add_item('titulo','Endereço');
             $menu->add_item('linkWindow','Relatório de Servidores Agrupados por Cidade','../grhRelatorios/enderecoPorCidade.php');
+            $menu->add_item('linkWindow','Relatório de Servidores com Endereço, Emails, Telefones e Lotaçao','../grhRelatorios/enderecoEmailLotacao.php');
             $menu->add_item('linkWindow','Relatório de Ativos e Aposentados Com Endereço','../grhRelatorios/enderecoAtivoAposentado.php');
             $menu->show();
             break;

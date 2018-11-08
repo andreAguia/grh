@@ -3649,12 +3649,65 @@ class Pessoal extends Bd {
         #
         # Parâmetro: id do servidor
         
-            $select = 'SELECT emailPessoalUenf
+            $select = 'SELECT emailPessoal
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = '.$idServidor;
            
              $row = parent::select($select,FALSE);
              return $row[0];
+            }
+
+    ##########################################################################################
+       
+        public function get_emails($idServidor){
+
+        # Função que retorna os emails pessoal e Uenf do servidor cadastrado no sistema
+        #
+        # Parâmetro: id do servidor
+        
+            $select = 'SELECT emailPessoal,
+                              emailUenf  
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = '.$idServidor;
+           
+             $row = parent::select($select,FALSE);
+             
+             return $row[0].' '.$row[1];
+            }
+
+    ##########################################################################################
+       
+        public function get_telefones($idServidor){
+
+        # Função que retorna os telefones do servidor cadastrado no sistema
+        #
+        # Parâmetro: id do servidor
+        
+            $select = 'SELECT telResidencialDDD,
+                              telResidencial,
+                              telCelularDDD,
+                              telCelular,
+                              telRecadosDDD,
+                              telRecados
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = '.$idServidor;
+           
+            $row = parent::select($select,FALSE);
+            $retorno = NULL;
+            
+            if(!vazio($row[1])){
+                $retorno .= "($row[0])$row[1]<br/>"; 
+            }
+            
+            if(!vazio($row[3])){
+                $retorno .= "($row[2])$row[3]<br/>"; 
+            }
+            
+            if(!vazio($row[5])){
+                $retorno .= "($row[4])$row[5]<br/>"; 
+            }   
+             
+             return $retorno;
             }
 
     ##########################################################################################

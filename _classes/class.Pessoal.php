@@ -3881,6 +3881,47 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
+    public function get_enderecoRel($idServidor){
+
+        # Função que retorna string com o endereço cadastrado do servidor para relatorio. Unica diferença e o salto de pagina antes da cidade.
+        #
+        # Parâmetro: id do servidor
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $this->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = 'SELECT endereco,
+                              bairro,
+                              tbcidade.nome,
+                              tbestado.uf,
+                              cep
+                         FROM tbpessoa JOIN tbcidade USING (idCidade)
+                                       JOIN tbestado USING (idEstado)
+                        WHERE idPessoa = '.$idPessoa;
+
+            $row = parent::select($select,FALSE);
+            $numero = parent::count($select);
+            $return = NULL;
+
+            if($numero > 0){
+                $return = primeiraLetraMaiuscula($row[0])." - ".
+                          primeiraLetraMaiuscula($row[1])."<br/> ".
+                          primeiraLetraMaiuscula($row[2])." - ".
+                          strtoupper($row[3])." Cep: ".$row[4];
+            }
+
+            return $return;		
+
+        }
+
+    ##########################################################################################
+
     public function get_numVinculos($idServidor){
 
         # Função que retorna quantos vinculos esse servidor teve com a uenf.

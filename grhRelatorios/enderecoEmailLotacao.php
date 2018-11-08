@@ -29,29 +29,33 @@ if($acesso)
     
     $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbservidor.idServidor,
+                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbperfil.nome
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa) 
+                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-               WHERE tbservidor.situacao = 1                 
-            ORDER BY tbpessoa.nome';
+               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                 AND tbservidor.situacao = 1                 
+            ORDER BY lotacao, tbpessoa.nome';
+
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores com Endereço, Emails, Telefones e Lotaçao');
-    $relatorio->set_subtitulo('Ordenado pelo nome');
+    $relatorio->set_titulo('Relatório de Servidores com Endereço, Emails e Telefones');
+    $relatorio->set_subtitulo('Agrupado por Lotaçao e Ordenado pelo nome');
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Endereço','E-mail','Telefones','Perfil'));
     $relatorio->set_bordaInterna(TRUE);
     $relatorio->set_align(array("center","left","left","left","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,"primeiraLetraMaiuscula"));
     
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal","pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoRel","get_endereco","get_emails","get_telefones"));
-    
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_endereco","get_emails","get_telefones"));
+    $relatorio->set_numGrupo(2);
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

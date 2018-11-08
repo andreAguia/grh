@@ -3670,10 +3670,19 @@ class Pessoal extends Bd {
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = '.$idServidor;
            
-             $row = parent::select($select,FALSE);
-             
-             return $row[0].' '.$row[1];
+            $row = parent::select($select,FALSE);
+            $retorno = NULL;
+            
+            if(!vazio($row[0])){
+                $retorno .= "$row[0]<br/>"; 
             }
+            
+            if(!vazio($row[1])){
+                $retorno .= $row[1]; 
+            }   
+             
+             return $retorno;
+        }
 
     ##########################################################################################
        
@@ -3696,19 +3705,19 @@ class Pessoal extends Bd {
             $retorno = NULL;
             
             if(!vazio($row[1])){
-                $retorno .= "($row[0])$row[1]<br/>"; 
+                $retorno .= "($row[0]) $row[1]<br/>"; 
             }
             
             if(!vazio($row[3])){
-                $retorno .= "($row[2])$row[3]<br/>"; 
+                $retorno .= "($row[2]) $row[3]<br/>"; 
             }
             
             if(!vazio($row[5])){
-                $retorno .= "($row[4])$row[5]<br/>"; 
+                $retorno .= "($row[4]) $row[5]<br/>"; 
             }   
              
              return $retorno;
-            }
+        }
 
     ##########################################################################################
 

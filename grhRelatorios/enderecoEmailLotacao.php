@@ -42,7 +42,7 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('RRelatório de Servidores com Endereço, Emails, Telefones e Lotaçao');
+    $relatorio->set_titulo('Relatório de Servidores com Endereço, Emails, Telefones e Lotaçao');
     $relatorio->set_subtitulo('Ordenado pelo nome');
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Endereço','E-mail','Telefones','Perfil'));
     $relatorio->set_bordaInterna(TRUE);

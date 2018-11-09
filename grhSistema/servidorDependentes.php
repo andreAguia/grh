@@ -29,50 +29,68 @@ if($acesso)
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
-    $jscript = '<script language="JavaScript" >
-                function exibeEscondeCampos()
-                {                
-                    switch(document.formDependente.parentesco.value)
-                    {                    
+    $jscript = '$("#parentesco").change(function(){
+                    var t1 = $("#parentesco").val();
+                    switch (t1) {
                         case "2":
-                            document.formDependente.auxCreche.disabled = FALSE;
-                            
-                            switch(document.formDependente.auxCreche.value)
-                            {                    
-                                case "Sim":
-                                    abreDivId("div7");
-                                    document.formDependente.dtTermino.disabled = FALSE;
-                                    document.formDependente.processo.disabled = FALSE;
-                                    document.formDependente.ciExclusao.disabled = FALSE;
-                                    break;
-                                default:
-                                case "Não":
-                                    fechaDivId("div7");
-                                    document.formDependente.dtTermino.disabled = TRUE;
-                                    document.formDependente.processo.disabled = TRUE;
-                                    document.formDependente.ciExclusao.disabled = TRUE;
-                                    break;
-                            }
+                            $("#labelauxCreche").show();
+                            $("#auxCreche").show();
                             break;
+                            
                         default:
-                            fechaDivId("div7");
-                            document.formDependente.auxCreche.value = "Não";
-                            document.formDependente.auxCreche.disabled = TRUE;
+                            $("#labelauxCreche").hide();
+                            $("#auxCreche").hide();
+                            $("#div7").hide();
                             break;
                     }
-                }                        
-                </script>';
+                    
+                });
+                
+                $("#auxCreche").change(function(){
+                    var t2 = $("#auxCreche").val();
+                    switch (t2) {
+                        case "Sim":
+                            $("#div7").show();
+                            break;
+                            
+                        default:
+                            $("#div7").hide();
+                            break;
+                    }
+                    
+                });
+                
+                var t1 = $("#parentesco").val();
+                switch (t1) {
+                    case "2":
+                        $("#labelauxCreche").show();
+                        $("#auxCreche").show();
+                        break;
+
+                    default:
+                        $("#labelauxCreche").hide();
+                        $("#auxCreche").hide();
+                        $("#div7").hide();
+                        break;
+                }
+                
+                var t2 = $("#auxCreche").val();
+                switch (t2) {
+                    case "Sim":
+                        $("#div7").show();
+                        break;
+
+                    default:
+                        $("#div7").hide();
+                        break;
+                }
+                
+                    
+                    ';
     
-    $jquery = '$(#auxCreche).change(function() {
-                alert("oi");
-
-                }';
-
     # Começa uma nova página
     $page = new Page();
-    $page->set_jscript($jscript);
-    #$page->set_bodyOnLoad("exibeEscondeCampos();");
-    $page->set_ready($jquery);
+    $page->set_ready($jscript);
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -200,7 +218,6 @@ if($acesso)
                                        'tipo' => 'combo',
                                        'array' => $result,
                                        'required' => TRUE,
-                                       'onChange' => 'exibeEscondeCampos();',
                                        'size' => 20,                                       
                                        'title' => 'Parentesco do dependente.',
                                        'col' => 3,

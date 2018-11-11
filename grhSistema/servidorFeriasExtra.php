@@ -13,10 +13,7 @@ $dataInicial = $campoValor[1];   // dataInicial
 # Define a data de hoje
 $hoje = date("Y-m-d");
 
-
 # Muda o status para solicitada ou fruída de acordo com a data Inicial e a data de hoje
-alert($dataInicial);
-
 if($dataInicial <= $hoje){
     $campoValor[5] = "fruída";
 }else{
@@ -25,6 +22,14 @@ if($dataInicial <= $hoje){
 
 # Conecta ao banco de dados
 $pessoal = new Pessoal();
+
+# Verifica se a data Inicial é posterior a data de admissão
+$dtAdmissao = $pessoal->get_dtAdmissao($servidor);
+$dtAdmissao = date_to_bd($dtAdmissao);
+if($dataInicial < $dtAdmissao){
+    $erro = 1;
+    $msgErro .= 'O servidor não pode pedir férias antes de ser admitido!'.$dtAdmissao.$dataInicial.'\n';
+}
 
 # Verifica quantos dias o servidor já pediu nesse exercicio
 $diasFerias = $pessoal->get_feriasSomaDias($exercicio,$servidor,$id);
@@ -39,21 +44,21 @@ switch ($diasFerias){
     case 20:
         if($dias > 10){
             $erro = 1;
-            $msgErro .= 'O servidor não pode tirar mais de 30 dias de férias!\n';
+            $msgErro .= 'O servidor não pode tirar mais de 30 dias de férias em um mesmo exercício!\n';
         }
         break;
         
     case 15:
         if($dias <> 15){
             $erro = 1;
-            $msgErro .= 'O servidor só poderá tirar 15 dias!\n';
+            $msgErro .= 'O servidor só poderá tirar 15 dias nesse exercício!\n';
         }
         break;
         
     case 10:
         if(($dias <> 10) AND ($dias <> 20)){
             $erro = 1;
-            $msgErro .= 'O servidor já tem 10 dias de férias, só poderá pedir mais 20 ou 10 dias\n';
+            $msgErro .= 'O servidor já tem 10 dias de férias, só poderá pedir mais 20 ou 10 dias nesse exercício\n';
         }
         break;
 }

@@ -92,7 +92,7 @@ if($acesso){
         $botao1->set_title('Edita');
         $botao1->set_label('');
         $botao1->set_url('?fase=editar&id=');     
-        $botao1->set_image(PASTA_FIGURAS_GERAIS.'bullet_edit.png',20,20);
+        $botao1->set_imagem(PASTA_FIGURAS_GERAIS.'bullet_edit.png',20,20);
     
         ### select do edita
         if(($fase == 'editar') or ($fase == 'gravar')){            

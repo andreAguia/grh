@@ -139,7 +139,7 @@ if($acesso){
     $botao->set_label('');
     #$botao->set_title('Servidores com permissão a essa regra');
     $botao->set_url('?fase=listaServidores&id=');       
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("","","","","","",$botao));
@@ -209,16 +209,16 @@ if($acesso){
     $objeto->set_idUsuario($idUsuario);
     
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
-    $botaoRel->set_title("Abre relatório dos cargos exibidos na listagem abaixo");
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir");
+    $botaoRel->set_target("_blank");
     if($tipo){
-        $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissaoAtivos.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_url('../grhRelatorios/cargoComissaoAtivos.php');        
     }else{
-        $botaoRel->set_onClick("window.open('../grhRelatorios/cargoComissaoInativos.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_url('../grhRelatorios/cargoComissaoInativos.php');
     }
-    $botaoRel->set_imagem($imagem2);
-    #$botaoRel->set_accessKey('R');
     
     # Cargos Ativos
     $botaoAtivo = new Button("Cargos Ativos","?tipo=1");
@@ -275,7 +275,7 @@ if($acesso){
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_onClick("abreFechaDivId('RelServidor');");
-            $botaoRel->set_imagem($imagem2);
+            $botaoRel->set_imagem($imagem2);            
             $menu->add_link($botaoRel,"right");
              
             $menu->show();
@@ -297,7 +297,7 @@ if($acesso){
             echo '<li>';
             $link = new Link("Servidores Ativos","?fase=relatorio&&id=".$id);
             $link->set_title("Exibe a lista de servidores ativos nesse cargo em comissão");
-            $link->set_janela(TRUE);    
+            $link->set_target("_blank");   
             $link->show();
             echo '</li>';
 
@@ -305,8 +305,7 @@ if($acesso){
             echo '<li>';
             $link = new Link("Histórico","../grhRelatorios/cargosComissionadosHistorico.php?cargo=".$id);
             $link->set_title("Exibe o histórico de servidores nesse cargo em comissão");
-            #$link->set_class("disabled");
-            $link->set_janela(TRUE);    
+            $link->set_target("_blank");   
             $link->show();
             echo '</li>';
 

@@ -74,7 +74,8 @@ if($acesso){
         
         case "exibeLista" :
             $grid = new Grid();
-            $grid->abreColuna(6);
+            $grid->abreColuna(12);
+            br();
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -87,17 +88,27 @@ if($acesso){
             $menu1->add_link($botaoVoltar,"left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório Tre");
-            $botaoRel->set_onClick("window.open('../grhRelatorios/treGeral.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
+            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button('Relatorio da Tela');
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("../grhRelatorios/treGeral.php");
+            $menu1->add_link($botaoRel,"right");
+            
+            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button('Anual de Dias Trabalhados');
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("../grhRelatorios/treAfastamentoAnual.php");
+            $menu1->add_link($botaoRel,"right");
+            
+            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button('Anual de Folgas Fruídas');
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("../grhRelatorios/treFolgaAnual.php");
+            $menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
+            
             
                 # Relatórios
                 $menu = new Menu('horizontal');
@@ -107,10 +118,7 @@ if($acesso){
                 $menu->add_item('linkWindow','Anual de Dias Trabalhados','../grhRelatorios/treAfastamentoAnual.php'); 
                 #$menu->add_item('linkWindow','Mensal de Folgas Fruídas','../grhRelatorios/treFolgaMensal.php'); 
                 $menu->add_item('linkWindow','Anual de Folgas Fruídas','../grhRelatorios/treFolgaAnual.php'); 
-                $menu->show();
-                
-            $grid->fechaColuna();
-            $grid->abreColuna(12);
+               # $menu->show();
             
             ###
             

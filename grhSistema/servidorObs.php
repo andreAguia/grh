@@ -81,8 +81,9 @@ if($acesso)
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Observações do Servidor");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorObs.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-        
+    $botaoRel->set_url("../grhRelatorios/servidorObs.php");
+    $botaoRel->set_target("_blank"); 
+    
     $objeto->set_botaoEditarExtra(array($botaoRel));
     
     # Log

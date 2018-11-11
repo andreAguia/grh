@@ -114,7 +114,7 @@ if($acesso)
     $botao = new BotaoGrafico();
     $botao->set_label('');    
     $botao->set_url('?fase=listaServidores&id=');    
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("","","","","","","","",$botao));

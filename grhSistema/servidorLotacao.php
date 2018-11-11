@@ -156,7 +156,8 @@ if($acesso){
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Lotação");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLotacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_url("../grhRelatorios/servidorLotacao.php");
+    $botaoRel->set_target("_blank");
     
     $objeto->set_botaoListarExtra(array($botaoRel));
 

@@ -135,10 +135,10 @@ if($acesso){
                                        'linha' => 6)));
     
     # Alterar Senha
-    $botao1 = new Link("Site da GRH");
-    $botao1->set_class('button');
+    $botao1 = new Button("Site da GRH");
+    $botao1->set_target('_blank');
     $botao1->set_title("Pagina no site da GRH sobre Abono Permanencia");
-    $botao1->set_onClick("window.open('http://uenf.br/dga/grh/gerencia-de-recursos-humanos/abono-de-permanencia/','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1000,height=600');");
+    $botao1->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/abono-de-permanencia/");
     
     $objeto->set_botaoListarExtra(array($botao1));
     

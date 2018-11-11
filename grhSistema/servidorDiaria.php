@@ -100,7 +100,7 @@ if($acesso)
     # Link do CI
     $botao = new BotaoGrafico();
     $botao->set_url('?fase=diaria&id=');
-    $botao->set_image(PASTA_FIGURAS.'printer.png',20,20);
+    $botao->set_imagem(PASTA_FIGURAS.'printer.png',20,20);
     #$objeto->set_link(array("","","","","","","",$botao));
 
     # Classe do banco de dados
@@ -212,7 +212,8 @@ if($acesso)
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Diárias");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorDiaria.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_url("../grhRelatorios/servidorDiaria.php");
+    $botaoRel->set_target("_blank");
     
     $objeto->set_botaoListarExtra(array($botaoRel));
        

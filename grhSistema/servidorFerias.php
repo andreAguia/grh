@@ -190,7 +190,8 @@ if($acesso){
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir Relatório de Histórico de Férias");
-            $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFerias.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url('../grhRelatorios/servidorFerias.php');
             $menu1->add_link($botaoRel,"right");
 
             # Incluir

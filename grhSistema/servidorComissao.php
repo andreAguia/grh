@@ -118,15 +118,15 @@ if($acesso){
     
     # Ato de Nomeação
     $botao1 = new Link(NULL,'?fase=atoNomeacao&id=','Imprime o Ato de Nomeação');
-    $botao1->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+    $botao1->set_imagem(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
     
     # Termo de Posse
     $botao2 = new Link(NULL,'?fase=termoPosse&id=','Imprime o Termo de Posse');
-    $botao2->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+    $botao2->set_imagem(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
     
     # Ato de Exoneração
     $botao3 = new Link(NULL,'?fase=atoExoneracao&id=','Imprime o Ato de Exoneração');
-    $botao3->set_image(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
+    $botao3->set_imagem(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
     
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("","","","",$botao1,$botao2,$botao3));
@@ -295,7 +295,8 @@ if($acesso){
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Cargo em Comissão");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorComissao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_url("../grhRelatorios/servidorComissao.php");
+    $botaoRel->set_target("_blank");
         
     $objeto->set_botaoListarExtra(array($botaoRel,$botaoVagas));
     

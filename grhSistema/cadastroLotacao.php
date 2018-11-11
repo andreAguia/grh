@@ -143,7 +143,7 @@ if($acesso){
     $botao->set_label('');
     #$botao->set_title('Servidores com permissão a essa regra');
     $botao->set_url('?fase=listaServidores&id=');       
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("","","","","","","","",$botao));
@@ -242,20 +242,20 @@ if($acesso){
     #$botaoGra->set_accessKey('G');
     
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
-    $botaoRel->set_title("Exibe Relatório das Lotações Ativas");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/lotacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $botaoRel->set_imagem($imagem2);
-    #$botaoRel->set_accessKey('R');
-    
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir");
+    $botaoRel->set_target("_blank");
+    $botaoRel->set_url('../grhRelatorios/lotacao.php');
+           
     # Organograma
     $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',NULL,15,15);
     $botaoOrg = new Button();
     $botaoOrg->set_title("Exibe o Organograma da UENF");
     $botaoOrg->set_imagem($imagem3);
-    $botaoOrg->set_onClick("window.open('../_img/organograma.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1000,height=700');");
-    #$botaoOrg->set_accessKey('O');
+    $botaoOrg->set_target("_blank");
+    $botaoOrg->set_url('../_img/organograma.png');
     
     # Organograma2
     $imagem3 = new Imagem(PASTA_FIGURAS.'organograma2.png',NULL,15,15);
@@ -309,6 +309,13 @@ if($acesso){
             $btnVoltar->set_title('Volta para a página anterior');
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar,"left");
+            
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url('../grhRelatorios/perfil.php');
 
             # Relatórios
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -337,7 +344,7 @@ if($acesso){
             echo '<li>';
             $link = new Link("Servidores","../grhRelatorios/lotacaoServidoresAtivos.php?lotacao=".$id);
             $link->set_title("Exibe a Lista de Servidores");
-            $link->set_janela(TRUE);    
+            $link->set_target("_blank");
             $link->show();
             echo '</li>';
 
@@ -345,8 +352,7 @@ if($acesso){
             echo '<li>';
             $link = new Link("Aniversariantes","../grhRelatorios/lotacaoAniversariantes.php?lotacao=".$id);
             $link->set_title("Exibe a Lista de aniversariantes deste setor");
-            #$link->set_class("disabled");
-            $link->set_janela(TRUE);    
+            $link->set_target("_blank"); 
             $link->show();
             echo '</li>';
 

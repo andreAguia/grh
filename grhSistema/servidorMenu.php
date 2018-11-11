@@ -204,7 +204,7 @@ if($acesso){
                             $botao->set_label($partesArquivo[0]);
                             $botao->set_url($achei.'/'.$arquivo);
                             $botao->set_target('_blank');
-                            $botao->set_image(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
+                            $botao->set_imagem(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
                             $menu->add_item($botao);
 
                             $contador++;
@@ -259,7 +259,7 @@ if($acesso){
                             $botao->set_label($partesArquivo[0]);
                             $botao->set_url($achei.'/'.$arquivo);
                             $botao->set_target('_blank');
-                            $botao->set_image(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
+                            $botao->set_imagem(PASTA_FIGURAS.'processo.png',$tamanhoImage,$tamanhoImage);
                             $menu->add_item($botao);
                         }
                     }

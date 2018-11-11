@@ -91,7 +91,6 @@ if($acesso){
                                'tipo' => 'texto',
                                'autofocus' => TRUE,
                                'title' => 'Endereço do Servidor',
-                               'fieldset' => 'Endereço',
                                'col' => 12,
                                'size' => 150),
                         array ('linha' => 6,

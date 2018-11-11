@@ -321,14 +321,14 @@ if($acesso){
             $botao1->set_label('');
             $botao1->set_title('Recadastrar Servidor');
             $botao1->set_url('?fase=editar&id=');
-            $botao1->set_image(PASTA_FIGURAS.'bullet_edit.png',20,20);
+            $botao1->set_imagem(PASTA_FIGURAS.'bullet_edit.png',20,20);
             
             # Botão para ao cadastro de servidor
             $botao2 = new BotaoGrafico();
             $botao2->set_label('');
             $botao2->set_title('Cadastro Servidor');
             $botao2->set_url('?fase=editaServidor&id=');
-            $botao2->set_image(PASTA_FIGURAS.'diploma.jpg',20,20);
+            $botao2->set_imagem(PASTA_FIGURAS.'diploma.jpg',20,20);
             
             # Coloca o objeto link na tabela			
             $tabela->set_idCampo('idServidor');
@@ -491,11 +491,7 @@ if($acesso){
             $form->add_item($controle);
 
             # Telefone Residencial
-            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                $controle = new Input('telResidencial','telefone','Telefone Residencial:',1);
-            }else{
-                $controle = new Input('telResidencial','texto','Telefone Residencial:',1);
-            }
+            $controle = new Input('telResidencial','telefone','Telefone Residencial:',1);
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telResidencial']);
@@ -511,11 +507,7 @@ if($acesso){
             $form->add_item($controle);
             
             # Telefone Celular
-            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                $controle = new Input('telCelular','celular','Telefone Celular:',1);
-            }else{
-                $controle = new Input('telCelular','texto','Telefone Celular:',1);
-            }
+            $controle = new Input('telCelular','celular','Telefone Celular:',1);
             $controle->set_size(30);
             $controle->set_linha(5);
             $controle->set_valor($result['telCelular']);

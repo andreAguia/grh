@@ -190,8 +190,9 @@ if($acesso)
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Atestados (Faltas Abonadas)");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorAtestado.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_url("../grhRelatorios/servidorAtestado.php");
     $objeto->set_botaoListarExtra(array($botaoRel));
+    $botaoRel->set_target("_blank");
     
     # Log
     $objeto->set_idUsuario($idUsuario);

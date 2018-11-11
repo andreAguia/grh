@@ -34,7 +34,7 @@ if($acesso)
                     lotacao,
                     motivo,
                     idHistLot
-               FROM tbhistLot
+               FROM tbhistlot
          WHERE idServidor = $idServidorPesquisado
       ORDER BY data desc";
 

@@ -223,7 +223,8 @@ if($acesso){
     $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório dos Afastamentos e Licenças");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/tiposLicenca.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_url("../grhRelatorios/tiposLicenca.php");
+    $botaoRel->set_target("_blank");
     $botaoRel->set_imagem($imagem2);
     #$botaoRel->set_accessKey('R');
 

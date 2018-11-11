@@ -23,6 +23,7 @@ if($acesso){
     $fase = get('fase','menu');
     $alerta = get('alerta');
     $parametroMes = post('parametroMes',date("m"));
+    $parametroLotacao = post('parametroLotacao','*');
 		
     # Define a senha padrão de acordo com o que está nas variáveis
     #define("SENHA_PADRAO",$config->get_variavel('senha_padrao'));    
@@ -38,6 +39,7 @@ if($acesso){
     }
     
     # Zera sessions
+    set_session('areaTre');
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');
     set_session('parametroNomeMat');
@@ -177,41 +179,72 @@ if($acesso){
             
             # Limita o tamanho da tela
             $grid = new Grid();
-            $grid->abreColuna(5);
+            $grid->abreColuna(12);
             
             # Botão voltar
             botaoVoltar('?');
             
-            $grid->fechaColuna();
-            $grid->abreColuna(2);
-            
             # Mês 
             $form = new Form('?fase=aniversariantes');
 
-            $controle = new Input('parametroMes','combo');
+            $controle = new Input('parametroMes','combo',"Mês",1);
             $controle->set_size(30);
             $controle->set_title('O mês dos aniversários');
             $controle->set_array($mes);
             $controle->set_valor($parametroMes);
             $controle->set_onChange('formPadrao.submit();');
+            $controle->set_col(3);
+            $controle->set_linha(1);
+            $form->add_item($controle);
+            
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                          FROM tblotacao
+                                         WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                          FROM tblotacao
+                                         WHERE ativo)
+                                      ORDER BY 2');
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_col(9);
+            $controle->set_linha(1);
             $form->add_item($controle);
             $form->show();
             
-            $grid->fechaColuna();
-            $grid->abreColuna(5);
+            if($parametroLotacao == "*"){
+                $parametroLotacao = NULL;
+            }
             
-            $grid->fechaColuna();
-            $grid->abreColuna(12);
-            
+            # Exibe a tabela            
             $select ='SELECT DAY(tbpessoa.dtNasc),
                      tbpessoa.nome,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor
                 FROM tbpessoa LEFT JOIN tbservidor ON (tbpessoa.idPessoa = tbservidor.idPessoa)
+                                   JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
                  AND MONTH(tbpessoa.dtNasc) = '.$parametroMes.'
-             ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+            
+            # lotacao
+            if(!is_null($parametroLotacao)){
+                # Verifica se o que veio é numérico
+                if(is_numeric($parametroLotacao)){
+                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+                }else{ # senão é uma diretoria genérica
+                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+                }
+            }
+            
+            $select .= ' ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
 
             $result = $pessoal->select($select);
             

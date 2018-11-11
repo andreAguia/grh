@@ -174,13 +174,15 @@ if($acesso){
         $botaoHelp = new Button();
         $botaoHelp->set_imagem($imagem);
         $botaoHelp->set_title("Ajuda");
-        $botaoHelp->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-               
+        $botaoHelp->set_url("../grhRelatorios/servidorLicenca.php");
+        $botaoHelp->set_target("_blank");
+        
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Relatório de Licença Prêmio");
-        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaPremio.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_url("../grhRelatorios/servidorLicencaPremio.php");
+        $botaoRel->set_target("_blank");
         
         $objeto->set_botaoListarExtra(array($botaoRel));
 

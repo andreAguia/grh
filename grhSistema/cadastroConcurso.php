@@ -54,7 +54,9 @@ if($acesso)
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "relatorio"){
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -126,7 +128,7 @@ if($acesso)
     $botao = new BotaoGrafico();
     $botao->set_label('');    
     $botao->set_url('?fase=aguarde&id=');   
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("","","","","","",$botao));
@@ -238,24 +240,34 @@ if($acesso)
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
-
+            
             # Tipo de servidores
-            if($subFase == 1){ 
+            if($subFase == 1){
+                $linkTipo = new Button("Servidores Ativos","#");
+                $linkTipo->set_title('Exibe os servidores ativos');
+                $menu->add_link($linkTipo,"right");
+                
                 $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
+                $linkTipo->set_class('hollow button');
                 $linkTipo->set_title('Exibe os servidores inativos');
+                $menu->add_link($linkTipo,"right");
             }else{
                 $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
+                $linkTipo->set_class('hollow button');
                 $linkTipo->set_title('Exibe os servidores ativos');
+                $menu->add_link($linkTipo,"right");
+                
+                $linkTipo = new Button("Servidores Inativos","#");
+                $linkTipo->set_title('Exibe os servidores inativos');
+                $menu->add_link($linkTipo,"right");
             }
-            $linkTipo->set_class('button');
-            $linkTipo->set_title('Exibe os servidores inativos');
-            $menu->add_link($linkTipo,"right");
              
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=$subFase&id=$id");            
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel,"right");
 

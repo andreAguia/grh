@@ -58,7 +58,9 @@ if($acesso)
     $page->iniciaPagina();
     
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "relatorio"){
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -135,7 +137,7 @@ if($acesso)
     $botao = new BotaoGrafico();
     $botao->set_label('');    
     $botao->set_url('?fase=aguarde&id=');   
-    $botao->set_image(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("","","","","",$botao));
@@ -292,15 +294,16 @@ if($acesso)
             #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',NULL,15,15);
             $botaoMapa = new Button("Mapa do Cargo");
             $botaoMapa->set_title("Mapa do Cargo");
-            $botaoMapa->set_onClick("window.open('../grhRelatorios/mapaCargo.php?cargo=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-            #$botaoMapa->set_imagem($imagem1);
+            $botaoMapa->set_target("_blank");
+            $botaoMapa->set_url("../grhRelatorios/mapaCargo.php?cargo=$id");
             $menu->add_link($botaoMapa,"right");
             
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("window.open('?fase=relatorio&subFase=$subFase&id=$id','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=$subFase&id=$id");
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel,"right");
              

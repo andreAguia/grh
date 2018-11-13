@@ -151,33 +151,6 @@ if($acesso){
     switch ($fase){
         case "editar" :  
             $objeto->$fase($idPessoa);
-            
-            # Exibe os contatos antigos
-            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                $grid = new Grid();
-                $grid->abreColuna(12);
-                br();
-                
-                $select = 'SELECT tipo,
-                                     numero,
-                                     obs,
-                                     idContatos
-                                FROM tbcontatos
-                          WHERE idPessoa='.$idPessoa.'
-                       ORDER BY tipo';
-                
-                $row = $pessoal->select($select);
-                $tabela = new Tabela();
-                $tabela->set_titulo("Contatos Antigos");
-                $tabela->set_conteudo($row);
-                $tabela->set_label(array("Tipo","Email / Telefone","Obs"));
-                $tabela->set_align(array("center"));
-                $tabela->show();
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                
-            }
             break;
         case "excluir" :
             $objeto->$fase($idPessoa);

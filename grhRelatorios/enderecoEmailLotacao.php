@@ -52,7 +52,7 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Cargo','Endereço','E-mail','Telefones','Perfil'));
     $relatorio->set_bordaInterna(TRUE);
     $relatorio->set_align(array("center","left","left","left","left","left","left"));
-    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"primeiraLetraMaiuscula"));
+    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"plm"));
     
     $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal","pessoal","pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_enderecoRel","get_emails","get_telefones"));

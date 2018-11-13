@@ -3910,9 +3910,9 @@ class Pessoal extends Bd {
             $return = NULL;
 
             if($numero > 0){
-                $return = primeiraLetraMaiuscula($row[0])." - ".
-                          primeiraLetraMaiuscula($row[1])."<br/> ".
-                          primeiraLetraMaiuscula($row[2])." - ".
+                $return = plm($row[0])." - ".
+                          plm($row[1])."<br/> ".
+                          plm($row[2])." - ".
                           strtoupper($row[3])." Cep: ".$row[4];
             }
 

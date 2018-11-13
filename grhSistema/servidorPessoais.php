@@ -112,6 +112,7 @@ if($acesso){
                                'tipo' => 'texto',
                                'required' => TRUE,
                                'autofocus' => TRUE,
+                               'plm' => TRUE,
                                'title' => 'Nome do servidor',
                                'col' => 6,
                                'size' => 50),
@@ -144,6 +145,7 @@ if($acesso){
                                'label' => 'Conjuge:',
                                'tipo' => 'texto',
                                'title' => 'Nome do conjuge',
+                               'plm' => TRUE,
                                'col' => 6,
                                'size' => 50),
                         array ('linha' => 3,
@@ -181,6 +183,7 @@ if($acesso){
                                'label' => 'Nome do Pai:',
                                'tipo' => 'texto',                          
                                'title' => 'Nome do Pai do Servidor',
+                               'plm' => TRUE,
                                'fieldset' => 'Filiação',
                                'col' => 6,
                                'size' => 50),
@@ -189,6 +192,7 @@ if($acesso){
                                'label' => 'Nome da Mãe:',
                                'tipo' => 'texto',                          
                                'title' => 'Nome da Mãe do Servidor',
+                               'plm' => TRUE,
                                'col' => 6,
                                'size' => 50)
                                 ));

@@ -193,6 +193,7 @@ if($acesso)
                                        'tipo' => 'texto',
                                        'size' => 50,
                                        'required' => TRUE,
+                                       'plm' => TRUE,
                                        'autofocus' => TRUE,
                                        'title' => 'Nome do dependente.',
                                        'col' => 6,

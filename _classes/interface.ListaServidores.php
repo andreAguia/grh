@@ -453,7 +453,7 @@ class ListaServidores{
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
         }
         $classe = array(NULL,NULL,NULL,"pessoal","pessoal");
-        $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao");
+        $metodo = array(NULL,NULL,NULL,"get_cargoRel","get_lotacao");
                 
         # Relatório
         $relatorio = new Relatorio();

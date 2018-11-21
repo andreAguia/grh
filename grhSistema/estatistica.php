@@ -37,6 +37,9 @@ if($acesso)
     # Pega o ano
     $ano = post("ano",date("Y"));
     
+    # PArametros do perfil
+    $parametroPerfil = post('parametroPerfil',get_session('parametroPerfil','*'));
+    
     # Começa uma nova página
     $page = new Page();        
     $page->iniciaPagina();
@@ -417,10 +420,41 @@ if($acesso)
             
     ##################################################################################
             
-        case "cargo":            
-            titulotable("Estatística por Cargo Efetivo");
+        case "cargo": 
+            # Parâmetros
+            $form = new Form('?fase=cargo');
+            
+            if($parametroPerfil <> "*"){
+                $titulo = "Estatística por Cargo Efetivo - ".$pessoal->get_nomePerfil($parametroPerfil);
+            }else{
+                $titulo = "Estatística por Cargo Efetivo";
+            }
+            
+            # Perfil
+            $grid = new Grid("right");
+            $grid->abreColuna(12);
+            
+            $result = $pessoal->get_perfilComServidores();
+            array_unshift($result,array('*','-- Todos --'));
+
+            $controle = new Input('parametroPerfil','combo','Perfil:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Perfil');
+            $controle->set_array($result);
+            $controle->set_valor($parametroPerfil);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(5);
+            $form->add_item($controle);
+            
+            $form->show();
+            
+            titulotable($titulo);
             br();
             
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+                        
             $grid = new Grid();
             
             ## Primeira Coluna            
@@ -429,7 +463,7 @@ if($acesso)
                 # Número de Servidores
                 $painel = new Callout();
                 $painel->abre();
-                    $numServidores = $pessoal->get_numServidoresAtivos();
+                    $numServidores = $pessoal->get_numServidoresAtivosPerfil($parametroPerfil);
                     p($numServidores,"estatisticaNumero");
                     p("Servidores Ativos","estatisticaTexto");
                 $painel->fecha(); 
@@ -440,8 +474,12 @@ if($acesso)
                 $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
                                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                   WHERE situacao = 1
-                                GROUP BY tbtipocargo.tipo
+                                   WHERE situacao = 1 ';
+                if($parametroPerfil <> "*"){
+                    $selectGrafico .= ' AND idPerfil = '.$parametroPerfil;   
+                }
+                                 
+                $selectGrafico .= ' GROUP BY tbtipocargo.tipo
                                 ORDER BY 2 DESC ';
 
                 $servidores = $pessoal->select($selectGrafico);
@@ -463,15 +501,20 @@ if($acesso)
             
             ## Segunda Coluna
             $grid->abreColuna(12,6,5);
-
+            
             # Adm/Tec
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
-                                 AND tbtipocargo.tipo = "Adm/Tec"
-                            GROUP BY tbtipocargo.cargo
-                            ORDER BY 1 DESC ';
+                                 AND tbtipocargo.tipo = "Adm/Tec" ';
+            
+            if($parametroPerfil <> "*"){
+                $selectGrafico .= ' AND idPerfil = '.$parametroPerfil;   
+            }
+
+            $selectGrafico .= ' GROUP BY tbtipocargo.cargo
+                        ORDER BY 1 DESC ';
 
             $servidores = $pessoal->select($selectGrafico);
             tituloTable("Administrativos e Técnicos");
@@ -501,8 +544,13 @@ if($acesso)
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
-                                 AND tbtipocargo.tipo = "Professor"
-                            GROUP BY tbtipocargo.cargo
+                                 AND tbtipocargo.tipo = "Professor" ';
+            
+            if($parametroPerfil <> "*"){
+                $selectGrafico .= ' AND idPerfil = '.$parametroPerfil;   
+            }
+                                 
+            $selectGrafico .= ' GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -547,8 +595,13 @@ if($acesso)
                                     FROM tbservidor JOIN tbcargo USING (idCargo)
                                                     JOIN tbtipocargo USING (idTipoCargo)
                                    WHERE tbservidor.situacao = 1
-                                     AND tbtipocargo.cargo = "'.$valor.'"
-                                GROUP BY tbcargo.nome
+                                     AND tbtipocargo.cargo = "'.$valor.'"';
+            
+            if($parametroPerfil <> "*"){
+                $selectGrafico .= ' AND idPerfil = '.$parametroPerfil;   
+            }
+                                 
+            $selectGrafico .= ' GROUP BY tbcargo.nome
                                 ORDER BY 2 DESC ';
 
                 $servidores = $pessoal->select($selectGrafico);

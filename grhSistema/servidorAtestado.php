@@ -31,8 +31,40 @@ if($acesso)
     $orderCampo = get('orderCampo');
     $orderTipo = get('orderTipo');
 
+    $jscript = '$("#tipo").change(function(){
+                    var t1 = $("#tipo").val();
+                    switch (t1) {
+                        case "Próprio":
+                            $("#parentesco").hide();
+                            $("#labelparentesco").hide();
+                            break;
+                            
+                        default:
+                            $("#parentesco").show();
+                            $("#labelparentesco").show();
+                            break;
+                    }
+                    
+                });
+                
+                var t1 = $("#tipo").val();
+                switch (t1) {
+                        case "Próprio":
+                            $("#parentesco").hide();
+                            $("#labelparentesco").hide();
+                            break;
+                            
+                        default:
+                            $("#parentesco").show();
+                            $("#labelparentesco").show();
+                            break;
+                }
+                    
+                    ';
+    
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    $page->set_ready($jscript);
     $page->iniciaPagina();
 
     # Cabeçalho da Página

@@ -2072,7 +2072,7 @@ class Pessoal extends Bd {
 
     /**
      * Método get_perfilQuantidade
-     * informa se o n�mero de servidores ativos nesse perfil
+     * informa se o numero de servidores ativos nesse perfil
      * 
      * @param   integer $id id do Perfil
      */
@@ -2087,6 +2087,29 @@ class Pessoal extends Bd {
             $count = parent::count($select);
 
             return $count;
+
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_perfilComServidores
+     * informa os nomes de perfil que tem servidores ativos
+     * 
+     * @nota usada na rotina de estatistica por cargo
+     */
+
+    public function get_perfilComServidores()
+    {
+            $select = 'SELECT tbperfil.idPErfil, tbperfil.nome
+                         FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                        WHERE tbservidor.situacao = 1 
+                     GROUP BY tbperfil.nome
+                     HAVING count(tbservidor.idServidor) > 0';
+
+            $row = parent::select($select);
+
+            return $row;
 
     }
 
@@ -2600,6 +2623,29 @@ class Pessoal extends Bd {
         # Lotação
         if((!is_null($idLotacao)) AND ($idLotacao <> "*")){
             $select .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+        }
+
+        $count = parent::count($select);
+        return $count;
+    }
+
+    ###########################################################
+
+    function get_numServidoresAtivosPerfil($idPerfil = NULL){
+
+    /**
+     * informa o número de Servidores Ativos por perfil
+     * 
+     * @param integer $idPerfil do servidor
+     */
+        
+        $select = 'SELECT idServidor
+                     FROM tbservidor
+                    WHERE situacao = 1';	
+
+        # Lotação
+        if((!is_null($idPerfil)) AND ($idPerfil <> "*")){
+            $select .= ' AND idPerfil = '.$idPerfil;
         }
 
         $count = parent::count($select);

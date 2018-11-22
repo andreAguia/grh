@@ -52,8 +52,6 @@ if($acesso){
                 $("#labelprocesso").hide();
                 $("#dtPublicacao").hide();
                 $("#labeldtPublicacao").hide();
-                $("#pgPublicacao").hide();
-                $("#labelpgPublicacao").hide();
                 $("#dtPericia").hide();
                 $("#labeldtPericia").hide();
                 $("#num_Bim").hide();
@@ -95,9 +93,7 @@ if($acesso){
                     # Exibe a publicação
                     if($pessoal->get_licencaPublicacao($tipo[0]) == "Sim"){
                         $script .= ' $("#dtPublicacao").show();
-                                     $("#labeldtPublicacao").show();
-                                     $("#pgPublicacao").show();
-                                     $("#labelpgPublicacao").show();';
+                                     $("#labeldtPublicacao").show();';
                     }
 
                      # Verifica se essa licença necessita de perícia
@@ -165,14 +161,10 @@ if($acesso){
                 # Exibe a publicação
                 if($pessoal->get_licencaPublicacao($tipo[0]) == "Sim"){
                     $script .= ' $("#dtPublicacao").show();
-                                 $("#labeldtPublicacao").show();
-                                 $("#pgPublicacao").show();
-                                 $("#labelpgPublicacao").show();';
+                                 $("#labeldtPublicacao").show();';
                 }else{
                     $script .= ' $("#dtPublicacao").hide();
-                                 $("#labeldtPublicacao").hide();
-                                 $("#pgPublicacao").hide();
-                                 $("#labelpgPublicacao").hide();'; 
+                                 $("#labeldtPublicacao").hide();'; 
                 }
                 
                  # Verifica se essa licença necessita de perícia

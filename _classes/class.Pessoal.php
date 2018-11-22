@@ -1680,22 +1680,21 @@ class Pessoal extends Bd {
 
     /**
      * Método get_trienioPublicacao
-     * informa data e página da publicação no DOERJ do triênio vigente (último)
+     * informa data da publicação no DOERJ do triênio vigente (último)
      * 
      * @param	string $idServidor idServidor do servidor
      */
 
     function get_trienioPublicacao($idServidor)
     {
-            $select = 'SELECT dtPublicacao,
-                              pgPublicacao
+            $select = 'SELECT dtPublicacao
                          FROM tbtrienio
                         WHERE idServidor = '.$idServidor.'
                              ORDER BY percentual desc';
 
             $row = parent::select($select,FALSE);
 
-            return date_to_php($row[0]).' - pág.'.$row[1];
+            return date_to_php($row[0]);
 
     }
 
@@ -2828,9 +2827,9 @@ class Pessoal extends Bd {
     function get_licencaDados($idLicenca)
 
 
-    # Função que informa v�rios dados de uma licença
+    # Função que informa varios dados de uma licença
     #
-    # Função usada na rotina tempor�rio que transforma uma licença em publicação de licença premio
+    # Função usada na rotina temporario que transforma uma licença em publicação de licença premio
     # 
     # Parâmetro: id da licença
 
@@ -2843,8 +2842,7 @@ class Pessoal extends Bd {
             $select = 'SELECT processo,
                               dtInicioPeriodo,
                               dtFimPeriodo,
-                              dtPublicacao,
-                              pgPublicacao,
+                              dtPublicacao
                               obs,
                               idServidor                              
                          FROM tblicenca

@@ -289,7 +289,7 @@ if($acesso){
                           onus,
                           salario,
                           processo,
-                          pgPublicacao
+                          dtPublicacao
                      FROM tbcedido
                     WHERE idServidor = '.$idFicha;
 

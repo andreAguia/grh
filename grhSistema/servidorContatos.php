@@ -56,7 +56,6 @@ if($acesso){
                                 FROM tbpessoa
                                WHERE idPessoa = '.$idPessoa);
 
-
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
     #$objeto->set_linkListar('?');

@@ -3530,13 +3530,16 @@ class Pessoal extends Bd {
             # Pega o sexo do servidor
             $sexo = $this->get_sexo($idServidor);
             
+            # Conecta ao banco intra
+            $intra = new Intra();
+            
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
                 case "Masculino" :
-                    $idade = 60;
+                    $idade = $intra->get_variavel("idadeAposentadoriaMasculino");
                     break;
                 case "Feminino" :
-                    $idade = 55;
+                    $idade = $intra->get_variavel("idadeAposentadoriaFeminino");
                     break;
             }
             
@@ -3563,8 +3566,11 @@ class Pessoal extends Bd {
 
 	public function get_dataCompulsoria($idServidor){
             
+            # Conecta ao banco intra
+            $intra = new Intra();
+            
             # Idade obrigatória
-            $idade = 75;
+            $idade = $intra->get_variavel("idadeAposentadoriaCompulsoria");
             
             # Pega a data de nascimento (vem dd/mm/AAAA)
             $dtNasc = $this->get_dataNascimento($idServidor);

@@ -44,6 +44,7 @@ if($acesso)
     $grid->abreColuna(12);
     
     titulo("Exclusão de Servidor");
+    br();
     
     switch ($fase)
     {
@@ -123,8 +124,8 @@ if($acesso)
             #####################################################
             # Tabelas vinculadas pelo idservidor
             #####################################################
-            $tabelas = array("tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaopremio","tbtrabalhotre","tbtrienio");
-            $idCampo = array("idAtestado","idAverbacao","idCedido","idComissao","idDiaria","idElogio","idFerias","idFolga","idGratificacao","idHistCessao","idhistlot","idLicenca","idProgressao","idPublicacaoPremio","idTrabalhoTre","idTrienio");
+            $tabelas = array("tbabono","tbatestado","tbaverbacao","tbcedido","tbcomissao","tbdiaria","tbelogio","tbferias","tbfolga","tbgratificacao","tbhistcessao","tbhistlot","tblicenca","tbprogressao","tbpublicacaopremio","tbtrabalhotre","tbtrienio");
+            $idCampo = array("idAbono","idAtestado","idAverbacao","idCedido","idComissao","idDiaria","idElogio","idFerias","idFolga","idGratificacao","idHistCessao","idHistLot","idLicenca","idProgressao","idPublicacaoPremio","idTrabalhoTre","idTrienio");
             
             # Apaga os dados das tabelas
             $numTabelas = count($tabelas);
@@ -160,7 +161,7 @@ if($acesso)
             # Tabelas vinculadas pelo idpessoa
             #####################################################
             $tabelas = array("tbpessoa","tbdependente","tbdocumentacao","tbformacao");
-            $idCampo = array("idpessoa","idDependente","iddocumentacao","idformacao");
+            $idCampo = array("idPessoa","idDependente","idDocumentacao","idFormacao");
             
             # Verifica se o servidor tem outra matricula
             if($numIdservidor == 1){

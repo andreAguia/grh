@@ -128,6 +128,7 @@ if($acesso){
             $menu = new Menu();
             $menu->add_item('titulo','Aposentadoria');
             $menu->add_item('linkWindow','Relatório de Estatutários com Idade para Aposentadoria','../grhRelatorios/servIdadeAposent.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários que Atingiram Idade para Aposentadoria','../grhRelatorios/servidoresComIdadeParaAposentar.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
             $menu->add_item('linkWindow','Relatório Geral de Estatutarios com Abono Permanencia Deferido','../grhRelatorios/geralAbonoDeferido.php');
             $menu->add_item('linkWindow','Relatório Geral de Estatutarios com Abono Permanencia Indeferido','../grhRelatorios/geralAbonoIndeferido.php');

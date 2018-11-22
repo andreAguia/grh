@@ -46,10 +46,10 @@ if($acesso)
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Data","Processo","Publicaçao","Status"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array("left","left","center"));
+    $relatorio->set_align(array("left","left","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
     $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_cargo","get_lotacao"));    
+    $relatorio->set_metodo(array(NULL,NULL,"get_cargoRel","get_lotacaoRel"));    
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

@@ -369,10 +369,10 @@ if($acesso){
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
                 case "Masculino" :
-                    $diasAposentadoria = 12775;
+                    $diasAposentadoria = $intra->get_variavel("diasAposentadoriaMasculino");
                     break;
                 case "Feminino" :
-                    $diasAposentadoria = 10950;
+                    $diasAposentadoria = $intra->get_variavel("diasAposentadoriaFeminino");
                     break;
             }
             
@@ -406,17 +406,17 @@ if($acesso){
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
                 case "Masculino" :
-                    $ii = 60;
+                    $anosAposentadoria = $intra->get_variavel("idadeAposentadoriaMasculino");
                     break;
                 case "Feminino" :
-                    $ii = 55;
+                    $anosAposentadoria = $intra->get_variavel("idadeAposentadoriaFeminino");
                     break;
             }
             
             $dados4 = array(
                     array("Idade do Servidor ",$idade),
                     array("Data de Nascimento ",$dtNascimento),
-                    array("Data com Direito a Aposentadoria ($ii anos)",$aposentadoria),
+                    array("Data com Direito a Aposentadoria ($anosAposentadoria anos)",$aposentadoria),
                     array("Data da Compulsória (75 anos)",$Compulsoria)
             );
             
@@ -445,8 +445,8 @@ if($acesso){
                     }
 
                     # Análise por idade
-                    if($ii > $idade){
-                        p("O servidor ainda não alcançou os <b>$ii</b> anos de idade de para solicitar aposentadoria.","exibeOcorrencia");
+                    if($anosAposentadoria > $idade){
+                        p("O servidor ainda não alcançou os <b>$anosAposentadoria</b> anos de idade de para solicitar aposentadoria.","exibeOcorrencia");
                     }else{
                         p("O servidor já alcançou a idade para solicitar aposentadoria.","exibeOcorrencia");
                     }

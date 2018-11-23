@@ -980,7 +980,7 @@ class Grh{
         $select ='SELECT tbservidor.idFuncional,
                          tbservidor.matricula,
                          tbpessoa.nome,
-                         tbperfil.nome,
+                         tbservidor.idServidor,
                          tbservidor.idServidor,
                          tbservidor.dtAdmissao,
                          tbservidor.idServidor,
@@ -988,7 +988,6 @@ class Grh{
                          tbservidor.dtDemissao
                     FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
                                        LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
-                                       LEFT JOIN tbperfil ON tbservidor.idPerfil = tbperfil.idPerfil
                    WHERE idServidor = '.$idServidor;
 
         $conteudo = $servidor->select($select,TRUE);
@@ -1005,8 +1004,8 @@ class Grh{
         }
         #$align = array("center");
         
-        $classe = array(NULL,NULL,NULL,NULL,"pessoal",NULL,"pessoal","pessoal");
-        $metodo = array(NULL,NULL,NULL,NULL,"get_Cargo",NULL,"get_Lotacao","get_Situacao");
+        $classe = array(NULL,NULL,NULL,"pessoal","pessoal",NULL,"pessoal","pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_Perfil","get_Cargo",NULL,"get_Lotacao","get_Situacao");
         
         $formatacaoCondicional = array( array('coluna' => 0,
                                               'valor' => $servidor->get_idFuncional($idServidor),

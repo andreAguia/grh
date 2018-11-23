@@ -128,7 +128,7 @@ class ListaServidores{
                           tbpessoa.nome,
                           tbservidor.idServidor,
                           tbservidor.idServidor,
-                          tbperfil.nome,
+                          tbservidor.idServidor,
                           tbservidor.dtAdmissao,';
         
         if($this->situacao <> 1){
@@ -370,8 +370,8 @@ class ListaServidores{
         }else{
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
         }            
-        $classe = array(NULL,NULL,NULL,"pessoal","pessoal");
-        $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao");
+        $classe = array(NULL,NULL,NULL,"pessoal","pessoal","pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao","get_perfil");
         
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select.$this->selectPaginacao,TRUE);

@@ -44,7 +44,7 @@ class Pessoal extends Bd {
         $this->tabela = $nomeTabela;
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método set_idCampo
@@ -56,7 +56,7 @@ class Pessoal extends Bd {
         $this->idCampo = $idCampo;
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método Gravar
@@ -74,7 +74,7 @@ class Pessoal extends Bd {
         parent::gravar($campos,$valor,$idValor,$tabela,$idCampo,$alerta);
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método Excluir
@@ -87,7 +87,7 @@ class Pessoal extends Bd {
         return TRUE;		
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_gratificacao
@@ -110,7 +110,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_gratificacaoDtFinal
@@ -141,7 +141,7 @@ class Pessoal extends Bd {
         }
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_periodoDisponivel
@@ -182,7 +182,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_ramais
@@ -203,7 +203,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_salarioBase
@@ -225,7 +225,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_salarioTotal
@@ -267,7 +267,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_aniversariantes
@@ -296,7 +296,7 @@ class Pessoal extends Bd {
         return $result; 
     }
     
-    ###########################################################
+###########################################################
 
     /**
      * Método get_numAniversariantes
@@ -323,7 +323,7 @@ class Pessoal extends Bd {
         return $result; 
     }
     
-    ###########################################################
+###########################################################
 
     /**
      * Método get_numAniversariantesHoje
@@ -343,7 +343,7 @@ class Pessoal extends Bd {
         return $result; 
     }
     
-    ###########################################################
+###########################################################
 
     /**
      * Método set_senhaNull
@@ -358,7 +358,7 @@ class Pessoal extends Bd {
             parent::gravar('senha_intra',$senha,$matr,'tbservidor','idServidor',$alert);
 
     }
-    ###########################################################
+###########################################################
 
     /**
      * Método get_diasAusentes
@@ -386,7 +386,7 @@ class Pessoal extends Bd {
 
     }
 
-    ######################################################################################
+######################################################################################
 
     /**
      * Método get_lotacao
@@ -420,7 +420,7 @@ class Pessoal extends Bd {
         return $retorno;
     }
 
-    ######################################################################################
+######################################################################################
 
     /**
      * Método get_lotacao
@@ -454,7 +454,7 @@ class Pessoal extends Bd {
         return $retorno;
     }
 
-    ######################################################################################
+######################################################################################
 
     /**
      * Método get_lotacaoDiretoria
@@ -473,7 +473,7 @@ class Pessoal extends Bd {
         return $row[0];
     }
 
-    ######################################################################################
+######################################################################################
 
     /**
      * Método get_lotacao
@@ -497,7 +497,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_lotacaoNumServidores
@@ -521,7 +521,7 @@ class Pessoal extends Bd {
 
     }
 
-    ###########################################################
+###########################################################
 
     /**
      * Método get_idlotacao
@@ -661,7 +661,7 @@ class Pessoal extends Bd {
         return $row[0];
     }
 
-    ###########################################################
+###########################################################
 
 
     /**
@@ -674,19 +674,50 @@ class Pessoal extends Bd {
     public function get_perfil($idServidor)
 
     {
-            # Pega o cargo do servidor
-            $select = 'SELECT tbperfil.nome
-                         FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
-                        WHERE idServidor = '.$idServidor;
+        # Pega o cargo do servidor
+        $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
+                     FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
+                    WHERE idServidor = '.$idServidor;
 
-            $row = parent::select($select,FALSE);
-            $perfil = $row[0];
+        $row = parent::select($select,FALSE);
 
-            return $perfil;
+        $retorno = $row[1];
+
+        # Verifica se e cedido para exibir o orgao de origem
+        if($row[0] == 2){
+            $orgaoOrigem = $this->get_orgaoOrigem($idServidor);
+            $retorno .= '<br/><span id="orgaoCedido">('.$orgaoOrigem.')';
+        }
+
+        return $retorno;
 
     }
 
-    ###########################################################
+###########################################################
+
+
+    /**
+     * Método get_orgaoOrigem
+     * Informa o orgao de origem de um servidor cedido de fora da uenf
+     * 
+     * @param   string $idServidor  idServidor do servidor
+     */
+
+    public function get_orgaoOrigem($idServidor)
+
+    {
+        # Pega o cargo do servidor
+        $select = 'SELECT orgaoOrigem
+                     FROM tbcedido
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+
+    }
+
+###########################################################
 
 
     /**

@@ -42,6 +42,20 @@ $mes = array(array("1","Janeiro"),
              array("11","Novembro"),
              array("12","Dezembro"));
 
+$nomeMes = array(NULL,
+                 "Janeiro",
+                 "Fevereiro",
+                 "Março",
+                 "Abril",
+                 "Maio",
+                 "Junho",
+                 "Julho",
+                 "Agosto",
+                 "Setembro",
+                 "Outubro",
+                 "Novembro",
+                 "Dezembro");
+
 # Inicia a Session
 session_start();
 #session_cache_limiter('private'); 

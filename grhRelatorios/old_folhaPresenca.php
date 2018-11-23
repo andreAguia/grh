@@ -16,7 +16,7 @@ include ("../grhSistema/_config.php");
 
 # Pega os parâmetros dos relatórios
 $anoBase = post('anoBase',date('Y'));
-$trimestre = post('trimestre',1);
+$mesBase = post('mesBase',date('m'));
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -48,8 +48,8 @@ if($acesso){
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioProcessosArquivados');
-    $relatorio->set_titulo('Cartão de Frequência Trimestral');
-    $relatorio->set_tituloLinha2($trimestre.'° Trimestre / '.$anoBase);
+    $relatorio->set_titulo('Folha de Presença');
+    $relatorio->set_tituloLinha2(get_nomeMes($mesBase).'/'.$anoBase);
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Admissão'));
     #$relatorio->set_width(array(12,30,28,20,10));
     $relatorio->set_align(array("center"));
@@ -71,12 +71,12 @@ if($acesso){
                                       'padrao' => $anoBase,
                                       'onChange' => 'formPadrao.submit();',
                                       'linha' => 1),
-                               array ('nome' => 'trimestre',
-                                      'label' => 'Trimestre:',
+                               array ('nome' => 'mesBase',
+                                      'label' => 'Mês:',
                                       'tipo' => 'combo',
-                                      'array' => array(array(1,'Primeiro'),array(2,'Segundo'),array(3,'Terceiro'),array(4,'Quarto')),
+                                      'array' => $mes,
                                       'size' => 10,
-                                      'padrao' => $trimestre,
+                                      'padrao' => $mesBase,
                                       'title' => 'Mês',
                                       'col' => 3,
                                       'onChange' => 'formPadrao.submit();',
@@ -96,154 +96,94 @@ if($acesso){
     echo '<table class="tabelaRelatorio" id="tableFolhaPresenca">';
     
     echo '<col style="width:5%">';
-    echo '<col style="width:20%">';
-    echo '<col style="width:5%">';
-    echo '<col style="width:20%">';
-    echo '<col style="width:5%">';
-    echo '<col style="width:20%">';
-    echo '<col style="width:5%">';
+    echo '<col style="width:15%">';
+    echo '<col style="width:15%">';
+    echo '<col style="width:15%">';
+    echo '<col style="width:50%">';
     
-    switch ($trimestre){
-        case 1:
-            $mesInicial = 1;
-            break;
-        
-        case 2:
-            $mesInicial = 4;
-            break;
-        
-        case 3:
-            $mesInicial = 7;
-            break;
-        
-        case 4:
-            $mesInicial = 10;
-            break;    
-    }
-    
-    # Verifica quantos dias tem o mês específico
-    $dias1 = date("j",mktime(0,0,0,$mesInicial+1,0,$anoBase));
-    $dias2 = date("j",mktime(0,0,0,$mesInicial+2,0,$anoBase));
-    $dias3 = date("j",mktime(0,0,0,$mesInicial+3,0,$anoBase));
-    
-    # Cabeçalho
     echo '<tr>';
         echo '<th>Dia</th>';
-        echo '<th>'.$nomeMes[$mesInicial].'</th>';
-        echo '<th>Codigo</th>';
-        echo '<th>'.$nomeMes[$mesInicial+1].'</th>';
-        echo '<th>Codigo</th>';
-        echo '<th>'.$nomeMes[$mesInicial+2].'</th>';
-        echo '<th>Codigo</th>';
+        echo '<th>Entrada</th>';
+        echo '<th>Saída</th>';
+        echo '<th>Rubrica</th>';
+        echo '<th>Observações</th>';
     echo '</tr>';
     
-    $contador = 0;
-    while ($contador < 31){	
+    # Verifica quantos dias tem o mês específico
+    $dias = date("j",mktime(0,0,0,$mesBase+1,0,$anoBase));
+
+    $contador=0;
+    while ($contador<$dias){	
         $contador++;
         echo '<tr>';
 
         # Cria variavel com a data no formato americano (ano/mes/dia)
-        #$data = date("d/m/Y", mktime(0, 0, 0, $mesBase , $contador, $anoBase));
+        $data = date("d/m/Y", mktime(0, 0, 0, $mesBase , $contador, $anoBase));
 
         # Verifica se nesta data o servidor está com licença
-        #$licenca = $pessoal->get_licenca($idServidorPesquisado,$data);
-        $licenca = NULL;
+        $licenca = $pessoal->get_licenca($idServidorPesquisado,$data); 
 
         # Verifica se nesta data existe um feriado
         #$feriado = $pessoal->get_feriado($data); 
         $feriado = NULL;
         
         # Verifica se nesta data o servidor está em férias
-        #$ferias = $pessoal->emFerias($idServidorPesquisado, $data);
-        $ferias = NULL;
+        $ferias = $pessoal->emFerias($idServidorPesquisado, $data);
+
+        # Verifica que dia da semana é
+        $tstamp=mktime(0,0,0,$mesBase,$contador,$anoBase);
+        $Tdate = getdate($tstamp);
+        $wday=$Tdate["wday"];
 
         # Exibe o número do dia
         echo '<td align="center">'.$contador.'</td>';
-        
-        ####################
-        # Primeira coluna
-        ####################
-        
-        if($contador <= $dias1){
-            $tstamp=mktime(0,0,0,$mesInicial,$contador,$anoBase);
-            $Tdate = getdate($tstamp);
-            $wday1=$Tdate["wday"];
 
-            switch ($wday1){
+        # Verifica se é o dia do feriado
+        if(!(is_null($feriado))){        
+            echo '<td align="center">FERIADO</td>';
+            echo '<td align="center">-------</td>';
+            echo '<td align="center">-------</td>';
+            echo '<td align="center">'.$feriado.'</td>';
+        }elseif(!is_null($licenca)){
+            echo '<td align="center">LICENÇA</td>';
+            echo '<td align="center">-------</td>';
+            echo '<td align="center">-------</td>';
+            echo '<td align="center">'.$licenca.'</td>';
+        }elseif($ferias){
+            echo '<td align="center">FÉRIAS</td>';
+            echo '<td align="center">-------</td>';
+            echo '<td align="center">-------</td>';
+            echo '<td align="center">FÉRIAS</td>';
+        }else{	
+            switch ($wday){
                 case 0:
                     echo '<td align="center">Domingo</td>';
+                    echo '<td align="center">-------</td>';
+                    echo '<td align="center">-------</td>';
+                    echo '<td align="center">-------</td>';
                     break;	
                 case 6:
                     echo '<td align="center">Sábado</td>';
+                    echo '<td align="center">-------</td>';
+                    echo '<td align="center">-------</td>';
+                    echo '<td align="center">-------</td>';
                     break;		
                 default:
                     echo '<td>&nbsp</td>';
-                    break;
-            }
-        }else{
-            echo '<td>------------</td>';
-        }
-
-        # Coluna do codigo
-        echo '<td>&nbsp</td>';
-        
-        ####################
-        # Segunda coluna 
-        ####################
-        if($contador <= $dias2){
-            $tstamp=mktime(0,0,0,$mesInicial+1,$contador,$anoBase);
-            $Tdate = getdate($tstamp);
-            $wday2=$Tdate["wday"];
-
-            switch ($wday2){
-                case 0:
-                    echo '<td align="center">Domingo</td>';
-                    break;	
-                case 6:
-                    echo '<td align="center">Sábado</td>';
-                    break;		
-                default:
+                    echo '<td>&nbsp</td>';
+                    echo '<td>&nbsp</td>';
                     echo '<td>&nbsp</td>';
                     break;
             }
-        }else{
-            echo '<td>------------</td>';
         }
-
-        # Coluna do codigo
-        echo '<td>&nbsp</td>';
-
-        ####################
-        # Terceira coluna 
-        ####################
-        if($contador <= $dias3){
-            $tstamp=mktime(0,0,0,$mesInicial+2,$contador,$anoBase);
-            $Tdate = getdate($tstamp);
-            $wday3=$Tdate["wday"];
-
-            switch ($wday3){
-                case 0:
-                    echo '<td align="center">Domingo</td>';
-                    break;	
-                case 6:
-                    echo '<td align="center">Sábado</td>';
-                    break;		
-                default:
-                    echo '<td>&nbsp</td>';
-                    break;
-            }
-        }else{
-            echo '<td>------------</td>';
-        }
-
-        # Coluna do codigo
-        echo '<td>&nbsp</td>';
-        
-        echo '</tr>';
+            echo '</tr>';
     }
-    
     echo '</table>';
-    br();
+    
+    # Nota de rodapé
+    p('Considerando o Intervalo de 1 hora para o Almoço','pFolhaPresencaRodape');        
+    br(2);
+    
     echo '<table class="tabelaRelatorio" id="tableFolhaPresenca2">';
     echo '<tr>';
     echo '<td>______________________________________________</td>';

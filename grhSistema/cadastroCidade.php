@@ -36,12 +36,11 @@ if($acesso)
     $id = soNumeros(get('id'));    
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
+        $parametro = retiraAspas(get_session('sessionParametro'));  # passa o parametro da session para a variavel parametro retirando as aspas
+    } else {
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
+        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
     # Ordem da tabela
@@ -71,11 +70,13 @@ if($acesso)
     $objeto->set_parametroValue($parametro);
 
     # ordenaç?o
-    if(is_null($orderCampo))
-            $orderCampo = "2";
+    if (is_null($orderCampo)) {
+        $orderCampo = "2";
+    }
 
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
+    if (is_null($orderTipo)) {
+        $orderTipo = 'asc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT idCidade,

@@ -404,9 +404,9 @@ p#termodePosse{
  
  table#tableFolhaPresenca th{
      color: #000000;
-     font-size: 12px;
+     font-size: 14px;
      text-align: center;
-     border: 1px solid black;
+     border: 2px solid black;
      height: 20px;
  }
  
@@ -414,7 +414,7 @@ p#termodePosse{
      color: #000000;
      font-size: 12px;
      text-align: center;
-     border: 1px solid black;
+     border: 2px solid black;
      height: 20px;
  }
  

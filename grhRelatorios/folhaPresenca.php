@@ -121,20 +121,15 @@ if($acesso){
             break;    
     }
     
-    # Verifica quantos dias tem o mês específico
-    $dias1 = date("j",mktime(0,0,0,$mesInicial+1,0,$anoBase));
-    $dias2 = date("j",mktime(0,0,0,$mesInicial+2,0,$anoBase));
-    $dias3 = date("j",mktime(0,0,0,$mesInicial+3,0,$anoBase));
-    
     # Cabeçalho
     echo '<tr>';
-        echo '<th>Dia</th>';
-        echo '<th>'.$nomeMes[$mesInicial].'</th>';
-        echo '<th>Codigo</th>';
-        echo '<th>'.$nomeMes[$mesInicial+1].'</th>';
-        echo '<th>Codigo</th>';
-        echo '<th>'.$nomeMes[$mesInicial+2].'</th>';
-        echo '<th>Codigo</th>';
+        echo '<th><b>DIA</b></th>';
+        echo '<th><b>'.mb_strtoupper($nomeMes[$mesInicial]).'</b></th>';
+        echo '<th><b>COD</b></th>';
+        echo '<th><b>'.mb_strtoupper($nomeMes[$mesInicial+1]).'</b></th>';
+        echo '<th><b>COD</b></th>';
+        echo '<th><b>'.mb_strtoupper($nomeMes[$mesInicial+2]).'</b></th>';
+        echo '<th><b>COD</b></th>';
     echo '</tr>';
     
     $contador = 0;
@@ -142,107 +137,85 @@ if($acesso){
         $contador++;
         echo '<tr>';
 
-        # Cria variavel com a data no formato americano (ano/mes/dia)
-        #$data = date("d/m/Y", mktime(0, 0, 0, $mesBase , $contador, $anoBase));
-
-        # Verifica se nesta data o servidor está com licença
-        #$licenca = $pessoal->get_licenca($idServidorPesquisado,$data);
-        $licenca = NULL;
-
-        # Verifica se nesta data existe um feriado
-        #$feriado = $pessoal->get_feriado($data); 
-        $feriado = NULL;
-        
-        # Verifica se nesta data o servidor está em férias
-        #$ferias = $pessoal->emFerias($idServidorPesquisado, $data);
-        $ferias = NULL;
-
         # Exibe o número do dia
         echo '<td align="center">'.$contador.'</td>';
         
-        ####################
-        # Primeira coluna
-        ####################
+        # Repete 3 vezes. Uma para cada coluna
+        for ($i = 0; $i <= 2; $i++) {
+            
+            # Verifica quantos dias tem o mês específico
+            $dias = date("j",mktime(0,0,0,$mesInicial+1+$i,0,$anoBase));
         
-        if($contador <= $dias1){
-            $tstamp=mktime(0,0,0,$mesInicial,$contador,$anoBase);
-            $Tdate = getdate($tstamp);
-            $wday1=$Tdate["wday"];
+            if($contador <= $dias){
+                # Cria variavel com a data no formato americano (ano/mes/dia)
+                $data = date("d/m/Y", mktime(0, 0, 0, $mesInicial+$i , $contador, $anoBase));
 
-            switch ($wday1){
-                case 0:
-                    echo '<td align="center">Domingo</td>';
-                    break;	
-                case 6:
-                    echo '<td align="center">Sábado</td>';
-                    break;		
-                default:
-                    echo '<td>&nbsp</td>';
-                    break;
+                # Verifica se nesta data o servidor está com licença
+                $licenca = $pessoal->get_licenca($idServidorPesquisado,$data);
+                
+                # Verifica se nesta data o servidor está em licança especial (prêmio)
+                $licencaPremio = $pessoal->emLicencaPremio($idServidorPesquisado, $data);
+                
+                # Verifica se nesta data o servidor está em férias
+                $ferias = $pessoal->emFerias($idServidorPesquisado, $data);
+                
+                # Verifica se nesta data o servidor está trabalhando no TRE
+                $emAfastamentoTre = $pessoal->emAfastamentoTre($idServidorPesquisado, $data);
+                
+                # Verifica se nesta data o servidor está em folga do TRE
+                $emFolgaTre = $pessoal->emFolgaTre($idServidorPesquisado, $data);
+                
+                # Verifica se nesta data existe um feriado
+                $feriado = $pessoal->get_feriado($data); 
+                
+                
+
+                # informa as ocorrências                
+                if($emFolgaTre){ // verifica se está folgando pelo no TRE
+                    echo '<td align="center">Folga do TRE</td>';
+                }elseif($emAfastamentoTre){ // verifica se está trabalhando no TRE
+                    echo '<td align="center">Trabalhando no TRE</td>';
+                }elseif(!is_null($feriado)){     // verifica se tem feriado
+                    echo '<td align="center">'.$feriado.'</td>';
+                }elseif(!is_null($licenca)){     // verifica se tem licença
+                    echo '<td align="center">'.$licenca.'</td>';
+                }elseif($ferias){ // verifica se tem férias
+                    echo '<td align="center">Férias</td>';
+                }elseif($licencaPremio){ // verifica se tem licença prêmio
+                    echo '<td align="center">Licença Especial (Prêmio)</td>';
+                }else{
+
+                    $tstamp=mktime(0,0,0,$mesInicial+$i,$contador,$anoBase);
+                    $Tdate = getdate($tstamp);
+                    $wday1=$Tdate["wday"];
+
+                    switch ($wday1){
+                        case 0:
+                            echo '<td align="center"><b>DOMINGO</b></td>';
+                            break;	
+                        case 6:
+                            echo '<td align="center"><b>SÁBADO</b></td>';
+                            break;		
+                        default:
+                            echo '<td>&nbsp</td>';
+                            break;
+                    }
+                }
+            }else{
+                echo '<td>------------</td>';
             }
-        }else{
-            echo '<td>------------</td>';
-        }
 
-        # Coluna do codigo
-        echo '<td>&nbsp</td>';
-        
-        ####################
-        # Segunda coluna 
-        ####################
-        if($contador <= $dias2){
-            $tstamp=mktime(0,0,0,$mesInicial+1,$contador,$anoBase);
-            $Tdate = getdate($tstamp);
-            $wday2=$Tdate["wday"];
-
-            switch ($wday2){
-                case 0:
-                    echo '<td align="center">Domingo</td>';
-                    break;	
-                case 6:
-                    echo '<td align="center">Sábado</td>';
-                    break;		
-                default:
-                    echo '<td>&nbsp</td>';
-                    break;
-            }
-        }else{
-            echo '<td>------------</td>';
-        }
-
-        # Coluna do codigo
-        echo '<td>&nbsp</td>';
-
-        ####################
-        # Terceira coluna 
-        ####################
-        if($contador <= $dias3){
-            $tstamp=mktime(0,0,0,$mesInicial+2,$contador,$anoBase);
-            $Tdate = getdate($tstamp);
-            $wday3=$Tdate["wday"];
-
-            switch ($wday3){
-                case 0:
-                    echo '<td align="center">Domingo</td>';
-                    break;	
-                case 6:
-                    echo '<td align="center">Sábado</td>';
-                    break;		
-                default:
-                    echo '<td>&nbsp</td>';
-                    break;
-            }
-        }else{
-            echo '<td>------------</td>';
-        }
-
-        # Coluna do codigo
-        echo '<td>&nbsp</td>';
+            # Coluna do codigo
+            echo '<td>&nbsp</td>';
+        } // for
         
         echo '</tr>';
     }
     
     echo '</table>';
+    # data de impressão
+    p('Emitido em: '.date('d/m/Y - H:i:s')." (".$idUsuario.")",'pRelatorioDataImpressao');
+    
     br();
     echo '<table class="tabelaRelatorio" id="tableFolhaPresenca2">';
     echo '<tr>';
@@ -255,9 +228,6 @@ if($acesso){
     echo '</tr>';
     echo '<tr>';
     echo '</table>';
-
-    # data de impressão
-    p('Emitido em: '.date('d/m/Y - H:i:s'),'pRelatorioDataImpressao');
     
     $grid->fechaColuna();
     $grid->fechaGrid();

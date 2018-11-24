@@ -336,7 +336,7 @@ class Grh{
                 titulo('Tabelas Secundárias'); 
                 br();
 
-                $menu = new MenuGrafico(11);
+                $menu = new MenuGrafico(6);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -424,6 +424,14 @@ class Grh{
                 $botao->set_url("cadastroCidade.php?origem=1");
                 $botao->set_imagem(PASTA_FIGURAS.'city.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Cidades');
+                #$botao->set_accesskey('S');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Feriados');
+                $botao->set_url("cadastroFeriado.php?origem=1");
+                $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Feriados');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
 

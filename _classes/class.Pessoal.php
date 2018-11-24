@@ -958,7 +958,7 @@ class Pessoal extends Bd {
 
     function emFerias($idServidor, $data = NULL){
 
-    # Função que informa se a idServidor esta em férias na data atual
+    # Função que informa se a idServidor esta em férias na data informada
     #
     # Parâmetro: a matrícula a ser pesquisada
         
@@ -987,20 +987,27 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-    function emLicenca($idServidor)
+    function emLicenca($idServidor, $data = NULL){
 
 
-    # Função que informa se a idServidor está em licanca na data atual
+    # Função que informa se a idServidor está em licenca na data informada
     #
     # Parâmetro: a matrícula a ser pesquisada
 
-    {
+    
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+   
         # Monta o select
         $select = "SELECT idLicenca 
                      FROM tblicenca
                     WHERE idServidor = '$idServidor'
-                      AND current_date() >= dtInicial 
-                      AND current_date() <= ADDDATE(dtInicial,numDias-1)";
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
         $row = parent::select($select,FALSE);
 
@@ -1013,19 +1020,26 @@ class Pessoal extends Bd {
     
     ##########################################################################################
 
-    function emLicencaPremio($idServidor){
+    function emLicencaPremio($idServidor, $data = NULL){
 
 
     # Função que informa se a idServidor está em licanca Prêmio na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
     
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+
         # Monta o select
         $select = "SELECT idLicencaPremio 
                      FROM tblicencapremio
                     WHERE idServidor = '$idServidor'
-                      AND current_date() >= dtInicial 
-                      AND current_date() <= ADDDATE(dtInicial,numDias-1)";
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
         $row = parent::select($select,FALSE);
 
@@ -2961,50 +2975,64 @@ class Pessoal extends Bd {
 	
     ##########################################################################################
 
-    function emFolgaTre($idServidor)
+    function emFolgaTre($idServidor, $data = NULL){
 
     # Função que informa se a idServidor est� folgando (TRE) na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
-
-    {
+        
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+    
         # Monta o select
         $select = "SELECT idFolga
                      FROM tbfolga
                     WHERE idServidor = '$idServidor'
-                      AND current_date() >= data 
-                      AND current_date() <= ADDDATE(data,dias-1)";
+                      AND '$data' >= data 
+                      AND '$data' <= ADDDATE(data,dias-1)"; 
 
         $row = parent::select($select,FALSE);
         
-        if(is_null($row[0]))
+        if (is_null($row[0])) {
             return 0;
-        else 
+        } else {
             return 1;
+        }
     }
 
     ##########################################################################################
 
-    function emAfastamentoTre($idServidor)
+    function emAfastamentoTre($idServidor, $data = NULL){
 
     # Função que informa se a idServidor está afastada para o (TRE) na data atual
     #
     # Parâmetro: a matrícula a ser pesquisada
-
-    {
+        
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+        
         # Monta o select
         $select = "SELECT idTrabalhoTre
                      FROM tbtrabalhotre
                     WHERE idServidor = '$idServidor'
-                      AND current_date() >= data 
-                      AND current_date() <= ADDDATE(data,dias-1)";
+                      AND '$data' >= data 
+                      AND '$data' <= ADDDATE(data,dias-1)"; 
 
         $row = parent::select($select,FALSE);
         
-        if(is_null($row[0]))
+        if (is_null($row[0])) {
             return 0;
-        else 
+        } else {
             return 1;
+        }
     }
 
     ###########################################################

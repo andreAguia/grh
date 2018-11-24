@@ -22,6 +22,15 @@ if($acesso)
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $origem = get('origem',FALSE);
+    if($origem){
+        # Grava no log a atividade
+        $atividade = "Visualizou o cadastro de feriados";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));    
@@ -55,18 +64,20 @@ if($acesso)
     $objeto->set_nome('Feriados');
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('../../areaServidor/adminSistema/administracao.php');
+    $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
     # ordenaç?o
-    if(is_null($orderCampo))
-            $orderCampo = "1";
+    if (is_null($orderCampo)) {
+        $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
-            $orderTipo = 'desc';
+    if (is_null($orderTipo)) {
+        $orderTipo = 'desc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT data,
@@ -122,18 +133,21 @@ if($acesso)
                'required' => TRUE,
                'autofocus' => TRUE,
                'title' => 'Data do feriado.',
+               'col' => 3,
                'linha' => 1),
         array ('linha' => 1,
                'nome' => 'descricao',
                'label' => 'Descrição:',
                'tipo' => 'texto',
                'required' => TRUE,
+               'col' => 6,
                'size' => 50),
         array ('linha' => 1,
                'nome' => 'tipo',
                'label' => 'Tipo:',
                'tipo' => 'combo',
                'array' => array("anual","data única"),
+               'col' => 3,
                'size' => 30)));
 
     # idUsuário para o Log

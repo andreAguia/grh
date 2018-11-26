@@ -86,7 +86,7 @@ class Grh{
             br();
 
             $tamanhoImage = 60;
-            $menu = new MenuGrafico(4);
+            $menu = new MenuGrafico(5);
 
             $botao = new BotaoGrafico();
             $botao->set_label('Perfil');
@@ -150,6 +150,14 @@ class Grh{
             $botao->set_imagem(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Tipos de Licenças');
             $botao->set_accesskey('b');
+            $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Feriados');
+            $botao->set_url("cadastroFeriado.php?origem=1");
+            $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Feriados');
+            #$botao->set_accesskey('S');
             $menu->add_item($botao);
 
             $menu->show();
@@ -336,7 +344,7 @@ class Grh{
                 titulo('Tabelas Secundárias'); 
                 br();
 
-                $menu = new MenuGrafico(6);
+                $menu = new MenuGrafico(11);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');
@@ -424,14 +432,6 @@ class Grh{
                 $botao->set_url("cadastroCidade.php?origem=1");
                 $botao->set_imagem(PASTA_FIGURAS.'city.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Cidades');
-                #$botao->set_accesskey('S');
-                $menu->add_item($botao);
-                
-                $botao = new BotaoGrafico();
-                $botao->set_label('Feriados');
-                $botao->set_url("cadastroFeriado.php?origem=1");
-                $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Feriados');
                 #$botao->set_accesskey('S');
                 $menu->add_item($botao);
 

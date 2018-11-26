@@ -452,8 +452,8 @@ class ListaServidores{
         }else{
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
         }
-        $classe = array(NULL,NULL,NULL,"pessoal","pessoal");
-        $metodo = array(NULL,NULL,NULL,"get_cargoRel","get_lotacao");
+        $classe = array(NULL,NULL,NULL,"pessoal","pessoal","pessoal");
+        $metodo = array(NULL,NULL,NULL,"get_cargoRel","get_lotacao","get_perfil");
                 
         # Relatório
         $relatorio = new Relatorio();

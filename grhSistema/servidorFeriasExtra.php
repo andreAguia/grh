@@ -23,12 +23,20 @@ if($dataInicial <= $hoje){
 # Conecta ao banco de dados
 $pessoal = new Pessoal();
 
-# Verifica se a data Inicial é posterior a data de admissão
+# Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($servidor);
 $dtAdmissao = date_to_bd($dtAdmissao);
 if($dataInicial < $dtAdmissao){
     $erro = 1;
-    $msgErro .= 'O servidor não pode pedir férias antes de ser admitido!'.$dtAdmissao.$dataInicial.'\n';
+    $msgErro .= 'O servidor não pode pedir férias ANTES de ser admitido!\n';
+}
+
+# Verifica se a data Inicial é posterior a data de saida
+$dtSaida = $pessoal->get_dtSaida($servidor);
+$dtSaida = date_to_bd($dtSaida);
+if($dataInicial > $dtSaida){
+    $erro = 1;
+    $msgErro .= 'O servidor não pode pedir férias DEPOIS de sair da UENF!\n';
 }
 
 # Verifica quantos dias o servidor já pediu nesse exercicio

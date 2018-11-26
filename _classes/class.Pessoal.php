@@ -857,7 +857,11 @@ class Pessoal extends Bd {
 
             $dt = parent::select($select,FALSE);
             
-            return date_to_php($dt[0]);
+            if(vazio($dt[0])){
+                return NULL;
+            }else{
+                return date_to_php($dt[0]);
+            }
     }
 
     ###########################################################

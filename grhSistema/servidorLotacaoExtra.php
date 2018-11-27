@@ -23,3 +23,15 @@ if($pessoal->temLotacaoNestaData($dtInicial, $idServidor, $id)){
     $msgErro.='Este servidor já tem uma lotação nesta data!\nEle não pode ser lotado em mais de um local no mesmo dia!\n';
     $erro = 1;
 }
+
+# Verifica se a data Inicial é posterior a data de saida
+$dtSaida = $pessoal->get_dtSaida($servidor);
+
+# Se tiver data de saida
+if(!is_null($dtSaida)){
+    $dtSaida = date_to_bd($dtSaida);
+    if($dtInicial > $dtSaida){
+        $erro = 1;
+        $msgErro .= 'O servidor não pode ser lotado DEPOIS de sair da UENF!\n';
+    }
+}

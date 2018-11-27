@@ -89,8 +89,12 @@ if($dtInicial < $dtAdmissao){
 
 # Verifica se a data Inicial é posterior a data de saida
 $dtSaida = $pessoal->get_dtSaida($idServidor);
-$dtSaida = date_to_bd($dtSaida);
-if($dtInicial > $dtSaida){
-    $erro = 1;
-    $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
+
+# Se tiver data de saida
+if(!is_null($dtSaida)){
+    $dtSaida = date_to_bd($dtSaida);
+    if($dtInicial > $dtSaida){
+        $erro = 1;
+        $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
+    }
 }

@@ -271,8 +271,11 @@ if($acesso){
             break;          
 
         case "excluir" :	
-        case "gravar" :		
             $objeto->$fase($id);
+            break;
+        
+        case "gravar" :		
+            $objeto->gravar($id,"servidorTrienioExtra.php"); 			
             break;
     }
     $page->terminaPagina();

@@ -5,17 +5,11 @@
  * 
  */
 
-$dtInicial = $campoValor[0];
-$valor = $campoValor[2];
-$idServidor = $campoValor[5];
-
+# Conecta ao Banco de Dados
 $pessoal = new Pessoal();
 
-# Valida se o valor é igual a zero
-if($valor == 0){
-    $msgErro.='O valor deve ser informado!\n';
-    $erro = 1;
-}
+$dtInicial = $campoValor[1];
+$idServidor = $campoValor[8];
 
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);

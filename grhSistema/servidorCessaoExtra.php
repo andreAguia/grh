@@ -31,3 +31,15 @@ if(!$erro){
         $pessoal->gravar($campos,$valor,NULL,"tbhistlot","idHistLot",FALSE);
     }
 }
+
+# Verifica se a data Inicial é posterior a data de saida
+$dtSaida = $pessoal->get_dtSaida($servidor);
+
+# Se tiver data de saida
+if(!is_null($dtSaida)){
+    $dtSaida = date_to_bd($dtSaida);
+    if($dtInicial > $dtSaida){
+        $erro = 1;
+        $msgErro .= 'O servidor não pode ser cedido DEPOIS de sair da UENF!\n';
+    }
+}

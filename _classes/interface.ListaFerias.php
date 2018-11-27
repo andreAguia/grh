@@ -173,22 +173,22 @@ class ListaFerias{
             
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: ".$this->anoExercicio);
-            $tabela->set_label(array("Id","Servidor","Lotação","Admissão","Dias","Situação"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal"));
-            $tabela->set_metodo(array(NULL,"get_cargo","get_lotacaoSimples"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+            $tabela->set_label(array("Id","Servidor","Lotação","Perfil","Admissão","Dias","Situação"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples","get_perfilSimples"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
             $tabela->set_align(array("center","left","left"));
             $tabela->set_idCampo('idServidor');
             $tabela->set_formatacaoCondicional(array(
-                                               array('coluna' => 4,
+                                               array('coluna' => 5,
                                                      'valor' => 30,
                                                      'operador' => '>',
                                                      'id' => 'problemas'),
-                                               array('coluna' => 4,
+                                               array('coluna' => 5,
                                                      'valor' => 30,
                                                      'operador' => '=',
                                                      'id' => 'certo'),
-                                               array('coluna' => 4,
+                                               array('coluna' => 5,
                                                      'valor' => 30,
                                                      'operador' => '<',
                                                      'id' => 'faltando')));
@@ -291,6 +291,7 @@ class ListaFerias{
         $select1 = "(SELECT tbservidor.idFuncional,
                             tbpessoa.nome,
                             tbservidor.idServidor,
+                            tbservidor.idServidor,
                             tbservidor.dtAdmissao,
                             sum(numDias) as soma,
                             tbsituacao.situacao
@@ -332,6 +333,7 @@ class ListaFerias{
         
         $select2 = "SELECT tbservidor.idFuncional,
                            tbpessoa.nome,
+                           tbservidor.idServidor,
                            tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-',

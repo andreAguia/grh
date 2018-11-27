@@ -207,14 +207,16 @@ if($acesso)
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
         case "" :
         case "listar" :
         case "editar" :			
-        case "excluir" :	
-        case "gravar" :
-            $objeto->$fase($id);
+        case "excluir" :
+            $objeto->$fase($id); 
+            break;
+
+        case "gravar" :		
+            $objeto->gravar($id,"servidorProgressaoExtra.php"); 			
             break;
     }
     $page->terminaPagina();

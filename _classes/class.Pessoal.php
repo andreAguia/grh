@@ -697,6 +697,31 @@ class Pessoal extends Bd {
 
 
     /**
+     * Método get_perfil
+     * Informa o perfil do servidor sem informar o rogao de origem do cedido
+     * 
+     * @param   string $idServidor  idServidor do servidor
+     */
+
+    public function get_perfilSimples($idServidor)
+
+    {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
+                     FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+
+        $retorno = $row[1];
+        return $retorno;
+
+    }
+
+###########################################################
+
+
+    /**
      * Método get_orgaoOrigem
      * Informa o orgao de origem de um servidor cedido de fora da uenf
      * 

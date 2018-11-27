@@ -40,6 +40,7 @@ if($acesso){
     $select2 = "SELECT tbservidor.idFuncional,
                            tbpessoa.nome,
                            tbservidor.idServidor,
+                           tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-',
                            tbsituacao.situacao
@@ -88,11 +89,11 @@ if($acesso){
     $relatorio->set_subtitulo('Agrupados pelo Total de Dias e Ordenado pelo Nome');
     $relatorio->set_subtitulo("== Não Solicitaram ==");
 
-    $relatorio->set_label(array("Id","Servidor","Lotação","Admissão","Dias","Situação"));
+    $relatorio->set_label(array("Id","Servidor","Lotação","Perfil","Admissão","Dias","Situação"));
     $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
-    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples","get_perfilSimples"));
     $relatorio->set_conteudo($result);
     
     
@@ -103,6 +104,7 @@ if($acesso){
     
     $select1 = "(SELECT tbservidor.idFuncional,
                         tbpessoa.nome,
+                        tbservidor.idServidor,
                         tbservidor.idServidor,
                         tbservidor.dtAdmissao,
                         sum(numDias) as soma,
@@ -130,12 +132,12 @@ if($acesso){
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
 
-    $relatorio->set_label(array("Id","Servidor","Lotação","Admissão","Dias","Situação"));
+    $relatorio->set_label(array("Id","Servidor","Lotação","Perfil","Admissão","Dias","Situação"));
     $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
-    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples"));
-    $relatorio->set_numGrupo(4);
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples","get_perfilSimples"));
+    $relatorio->set_numGrupo(5);
     $relatorio->set_conteudo($result);
     
     $relatorio->set_dataImpressao(FALSE);

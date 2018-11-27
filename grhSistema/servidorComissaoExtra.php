@@ -23,3 +23,15 @@ if(($exoneracao < $nomeacao) AND (!is_null($nomeacao)) AND (!is_null($exoneracao
     $msgErro.='Você não pode ser exonerado antes de ser nomeado!\nA data está errada!'.$nomeacao.'-'.$exoneracao.'\n';;
     $erro = 1;
 }
+
+# Verifica se a data Inicial é posterior a data de saida
+$dtSaida = $pessoal->get_dtSaida($servidor);
+
+# Se tiver data de saida
+if(!is_null($dtSaida)){
+    $dtSaida = date_to_bd($dtSaida);
+    if($nomeacao > $dtSaida){
+        $erro = 1;
+        $msgErro .= 'O servidor não pode ser nomeado DEPOIS de sair da UENF!\n';
+    }
+}

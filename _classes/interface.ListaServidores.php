@@ -188,8 +188,13 @@ class ListaServidores{
         
         # cargo
         if(!is_null($this->cargo)){
-            $select .= ' AND (tbcargo.idcargo = "'.$this->cargo.'")';
-            $this->subTitulo .= "Cargo: ".$servidor->get_nomeCompletoCargo($this->cargo)."<br/>";
+            if(is_numeric($this->cargo)){
+                $select .= ' AND (tbcargo.idcargo = "'.$this->cargo.'")';
+                $this->subTitulo .= "Cargo: ".$servidor->get_nomeCompletoCargo($this->cargo)."<br/>";
+            }else{ # senão é nivel do cargo
+                $select .= ' AND (tbltipocargo.cargo = "'.$this->cargo.'")';                
+                $this->subTitulo .= "Cargo: ".$this->cargo."<br/>";
+            }
         }
         
         # cargo em comissão

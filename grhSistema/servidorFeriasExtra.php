@@ -33,10 +33,14 @@ if($dataInicial < $dtAdmissao){
 
 # Verifica se a data Inicial é posterior a data de saida
 $dtSaida = $pessoal->get_dtSaida($servidor);
-$dtSaida = date_to_bd($dtSaida);
-if($dataInicial > $dtSaida){
-    $erro = 1;
-    $msgErro .= 'O servidor não pode pedir férias DEPOIS de sair da UENF!\n';
+
+# Se tiver data de saida
+if(!is_null($dtSaida)){
+    $dtSaida = date_to_bd($dtSaida);
+    if($dataInicial > $dtSaida){
+        $erro = 1;
+        $msgErro .= 'O servidor não pode pedir férias DEPOIS de sair da UENF!\n';
+    }
 }
 
 # Verifica quantos dias o servidor já pediu nesse exercicio

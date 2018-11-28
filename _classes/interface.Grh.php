@@ -159,6 +159,14 @@ class Grh{
             $botao->set_title('Cadastro de Feriados');
             #$botao->set_accesskey('S');
             $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Atribuições');
+            $botao->set_url("cadastroAtribuicoes.php?origem=1");
+            $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Atribuições de tarefas');
+            #$botao->set_accesskey('S');
+            $menu->add_item($botao);
 
             $menu->show();
             $grid->fechaColuna();

@@ -122,7 +122,7 @@ if($acesso){
             
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores');
-
+            
             # Parâmetros
             $form = new Form('?');
 
@@ -154,10 +154,20 @@ if($acesso){
                 $form->add_item($controle);
 
                 # Cargos
-                $result = $pessoal->select('SELECT tbcargo.idCargo, concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) cargo
+                $result1 = $pessoal->select('SELECT tbcargo.idCargo, 
+                                                    concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) as cargo
                                               FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
                                                            LEFT JOIN tbarea USING (idArea)    
                                       ORDER BY 2');
+                
+                # cargos por nivel
+                $result2 = $pessoal->select('SELECT cargo,cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
+                
+                # junta os dois
+                $result = array_merge($result2,$result1);
+                
+                               
+                # acrescenta todos
                 array_unshift($result,array('*','-- Todos --'));
 
                 $controle = new Input('parametroCargo','combo','Cargo - Área - Função:',1);
@@ -245,36 +255,43 @@ if($acesso){
                 #$form->add_item($controle);
 
                 $form->show();
-
-                
-                if(!is_null($parametroNomeMat)){
-                    $lista->set_matNomeId($parametroNomeMat);
-                }
-                
-                if($parametroCargo <> "*"){
-                    $lista->set_cargo($parametroCargo);
-                }
-
-                if($parametroCargoComissao <> "*"){
-                    $lista->set_cargoComissao($parametroCargoComissao);
-                }
-
-                if($parametroLotacao <> "*"){
-                    $lista->set_lotacao($parametroLotacao);
-                }
-                
-                if($parametroPerfil <> "*"){
-                    $lista->set_perfil($parametroPerfil);
-                }
-
-                if($parametroSituacao <> "*"){
-                    $lista->set_situacao($parametroSituacao);
-                }
                 
                 # Paginação
                 $lista->set_paginacao(TRUE);
                 $lista->set_paginacaoInicial($paginacao);
                 $lista->set_paginacaoItens(12);
+
+                if(!vazio($parametroNomeMat)){
+                    $lista->set_matNomeId($parametroNomeMat);
+                    $lista->set_paginacao(FALSE);
+                }
+                
+                if($parametroCargo <> "*"){
+                    $lista->set_cargo($parametroCargo);
+                    $lista->set_paginacao(FALSE);
+                }
+
+                if($parametroCargoComissao <> "*"){
+                    $lista->set_cargoComissao($parametroCargoComissao);
+                    $lista->set_paginacao(FALSE);
+                }
+
+                if($parametroLotacao <> "*"){
+                    $lista->set_lotacao($parametroLotacao);
+                    $lista->set_paginacao(FALSE);
+                }
+                
+                if($parametroPerfil <> "*"){
+                    $lista->set_perfil($parametroPerfil);
+                    $lista->set_paginacao(FALSE);
+                }
+
+                if($parametroSituacao <> "*"){
+                    $lista->set_situacao($parametroSituacao);
+                    if($parametroSituacao <> 1){
+                        $lista->set_paginacao(FALSE);
+                    }
+                }
                 
                 # Ordenação
                 $lista->set_ordenacao($parametroOrdenacao);

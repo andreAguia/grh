@@ -75,7 +75,7 @@ if($acesso)
     }
 
     if (is_null($orderTipo)) {
-        $orderTipo = 'desc';
+        $orderTipo = 'asc';
     }
 
     # select da lista

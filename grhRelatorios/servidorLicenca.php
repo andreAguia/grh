@@ -30,10 +30,6 @@ if($acesso){
     
     br();
     $select = '(SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
-                        CASE tipo
-                           WHEN 1 THEN "Inicial"
-                           WHEN 2 THEN "Prorrogação"
-                           end,
                         CASE alta
                            WHEN 1 THEN "Sim"
                            WHEN 2 THEN "Não"
@@ -49,7 +45,6 @@ if($acesso){
                   UNION
                   (SELECT (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                           "",
-                          "",
                           dtInicial,
                           tblicencapremio.numdias,
                           ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -58,7 +53,7 @@ if($acesso){
                           idLicencaPremio
                      FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                     WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
-                 ORDER BY 4 desc';
+                 ORDER BY 3 desc';
 
     $result = $pessoal->select($select);
 
@@ -70,10 +65,10 @@ if($acesso){
     $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_label(array("Licença","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
+    $relatorio->set_label(array("Licença","Alta","Inicio","Dias","Término","Processo","Publicação"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

@@ -476,3 +476,25 @@ function exibeFeriasPendentes($texto){
     return $retorno;
 }
 
+##########################################################
+
+function consertaUf($uf){
+    
+    /* 
+     * Funçao que conserta um campo de unidade federal que esta na forma de 
+     * string e transforma em inteiro com o id da tabela tbestado
+     */
+    
+    if(!is_integer($uf)){
+        $select = 'SELECT idEstado
+                     FROM tbestado
+                    WHERE uf = '.$uf;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+
+        $uf = $row[0];
+    }
+    
+    return $uf;
+}

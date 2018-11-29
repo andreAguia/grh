@@ -63,7 +63,10 @@ if($acesso){
 
 
     $selectEdita.='conselhoClasse,
-                   registroClasse
+                   registroClasse,
+                   cp,
+                   serieCp,
+                   ufCp
               FROM tbdocumentacao
              WHERE idPessoa = '.$idPessoa;
 
@@ -96,7 +99,7 @@ if($acesso){
     $objeto->set_formlabelTipo(1);
     
     # Pega os dados da combo de cidade
-    $estado = $pessoal->select('SELECT idEstado,
+    $estado = $pessoal->select('SELECT uf,
                                        uf
                                   FROM tbestado
                               ORDER BY 2');
@@ -218,7 +221,30 @@ if($acesso){
                                'label' => 'Número:',
                                'tipo' => 'texto',                          
                                'title' => 'Número do registro',
-                               'size' => 20)
+                               'size' => 20),
+                       array  ('linha' => 8,
+                               'col' => 3,
+                               'nome' => 'cp',
+                               'label' => 'Numero:',
+                               'tipo' => 'texto',                          
+                               'title' => 'Numero da Carteira Profissional CLT',
+                               'fieldset' => 'Carteira Profissional CLT',
+                               'size' => 20),
+                        array ('linha' => 8,
+                               'nome' => 'serieCp',
+                               'col' => 2,
+                               'label' => 'Serie:',
+                               'tipo' => 'texto',                          
+                               'title' => 'Serie',
+                               'size' => 10),
+                        array ('linha' => 8,
+                               'nome' => 'ufCp',
+                               'col' => 2,
+                               'label' => 'UF:',
+                               'tipo' => 'combo',
+                                'array' => $estado,                         
+                               'title' => 'Unidade da Federaçao',
+                               'size' => 10)
                                 );
 
     $objeto->set_campos($campos);

@@ -457,6 +457,36 @@ if($acesso){
     #$relatorio->set_linhaNomeColuna(FALSE);
     $relatorio->set_log(FALSE);
     $relatorio->show();
+    
+    ##
+
+    $select = 'SELECT cp,
+                      serieCp,
+                      ufCp
+                 FROM tbdocumentacao
+                WHERE idPessoa = '.$idPessoa;
+
+    $result = $pessoal->select($select);
+
+    $relatorio = new Relatorio('relatorioFichaCadastral');
+    #$relatorio->set_titulo(NULL);
+    #$relatorio->set_subtitulo($subtitulo);
+    $relatorio->set_label(array('Carteira Profissional','Serie','UF'));
+    $relatorio->set_width(array(30,30,30));
+    $relatorio->set_align(array('center'));
+    $relatorio->set_funcao(array("trataNulo","trataNulo","trataNulo"));
+    $relatorio->set_conteudo($result);
+    #$relatorio->set_numGrupo(0);
+    $relatorio->set_botaoVoltar(FALSE);
+    #$relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    #$relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_log(FALSE);
+    $relatorio->show();
 
     /*
      * Endereço
@@ -857,10 +887,6 @@ if($acesso){
         tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
         $select = '(SELECT CONCAT(tbtipolicenca.nome," - ",IFNULL(tbtipolicenca.lei,"")),
-                                     CASE tipo
-                                        WHEN 1 THEN "Inicial"
-                                        WHEN 2 THEN "Prorrogação"
-                                        end,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
@@ -876,7 +902,6 @@ if($acesso){
                                UNION
                                (SELECT (SELECT CONCAT(tbtipolicenca.nome," - ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                                        "",
-                                       "",
                                        dtInicial,
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -885,16 +910,16 @@ if($acesso){
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = '.$idFicha.')
-                              ORDER BY 4 desc';
+                              ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(NULL);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array("Licença ou Afastamento","Tipo","Alta","Inicio","Dias","Término","Processo","Publicação"));
+        $relatorio->set_label(array("Licença ou Afastamento","Alta","Inicio","Dias","Término","Processo","Publicação"));
         #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-        $relatorio->set_funcao(array(NULL,NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+        $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
         $relatorio->set_align(array('left','center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);

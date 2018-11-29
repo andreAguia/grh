@@ -105,8 +105,10 @@ if($acesso)
     $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkExcluir('?fase=excluir');
+    if(Verifica::acesso($idUsuario,1)){
+        $objeto->set_linkEditar('?fase=editar');
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 

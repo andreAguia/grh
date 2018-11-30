@@ -124,7 +124,7 @@ if($acesso)
                                       concat("R$ ",Valor," ( ",tbplano.numdecreto," - ",faixa," )") as classe 
                                  FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
                                 WHERE nivel = "'.$nivel.'" 
-                             ORDER BY numdecreto,nivel,classe');
+                             ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, nivel desc, faixa asc');
     array_push($result2, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario

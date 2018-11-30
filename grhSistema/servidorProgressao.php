@@ -121,10 +121,10 @@ if($acesso)
     # Pega os dados da combo classe
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
     $result2 = $lista->select('SELECT idClasse,
-                                      concat("R$ ",Valor," ( ",tbplano.numdecreto," - ",faixa," )") as classe 
+                                      concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe 
                                  FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
                                 WHERE nivel = "'.$nivel.'" 
-                             ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, nivel desc, faixa asc');
+                             ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, valor desc');
     array_push($result2, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
@@ -140,7 +140,7 @@ if($acesso)
                                array ( 'nome' => 'idTpProgressao',
                                        'label' => 'Tipo:',
                                        'tipo' => 'combo',
-                                       'col' => 4,
+                                       'col' => 3,
                                        'required' => TRUE,
                                        'array' => $result1,
                                        'size' => 20,                               
@@ -151,7 +151,7 @@ if($acesso)
                                        'tipo' => 'combo',
                                        'array' => $result2,
                                        'size' => 20,
-                                       'col' => 5,
+                                       'col' => 6,
                                        'required' => TRUE,
                                        'title' => 'Valor',
                                        'linha' => 1), 

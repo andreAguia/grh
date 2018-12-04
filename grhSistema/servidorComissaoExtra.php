@@ -25,7 +25,7 @@ if(($exoneracao < $nomeacao) AND (!is_null($nomeacao)) AND (!is_null($exoneracao
 }
 
 # Verifica se a data Inicial é posterior a data de saida
-$dtSaida = $pessoal->get_dtSaida($servidor);
+$dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida
 if(!is_null($dtSaida)){

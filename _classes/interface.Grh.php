@@ -669,7 +669,7 @@ class Grh{
             # Direito Pessoal    
             $botao = new BotaoGrafico();
             $botao->set_label('Direito Pessoal');
-            $botao->set_url('#');
+            $botao->set_url('servidorDireitoPessoal.php');
             $botao->set_imagem(PASTA_FIGURAS.'abono.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Abono / Direito Pessoal');                
             $menu->add_item($botao);

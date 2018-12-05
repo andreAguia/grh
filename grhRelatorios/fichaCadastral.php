@@ -34,6 +34,8 @@ $postProgressao = post('progressao');
 $postGratificacao = post('gratificacao');
 $postAverbacao = post('averbacao');
 $postDiaria = post('diaria');
+$postAbono = post('abono');
+$postDireito = post('direito');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -192,7 +194,26 @@ if($acesso){
                      'valor' => $postAverbacao,
                      'onChange' => 'formPadrao.submit();',
                      'col' => 3,
-                     'linha' => 3)));
+                     'linha' => 3),
+              array ('nome' => 'abono',
+                     'label' => 'Abono Permanência',
+                     'tipo' => 'simnao',
+                     'size' => 1,
+                     'title' => 'Exibe as informaçoes do abono Permanência',
+                     'valor' => $postAbono,
+                     'onChange' => 'formPadrao.submit();',
+                     'col' => 3,
+                     'linha' => 3),
+              array ('nome' => 'direito',
+                     'label' => 'Direito Pessoal',
+                     'tipo' => 'simnao',
+                     'size' => 1,
+                     'title' => 'Exibe Informaçoes do direito pessoal do servidor',
+                     'valor' => $postDireito,
+                     'onChange' => 'formPadrao.submit();',
+                     'col' => 3,
+                     'linha' => 3)
+        ));
 
     $relatorio->set_formFocus('contatos');		
     $relatorio->set_formLink('?');
@@ -839,6 +860,45 @@ if($acesso){
         $relatorio->set_log(FALSE);
         $relatorio->show();
     }
+    
+    /*
+     * Histórico de Direito pessoal
+     */
+
+    if($postDireito){
+        tituloRelatorio('Histórico de Direito Pessoal');
+
+        $select = 'SELECT dtInicial,
+                          dtFinal,
+                          valor,
+                          processo,
+                          dtPublicacao
+                     FROM tbdireitopessoal
+                    WHERE idServidor = '.$idFicha.'
+                    ORDER BY dtInicial desc';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(NULL);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Data Inicial','Data Final','Valor','Processo','Publicaçao'));
+        #$relatorio->set_width(array(25,25,25,25));
+        $relatorio->set_funcao(array('date_to_php','date_to_php','formataMoeda',NULL,'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(0);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
+        $relatorio->show();
+    }
 
     /*
      * Histórico de Férias
@@ -1027,6 +1087,45 @@ if($acesso){
         $relatorio->set_log(FALSE);
         $relatorio->show();
     }
+    
+     /*
+     * Abono Permanência
+     */
+
+    if($postAbono){
+        tituloRelatorio('Abono Permanência');
+
+        $select = 'SELECT processo,
+                          dtPublicacao,
+                          if(status = 1,"Deferido","Indeferido"),
+                          data
+                     FROM tbabono
+                    WHERE idServidor = '.$idFicha.'
+                    ORDER BY data desc';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(NULL);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Processo','Publicação','Status','Data Inicial'));
+        #$relatorio->set_width(array(25,25,25,25));
+        $relatorio->set_funcao(array(NULL,'date_to_php',NULL,'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(0);
+        $relatorio->set_botaoVoltar(FALSE);
+        #$relatorio->set_bordaInterna(TRUE);
+        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_totalRegistro(TRUE);
+        $relatorio->set_dataImpressao(FALSE);
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        #$relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_log(FALSE);
+        $relatorio->show();
+    }
+    
     
     # Data da Impressão
     p('Emitido em: '.date('d/m/Y - H:i:s')." (".$idUsuario.")",'pRelatorioDataImpressao');

@@ -43,13 +43,15 @@ if($acesso)
     $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);
     $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);
     $cessao = $pessoal->get_salarioCessao($idServidorPesquisado);
-    $total = $salario+$trienio+$comissao+$gratificacao+$cessao;
+    $direito = $pessoal->get_direitoPessoal($idServidorPesquisado);
+    $total = $salario+$trienio+$comissao+$gratificacao+$cessao+$direito;
 
     # Dados da tabela
     $conteudo = array(array('Salário:',$salario),
                       array('Triênio:',$trienio),
                       array('Cargo em Comissão:',$comissao),
                       array('Gratificação Especial:',$gratificacao),
+                      array('Direito Pessoal:',$direito),
                       array('Salário recebido pelo Órgão de Origem (Cedidos):',$cessao),
                       array('Total',$total));
 

@@ -43,7 +43,7 @@ if($acesso){
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Abono Permanencia');
+    $objeto->set_nome('Cadastro de Abono Permanência');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');

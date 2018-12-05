@@ -113,6 +113,29 @@ class Pessoal extends Bd {
 ###########################################################
 
     /**
+     * Método get_direitoPessoal
+     * informa direito pessoal de um servidor(se houver)
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    public function get_direitoPessoal($idServidor)
+    {
+            $select = 'SELECT valor
+                         FROM tbdireitopessoal
+                        WHERE idServidor = '.$idServidor.'
+                          AND current_date() >= dtInicial 
+                          AND (dtFinal is NULL OR current_date() <= dtFinal)';
+
+            $row = parent::select($select,FALSE);
+
+            return $row[0];
+
+    }
+
+###########################################################
+
+    /**
      * Método get_gratificacaoDtFinal
      * informa a data de t�rmino da graificação de uma matrícula(se houver)
      * 

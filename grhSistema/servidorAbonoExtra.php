@@ -19,7 +19,7 @@ if($status == 1){
     
     # Verifica se a data esta em branco
     if(is_null($data)){
-        $msgErro.='Quando o abono e deferido deve-se informar a data em que o mesmo passa a valer!';
+        $msgErro.='Quando o abono e deferido deve-se informar a data em que o mesmo passa a valer!\n';
         $erro = 1;
     }
 
@@ -30,7 +30,7 @@ if($status == 1){
     $dtAdmissao = date_to_bd($dtAdmissao);
     if($data < $dtAdmissao){
         $erro = 1;
-       $msgErro.='A data Inicial não pode ser antes de ser admitido!\n A data está errada!';
+       $msgErro.='A data Inicial não pode ser antes de ser admitido!\n A data está errada!\n';
     }
 
     # Verifica se a data Inicial é posterior a data de saida

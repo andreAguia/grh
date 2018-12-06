@@ -81,7 +81,7 @@ if($acesso){
                                FROM tbclasse JOIN tbplano USING (idPlano)
                               WHERE nivel LIKE "%'.$parametroNivel.'%"
                                  AND tbplano.idPlano LIKE "%'.$parametroPlano.'%"   
-                           ORDER BY tbplano.planoAtual desc,tbplano.numDecreto desc, nivel desc, faixa asc');
+                           ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, nivel desc, faixa asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,

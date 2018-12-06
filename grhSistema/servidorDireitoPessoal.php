@@ -1,6 +1,6 @@
 <?php
 /**
- * Histórico de Progressões e Enquadramentos
+ * Histórico de Gratificações Especiais
  *  
  * By Alat
  */
@@ -15,8 +15,10 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{  	
+if($acesso){    
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
+    
     # Verifica a fase do programa
     $fase = get('fase','listar');
 
@@ -44,42 +46,55 @@ if($acesso)
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Progressões e Enquadramentos do Servidor');
+    $objeto->set_nome('Cadastro de Abonos e Direitos Pessoais do Servidor');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
         $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
         $orderTipo = 'desc';
+    }
+
+    # Evita que um servidor que já esteja recebendo gratificação passe a receber outra.
+    # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
+    if(is_null($pessoal->get_gratificacaoDtFinal($idServidorPesquisado))){
+        # Retira o botão de incluir
+        $objeto->set_botaoIncluir(FALSE);
+        
+        # Informa o porquê
+        $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor ainda está recebendo uma gratificação.<br/>"
+                   ."Somente será permitido a inserção de uma nova gratificação quanfo for informado a data de término da gratificação atual.";
+        $objeto->set_rotinaExtraListar("callout");
+        $objeto->set_rotinaExtraListarParametro($mensagem);
+    }
 
     # select da lista
-    $objeto->set_selectLista('SELECT tbprogressao.dtInicial,
-                                     tbtipoprogressao.nome,
-                                     CONCAT(tbclasse.faixa," - ",tbclasse.valor) as vv,
-                                     numProcesso,
+    $objeto->set_selectLista('SELECT dtInicial,
+                                     dtFinal,
+                                     valor,
+                                     processo,
                                      dtPublicacao,
-                                     documento,
-                                     tbprogressao.idProgressao
-                                FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
-                                                  JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
+                                     obs,
+                                     idDireitoPessoal
+                                FROM tbdireitopessoal
                                WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtInicial,
-                                     idTpProgressao,
-                                     idClasse,
-                                     documento,
-                                     numProcesso,
+                                     dtFinal,
+                                     valor,
+                                     processo,
                                      dtPublicacao,
                                      obs,
                                      idServidor
-                                FROM tbprogressao
-                               WHERE idProgressao = '.$id);
+                                FROM tbdireitopessoal
+                               WHERE idDireitoPessoal = '.$id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -93,92 +108,65 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
-    $objeto->set_width(array(10,20,15,15,15,15));	
+    $objeto->set_label(array("Data Inicial","Data Final","Valor","Processo","Publicaçao","Obs"));
+    #$objeto->set_width(array(20,20,20,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php",NULL,NULL,NULL,"date_to_php"));
+    $objeto->set_funcao(array("date_to_php","date_to_php","formataMoeda",NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbprogressao');
+    $objeto->set_tabela('tbdireitopessoal');
 
     # Nome do campo id
-    $objeto->set_idCampo('idProgressao');
+    $objeto->set_idCampo('idDireitoPessoal');
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
-
-    # Pega os dados da combo prograssao
-    $lista = new Pessoal();
-    $result1 = $lista->select('SELECT idTpProgressao, 
-                                      nome
-                                 FROM tbtipoprogressao
-                             ORDER BY nome');
-    array_push($result1, array(NULL,NULL)); # Adiciona o valor de nulo
-
-    # Pega os dados da combo classe
-    $nivel = $lista->get_nivelCargo($idServidorPesquisado);
-    $result2 = $lista->select('SELECT idClasse,
-                                      concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe 
-                                 FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
-                                WHERE nivel = "'.$nivel.'" 
-                             ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, valor desc');
-    array_push($result2, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'dtInicial',
                                        'label' => 'Data Inicial:',
                                        'tipo' => 'data',
                                        'size' => 20,
+                                       'col' => 3,
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
-                                       'col' => 3,
-                                       'title' => 'Data inícial da Progressão ou Enquadramento.',
+                                       'title' => 'Data inícial da Gratificação.',
                                        'linha' => 1),
-                               array ( 'nome' => 'idTpProgressao',
-                                       'label' => 'Tipo:',
-                                       'tipo' => 'combo',
-                                       'col' => 3,
-                                       'required' => TRUE,
-                                       'array' => $result1,
-                                       'size' => 20,                               
-                                       'title' => 'Tipo de Progressão / Enquadramento',
-                                       'linha' => 1), 
-                               array ( 'nome' => 'idClasse',
-                                       'label' => 'Classe:',
-                                       'tipo' => 'combo',
-                                       'array' => $result2,
+                               array ( 'nome' => 'dtFinal',
+                                       'label' => 'Data Final:',
+                                       'tipo' => 'data',
                                        'size' => 20,
-                                       'col' => 6,
+                                       'col' => 3,
+                                       'title' => 'Data final da gratificação.',
+                                       'linha' => 1),
+                               array ( 'nome' => 'valor',
+                                       'label' => 'Valor:',
+                                       'tipo' => 'moeda',
+                                       'size' => 20,
                                        'required' => TRUE,
-                                       'title' => 'Valor',
-                                       'linha' => 1), 
-                               array ( 'nome' => 'documento',
-                                       'label' => 'Documento:',
-                                       'tipo' => 'texto',
-                                       'size' => 30,
-                                       'col' => 4,
-                                       'title' => 'Documento comunicando a nova progressão.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'numProcesso',
+                                       'col' => 3,
+                                       'title' => 'Valor da Gratificação.',
+                                       'linha' => 1),
+                               array ( 'nome' => 'processo',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
                                        'col' => 3,
                                        'title' => 'Número do Processo',
-                                       'linha' => 2), 
-                               array ( 'nome' => 'dtPublicacao',
-                                       'label' => 'Data da Pub. no DOERJ:',
+                                       'linha' => 2),
+                                array ( 'nome' => 'dtPublicacao',
+                                       'label' => 'Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'title' => 'Data da Publicação no DOERJ.',
+                                       'title' => 'Data final da Publicação.',
                                        'linha' => 2),
                                 array ('linha' => 3,
-                                       'nome' => 'obs',
                                        'col' => 12,
+                                       'nome' => 'obs',
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'size' => array(80,5)),
@@ -188,18 +176,17 @@ if($acesso)
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
-                                       'linha' => 8)));
-
+                                       'linha' => 5)));
 
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Progressões e Enquadramentos");
-    $botaoRel->set_url("../grhRelatorios/servidorProgressao.php");
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Gratificação Especial");    
+    $botaoRel->set_url("../grhRelatorios/servidorGratificacao.php");
     $botaoRel->set_target("_blank");
     
-    $objeto->set_botaoListarExtra(array($botaoRel));
+    #$objeto->set_botaoListarExtra(array($botaoRel));
     
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -214,9 +201,9 @@ if($acesso)
         case "excluir" :
             $objeto->$fase($id); 
             break;
-
-        case "gravar" :		
-            $objeto->gravar($id,"servidorProgressaoExtra.php"); 			
+        
+        case "gravar" :
+            $objeto->$fase($id,"servidorDireitoPessoalExtra.php"); 
             break;
     }
     $page->terminaPagina();

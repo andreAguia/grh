@@ -470,7 +470,7 @@ class Grh{
             br();     
             $tamanhoImage = 50;
             
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             $botao = new BotaoGrafico();
             $botao->set_label('Funcionais');
             $botao->set_url('servidorFuncionais.php');
@@ -561,7 +561,7 @@ class Grh{
             titulo('Pessoais');
             br();
 
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             $botao = new BotaoGrafico();
             $botao->set_label('Pessoais');
             $botao->set_url('servidorPessoais.php');
@@ -638,7 +638,7 @@ class Grh{
             titulo('Financeiro');
             br();
 
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
             if($pessoal->get_perfilProgressao($perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Progressão e Enquadramento');
@@ -666,12 +666,12 @@ class Grh{
                 $menu->add_item($botao);
             }
             
-            # Diarias
+            # Direito Pessoal    
             $botao = new BotaoGrafico();
-            $botao->set_label('Diárias');
-            $botao->set_url('servidorDiaria.php');
-            $botao->set_imagem(PASTA_FIGURAS.'diaria.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Controle de Diárias');
+            $botao->set_label('Direito Pessoal');
+            $botao->set_url('servidorDireitoPessoal.php');
+            $botao->set_imagem(PASTA_FIGURAS.'abono.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Cadastro de Abono / Direito Pessoal');                
             $menu->add_item($botao);
             
             if ($perfil == 1){   // Ser for estatutário
@@ -679,11 +679,19 @@ class Grh{
                 $botao = new BotaoGrafico();
                 $botao->set_label('Abono Permanencia');
                 $botao->set_url('servidorAbono.php');
-                $botao->set_imagem(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_imagem(PASTA_FIGURAS.'money.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Abono Permanencia');                
                 $menu->add_item($botao);
             }
-
+            
+            # Diarias
+            $botao = new BotaoGrafico();
+            $botao->set_label('Diárias');
+            $botao->set_url('servidorDiaria.php');
+            $botao->set_imagem(PASTA_FIGURAS.'diaria.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Controle de Diárias');
+            $menu->add_item($botao);
+            
             # Dados BAncarios
             $botao = new BotaoGrafico();
             $botao->set_label('Dados Bancários');
@@ -695,7 +703,7 @@ class Grh{
             $botao = new BotaoGrafico();
             $botao->set_label('Resumo Financeiro');
             $botao->set_url('servidorFinanceiro.php');
-            $botao->set_imagem(PASTA_FIGURAS.'money.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_imagem(PASTA_FIGURAS.'lista.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Informações sobre os valores recebidos pelo servidor');                
             #$botao->set_onClick("abreFechaDiv('divResumo');");
             $menu->add_item($botao);
@@ -718,7 +726,7 @@ class Grh{
         titulo('Afastamentos');
         br();
 
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(4);
         if($pessoal->get_perfilFerias($perfil) == "Sim"){
             $botao = new BotaoGrafico();
             $botao->set_label('Férias');

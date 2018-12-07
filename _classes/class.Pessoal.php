@@ -2750,6 +2750,38 @@ class Pessoal extends Bd {
 
     ###########################################################
 
+    function get_numServidoresAtivosCargoLotacao($idCargo, $idLotacao){
+
+    /**
+     * informa o número de Servidores Ativos por cargo em uma determinada lotaçao
+     * 
+     * @param integer $idCargo do servidor
+     * @param integer $idLotacao do servidor
+     */
+        
+        $select = 'SELECT tbservidor.idServidor
+                     FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbcargo USING (idCargo)
+                                     JOIN tbtipocargo USING (idTipoCargo)
+                    WHERE situacao = 1
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND idTipoCargo = '.$idCargo;
+        
+        # Lotaçao
+        # Verifica se é numérico
+        if(is_numeric($idLotacao)){
+            $select .= ' AND tblotacao.idlotacao = "'.$idLotacao.'"'; 
+        }else{ # senão é uma diretoria genérica
+            $select .= ' AND tblotacao.DIR = "'.$idLotacao.'"';
+        }
+
+        $count = parent::count($select);
+        return $count;
+    }
+
+    ###########################################################
+
     /**
      * Método get_ultimoAcesso
      * informa a data do �ltimo acesso a �rea do servidor de uma matrícula

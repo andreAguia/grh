@@ -27,7 +27,7 @@ if($acesso)
     
     # Pega os parâmetros dos relatórios
     $parametroPerfil = post('perfil','*');
-    echo "---->".$parametroPerfil;
+    
     ######
    
     # Pega as diretorias ativas

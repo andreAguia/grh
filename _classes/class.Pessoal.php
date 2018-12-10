@@ -2780,7 +2780,7 @@ class Pessoal extends Bd {
         }else{ # senão é uma diretoria genérica
             $select .= ' AND tblotacao.DIR = "'.$idLotacao.'"';
         }
-
+        
         $count = parent::count($select);
         return $count;
     }

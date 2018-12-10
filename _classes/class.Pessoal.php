@@ -2750,7 +2750,7 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-    function get_numServidoresAtivosCargoLotacao($idCargo, $idLotacao){
+    function get_numServidoresAtivosCargoLotacao($idCargo = NULL, $idLotacao = NULL, $idPerfil = NULL){
 
     /**
      * informa o número de Servidores Ativos por cargo em uma determinada lotaçao
@@ -2764,10 +2764,15 @@ class Pessoal extends Bd {
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE situacao = 1
+                    WHERE situacao = 1                      
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND idTipoCargo = '.$idCargo;
         
+        # Perfil
+        if(!is_null($idPerfil)){
+            $select .= ' AND idPerfil = '.$idPerfil;
+        }
+
         # Lotaçao
         # Verifica se é numérico
         if(is_numeric($idLotacao)){

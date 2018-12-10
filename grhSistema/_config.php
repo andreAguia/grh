@@ -58,7 +58,6 @@ $nomeMes = array(NULL,
 
 # Inicia a Session
 session_start();
-#session_cache_limiter('private'); 
 
 # Funçõess gerais	
 include_once (PASTA_FUNCOES_GERAIS."funcoes.gerais.php");
@@ -77,11 +76,6 @@ define("IP",getenv("REMOTE_ADDR"));     # Ip da máquina
 
 # Sistema Operacional
 define("SO",get_So());
-
-# Programa Chamador - Aparentemente não é mais usado
-#$arquivo = explode("/",$_SERVER['PHP_SELF']);
-#$arquivo = end($arquivo);
-#define("CHAMADOR",$arquivo);
 
 setlocale (LC_ALL, 'pt_BR');
 setlocale (LC_CTYPE, 'pt_BR');

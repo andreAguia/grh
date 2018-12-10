@@ -271,6 +271,13 @@ class Grh{
             $menu = new MenuGrafico(3);
             $largura = 120;
             $altura = 50;
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label("Sistema do Almoxarifado");
+            $botao->set_title('Sistema DO Almoxarifado da Uenf');
+            $botao->set_imagem(PASTA_FIGURAS."almoxarifado.png",50,50);      
+            $botao->set_url("https://almoxarifado.uenf.br/usuarios/sign_in/");
+            $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
             #$botao->set_label(SISTEMA_GRH);
@@ -296,7 +303,7 @@ class Grh{
             $botao = new BotaoGrafico();
             #$botao->set_label(SISTEMA_GRH);
             $botao->set_title('Site da UENF');
-            $botao->set_imagem(PASTA_FIGURAS."uenf.jpg",$largura,$altura);       
+            $botao->set_imagem(PASTA_FIGURAS."uenf.png",$largura,$altura);       
             $botao->set_url("http://www.uenf.br/portal/index.php/br/");
             $menu->add_item($botao);
             

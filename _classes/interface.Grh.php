@@ -86,7 +86,7 @@ class Grh{
             br();
 
             $tamanhoImage = 60;
-            $menu = new MenuGrafico(5);
+            $menu = new MenuGrafico(4);
 
             $botao = new BotaoGrafico();
             $botao->set_label('Perfil');
@@ -167,8 +167,18 @@ class Grh{
             $botao->set_title('Cadastro de Atribuições de tarefas');
             #$botao->set_accesskey('S');
             $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Balcão');
+            $botao->set_url("balcao.php?origem=1");
+            $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Controle de Atendimento do Balcão');
+            #$botao->set_accesskey('S');
+            $menu->add_item($botao);
 
             $menu->show();
+            br();
+            
             $grid->fechaColuna();
 		       
         ###############################################################################################

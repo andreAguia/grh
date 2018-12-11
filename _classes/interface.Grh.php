@@ -920,7 +920,8 @@ class Grh{
             
         # Férias
         if($ferias){
-            $mensagem[] = 'Servidor em férias';
+            $exercicio = $pessoal->emFeriasExercicio($idServidor);
+            $mensagem[] = 'Servidor em férias (Exercicio '.$exercicio.')';
         }
 
         # Licenca

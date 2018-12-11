@@ -67,7 +67,7 @@ if($acesso){
                                      idFerias
                                 FROM tbferias
                                WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY anoExercicio desc');
+                            ORDER BY anoExercicio desc, dtInicial desc');
     
     # select do edita
     $objeto->set_selectEdita('SELECT anoExercicio,

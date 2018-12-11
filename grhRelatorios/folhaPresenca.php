@@ -159,6 +159,11 @@ if($acesso){
                 # Verifica se nesta data o servidor está em férias
                 $ferias = $pessoal->emFerias($idServidorPesquisado, $data);
                 
+                # Pega o exercicio
+                if($ferias){
+                    $exercicio = $pessoal->emFeriasExercicio($idServidorPesquisado, $data);
+                }
+                
                 # Verifica se nesta data o servidor está trabalhando no TRE
                 $emAfastamentoTre = $pessoal->emAfastamentoTre($idServidorPesquisado, $data);
                 
@@ -180,7 +185,7 @@ if($acesso){
                 }elseif(!is_null($licenca)){     // verifica se tem licença
                     echo '<td align="center">'.$licenca.'</td>';
                 }elseif($ferias){ // verifica se tem férias
-                    echo '<td align="center">Férias</td>';
+                    echo '<td align="center">Férias ('.$exercicio.')</td>';
                 }elseif($licencaPremio){ // verifica se tem licença prêmio
                     echo '<td align="center">Licença Especial (Prêmio)</td>';
                 }else{

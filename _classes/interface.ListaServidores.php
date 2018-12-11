@@ -135,7 +135,7 @@ class ListaServidores{
              $select .= 'tbservidor.dtDemissao,';
         }
         
-        $select .= '      tbsituacao.situacao,
+        $select .= '      tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                           JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -371,9 +371,9 @@ class ListaServidores{
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
         if($this->situacao == 1){
-            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacao");
         }else{
-            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacao");
         }            
         $classe = array(NULL,NULL,NULL,"pessoal","pessoal","pessoal");
         $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao","get_perfil");
@@ -453,9 +453,9 @@ class ListaServidores{
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
         if($this->situacao == 1){
-            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php");
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacaoRel");
         }else{
-            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php");
+            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacaoRel");
         }
         $classe = array(NULL,NULL,NULL,"pessoal","pessoal","pessoal");
         $metodo = array(NULL,NULL,NULL,"get_cargoRel","get_lotacao","get_perfil");

@@ -498,3 +498,80 @@ function consertaUf($uf){
     
     return $uf;
 }
+
+###########################################################
+/**
+ * Função que retorna a situaçao do servidor mais informaçoes de ferias, licença, etc
+ * Obs esta função só existe para ser usada na classe modelo
+ */
+
+function get_situacao($idServidor){
+    $pessoal = new Pessoal();
+    $situacao = $pessoal->get_situacao($idServidor);
+    $especial = NULL;
+    $title = NULL;
+    
+    # Pega as situações
+    $ferias = $pessoal->emFerias($idServidor);
+    $licenca = $pessoal->emLicenca($idServidor);
+    $licencaPremio = $pessoal->emLicencaPremio($idServidor);
+    $folgaTre = $pessoal->emFolgaTre($idServidor);
+    $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
+    $cedido = $pessoal->emCessao($idServidor);
+    
+    # Férias
+    if($ferias){
+        $especial = 'Férias';
+        $title = 'Exercicio '.$pessoal->emFeriasExercicio($idServidor);
+    }
+
+    # Licenca
+    if($licenca){
+        $title = $pessoal->get_licenca($idServidor);
+        $especial = 'Licença';
+    }
+
+    # Licenca Prêmio
+    if($licencaPremio){
+        $title = $pessoal->get_licencaNome(6);
+        $especial = 'Licença';
+    }
+
+    # Folga TRE
+    if($folgaTre){
+        $especial = 'Folga TRE';
+    }
+
+    # Afastamento TRE
+    if($afastadoTre){
+        $especial = 'TRE';
+    }
+
+    # Cedido
+    if(!is_null($cedido)){
+        $especial = 'Cedido';
+    }
+    
+    # Monta variavel de retorno    
+    if(is_null($especial)){
+        $retorno = $situacao;
+    }else{
+        $retorno = $situacao.'<br/><span title="'.$title.'" class="warning label">'.$especial.'</span>';
+    }
+    return $retorno;
+}
+
+###########################################################
+/**
+ * Função que retorna a situaçao do servidor mais informaçoes de ferias, licença, etc
+ * Obs esta função só existe para ser usada na classe modelo
+ */
+
+function get_situacaoRel($idServidor){
+    $pessoal = new Pessoal();
+    $situacao = $pessoal->get_situacao($idServidor);
+    
+    return $situacao;
+}
+
+##########################################################

@@ -1039,6 +1039,33 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
+    function emFeriasExercicio($idServidor, $data = NULL){
+
+    # Função que informa o exercicio das ferias na data informada
+    #
+    # Parâmetro: a matrícula a ser pesquisada
+        
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+        
+        # Monta o select
+        $select = "SELECT anoExercicio 
+                     FROM tbferias
+                    WHERE idServidor = '$idServidor'
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+    }
+
+    ##########################################################################################
+
     function emLicenca($idServidor, $data = NULL){
 
 

@@ -1516,20 +1516,61 @@ class Pessoal extends Bd {
 
     function get_nome($idServidor)
     {
-            if(is_numeric($idServidor)){
-                $select = 'SELECT tbpessoa.nome
-                             FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                            WHERE idServidor = '.$idServidor;
+        if(is_numeric($idServidor)){
+            $select = 'SELECT tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+                        WHERE idServidor = '.$idServidor;
 
-                if($idServidor == 0){
-                    $nome[0] = "";
-                }else{ 
-                    $nome = parent::select($select,FALSE);
-                }
-                return $nome[0];
-            }else{
-                return $idServidor;
+            if($idServidor == 0){
+                $nome[0] = "";
+            }else{ 
+                $nome = parent::select($select,FALSE);
             }
+            return $nome[0];
+        }else{
+            return $idServidor;
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeSimples
+     * fornece o primeiro nome de uma idServidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    function get_nomeSimples($idServidor)
+    {
+        if(is_numeric($idServidor)){
+            $select = 'SELECT tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+                        WHERE idServidor = '.$idServidor;
+
+            if($idServidor == 0){
+                $nome[0] = "";
+            }else{ 
+                $nome = parent::select($select,FALSE);
+            }
+            
+            # trata o nome para pegar somente o primeiro nome
+            $parte = explode(" ", $nome[0]);
+            
+            # Verifica se e nome composto
+            $nomesCompostos = array("Ana", "Maria", "Andre","André"); 
+            
+            # Verifica se o nome em questao e composto e insere o segundo nome
+            if(in_array($parte[0], $nomesCompostos)) { 
+                $retorno = $parte[0]." ".$parte[1];
+            }else{
+                $retorno = $parte[0];
+            }            
+            
+            return $retorno;
+        }else{
+            return $idServidor;
+        }
     }
 
     ###########################################################

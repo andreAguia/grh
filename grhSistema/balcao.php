@@ -89,9 +89,16 @@ if($acesso){
                 $linkVoltar->set_title('Voltar');
                 $menu1->add_link($linkVoltar,"left");
                 
+                # Servidores
+                $linkServ = new Link("Servidores","?fase=servidores");
+                $linkServ->set_class('button');
+                $linkServ->set_title('Informa os servidores que entram no rodizio de atendimento');
+                $menu1->add_link($linkServ,"right");
+                
                 # Editar
                 $linkEditar = new Link("Editar","?editar=1");
                 $linkEditar->set_class('button');
+                $linkEditar->set_title('Informa entre os servidores do rodizio o dia de atendimento de cada um');
                 $menu1->add_link($linkEditar,"right");
 
                 $menu1->show();
@@ -245,7 +252,7 @@ if($acesso){
                             echo '</select>';
                             echo '</td>';
                         }else{
-                            echo '<td align="center">S/A</td>';
+                            echo '<td align="center">-----</td>';
                         }
                         
                         # Turno da Tarde                                                
@@ -270,7 +277,7 @@ if($acesso){
                             echo '</select>';
                             echo '</td>';
                         }else{
-                            echo '<td align="center">S/A</td>';
+                            echo '<td align="center">-----</td>';
                         }
                         
                     }else{
@@ -284,7 +291,7 @@ if($acesso){
                             }
                             echo ' align="center"><b><span id="f14">'.$ditoCujo.'</span></b></td>';
                         }else{
-                            echo '<td align="center">S/A</td>';
+                            echo '<td align="center">-----</td>';
                         }
                         
                         # Turno da Tarde
@@ -297,7 +304,7 @@ if($acesso){
                             }
                             echo ' align="center"><b><span id="f14">'.$ditoCujo.'</span></b></td>';
                         }else{
-                            echo '<td align="center">S/A</td>';
+                            echo '<td align="center">-----</td>';
                         }
                     }
                 }
@@ -338,6 +345,70 @@ if($acesso){
                 }
             }
             loadPage("?");
+            break;
+            
+        case "servidores" :
+            
+            # Botao Voltar
+            botaoVoltar("?");
+            
+            # Monta o select
+            $select = 'SELECT idServidor,
+                              idServidor,
+                              idServidor,
+                              balcao,
+                              idUsuario
+                         FROM areaservidor.tbusuario JOIN grh.tbservidor USING (idServidor)
+                                                     JOIN grh.tbpessoa USING (idPessoa)
+                        WHERE senha IS NOT NULL
+                     ORDER BY tbpessoa.nome asc';
+            
+            $lista = $pessoal->select($select);
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($lista);
+            $tabela->set_label(array("Servidor","Lotação","Cargo","Balcão"));
+            $tabela->set_align(array("left","left","left"));
+            #$tabela->set_width(array(5,15,15,15,8,15,15,15));
+            #$tabela->set_funcao(array(NULL,"dv"));
+            $tabela->set_classe(array("pessoal","pessoal","pessoal"));
+            $tabela->set_metodo(array("get_nomeSimples","get_lotacao","get_cargo"));
+            $tabela->set_titulo("Controle de Servidores da GRH que atendem ao Balcão");            
+            $tabela->set_editar('?fase=editaServidor&id=');
+            #$tabela->set_nomeColunaEditar("Editar");
+            #$tabela->set_editarBotao("ver.png");
+            $tabela->set_idCampo('idUsuario');
+            $tabela->show();
+            break;
+        
+        case "editaServidor" :
+            
+            $idServidor = $intra->get_idServidor($id);
+            $nome = $pessoal->get_nomeSimples($idServidor);
+            $valorAnterior = NULL;
+            
+            $form = new Form('?fase=validaServidor');
+                        
+            # Cria um array com os valores possiveis
+            $array = array(NULL,"Manhã","Tarde","Ambos","Não Atende");
+
+            $controle = new Input('balcao','combo','Atendimento:',1);
+            $controle->set_size(30);
+            $controle->set_title('Atendimento no Balcão');
+            $controle->set_array($array);
+            $controle->set_valor($valorAnterior);
+            $controle->set_autofocus(TRUE);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            $form->show();            
+            break;
+        
+        case "validaServidor" :
+            $balcao = post("balcao");
+            echo $balcao;
+            
             break;
     }
             

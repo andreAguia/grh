@@ -316,6 +316,10 @@ td#ausente{
     background-color: #ffdcc3;
 }
 
+td#sematendimento{
+    background-color: #b9b9b9;
+}
+
 /*******************************************
  * Relatórios
  *******************************************/

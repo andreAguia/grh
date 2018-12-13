@@ -108,17 +108,15 @@ if($acesso){
 
             $menu1->show();
             
-            
-            
-                # Relatórios
-                $menu = new Menu('horizontal');
-                #$menu->add_item('titulo','Relatórios');
-                $menu->add_item('linkWindow','Relatorio da Tela','../grhRelatorios/treGeral.php');
-                #$menu->add_item('linkWindow','Mensal de Dias Trabalhados','../grhRelatorios/treAfastamentoMensal.php');
-                $menu->add_item('linkWindow','Anual de Dias Trabalhados','../grhRelatorios/treAfastamentoAnual.php'); 
-                #$menu->add_item('linkWindow','Mensal de Folgas Fruídas','../grhRelatorios/treFolgaMensal.php'); 
-                $menu->add_item('linkWindow','Anual de Folgas Fruídas','../grhRelatorios/treFolgaAnual.php'); 
-               # $menu->show();
+            # Relatórios
+            $menu = new Menu('horizontal');
+            #$menu->add_item('titulo','Relatórios');
+            $menu->add_item('linkWindow','Relatorio da Tela','../grhRelatorios/treGeral.php');
+            #$menu->add_item('linkWindow','Mensal de Dias Trabalhados','../grhRelatorios/treAfastamentoMensal.php');
+            $menu->add_item('linkWindow','Anual de Dias Trabalhados','../grhRelatorios/treAfastamentoAnual.php'); 
+            #$menu->add_item('linkWindow','Mensal de Folgas Fruídas','../grhRelatorios/treFolgaMensal.php'); 
+            $menu->add_item('linkWindow','Anual de Folgas Fruídas','../grhRelatorios/treFolgaAnual.php'); 
+            # $menu->show();
             
             ###
             

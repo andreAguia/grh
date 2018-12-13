@@ -308,6 +308,14 @@ tr#feriado{
     background-color: #b9b9b9;
 }
 
+tr#hoje{
+    background-color: #99ccff;
+}
+
+td#ausente{
+    background-color: #ffdcc3;
+}
+
 /*******************************************
  * Relatórios
  *******************************************/

@@ -574,4 +574,51 @@ function get_situacaoRel($idServidor){
     return $situacao;
 }
 
-##########################################################
+###########################################################
+/**
+ * Função que retorna o servidor cadastrado para o atyendimento do balcao no dia informado
+ * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão
+ */
+
+function get_servidorBalcao($ano,$mes,$dia,$turno){
+    $pessoal = new Pessoal();
+    
+    $select = 'SELECT manha,
+                      tarde
+                FROM tbbalcao
+               WHERE ano = '.$ano.'
+                 AND mes = '.$mes.' 
+                 AND dia = '.$dia;
+
+   $row = $pessoal->select($select,FALSE);
+   $count = $pessoal->count($select,FALSE);
+   
+   if($count == 0){
+       return "?";
+   }else{
+       if($turno == "m"){
+           return $row[0];
+       }else{
+           return $row[1];
+       }
+   }
+}
+
+###########################################################
+/**
+ * Função que retorna o idBalcao de um dia específico para saber se será update ou insert
+ * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão
+ */
+
+function get_idBalcao($ano,$mes,$dia){
+    $pessoal = new Pessoal();
+    
+    $select = 'SELECT idBalcao
+                FROM tbbalcao
+               WHERE ano = '.$ano.'
+                 AND mes = '.$mes.' 
+                 AND dia = '.$dia;
+
+   $row = $pessoal->select($select,FALSE);
+   return $row[0];
+}

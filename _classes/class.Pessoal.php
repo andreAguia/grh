@@ -98,15 +98,15 @@ class Pessoal extends Bd {
 
     public function get_gratificacao($idServidor)
     {
-            $select = 'SELECT valor
-                         FROM tbgratificacao
-                        WHERE idServidor = '.$idServidor.'
-                          AND current_date() >= dtInicial 
-                          AND (dtFinal is NULL OR current_date() <= dtFinal)';
+        $select = 'SELECT valor
+                     FROM tbgratificacao
+                    WHERE idServidor = '.$idServidor.'
+                      AND current_date() >= dtInicial 
+                      AND (dtFinal is NULL OR current_date() <= dtFinal)';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select,FALSE);
 
-            return $row[0];
+        return $row[0];
 
     }
 

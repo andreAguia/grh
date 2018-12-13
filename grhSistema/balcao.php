@@ -58,69 +58,96 @@ if($acesso){
     
     switch ($fase){	
         # Exibe o Menu Inicial
-        case "lista" :    
-            # Cria um menu
-            $menu1 = new MenuBar();
+        case "lista" :
+            # Editar ou salvar
+            if($editar == 1){
+                echo '<form method=post id="formPadrao" name="formPadrao" action="?fase=valida">';
+                
+                # Cria um menu
+                $menu1 = new MenuBar();
 
-            # Sair da Área do Servidor
-            $linkVoltar = new Link("Voltar","grh.php");
-            $linkVoltar->set_class('button');
-            $linkVoltar->set_title('Voltar');
-            $menu1->add_link($linkVoltar,"left");
-            
-            if($editar){
-                $linkEditar = new Link("Editar","?editar=0");
+                # Sair da Área do Servidor
+                $linkVoltar = new Link("Não Salvar","?");
+                $linkVoltar->set_class('button');
+                $linkVoltar->set_title('Volta Sem Salvar');
+                $menu1->add_link($linkVoltar,"left");
+                
+                # Editar
+                $linkEditar = new Input("Editar","submit");
+                $linkEditar->set_valor('Salvar');
+                $menu1->add_link($linkEditar,"right");
+
+                $menu1->show();
+                
             }else{
-                $linkEditar = new Link("Editar","?editar=1");
-            }
-            $linkEditar->set_class('button');
-            $linkEditar->set_title('Voltar');
-            $menu1->add_link($linkEditar,"right");
+                # Cria um menu
+                $menu1 = new MenuBar();
 
-            $menu1->show();
+                # Sair da Área do Servidor
+                $linkVoltar = new Link("Voltar","grh.php");
+                $linkVoltar->set_class('button');
+                $linkVoltar->set_title('Voltar');
+                $menu1->add_link($linkVoltar,"left");
+                
+                # Editar
+                $linkEditar = new Link("Editar","?editar=1");
+                $linkEditar->set_class('button');
+                $menu1->add_link($linkEditar,"right");
+
+                $menu1->show();
+            }
             
             # Formulário de Pesquisa
-            $form = new Form('?');
-            
-            # Cria um array com os anos possíveis
-            $anoAtual = date('Y');
-            $anosPossiveis = arrayPreenche($anoAtual-1,$anoAtual+2);
+            if($editar <> 1){
+                $form = new Form('?');
+                        
+                # Cria um array com os anos possíveis
+                $anoAtual = date('Y');
+                $anosPossiveis = arrayPreenche($anoAtual-1,$anoAtual+2);
 
-            $controle = new Input('parametroAno','combo','Ano:',1);
-            $controle->set_size(30);
-            $controle->set_title('Ano');
-            $controle->set_array($anosPossiveis);
-            $controle->set_valor($parametroAno);
-            $controle->set_autofocus(TRUE);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
+                $controle = new Input('parametroAno','combo','Ano:',1);
+                $controle->set_size(30);
+                $controle->set_title('Ano');
+                $controle->set_array($anosPossiveis);
+                $controle->set_valor($parametroAno);
+                $controle->set_autofocus(TRUE);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(1);
+                $controle->set_col(4);
+                $form->add_item($controle);
 
-            $controle = new Input('parametroMes','combo','Lotação:',1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Lotação');
-            $controle->set_array($mes);
-            $controle->set_valor($parametroMes);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
-            
-            $form->show();
-            
-            # Monta o relatório da folha de Presença
+                $controle = new Input('parametroMes','combo','Mês:',1);
+                $controle->set_size(30);
+                $controle->set_title('Filtra por Lotação');
+                $controle->set_array($mes);
+                $controle->set_valor($parametroMes);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(1);
+                $controle->set_col(4);
+                $form->add_item($controle);
 
+                $form->show();
+            }else{
+                $grid1 = new Grid();
+                $grid1->abreColuna(4);
+                $grid1->fechaColuna();
+                $grid1->abreColuna(4);
+                p(get_nomeMes($parametroMes)." / ".$parametroAno,"center","f18");
+                $grid1->fechaColuna();
+                $grid1->abreColuna(4);
+                $grid1->fechaColuna();
+                $grid1->fechaGrid();
+            }
+            
             # Cabeçalho
             echo '<table class="tabelaPadrao">';
             
             echo '<caption>Controle de Atendimento no Balcão</caption>';
 
-            echo '<col style="width:5%">';
-            echo '<col style="width:20%">';
-            echo '<col style="width:20%">';
-            echo '<col style="width:20%">';
-            echo '<col style="width:35%">';
+            echo '<col style="width:10%">';
+            echo '<col style="width:30%">';
+            echo '<col style="width:30%">';
+            echo '<col style="width:30%">';
 
             # Cabeçalho
             echo '<tr>';
@@ -128,7 +155,6 @@ if($acesso){
                 echo '<th>Dia da Semana</th>';
                 echo '<th>Manha</th>';
                 echo '<th>Tarde</th>';
-                echo '<th>Obs</th>';
             echo '</tr>';
             
             # Verifica quantos dias tem o mês específico
@@ -144,7 +170,7 @@ if($acesso){
                 # Determina o dia da semana numericamente
                 $tstamp=mktime(0,0,0,$parametroMes,$contador,$parametroAno);
                 $Tdate = getdate($tstamp);
-                $wday1=$Tdate["wday"];
+                $wday=$Tdate["wday"];
 
                 # Array dom os nomes do dia da semana 
                 $diaSemana = array("Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado");
@@ -155,10 +181,15 @@ if($acesso){
                 # inicia a linha do dia    
                 echo '<tr';
                 
-                if(!is_null($feriado)){
-                    echo ' id="feriado"';
-                }elseif(($wday1 == 0) OR ($wday1 == 6)){
-                    echo ' id="feriado"';
+                if(($parametroAno == date('Y')) AND ($parametroMes == date('m')) AND ($contador == date('d'))){
+                    echo ' id="hoje"';
+                }else{
+                
+                    if(!is_null($feriado)){
+                        echo ' id="feriado"';
+                    }elseif(($wday == 0) OR ($wday == 6)){
+                        echo ' id="feriado"';
+                    }
                 }
                 echo '>';
 
@@ -166,55 +197,108 @@ if($acesso){
                 echo '<td align="center">'.$contador.'</td>';
                 
                 # Exibe o nome da semana
-                if(($wday1 == 0) OR ($wday1 == 6)){
-                    echo '<td id="" align="center">'.$diaSemana[$wday1].'</td>';
+                if(($parametroAno == date('Y')) AND ($parametroMes == date('m')) AND ($contador == date('d'))){
+                    echo '<td align="center"><b>Hoje</b></td>';
                 }else{
-                    echo '<td align="center">'.$diaSemana[$wday1].'</td>';
+                    echo '<td align="center">'.$diaSemana[$wday].'</td>';
                 }
 
                 # Coluna do codigo
                 if(!is_null($feriado)){
-                    echo '<td align="center">Feriado</td>';
-                    echo '<td align="center">Feriado</td>';
-                    echo '<td align="center">'.$feriado.'</td>';
-                }elseif(($wday1 == 0) OR ($wday1 == 6)){
-                    echo '<td align="center"><b><span id="f14">----------</span></b></td>';
-                    echo '<td align="center"><b><span id="f14">----------</span></b></td>';
-                    echo '<td align="center"><b><span id="f14">----------</span></b></td>';
+                    echo '<td colspan="2" align="center">'.$feriado.'</td>';
+                }elseif(($wday == 0) OR ($wday == 6)){
+                    echo '<td colspan="2" align="center"><b><span id="f14">----------</span></b></td>';
                 }else{
+                    
+                    # Define a regra de funcionamento para cada dia da semana seguindo o valor de $wday
+                    # Sendo: 
+                    #   n -> não tem atendimento; 
+                    #   m -> atendimento no turno da manhã; 
+                    #   t -> atendimento no turno da tarde; 
+                    #   a -> ambos
+                    $regraFuncionamento = array('n','m','t','a','t','m','n');   
+                        
                     if($editar == 1){
-                        $servidoresManha = array("Ana Paula","Andre","Claudia");
-                        $servodiresTarde = array("Alberto","Ana Terezinha","Christiane");
+                        # Monta os array de servidores para cada turno
+                        $servidoresManha = array(NULL,"Ana Paula","Andre","Claudia");
+                        $servidoresTarde = array(NULL,"Alberto","Ana Terezinha","Christiane");
                         
-                        # Formulário de Pesquisa
-                        $form = new Form('?');
-            
-                        echo '<td>';
-                        $controle = new Input('manha'.$contador,'combo',NULL,0);
-                        $controle->set_size(30);
-                        $controle->set_title('manha'.$contador);
-                        $controle->set_array($servidoresManha);
-                        #$controle->set_valor($parametroAno);
-                        $form->add_item($controle);
-                        echo '</td>';
+                        # Turno da manhã                        
+                        # Verifica se tem atendimento de manhã
+                        if(($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")){
+                            echo '<td>';
+                            echo '<select name="m'.$contador.'">';
+                                # Pega o valor quando tiver
+                                $valor = get_servidorBalcao($parametroAno,$parametroMes,$contador,"m");
+                                        
+                                # Percorre o array de servidores da manhã
+                                foreach($servidoresManha as $servidores){
+                                    echo ' <option value="'.$servidores.'"';
+                                    
+                                    # Varifica se é o cara
+                                    if($servidores == $valor){
+                                        echo ' selected="selected"';
+                                    }
+                                    
+                                    echo '>'.$servidores.'</option>';
+                                }
+                            echo '</select>';
+                            echo '</td>';
+                        }else{
+                            echo '<td align="center">S/A</td>';
+                        }
                         
-                        echo '<td>';
-                        $controle = new Input('tarde'.$contador,'combo',NULL,0);
-                        $controle->set_size(30);
-                        $controle->set_title('tarde'.$contador);
-                        $controle->set_array($servodiresTarde);
-                        #$controle->set_valor($parametroAno);
-                        $form->add_item($controle);
-                        echo '</td>';
-                        
-                        $form->show();
-                        
-                        echo '<td>&nbsp</td>';
+                        # Turno da Tarde                                                
+                        # Verifica se tem atendimento
+                        if(($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")){
+                            echo '<td>';
+                            echo '<select name="t'.$contador.'">';
+                                # Pega o valor quando tiver
+                                $valor = get_servidorBalcao($parametroAno,$parametroMes,$contador,"t");
+                            
+                                # Percorre o array de servidores da manhã
+                                foreach($servidoresTarde as $servidores){
+                                    echo ' <option value="'.$servidores.'"';
+                                    
+                                    # Varifica se é o cara
+                                    if($servidores == $valor){
+                                        echo ' selected="selected"';
+                                    }
+                                    
+                                    echo '>'.$servidores.'</option>';
+                                }
+                            echo '</select>';
+                            echo '</td>';
+                        }else{
+                            echo '<td align="center">S/A</td>';
+                        }
                         
                     }else{
-                        echo '<td>&nbsp</td>';
-                        echo '<td>&nbsp</td>';
-                        echo '<td>&nbsp</td>';
+                        # Turno da manhã  
+                        if(($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")){
+                            $ditoCujo = get_servidorBalcao($parametroAno,$parametroMes,$contador,"m");
+                            echo '<td';
+                            
+                            if($ditoCujo == '?'){
+                                echo ' id="ausente"';
+                            }
+                            echo ' align="center"><b><span id="f14">'.$ditoCujo.'</span></b></td>';
+                        }else{
+                            echo '<td align="center">S/A</td>';
+                        }
+                        
+                        # Turno da Tarde
+                        if(($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")){
+                            $ditoCujo = get_servidorBalcao($parametroAno,$parametroMes,$contador,"t");
+                            echo '<td';
+                            
+                            if($ditoCujo == '?'){
+                                echo ' id="ausente"';
+                            }
+                            echo ' align="center"><b><span id="f14">'.$ditoCujo.'</span></b></td>';
+                        }else{
+                            echo '<td align="center">S/A</td>';
+                        }
                     }
                 }
                 
@@ -222,10 +306,38 @@ if($acesso){
             }
 
             echo '</table>';
-            # data de impressão
-            p('Emitido em: '.date('d/m/Y - H:i:s')." (".$idUsuario.")",'pRelatorioDataImpressao');
-
             
+            # Fecha o form
+            if($editar == 1){
+                echo "</form>";
+            }            
+            break;
+            
+        case "valida" :
+            
+            # Verifica quantos dias tem o mês específico
+            $dias = date("j",mktime(0,0,0,$parametroMes+1,0,$parametroAno));
+            
+            $contador = 0;
+            while ($contador < $dias){
+                $contador++;
+                $vmanha = post("m$contador");
+                $vtarde = post("t$contador");
+                
+                if((!vazio($vmanha)) OR (!vazio($vtarde))){
+                    # Abre o banco de dados
+                    $pessoal = new Pessoal();
+                    
+                    # Verifica se já existe esse campo e pega o id para o update
+                    $idBalcao = get_idBalcao($parametroAno,$parametroMes,$contador);
+                    
+                    # Grava na tabela
+                    $campos = array("ano","mes","dia","manha","tarde");
+                    $valor = array($parametroAno,$parametroMes,$contador,$vmanha,$vtarde);                    
+                    $pessoal->gravar($campos,$valor,$idBalcao,"tbbalcao","idBalcao",FALSE);
+                }
+            }
+            loadPage("?");
             break;
     }
             

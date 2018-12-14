@@ -1543,6 +1543,7 @@ class Pessoal extends Bd {
 
     function get_nomeSimples($idServidor)
     {
+        echo $idServidor;
         if(is_numeric($idServidor)){
             $select = 'SELECT tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -1569,7 +1570,7 @@ class Pessoal extends Bd {
             
             return $retorno;
         }else{
-            return $idServidor;
+            return "XIII";
         }
     }
 

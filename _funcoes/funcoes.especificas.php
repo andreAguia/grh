@@ -622,3 +622,17 @@ function get_idBalcao($ano,$mes,$dia){
    $row = $pessoal->select($select,FALSE);
    return $row[0];
 }
+
+###########################################################
+/**
+ * Função que retorna o primeiro nome de um idServidor
+ * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão e chama a classe homonima
+ */
+
+function get_nomeSimples($idServidor){
+    
+    $pessoal = new Pessoal();
+    $nomeSimples = $pessoal->get_nomeSimples($idServidor);
+    
+    return $nomeSimples;
+}

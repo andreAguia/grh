@@ -72,7 +72,7 @@ if($acesso){
                 $linkVoltar->set_title('Volta Sem Salvar');
                 $menu1->add_link($linkVoltar,"left");
                 
-                # Editar
+                # Salvar
                 $linkEditar = new Input("Editar","submit");
                 $linkEditar->set_valor('Salvar');
                 $menu1->add_link($linkEditar,"right");
@@ -227,28 +227,36 @@ if($acesso){
                         
                     if($editar == 1){
                         # Monta os array de servidores para cada turno
-                        $servidoresManha = array(NULL,"Ana Paula","Andre","Claudia");
-                        $servidoresTarde = array(NULL,"Alberto","Ana Terezinha","Christiane");
+                        $select1 = "select idServidor FROM tbusuario where balcao = 'Manhã'";
+                        $manha = $intra->select($select1);
+                        $servidoresManha = array_map("get_nomeSimples", $manha);
+                        
+                        $select2 = "select idServidor FROM tbusuario where balcao = 'Tarde'";
+                        $tarde = $intra->select($select2);
+                        $servidoresTarde = array_map("get_nomeSimples", $tarde);
                         
                         # Turno da manhã                        
                         # Verifica se tem atendimento de manhã
                         if(($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")){
+                            
                             echo '<td>';
                             echo '<select name="m'.$contador.'">';
+                            
                                 # Pega o valor quando tiver
                                 $valor = get_servidorBalcao($parametroAno,$parametroMes,$contador,"m");
                                         
                                 # Percorre o array de servidores da manhã
                                 foreach($servidoresManha as $servidores){
-                                    echo ' <option value="'.$servidores.'"';
+                                    echo ' <option value="'.$servidores[0].'"';
                                     
                                     # Varifica se é o cara
-                                    if($servidores == $valor){
+                                    if($servidores[0] == $valor){
                                         echo ' selected="selected"';
                                     }
                                     
-                                    echo '>'.$servidores.'</option>';
+                                    echo '>'.$servidores[0].'</option>';
                                 }
+                                
                             echo '</select>';
                             echo '</td>';
                         }else{
@@ -265,14 +273,14 @@ if($acesso){
                             
                                 # Percorre o array de servidores da manhã
                                 foreach($servidoresTarde as $servidores){
-                                    echo ' <option value="'.$servidores.'"';
+                                    echo ' <option value="'.$servidores[0].'"';
                                     
                                     # Varifica se é o cara
-                                    if($servidores == $valor){
+                                    if($servidores[0] == $valor){
                                         echo ' selected="selected"';
                                     }
                                     
-                                    echo '>'.$servidores.'</option>';
+                                    echo '>'.$servidores[0].'</option>';
                                 }
                             echo '</select>';
                             echo '</td>';
@@ -384,15 +392,47 @@ if($acesso){
         
         case "editaServidor" :
             
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Sair da Área do Servidor
+            $linkVoltar = new Link("Não Salvar","?fase=servidores");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta Sem Salvar');
+            $menu1->add_link($linkVoltar,"left");
+
+            # Editar
+            $linkEditar = new Input("Editar","submit");
+            $linkEditar->set_valor('Salvar');
+            #$menu1->add_link($linkEditar,"right");
+
+            $menu1->show();
+                
+            # Titulo 
+            titulotable("Controle de Servidores da GRH que atendem ao Balcão");
+            br();
+            
+            # Pega os valores
             $idServidor = $intra->get_idServidor($id);
             $nome = $pessoal->get_nomeSimples($idServidor);
-            $valorAnterior = NULL;
+            $valorAnterior = NULL;           
             
-            $form = new Form('?fase=validaServidor');
+            # Abre o form
+            $form = new Form('?fase=validaServidor&id='.$id);
+            
+            # Servidor
+            $controle = new Input('nome','texto','Servidor:',1);
+            $controle->set_size(30);
+            $controle->set_title('Atendimento no Balcão');
+            $controle->set_valor($nome);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
                         
             # Cria um array com os valores possiveis
             $array = array(NULL,"Manhã","Tarde","Ambos","Não Atende");
 
+            # Balcao
             $controle = new Input('balcao','combo','Atendimento:',1);
             $controle->set_size(30);
             $controle->set_title('Atendimento no Balcão');
@@ -402,13 +442,28 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('submit','submit');
+            $controle->set_valor('Salvar');
+            $controle->set_linha(1);
+            $form->add_item($controle);
+            
             $form->show();            
             break;
         
         case "validaServidor" :
             $balcao = post("balcao");
-            echo $balcao;
+            $id = get('id');
+            $idServidor = $intra->get_idServidor($id);
             
+            # Grava na tabela
+            $campos = array("balcao");
+            $valor = array($balcao);                    
+            $intra->gravar($campos,$valor,$id,"tbusuario","idUsuario",FALSE);
+            
+            # Volta para o inicio
+            loadpage("?fase=servidores");
             break;
     }
             

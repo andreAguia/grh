@@ -54,7 +54,7 @@ if($acesso){
     $grid1 = new Grid();
     $grid1->abreColuna(12);
     
-    ################################################################
+#########################################################################################################################
     
     switch ($fase){	
         # Exibe o Menu Inicial
@@ -227,11 +227,11 @@ if($acesso){
                         
                     if($editar == 1){
                         # Monta os array de servidores para cada turno
-                        $select1 = "select idServidor FROM tbusuario where balcao = 'Manhã'";
+                        $select1 = "select idServidor, idServidor FROM tbusuario where balcao = 'Manhã'";
                         $manha = $intra->select($select1);
                         $servidoresManha = array_map("get_nomeSimples", $manha);
                         
-                        $select2 = "select idServidor FROM tbusuario where balcao = 'Tarde'";
+                        $select2 = "select idServidor, idServidor FROM tbusuario where balcao = 'Tarde'";
                         $tarde = $intra->select($select2);
                         $servidoresTarde = array_map("get_nomeSimples", $tarde);
                         
@@ -327,6 +327,8 @@ if($acesso){
                 echo "</form>";
             }            
             break;
+
+#########################################################################################################################
             
         case "valida" :
             
@@ -354,6 +356,8 @@ if($acesso){
             }
             loadPage("?");
             break;
+            
+#########################################################################################################################
             
         case "servidores" :
             
@@ -389,6 +393,8 @@ if($acesso){
             $tabela->set_idCampo('idUsuario');
             $tabela->show();
             break;
+
+#########################################################################################################################
         
         case "editaServidor" :
             
@@ -451,6 +457,8 @@ if($acesso){
             
             $form->show();            
             break;
+ 
+#########################################################################################################################
         
         case "validaServidor" :
             $balcao = post("balcao");

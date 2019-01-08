@@ -118,7 +118,7 @@ if($acesso)
             #   m -> atendimento no turno da manhã; 
             #   t -> atendimento no turno da tarde; 
             #   a -> ambos
-            $regraFuncionamento = array('n','m','t','a','t','m','n');   
+            $regraFuncionamento = array('n','t','m','a','t','m','n');   
 
             # Turno da manhã  
             if(($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")){

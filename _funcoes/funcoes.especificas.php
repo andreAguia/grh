@@ -597,9 +597,17 @@ function get_servidorBalcao($ano,$mes,$dia,$turno){
        return "?";
    }else{
        if($turno == "m"){
-           return $row[0];
+           if(vazio($row[0])){
+               return "?";
+           }else{
+               return $row[0];
+           }
        }else{
-           return $row[1];
+           if(vazio($row[1])){
+               return "?";
+           }else{
+               return $row[1];
+           }
        }
    }
 }

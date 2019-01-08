@@ -166,17 +166,15 @@ class Grh{
             $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Cadastro de Atribuições de tarefas');
             #$botao->set_accesskey('S');
-            $menu->add_item($botao);
+            $menu->add_item($botao);            
             
-            if(Verifica::acesso($idUsuario,1)){
-                $botao = new BotaoGrafico();
-                $botao->set_label('Balcão');
-                $botao->set_url("balcao.php?origem=1");
-                $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Controle de Atendimento do Balcão');
-                #$botao->set_accesskey('S');
-                $menu->add_item($botao);
-            }
+            $botao = new BotaoGrafico();
+            $botao->set_label('Balcão');
+            $botao->set_url("balcao.php?origem=1");
+            $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Controle de Atendimento do Balcão');
+            #$botao->set_accesskey('S');
+            $menu->add_item($botao);
 
             $menu->show();
             br();

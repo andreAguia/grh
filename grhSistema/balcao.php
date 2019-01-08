@@ -89,17 +89,28 @@ if($acesso){
                 $linkVoltar->set_title('Voltar');
                 $menu1->add_link($linkVoltar,"left");
                 
-                # Servidores
-                $linkServ = new Link("Servidores","?fase=servidores");
-                $linkServ->set_class('button');
-                $linkServ->set_title('Informa os servidores que entram no rodizio de atendimento');
-                $menu1->add_link($linkServ,"right");
+                if(Verifica::acesso($idUsuario,8)){
+                    # Servidores
+                    $linkServ = new Link("Servidores","?fase=servidores");
+                    $linkServ->set_class('button');
+                    $linkServ->set_title('Informa os servidores que entram no rodizio de atendimento');
+                    $menu1->add_link($linkServ,"right");
+
+                    # Editar
+                    $linkEditar = new Link("Editar","?editar=1");
+                    $linkEditar->set_class('button');
+                    $linkEditar->set_title('Informa entre os servidores do rodizio o dia de atendimento de cada um');
+                    $menu1->add_link($linkEditar,"right");
+                }
                 
-                # Editar
-                $linkEditar = new Link("Editar","?editar=1");
-                $linkEditar->set_class('button');
-                $linkEditar->set_title('Informa entre os servidores do rodizio o dia de atendimento de cada um');
-                $menu1->add_link($linkEditar,"right");
+                # Relatórios
+                $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+                $botaoRel = new Button();
+                $botaoRel->set_imagem($imagem);
+                $botaoRel->set_title("Relatório de Licença");
+                $botaoRel->set_url("../grhRelatorios/balcao.php");
+                $botaoRel->set_target("_blank");
+                $menu1->add_link($botaoRel,"right");
 
                 $menu1->show();
             }
@@ -227,26 +238,27 @@ if($acesso){
                         
                     if($editar == 1){
                         # Monta os array de servidores para cada turno
-                        $select1 = "select idServidor, idServidor FROM tbusuario where balcao = 'Manhã'";
+                        $select1 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Manhã'";
                         $manha = $intra->select($select1);
-                        $servidoresManha = array_map("get_nomeSimples", $manha);
+                        array_unshift($manha, array(NULL,NULL)); # Adiciona o valor de nulo
                         
-                        $select2 = "select idServidor, idServidor FROM tbusuario where balcao = 'Tarde'";
+                        $select2 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Tarde'";
                         $tarde = $intra->select($select2);
-                        $servidoresTarde = array_map("get_nomeSimples", $tarde);
+                        array_unshift($tarde, array(NULL,NULL)); # Adiciona o valor de nulo
                         
                         # Turno da manhã                        
                         # Verifica se tem atendimento de manhã
                         if(($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")){
                             
-                            echo '<td>';
+                            echo '<td>';                           
+                            
                             echo '<select name="m'.$contador.'">';
                             
                                 # Pega o valor quando tiver
                                 $valor = get_servidorBalcao($parametroAno,$parametroMes,$contador,"m");
                                         
                                 # Percorre o array de servidores da manhã
-                                foreach($servidoresManha as $servidores){
+                                foreach($manha as $servidores){
                                     echo ' <option value="'.$servidores[0].'"';
                                     
                                     # Varifica se é o cara
@@ -272,7 +284,7 @@ if($acesso){
                                 $valor = get_servidorBalcao($parametroAno,$parametroMes,$contador,"t");
                             
                                 # Percorre o array de servidores da manhã
-                                foreach($servidoresTarde as $servidores){
+                                foreach($tarde as $servidores){
                                     echo ' <option value="'.$servidores[0].'"';
                                     
                                     # Varifica se é o cara
@@ -297,7 +309,7 @@ if($acesso){
                             if($ditoCujo == '?'){
                                 echo ' id="ausente"';
                             }
-                            echo ' align="center"><b><span id="f14">'.$ditoCujo.'</span></b></td>';
+                            echo ' align="center"><span id="f14">'.$ditoCujo.'</span></td>';
                         }else{
                             echo '<td align="center">-----</td>';
                         }
@@ -310,7 +322,7 @@ if($acesso){
                             if($ditoCujo == '?'){
                                 echo ' id="ausente"';
                             }
-                            echo ' align="center"><b><span id="f14">'.$ditoCujo.'</span></b></td>';
+                            echo ' align="center"><span id="f14">'.$ditoCujo.'</span></td>';
                         }else{
                             echo '<td align="center">-----</td>';
                         }
@@ -341,18 +353,16 @@ if($acesso){
                 $vmanha = post("m$contador");
                 $vtarde = post("t$contador");
                 
-                if((!vazio($vmanha)) OR (!vazio($vtarde))){
-                    # Abre o banco de dados
-                    $pessoal = new Pessoal();
-                    
-                    # Verifica se já existe esse campo e pega o id para o update
-                    $idBalcao = get_idBalcao($parametroAno,$parametroMes,$contador);
-                    
-                    # Grava na tabela
-                    $campos = array("ano","mes","dia","manha","tarde");
-                    $valor = array($parametroAno,$parametroMes,$contador,$vmanha,$vtarde);                    
-                    $pessoal->gravar($campos,$valor,$idBalcao,"tbbalcao","idBalcao",FALSE);
-                }
+                # Abre o banco de dados
+                $pessoal = new Pessoal();
+
+                # Verifica se já existe esse campo e pega o id para o update
+                $idBalcao = get_idBalcao($parametroAno,$parametroMes,$contador);
+
+                # Grava na tabela
+                $campos = array("ano","mes","dia","manha","tarde");
+                $valor = array($parametroAno,$parametroMes,$contador,$vmanha,$vtarde);                    
+                $pessoal->gravar($campos,$valor,$idBalcao,"tbbalcao","idBalcao",FALSE);
             }
             loadPage("?");
             break;
@@ -461,6 +471,22 @@ if($acesso){
 #########################################################################################################################
         
         case "validaServidor" :
+            $balcao = post("balcao");
+            $id = get('id');
+            $idServidor = $intra->get_idServidor($id);
+            
+            # Grava na tabela
+            $campos = array("balcao");
+            $valor = array($balcao);                    
+            $intra->gravar($campos,$valor,$id,"tbusuario","idUsuario",FALSE);
+            
+            # Volta para o inicio
+            loadpage("?fase=servidores");
+            break;
+        
+#########################################################################################################################
+        
+        case "relatorio" :
             $balcao = post("balcao");
             $id = get('id');
             $idServidor = $intra->get_idServidor($id);

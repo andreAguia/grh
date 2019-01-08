@@ -77,11 +77,13 @@ if($acesso){
     $objeto->set_parametroValue($parametro);
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
         $orderCampo = "8 desc, 3 asc, 4 asc, 5";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
         $orderTipo = 'asc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT idLotacao,

@@ -234,7 +234,7 @@ if($acesso){
                     #   m -> atendimento no turno da manhã; 
                     #   t -> atendimento no turno da tarde; 
                     #   a -> ambos
-                    $regraFuncionamento = array('n','m','t','a','t','m','n');   
+                    $regraFuncionamento = array('n','t','m','a','t','m','n');   
                         
                     if($editar == 1){
                         # Monta os array de servidores para cada turno

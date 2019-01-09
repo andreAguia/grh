@@ -45,11 +45,11 @@ if($acesso)
 
     # Cabeçalho
     $cabecalho = new Relatorio();
-    $cabecalho->exibeCabecalho();
+    #$cabecalho->exibeCabecalho();
 
-    echo '<table class="tabelaRelatorio" id="tableFolhaPresenca">';
+    echo '<table class="tabelaRelatorio" id="tableRelatorioBalcao">';
 	
-    echo '<caption>Controle de Atendimento no Balcão</caption>';
+    echo "<caption>Atendimento no Balcão<br/>".get_nomeMes($parametroMes)." / ".$parametroAno."</caption>";
 
     echo '<col style="width:10%">';
     echo '<col style="width:20%">';
@@ -99,11 +99,7 @@ if($acesso)
         echo '<td align="center">'.$contador.'</td>';
 
         # Exibe o nome da semana
-        if(($parametroAno == date('Y')) AND ($parametroMes == date('m')) AND ($contador == date('d'))){
-            echo '<td align="center"><b>Hoje</b></td>';
-        }else{
-            echo '<td align="center">'.$diaSemana[$wday].'</td>';
-        }
+        echo '<td align="center">'.$diaSemana[$wday].'</td>';
 
         # Coluna do codigo
         if(!is_null($feriado)){
@@ -150,7 +146,7 @@ if($acesso)
     }
     
     echo '</table>';
-    echo "<div style='page-break-before:always;'>&nbsp</div>";
+    
     
     $grid1->fechaColuna();
     $grid1->fechaGrid();

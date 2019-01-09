@@ -259,6 +259,10 @@ if($acesso){
                                         
                                 # Percorre o array de servidores da manhã
                                 foreach($manha as $servidores){
+                                    
+                                    # Simplifica o nome
+                                    $servidores[0] = get_nomeSimples($servidores[0]);
+                                    
                                     echo ' <option value="'.$servidores[0].'"';
                                     
                                     # Varifica se é o cara
@@ -283,8 +287,12 @@ if($acesso){
                                 # Pega o valor quando tiver
                                 $valor = get_servidorBalcao($parametroAno,$parametroMes,$contador,"t");
                             
-                                # Percorre o array de servidores da manhã
+                                # Percorre o array de servidores da tarde
                                 foreach($tarde as $servidores){
+                                    
+                                    # Simplifica o nome
+                                    $servidores[0] = get_nomeSimples($servidores[0]);
+                                    
                                     echo ' <option value="'.$servidores[0].'"';
                                     
                                     # Varifica se é o cara

@@ -637,10 +637,20 @@ function get_idBalcao($ano,$mes,$dia){
  * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão e chama a classe homonima
  */
 
-function get_nomeSimples($idServidor){
+function get_nomeSimples($nome){
     
-    $pessoal = new Pessoal();
-    $nomeSimples = $pessoal->get_nomeSimples($idServidor);
+    # trata o nome para pegar somente o primeiro nome
+    $parte = explode(" ", $nome);
+
+    # Verifica se e nome composto
+    $nomesCompostos = array("Ana", "Maria", "Andre","André"); 
+
+    # Verifica se o nome em questao e composto e insere o segundo nome
+    if(in_array($parte[0], $nomesCompostos)) { 
+        $nomeSimples = $parte[0]." ".$parte[1];
+    }else{
+        $nomeSimples = $parte[0];
+    }  
     
     return $nomeSimples;
 }

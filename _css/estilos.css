@@ -450,6 +450,39 @@ p#termodePosse{
      font-size: 10px;     
   }
   
+ /*******************************************
+ * relatório de Balcao
+ *******************************************/
+ 
+ table#tableRelatorioBalcao {
+     border: 1px solid black;
+     color: #000000;
+     border-collapse:collapse;
+     width: 100%;
+ }
+ 
+ table#tableRelatorioBalcao caption{
+     font-size: 30px;
+     text-align: center;
+     font-weight: normal;
+     padding-bottom: 20px;
+     padding-top: 20px;
+ }
+ 
+ table#tableRelatorioBalcao th{
+     color: #000000;
+     font-size: 18px;
+     text-align: center;
+     border: 1px solid black;
+ }
+ 
+ table#tableRelatorioBalcao td{
+     color: #000000;
+     font-size: 18px;
+     text-align: center;
+     border: 1px solid black;
+ }
+  
   /*******************************************
  * Ficha de avaliação Funcional
  *******************************************/

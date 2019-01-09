@@ -1549,25 +1549,12 @@ class Pessoal extends Bd {
                         WHERE idServidor = '.$idServidor;
 
             if($idServidor == 0){
-                $nome[0] = "";
+                return "----";
             }else{ 
                 $nome = parent::select($select,FALSE);
+                
+                return get_nomeSimples($nome[0]);
             }
-            
-            # trata o nome para pegar somente o primeiro nome
-            $parte = explode(" ", $nome[0]);
-            
-            # Verifica se e nome composto
-            $nomesCompostos = array("Ana", "Maria", "Andre","André"); 
-            
-            # Verifica se o nome em questao e composto e insere o segundo nome
-            if(in_array($parte[0], $nomesCompostos)) { 
-                $retorno = $parte[0]." ".$parte[1];
-            }else{
-                $retorno = $parte[0];
-            }            
-            
-            return $retorno;
         }else{
             return "----";
         }

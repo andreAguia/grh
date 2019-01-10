@@ -47,11 +47,15 @@ class Grh{
      * 
      * @var private $matriculaUsuário string NULL Informa a matrícula do servidor logado para exibir somente os links que o servidor tem permissão 
      */
+        
+        $gridFora = new Grid();
+        $gridFora->abreColuna(12,8,8);
+        
        ##########################################################
         
         # Cadastro de Servidores
         $grid = new Grid();
-        $grid->abreColuna(12,3,3);
+        $grid->abreColuna(12,4,4);
 
         titulo('Servidores');
         br();
@@ -74,7 +78,7 @@ class Grh{
         ##########################################################
             
         # Tabelas Auxiliares 
-        $grid->abreColuna(12,5,5);        
+        $grid->abreColuna(12,8,8);        
 
         titulo('Tabelas Auxiliares');           
         br();
@@ -176,42 +180,9 @@ class Grh{
         $grid->fechaColuna();
 		       
         ###############################################################################################
-        
-        # Alertas
-        $grid->abreColuna(12,4,4);
-            
-            $divAlertas = new Div("divAlertas");
-            $divAlertas->abre();            
-                titulo('Alertas');
-                br(5);
-                aguarde();
-            $divAlertas->fecha();
-            
-        $grid->fechaColuna();     
-        
-        ##########################################################  
-            
-        # Legislação
-        $grid->abreColuna(12,3,3);
-
-        titulo('Legislação');
-        br();
-
-        $menu = new Menu();
-        $menu->add_item('linkWindow','Estatuto dos Servidores',"http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1","Decreto nº 2479 de 08 de Março de 1979");
-        $menu->add_item('linkWindow','Plano de Cargos e Vencimentos',"http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument","LEI Nº 4.800 de 29 de Junho de 2006");
-        $menu->add_item('linkWindow','Resoluções da Reitoria',"http://uenf.br/reitoria/legislacao/resolucoes/");
-        $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");     
-        $menu->add_item('linkWindow','Estatuto da UENF',"http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");            
-        $menu->show();
-
-        $grid->fechaColuna();
-        br();
-        
-        ##########################################################
                         
         # Área Especial        
-        $grid->abreColuna(12,5,5);
+        $grid->abreColuna(12);
 
         titulo('Área Especial');
         br();
@@ -262,11 +233,77 @@ class Grh{
         br();
 
         $grid->fechaColuna();
+        $grid->fechaGrid();
+        
+        $gridFora->fechaColuna();
         
         ###############################################################################################
         
-        # Balcão
+         # Alertas
+        $gridFora->abreColuna(12,4,4);
+            
+            $divAlertas = new Div("divAlertas");
+            $divAlertas->abre();            
+                titulo('Alertas');
+                br(5);
+                aguarde();
+            $divAlertas->fecha();
+            
+        $gridFora->fechaColuna();     
+        
+        ##########################################################  
+        
+         # Legislação
+        $gridFora->abreColuna(12,4,4);
+
+        titulo('Legislação');
+        br();
+
+        $menu = new Menu();
+        $menu->add_item('linkWindow','Estatuto dos Servidores',"http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1","Decreto nº 2479 de 08 de Março de 1979");
+        $menu->add_item('linkWindow','Plano de Cargos e Vencimentos',"http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument","LEI Nº 4.800 de 29 de Junho de 2006");
+        $menu->add_item('linkWindow','Resoluções da Reitoria',"http://uenf.br/reitoria/legislacao/resolucoes/");
+        $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");     
+        $menu->add_item('linkWindow','Estatuto da UENF',"http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");            
+        $menu->show();
+
+        $gridFora->fechaColuna();
+        br();
+        
+        ##########################################################
+        
+        # Aniversariantes
         $grid->abreColuna(12,4,4);
+
+            titulo("Aniversariantes de ".get_nomeMes());
+            br();
+
+            # Pega os valores
+            $pessoal = new Pessoal();
+            $numServidores = $pessoal->get_numAniversariantes();
+            $numHoje = $pessoal->get_numAniversariantesHoje();
+
+            # Exibe os valores
+            p("Aniversariantes do mês: ".$numServidores,"aniversariante");
+            p("Aniversariantes de hoje: ".$numHoje,"aniversariante");
+            br();
+
+            # Voltar
+            $div = new Div("divAniversariante");
+            $div->abre();
+                $link = new Link("Saiba mais","?fase=aniversariantes");
+                #$link->set_class('small button');
+                $link->set_id('linkAniversariante');
+                $link->set_title('Aniversarintes do mês');
+                $link->show();
+            $div->fecha();
+
+        $grid->fechaColuna();
+        
+        ##########################################################
+        
+        # Balcão
+        $gridFora->abreColuna(12,4,4);
             titulo('Hoje no Balcão');
             br();
             
@@ -295,12 +332,12 @@ class Grh{
             
             #$painel->fecha();
         
-        $grid->fechaColuna();     
+        $gridFora->fechaColuna();
         
         ##########################################################                
         
         # links externos
-        $grid->abreColuna(12,12,8);
+        $gridFora->abreColuna(12);
             titulo('Links Externos');
             br();
             
@@ -352,43 +389,13 @@ class Grh{
 
             $menu->show();
             
-        $grid->fechaColuna();
+        $gridFora->fechaColuna();
             
         ##########################################################
             
-        # Aniversariantes
-        $grid->abreColuna(12,12,4);
-
-            titulo("Aniversariantes de ".get_nomeMes());
-            br();
-
-            # Pega os valores
-            $pessoal = new Pessoal();
-            $numServidores = $pessoal->get_numAniversariantes();
-            $numHoje = $pessoal->get_numAniversariantesHoje();
-
-            # Exibe os valores
-            p("Aniversariantes do mês: ".$numServidores,"aniversariante");
-            p("Aniversariantes de hoje: ".$numHoje,"aniversariante");
-            br();
-
-            # Voltar
-            $div = new Div("divAniversariante");
-            $div->abre();
-                $link = new Link("Saiba mais","?fase=aniversariantes");
-                #$link->set_class('small button');
-                $link->set_id('linkAniversariante');
-                $link->set_title('Aniversarintes do mês');
-                $link->show();
-            $div->fecha();
-
-        $grid->fechaColuna();
-        
-        ##########################################################
-        
         # Tabelas Secundárias
         if(Verifica::acesso($idUsuario,1)){
-            $grid->abreColuna(12);            
+            $gridFora->abreColuna(12);            
 
                 $tamanhoImage = 50;
                 br();
@@ -488,10 +495,10 @@ class Grh{
 
                 $menu->show();
 
-            $grid->fechaColuna();
+            $gridFora->fechaColuna();
             
         }
-        $grid->fechaGrid();
+        $gridFora->fechaGrid();
     }
         
 ##########################################################

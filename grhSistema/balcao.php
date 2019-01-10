@@ -492,21 +492,6 @@ if($acesso){
             loadpage("?fase=servidores");
             break;
         
-#########################################################################################################################
-        
-        case "relatorio" :
-            $balcao = post("balcao");
-            $id = get('id');
-            $idServidor = $intra->get_idServidor($id);
-            
-            # Grava na tabela
-            $campos = array("balcao");
-            $valor = array($balcao);                    
-            $intra->gravar($campos,$valor,$id,"tbusuario","idUsuario",FALSE);
-            
-            # Volta para o inicio
-            loadpage("?fase=servidores");
-            break;
     }
             
     $grid1->fechaColuna();

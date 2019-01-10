@@ -49,218 +49,136 @@ class Grh{
      */
        ##########################################################
         
-        # 1º Coluna
-        $grid1 = new Grid();
-        $grid1->abreColuna(12,8,8);
-        
-        ##########################################################
-        
-            # Cadastro de Servidores 
-            $grid = new Grid();
-            $grid->abreColuna(12,4,4);
+        # Cadastro de Servidores
+        $grid = new Grid();
+        $grid->abreColuna(12,3,3);
 
-            titulo('Servidores');
-            br();
+        titulo('Servidores');
+        br();
 
-            $tamanhoImage = 180;
-            $menu = new MenuGrafico(1);
+        $tamanhoImage = 180;
+        $menu = new MenuGrafico(1);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Servidores');
-            $botao->set_url('servidor.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Servidores');
-            $botao->set_accesskey('S');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Servidores');
+        $botao->set_url('servidor.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Servidores');
+        $botao->set_accesskey('S');
+        $menu->add_item($botao);
 
-            $menu->show();
-            br(); 
-            $grid->fechaColuna();
+        $menu->show();
+        br(); 
+        $grid->fechaColuna();
         
         ##########################################################
             
-            # Tabelas Auxiliares 
-            $grid->abreColuna(12,8,8);        
+        # Tabelas Auxiliares 
+        $grid->abreColuna(12,5,5);        
 
-            titulo('Tabelas Auxiliares');           
-            br();
+        titulo('Tabelas Auxiliares');           
+        br();
 
-            $tamanhoImage = 60;
-            $menu = new MenuGrafico(4);
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(4);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Perfil');
-            $botao->set_url('cadastroPerfil.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Perfil');
-            $botao->set_accesskey('P');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Perfil');
+        $botao->set_url('cadastroPerfil.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'usuarios.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Perfil');
+        $botao->set_accesskey('P');
+        $menu->add_item($botao);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Lotação');
-            $botao->set_url('cadastroLotacao.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'lotacao.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Lotação');
-            $botao->set_accesskey('L');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Lotação');
+        $botao->set_url('cadastroLotacao.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'lotacao.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Lotação');
+        $botao->set_accesskey('L');
+        $menu->add_item($botao);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Cargo Efetivo');
-            $botao->set_url('cadastroCargo.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Funções');
-            $botao->set_accesskey('C');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Cargo Efetivo');
+        $botao->set_url('cadastroCargo.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'cracha.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Funções');
+        $botao->set_accesskey('C');
+        $menu->add_item($botao);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Cargo em Comissão');
-            $botao->set_url('cadastroCargoComissao.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Cargos em Comissão');
-            $botao->set_accesskey('g');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Cargo em Comissão');
+        $botao->set_url('cadastroCargoComissao.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Cargos em Comissão');
+        $botao->set_accesskey('g');
+        $menu->add_item($botao);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Concurso');
-            $botao->set_url('cadastroConcurso.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Concursos');
-            $botao->set_accesskey('o');
-            $menu->add_item($botao);   
+        $botao = new BotaoGrafico();
+        $botao->set_label('Concurso');
+        $botao->set_url('cadastroConcurso.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Concursos');
+        $botao->set_accesskey('o');
+        $menu->add_item($botao);   
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Licenças e Afastamentos');
-            $botao->set_url('cadastroLicenca.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Tipos de Licenças');
-            #$botao->set_accesskey('T');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Licenças e Afastamentos');
+        $botao->set_url('cadastroLicenca.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'nene.gif',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Tipos de Licenças');
+        #$botao->set_accesskey('T');
+        $menu->add_item($botao);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('PDV');
-            $botao->set_url('cadastroPlanoCargos.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
-            $botao->set_accesskey('D');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('PDV');
+        $botao->set_url('cadastroPlanoCargos.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
+        $botao->set_accesskey('D');
+        $menu->add_item($botao);
 
-            $botao = new BotaoGrafico();
-            $botao->set_label('Tabela Salarial');
-            $botao->set_url('cadastroTabelaSalarial.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Tipos de Licenças');
-            $botao->set_accesskey('b');
-            $menu->add_item($botao);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Feriados');
-            $botao->set_url("cadastroFeriado.php?origem=1");
-            $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Feriados');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Atribuições');
-            $botao->set_url("cadastroAtribuicoes.php?origem=1");
-            $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Cadastro de Atribuições de tarefas');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);            
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Balcão');
-            $botao->set_url("balcao.php?origem=1");
-            $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Controle de Atendimento do Balcão');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
+        $botao = new BotaoGrafico();
+        $botao->set_label('Tabela Salarial');
+        $botao->set_url('cadastroTabelaSalarial.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Tipos de Licenças');
+        $botao->set_accesskey('b');
+        $menu->add_item($botao);
 
-            $menu->show();
-            br();
-            
-            $grid->fechaColuna();
+        $botao = new BotaoGrafico();
+        $botao->set_label('Feriados');
+        $botao->set_url("cadastroFeriado.php?origem=1");
+        $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Feriados');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Atribuições');
+        $botao->set_url("cadastroAtribuicoes.php?origem=1");
+        $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Atribuições de tarefas');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);            
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Balcão');
+        $botao->set_url("balcao.php?origem=1");
+        $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Atendimento do Balcão');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+
+        $menu->show();
+        br();
+
+        $grid->fechaColuna();
 		       
         ###############################################################################################
-            
-            # Legislação
-            $grid->abreColuna(12,4,4);
         
-            titulo('Legislação');
-            br();
-            
-            $menu = new Menu();
-            $menu->add_item('linkWindow','Estatuto dos Servidores',"http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1","Decreto nº 2479 de 08 de Março de 1979");
-            $menu->add_item('linkWindow','Plano de Cargos e Vencimentos',"http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument","LEI Nº 4.800 de 29 de Junho de 2006");
-            $menu->add_item('linkWindow','Resoluções da Reitoria',"http://uenf.br/reitoria/legislacao/resolucoes/");
-            $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");     
-            $menu->add_item('linkWindow','Estatuto da UENF',"http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");            
-            $menu->show();
-        
-            $grid->fechaColuna();
-            br();
-        
-        ##########################################################
-                        
-            # Área Especial        
-            $grid->abreColuna(12,8,8);
-            
-            titulo('Área Especial');
-            br();
-            
-            $tamanhoImage = 60;
-            $menu = new MenuGrafico(5);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Férias');
-            $botao->set_url('areaFeriasExercicio.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Área de Férias');
-            $botao->set_accesskey('F');
-            $menu->add_item($botao);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Licença Prêmio');
-            $botao->set_url('areaLicencaPremio.php');
-            $botao->set_imagem(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Área de Licença Prêmio');
-            #$botao->set_accesskey('F');
-            $menu->add_item($botao);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('TRE');
-            $botao->set_url('areaTre.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Área de Controle de Folgas do TRE');
-            #$botao->set_accesskey('F');
-            $menu->add_item($botao);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Estatística');
-            $botao->set_url('estatistica.php?origem=1');
-            $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Análise estatísticas');
-            #$botao->set_accesskey('F');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php');
-            #$botao->set_url('#');
-            $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Recadastramento de Servidores');
-            $menu->add_item($botao);
-            $menu->show();
-            br();
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-        
-        ##########################################################
-        $grid1->fechaColuna();
-        
-        # 2º Coluna - Alertas
-        $grid1->abreColuna(12,4,4);
+        # Alertas
+        $grid->abreColuna(12,4,4);
             
             $divAlertas = new Div("divAlertas");
             $divAlertas->abre();            
@@ -269,12 +187,119 @@ class Grh{
                 aguarde();
             $divAlertas->fecha();
             
-        $grid1->fechaColuna();     
+        $grid->fechaColuna();     
         
-        ##########################################################        
+        ##########################################################  
+            
+        # Legislação
+        $grid->abreColuna(12,3,3);
+
+        titulo('Legislação');
+        br();
+
+        $menu = new Menu();
+        $menu->add_item('linkWindow','Estatuto dos Servidores',"http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1","Decreto nº 2479 de 08 de Março de 1979");
+        $menu->add_item('linkWindow','Plano de Cargos e Vencimentos',"http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument","LEI Nº 4.800 de 29 de Junho de 2006");
+        $menu->add_item('linkWindow','Resoluções da Reitoria',"http://uenf.br/reitoria/legislacao/resolucoes/");
+        $menu->add_item('linkWindow','Portarias',"http://uenf.br/reitoria/legislacao/portarias/");     
+        $menu->add_item('linkWindow','Estatuto da UENF',"http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");            
+        $menu->show();
+
+        $grid->fechaColuna();
+        br();
+        
+        ##########################################################
+                        
+        # Área Especial        
+        $grid->abreColuna(12,5,5);
+
+        titulo('Área Especial');
+        br();
+
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(5);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Férias');
+        $botao->set_url('areaFeriasExercicio.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Férias');
+        $botao->set_accesskey('F');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Licença Prêmio');
+        $botao->set_url('areaLicencaPremio.php');
+        $botao->set_imagem(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Licença Prêmio');
+        #$botao->set_accesskey('F');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('TRE');
+        $botao->set_url('areaTre.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Controle de Folgas do TRE');
+        #$botao->set_accesskey('F');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Estatística');
+        $botao->set_url('estatistica.php?origem=1');
+        $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Análise estatísticas');
+        #$botao->set_accesskey('F');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Recadastramento');
+        $botao->set_url('areaRecadastramento.php');
+        #$botao->set_url('#');
+        $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Recadastramento de Servidores');
+        $menu->add_item($botao);
+        $menu->show();
+        br();
+
+        $grid->fechaColuna();
+        
+        ###############################################################################################
+        
+        # Balcão
+        $grid->abreColuna(12,4,4);
+            titulo('Hoje no Balcão');
+            br();
+            
+            $select = "SELECT manha, tarde FROM tbbalcao WHERE month(curdate()) = mes AND day(curdate()) = dia AND year(curdate()) = ano";
+            $pessoal = new Pessoal();
+            $sortudos = $pessoal->select($select, false);
+            
+            #$painel = new Callout("warning");
+            #$painel->abre();
+            
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+            
+            if(is_NULL($sortudos)){
+                p("Não Haverá Atendimento Hoje.");
+            }else{
+                echo "<table id='tableBalcao'>";
+                echo "<tr><td>Manhã:</td><td>".trataNulo($sortudos[0])."</td></tr>";
+                echo "<tr><td>Tarde:</td><td>".trataNulo($sortudos[1])."</td></tr>";
+                echo "</table>";
+            }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            #$painel->fecha();
+        
+        $grid->fechaColuna();     
+        
+        ##########################################################                
         
         # links externos
-        $grid1->abreColuna(12,12,8);
+        $grid->abreColuna(12,12,8);
             titulo('Links Externos');
             br();
             
@@ -326,12 +351,12 @@ class Grh{
 
             $menu->show();
             
-        $grid1->fechaColuna();
+        $grid->fechaColuna();
             
         ##########################################################
             
         # Aniversariantes
-        $grid1->abreColuna(12,12,4);
+        $grid->abreColuna(12,12,4);
 
             titulo("Aniversariantes de ".get_nomeMes());
             br();
@@ -356,13 +381,13 @@ class Grh{
                 $link->show();
             $div->fecha();
 
-        $grid1->fechaColuna();
+        $grid->fechaColuna();
         
         ##########################################################
         
         # Tabelas Secundárias
         if(Verifica::acesso($idUsuario,1)){
-            $grid1->abreColuna(12);            
+            $grid->abreColuna(12);            
 
                 $tamanhoImage = 50;
                 br();
@@ -462,10 +487,10 @@ class Grh{
 
                 $menu->show();
 
-            $grid1->fechaColuna();
+            $grid->fechaColuna();
             
         }
-        $grid1->fechaGrid();
+        $grid->fechaGrid();
     }
         
 ##########################################################

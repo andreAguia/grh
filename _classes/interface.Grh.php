@@ -283,7 +283,8 @@ class Grh{
             if(is_NULL($sortudos)){
                 p("Não Haverá Atendimento Hoje.");
             }else{
-                echo "<table id='tableBalcao'>";
+                echo "<table class='tabelaPadrao'>";
+                #echo "<tr><th>Turno</th><th>Servidor</th></tr>";
                 echo "<tr><td>Manhã:</td><td>".trataNulo($sortudos[0])."</td></tr>";
                 echo "<tr><td>Tarde:</td><td>".trataNulo($sortudos[1])."</td></tr>";
                 echo "</table>";

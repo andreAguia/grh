@@ -158,19 +158,18 @@ if($acesso){
             }
             
             ###########################################################################################################
-            /*
+            $grid1 = new Grid();
+            $grid1->abreColuna(5);
+    
             # Define a data para o sql
             $data = $parametroAno.'-'.$parametroMes.'-01';
             
             # Exibe as férias dos servidores
             $select ="SELECT tbpessoa.nome,
-                             tbservidor.idServidor,
                              tbferias.anoExercicio,
                              tbferias.dtInicial,
                              tbferias.numDias,
-                             ADDDATE(tbferias.dtInicial,tbferias.numDias-1) as dtf,
-                             idFerias,
-                             tbferias.status
+                             ADDDATE(tbferias.dtInicial,tbferias.numDias-1) as dtf
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -180,7 +179,7 @@ if($acesso){
                          AND (tblotacao.idlotacao = 66)
                          AND (('$data' BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                    OR  (LAST_DAY('$data') BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
-                   OR  ('$data' < dtInicial AND LAST_DAY('$data') > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))";
+                   OR  ('$data' < dtInicial AND LAST_DAY('$data') > ADDDATE(tbferias.dtInicial,tbferias.numDias-1))) order by 3";
                  
             $result = $pessoal->select($select);
             $numServidores = $pessoal->count($select);
@@ -190,11 +189,9 @@ if($acesso){
             if($numServidores > 0){
                 $tabela = new Tabela();
                 $tabela->set_titulo("Férias dos Servidores da GRH em ".get_nomeMes($parametroMes)." / ".$parametroAno);
-                $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status'));
-                $tabela->set_align(array("left","left"));
-                $tabela->set_funcao(array('get_nomeSimples',NULL,NULL,"date_to_php",NULL,"date_to_php",NULL,NULL));
-                $tabela->set_classe(array(NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
-                $tabela->set_metodo(array(NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+                $tabela->set_label(array('Nome','Exercício','Inicio','Dias','Fim'));
+                $tabela->set_align(array("left"));
+                $tabela->set_funcao(array('get_nomeSimples',NULL,"date_to_php",NULL,"date_to_php"));                
                 $tabela->set_conteudo($result);
                 $tabela->show();
             }else{
@@ -268,9 +265,11 @@ if($acesso){
                 
             }
             $painel->fecha();
-            */
-            ###########################################################################################################
             
+            $grid1->fechaColuna();
+            ###########################################################################################################
+            $grid1->abreColuna(7);
+    
             # Cabeçalho
             echo '<table class="tabelaPadrao">';
             
@@ -459,7 +458,10 @@ if($acesso){
             # Fecha o form
             if($editar == 1){
                 echo "</form>";
-            }            
+            }
+            
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
             break;
 
 #########################################################################################################################

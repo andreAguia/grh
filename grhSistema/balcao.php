@@ -157,38 +157,119 @@ if($acesso){
                 $grid1->fechaGrid();
             }
             
+            ###########################################################################################################
+            
+            # Define a data para o sql
+            $data = $parametroAno.'-'.$parametroMes.'-01';
+            
             # Exibe as férias dos servidores
             $select ="SELECT tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbferias.anoExercicio,
-                         tbferias.dtInicial,
-                         tbferias.numDias,
-                         date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
-                         idFerias,
-                         tbferias.status,
-                         tbsituacao.situacao
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                         JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
-                                         JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                   WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND YEAR(tbferias.dtInicial) = $parametroAno
-                     AND month(tbferias.dtInicial) = $parametroMes
-                     AND (tblotacao.idlotacao = 66)
-                ORDER BY dtInicial";
+                             tbservidor.idServidor,
+                             tbferias.anoExercicio,
+                             tbferias.dtInicial,
+                             tbferias.numDias,
+                             ADDDATE(tbferias.dtInicial,tbferias.numDias-1) as dtf,
+                             idFerias,
+                             tbferias.status
+                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                       WHERE situacao = 1
+                         AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                         AND (tblotacao.idlotacao = 66)
+                         AND (('$data' BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
+                   OR  (LAST_DAY('$data') BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
+                   OR  ('$data' < dtInicial AND LAST_DAY('$data') > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))";
+                 
+            $result = $pessoal->select($select);
+            $numServidores = $pessoal->count($select);
+
+            $painel = new Callout();
+            $painel->abre();
+            if($numServidores > 0){
+                $tabela = new Tabela();
+                $tabela->set_titulo("Férias dos Servidores da GRH em ".get_nomeMes($parametroMes)." / ".$parametroAno);
+                $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status'));
+                $tabela->set_align(array("left","left"));
+                $tabela->set_funcao(array('get_nomeSimples',NULL,NULL,"date_to_php",NULL,"date_to_php",NULL,NULL));
+                $tabela->set_classe(array(NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
+                $tabela->set_metodo(array(NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+                $tabela->set_conteudo($result);
+                $tabela->show();
+            }else{
+                tituloTable("Férias dos Servidores da GRH em ".get_nomeMes($parametroMes)." / ".$parametroAno);
+                br();
+                p("Não há servidores !!","center");
+                
+            }
+            $painel->fecha();
+            
+            ###########################################################################################################
+            
+            # Exibe as Licenças dos servidores
+            
+            $select = "(SELECT tbpessoa.nome,                               
+                               idServidor,
+                               CONCAT(tbtipolicenca.nome,' ',IFNULL(tbtipolicenca.lei,'')),
+                               tblicenca.dtInicial,
+                               tblicenca.numDias,
+                               ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
+                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                 LEFT JOIN tblicenca USING (idServidor)
+                                 LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                          WHERE situacao = 1
+                            AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                            AND (tblotacao.idlotacao = 66)
+                            AND (('$data' BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
+                             OR  (LAST_DAY('$data') BETWEEN dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
+                             OR  ('$data' < dtInicial AND LAST_DAY('$data') > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))
+                       ORDER BY dtInicial)
+                     UNION
+                     (SELECT tbpessoa.nome,
+                             idServidor,
+                             (SELECT CONCAT(tbtipolicenca.nome,' ',IFNULL(tbtipolicenca.lei,'')) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                             tblicencapremio.dtInicial,
+                             tblicencapremio.numDias,
+                             ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)
+                        FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                           JOIN tbhistlot USING (idServidor)
+                                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                      LEFT JOIN tblicencapremio USING (idServidor)
+                       WHERE situacao = 1
+                         AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                         AND (tblotacao.idlotacao = 66)
+                         AND (('$data' BETWEEN dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                          OR  (LAST_DAY('$data') BETWEEN dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                          OR  ('$data' < dtInicial AND LAST_DAY('$data') > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))
+                    ORDER BY dtInicial)";
 
             $result = $pessoal->select($select);
+            $numServidores = $pessoal->count($select);
 
-            $tabela = new Tabela();
-            $tabela->set_titulo("Férias dos Servidores da GRH em $parametroAno");
-            $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status','Situação'));
-            $tabela->set_align(array("left","left"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
-            $tabela->set_classe(array(NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
-            $tabela->set_metodo(array(NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
-            $tabela->set_conteudo($result);
-            $tabela->show();
+            $painel = new Callout();
+            $painel->abre();
+            if($numServidores > 0){
+                $tabela = new Tabela();
+                $tabela->set_titulo("Licença dos Servidores da GRH em ".get_nomeMes($parametroMes)." / ".$parametroAno);
+                $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim'));
+                $tabela->set_align(array("left","left"));
+                $tabela->set_funcao(array('get_nomeSimples',NULL,NULL,"date_to_php",NULL,"date_to_php",NULL));
+                $tabela->set_classe(array(NULL,"pessoal"));
+                $tabela->set_metodo(array(NULL,"get_lotacaoSimples"));
+                $tabela->set_conteudo($result);
+                $tabela->show();
+            }else{
+                tituloTable("Licença dos Servidores da GRH em ".get_nomeMes($parametroMes)." / ".$parametroAno);
+                br();
+                p("Não há servidores !!","center");
+                
+            }
+            $painel->fecha();
+            
+            ###########################################################################################################
             
             # Cabeçalho
             echo '<table class="tabelaPadrao">';

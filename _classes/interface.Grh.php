@@ -55,7 +55,7 @@ class Grh{
         
         # Cadastro de Servidores
         $grid = new Grid();
-        $grid->abreColuna(12,4,4);
+        $grid->abreColuna(12,12,4);
 
         titulo('Servidores');
         br();
@@ -78,7 +78,7 @@ class Grh{
         ##########################################################
             
         # Tabelas Auxiliares 
-        $grid->abreColuna(12,8,8);        
+        $grid->abreColuna(12,12,8);        
 
         titulo('Tabelas Auxiliares');           
         br();
@@ -254,7 +254,7 @@ class Grh{
         ##########################################################  
         
          # Legislação
-        $gridFora->abreColuna(12,4,4);
+        $gridFora->abreColuna(12,6,4);
 
         titulo('Legislação');
         br();
@@ -273,7 +273,7 @@ class Grh{
         ##########################################################
         
         # Aniversariantes
-        $grid->abreColuna(12,4,4);
+        $grid->abreColuna(12,6,4);
 
             titulo("Aniversariantes de ".get_nomeMes());
             br();
@@ -303,7 +303,7 @@ class Grh{
         ##########################################################
         
         # Balcão
-        $gridFora->abreColuna(12,4,4);
+        $gridFora->abreColuna(12,12,4);
             titulo('Hoje no Balcão');
             br();
             
@@ -402,7 +402,7 @@ class Grh{
                 titulo('Tabelas Secundárias'); 
                 br();
 
-                $menu = new MenuGrafico(11);
+                $menu = new MenuGrafico();
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');

@@ -157,6 +157,39 @@ if($acesso){
                 $grid1->fechaGrid();
             }
             
+            # Exibe as férias dos servidores
+            $select ="SELECT tbpessoa.nome,
+                         tbservidor.idServidor,
+                         tbferias.anoExercicio,
+                         tbferias.dtInicial,
+                         tbferias.numDias,
+                         date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
+                         idFerias,
+                         tbferias.status,
+                         tbsituacao.situacao
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                                         JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                   WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND YEAR(tbferias.dtInicial) = $parametroAno
+                     AND month(tbferias.dtInicial) = $parametroMes
+                     AND (tblotacao.idlotacao = 66)
+                ORDER BY dtInicial";
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo("Férias dos Servidores da GRH em $parametroAno");
+            $tabela->set_label(array('Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status','Situação'));
+            $tabela->set_align(array("left","left"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
+            $tabela->set_classe(array(NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+            $tabela->set_conteudo($result);
+            $tabela->show();
+            
             # Cabeçalho
             echo '<table class="tabelaPadrao">';
             
@@ -238,11 +271,11 @@ if($acesso){
                         
                     if($editar == 1){
                         # Monta os array de servidores para cada turno
-                        $select1 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Manhã'";
+                        $select1 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Manhã' order by nome";
                         $manha = $intra->select($select1);
                         array_unshift($manha, array(NULL,NULL)); # Adiciona o valor de nulo
                         
-                        $select2 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Tarde'";
+                        $select2 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Tarde' order by nome";
                         $tarde = $intra->select($select2);
                         array_unshift($tarde, array(NULL,NULL)); # Adiciona o valor de nulo
                         

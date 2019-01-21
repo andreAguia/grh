@@ -248,14 +248,12 @@ if($acesso){
             
             # Dados para o controle
             $disabled = FALSE;
-            $tipoControle = "data";
             $autofocus = TRUE;
             
             # Analisa a data
             if(!vazio($dtSaida)){           // Se tem saída é a saída
-                $dtFinal = $dtSaida;
+                $dtFinal = date_to_bd($dtSaida);
                 $disabled = TRUE;
-                $tipoControle = "texto";
                 $autofocus = FALSE;
             }elseif(!vazio($dtDigitado)){   // Não tem saída e tem digitado, então é o digitado
                 $dtFinal = $dtDigitado;     
@@ -304,15 +302,15 @@ if($acesso){
             get_DadosServidor($idServidorPesquisado);
             
             #############################################################
-            # Controle
             
+            # Controle
             $grid1 = new Grid();
             $grid1->abreColuna(3);
             
             # Inicia o form
             $form = new Form('?');
 
-            $controle = new Input('parametro',$tipoControle,'Data Final',1);
+            $controle = new Input('parametro','data','Data Final',1);
             $controle->set_size(30);
             $controle->set_title('Data final para contagem de dias. (Padrão: HOJE)');
             $controle->set_valor($parametro);

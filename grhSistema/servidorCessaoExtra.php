@@ -12,7 +12,7 @@ $orgao = $campoValor[4];
 $pessoal = new Pessoal();
 $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 
-# Verifica se a cessão é posterior a adimissão
+# Verifica se a cessão é posterior a admissão
 if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial))){
     $msgErro.='Você não pode ser cedido antes de ser admitido!\nA data Inicial está errada!';
     $erro = 1;
@@ -33,7 +33,7 @@ if(!$erro){
 }
 
 # Verifica se a data Inicial é posterior a data de saida
-$dtSaida = $pessoal->get_dtSaida($servidor);
+$dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida
 if(!is_null($dtSaida)){

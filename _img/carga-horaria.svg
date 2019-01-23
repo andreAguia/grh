@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW X7 -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="128px" height="128px" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 245 245"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style type="text/css">
+   <![CDATA[
+    .str0 {stroke:#FFFF3D;stroke-width:3.84455}
+    .fil8 {fill:black}
+    .fil3 {fill:#37474F}
+    .fil2 {fill:#78909C}
+    .fil5 {fill:#90A4AE}
+    .fil4 {fill:#B0BEC5}
+    .fil1 {fill:#CFD8DC}
+    .fil7 {fill:#EEEEEE}
+    .fil6 {fill:#F44336}
+    .fil0 {fill:#FFFF3D}
+   ]]>
+  </style>
+ </defs>
+ <g id="Camada_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <g id="_526266694352">
+   <circle class="fil0 str0" cx="122" cy="122" r="120"/>
+   <g>
+    <path class="fil1" d="M73 191l0 -83 132 0 0 83c0,9 -7,16 -16,16l-100 0c-9,1 -16,-7 -16,-16z"/>
+    <path class="fil2" d="M205 91l0 25 -132 0 0 -25c0,-9 7,-16 16,-16l100 0c9,0 16,7 16,16z"/>
+    <g>
+     <circle class="fil3" cx="176" cy="91" r="12"/>
+     <circle class="fil3" cx="106" cy="91" r="12"/>
+    </g>
+    <g>
+     <path class="fil4" d="M176 66c-4,0 -8,4 -8,9l0 16c0,5 4,9 8,9 5,0 9,-4 9,-9l0 -16c0,-5 -4,-9 -9,-9z"/>
+     <path class="fil4" d="M106 66c-5,0 -9,4 -9,9l0 16c0,5 4,9 9,9 4,0 8,-4 8,-9l0 -16c0,-5 -4,-9 -8,-9z"/>
+    </g>
+    <rect class="fil5" x="156" y="166" width="16.6041" height="16.6041"/>
+    <rect class="fil5" x="131" y="166" width="16.6041" height="16.6041"/>
+    <rect class="fil5" x="106" y="166" width="16.6041" height="16.6041"/>
+    <rect class="fil5" x="156" y="141" width="16.6041" height="16.6041"/>
+    <rect class="fil5" x="131" y="141" width="16.6041" height="16.6041"/>
+    <rect class="fil5" x="106" y="141" width="16.6041" height="16.6041"/>
+    <circle class="fil6" cx="89" cy="87" r="50"/>
+    <circle class="fil7" cx="89" cy="87" r="37"/>
+    <rect class="fil8" x="85" y="58" width="8.32048" height="29.0848"/>
+    <rect class="fil8" transform="matrix(0.0847262 -0.0847262 0.0847262 0.0847262 86.4339 89.6653)" width="65.7206" height="187.243"/>
+    <circle class="fil8" cx="89" cy="87" r="6"/>
+   </g>
+  </g>
+ </g>
+</svg>

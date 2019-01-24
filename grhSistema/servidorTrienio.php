@@ -239,7 +239,7 @@ if($acesso){
 
     switch ($fase){
         case "editar" :
-            # Post it informando da porcentagem do triênio
+            # Informa da porcentagem do triênio
             if (is_null($id)){ // se for inclusão
                 if(!is_null($ultimoPercentual)){
                     $mensagem1 = 'O último triênio desse servidor foi de '.$ultimoPercentual.'%, o próximo percentual deverá ser de '.$percentuais[0].'%.';

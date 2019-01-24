@@ -890,7 +890,7 @@ class Grh{
             
             $botao = new BotaoGrafico();
             $botao->set_label('Readaptação');
-            $botao->set_url('servidorReadaptacao.php');
+            #$botao->set_url('servidorReadaptacao.php');
             $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Controle de Readaptação');
             $menu->add_item($botao);

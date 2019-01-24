@@ -88,6 +88,7 @@ if($acesso){
                                'title' => 'DDD',
                                'autofocus' => TRUE,
                                'col' => 1,
+                               'fieldset' => 'Telefones',
                                'size' => 2),
                         array ('linha' => 1,
                                'nome' => 'telResidencial',

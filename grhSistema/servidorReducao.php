@@ -35,12 +35,79 @@ if($acesso){
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
+    
+    ################################################################
+    
+    if($fase == "listar"){
+        # Limita o tamanho da tela
+        $grid = new Grid();
+        $grid->abreColuna(12);
+        
+        # Cria um menu
+        $menu = new MenuBar();
+
+        # Botão voltar
+        $linkBotao1 = new Link("Voltar",'servidorMenu.php');
+        $linkBotao1->set_class('button');
+        $linkBotao1->set_title('Volta para a página anterior');
+        $linkBotao1->set_accessKey('V');
+        $menu->add_link($linkBotao1,"left");
+
+        # Código
+        $linkBotao2 = new Link("Incluir",'?fase=editar');
+        $linkBotao2->set_class('button');
+        $linkBotao2->set_title('Incluir uma nova solicitação de redução');
+        $linkBotao2->set_accessKey('I');
+        $menu->add_link($linkBotao2,"right");
+        
+        # Site
+        $botaoSite = new Button("Site da GRH");
+        $botaoSite->set_target('_blank');
+        $botaoSite->set_title("Pagina no site da GRH sobre Abono Permanencia");
+        $botaoSite->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/");
+        $menu->add_link($botaoSite,"right");
+
+        # Legislação
+        $botaoLegis = new Button("Legislação");
+        $botaoLegis->set_disabled(TRUE);
+        $botaoLegis->set_title('Exibe as Legislação pertinente');
+        #$botaoLegis->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRfb7P06MCBHAwd15hKm6KWV4-y0I8yBzlac58uAA-xCHeaL9aCbtSGCgGguZzaPQafvXYvGqWhwG0r/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $menu->add_link($botaoLegis,"right");
+
+        # Relatório
+        $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $botaoRel = new Button();
+        $botaoRel->set_imagem($imagem);
+        $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de redução da carga horária");
+        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorGratificacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $menu->add_link($botaoRel,"right");
+        
+        # Fluxograma
+        $imagem = new Imagem(PASTA_FIGURAS.'fluxograma.png',NULL,15,15);
+        $botaoFluxo = new Button();
+        $botaoFluxo->set_imagem($imagem);
+        $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo de readaptação");
+        $botaoFluxo->set_onClick("window.open('../_diagramas/reducao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1300,height=700');");
+        $menu->add_link($botaoFluxo,"right");
+        
+        $menu->show();
+               
+        $objeto->set_botaoVoltarLista(FALSE);
+        $objeto->set_botaoIncluir(FALSE);
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+        
+        get_DadosServidor($idServidorPesquisado);
+    }else{
+        # Exibe os dados do Servidor
+        $objeto->set_rotinaExtra("get_DadosServidor");
+        $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    }
 
     ################################################################
 
-    # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Controle de Redução da Carga Horária');
@@ -59,6 +126,9 @@ if($acesso){
                                      dtPublicacao,
                                      dtInicio,
                                      periodo,
+                                     ADDDATE(dtInicio, INTERVAL periodo MONTH),
+                                     numCiInicio,
+                                     numCiTermino,
                                      idReducao
                                 FROM tbreducao
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -84,10 +154,10 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Solicitado em:","Pericia","Resultado","Publicação","Início","Período"));
+    $objeto->set_label(array("Solicitado em:","Pericia","Resultado","Publicação","Início","Período<br/>(Meses)","Término","CI Início","CI Término"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php","date_to_php",NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array ("date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -134,7 +204,7 @@ if($acesso){
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'A Data da Publicação no DOERJ.',
-                                       'fieldset' => 'Quando Aprovado',
+                                       'fieldset' => 'Quando Deferido',
                                        'linha' => 2),
                                array ( 'nome' => 'dtInicio',
                                        'label' => 'Data do Inicio do Benefício:',
@@ -171,34 +241,6 @@ if($acesso){
                                        'size' => 5,
                                        'linha' => 6)));
     
-    # Alterar Senha
-    $botaoSite = new Button("Site da GRH");
-    $botaoSite->set_target('_blank');
-    $botaoSite->set_title("Pagina no site da GRH sobre Abono Permanencia");
-    $botaoSite->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/");
-
-    # Legislação
-    $botaoLegis = new Button("Legislação");
-    $botaoLegis->set_disabled(TRUE);
-    $botaoLegis->set_title('Exibe as Legislação pertinente');
-    #$botaoLegis->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRfb7P06MCBHAwd15hKm6KWV4-y0I8yBzlac58uAA-xCHeaL9aCbtSGCgGguZzaPQafvXYvGqWhwG0r/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de redução da carga horária");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorGratificacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    
-    # Fluxograma
-    $imagem = new Imagem(PASTA_FIGURAS.'fluxograma.png',NULL,15,15);
-    $botaoFluxo = new Button();
-    $botaoFluxo->set_imagem($imagem);
-    $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo de readaptação");
-    $botaoFluxo->set_onClick("window.open('../_diagramas/reducao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1300,height=700');");
-    
-    $objeto->set_botaoListarExtra(array($botaoSite,$botaoLegis,$botaoFluxo,$botaoRel));
-    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -208,6 +250,76 @@ if($acesso){
     switch ($fase){
         case "" :
         case "listar" :
+            # Divide a página em 2 colunas
+            $grid = new Grid();
+            $grid->abreColuna(4);
+            
+                $processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));
+                $painel = new Callout();
+                $painel->abre();
+                
+                    tituloTable("N° do Processo:");
+                    br();
+                    p($processo,"center");
+                    br();
+                    
+                    $div = new Div("divEditaProcesso");
+                    $div->abre();
+                        $link = new Link("Editar Processo",'servidorProcessoReducao.php',"Edita ou insere o número do processo de redução");
+                        $link->set_id("editaProcesso");
+                        $link->show();
+                    $div->fecha();  
+                
+                $painel->fecha();
+                
+            $grid->fechaColuna();
+            
+            $grid->abreColuna(4);
+            
+                $telefones = $pessoal->get_telefones($idServidorPesquisado);
+                
+                $painel = new Callout();
+                $painel->abre();
+                
+                    tituloTable("Telefones:");
+                    br();
+                    p($telefones,"center","f14");                
+                
+                $painel->fecha();
+                
+            $grid->fechaColuna();
+            
+            $grid->abreColuna(4);
+            
+                $emailPessoal = $pessoal->get_emailPessoal($idServidorPesquisado);
+                $emailUenf = $pessoal->get_emailUenf($idServidorPesquisado);
+                $emails = NULL;
+                
+                # Junta os emails
+                if(!vazio($emailPessoal)){
+                    $emails .= "$emailPessoal<br/>"; 
+                }
+                
+                if(!vazio($emailUenf)){
+                    $emails .= "$emailUenf<br/>"; 
+                }
+                
+                $emails = trataNulo($emails);
+                
+                $painel = new Callout();
+                $painel->abre();
+                
+                    tituloTable("Emails:");
+                    br();
+                    p($emails,"center","f14");
+                                    
+                $painel->fecha();
+                
+            $grid->fechaColuna();
+            
+            $grid->fechaGrid();        
+            $objeto->listar(); 
+            break;
         case "editar" :			
         case "excluir" :
             $objeto->$fase($id); 

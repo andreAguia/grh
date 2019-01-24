@@ -319,6 +319,21 @@ td#sematendimento{
 }
 
 /*******************************************
+ * Controle de solicitação de redução de Carga horária
+ *******************************************/
+
+a#editaProcesso{
+    font-size: 12px;
+    color: #8a8a8a;
+}
+
+div#divEditaProcesso{
+    float: right;
+    margin-top: -15px;
+    margin-right: -5px;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

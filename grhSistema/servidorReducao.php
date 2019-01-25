@@ -79,7 +79,7 @@ if($acesso){
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de redução da carga horária");
-        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorGratificacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorReducao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         $menu->add_link($botaoRel,"right");
         
         # Fluxograma
@@ -157,7 +157,7 @@ if($acesso){
     $objeto->set_label(array("Solicitado em:","Pericia","Resultado","Publicação","Início","Período<br/>(Meses)","Término","CI Início","CI Término"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array ("date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
+    $objeto->set_funcao(array("date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -252,6 +252,66 @@ if($acesso){
         case "listar" :
             # Divide a página em 2 colunas
             $grid = new Grid();
+            
+            # Verifica status da última solicitação
+            
+                
+                # Pega os dados
+                $select="SELECT dtSolicitacao,
+                                dtPericia,
+                                resultado,
+                                dtPublicacao,
+                                dtInicio,
+                                periodo,
+                                numCiInicio,
+                                numCiTermino
+                           FROM tbreducao
+                          WHERE idServidor = $idServidorPesquisado
+                            AND resultado is NULL or resultado <> 2  
+                          ORDER BY dtSolicitacao DESC LIMIT 1";
+                
+                $dados = $pessoal->select($select,FALSE);
+                $numero = $pessoal->count($select);
+                $mensagem = NULL;
+                
+                if(is_null($dados[5])){
+                    $mensagem = "<ul>"
+                              . "<li>Enviar CI para o setor do servidor informando a chefia imediata sobre o benefício concedido</li>"
+                              . "<li>Cadastrar o número da CI Inicial no sistema</li>"
+                              . "</ul>";
+                }
+                
+                if(is_null($dados[4])){
+                    $mensagem = "<ul>"
+                              . "<li>Enviar CI para o setor do servidor informando a chefia imediata sobre o benefício concedido</li>"
+                              . "<li>Cadastrar o número da CI Inicial no sistema</li>"
+                              . "</ul>";
+                }
+                
+                if(is_null($dados[3])){
+                    $mensagem = "<ul>"
+                              . "<li>Enviar o processo para o setor de publicação</li>"
+                              . "<li>Enviar email ao servidor informando do benefício concedido</li>"
+                              . "</ul>";
+                }
+                
+                if(is_null($dados[2])){
+                    $mensagem = "<ul>"
+                              . "<li>Verificar pelo UPO quando o processo chegar na SPMSO/SES</li>"
+                              . "<li>Assim que chegar, avisar o servidor para Enviar email marcando a perícia</li>"
+                              . "<li>Aguardar o retorno do processo com o resultado</li>"
+                              . "<li>Assim que chegar, cadastrar no sistema o resultado</li>"
+                              . "</ul>";
+                }
+                
+            if($numero > 0){
+                $grid->abreColuna(12);
+            
+                    callout($mensagem);
+            
+                $grid->fechaColuna();
+            }
+            
             $grid->abreColuna(4);
             
                 $processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));

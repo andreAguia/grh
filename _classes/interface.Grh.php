@@ -676,8 +676,8 @@ class Grh{
             $idFuncional = $pessoal->get_idFuncional($idServidor);
 
             # Define a pasta
-            $arquivo = "../../_arquivo/fotos/".$idServidor.".jpg";
-            
+            $arquivo = "../../../_fotos/".$idServidor.".jpg";
+            #echo $arquivo;
             # Verifica se tem pasta desse servidor
             if(file_exists($arquivo)){
                 $foto = new Imagem($arquivo,'Foto do Servidor',150,100);

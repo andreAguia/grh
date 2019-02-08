@@ -676,7 +676,7 @@ class Grh{
             $idFuncional = $pessoal->get_idFuncional($idServidor);
 
             # Define a pasta
-            $arquivo = "../../../_fotos/".$idServidor.".jpg";
+            $arquivo = "../../_fotos/$idServidor.jpg";
             #echo $arquivo;
             # Verifica se tem pasta desse servidor
             if(file_exists($arquivo)){
@@ -688,6 +688,8 @@ class Grh{
                 $foto->set_id('foto');
                 $foto->show();
             }
+            
+            #echo '<img alt="jujuba" src="../../../_fotos/11783.jpg" height="100" width="150">';
            
         $grid2->fechaColuna();
         

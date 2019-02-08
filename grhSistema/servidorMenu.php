@@ -487,7 +487,6 @@ if($acesso){
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
                 
-                
                 echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>
                         <p>Click aqui ou arraste o arquivo para escolher a foto.</p>
@@ -502,9 +501,9 @@ if($acesso){
                       </form>';
                 */
                                 
-                $pasta = "../../../_fotos/";
+                $pasta = "../../_fotos/";
                      
-                if ((isset($_POST["submit"])) && (! empty($_FILES['foto']))){
+                if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
                     $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idServidorPesquisado);
                     echo $upload->salvar();
                     loadPage("?");

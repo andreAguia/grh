@@ -4408,25 +4408,4 @@ class Pessoal extends Bd {
     }
 
    ###########################################################
-    
-    function get_numProcessoReducao($idServidor){
-
-    /**
-     * Informe o número do processo de solicitação de redução de carga horária de um servidor
-     */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega os dias publicados
-        $select = 'SELECT processoReducao
-                     FROM tbservidor
-                    WHERE idServidor = '.$idServidor;
-        
-        $retorno = parent::select($select,FALSE);
-        
-        # Retorno
-        return $retorno[0];
-    }
-    
-    ###########################################################
 }

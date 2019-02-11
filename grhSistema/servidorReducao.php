@@ -19,6 +19,10 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $reducao = new ReducaoCargaHoraria($idServidorPesquisado);
+	
+    # Pega o número do processo (Quando tem)
+    $processo = trataNulo($reducao->get_numProcesso());
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -53,12 +57,14 @@ if($acesso){
         $linkBotao1->set_accessKey('V');
         $menu->add_link($linkBotao1,"left");
 
-        # Código
-        $linkBotao2 = new Link("Incluir",'?fase=editar');
-        $linkBotao2->set_class('button');
-        $linkBotao2->set_title('Incluir uma nova solicitação de redução');
-        $linkBotao2->set_accessKey('I');
-        $menu->add_link($linkBotao2,"right");
+        if($processo <> "--"){
+            # Incluir
+            $linkBotao2 = new Link("Incluir",'?fase=editar');
+            $linkBotao2->set_class('button');
+            $linkBotao2->set_title('Incluir uma nova solicitação de redução');
+            $linkBotao2->set_accessKey('I');
+            $menu->add_link($linkBotao2,"right");
+        }
         
         # Site
         $botaoSite = new Button("Site da GRH");
@@ -360,7 +366,7 @@ if($acesso){
                        
             $grid->abreColuna(4);
             
-                $processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));
+                #$processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));
                 $painel = new Callout();
                 $painel->abre();
                 
@@ -371,7 +377,11 @@ if($acesso){
                     
                     $div = new Div("divEditaProcesso");
                     $div->abre();
-                        $link = new Link("Editar Processo",'servidorProcessoReducao.php',"Edita ou insere o número do processo de redução");
+                        if($processo == "--"){
+                            $link = new Link("Incluir Processo",'servidorProcessoReducao.php',"Inclui o número do processo de redução");
+                        }else{
+                            $link = new Link("Editar Processo",'servidorProcessoReducao.php',"Edita o número do processo de redução");
+                        }
                         $link->set_id("editaProcesso");
                         $link->show();
                     $div->fecha();  
@@ -418,6 +428,13 @@ if($acesso){
                     tituloTable("Emails:");
                     br();
                     p($emails,"center","f14");
+                                    
+                    $div = new Div("divEditaProcesso");
+                    $div->abre();
+                        $link = new Link("Editar Contatos",'servidorContatos.php',"Edita os contatos do servidor");
+                        $link->set_id("editaProcesso");
+                        $link->show();
+                    $div->fecha();  
                                     
                 $painel->fecha();
                 

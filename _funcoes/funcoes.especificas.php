@@ -654,3 +654,26 @@ function get_nomeSimples($nome){
     
     return $nomeSimples;
 }
+
+##################################################################
+
+    function statusReducao($arquivado){
+    /**
+     * Exibe na tabela de redução de carga horária imagem se está arquivado ou não
+     * 
+     * @note Usado na rotina de cadastro de redução de carga horária
+     * 
+     * @syntax statusReducao($arquivado);
+     * 
+     * @param $arquivado int NULL se foi arquivado ou não
+     */
+
+        if($arquivado){
+            $figura = new Imagem(PASTA_FIGURAS.'arquivo.png','Arquivado',30,30);
+            $figura->show();
+        }else{
+            echo "";
+        }
+    }
+    
+    ##################################################################

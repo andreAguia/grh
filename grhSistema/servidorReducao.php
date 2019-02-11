@@ -127,12 +127,13 @@ if($acesso){
                                      WHEN resultado = 2 THEN "Indeferido"
                                      ELSE "---"
                                      END,
+                                     arquivado,
                                      dtPublicacao,
                                      dtInicio,
                                      periodo,
                                      ADDDATE(dtInicio, INTERVAL periodo MONTH),
                                      numCiInicio,
-                                     numCiTermino,
+                                     numCiTermino,                                     
                                      idReducao
                                 FROM tbreducao
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -147,6 +148,7 @@ if($acesso){
                                      periodo,
                                      numCiInicio,
                                      numCiTermino,
+                                     arquivado,
                                      idServidor
                                 FROM tbreducao
                                WHERE idReducao = '.$id);
@@ -158,10 +160,10 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Solicitado em:","Pericia","Resultado","Publicação","Início","Período<br/>(Meses)","Término","CI Início","CI Término"));
+    $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Início","Período<br/>(Meses)","Término","CI Início","CI Término"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
+    $objeto->set_funcao(array("statusReducao","date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -205,6 +207,14 @@ if($acesso){
                                        'size' => 20,                               
                                        'title' => 'Se o processo foi deferido ou indeferido',
                                        'col' => 3,
+                                       'linha' => 1),                               
+                               array ( 'nome' => 'arquivado',
+                                       'label' => 'Arquivado:',
+                                       'tipo' => 'simnao',
+                                       'size' => 2,
+                                       'valor' => FALSE,
+                                       'col' => 3,
+                                       'title' => 'Se a solicitação foi arquivada ou não.',
                                        'linha' => 1),
                                array ( 'nome' => 'dtPublicacao',
                                        'label' => 'Data da Publicação:',
@@ -261,110 +271,7 @@ if($acesso){
             # Divide a página em 2 colunas
             $grid = new Grid();
             
-            # Verifica status da última solicitação
-                
-            # Pega os dados
-            $select="SELECT dtSolicitacao,
-                            dtPericia,
-                            resultado,
-                            dtPublicacao,
-                            dtInicio,
-                            periodo,
-                            numCiInicio,
-                            numCiTermino
-                       FROM tbreducao
-                      WHERE idServidor = $idServidorPesquisado
-                      ORDER BY dtSolicitacao DESC LIMIT 1";
-
-            $dados = $pessoal->select($select,FALSE);
-            $numero = $pessoal->count($select);
-            $mensagem = NULL;
-
-            # Se foi deferido
-            if($dados[2] == 1){
-                # Quando não enviou ci de término e a data atual já passou ou é inferior a 90 dias
-                if(is_null($dados[7])){
-
-                    if((!is_null($dados[4])) AND (!is_null($dados[5]))){
-                        # Variáveis para calculo das datas
-                        $dtHoje = date("Y-m-d");
-                        $dtInicio = date_to_php($dados[4]);
-                        $periodo = $dados[5];
-                        $dtTermino = addMeses($dtInicio,$periodo);
-                        $dtAlerta = addDias($dtTermino,-90);
-                        
-                        # Verifica se a data do alerta já passou
-                        if(jaPassou($dtAlerta)){
-                            $mensagem = "<ul>"
-                                      . "<li>Perguntar ao servidor se há interesse em renovação</li>"
-                                      . "<li>Enviar CI para o setor do servidor informando o término do benefício</li>"
-                                      . "<li>Cadastrar a data de envio da CI de término no sistema</li>"
-                                      . "</ul>";
-                        }
-                    }
-                }
-
-                # Quando ainda não enviou a CI de início para a chefia do servidor
-                if(is_null($dados[6])){
-                    $mensagem = "<ul>"
-                              . "<li>Enviar CI para o setor do servidor informando a chefia imediata sobre o benefício concedido</li>"
-                              . "<li>Cadastrar o número da CI Inicial no sistema</li>"
-                              . "</ul>";
-                }
-
-                # Quando ainda não preencheu o período
-                if(is_null($dados[5])){
-                    $mensagem = "<ul>"
-                              . "<li>Cadastrar no sistema o período, em meses,  do benefício</li>"
-                              . "</ul>";
-                }
-
-                # Quando ainda não preencheu o início do benefício
-                if(is_null($dados[4])){
-                    $mensagem = "<ul>"
-                              . "<li>Cadastrar no sistema o início do benefício</li>"
-                              . "</ul>";
-                }
-
-                # Quando ainda não foi publicado 
-                if(is_null($dados[3])){
-                    $mensagem = "<ul>"
-                              . "<li>Enviar o processo para o setor de publicação</li>"
-                              . "<li>Enviar email ao servidor informando do benefício concedido</li>"
-                              . "</ul>";
-                }
-            }elseif($dados[2] == 2){
-                $mensagem = "<ul>"
-                          . "<li>Avisar o servidor da negativa</li>"
-                          . "<li>Arquivar processo</li>"
-                          . "</ul>";
-            }
-
-            # Quando ainda não foi informado o resultado 
-            if(is_null($dados[2])){
-                $mensagem = "<ul>"
-                          . "<li>Verificar pelo UPO quando o processo chegar na SPMSO/SES</li>"
-                          . "<li>Assim que chegar, avisar o servidor para Enviar email marcando a perícia</li>"
-                          . "<li>Aguardar o retorno do processo com o resultado</li>"
-                          . "<li>Assim que chegar, cadastrar no sistema o resultado</li>"
-                          . "</ul>";
-            }
-
-
-            # Verifica se tem mensagem a ser exibida
-            if((!is_null($mensagem)) AND ($numero > 0)){
-                $grid->abreColuna(12);
-                    $painel = new Callout();
-                    $painel->abre();
-
-                        titulotable("Referente à Solicitação de ".date_to_php($dados[0]));
-                        p($mensagem);
-
-                    $painel->fecha();            
-                $grid->fechaColuna();
-            }
-                       
-            $grid->abreColuna(4);
+            $grid->abreColuna(12,6,3);
             
                 #$processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));
                 $painel = new Callout();
@@ -372,8 +279,7 @@ if($acesso){
                 
                     tituloTable("N° do Processo:");
                     br();
-                    p($processo,"center");
-                    br();
+                    p($processo,'f14',"center");
                     
                     $div = new Div("divEditaProcesso");
                     $div->abre();
@@ -390,23 +296,12 @@ if($acesso){
                 
             $grid->fechaColuna();
             
-            $grid->abreColuna(4);
+            $grid->abreColuna(12,6,3);
             
+                # Pega os telefones
                 $telefones = $pessoal->get_telefones($idServidorPesquisado);
                 
-                $painel = new Callout();
-                $painel->abre();
-                
-                    tituloTable("Telefones:");
-                    br();
-                    p($telefones,"center","f14");                
-                
-                $painel->fecha();
-                
-            $grid->fechaColuna();
-            
-            $grid->abreColuna(4);
-            
+                # Pega os Emails
                 $emailPessoal = $pessoal->get_emailPessoal($idServidorPesquisado);
                 $emailUenf = $pessoal->get_emailUenf($idServidorPesquisado);
                 $emails = NULL;
@@ -420,13 +315,14 @@ if($acesso){
                     $emails .= "$emailUenf<br/>"; 
                 }
                 
-                $emails = trataNulo($emails);
+                #$emails = trataNulo($emails);
                 
                 $painel = new Callout();
                 $painel->abre();
                 
-                    tituloTable("Emails:");
+                    tituloTable("Contatos:");
                     br();
+                    p($telefones,"center","f14");
                     p($emails,"center","f14");
                                     
                     $div = new Div("divEditaProcesso");
@@ -435,6 +331,102 @@ if($acesso){
                         $link->set_id("editaProcesso");
                         $link->show();
                     $div->fecha();  
+                
+                $painel->fecha();
+                
+            $grid->fechaColuna();
+            
+            $grid->abreColuna(12,12,6);
+                
+                $painel = new Callout();
+                $painel->abre();
+                
+                    tituloTable("Tarefas:");
+                    br();
+                    
+                    # Verifica status da última solicitação
+                
+                # Pega os dados
+                $select="SELECT dtSolicitacao,
+                                dtPericia,
+                                resultado,
+                                dtPublicacao,
+                                dtInicio,
+                                periodo,
+                                numCiInicio,
+                                numCiTermino
+                           FROM tbreducao
+                          WHERE idServidor = $idServidorPesquisado
+                            AND arquivado <> 1
+                          ORDER BY dtSolicitacao DESC LIMIT 1";
+                
+                $dados = $pessoal->select($select,FALSE);
+                $numero = $pessoal->count($select);
+                $mensagem = NULL;
+                
+                # Se foi deferido
+                if($dados[2] == 1){
+                    # Quando não enviou ci de término e a data atual já passou ou é inferior a 90 dias
+                    if(is_null($dados[7])){
+
+                        if((!is_null($dados[4])) AND (!is_null($dados[5]))){
+                            # Variáveis para calculo das datas
+                            $dtHoje = date("Y-m-d");
+                            $dtInicio = date_to_php($dados[4]);
+                            $periodo = $dados[5];
+                            $dtTermino = addMeses($dtInicio,$periodo);
+                            $dtAlerta = addDias($dtTermino,-90);
+
+                            # Verifica se a data do alerta já passou
+                            if(jaPassou($dtAlerta)){
+                                $mensagem = "- Perguntar ao servidor se há interesse em renovação;<br/>"
+                                          . "- Enviar CI para o setor do servidor informando o término do benefício;<br/>"
+                                          . "- Cadastrar a data de envio da CI de término no sistema.<br/>";
+                            }
+                        }
+                    }
+
+                    # Quando ainda não enviou a CI de início para a chefia do servidor
+                    if(is_null($dados[6])){
+                        $mensagem = "- Enviar CI para o setor do servidor informando a chefia imediata sobre o benefício concedido;<br/>"
+                                  . "- Cadastrar o número da CI Inicial no sistema.<br/>";
+                    }
+
+                    # Quando ainda não preencheu o período
+                    if(is_null($dados[5])){
+                        $mensagem = "- Cadastrar no sistema o período (em meses).<br/>";
+                    }
+
+                    # Quando ainda não preencheu o início do benefício
+                    if(is_null($dados[4])){
+                        $mensagem = "- Cadastrar no sistema o início do benefício.<br/>";
+                    }
+
+                    # Quando ainda não foi publicado 
+                    if(is_null($dados[3])){
+                        $mensagem = "- Enviar o processo para o setor de publicação;<br/>"
+                                  . "- Enviar email ao servidor informando do benefício concedido.<br/>";
+                    }
+                }elseif($dados[2] == 2){
+                    $mensagem = "- Avisar o servidor da negativa;<br/>"
+                              . "- Arquivar processo.<br/>";
+                }
+
+                # Quando ainda não foi informado o resultado 
+                if(is_null($dados[2])){
+                    $mensagem = "- Verificar pelo UPO quando o processo chegar na SPMSO/SES;<br/>"
+                              . "- Assim que chegar, avisar o servidor para enviar email marcando a perícia;<br/>"
+                              . "- Aguardar o retorno do processo com o resultado;<br/>"
+                              . "- Assim que chegar, cadastrar no sistema o resultado.<br/>";
+                }
+
+
+                # Verifica se tem mensagem a ser exibida
+                if((!is_null($mensagem)) AND ($numero > 0)){
+                    p($mensagem,'f13');
+                }else{
+                    p('---','f14','center');
+                }                    
                                     
                 $painel->fecha();
                 

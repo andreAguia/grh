@@ -120,14 +120,17 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT dtSolicitacao,
+    $objeto->set_selectLista('SELECT CASE
+                                     WHEN arquivado = 0 THEN "Em Aberto"
+                                     WHEN arquivado = 1 THEN "Arquivado"
+                                     END,
+                                     dtSolicitacao,
                                      dtPericia,
                                      CASE
                                      WHEN resultado = 1 THEN "Deferido"
                                      WHEN resultado = 2 THEN "Indeferido"
                                      ELSE "---"
                                      END,
-                                     arquivado,
                                      dtPublicacao,
                                      dtInicio,
                                      periodo,
@@ -143,12 +146,12 @@ if($acesso){
     $objeto->set_selectEdita('SELECT dtSolicitacao,
                                      dtPericia,
                                      resultado,
+                                     arquivado,
                                      dtPublicacao,
                                      dtInicio,
                                      periodo,
                                      numCiInicio,
                                      numCiTermino,
-                                     arquivado,
                                      idServidor
                                 FROM tbreducao
                                WHERE idReducao = '.$id);
@@ -158,12 +161,22 @@ if($acesso){
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                    'valor' => 'Em Aberto',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),                                              
+                                              array('coluna' => 0,
+                                                    'valor' => 'Arquivado',
+                                                    'operador' => '=',
+                                                    'id' => 'arquivado')                                           
+                                                    ));
 
     # Parametros da tabela
     $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Início","Período<br/>(Meses)","Término","CI Início","CI Término"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("statusReducao","date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
+    $objeto->set_funcao(array(NULL,"date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -212,7 +225,7 @@ if($acesso){
                                        'label' => 'Arquivado:',
                                        'tipo' => 'simnao',
                                        'size' => 2,
-                                       'valor' => FALSE,
+                                       'valor' => 0,
                                        'col' => 3,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
                                        'linha' => 1),
@@ -364,6 +377,11 @@ if($acesso){
                 $numero = $pessoal->count($select);
                 $mensagem = NULL;
                 
+                # Quando Já enviou a CI de Término e não arquivou o processo
+                if(!is_null($dados[7])){
+                    $mensagem = "- Arquivar processo.<br/>";
+                }
+                
                 # Se foi deferido
                 if($dados[2] == 1){
                     # Quando não enviou ci de término e a data atual já passou ou é inferior a 90 dias
@@ -381,7 +399,8 @@ if($acesso){
                             if(jaPassou($dtAlerta)){
                                 $mensagem = "- Perguntar ao servidor se há interesse em renovação;<br/>"
                                           . "- Enviar CI para o setor do servidor informando o término do benefício;<br/>"
-                                          . "- Cadastrar a data de envio da CI de término no sistema.<br/>";
+                                          . "- Cadastrar a data de envio da CI de término no sistema.<br/>"
+                                          . "- Arquivar processo.<br/>";
                             }
                         }
                     }

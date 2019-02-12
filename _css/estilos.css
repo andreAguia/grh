@@ -333,6 +333,14 @@ div#divEditaProcesso{
     margin-right: -5px;
 }
 
+tr#arquivado{
+    background-color:#ffdcc3;
+}
+
+tr#emAberto{
+    background-color:#e6e6e6;
+}
+
 /*******************************************
  * Cadastro de Cargo Efetivo
  *******************************************/

@@ -1428,6 +1428,31 @@ class Pessoal extends Bd {
 
     }
 
+    ##########################################################################################
+
+    function get_nomeTipoCargo($idTipoCargo)
+
+
+    # Função que informa o nome de um tipo da licença
+    #
+    # Parâmetro: id do tipo da licença
+
+    {
+            # Valida parametro
+            if(is_null($idTipoCargo))
+                return FALSE;
+
+            # Monta o select		
+            $select = 'SELECT cargo
+                         FROM tbtipocargo
+                        WHERE idTipoCargo = '.$idTipoCargo;
+
+            $row = parent::select($select,FALSE);
+
+            return $row[0];		
+
+    }
+
     ###########################################################
 
     /**
@@ -1928,16 +1953,35 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_servidoresTipoCargo
+     * Método get_servidoresAtivosTipoCargo
      * 
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
 
-    public function get_servidoresTipoCargo($id)
+    public function get_servidoresAtivosTipoCargo($id)
     {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao = 1 AND 
+                          tbcargo.idTipoCargo = '.$id;
+
+        $numero = parent::count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresTipoCargo
+     * 
+     * Exibe o número de servidores inativos em um determinado tipo de cargo
+     */
+
+    public function get_servidoresInativosTipoCargo($id)
+    {
+        $select = 'SELECT idServidor                             
+                     FROM tbservidor JOIN tbcargo USING (idCargo)
+                    WHERE situacao <> 1 AND 
                           tbcargo.idTipoCargo = '.$id;
 
         $numero = parent::count($select);
@@ -3348,7 +3392,7 @@ class Pessoal extends Bd {
 	
 	public function get_tipoCargoVagasDisponiveis($id){
             $vagas = $this->get_TipoCargoVagas($id);
-            $ocupadas = $this->get_servidoresTipoCargo($id);
+            $ocupadas = $this->get_servidoresAtivosTipoCargo($id);
             $disponiveis = $vagas - $ocupadas;
            
             return $disponiveis;

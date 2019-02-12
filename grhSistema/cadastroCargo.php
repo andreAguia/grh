@@ -77,6 +77,7 @@ if($acesso)
                                       nivel,
                                       vagas,
                                       idTipoCargo,
+                                      idTipoCargo,
                                       idTipoCargo
                                  FROM tbtipocargo
                                 WHERE cargo LIKE "%'.$parametro.'%"
@@ -104,11 +105,11 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id","Tipo","Cargo","Sigla","Nível","Vagas<br/>Publicadas","Servidores<br/>Ativos","Vagas<br/>Disponíveis"]);
+    $objeto->set_label(["Id","Tipo","Cargo","Sigla","Nível","Vagas<br/>Publicadas","Servidores<br/>Ativos","Vagas<br/>Disponíveis","Servidores<br/>Inativos"]);
     $objeto->set_align(["center","center","left"]);
     
-    $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal']);
-    $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,'get_servidoresTipoCargo','get_tipoCargoVagasDisponiveis']);
+    $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,'Grh','Pessoal','Grh']);
+    $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,'get_numServidoresAtivosTipoCargo','get_tipoCargoVagasDisponiveis','get_numServidoresInativosTipoCargo']);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -199,6 +200,106 @@ if($acesso)
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);
+            break;
+        
+        case "exibeServidoresAtivos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar","?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar,"left");
+            
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioAtivo&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
+            
+            $menu->show();
+            
+            # Pega o nome do tipo de cargo
+            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
+            
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Cargo: '.$nomeTipo);       
+            $lista->set_situacao(1);
+            $lista->set_cargo($nomeTipo);
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "relatorioAtivo" :
+            # Pega o nome do tipo de cargo
+            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
+            
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores("Cadastro de Servidores Ativos por Cargo");     
+            $lista->set_situacao(1);
+            $lista->set_cargo($nomeTipo);
+            $lista->showRelatorio();
+            break;
+        
+        case "exibeServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar","?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar,"left");
+            
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioInativo&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
+            
+            $menu->show();
+            
+            # Pega o nome do tipo de cargo
+            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
+            
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos - Cargo: '.$nomeTipo);       
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_cargo($nomeTipo);
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "relatorioInativo" :
+            # Pega o nome do tipo de cargo
+            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
+            
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores("Cadastro de Servidores Inativos por Cargo");       
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_cargo($nomeTipo);
+            $lista->showRelatorio();
             break;
         
         case "grafico" :

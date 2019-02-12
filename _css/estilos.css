@@ -334,6 +334,17 @@ div#divEditaProcesso{
 }
 
 /*******************************************
+ * Cadastro de Cargo Efetivo
+ *******************************************/
+
+a#aServidorTipoCargo{
+    float: right;
+    margin-top: 0px;
+    margin-right: 1px;
+}
+
+
+/*******************************************
  * Relatórios
  *******************************************/
 

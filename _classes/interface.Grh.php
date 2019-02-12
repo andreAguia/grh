@@ -1440,6 +1440,61 @@ class Grh{
         }
     }
 
-######################################################################################################################
+    
+    ###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresAtivosTipoCargo
+	 * 
+	 * Exibe o número de servidores ativos por tipo de cargo e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de cargo efetivo
+	 */
+	
+	public function get_numServidoresAtivosTipoCargo($id){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresAtivosTipoCargo($id);
+            
+            echo $numero;
+            echo "&nbsp&nbsp&nbsp";
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=exibeServidoresAtivos&id='.$id);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresAtivosTipoCargo
+	 * 
+	 * Exibe o número de servidores ativos por tipo de cargo e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de cargo efetivo
+	 */
+	
+	public function get_numServidoresInativosTipoCargo($id){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresInativosTipoCargo($id);
+            
+            echo $numero;
+            echo "&nbsp&nbsp&nbsp";
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=exibeServidoresInativos&id='.$id);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
     
 }

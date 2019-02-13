@@ -542,7 +542,7 @@ class Grh{
             $pessoal = new Pessoal();
             $perfil = $pessoal->get_idPerfil($idServidor);
 
-            if ($perfil == 1){   // Ser for estatutário
+            if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cessão');
                 $botao->set_url('servidorCessao.php');
@@ -567,7 +567,7 @@ class Grh{
                 $menu->add_item($botao);
             }
 
-            if ($perfil == 1){   // Ser for estatutário
+            if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
                 $botao = new BotaoGrafico();
                 $botao->set_label('Tempo de Serviço');
                 $botao->set_url('servidorAverbacao.php');

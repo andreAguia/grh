@@ -672,11 +672,10 @@ class Grh{
         $grid2->abreColuna(12,2); 
             titulo('Foto do Servidor');
             
-            # Pega o idfuncional
-            $idFuncional = $pessoal->get_idFuncional($idServidor);
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
 
             # Define a pasta
-            $arquivo = "../../_fotos/$idServidor.jpg";
+            $arquivo = "../../_fotos/$idPessoa.jpg";
             #echo $arquivo;
             # Verifica se tem pasta desse servidor
             if(file_exists($arquivo)){

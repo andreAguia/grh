@@ -502,9 +502,11 @@ if($acesso){
                 */
                                 
                 $pasta = "../../_fotos/";
+                
+                $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
-                    $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idServidorPesquisado);
+                    $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idPessoa);
                     echo $upload->salvar();
                     loadPage("?");
                 }

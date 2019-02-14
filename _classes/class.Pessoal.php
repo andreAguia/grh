@@ -523,13 +523,13 @@ class Pessoal extends Bd {
 ###########################################################
 
     /**
-     * Método get_lotacaoNumServidores
-     * Informa o n�mero de servidores ativos nessa lota��o
+     * Método get_servidoresAtivosLotacao
+     * Informa o número de servidores ativos nessa lotação
      * 
-     * @param	string $idServidor  idServidor do servidor
+     * @param	integer $idLotacao  id da lotação
      */
 
-    public function get_lotacaoNumServidores($id)
+    public function get_servidoresAtivosLotacao($idLotacao)
 
     {
             $select = 'SELECT tbservidor.idServidor
@@ -537,7 +537,31 @@ class Pessoal extends Bd {
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                           WHERE tbservidor.situacao = 1
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                            AND tbhistlot.lotacao = '.$id;
+                            AND tbhistlot.lotacao = '.$idLotacao;
+
+            $numero = parent::count($select);
+            return $numero;
+
+    }
+
+###########################################################
+
+    /**
+     * Método get_servidoresInativosLotacao
+     * Informa o número de servidores inativos nessa lotação
+     * 
+     * @param	integer $idLotacao  id da lotação
+     */
+
+    public function get_servidoresInativosLotacao($idLotacao)
+
+    {
+            $select = 'SELECT tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                          WHERE tbservidor.situacao <> 1
+                            AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                            AND tbhistlot.lotacao = '.$idLotacao;
 
             $numero = parent::count($select);
             return $numero;
@@ -2064,17 +2088,36 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_servidoresConcurso
+     * Método get_servidoresAtivosConcurso
      * 
      * Exibe o n�mero de servidores ativos em um determinado concurso
      */
 
-    public function get_servidoresConcurso($id)
+    public function get_servidoresAtivosConcurso($idConcurso)
     {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
-                          idConcurso = '.$id;
+                          idConcurso = '.$idConcurso;
+
+        $numero = parent::count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresInativosConcurso
+     * 
+     * Exibe o n�mero de servidores inativos em um determinado concurso
+     */
+
+    public function get_servidoresInativosConcurso($idConcurso)
+    {
+        $select = 'SELECT idServidor                             
+                     FROM tbservidor
+                    WHERE situacao <> 1 AND 
+                          idConcurso = '.$idConcurso;
 
         $numero = parent::count($select);
         return $numero;

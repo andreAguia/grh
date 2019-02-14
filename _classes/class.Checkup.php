@@ -2156,7 +2156,7 @@ class Checkup {
      /**
      * Método get_servidorSemSituacao
      * 
-     * Servidor inativo sem motivo de saída:
+     * Servidor sem situação cadastrada
      */
     
     public function get_servidorSemSituacao($idServidor = NULL){
@@ -2175,7 +2175,7 @@ class Checkup {
                           idServidor,
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                     
-                    WHERE situacao IS NULL';
+                    WHERE situacao IS NULL OR situacao > 6';
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
                 }                

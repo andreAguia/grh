@@ -74,7 +74,9 @@ class ListaServidores{
                                 array("6 asc","por Perfil asc"),
                                 array("6 desc","por Perfil desc"),
                                 array("7 asc","por Admissão asc"),
-                                array("7 desc","por Admissão desc")
+                                array("7 desc","por Admissão desc"),
+                                array("tbsituacao.situacao asc","por Situação asc"),
+                                array("tbsituacao.situacao desc","por Situação desc")
                 );
     }
     
@@ -131,15 +133,15 @@ class ListaServidores{
                           tbservidor.idServidor,
                           tbservidor.dtAdmissao,';
         
-        if($this->situacao <> 1){
+        if(($this->situacao <> 1) OR (($this->situacao == 1) AND ($this->situacaoSinal == "<>"))){
              $select .= 'tbservidor.dtDemissao,';
         }
         
         $select .= '      tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                                      LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
@@ -363,14 +365,14 @@ class ListaServidores{
         $servidor = new Pessoal();
         
         # Dados da Tabela
-        if($this->situacao == 1){
+        if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
             $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
         }else{
             $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Saída","Situação");
         }
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        if($this->situacao == 1){
+        if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacao");
         }else{
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacao");
@@ -445,14 +447,14 @@ class ListaServidores{
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($this->select,TRUE);
         
-        if($this->situacao == 1){
+        if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
             $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
         }else{
             $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Saída","Situação");
         }
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
-        if($this->situacao == 1){
+        if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacaoRel");
         }else{
             $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacaoRel");

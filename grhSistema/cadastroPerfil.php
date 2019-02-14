@@ -91,7 +91,6 @@ if($acesso){
                                       ferias,
                                       licenca,
                                       idPerfil,
-                                      if(novoServidor = 1,"Sim","Não"),
                                       idPerfil
                                  FROM tbperfil
                                 WHERE nome LIKE "%'.$parametro.'%"
@@ -128,22 +127,13 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo<br/>em Comissão","Gratificação","Férias","Licença","Servidores","Novo<br/>Servidor","Ver"));
+    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo<br/>em Comissão","Gratificação","Férias","Licença","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
     $objeto->set_align(array("center","left","left"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosPerfil"));
-
-    # Botão de exibição dos servidores
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    $botao->set_url('?fase=aguarde&id=');     
-    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","","","","","","",$botao));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosPerfil","get_numServidoresInativosPerfil"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -277,11 +267,14 @@ if($acesso){
     $objeto->set_botaoListarExtra(array($botaoGra,$botaoRel));
 
     ################################################################
+    
     switch ($fase){
         case "" :            
         case "listar" :
             $objeto->listar();
             break;
+        
+    ################################################################    
         
         case "excluir" :
             # Verifica se esse perfil tem servidor
@@ -296,11 +289,15 @@ if($acesso){
                 $objeto->excluir($id);
             }            
             break;
-
+            
+    ################################################################
+            
         case "editar" :
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
         
         case "aguarde" :
             br(10);
@@ -309,7 +306,9 @@ if($acesso){
             loadPage('?fase=listaServidores&id='.$id);
             break;
             
-        case "listaServidores" :
+    ################################################################
+        
+        case "listaServidoresAtivos" :
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -322,27 +321,6 @@ if($acesso){
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
-
-            # Tipo de servidores
-            if($subFase == 1){
-                $linkTipo = new Button("Servidores Ativos","#");
-                $linkTipo->set_title('Exibe os servidores ativos');
-                $menu->add_link($linkTipo,"right");
-                
-                $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
-                $linkTipo->set_class('hollow button');
-                $linkTipo->set_title('Exibe os servidores inativos');
-                $menu->add_link($linkTipo,"right");
-            }else{
-                $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
-                $linkTipo->set_class('hollow button');
-                $linkTipo->set_title('Exibe os servidores ativos');
-                $menu->add_link($linkTipo,"right");
-                
-                $linkTipo = new Button("Servidores Inativos","#");
-                $linkTipo->set_title('Exibe os servidores inativos');
-                $menu->add_link($linkTipo,"right");
-            }
             
             # Relatório
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -350,33 +328,64 @@ if($acesso){
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&subFase=$subFase&id=$id");
+            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");
             $menu->add_link($botaoRel,"right");
 
             $menu->show();
             
             $servidor = new Pessoal();
             
-            if($subFase == 1){           
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores Ativos - Perfil: '.$pessoal->get_perfilNome($id));
-                $lista->set_situacao(1);
-                $lista->set_perfil($id);   
-                $lista->set_relatorio(TRUE);   
-                $lista->showTabela();
-            }else{            
-                # Lista de Servidores Inativos
-                $lista = new ListaServidores('Servidores Inativos - Perfil: '.$pessoal->get_perfilNome($id));
-                $lista->set_situacao(1);
-                $lista->set_situacaoSinal("<>");
-                $lista->set_perfil($id);
-                $lista->set_relatorio(TRUE);  
-                $lista->showTabela();
-            }
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Perfil: '.$pessoal->get_perfilNome($id));
+            $lista->set_situacao(1);
+            $lista->set_perfil($id);   
+            $lista->set_relatorio(TRUE);   
+            $lista->showTabela();
             
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+            
+        ################################################################    
+            
+        case "listaServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Button("Voltar","?");
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+            
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=2&id=$id");
+            $menu->add_link($botaoRel,"right");
+
+            $menu->show();
+            
+            $servidor = new Pessoal();
+            
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos - Perfil: '.$pessoal->get_perfilNome($id));
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_perfil($id);
+            $lista->set_relatorio(TRUE);  
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;    
             
         case "relatorio" :
             

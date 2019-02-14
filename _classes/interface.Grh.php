@@ -1484,10 +1484,191 @@ class Grh{
             $numero = $pessoal->get_servidoresInativosTipoCargo($id);
             
             echo $numero;
-            echo "&nbsp&nbsp&nbsp";
             
             # Botão de exibição dos servidores
             $botao = new Link('','?fase=exibeServidoresInativos&id='.$id);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresCargoComissao
+	 * 
+	 * Exibe o número de servidores ativos por de cargo em comissão e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de cargo em comissão
+	 */
+	
+	public function get_numServidoresCargoComissao($id){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresCargoComissao($id);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidores&id='.$id);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresAtivosPerfil
+	 * 
+	 * Exibe o número de servidores ativos por perfil e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de perfil
+	 */
+	
+	public function get_numServidoresAtivosPerfil($id){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresAtivosPerfil($id);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidoresAtivos&id='.$id);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresInativosPerfil
+	 * 
+	 * Exibe o número de servidores inativos por perfil e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de perfil
+	 */
+	
+	public function get_numServidoresInativosPerfil($id){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresInativosPerfil($id);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidoresInativos&id='.$id);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresAtivosLotacao
+	 * 
+	 * Exibe o número de servidores ativos por lotação e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de lotação
+	 */
+	
+	public function get_numServidoresAtivosLotacao($idLotacao){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresAtivosLotacao($idLotacao);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidoresAtivos&id='.$idLotacao);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresInativosLotacao
+	 * 
+	 * Exibe o número de servidores inativos por lotação e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de lotação
+	 */
+	
+	public function get_numServidoresInativosLotacao($idLotacao){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresInativosLotacao($idLotacao);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidoresInativos&id='.$idLotacao);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresAtivosConcurso
+	 * 
+	 * Exibe o número de servidores ativos por concurso e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de concurso
+	 */
+	
+	public function get_numServidoresAtivosConcurso($idConcurso){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresAtivosConcurso($idConcurso);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidoresAtivos&id='.$idConcurso);
+            $botao->set_id('aServidorTipoCargo');
+            $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
+            $botao->show();
+            
+	}
+
+	###########################################################
+	
+	/**
+	 * Método exibe get_numServidoresInativosConcurso
+	 * 
+	 * Exibe o número de servidores inativos por concurso e o link para exibí-los
+         * Usado na tabela da rotina de cadastro de concurso
+	 */
+	
+	public function get_numServidoresInativosConcurso($idConcurso){
+            
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+            
+            $numero = $pessoal->get_servidoresInativosConcurso($idConcurso);
+            
+            echo $numero;
+            
+            # Botão de exibição dos servidores
+            $botao = new Link('','?fase=listaServidoresInativos&id='.$idConcurso);
             $botao->set_id('aServidorTipoCargo');
             $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
             $botao->show();

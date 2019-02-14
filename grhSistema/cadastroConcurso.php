@@ -74,11 +74,13 @@ if($acesso)
     $objeto->set_parametroValue($parametro);
 
     # ordenaç?o
-    if(is_null($orderCampo))
-            $orderCampo = "2";
+    if(is_null($orderCampo)){
+        $orderCampo = "2";
+    }
 
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
+    if(is_null($orderTipo)){
+        $orderTipo = 'asc';
+    }
 
     # select da lista
     $objeto->set_selectLista ('SELECT idConcurso,
@@ -89,7 +91,7 @@ if($acesso)
                                       idConcurso,
                                       idConcurso,
                                       idConcurso
-                                 FROM tbconcurso JOIN tbplano USING (idPlano)
+                                 FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                                 WHERE anobase LIKE "%'.$parametro.'%"
                                    OR regime LIKE "%'.$parametro.'%"
                                    OR orgExecutor LIKE "%'.$parametro.'%"
@@ -117,21 +119,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Regime","Executor","Plano de Cargos","Servidores","Ver"));
+    $objeto->set_label(array("id","Ano Base","Regime","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     $objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_servidoresConcurso"));
-    
-    # Botão de exibição dos servidores
-    $botao = new BotaoGrafico();
-    $botao->set_label('');    
-    $botao->set_url('?fase=aguarde&id=');   
-    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","",$botao));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -206,32 +199,39 @@ if($acesso)
     $objeto->set_botaoListarExtra(array($botaoGra));
 
     ################################################################
+    
     switch ($fase)
     {
         case "" :            
         case "listar" :            
             $objeto->listar();
             break;
+        
+    ################################################################
 			
         case "editar" :
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
 			
-		case "aguarde" :
+        case "aguarde" :
             br(10);
             aguarde();
             br();
             loadPage('?fase=listaServidores&id='.$id);
-            break;	
+            break;
+    
+    ################################################################
 
-        case "listaServidores" :            
+        case "listaServidoresAtivos" :            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
 			
-			# Cria um menu
+            # Cria um menu
             $menu = new MenuBar();
 
             # Voltar
@@ -240,74 +240,87 @@ if($acesso)
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
-            
-            # Tipo de servidores
-            if($subFase == 1){
-                $linkTipo = new Button("Servidores Ativos","#");
-                $linkTipo->set_title('Exibe os servidores ativos');
-                $menu->add_link($linkTipo,"right");
-                
-                $linkTipo = new Link("Servidores Inativos","?fase=listaServidores&subFase=2&id=$id");
-                $linkTipo->set_class('hollow button');
-                $linkTipo->set_title('Exibe os servidores inativos');
-                $menu->add_link($linkTipo,"right");
-            }else{
-                $linkTipo = new Link("Servidores Ativos","?fase=listaServidores&subFase=1&id=$id");
-                $linkTipo->set_class('hollow button');
-                $linkTipo->set_title('Exibe os servidores ativos');
-                $menu->add_link($linkTipo,"right");
-                
-                $linkTipo = new Button("Servidores Inativos","#");
-                $linkTipo->set_title('Exibe os servidores inativos');
-                $menu->add_link($linkTipo,"right");
-            }
              
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&subFase=$subFase&id=$id");            
+            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");            
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel,"right");
 
             $menu->show();
 
-            if($subFase == 1){
-	            # Lista de Servidores Ativos
-	            $lista = new ListaServidores('Servidores Estatutários Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
-	            $lista->set_situacao(1);				
-	            $lista->set_concurso($id);            
-	            $lista->showTabela();
-            }else{
-	            # Lista de Servidores Inativos
-	            $lista = new ListaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
-	            $lista->set_situacao(1);				
-	            $lista->set_situacaoSinal("<>");
-	            $lista->set_concurso($id);            
-	            $lista->showTabela();
-			}
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Estatutários Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+            $lista->set_situacao(1);				
+            $lista->set_concurso($id);            
+            $lista->showTabela();
             
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+    ################################################################
+            
+            case "listaServidoresInativos" :            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
 			
-		case "relatorio" :
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+             
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=2&id=$id");            
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
+
+            $menu->show();
+
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+            $lista->set_situacao(1);				
+            $lista->set_situacaoSinal("<>");
+            $lista->set_concurso($id);            
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
+			
+        case "relatorio" :
             if($subFase == 1){        
                 # Lista de Servidores Ativos
                 $lista = new ListaServidores('Servidores Ativos');
                 $lista->set_situacao(1);				
-	            $lista->set_concurso($id);   
+	        $lista->set_concurso($id);   
                 $lista->showRelatorio();
             }else{            
                 # Lista de Servidores Inativos
                 $lista = new ListaServidores('Servidores Inativos');
                	$lista->set_situacao(1);				
-	            $lista->set_situacaoSinal("<>");
-	            $lista->set_concurso($id);         
+	        $lista->set_situacaoSinal("<>");
+	        $lista->set_concurso($id);         
                 $lista->showRelatorio();
             }
             break;
+    
+    ################################################################
             
         case "grafico" :
             # Botão voltar

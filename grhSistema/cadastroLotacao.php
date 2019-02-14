@@ -21,6 +21,7 @@ if($acesso){
     
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    $subFase = get('subFase',1);
     
     # Verifica se veio menu grh e registra o acesso no log
     $origem = get('origem',FALSE);
@@ -92,9 +93,9 @@ if($acesso){
                                       DIR,
                                       GER,
                                       nome,
-                                      idLotacao,                                  
-                                      if(ativo = 0,"Não","Sim"),
                                       idLotacao,
+                                      idLotacao,
+                                      if(ativo = 0,"Não","Sim"),
                                       idLotacao
                                  FROM tblotacao
                                 WHERE ativo = '.$tipo.'  
@@ -131,24 +132,12 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Código","Unid.Adm.","Diretoria","Gerência","Nome","Servidores","Ativa","Ver"));
-    $objeto->set_width(array(5,8,8,8,8,43,5,5,5));
+    $objeto->set_label(array("id","Código","Unid.Adm.","Diretoria","Gerência","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
+    #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center","center","center","center","center","left"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_lotacaoNumServidores"));
-
-    #$objeto->set_function(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_lotacaoNumServidores"));
-
-    # Botão de exibição dos servidores
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    #$botao->set_title('Servidores com permissão a essa regra');
-    $botao->set_url('?fase=listaServidores&id=');       
-    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","","","",$botao));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao","get_numServidoresInativosLotacao"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -286,19 +275,24 @@ if($acesso){
     $objeto->set_botaoListarExtra($arrayBotoes); 
 
     ################################################################
+    
     switch ($fase){
         case "" :            
         case "listar" :            
             $objeto->listar();
             break;
+        
+    ################################################################
 
         case "editar" :
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
 
-        case "listaServidores" :
+        case "listaServidoresAtivos" :
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -306,64 +300,23 @@ if($acesso){
             # Cria um menu
             $menu = new MenuBar();
 
-            # Botão voltar
-            $btnVoltar = new Button("Voltar","?");
-            $btnVoltar->set_title('Volta para a página anterior');
-            $btnVoltar->set_accessKey('V');
-            $menu->add_link($btnVoltar,"left");
-            
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_imagem($imagem);
-            $botaoRel->set_title("Imprimir");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_url('../grhRelatorios/perfil.php');
-
-            # Relatórios
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+             
+            # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("abreFechaDivId('RelServidor');");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");            
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel,"right");
-             
+
             $menu->show();
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            
-            # Menu Relatório    
-            $div = new Div("RelServidor");
-            $div->abre();
-
-            $grid = new Grid("right");
-            $grid->abreColuna(3);
-
-            echo '<nav aria-label="You are here:" role="navigation">';
-            echo '<ul class="breadcrumbs">';
-
-            # Servidores
-            echo '<li>';
-            $link = new Link("Servidores","../grhRelatorios/lotacaoServidoresAtivos.php?lotacao=".$id);
-            $link->set_title("Exibe a Lista de Servidores");
-            $link->set_target("_blank");
-            $link->show();
-            echo '</li>';
-
-            # Aniversariantes
-            echo '<li>';
-            $link = new Link("Aniversariantes","../grhRelatorios/lotacaoAniversariantes.php?lotacao=".$id);
-            $link->set_title("Exibe a Lista de aniversariantes deste setor");
-            $link->set_target("_blank"); 
-            $link->show();
-            echo '</li>';
-
-            echo '</ul>';
-            echo '</nav>';
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            $div->fecha();
             
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -382,6 +335,70 @@ if($acesso){
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+    ################################################################
+
+        case "listaServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+             
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=2&id=$id");            
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
+
+            $menu->show();
+            
+            # Titulo
+            titulo('Servidores da Lotação: '.$pessoal->get_nomeLotacao($id));
+            br();
+            
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Inativos');
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_lotacao($id);            
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
+			
+        case "relatorio" :
+            if($subFase == 1){        
+                # Lista de Servidores Ativos
+                $lista = new ListaServidores('Servidores Ativos');
+                $lista->set_situacao(1);				
+	        $lista->set_lotacao($id);   
+                $lista->showRelatorio();
+            }else{            
+                # Lista de Servidores Inativos
+                $lista = new ListaServidores('Servidores Inativos');
+               	$lista->set_situacao(1);				
+	        $lista->set_situacaoSinal("<>");
+	        $lista->set_lotacao($id);         
+                $lista->showRelatorio();
+            }
+            break;
+    
+    ################################################################
         
         case "grafico" :
             # Botão voltar
@@ -430,6 +447,8 @@ if($acesso){
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+    ################################################################
         
         case "organograma" :
             

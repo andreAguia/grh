@@ -80,7 +80,7 @@ if($acesso){
 
     # ordenação
     if(is_null($orderCampo)){
-        $orderCampo = "9 desc, 3";
+        $orderCampo = "8 desc, 3";
     }
 
     if(is_null($orderTipo)){
@@ -93,7 +93,6 @@ if($acesso){
                                       simbolo,
                                       valsal,
                                       vagas,
-                                      idTipoComissao,
                                       idTipoComissao,
                                       idTipoComissao,
                                       IF(ativo = 0, "Não", "Sim") as ativo
@@ -118,6 +117,12 @@ if($acesso){
     $objeto->set_orderCampo($orderCampo);
     $objeto->set_orderTipo($orderTipo);
     $objeto->set_orderChamador('?fase=listar');
+    
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 6,
+                                                    'valor' => 0,
+                                                    'operador' => '<',
+                                                    'id' => 'arquivado')                                              
+                                                    ));
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -126,23 +131,13 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas<br/>Ocupadas","Ver","Vagas<br/>Disponíveis","Ativo?"));
+    $objeto->set_label(array("id","Cargo","Simbolo","Valor (R$)","Vagas","Vagas<br/>Ocupadas","Vagas<br/>Disponíveis","Ativo?"));
     #$objeto->set_width(array(5,20,10,10,10,10,10,10,10));
     $objeto->set_align(array("center","left"));
     
     $objeto->set_funcao(array(NULL,NULL,NULL,"formataMoeda"));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal',NULL,'pessoal'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_servidoresCargoComissao',NULL,'get_cargoComissaoVagasDisponiveis'));
-
-    # Botão de exibição dos servidores
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    #$botao->set_title('Servidores com permissão a essa regra');
-    $botao->set_url('?fase=listaServidores&id=');       
-    $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","","","",$botao));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'Grh','pessoal'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_numServidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

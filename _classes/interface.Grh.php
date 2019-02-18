@@ -137,11 +137,11 @@ class Grh{
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Plano de Cargos');
+        $botao->set_label('PDV');
         $botao->set_url('cadastroPlanoCargos.php?origem=1');
         $botao->set_imagem(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
-        #$botao->set_accesskey('D');
+        $botao->set_accesskey('D');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();

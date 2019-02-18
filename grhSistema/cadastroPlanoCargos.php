@@ -67,7 +67,7 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista ('SELECT idPlano,
-                                      numDecreto,
+                                      idPlano,
                                       dtDecreto,
                                       dtPublicacao,
                                       CASE planoAtual                                        
@@ -78,13 +78,14 @@ if($acesso)
                                  FROM tbplano
                                 WHERE numDecreto LIKE "%'.$parametro.'%"
                                    OR idPlano LIKE "%'.$parametro.'%"
-                             ORDER BY planoAtual desc, dtPublicacao desc');
+                             ORDER BY planoAtual desc, dtPublicacao desc, numDecreto desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT numDecreto,
                                      dtDecreto,
                                      dtPublicacao,
                                      planoAtual,
+                                     link,
                                      obs
                                 FROM tbplano
                                WHERE idPlano = '.$id);
@@ -104,6 +105,9 @@ if($acesso)
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
+    
+    $objeto->set_classe(array(NULL,"Grh"));
+    $objeto->set_metodo(array(NULL,"get_planoLinkLei"));
 
     $objeto->set_formatacaoCondicional(array(
                                              array('coluna' => 4,
@@ -135,7 +139,7 @@ if($acesso)
                'autofocus' => TRUE,
                'size' => 30),
          array ('linha' => 1,
-                'col' => 3,
+               'col' => 3,
                'nome' => 'dtDecreto',
                'label' => 'Data do Decreto:',
                'title' => 'Data do decreto',
@@ -144,7 +148,7 @@ if($acesso)
                'size' => 15),
         array ('linha' => 1,
                'nome' => 'dtPublicacao',
-            'col' => 3,
+               'col' => 3,
                'label' => 'Data da Publicação:',
                'title' => 'Data da Publicação no DOERJ',
                'tipo' => 'data',
@@ -152,14 +156,22 @@ if($acesso)
                'size' => 15),
         array ('linha' => 1,
                'nome' => 'planoAtual',
-            'col' => 2,
+               'col' => 2,
                'label' => 'Plano atual:',
                'title' => 'Se é o Plano de Cargos atualmente ativo',
                'tipo' => 'combo',
                'array' => array(array('1','Sim'),array(NULL,'Não')),
                'padrao' => 'Sim',
-               'size' => 10),   
+               'size' => 10),
+        array ('linha' => 2,
+               'col' => 12,
+               'nome' => 'link',
+               'label' => 'Link do Decreto ou Lei:',
+               'title' => 'texto do Decreto',
+               'tipo' => 'texto',
+               'size' => 250),
         array ('linha' => 3,
+                'col' => 12,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',

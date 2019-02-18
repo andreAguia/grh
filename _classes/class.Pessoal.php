@@ -2684,6 +2684,46 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_nomePlanoCargos
+     * Informa o nome do Plano de Cargos solicitado
+     * 
+     * @param   string $idPlano	 
+     */
+
+    public function get_nomePlanoCargos($idPlano)
+    {
+        $select = 'SELECT numdecreto
+                     FROM tbplano
+                    WHERE idPlano = '.$idPlano;
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_planoLink
+     * Informa o link com o texto da lei solicitada
+     * 
+     * @param   string $idPlano	 
+     */
+
+    public function get_planoLink($idPlano)
+    {
+        $select = 'SELECT link
+                     FROM tbplano
+                    WHERE idPlano = '.$idPlano;
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
      * Método get_classeInicial
      * Informa o idClasse inicial (sal�rio Inicial)
      * 

@@ -69,7 +69,7 @@ if($acesso){
         # Site
         $botaoSite = new Button("Site da GRH");
         $botaoSite->set_target('_blank');
-        $botaoSite->set_title("Pagina no site da GRH sobre Abono Permanencia");
+        $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
         $botaoSite->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/");
         $menu->add_link($botaoSite,"right");
 

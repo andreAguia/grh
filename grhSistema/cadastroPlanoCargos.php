@@ -212,10 +212,12 @@ if($acesso)
             $menu->add_link($linkVoltar,"right");
             
             # Incluir Valor na tabela
-            $linkVoltar = new Button("Incluir Vencimento","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
-            $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
-            $linkVoltar->set_accessKey('I');
-            $menu->add_link($linkVoltar,"right");
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                $linkVoltar = new Button("Incluir Vencimento","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
+                $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
+                $linkVoltar->set_accessKey('I');
+                $menu->add_link($linkVoltar,"right");
+            }
             
             # Texto da Lei
             if(!vazio($dados[4])){
@@ -253,7 +255,11 @@ if($acesso)
             $grid = new Grid("center");
             $grid->abreColuna(10);
             
-            $plano->exibeTabela($id);
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                $plano->exibeTabela($id,TRUE);
+            }else{
+                $plano->exibeTabela($id,FALSE);
+            }
             
             $grid->fechaColuna();
             $grid->fechaGrid();

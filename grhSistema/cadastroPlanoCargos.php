@@ -206,7 +206,7 @@ if($acesso)
             $menu->add_link($linkVoltar,"left");
             
             # Editar
-            $linkVoltar = new Button("Editar","?fase=editar2&id=$id");
+            $linkVoltar = new Button("Editar Plano","?fase=editar2&id=$id");
             $linkVoltar->set_title('Edita dados do plano de cargos');
             $linkVoltar->set_accessKey('E');
             $menu->add_link($linkVoltar,"right");
@@ -214,7 +214,7 @@ if($acesso)
             # Incluir Valor na tabela
             $linkVoltar = new Button("Incluir Vencimento","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
             $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
-            $linkVoltar->set_accessKey('i');
+            $linkVoltar->set_accessKey('I');
             $menu->add_link($linkVoltar,"right");
             
             # Texto da Lei

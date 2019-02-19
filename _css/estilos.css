@@ -350,6 +350,32 @@ a#aServidorTipoCargo{
     margin: 0px;
 }
 
+/*******************************************
+ * Cadastro de Plano de Cargos
+ *******************************************/
+
+p#planoDatas {
+    font-size: 11px;
+    margin: 0;
+    padding-bottom: 3px;
+    text-align: center;
+}
+
+p#planoTitulo {
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+tr#tipo1{
+    background-color:#cccccc;
+}
+
+tr#tipo2{
+    background-color:#e6e6e6;
+}
+
 
 /*******************************************
  * Relatórios

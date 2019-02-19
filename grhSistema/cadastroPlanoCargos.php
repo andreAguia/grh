@@ -67,7 +67,7 @@ if($acesso)
 
     # select da lista
     $objeto->set_selectLista ('SELECT idPlano,
-                                      idPlano,
+                                      numDecreto,
                                       dtDecreto,
                                       dtPublicacao,
                                       CASE planoAtual                                        
@@ -105,9 +105,6 @@ if($acesso)
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
-    
-    $objeto->set_classe(array(NULL,"Grh"));
-    $objeto->set_metodo(array(NULL,"get_planoLinkLei"));
 
     $objeto->set_formatacaoCondicional(array(
                                              array('coluna' => 4,
@@ -188,7 +185,77 @@ if($acesso)
             $objeto->listar();
             break;
 
-        case "editar" :	
+        case "editar" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Pega os dados do plano
+            $plano = new PlanoCargos();
+            $dados = $plano->get_dadosPlano($id);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Button("Voltar","?");
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+            
+            # Editar
+            $linkVoltar = new Button("Editar","?fase=editar2&id=$id");
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('E');
+            $menu->add_link($linkVoltar,"right");
+            
+            # Texto da Lei
+            if(!vazio($dados[4])){
+                $botaoRel = new Button("Texto",$dados[4]);
+                $botaoRel->set_title("Texto da Lei");
+                $botaoRel->set_target("_blank");
+                $menu->add_link($botaoRel,"right");
+            }
+            
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");
+            $menu->add_link($botaoRel,"right");
+
+            $menu->show();
+            
+            tituloTable("Plano de Cargos & Salários");
+            br();
+            
+            # Informa se é o plano vigente
+            if($dados[3]){
+                callout("Plano Vigente !","secondary");
+            }
+            
+            # Título
+            p($dados[0],"planoTitulo");
+            p(" de ".date_to_php($dados[2]),"planoDatas");
+            p(" Publicado em ".date_to_php($dados[1]),"planoDatas");
+            br();
+            
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            
+            $plano->exibeTabela($id);
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        case "editar2" :
+            $objeto->editar($id);
+            break;
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);

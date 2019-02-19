@@ -1676,37 +1676,5 @@ class Grh{
 	}
 
 	###########################################################
-	
-	/**
-	 * Método exibe get_planoLinkLei
-	 * 
-	 * Exibe o plano de cargos e link da lei
-         * Usado na tabela da rotina de cadastro de planos de cargos e vencimentos PCV
-	 */
-	
-	public function get_planoLinkLei($idPlano){
-            
-            # Conecta com o banco de dados
-            $pessoal = new Pessoal();
-            
-            $nome = $pessoal->get_nomePlanoCargos($idPlano);
-            $link = $pessoal->get_planoLink($idPlano);
-            
-            echo $nome;
-            
-            if(!vazio($link)){
-            
-                # Botão de exibição dos servidores
-                $botao = new Link('',$link);
-                $botao->set_id('aServidorTipoCargo');
-                $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
-                $botao->set_target("_blank");
-                $botao->show();
-                
-            }
-            
-	}
-
-	###########################################################
     
 }

@@ -87,7 +87,8 @@ class PlanoCargos{
             
             # Pega os valores
             $select = 'SELECT faixa,
-                              valor
+                              valor,
+                              idClasse
                          FROM tbclasse
                         WHERE idPlano = '.$idPlano.' AND nivel = "'.$nn.'" ORDER BY SUBSTRING(faixa, 1, 1), valor';
             
@@ -98,6 +99,7 @@ class PlanoCargos{
                 
                 $faixa = $rr[0];
                 $valor = $rr[1];
+                $url = $rr[2];
                 
                 # Trata faixa
                 $parte = explode("-",$faixa);
@@ -150,9 +152,24 @@ class PlanoCargos{
                         echo "<td align='center'>$letra</td>";
                     }
                     echo "<td align='center'>$faixaRomanos</td>";
-                    echo "<td align='right'>".formataMoeda($valor)."</td>";
+                    
+                    echo "<td align='right'>";
+                    
+                    # Coloca o link de edição
+                    $link = new Link(formataMoeda($valor),'cadastroTabelaSalarial.php?fase=editar&pcv='.$idPlano.'&id='.$url);
+                    $link->set_id("aLinkTabela");
+                    $link->show();
+                        
+                    echo "</td>";
                 }else{
-                    echo "<td align='right'>".formataMoeda($valor)."</td>";
+                    echo "<td align='right'>";
+                    
+                    # Coloca o link de edição
+                    $link = new Link(formataMoeda($valor),'cadastroTabelaSalarial.php?fase=editar&pcv='.$idPlano.'&id='.$url);
+                    $link->set_id("aLinkTabela");
+                    $link->show();
+                        
+                    echo "</td>";
                 }
                 
             }

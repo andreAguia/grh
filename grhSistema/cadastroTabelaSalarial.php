@@ -22,6 +22,9 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
+    # Verifica se veio da rotina de PCV
+    $pcv = get('pcv');
+    
     # Verifica se veio menu grh e registra o acesso no log
     $origem = get('origem',FALSE);
     if($origem){
@@ -165,6 +168,13 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Verifica se veio do pcv e muda volta do formulário
+    if(!is_null($pcv)){
+        $objeto->set_voltarForm('cadastroPlanoCargos.php?fase=editar&id='.$pcv);
+        $objeto->set_linkListar('cadastroPlanoCargos.php?fase=editar&id='.$pcv);
+        $objeto->set_linkGravar('?fase=gravar&pcv='.$pcv);
+    }
 
     ################################################################
     switch ($fase) {

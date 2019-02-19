@@ -137,11 +137,10 @@ class Grh{
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('PDV');
+        $botao->set_label('Plano de Cargos & Vencimentos');
         $botao->set_url('cadastroPlanoCargos.php?origem=1');
         $botao->set_imagem(PASTA_FIGURAS.'plano.gif',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Plano de Cargos e Vencimentos');
-        $botao->set_accesskey('D');
+        $botao->set_title('Cadastro de Plano de Cargos & Vencimentos');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -150,7 +149,7 @@ class Grh{
         $botao->set_imagem(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
         $botao->set_accesskey('b');
-        $menu->add_item($botao);
+        #$menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Feriados');

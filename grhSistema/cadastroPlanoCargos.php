@@ -56,7 +56,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Plano de Cargos & Salários');
+    $objeto->set_nome('Plano de Cargos & Vencimentos');
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -176,6 +176,8 @@ if($acesso)
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    $objeto->set_voltarForm('?fase=editar&id='.$id);
 
     ################################################################
     switch ($fase)
@@ -205,8 +207,14 @@ if($acesso)
             
             # Editar
             $linkVoltar = new Button("Editar","?fase=editar2&id=$id");
-            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_title('Edita dados do plano de cargos');
             $linkVoltar->set_accessKey('E');
+            $menu->add_link($linkVoltar,"right");
+            
+            # Incluir Valor na tabela
+            $linkVoltar = new Button("Incluir Vencimento","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
+            $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
+            $linkVoltar->set_accessKey('i');
             $menu->add_link($linkVoltar,"right");
             
             # Texto da Lei
@@ -228,7 +236,7 @@ if($acesso)
 
             $menu->show();
             
-            tituloTable("Plano de Cargos & Salários");
+            tituloTable("Tabela Salarial");
             br();
             
             # Informa se é o plano vigente

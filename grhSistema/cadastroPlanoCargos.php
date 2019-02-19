@@ -205,19 +205,7 @@ if($acesso)
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
             
-            # Editar
-            $linkVoltar = new Button("Editar Plano","?fase=editar2&id=$id");
-            $linkVoltar->set_title('Edita dados do plano de cargos');
-            $linkVoltar->set_accessKey('E');
-            $menu->add_link($linkVoltar,"right");
             
-            # Incluir Valor na tabela
-            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                $linkVoltar = new Button("Incluir Vencimento","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
-                $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
-                $linkVoltar->set_accessKey('I');
-                $menu->add_link($linkVoltar,"right");
-            }
             
             # Texto da Lei
             if(!vazio($dados[4])){
@@ -238,9 +226,6 @@ if($acesso)
 
             $menu->show();
             
-            tituloTable("Tabela Salarial");
-            br();
-            
             # Informa se é o plano vigente
             if($dados[3]){
                 callout("Plano Vigente !","secondary");
@@ -248,21 +233,29 @@ if($acesso)
             
             # Título
             p($dados[0],"planoTitulo");
-            p(" de ".date_to_php($dados[2]),"planoDatas");
-            p(" Publicado em ".date_to_php($dados[1]),"planoDatas");
-            br();
-            
-            $grid = new Grid("center");
-            $grid->abreColuna(10);
+            p(" de ".date_to_php($dados[2]).", publicado em ".date_to_php($dados[1]),"planoDatas");
             
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                # Cria um menu
+                $menu = new MenuBar("small button-group");
+                
+                # Editar
+                $linkVoltar = new Button("Editar Plano","?fase=editar2&id=$id");
+                $linkVoltar->set_title('Edita dados do plano de cargos');
+                $linkVoltar->set_accessKey('E');
+                $menu->add_link($linkVoltar,"right");
+                
+                $linkVoltar = new Button("Incluir Valor","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
+                $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
+                $linkVoltar->set_accessKey('I');
+                $menu->add_link($linkVoltar,"right");
+                
+                $menu->show();
+                
                 $plano->exibeTabela($id,TRUE);
             }else{
                 $plano->exibeTabela($id,FALSE);
             }
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

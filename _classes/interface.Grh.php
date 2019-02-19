@@ -403,7 +403,7 @@ class Grh{
                 titulo('Tabelas Secundárias'); 
                 br();
 
-                $menu = new MenuGrafico();
+                $menu = new MenuGrafico(6);
 
                 $botao = new BotaoGrafico();
                 $botao->set_label('Banco');

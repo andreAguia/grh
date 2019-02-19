@@ -92,7 +92,7 @@ if($acesso){
         $imagem = new Imagem(PASTA_FIGURAS.'fluxograma.png',NULL,15,15);
         $botaoFluxo = new Button();
         $botaoFluxo->set_imagem($imagem);
-        $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo de readaptação");
+        $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo redução da carga horária");
         $botaoFluxo->set_onClick("window.open('../_diagramas/reducao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1300,height=700');");
         $menu->add_link($botaoFluxo,"right");
         

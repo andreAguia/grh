@@ -50,11 +50,13 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if(is_null($orderCampo)){
         $orderCampo = "1";
+    }
 
-    if(is_null($orderTipo))
+    if(is_null($orderTipo)){
         $orderTipo = 'desc';
+    }
 
     # select da lista
     $objeto->set_selectLista('SELECT tbprogressao.dtInicial,
@@ -120,12 +122,26 @@ if($acesso)
 
     # Pega os dados da combo classe
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
-    $result2 = $lista->select('SELECT idClasse,
-                                      concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe 
-                                 FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
-                                WHERE nivel = "'.$nivel.'" 
-                             ORDER BY tbplano.planoAtual desc, tbplano.dtPublicacao desc, tbplano.planoAtual, SUBSTRING(faixa, 1, 1), valor');
-    array_push($result2, array(NULL,NULL)); # Adiciona o valor de nulo
+    $idCargo = $lista->get_idCargo($idServidorPesquisado);
+    
+    $combo = 'SELECT idClasse, concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe 
+                FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
+               WHERE nivel = "'.$nivel.'"';
+    
+    if($idCargo == 128){
+        $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "E" OR faixa = "Associado")';
+    }
+    
+    if($idCargo == 129){
+        $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular")';
+    }
+    
+    $combo .= ' ORDER BY tbplano.planoAtual desc, tbplano.dtPublicacao desc, tbplano.planoAtual, SUBSTRING(faixa, 1, 1), valor';
+    
+    
+    $result2 = $lista->select($combo);
+    
+    array_unshift($result2, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'dtInicial',

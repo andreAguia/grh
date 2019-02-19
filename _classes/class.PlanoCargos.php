@@ -81,6 +81,7 @@ class PlanoCargos{
         
         # Inicia a Tabela
         echo "<table class='tabelaPadrao'>";
+        echo '<caption>Tabela Salarial</caption>';
         
         # Percorre os valores seguindo a ordem dos níveis definido no array
         foreach ($nivel as $nn){

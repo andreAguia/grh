@@ -72,7 +72,7 @@ if($acesso){
                                     tbplano.numDecreto,
                                     nivel,
                                     faixa,
-                                    valor,
+                                    valor,                 
                                     CASE tbplano.planoAtual                                        
                                           WHEN 1 THEN "Vigente"
                                           ELSE "Antigo"

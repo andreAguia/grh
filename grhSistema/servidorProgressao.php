@@ -129,11 +129,11 @@ if($acesso)
                WHERE nivel = "'.$nivel.'"';
     
     if($idCargo == 128){
-        $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "E" OR faixa = "Associado")';
+        $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "E" OR faixa = "Associado" OR SUBSTRING(faixa, 1, 1) = "I")';
     }
     
     if($idCargo == 129){
-        $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular")';
+        $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular" OR SUBSTRING(faixa, 1, 1) = "X")';
     }
     
     $combo .= ' ORDER BY tbplano.planoAtual desc, tbplano.dtPublicacao desc, tbplano.planoAtual, SUBSTRING(faixa, 1, 1), valor';

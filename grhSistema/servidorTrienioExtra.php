@@ -11,9 +11,10 @@ $pessoal = new Pessoal();
 $dtInicial = $campoValor[1];
 $idServidor = $campoValor[8];
 
+# Pega a data de admissão do servidor
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
+
 # Verifica se a data Inicial é anterior a data de admissão
-$dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-$dtAdmissao = date_to_bd($dtAdmissao);
 if($dtInicial < $dtAdmissao){
     $erro = 1;
     $msgErro .= 'O servidor não pode ter trienio ANTES de ser admitido!\n';

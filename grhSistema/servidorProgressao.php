@@ -15,8 +15,8 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{  	
+if($acesso){
+    
     # Verifica a fase do programa
     $fase = get('fase','listar');
 
@@ -136,7 +136,7 @@ if($acesso)
         $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular" OR SUBSTRING(faixa, 1, 1) = "X")';
     }
     
-    $combo .= ' ORDER BY tbplano.planoAtual desc, tbplano.dtPublicacao desc, tbplano.planoAtual, SUBSTRING(faixa, 1, 1), valor';
+    $combo .= ' ORDER BY tbplano.planoAtual, tbplano.dtPublicacao, tbplano.planoAtual, SUBSTRING(faixa, 1, 1), valor';
     
     
     $result2 = $lista->select($combo);

@@ -189,5 +189,30 @@ class PlanoCargos{
     
     ###########################################################
     
+    public function get_planoVigente($data = NULL){
+    /**
+     * Retorna o id do cadastro de plano de cargos que estava vigente na data indicada
+     * 
+     * @param $data date NULL A data desejada
+     * 
+     * @syntax $plano->get_planoVigente($data);
+     * 
+     * @Obs Utilizada na rotina de enquadramento e progressão para saber em qual plano o servidor foi enquadrado ou progredido
+     */
+    
+        # Pega os projetos cadastrados
+        $select = 'SELECT idPlano
+                     FROM tbplano
+                     WHERE dtVigencia <= "'.date_to_bd($data).'"
+                     AND idPlano <> 6
+                     ORDER BY dtVigencia desc limit 1';
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,false);
+        return $row[0];
+    }
+    
+    ###########################################################
+    
     
 }

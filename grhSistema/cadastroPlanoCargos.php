@@ -70,6 +70,7 @@ if($acesso)
                                       numDecreto,
                                       dtDecreto,
                                       dtPublicacao,
+                                      dtVigencia,
                                       CASE planoAtual                                        
                                             WHEN 1 THEN "Vigente"
                                             ELSE "Antigo"
@@ -84,6 +85,7 @@ if($acesso)
     $objeto->set_selectEdita('SELECT numDecreto,
                                      dtDecreto,
                                      dtPublicacao,
+                                     dtVigencia,
                                      planoAtual,
                                      link,
                                      obs
@@ -101,13 +103,13 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Decreto / Lei","Data do Decreto / Lei","Publicação no DOERJ","Plano Atual"));
+    $objeto->set_label(array("id","Decreto / Lei","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual"));
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
-    $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php","date_to_php"));
 
     $objeto->set_formatacaoCondicional(array(
-                                             array('coluna' => 4,
+                                             array('coluna' => 5,
                                                    'valor' => "Antigo",
                                                    'operador' => '=',
                                                    'id' => 'inativo')));
@@ -136,7 +138,7 @@ if($acesso)
                'autofocus' => TRUE,
                'size' => 30),
          array ('linha' => 1,
-               'col' => 3,
+               'col' => 2,
                'nome' => 'dtDecreto',
                'label' => 'Data do Decreto:',
                'title' => 'Data do decreto',
@@ -145,9 +147,17 @@ if($acesso)
                'size' => 15),
         array ('linha' => 1,
                'nome' => 'dtPublicacao',
-               'col' => 3,
+               'col' => 2,
                'label' => 'Data da Publicação:',
                'title' => 'Data da Publicação no DOERJ',
+               'tipo' => 'data',
+               'required' => TRUE,
+               'size' => 15),
+        array ('linha' => 1,
+               'nome' => 'dtVigencia',
+               'col' => 2,
+               'label' => 'Data da Vigência:',
+               'title' => 'Data em que o plano passou a vigorar',
                'tipo' => 'data',
                'required' => TRUE,
                'size' => 15),

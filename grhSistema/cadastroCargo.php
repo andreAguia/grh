@@ -189,6 +189,7 @@ if($acesso)
     $objeto->set_botaoListarExtra([$botaoGra,$botaoCargo]);
 
     ################################################################
+    
     switch ($fase)
     {
         case "" :            
@@ -201,6 +202,8 @@ if($acesso)
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
         
         case "exibeServidoresAtivos" :
             # Limita o tamanho da tela
@@ -240,6 +243,8 @@ if($acesso)
             $grid->fechaGrid();
             break;
         
+    ################################################################
+        
         case "relatorioAtivo" :
             # Pega o nome do tipo de cargo
             $nomeTipo = $pessoal->get_nomeTipoCargo($id);
@@ -250,6 +255,8 @@ if($acesso)
             $lista->set_cargo($nomeTipo);
             $lista->showRelatorio();
             break;
+        
+    ################################################################
         
         case "exibeServidoresInativos" :
             # Limita o tamanho da tela
@@ -290,6 +297,8 @@ if($acesso)
             $grid->fechaGrid();
             break;
         
+    ################################################################
+        
         case "relatorioInativo" :
             # Pega o nome do tipo de cargo
             $nomeTipo = $pessoal->get_nomeTipoCargo($id);
@@ -301,6 +310,8 @@ if($acesso)
             $lista->set_cargo($nomeTipo);
             $lista->showRelatorio();
             break;
+        
+    ################################################################
         
         case "grafico" :
             # Gráfico Estatístico
@@ -345,6 +356,9 @@ if($acesso)
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
+        
+    ################################################################
+                
     }									 	 		
 
     $page->terminaPagina();

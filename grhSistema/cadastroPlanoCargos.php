@@ -68,6 +68,7 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista ('SELECT idPlano,
                                       numDecreto,
+                                      servidores,
                                       dtDecreto,
                                       dtPublicacao,
                                       dtVigencia,
@@ -83,10 +84,11 @@ if($acesso)
 
     # select do edita
     $objeto->set_selectEdita('SELECT numDecreto,
+                                     servidores,
+                                     planoAtual,
                                      dtDecreto,
                                      dtPublicacao,
                                      dtVigencia,
-                                     planoAtual,
                                      link,
                                      obs
                                 FROM tbplano
@@ -103,13 +105,13 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Decreto / Lei","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual"));
+    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual"));
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
-    $objeto->set_funcao(array (NULL,NULL,"date_to_php","date_to_php","date_to_php"));
+    $objeto->set_funcao(array (NULL,NULL,NULL,"date_to_php","date_to_php","date_to_php"));
 
     $objeto->set_formatacaoCondicional(array(
-                                             array('coluna' => 5,
+                                             array('coluna' => 6,
                                                    'valor' => "Antigo",
                                                    'operador' => '=',
                                                    'id' => 'inativo')));
@@ -129,7 +131,7 @@ if($acesso)
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'col' => 4,
+               'col' => 6,
                'nome' => 'numDecreto',
                'label' => 'Decreto ou Lei:',
                'title' => 'Número do Decreto',
@@ -137,33 +139,18 @@ if($acesso)
                'required' => TRUE,
                'autofocus' => TRUE,
                'size' => 30),
-         array ('linha' => 1,
-               'col' => 2,
-               'nome' => 'dtDecreto',
-               'label' => 'Data do Decreto:',
-               'title' => 'Data do decreto',
-               'tipo' => 'data',
-               'required' => TRUE,
-               'size' => 15),
         array ('linha' => 1,
-               'nome' => 'dtPublicacao',
-               'col' => 2,
-               'label' => 'Data da Publicação:',
-               'title' => 'Data da Publicação no DOERJ',
-               'tipo' => 'data',
-               'required' => TRUE,
-               'size' => 15),
-        array ('linha' => 1,
-               'nome' => 'dtVigencia',
-               'col' => 2,
-               'label' => 'Data da Vigência:',
-               'title' => 'Data em que o plano passou a vigorar',
-               'tipo' => 'data',
-               'required' => TRUE,
-               'size' => 15),
+               'nome' => 'servidores',
+               'col' => 3,
+               'label' => 'Servidores:',
+               'title' => 'O plano se refere a qual tipo de servidor.',
+               'tipo' => 'combo',
+               'array' => array(NULL,"Todos","Adm/Tec","Professor"),
+               'padrao' => 'Sim',
+               'size' => 10),         
         array ('linha' => 1,
                'nome' => 'planoAtual',
-               'col' => 2,
+               'col' => 3,
                'label' => 'Plano atual:',
                'title' => 'Se é o Plano de Cargos atualmente ativo',
                'tipo' => 'combo',
@@ -171,13 +158,37 @@ if($acesso)
                'padrao' => 'Sim',
                'size' => 10),
         array ('linha' => 2,
+               'col' => 4,
+               'nome' => 'dtDecreto',
+               'label' => 'Data do Decreto:',
+               'title' => 'Data do decreto',
+               'tipo' => 'data',
+               'required' => TRUE,
+               'size' => 15),
+        array ('linha' => 2,
+               'nome' => 'dtPublicacao',
+               'col' => 4,
+               'label' => 'Data da Publicação:',
+               'title' => 'Data da Publicação no DOERJ',
+               'tipo' => 'data',
+               'required' => TRUE,
+               'size' => 15),
+        array ('linha' => 2,
+               'nome' => 'dtVigencia',
+               'col' => 4,
+               'label' => 'Data da Vigência:',
+               'title' => 'Data em que o plano passou a vigorar',
+               'tipo' => 'data',
+               'required' => TRUE,
+               'size' => 15),
+        array ('linha' => 3,
                'col' => 12,
                'nome' => 'link',
                'label' => 'Link do Decreto ou Lei:',
                'title' => 'texto do Decreto',
                'tipo' => 'texto',
                'size' => 250),
-        array ('linha' => 3,
+        array ('linha' => 4,
                 'col' => 12,
                'nome' => 'obs',
                'label' => 'Observação:',
@@ -190,12 +201,15 @@ if($acesso)
     $objeto->set_voltarForm('?fase=editar&id='.$id);
 
     ################################################################
+    
     switch ($fase)
     {
         case "" :
         case "listar" :
             $objeto->listar();
             break;
+        
+    ################################################################
 
         case "editar" :
             # Limita o tamanho da tela
@@ -214,8 +228,6 @@ if($acesso)
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
-            
-            
             
             # Texto da Lei
             if(!vazio($dados[4])){
@@ -270,13 +282,22 @@ if($acesso)
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+            
+    ################################################################
+            
         case "editar2" :
             $objeto->editar($id);
             break;
+        
+    ################################################################
+        
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
+        
     }									 	 		
 
     $page->terminaPagina();

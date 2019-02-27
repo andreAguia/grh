@@ -79,9 +79,12 @@ class PlanoCargos{
             $temLetra = TRUE;
         }
         
+        # Pega o nome da tabela
+        $dados = $this->get_dadosPlano($idPlano);
+                
         # Inicia a Tabela
         echo "<table class='tabelaPadrao'>";
-        echo '<caption>Tabela Salarial</caption>';
+        echo '<caption>'.$dados[0].'</caption>';
         
         # Percorre os valores seguindo a ordem dos níveis definido no array
         foreach ($nivel as $nn){
@@ -198,11 +201,17 @@ class PlanoCargos{
      * @syntax $plano->get_planoVigente($data);
      *
      * @Obs O id Servidor é necessário pois existem planos que só é válido para determinados cargos
+     * @Obs Se a data estiver nulla será considerada a data atual
      * @Obs Utilizada na rotina de enquadramento e progressão para saber em qual plano o servidor foi enquadrado ou progredido
      */
     
         # Conecta
         $pessoal = new Pessoal();
+        
+        # Verifica se a data é nula
+        if(is_null($data)){
+            $data = date("d/m/Y");
+        }
         
         # Verifica se servidor é professor ou adm e Tec
         $tipo = $pessoal->get_cargoTipo($idServidor);
@@ -212,6 +221,7 @@ class PlanoCargos{
                      FROM tbplano
                      WHERE dtVigencia <= "'.date_to_bd($data).'"
                      AND idPlano <> 6
+                     AND (servidores = "Todos" OR servidores = "'.$tipo.'")
                      ORDER BY dtVigencia desc limit 1';
         
         
@@ -233,6 +243,30 @@ class PlanoCargos{
     
         # Pega os projetos cadastrados
         $select = 'SELECT valor
+                     FROM tbclasse
+                     WHERE faixa = "'.$classe.'"
+                     AND idPlano = "'.$idPlano.'"';
+        
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,false);
+        return $row[0];
+    }
+    
+    ###########################################################
+    
+    public function get_idClasse($idPlano = NULL, $classe = NULL){
+    /**
+     * Retorna o salário cadastrado da classe do idPlano fornecido
+     * 
+     * @param $idPlano integer NULL O id do plano
+     * @param $classe  texto   NULL A classe do salário
+     * 
+     * @syntax $plano->get_salarioClasse($idPlano, $classe);
+     */
+    
+        # Pega os projetos cadastrados
+        $select = 'SELECT idClasse
                      FROM tbclasse
                      WHERE faixa = "'.$classe.'"
                      AND idPlano = "'.$idPlano.'"';

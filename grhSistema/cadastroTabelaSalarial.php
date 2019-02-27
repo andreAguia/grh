@@ -171,8 +171,8 @@ if($acesso){
     
     # Verifica se veio do pcv e muda volta do formulário
     if(!is_null($pcv)){
-        $objeto->set_voltarForm('cadastroPlanoCargos.php?fase=editar&id='.$pcv);
-        $objeto->set_linkListar('cadastroPlanoCargos.php?fase=editar&id='.$pcv);
+        $objeto->set_voltarForm('cadastroPlanoCargos.php?fase=tabela&id='.$pcv);
+        $objeto->set_linkListar('cadastroPlanoCargos.php?fase=tabela&id='.$pcv);
         $objeto->set_linkGravar('?fase=gravar&pcv='.$pcv);
     }
 

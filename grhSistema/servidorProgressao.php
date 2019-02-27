@@ -97,7 +97,7 @@ if($acesso){
     # Parametros da tabela
     $objeto->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
     $objeto->set_width(array(10,20,15,15,15,15));	
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array ("date_to_php",NULL,NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados

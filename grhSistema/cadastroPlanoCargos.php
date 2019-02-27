@@ -14,8 +14,8 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){
+    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -187,6 +187,7 @@ if($acesso)
                'label' => 'Link do Decreto ou Lei:',
                'title' => 'texto do Decreto',
                'tipo' => 'texto',
+               'bloqueadoEsconde' => TRUE,
                'size' => 250),
         array ('linha' => 4,
                 'col' => 12,
@@ -231,53 +232,28 @@ if($acesso)
             
             # Texto da Lei
             if(!vazio($dados[4])){
-                $botaoRel = new Button("Texto",$dados[4]);
+                $botaoRel = new Button("Lei",$dados[4]);
                 $botaoRel->set_title("Texto da Lei");
                 $botaoRel->set_target("_blank");
                 $menu->add_link($botaoRel,"right");
             }
             
-            # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_imagem($imagem);
-            $botaoRel->set_title("Imprimir");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");
+            # Tabela
+            $botaoRel = new Button("Tabela","?fase=tabela&id=$id");
+            $botaoRel->set_title("Tabela");
             $menu->add_link($botaoRel,"right");
+                        
+            # Editar
+            $botaoEditar = new Button("Editar","?fase=editar2&id=$id");
+            $botaoEditar->set_title("Editar");
+            $menu->add_link($botaoEditar,"right");
 
             $menu->show();
             
-            # Informa se é o plano vigente
-            if($dados[3]){
-                callout("Plano Vigente !","secondary");
-            }
+            $objeto->set_botaoVoltarForm(FALSE);
+            $objeto->set_botaoHistorico(FALSE);
             
-            # Título
-            p($dados[0],"planoTitulo");
-            p(" de ".date_to_php($dados[2]).", publicado em ".date_to_php($dados[1]),"planoDatas");
-            
-            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                # Cria um menu
-                $menu = new MenuBar("small button-group");
-                
-                # Editar
-                $linkVoltar = new Button("Editar Plano","?fase=editar2&id=$id");
-                $linkVoltar->set_title('Edita dados do plano de cargos');
-                $linkVoltar->set_accessKey('E');
-                $menu->add_link($linkVoltar,"right");
-                
-                $linkVoltar = new Button("Incluir Valor","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
-                $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
-                $linkVoltar->set_accessKey('I');
-                $menu->add_link($linkVoltar,"right");
-                
-                $menu->show();
-                
-                $plano->exibeTabela($id,TRUE);
-            }else{
-                $plano->exibeTabela($id,FALSE);
-            }
+            $objeto->editar($id,TRUE);
             
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -287,6 +263,48 @@ if($acesso)
             
         case "editar2" :
             $objeto->editar($id);
+            break;
+        
+    ################################################################
+            
+        case "tabela" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Pega os dados do plano
+            $plano = new PlanoCargos();
+            $dados = $plano->get_dadosPlano($id);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Button("Voltar","?fase=editar&id=$id");
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+            
+            # Verifica se permite edição dos valores
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores                
+                
+                $linkVoltar = new Button("Incluir Valor","cadastroTabelaSalarial.php?fase=editar&pcv=.$id");
+                $linkVoltar->set_title('Inclui novo valor de vencimento na tabela salarial');
+                $linkVoltar->set_accessKey('I');
+                $menu->add_link($linkVoltar,"right");
+            }
+                
+            $menu->show();
+            
+            # Verifica se permite edição dos valores
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores     
+                $plano->exibeTabela($id,TRUE);
+            }else{
+                $plano->exibeTabela($id,FALSE);
+            }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
         
     ################################################################

@@ -103,7 +103,7 @@ if($acesso){
     # Parametros da tabela
     $objeto->set_label(array("Id","Tipo de Progressão","Obs"));
     $objeto->set_width(array(5,40,45));
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_align(array("center","left","left"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

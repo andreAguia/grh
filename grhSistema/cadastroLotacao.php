@@ -79,7 +79,7 @@ if($acesso){
 
     # ordenação
     if(is_null($orderCampo)){
-        $orderCampo = "8 desc, 3 asc, 4 asc, 5";
+        $orderCampo = "9 desc, 3 asc, 4 asc, 5";
     }
 
     if(is_null($orderTipo)){

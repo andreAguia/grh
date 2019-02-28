@@ -279,5 +279,31 @@ class PlanoCargos{
     
     ###########################################################
     
+    public function evibeValor($idClasse){
+    /**
+     * Exive informação da faixa, valor e plano referente ao idClasse para ser exibido na rotina de cadastro de enquadramento & progressão
+     * 
+     * @param $classe  texto   NULL A classe do salário
+     * 
+     * @syntax $plano->evibeValor($idclasse);
+     */
+    
+        # Pega os projetos cadastrados
+        $select = 'SELECT faixa,
+                          valor,
+                          tbplano.numdecreto
+                     FROM tbclasse LEFT JOIN tbplano USING (idPlano)
+                     WHERE idClasse = "'.$idClasse.'"';
+        
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,false);
+        
+        p($row[0]." - ".$row[1],"pprogressao1");
+        p($row[2],"pprogressao2");
+    }
+    
+    ###########################################################
+    
     
 }

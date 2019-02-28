@@ -116,6 +116,24 @@ tr#inativo td{
 }
 
 /*******************************************
+ * Cadastro de Progressão e Enquadramento de Servidor
+ *******************************************/
+tr#importado{
+    background-color: #ffcccc;
+}
+
+p#pprogressao1{
+    padding: 0px;
+    margin: 0px;
+}
+
+p#pprogressao2{
+    padding: 0px;
+    margin: 0px;
+    font-size: 10px;
+}
+
+/*******************************************
  * Aniversariante do dia
  *******************************************/
 tr#aniversariante td{

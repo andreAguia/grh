@@ -61,13 +61,11 @@ if($acesso){
     # select da lista
     $objeto->set_selectLista('SELECT tbprogressao.dtInicial,
                                      tbtipoprogressao.nome,
-                                     CONCAT(tbclasse.faixa," - ",tbclasse.valor) as vv,
-                                     numProcesso,
+                                     idClasse,
                                      dtPublicacao,
-                                     documento,
+                                     tbprogressao.obs,
                                      tbprogressao.idProgressao
                                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
-                                                  JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
                                WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY '.$orderCampo.' '.$orderTipo);
 
@@ -95,10 +93,18 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
-    $objeto->set_width(array(10,20,15,15,15,15));	
-    $objeto->set_align(array("center","left"));
-    $objeto->set_funcao(array ("date_to_php",NULL,NULL,NULL,"date_to_php"));
+    $objeto->set_label(array("Data Inicial","Tipo","Valor","DOERJ","Obs"));
+    $objeto->set_width(array(10,20,20,10,30));	
+    $objeto->set_align(array("center","left","center","center","left"));
+    $objeto->set_funcao(array ("date_to_php",NULL,NULL,"date_to_php"));
+    $objeto->set_classe(array(NULL,NULL,"PlanoCargos"));
+    $objeto->set_metodo(array(NULL,NULL,"evibeValor"));
+    
+    # Formatação condicional
+    $objeto->set_formatacaoCondicional(array(array('coluna' => 1,
+                                                   'valor' => "Importado",
+                                                   'operador' => '=',
+                                                   'id' => 'importado')));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

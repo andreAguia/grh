@@ -50,12 +50,25 @@ class Checkup {
         function cmp($a, $b) {          // Função específica que compara se $a é maior que $b
             return $a[2] > $b[2];
         }
-
+        
         // Ordena
         usort($metodoRetorno, 'cmp');
         
+        $prioridadeAnterior = NULL;
+        
         # Percorre o array $metodoRetorno e exibe a lista
         foreach($metodoRetorno as $listaRetorno){
+            
+            # Exibe uma linha horizontal
+            if($prioridadeAnterior <> $listaRetorno[2]){
+                if(is_null($prioridadeAnterior)){
+                    $prioridadeAnterior = $listaRetorno[2];
+                }else{
+                    $prioridadeAnterior = $listaRetorno[2];
+                    hr("alerta");
+                }
+            }
+            
             $link = new Link($listaRetorno[0],"?fase=alertas&alerta=".$listaRetorno[1]);
             $link->set_id("checkupResumo".$listaRetorno[2]);
             echo "<li>";
@@ -2606,6 +2619,72 @@ class Checkup {
         $funcao = [NULL];
         $classe = [NULL,NULL,NULL,"Pessoal","Pessoal","Pessoal"];
         $rotina = [NULL,NULL,NULL,"get_lotacao","get_treFolgasConcedidas","get_treFolgasFruidas"];
+        $align = ['center','left'];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+        
+        if ($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_progressaoImportada
+     * 
+     * Servidores com progressão e/ou 
+     */
+    
+    public function get_progressaoImportada($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+       
+        $select = 'SELECT distinct tbservidor.idFuncional,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbprogressao USING (idServidor)
+                     WHERE idTpProgressao = 9'; 
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY situacao,2';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidor(es) com progressão e enquadramento importados';
+        $label = ['IdFuncional','Nome','Perfil','Lotação','Situação'];
+        $funcao = [NULL];
+        $classe = [NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,"get_lotacao","get_situacao"];
         $align = ['center','left'];
         $linkEditar = 'servidor.php?fase=editar&id=';
 

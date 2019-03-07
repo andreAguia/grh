@@ -212,7 +212,12 @@ if($acesso){
                                        'title' => 'Matrícula',
                                        'linha' => 8)));
 
-
+    
+    # tabela
+    $botao = new Button("Tabela","tabelaSalarial.php");
+    $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
+    $botao->set_target("_blank");
+    
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
@@ -221,7 +226,7 @@ if($acesso){
     $botaoRel->set_url("../grhRelatorios/servidorProgressao.php");
     $botaoRel->set_target("_blank");
     
-    $objeto->set_botaoListarExtra(array($botaoRel));
+    $objeto->set_botaoListarExtra(array($botao,$botaoRel));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

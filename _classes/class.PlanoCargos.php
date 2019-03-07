@@ -36,7 +36,9 @@ class PlanoCargos{
                           dtPublicacao,
                           dtDecreto,
                           planoAtual,
-                          link
+                          link,
+                          dtVigencia,
+                          servidores
                      FROM tbplano
                      WHERE idPlano = '.$idPlano;
         
@@ -81,10 +83,19 @@ class PlanoCargos{
         
         # Pega o nome da tabela
         $dados = $this->get_dadosPlano($idPlano);
+        
+        # Exibe a tabela identificando o plano
+        $tabela = new Tabela();
+        $tabela->set_titulo($dados[0]);
+        $tabela->set_conteudo(array([date_to_php($dados[2]),date_to_php($dados[1]),date_to_php($dados[5]),$dados[6]]));
+        $tabela->set_label(["Data da Lei/Decreto","Data da Publicação","Data do Início da Vigência","Servidores"]);
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->show();
+        
                 
-        # Inicia a Tabela
+        # Exibe a tabela de valores
         echo "<table class='tabelaPadrao'>";
-        echo '<caption>'.$dados[0].'</caption>';
+        echo '<caption>Valores</caption>';
         
         # Percorre os valores seguindo a ordem dos níveis definido no array
         foreach ($nivel as $nn){
@@ -305,5 +316,46 @@ class PlanoCargos{
     
     ###########################################################
     
-    
+    public function menuPlanos($idPlano){
+    /**
+    * Exibe o menu de Planos de Cargo.
+    * 
+    * @syntax PlanoCargos::menuPlanos;
+    * 
+    */    
+   
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        
+        # Pega os projetos cadastrados
+        $select = 'SELECT idPlano,
+                          numDecreto
+                     FROM tbplano
+                  ORDER BY dtVigencia desc';
+        
+        $dados = $pessoal->select($select);
+        $num = $pessoal->count($select);
+        
+        # Inicia o menu
+        $menu1 = new Menu();
+        $menu1->add_item('titulo1','Planos','?fase=menuCaderno');
+        #$menu1->add_item('sublink','+ Novo Caderno','?fase=cadernoNovo');
+                
+        # Verifica se tem Planos
+        if($num > 0){
+            # Percorre o array 
+            foreach ($dados as $valor){               
+
+                # Marca o item que está sendo editado
+                if($idPlano == $valor[0]){
+                    $menu1->add_item('link',"<b>".$valor[1]."</b>",'?id='.$valor[0],$valor[1]);
+                }else{
+                    $menu1->add_item('link',$valor[1],'?id='.$valor[0],$valor[1]);
+                }
+            }           
+        }
+        $menu1->show();
+    }
+
+    ##########################################################
 }

@@ -10,9 +10,10 @@
 $dtNasc = date_to_php($campoValor[1]);
 
 # verifica se dependente é filho
-if(($campoValor[3] == 2) AND ($campoValor[6] == "Sim")){
+if((($campoValor[3] == 2) OR ($campoValor[3] == 8) OR ($campoValor[3] == 9)) AND ($campoValor[6] == "Sim")){
+    
     # verifica a data limite do auxílio creche (6 anos e 11 meses)
-    $dataLimite = addAnos($dtNasc,6);   // acrescenta os 6 anos
+    $dataLimite = addAnos($dtNasc,6);                   // acrescenta os 6 anos
     $dataLimite = addMeses($dataLimite,11);             // acrescenta os 11 meses
 
     # verifica se a data de término está vazia e preenche

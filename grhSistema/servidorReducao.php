@@ -1,6 +1,6 @@
 <?php
 /**
- * Controle do Abono de Permanencia
+ * Controle do Redução de Carega Horária
  *  
  * By Alat
  */

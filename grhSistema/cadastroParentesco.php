@@ -72,7 +72,7 @@ if($acesso)
 
     # ordenação
     if(is_null($orderCampo))
-            $orderCampo = "2";
+            $orderCampo = "4";
 
     if(is_null($orderTipo))
             $orderTipo = 'asc';

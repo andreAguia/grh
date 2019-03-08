@@ -33,6 +33,8 @@ if($acesso)
                     var t1 = $("#parentesco").val();
                     switch (t1) {
                         case "2":
+                        case "8":
+                        case "9":
                             $("#labelauxCreche").show();
                             $("#auxCreche").show();
                             break;
@@ -184,7 +186,7 @@ if($acesso)
     $result = $parentesco->select('SELECT idParentesco, 
                                           parentesco
                                      FROM tbparentesco
-                                 ORDER BY parentesco');
+                                 ORDER BY idParentesco');
     array_push($result, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario

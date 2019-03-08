@@ -65,6 +65,8 @@ if($acesso)
                 var t1 = $("#parentesco").val();
                 switch (t1) {
                     case "2":
+                    case "8":
+                    case "9":
                         $("#labelauxCreche").show();
                         $("#auxCreche").show();
                         break;

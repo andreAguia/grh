@@ -32,8 +32,9 @@ if($acesso)
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
     
-    # Pega o número do processo
-    $processo = $pessoal->get_numProcessoReducao($idServidorPesquisado);
+    # Pega o número do processo (Quando tem)
+    $reducao = new ReducaoCargaHoraria($idServidorPesquisado);
+    $processo = trataNulo($reducao->get_numProcesso());
     
     br();
     $select = "SELECT dtSolicitacao,

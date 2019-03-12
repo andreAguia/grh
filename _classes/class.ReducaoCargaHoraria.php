@@ -320,4 +320,38 @@ class ReducaoCargaHoraria{
     }
     
     ###########################################################
+    
+    function exibeStatus($idReducao){
+
+    /**
+     * Informe o status de uma solicitação de redução de carga horária específica
+     * 
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT arquivado, pendencia
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Verifica se há pendências
+        if($row[1] == 1){
+            $retorno = "Em Pendência";
+        }else{
+            if($row[0] == 0){
+                $retorno = "Em Aberto";
+            }else{
+                $retorno = "Arquivado";
+            }
+        }
+                                
+        return $retorno;
+    }
+    
+    ###########################################################
 }

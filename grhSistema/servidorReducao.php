@@ -120,10 +120,7 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT CASE
-                                     WHEN arquivado = 0 THEN "Em Aberto"
-                                     WHEN arquivado = 1 THEN "Arquivado"
-                                     END,
+    $objeto->set_selectLista('SELECT idReducao,
                                      dtSolicitacao,
                                      idReducao,
                                      CASE
@@ -147,6 +144,7 @@ if($acesso){
                                      dtAgendadaPericia,
                                      resultado,
                                      pendencia,
+                                     dadosPendencia,
                                      dtEnvioPendencia,
                                      dtPublicacao,
                                      dtInicio,
@@ -166,7 +164,11 @@ if($acesso){
     $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
                                                     'valor' => 'Em Aberto',
                                                     'operador' => '=',
-                                                    'id' => 'emAberto'),                                              
+                                                    'id' => 'emAberto'),  
+                                              array('coluna' => 0,
+                                                    'valor' => 'Em Pendência',
+                                                    'operador' => '=',
+                                                    'id' => 'pendencia'),  
                                               array('coluna' => 0,
                                                     'valor' => 'Arquivado',
                                                     'operador' => '=',
@@ -179,8 +181,8 @@ if($acesso){
     $objeto->set_align(array("center","center","left","center","center","left","left"));
     $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $objeto->set_metodo(array(NULL,NULL,"exibeDadorPericia",NULL,NULL,"exibePeriodo","exibeCi"));
+    $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadorPericia",NULL,NULL,"exibePeriodo","exibeCi"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -254,6 +256,13 @@ if($acesso){
                                        'title' => 'Se há pendências',
                                        'col' => 2,
                                        'linha' => 3),
+                                array ('linha' => 3,
+                                       'col' => 7,
+                                       'nome' => 'dadosPendencia',
+                                       'label' => 'Pendências:',
+                                       'tipo' => 'textarea',
+                                       'title' => 'Quais são as pendências.',
+                                       'size' => array(60,3)),
                                array ( 'nome' => 'dtEnvioPendencia',
                                        'label' => 'Data de Envio das Pendências:',
                                        'tipo' => 'data',

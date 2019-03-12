@@ -356,11 +356,15 @@ div#divEditaProcesso{
 }
 
 tr#arquivado{
-    background-color:#ffdcc3;
+    background-color:#e6e6e6;
 }
 
 tr#emAberto{
-    background-color:#e6e6e6;
+    background-color:#fff;
+}
+
+tr#pendencia{
+    background-color:#f5caca;
 }
 
 /*******************************************

@@ -78,7 +78,11 @@ class ReducaoCargaHoraria{
         # Pega os dados
         $select="SELECT dtSolicitacao,
                         dtEnvioPericia,
+                        dtChegadaPericia,
+                        dtAgendadaPericia,
                         resultado,
+                        pendencia,
+                        dtEnvioPendencia,
                         dtPublicacao,
                         dtInicio,
                         periodo,
@@ -99,16 +103,16 @@ class ReducaoCargaHoraria{
             $mensagem = "- Arquivar processo.<br/>";
         }
 
-        # Se foi deferido
-        if($dados[2] == 1){
+        # Resultado Deferido
+        if($dados[4] == 1){
             # Quando não enviou ci de término e a data atual já passou ou é inferior a 90 dias
             if(is_null($dados[7])){
 
-                if((!is_null($dados[4])) AND (!is_null($dados[5]))){
+                if((!is_null($dados[8])) AND (!is_null($dados[9]))){
                     # Variáveis para calculo das datas
                     $dtHoje = date("Y-m-d");
-                    $dtInicio = date_to_php($dados[4]);
-                    $periodo = $dados[5];
+                    $dtInicio = date_to_php($dados[8]);
+                    $periodo = $dados[9];
                     $dtTermino = addMeses($dtInicio,$periodo);
                     $dtAlerta = addDias($dtTermino,-90);
 
@@ -123,37 +127,55 @@ class ReducaoCargaHoraria{
             }
 
             # Quando ainda não enviou a CI de início para a chefia do servidor
-            if(is_null($dados[6])){
+            if(is_null($dados[10])){
                 $mensagem = "- Enviar CI para o setor do servidor informando a chefia imediata sobre o benefício concedido;<br/>"
                           . "- Cadastrar o número da CI Inicial no sistema.<br/>";
             }
 
             # Quando ainda não preencheu o período
-            if(is_null($dados[5])){
+            if(is_null($dados[9])){
                 $mensagem = "- Cadastrar no sistema o período (em meses).<br/>";
             }
 
             # Quando ainda não preencheu o início do benefício
-            if(is_null($dados[4])){
+            if(is_null($dados[8])){
                 $mensagem = "- Cadastrar no sistema o início do benefício.<br/>";
             }
 
             # Quando ainda não foi publicado 
-            if(is_null($dados[3])){
+            if(is_null($dados[7])){
                 $mensagem = "- Enviar o processo para o setor de publicação;<br/>"
                           . "- Enviar email ao servidor informando do benefício concedido.<br/>";
             }
-        }elseif($dados[2] == 2){
+        
+        # Resultado indeferido
+        }elseif($dados[4] == 2){
             $mensagem = "- Avisar o servidor da negativa;<br/>"
                       . "- Arquivar processo.<br/>";
         }
 
         # Quando ainda não foi informado o resultado 
-        if(is_null($dados[2])){
-            $mensagem = "- Verificar pelo UPO quando o processo chegar na SPMSO/SES;<br/>"
-                      . "- Assim que chegar, avisar o servidor para enviar email marcando a perícia;<br/>"
-                      . "- Aguardar o retorno do processo com o resultado;<br/>"
+        if(is_null($dados[4])){
+            
+            $mensagem = "- Aguardar o retorno do processo com o resultado;<br/>"
                       . "- Assim que chegar, cadastrar no sistema o resultado.<br/>";
+                        
+            # Verifica a data agendada
+            if(is_null($dados[3])){
+            $mensagem = "- Obter com a SPMSO/SES a data agendada e cadastrar no sistema.<br/>";
+            }
+            
+            # Verifica a data de chegada à perícia
+            if(is_null($dados[2])){
+            $mensagem = "- Verificar pelo UPO quando o processo chegar na SPMSO/SES;<br/>"
+                      . "- Assim que chegar, cadastrar no sistema a data de chegada;<br/>"
+                      . "- E avisar o servidor para enviar email marcando a perícia;<br/>";
+            }
+            
+            # Verifica a data de envio à perícia
+            if(is_null($dados[1])){
+            $mensagem = "- Assim que enviar o processo à perícia cadastrar a data no sistema.";
+            }
         }
 
         if($numero == 0){
@@ -225,38 +247,74 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT dtInicio, periodo, ADDDATE(dtInicio, INTERVAL periodo MONTH)
+        $select = 'SELECT dtInicio, periodo, ADDDATE(dtInicio, INTERVAL periodo MONTH), resultado
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
         
-        # Trata a data de Início
-        if(vazio($row[0])){
-            $dtInicio = "---";
-        }else{
-            $dtInicio = date_to_php($row[0]);
-        }
+        # Retorno
+        if($row[3] == 1){
         
-        # Trata o período
-        if(vazio($row[1])){
-            $periodo = "---";
-        }else{
-            $periodo = $row[1]." meses";
-        }
+            # Trata a data de Início
+            if(vazio($row[0])){
+                $dtInicio = "---";
+            }else{
+                $dtInicio = date_to_php($row[0]);
+            }
+
+            # Trata o período
+            if(vazio($row[1])){
+                $periodo = "---";
+            }else{
+                $periodo = $row[1]." meses";
+            }
+
+            # Trata a data de término
+            if(vazio($row[2])){
+                $dttermino = "---";
+            }else{
+                $dttermino = date_to_php($row[2]);
+            }
         
-        # Trata a data de término
-        if(vazio($row[2])){
-            $dttermino = "---";
+            $retorno = "Início  : ".$dtInicio."<br/>"
+                     . "Período : ".$periodo."<br/>"
+                     . "Término : ".$dttermino;
         }else{
-            $dttermino = date_to_php($row[2]);
+            $retorno = NULL;
         }
+                                
+        return $retorno;
+    }
+    
+    ###########################################################
+    
+    function exibeCi($idReducao){
+
+    /**
+     * Informe os dados da CI de uma solicitação de redução de carga horária específica
+     * 
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT numCiInicio, numCiTermino, resultado
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
         
         # Retorno
-        $retorno = "Início  : ".$dtInicio."<br/>"
-                 . "Período : ".$periodo."<br/>"
-                 . "Término : ".$dttermino;
+        if($row[2] == 1){
+            $retorno = "CI de Início  : ".trataNulo($row[0])."<br/>"
+                     . "CI de Término : ".trataNulo($row[1]);
+        }else{
+            $retorno = NULL;
+        }
                                 
         return $retorno;
     }

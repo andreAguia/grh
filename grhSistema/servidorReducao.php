@@ -176,7 +176,7 @@ if($acesso){
     # Parametros da tabela
     $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Período","CI"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center","center","left","center","center","left"));
+    $objeto->set_align(array("center","center","left","center","center","left","left"));
     $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,"date_to_php"));
     
     $objeto->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));

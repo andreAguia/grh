@@ -189,7 +189,7 @@ class Grh{
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(5);
+        $menu = new MenuGrafico(6);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
@@ -221,8 +221,16 @@ class Grh{
         $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Análise estatísticas');
         #$botao->set_accesskey('F');
+        $menu->add_item($botao);        
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Benefícios');
+        $botao->set_url('beneficios.php');
+        #$botao->set_url('#');
+        $botao->set_imagem(PASTA_FIGURAS.'beneficios.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Recadastramento');
         $botao->set_url('areaRecadastramento.php');
@@ -230,6 +238,7 @@ class Grh{
         $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Recadastramento de Servidores');
         $menu->add_item($botao);
+        
         $menu->show();
         br();
 

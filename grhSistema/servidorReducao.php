@@ -23,6 +23,7 @@ if($acesso){
 	
     # Pega o número do processo (Quando tem)
     $processo = trataNulo($reducao->get_numProcesso());
+    $processoAntigo = $reducao->get_numProcessoAntigo();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -30,8 +31,83 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    $jscript = '// Pega os valores da pendêencia
+                var pendencia = $("#pendencia").val();
+                
+                
+                // Verifica o valor da pendência quando o form é carregado
+                if(pendencia == 1){
+                    $("#dadosPendencia").show();
+                    $("#dtEnvioPendencia").show();
+                    $("#div7").show();
+                }else{
+                    $("#dadosPendencia").hide();
+                    $("#dtEnvioPendencia").hide();
+                    $("#div7").hide();
+                }
+                
+                // Pega os valores do resultado
+                var resultado = $("#resultado").val();
+
+                // Verifica o valor do resultado quando o form é carregado
+                if(resultado == 1){
+                    $("#dtPublicacao").show();
+                    $("#dtInicio").show();
+                    $("#periodo").show();
+                    $("#numCiInicio").show();
+                    $("#numCiTermino").show();                    
+                    $("#div9").show();
+                }else{
+                    $("#dtPublicacao").hide();
+                    $("#dtInicio").hide();
+                    $("#periodo").hide();
+                    $("#numCiInicio").hide();
+                    $("#numCiTermino").hide();                    
+                    $("#div9").hide();
+                }
+        
+                // Verifica o valor da pendência quando se muda o valor do campo
+                $("#pendencia").change(function(){
+                    var pendencia = $("#pendencia").val();
+                    
+                    if(pendencia == 1){
+                        $("#dadosPendencia").show();
+                        $("#dtEnvioPendencia").show();
+                        $("#div7").show();
+                    }else{
+                        $("#dadosPendencia").hide();
+                        $("#dtEnvioPendencia").hide();
+                        $("#div7").hide();
+                    }
+                });
+                
+                // Verifica o valor do resultado quando se muda o valor do campo
+                $("#resultado").change(function(){
+                    var resultado = $("#resultado").val();
+                    
+                    if(resultado == 1){
+                        $("#dtPublicacao").show();
+                        $("#dtInicio").show();
+                        $("#periodo").show();
+                        $("#numCiInicio").show();
+                        $("#numCiTermino").show();                    
+                        $("#div9").show();
+                    }else{
+                        $("#dtPublicacao").hide();
+                        $("#dtInicio").hide();
+                        $("#periodo").hide();
+                        $("#numCiInicio").hide();
+                        $("#numCiTermino").hide();                    
+                        $("#div9").hide();
+                    }                
+                });
+                
+';
+    
+    
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    $page->set_ready($jscript);
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -142,15 +218,16 @@ if($acesso){
                                      dtEnvioPericia,
                                      dtChegadaPericia,
                                      dtAgendadaPericia,
-                                     resultado,
                                      pendencia,
+                                     resultado,
                                      dadosPendencia,
-                                     dtEnvioPendencia,
+                                     dtEnvioPendencia,                                     
                                      dtPublicacao,
                                      dtInicio,
                                      periodo,
                                      numCiInicio,
                                      numCiTermino,
+                                     obs,
                                      idServidor
                                 FROM tbreducao
                                WHERE idReducao = '.$id);
@@ -182,7 +259,7 @@ if($acesso){
     $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,"date_to_php"));
     
     $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadorPericia",NULL,NULL,"exibePeriodo","exibeCi"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia",NULL,NULL,"exibePeriodo","exibeCi"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -208,7 +285,7 @@ if($acesso){
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
                                        'title' => 'A data da Solicitação.',
-                                       'col' => 3,                                       
+                                       'col' => 3,                                    
                                        'linha' => 1),
                                array ( 'nome' => 'arquivado',
                                        'label' => 'Arquivado:',
@@ -219,15 +296,15 @@ if($acesso){
                                        'title' => 'Se a solicitação foi arquivada ou não.',
                                        'linha' => 1),
                                array ( 'nome' => 'dtEnvioPericia',
-                                       'label' => 'Data de Envio à Perícia:',
+                                       'label' => 'Data de Envio:',
                                        'tipo' => 'data',
                                        'size' => 10,
-                                       'col' => 3,
                                        'fieldset' => 'Da Perícia',
+                                       'col' => 3,                                       
                                        'title' => 'A data do envio do processo à perícia.',
                                        'linha' => 2),
                                array ( 'nome' => 'dtChegadaPericia',
-                                       'label' => 'Data da Chegada à Perícia:',
+                                       'label' => 'Data da Chegada:',
                                        'tipo' => 'data',
                                        'size' => 10,
                                        'col' => 3,
@@ -240,36 +317,36 @@ if($acesso){
                                        'col' => 3,
                                        'title' => 'A data agendada pela perícia.',
                                        'linha' => 2),
-                               array ( 'nome' => 'resultado',
+                               array ( 'nome' => 'pendencia',
+                                       'label' => 'Há pendências:',
+                                       'tipo' => 'simnao',
+                                       'size' => 5,
+                                       'title' => 'Se há pendências',
+                                       'col' => 3,
+                                       'linha' => 3),
+                                array ( 'nome' => 'resultado',
                                        'label' => 'Resultado:',
                                        'tipo' => 'combo',
                                        'array' => array(array(NULL,""),array(1,"Deferido"),array(2,"Indeferido")),
                                        'size' => 20,                               
                                        'title' => 'Se o processo foi deferido ou indeferido',
-                                       'col' => 2,
-                                       'linha' => 2),             
-                               array ( 'nome' => 'pendencia',
-                                       'label' => 'Há pendências:',
-                                       'tipo' => 'simnao',
-                                       'size' => 5,
-                                       'fieldset' => 'Das Pendências',
-                                       'title' => 'Se há pendências',
-                                       'col' => 2,
-                                       'linha' => 3),
-                                array ('linha' => 3,
-                                       'col' => 7,
+                                       'col' => 3,
+                                       'linha' => 3),    
+                                array ('linha' => 4,
+                                       'col' => 9,
                                        'nome' => 'dadosPendencia',
                                        'label' => 'Pendências:',
-                                       'tipo' => 'textarea',
+                                       'tipo' => 'textarea',                                    
+                                       'fieldset' => 'Das Pendências',
                                        'title' => 'Quais são as pendências.',
-                                       'size' => array(60,3)),
+                                       'size' => array(80,3)),
                                array ( 'nome' => 'dtEnvioPendencia',
                                        'label' => 'Data de Envio das Pendências:',
                                        'tipo' => 'data',
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'Data de envio das pendências da Perícia.',
-                                       'linha' => 3),
+                                       'linha' => 4),                               
                                array ( 'nome' => 'dtPublicacao',
                                        'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
@@ -306,6 +383,14 @@ if($acesso){
                                        'col' => 3,
                                        'title' => 'Número da Ci informando a chefia imediata do servidor da data de término do benefício.',
                                        'linha' => 6),
+                               array ('linha' => 7,
+                                       'col' => 12,
+                                       'nome' => 'obs',
+                                       'label' => 'Obs:',
+                                       'tipo' => 'textarea',                                    
+                                       'fieldset' => 'fecha',
+                                       'title' => 'Observações.',
+                                       'size' => array(80,4)),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor',
                                        'tipo' => 'hidden',
@@ -337,6 +422,11 @@ if($acesso){
                     tituloTable("N° do Processo:");
                     br();
                     p($processo,'f14',"center");
+                    
+                    # Verifica se tem processo antigo
+                    if(!is_null($processoAntigo)){
+                        p($processoAntigo."<br/>(Antigo)","processoAntigoReducao");
+                    }
                     
                     $div = new Div("divEditaProcesso");
                     $div->abre();

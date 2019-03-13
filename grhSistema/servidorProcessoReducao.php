@@ -42,10 +42,11 @@ if($acesso){
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
     
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Processo de Solicitação de Redução de CArga Horária');
+    $objeto->set_nome('Processo de Solicitação de Redução de Carga Horária');
 
     # select do edita
-    $selectEdita = 'SELECT processoReducao
+    $selectEdita = 'SELECT processoReducao,
+                           processoAntigoReducao
                       FROM tbservidor
                      WHERE idServidor = '.$idServidorPesquisado;
 
@@ -82,7 +83,15 @@ if($acesso){
                           'autofocus' => TRUE,
                           'size' => 25,
                           'col' => 3,
-                          'title' => 'Número do processo.'));
+                          'title' => 'Número do processo.'),
+                    array('linha' => 2,
+                          'nome' => 'processoAntigoReducao',
+                          'label' => 'Processos Antigos (caso exista):',
+                          'tipo' => 'texto',
+                          'size' => 100,
+                          'col' => 6,
+                          'title' => 'Processos antigos.')
+        );
 
     $objeto->set_campos($campos);
 

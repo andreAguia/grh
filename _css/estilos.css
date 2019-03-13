@@ -367,6 +367,12 @@ tr#pendencia{
     background-color:#f5caca;
 }
 
+p#processoAntigoReducao{
+    text-align: center;
+    font-size: 12px;
+    color: #af4747;
+}
+
 /*******************************************
  * Cadastro de Cargo Efetivo
  *******************************************/

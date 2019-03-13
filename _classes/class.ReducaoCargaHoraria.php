@@ -34,7 +34,29 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT processoReducao
+        $select = 'SELECT processoReducao, processoAntigoReducao
+                     FROM tbservidor
+                    WHERE idServidor = '.$this->idServidor;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        return $row[0];
+    }
+    
+    ###########################################################
+    
+    function get_numProcessoAntigo(){
+
+    /**
+     * Informe o número do processo Antigo de solicitação de redução de carga horária de um servidor
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT processoAntigoReducao
                      FROM tbservidor
                     WHERE idServidor = '.$this->idServidor;
         
@@ -160,21 +182,27 @@ class ReducaoCargaHoraria{
             $mensagem = "- Aguardar o retorno do processo com o resultado;<br/>"
                       . "- Assim que chegar, cadastrar no sistema o resultado.<br/>";
                         
+            # Quando tem pendências
+            if($dados[5] == 1){
+                $mensagem = "- Resolver as pendências<br/>"
+                          . "- Cadastrar a data do envio das pendências no sistema.<br/>";
+            }
+            
             # Verifica a data agendada
             if(is_null($dados[3])){
-            $mensagem = "- Obter com a SPMSO/SES a data agendada e cadastrar no sistema.<br/>";
+                $mensagem = "- Obter com a SPMSO/SES a data agendada e cadastrar no sistema.<br/>";
             }
             
             # Verifica a data de chegada à perícia
             if(is_null($dados[2])){
-            $mensagem = "- Verificar pelo UPO quando o processo chegar na SPMSO/SES;<br/>"
-                      . "- Assim que chegar, cadastrar no sistema a data de chegada;<br/>"
-                      . "- E avisar o servidor para enviar email marcando a perícia;<br/>";
+                $mensagem = "- Verificar pelo UPO quando o processo chegar na SPMSO/SES;<br/>"
+                          . "- Assim que chegar, cadastrar no sistema a data de chegada;<br/>"
+                          . "- E avisar o servidor para enviar email marcando a perícia;<br/>";
             }
             
             # Verifica a data de envio à perícia
             if(is_null($dados[1])){
-            $mensagem = "- Assim que enviar o processo à perícia cadastrar a data no sistema.";
+                $mensagem = "- Assim que enviar o processo à$mensagem perícia cadastrar a data no sistema.";
             }
         }
 
@@ -187,7 +215,7 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
-    function exibeDadorPericia($idReducao){
+    function exibeDadosPericia($idReducao){
 
     /**
      * Informe os dados da perícia de uma solicitação de redução de carga horária específica

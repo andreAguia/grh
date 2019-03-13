@@ -37,23 +37,21 @@ if($acesso)
     $processo = trataNulo($reducao->get_numProcesso());
     
     br();
-    $select = "SELECT dtSolicitacao,
-                    dtPericia,
-                    CASE
-                    WHEN resultado = 1 THEN 'Deferido'
-                    WHEN resultado = 2 THEN 'Indeferido'
-                    ELSE '---'
-                    END,
-                    dtPublicacao,
-                    dtInicio,
-                    periodo,
-                    ADDDATE(dtInicio, INTERVAL periodo MONTH),
-                    numCiInicio,
-                    numCiTermino,
-                    idReducao
-               FROM tbreducao
-              WHERE idServidor = $idServidorPesquisado
-           ORDER BY 1 desc";
+    $select = "SELECT idReducao,
+                      dtSolicitacao,
+                      idReducao,
+                      CASE
+                      WHEN resultado = 1 THEN 'Deferido'
+                      WHEN resultado = 2 THEN 'Indeferido'
+                      ELSE '---'
+                      END,
+                      dtPublicacao,
+                      idReducao,
+                      idReducao,                                   
+                      idReducao               
+                 FROM tbreducao
+                WHERE idServidor = $idServidorPesquisado
+             ORDER BY 1 desc";
 
     $result = $pessoal->select($select);
 
@@ -62,10 +60,14 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Solicitado em:","Pericia","Resultado","Publicação","Início","Período<br/>(Meses)","Término","CI Início","CI Término"));
+    $relatorio->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Período","CI"));
     $relatorio->set_subtitulo("Processo: ".$processo);
-    $relatorio->set_align(array("center"));
-    $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,"date_to_php","date_to_php",NULL,"date_to_php"));
+    
+    $relatorio->set_align(array("center","center","left","center","center","left","left"));
+    $relatorio->set_funcao(array(NULL,"date_to_php",NULL,NULL,"date_to_php"));
+    
+    $relatorio->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));
+    $relatorio->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia",NULL,NULL,"exibePeriodo","exibeCi"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

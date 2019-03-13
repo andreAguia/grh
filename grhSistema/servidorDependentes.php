@@ -37,6 +37,17 @@ if($acesso)
                         case "9":
                             $("#labelauxCreche").show();
                             $("#auxCreche").show();
+                            
+                            var t2 = $("#auxCreche").val();
+                            switch (t2) {
+                                case "Sim":
+                                    $("#div7").show();
+                                    break;
+
+                                default:
+                                    $("#div7").hide();
+                                    break;
+                            }
                             break;
                             
                         default:

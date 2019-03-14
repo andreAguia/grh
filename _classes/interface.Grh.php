@@ -225,7 +225,7 @@ class Grh{
         
         $botao = new BotaoGrafico();
         $botao->set_label('Benefícios');
-        $botao->set_url('beneficios.php');
+        $botao->set_url('areaBeneficios.php');
         #$botao->set_url('#');
         $botao->set_imagem(PASTA_FIGURAS.'beneficios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');

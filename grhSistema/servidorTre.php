@@ -28,7 +28,7 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
-    # Verifica se veio da área de Licença Premio
+    # Verifica se veio da área de TRE
     $areaTre = get_session("areaTre");
     
     # Começa uma nova página

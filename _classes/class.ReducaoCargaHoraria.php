@@ -91,7 +91,34 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
-    function get_tarefas(){
+    function get_ultimaSolicitacaoAberto(){
+
+    /**
+     * Informe o número de solicitações de redução de carga horária de um servidor
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT idReducao
+                     FROM tbreducao
+                    WHERE NOT arquivado AND idServidor = '.$this->idServidor;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        $quantidade = $pessoal->count($select,FALSE);
+        
+        # Retorno
+        if($quantidade > 0){
+            return $row[0];
+        }else{
+            return NULL;
+        }
+    }
+    
+    ###########################################################
+    
+    function get_tarefas($idReducao){
         
     /**
      * fornece a próxima tarefa a ser realizada
@@ -111,9 +138,7 @@ class ReducaoCargaHoraria{
                         numCiInicio,
                         numCiTermino
                    FROM tbreducao
-                  WHERE idServidor = $this->idServidor
-                    AND arquivado <> 1
-                  ORDER BY dtSolicitacao DESC LIMIT 1";
+                  WHERE idReducao = $idReducao";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select,FALSE);
@@ -368,14 +393,14 @@ class ReducaoCargaHoraria{
         $row = $pessoal->select($select,FALSE);
         
         # Verifica se há pendências
-        if($row[1] == 1){
-            $retorno = "Em Pendência";
-        }else{
-            if($row[0] == 0){
-                $retorno = "Em Aberto";
-            }else{
-                $retorno = "Arquivado";
+        if($row[0] == 0){
+            $retorno = "Em Aberto";
+            
+            if($row[1] == 1){
+                $retorno.= "<br/><span title='Existem pendências nessa solicitação de redução de carga horária!' class='warning label'>Com Pendência!</span>";
             }
+        }else{
+            $retorno = "Arquivado";
         }
                                 
         return $retorno;

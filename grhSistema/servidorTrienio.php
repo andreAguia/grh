@@ -264,10 +264,57 @@ if($acesso){
                 }
             }
             
-            $objeto->set_rotinaExtraListar("callout");
-            $objeto->set_rotinaExtraListarParametro($mensagem2);
+            ####
+            
+            function teste($idServidor){
+                
+                # Monta a tabela de tempo averbado
+                $select = 'SELECT dtInicial,
+                        dtFinal,
+                        dias,
+                        empresa,
+                        CASE empresaTipo
+                           WHEN 1 THEN "Pública"
+                           WHEN 2 THEN "Privada"
+                        END,
+                        CASE regime
+                           WHEN 1 THEN "Celetista"
+                           WHEN 2 THEN "Estatutário"
+                           WHEN 3 THEN "Próprio"
+                        END,
+                        cargo,
+                        dtPublicacao,
+                        processo,
+                        idAverbacao
+                   FROM tbaverbacao
+                  WHERE empresaTipo = 1 AND idServidor = '.$idServidor.'
+                ORDER BY 1 desc';
+
+                $pessoal = new Pessoal();
+                $result = $pessoal->select($select);
+
+                $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
+                $align = array("center","center","center","left");
+                $funcao = array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+
+                $tabela = new Tabela();
+                $tabela->set_titulo('Tempo Público Averbado');
+                $tabela->set_conteudo($result);
+                $tabela->set_label($label);
+                $tabela->set_align($align);
+                $tabela->set_funcao($funcao);
+                $tabela->set_idCampo('idAverbacao');
+                #$tabela->set_editar('?fase=editar&id=');
+                #$tabela->set_excluir('?fase=excluir&id=');
+                $tabela->show();
+            }
+            
+            ###
+            
+            $objeto->set_rotinaExtraListar(array("callout","teste"));
+            $objeto->set_rotinaExtraListarParametro(array($mensagem2,$idServidorPesquisado));
                     
-            $objeto->$fase($id);
+            $objeto->listar($id);
             break;          
 
         case "excluir" :	

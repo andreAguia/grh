@@ -676,4 +676,25 @@ function get_nomeSimples($nome){
         }
     }
     
-    ##################################################################
+##########################################################
+
+    function idMatricula($idServidor){
+    /**
+     * Função exibe o id e a matrícula de um servidor
+     * 
+     * Usado quando se deseja nas tabelas exibir as duas informações na mesma coluna
+     */
+
+        $pessoal = new Pessoal();
+    
+        $select = 'SELECT idFuncional,
+                          matricula
+                     FROM tbservidor
+                   WHERE idServidor = '.$idServidor;
+
+       $row = $pessoal->select($select,FALSE);
+       
+       return $row[0]."<br/>".dv($row[1]);
+    }
+
+##########################################################

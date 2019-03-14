@@ -31,6 +31,9 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # Verifica se veio da área de Redução
+    $areaReducao = get_session("areaReducao");
+    
     $jscript = '// Pega os valores da pendêencia
                 var pendencia = $("#pendencia").val();
                 
@@ -123,11 +126,18 @@ if($acesso){
         $grid = new Grid();
         $grid->abreColuna(12);
         
+        # botão de voltar da lista
+        if($areaReducao){
+            $voltar = 'areaBeneficios.php';
+        }else{
+            $voltar = 'servidorMenu.php';
+        }
+        
         # Cria um menu
         $menu = new MenuBar();
 
         # Botão voltar
-        $linkBotao1 = new Link("Voltar",'servidorMenu.php');
+        $linkBotao1 = new Link("Voltar",$voltar);
         $linkBotao1->set_class('button');
         $linkBotao1->set_title('Volta para a página anterior');
         $linkBotao1->set_accessKey('V');
@@ -242,10 +252,6 @@ if($acesso){
                                                     'valor' => 'Em Aberto',
                                                     'operador' => '=',
                                                     'id' => 'emAberto'),  
-                                              array('coluna' => 0,
-                                                    'valor' => 'Em Pendência',
-                                                    'operador' => '=',
-                                                    'id' => 'pendencia'),  
                                               array('coluna' => 0,
                                                     'valor' => 'Arquivado',
                                                     'operador' => '=',
@@ -498,8 +504,15 @@ if($acesso){
                     tituloTable("Tarefas:");
                     br();
                     
+                    # Pega a ultima solicitação
+                    $idReducao = $reducao->get_ultimaSolicitacaoAberto();
+                    
                     # Pega as tarefas
-                    $mensagem = $reducao->get_tarefas();
+                    if(is_null($idReducao)){
+                        $mensagem = NULL;
+                    }else{
+                        $mensagem = $reducao->get_tarefas($idReducao);
+                    }
                 
                     # Verifica se tem mensagem a ser exibida
                     if(!is_null($mensagem)){

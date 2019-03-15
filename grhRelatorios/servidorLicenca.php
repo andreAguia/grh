@@ -25,41 +25,56 @@ if($acesso){
 
     ######
     
+    # pega o parametro (se tiver)
+    $parametro = soNumeros(get('parametro'));
+    
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Licenças e Afastamentos');
     
     br();
-    $select = '(SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
-                        CASE alta
-                           WHEN 1 THEN "Sim"
-                           WHEN 2 THEN "Não"
-                           end,
-                        dtInicial,
-                        numdias,
-                        ADDDATE(dtInicial,numDias-1),
-                        CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
-                        dtPublicacao,
-                        idLicenca
-                   FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                  WHERE idServidor='.$idServidorPesquisado.')
-                  UNION
-                  (SELECT (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                          "",
-                          dtInicial,
-                          tblicencapremio.numdias,
-                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
-                          CONCAT("6&",tblicencapremio.idServidor),
-                          tbpublicacaopremio.dtPublicacao,
-                          idLicencaPremio
-                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                    WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
-                 ORDER BY 3 desc';
+    # select da lista
+    $selectLicença = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                                 CASE alta
+                                    WHEN 1 THEN "Sim"
+                                    WHEN 2 THEN "Não"
+                                    end,
+                                 dtInicial,
+                                 numdias,
+                                 ADDDATE(dtInicial,numDias-1),
+                                 CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
+                                 dtPublicacao,
+                                 idLicenca
+                            FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                           WHERE idServidor='.$idServidorPesquisado;
+    if(!vazio($parametro)){
+        $selectLicença .= ' AND tbtipolicenca.idTpLicenca = '.$parametro.')';
+    }else{
+        $selectLicença .= ')
+                           UNION
+                           (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                                   "",
+                                   dtInicial,
+                                   tblicencapremio.numdias,
+                                   ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                                   CONCAT("6&",tblicencapremio.idServidor),
+                                   tbpublicacaopremio.dtPublicacao,
+                                   idLicencaPremio
+                              FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                             WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
+                          ORDER BY 3 desc';
+    }
 
-    $result = $pessoal->select($select);
+    $result = $pessoal->select($selectLicença);
 
     $relatorio = new Relatorio();   
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
+    
+    # Tiver parâmetro exibe subtitulo
+    if(!vazio($parametro)){
+        $relatorio->set_subtitulo($pessoal->get_nomeTipoLicenca($parametro));
+    }
+    
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_numeroOrdem(TRUE);
     $relatorio->set_numeroOrdemTipo("d");

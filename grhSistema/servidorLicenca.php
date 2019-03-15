@@ -24,6 +24,14 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega o parametro de pesquisa (se tiver)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
+        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
+    }else{ 
+        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
+        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
+    }
 
     # Ordem da tabela
     $orderCampo = get('orderCampo');
@@ -222,6 +230,19 @@ if($acesso){
 
         # botão de voltar da lista
         $objeto->set_voltarLista('servidorMenu.php');
+       
+        # Pega os dados da combo licenca
+        $result = $pessoal->select('SELECT distinct tblicenca.idTpLicenca, tbtipolicenca.nome
+                                      FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                                     WHERE idServidor='.$idServidorPesquisado.'                                         
+                                  ORDER BY 2');
+        array_unshift($result, array(NULL,'-- Todos --')); # Adiciona o valor de nulo
+        
+        # controle de pesquisa
+        $objeto->set_parametroLabel('Pesquisar');
+        $objeto->set_parametroValue($parametro);
+        $objeto->set_tipoCampoPesquisa("combo");
+        $objeto->set_arrayPesquisa($result);
 
         # ordenação
         if(is_null($orderCampo)){
@@ -233,7 +254,7 @@ if($acesso){
         }
 
         # select da lista
-        $objeto->set_selectLista('(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+        $selectLicença = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
@@ -245,7 +266,11 @@ if($acesso){
                                      dtPublicacao,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                               WHERE idServidor='.$idServidorPesquisado.')
+                               WHERE idServidor='.$idServidorPesquisado;
+        if(!vazio($parametro)){
+            $selectLicença .= ' AND tbtipolicenca.idTpLicenca = '.$parametro.')';
+        }else{
+            $selectLicença .= ')
                                UNION
                                (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                                        "",
@@ -257,7 +282,11 @@ if($acesso){
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
-                              ORDER BY 3 desc');
+                              ORDER BY 3 desc';
+        }
+        
+                
+        $objeto->set_selectLista($selectLicença);
 
         # select do edita
         $objeto->set_selectEdita('SELECT idTpLicenca,
@@ -432,7 +461,7 @@ if($acesso){
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Relatório de Licença");
-        $botaoRel->set_url("../grhRelatorios/servidorLicenca.php");
+        $botaoRel->set_url("../grhRelatorios/servidorLicenca.php?parametro=".$parametro);
         $botaoRel->set_target("_blank");
         
         $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));

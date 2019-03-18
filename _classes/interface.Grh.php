@@ -189,14 +189,24 @@ class Grh{
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(6);
+        $menu = new MenuGrafico(7);
+        $botao = new BotaoGrafico();
+        
+        $botao->set_label('Procedimentos');
+        if(Verifica::acesso($idUsuario,1)){
+            $botao->set_url('areaProcedimentos.php');
+        }else{
+            $botao->set_onClick("alert('Rotina ainda não implementada.');");
+        }
+        $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Àrea de Procedimentos da GRH');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
         $botao->set_url('areaFeriasExercicio.php?origem=1');
         $botao->set_imagem(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Férias');
-        $botao->set_accesskey('F');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -204,7 +214,6 @@ class Grh{
         $botao->set_url('areaLicencaPremio.php');
         $botao->set_imagem(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Licença Prêmio');
-        #$botao->set_accesskey('F');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -212,7 +221,6 @@ class Grh{
         $botao->set_url('areaTre.php?origem=1');
         $botao->set_imagem(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Controle de Folgas do TRE');
-        #$botao->set_accesskey('F');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -220,13 +228,11 @@ class Grh{
         $botao->set_url('estatistica.php?origem=1');
         $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Análise estatísticas');
-        #$botao->set_accesskey('F');
         $menu->add_item($botao);        
         
         $botao = new BotaoGrafico();
         $botao->set_label('Benefícios');
         $botao->set_url('areaBeneficios.php');
-        #$botao->set_url('#');
         $botao->set_imagem(PASTA_FIGURAS.'beneficios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);
@@ -234,7 +240,6 @@ class Grh{
         $botao = new BotaoGrafico();
         $botao->set_label('Recadastramento');
         $botao->set_url('areaRecadastramento.php');
-        #$botao->set_url('#');
         $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Recadastramento de Servidores');
         $menu->add_item($botao);

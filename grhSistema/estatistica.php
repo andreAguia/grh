@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -715,9 +714,11 @@ if($acesso)
             
         case "sexo":
             titulotable("Estatística por Sexo");
-            br();
-            
+            br();            
             $grid2 = new Grid();
+            
+            ##############
+            
             $grid2->abreColuna(3);
             
             # Geral - Por Sexo
@@ -830,10 +831,11 @@ if($acesso)
                 $tabela->show();
 
                 $grid3->fechaColuna();
-                $grid3->abreColuna(6);
 
                 ##############
-
+                
+                $grid3->abreColuna(6);
+                
                 # Sexo por Cargo
                 $selectGrafico = 'SELECT tbtipocargo.cargo, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
@@ -907,6 +909,89 @@ if($acesso)
                 $tabela->show();
 
                 $grid3->fechaColuna();
+                
+                ##############
+                
+                $grid3->abreColuna(6);
+                
+                # Sexo por Escolaridade
+                $selectGrafico = 'SELECT tbescolaridade.escolaridade, tbpessoa.sexo, count(tbservidor.idServidor) as jj
+                                    FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                                    JOIN tbformacao USING (idPessoa)
+                                                    JOIN tbescolaridade USING (idEscolaridade)
+                                   WHERE tbservidor.situacao = 1 AND idEscolaridade <> 12
+                                GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
+                                ORDER BY tbescolaridade.idEscolaridade';
+
+                $servidores = $pessoal->select($selectGrafico);
+
+                # Novo array 
+                $novoArray2 = array();
+
+                # Valores anteriores
+                $escolaridadeAnterior = NULL;
+                $sexoAnterior = NULL;
+                $contagemAnterior = NULL;
+
+                # Contador 
+                $contador = 1;
+
+                # Melhora a apresentação da tabela
+                foreach ($servidores as $value) {
+                    # Carrega as variáveis de armazenamento para comparação 
+                    $escolaridade = $value[0];
+                    $sexo = $value[1];
+                    $contagem = $value[2];
+
+                    # Verifica se mudou de diretoria
+                    if($escolaridade <> $escolaridadeAnterior){
+                        
+                        # O normal é ser diferente no contador 1. 
+                        # Significa que tem servidores dos 2 generos (masculino e feminino)
+                        if($contador == 1){
+                            $contador = 2;
+
+                            # passa os valores para as variaveis anteriores
+                            $escolaridadeAnterior = $escolaridade;
+                            $sexoAnterior = $sexo;
+                            $contagemAnterior = $contagem;
+                        }else{
+                            # Se for diferente no 2 significa que só tem servidores de um único genero nesse cargo
+                            if($sexo == "feminino"){
+                                array_push($novoArray2,array($escolaridadeAnterior,$contagemAnterior,0,$contagemAnterior+$contagem));
+                            }else{
+                                array_push($novoArray2,array($escolaridadeAnterior,0,$contagemAnterior,$contagemAnterior+$contagem));
+                            }
+
+                            # passa os valores para as variaveis anteriores
+                            $escolaridadeAnterior = $escolaridade;
+                            $sexoAnterior = $sexo;
+                            $contagemAnterior = $contagem;
+                            $contador = 1;
+                        }
+                    }else{
+                        array_push($novoArray2,array($escolaridade,$contagemAnterior,$contagem,$contagemAnterior+$contagem));
+                        $contador = 1;
+                    }
+                }
+
+                # Soma a coluna do count
+                $total = array_sum(array_column($servidores, "jj"));            
+
+                # Tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($novoArray2);
+                $tabela->set_titulo("por Escolaridade");
+                $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
+                $tabela->set_width(array(55,15,15,15));
+                $tabela->set_align(array("left","center"));
+                $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->show();
+
+                $grid3->fechaColuna();
+                
+                ##############
+                
                 $grid3->fechaGrid();
             
             $grid2->fechaColuna();

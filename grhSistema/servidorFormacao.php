@@ -60,17 +60,17 @@ if($acesso)
     }
 
     # select da lista
-    $objeto->set_selectLista('SELECT tbescolaridade.escolaridade,
+    $objeto->set_selectLista('SELECT escolaridade,
                                      habilitacao,
                                      instEnsino,
                                      anoTerm,                              
                                      idFormacao
-                                FROM tbformacao JOIN tbescolaridade ON (tbformacao.escolaridade = tbescolaridade.idEscolaridade)
+                                FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
                           WHERE idPessoa='.$idPessoa.'
                        ORDER BY anoTerm desc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT escolaridade,
+    $objeto->set_selectEdita('SELECT idEscolaridade,
                                      habilitacao,
                                      instEnsino,                                     
                                      horas,
@@ -112,13 +112,13 @@ if($acesso)
     # Pega os dados da combo escolaridade
     $escolaridade = new Pessoal();
     $result = $escolaridade->select('SELECT idEscolaridade, 
-                                            Escolaridade
+                                            escolaridade
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
     array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'escolaridade',
+    $objeto->set_campos(array( array ( 'nome' => 'idEscolaridade',
                                        'label' => 'Nível:',
                                        'tipo' => 'combo',
                                        'array' => $result,

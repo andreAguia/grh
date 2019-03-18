@@ -78,7 +78,7 @@ if($acesso)
             $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idescolaridade,escolaridade,obs,
+    $objeto->set_selectLista ('SELECT idEscolaridade,escolaridade,obs,
                                       idescolaridade
                                  FROM tbescolaridade
                                 WHERE escolaridade LIKE "%'.$parametro.'%"
@@ -103,8 +103,8 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Id","Escolaridade","Obs"));
-    $objeto->set_width(array(5,40,45));
-    $objeto->set_align(array("center","center","left"));
+    #$objeto->set_width(array(5,40,45));
+    $objeto->set_align(array("center","left","left"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -113,7 +113,7 @@ if($acesso)
     $objeto->set_tabela('tbescolaridade');
 
     # Nome do campo id
-    $objeto->set_idCampo('idescolaridade');
+    $objeto->set_idCampo('idEscolaridade');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);

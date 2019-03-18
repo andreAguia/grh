@@ -635,11 +635,11 @@ if($acesso){
     if($postFormacao){
         tituloRelatorio('Formação');
 
-        $select = 'SELECT tbescolaridade.Escolaridade,
+        $select = 'SELECT tbescolaridade.escolaridade,
                             habilitacao,
                             instEnsino,
                             anoTerm
-                        FROM tbformacao join tbescolaridade on (tbformacao.escolaridade = tbescolaridade.idEscolaridade)
+                        FROM tbformacao join tbescolaridade USING (idEscolaridade)
                     WHERE idPessoa = '.$idPessoa.'
                     ORDER BY anoterm desc';
 

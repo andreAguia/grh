@@ -108,26 +108,26 @@ if($acesso)
 
     # Pega os dados da combo concurso
     $concurso = $pessoal->select('SELECT idconcurso,
-                                       concat(anobase," - ",regime) as nome
-                                  FROM tbconcurso
-                              ORDER BY nome');
+                                         concat(anobase," - ",regime) as nome
+                                    FROM tbconcurso
+                                ORDER BY nome');
 
     array_unshift($concurso, array(NULL,NULL)); 
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
-                                       concat(tbtipocargo.cargo," - ",tbarea.area," - ",nome)
-                                  FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                               LEFT JOIN tbarea USING (idarea)
-                              ORDER BY tbtipocargo.cargo,tbarea.area,nome');
+                                      concat(tbtipocargo.cargo," - ",tbarea.area," - ",nome)
+                                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                              LEFT JOIN tbarea USING (idarea)
+                             ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
     array_unshift($cargo, array(0,NULL)); 
 
     # Pega os dados da combo situação
     $situacao = $pessoal->select('SELECT idsituacao,
-                                       situacao
-                                  FROM tbsituacao
-                              ORDER BY situacao');
+                                         situacao
+                                    FROM tbsituacao
+                                ORDER BY situacao');
 
     array_unshift($situacao, array(NULL,NULL)); 
     

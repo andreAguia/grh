@@ -38,7 +38,7 @@ if($acesso)
                         instEnsino,
                         anoTerm,                              
                         idFormacao
-                   FROM tbformacao JOIN tbescolaridade ON (tbformacao.escolaridade = tbescolaridade.idEscolaridade)
+                   FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
              WHERE idPessoa = $idPessoa
           ORDER BY anoTerm";
 

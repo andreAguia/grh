@@ -926,66 +926,67 @@ if($acesso){
                 $servidores = $pessoal->select($selectGrafico);
 
                 # Novo array 
-                $novoArray2 = array();
+                $arrayEscolaridade = array();
 
                 # Valores anteriores
                 $escolaridadeAnterior = NULL;
-                $sexoAnterior = NULL;
-                $contagemAnterior = NULL;
+                
+                # inicia as variáveis
+                $masc = 0;
+                $femi = 0;
+                $totalMasc = 0;
+                $totalFemi = 0;
+                $total = 0;
 
-                # Contador 
-                $contador = 1;
-
-                # Melhora a apresentação da tabela
+                # Modelar o novo array
                 foreach ($servidores as $value) {
-                    # Carrega as variáveis de armazenamento para comparação 
+                    # Carrega as variáveis
                     $escolaridade = $value[0];
-                    $sexo = $value[1];
+                    $sexo = $value[1];                    
                     $contagem = $value[2];
 
-                    # Verifica se mudou de diretoria
+                    # Verifica se mudou de escolaridade
                     if($escolaridade <> $escolaridadeAnterior){
-                        
-                        # O normal é ser diferente no contador 1. 
-                        # Significa que tem servidores dos 2 generos (masculino e feminino)
-                        if($contador == 1){
-                            $contador = 2;
-
-                            # passa os valores para as variaveis anteriores
+                        if(is_null($escolaridadeAnterior)){
                             $escolaridadeAnterior = $escolaridade;
-                            $sexoAnterior = $sexo;
-                            $contagemAnterior = $contagem;
                         }else{
-                            # Se for diferente no 2 significa que só tem servidores de um único genero nesse cargo
-                            if($sexo == "feminino"){
-                                array_push($novoArray2,array($escolaridadeAnterior,$contagemAnterior,0,$contagemAnterior+$contagem));
-                            }else{
-                                array_push($novoArray2,array($escolaridadeAnterior,0,$contagemAnterior,$contagemAnterior+$contagem));
-                            }
-
-                            # passa os valores para as variaveis anteriores
+                            $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
+                            $masc = 0;
+                            $femi = 0;
                             $escolaridadeAnterior = $escolaridade;
-                            $sexoAnterior = $sexo;
-                            $contagemAnterior = $contagem;
-                            $contador = 1;
+                            $total += ($femi+$masc);
                         }
-                    }else{
-                        array_push($novoArray2,array($escolaridade,$contagemAnterior,$contagem,$contagemAnterior+$contagem));
-                        $contador = 1;
                     }
+                    
+                    if($sexo == 'Masculino'){
+                       $masc = $contagem;
+                       $totalMasc += $masc;
+                    }else{
+                       $femi = $contagem;
+                       $totalFemi += $femi; 
+                    }   
                 }
+                
+                $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
 
                 # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));            
+                $total = array_sum(array_column($servidores, "jj"));          
+                
+                $arrayEscolaridade[] = array("Total",$totalFemi,$totalMasc,$total);
 
                 # Tabela
                 $tabela = new Tabela();
-                $tabela->set_conteudo($novoArray2);
+                $tabela->set_conteudo($arrayEscolaridade);
                 $tabela->set_titulo("por Escolaridade");
                 $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
                 $tabela->set_width(array(55,15,15,15));
                 $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total de Servidores: ".$total);
+                $tabela->set_totalRegistro(FALSE);
+                $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'estatisticaTotal')));
+    
                 $tabela->show();
 
                 $grid3->fechaColuna();

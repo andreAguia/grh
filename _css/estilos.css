@@ -297,6 +297,12 @@ p#estatisticaTexto{
     margin: 0px;
 }
 
+
+tr#estatisticaTotal{
+    background-color: #02548b;
+    color: #fff;
+}
+
 /*******************************************
  * Publicação de Licença Prêmio
  *******************************************/

@@ -20,7 +20,7 @@ if($acesso){
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase','geral');
+    $fase = get('fase','inicial');
     $diretoria = get('diretoria');
     $grafico = get('grafico');
     
@@ -66,47 +66,64 @@ if($acesso){
 
     $menu1->show();
     
+    titulo("Estatística");
+    br();
+
+    $grid = new Grid();
+
+    ## Coluna do menu            
+    $grid->abreColuna(12,3);
+
+        # Número de Servidores
+        $painel = new Callout();
+        $painel->abre();
+            $numServidores = $pessoal->get_numServidoresAtivos();
+            p($numServidores,"estatisticaNumero");
+            p("Servidores Ativos","estatisticaTexto");
+        $painel->fecha(); 
+
+        ###############################
+
+        # Menu de tipos
+        $menu = new Menu();
+        $menu->add_item('titulo','Detalhada');
+        $menu->add_item('link','Por Idade','?fase=idade1');
+        $menu->add_item('link','Por Faixa Etária','?fase=faixaEtaria');
+        $menu->add_item('link','Por Perfil','?fase=perfil');
+        $menu->add_item('link','Por Cargo','?fase=cargo');
+
+        $menu->add_item('link','Por Lotação','?fase=lotacao');
+        $menu->add_item('link','Por Sexo','?fase=sexo');
+        $menu->add_item('link','Por Idade','?fase=idade');
+        $menu->show();
+
+    $grid->fechaColuna();
+    
     ################################################################
     
-    switch ($fase){   
-        case "geral":
-            titulo("Estatística Geral");
-            br();
+    # Coluna de Conteúdo
+    $grid->abreColuna(12,9);
+    
+    switch ($fase){
+        case "inicial":
             
-            $grid = new Grid();
+            break;
+        
+    ################################################################
+        
+        case "idade1":
             
-            ## Coluna do menu            
-            $grid->abreColuna(12,6,3);
+            # Abre um callout
+            $painal = new Callout();
+            $painel->abre();
             
-                # Número de Servidores
-                $painel = new Callout();
-                $painel->abre();
-                    $numServidores = $pessoal->get_numServidoresAtivos();
-                    p($numServidores,"estatisticaNumero");
-                    p("Servidores Ativos","estatisticaTexto");
-                $painel->fecha(); 
-                
-                ###############################
-                        
-                # Menu de tipos
-                $menu = new Menu();
-                $menu->add_item('titulo','Detalhada');
-                $menu->add_item('link','Por Cargo','?fase=cargo');
-                $menu->add_item('link','Por Lotação','?fase=lotacao');
-                $menu->add_item('link','Por Sexo','?fase=sexo');
-                $menu->add_item('link','Por Idade','?fase=idade');
-                $menu->show();
-                
-            $grid->fechaColuna();
+            # Título
+            tituloTable("Por Idade");
             
-            # Coluna de Conteúdo
-            $grid->abreColuna(12,6,9);
-            
-            ###############################
-            
-            ## Por Idade 
+            # Cria as colunas
             $grid2 = new Grid();
-            $grid2->abreColuna(12);
+            $grid2->abreColuna(4);
+            br();
 
             # Geral - Por Idade
             $selectGrafico = 'SELECT count(tbservidor.idServidor) as jj,
@@ -132,13 +149,6 @@ if($acesso){
             $dados[] = array("Menor Idade",menorValor($idades));
             $dados[] = array("Idade Média",media_aritmetica($idades));
 
-            # Chart
-            tituloTable("por Idade");
-            $chart = new Chart("ColumnChart",$dados);
-            $chart->set_idDiv("idade");
-            $chart->set_legend(FALSE);
-            $chart->show();
-
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
@@ -149,79 +159,324 @@ if($acesso){
             $tabela->set_rodape("Total de Servidores: ".$total);
             $tabela->set_linkTituloTitle("Exibe detalhes");
             $tabela->show();
-
-            $grid2->fechaColuna();
-
-            #################################
-            
-            ## Por Pefil
-            
-            $grid2->abreColuna(12,6,4);
-            
-                # Geral - Por Perfil
-                $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as jj
-                                    FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                                   WHERE tbservidor.situacao = 1
-                                GROUP BY tbperfil.nome
-                                ORDER BY 2 DESC ';
-
-                $servidores = $pessoal->select($selectGrafico);
-                
-                tituloTable("por Perfil");
-                $chart = new Chart("Pie",$servidores);
-                $chart->set_idDiv("perfil");
-                $chart->set_legend(FALSE);
-                $chart->show();
-
-                # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));
-
-                # Exemplo de tabela simples
-                $tabela = new Tabela();
-                #$tabela->set_titulo("por Perfil");
-                $tabela->set_conteudo($servidores);
-                $tabela->set_label(array("Perfil","Servidores"));
-                $tabela->set_width(array(80,20));
-                $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total de Servidores: ".$total);
-                $tabela->show();
-                
-            $grid2->fechaColuna();
-                
-            ###############################
-
-            ## Por Cargo           
-            $grid2->abreColuna(12,6,4);
-                
-                # Geral - Por Cargo
-                $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
-                                    FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
-                                                    LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                   WHERE situacao = 1
-                                GROUP BY tbtipocargo.tipo
-                                ORDER BY 2 DESC ';
-
-                $servidores = $pessoal->select($selectGrafico);
-                
-                tituloTable("por Cargo");
-                $chart = new Chart("Pie",$servidores);
-                $chart->set_idDiv("cargo");
-                $chart->set_legend(FALSE);
-                $chart->show();
-
-                # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));
-
-                # Exemplo de tabela simples
-                $tabela = new Tabela();                
-                $tabela->set_conteudo($servidores);
-                $tabela->set_label(array("Tipo do Cargo","Servidores"));
-                $tabela->set_width(array(80,20));
-                $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total de Servidores: ".$total);
-                $tabela->show();
             
             $grid2->fechaColuna();
+            $grid2->abreColuna(8);
+            
+            # Chart
+            $chart = new Chart("ColumnChart",$dados);
+            $chart->set_idDiv("idade");
+            $chart->set_legend(FALSE);
+            $chart->set_label(array("Idade","Descrição"));
+            $chart->show();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12);            
+            
+            $select = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade,
+                              count(tbservidor.idServidor) as jj
+                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                               WHERE situacao = 1
+                            GROUP BY idade
+                            ORDER BY 1';
+
+            $servidores = $pessoal->select($select);
+            
+            # Chart
+            #tituloTable("por Cada Idade");
+            $chart = new Chart("ColumnChart",$servidores);
+            $chart->set_idDiv("faixa");
+            $chart->set_label(array("Servidores","Idade"));
+            $chart->set_legend(FALSE);
+            $chart->set_idDiv("cadaIdade");
+            $chart->show();
+            
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_titulo("por Cada Idade");
+            $tabela->set_label(array("Idade","Servidores"));
+            $tabela->set_align(array("center"));
+            $tabela->set_width(array(50,50));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            #$tabela->show();
+            
+            $grid2->fechaGrid();
+            
+            $painel->fecha();            
+            break;
+        
+    ################################################################   
+        
+        case "faixaEtaria":
+            
+            # Abre um callout
+            $panel = new Callout();
+            $panel->abre();
+            
+            $grid3 = new Grid();
+            $grid3->abreColuna(12);
+            
+            # Faixa Etária Geral
+            $select = "SELECT CASE 
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN '21 a 30'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN '31 a 40'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN '41 a 50'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN '51 a 60'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN '61 a 70'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN '71 a 80'
+                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN '81 a 90'
+            END,
+            COUNT(idPessoa),
+            ROUND((COUNT(idPessoa)*100)/".$numServidores.",1)
+            FROM tbpessoa JOIN tbservidor USING (idPessoa)
+           WHERE situacao = 1
+            GROUP BY 1 ORDER BY 1";
+            
+            $servidores = $pessoal->select($select);
+            
+            # Chart
+            tituloTable("por Faixa Etária");
+            $chart = new Chart("ColumnChart",$servidores);
+            $chart->set_idDiv("faixa");
+            $chart->set_label(array("Servidores","Faixa"));
+            $chart->set_legend(FALSE);
+            $chart->show();
+            
+            br(2);
+            $grid4 = new Grid();
+            $grid4->abreColuna(5);
+            
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            #$tabela->set_titulo("por Faixa Etária");
+            $tabela->set_label(array("Faixa","Servidores","%"));
+            $tabela->set_align(array("center"));
+            $tabela->set_rodape("Total de Servidores: ".$numServidores);
+            $tabela->show();
+            
+            $grid4->fechaColuna();      
+            $grid4->abreColuna(7);
+            
+            # Chart            
+            $chart = new Chart("Pie",$servidores);
+            $chart->set_idDiv("faixaPie");
+            $chart->set_tamanho($largura = 400,$altura = 400);
+            $chart->set_legend(FALSE);
+            $chart->show();
+            
+            
+            $grid4->fechaColuna();            
+            $grid4->fechaGrid();            
+            $panel->fecha();
+            break;
+            
+    ################################################################   
+        
+        case "perfil":
+            
+            # Abre um callout
+            $panel = new Callout();
+            $panel->abre();
+            
+            # Título
+            tituloTable("por Perfil");
+
+            $grid3 = new Grid();
+            $grid3->abreColuna(4);
+            br();
+            
+            # Geral - Por Perfil
+            $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                               WHERE tbservidor.situacao = 1
+                            GROUP BY tbperfil.nome
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+            
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Tabela
+            $tabela = new Tabela();
+            #$tabela->set_titulo("por Perfil");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Perfil","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);                
+            $tabela->show();
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(2);
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
+
+            # Gráfico
+            $chart = new Chart("Pie",$servidores);
+            $chart->set_idDiv("perfil");
+            $chart->set_legend(FALSE);
+            $chart->set_tamanho($largura = 300,$altura = 300);
+            $chart->show();
+
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
+            $panel->fecha();
+            break;
+            
+    ################################################################        
+
+            case "cargo":
+            
+            # Abre um callout
+            $panel = new Callout();
+            $panel->abre();
+            
+            # Título
+            tituloTable("por Cargo");
+
+            $grid3 = new Grid();
+            $grid3->abreColuna(4);
+            br();
+
+            # Geral - Por Cargo
+            $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE situacao = 1
+                            GROUP BY tbtipocargo.tipo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();                
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Tipo do Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+            
+            
+            $grid3->fechaColuna();
+            $grid3->abreColuna(2);
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
+
+            #tituloTable("por Cargo");
+            $chart = new Chart("Pie",$servidores);
+            $chart->set_idDiv("cargo");
+            $chart->set_legend(FALSE);
+            $chart->set_tamanho($largura = 300,$altura = 300);
+            $chart->show();
+            
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
+            
+            # Adm/Tec
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                                 AND tbtipocargo.tipo = "Adm/Tec" ';
+            
+            if($parametroPerfil <> "*"){
+                $selectGrafico .= ' AND idPerfil = '.$parametroPerfil;   
+            }
+
+            $selectGrafico .= ' GROUP BY tbtipocargo.cargo
+                        ORDER BY 1 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+            tituloTable("Administrativos e Técnicos");
+            $chart = new Chart("Pie",$servidores);
+            $chart->set_idDiv("administrativos");
+            #$chart->set_legend(FALSE);
+            $chart->show();
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            #$tabela->set_titulo("Administrativos e Técnicos");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
+
+            # Professores
+            $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor JOIN tbcargo USING (idCargo)
+                                                JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbservidor.situacao = 1
+                                 AND tbtipocargo.tipo = "Professor" ';
+            
+            if($parametroPerfil <> "*"){
+                $selectGrafico .= ' AND idPerfil = '.$parametroPerfil;   
+            }
+                                 
+            $selectGrafico .= ' GROUP BY tbtipocargo.cargo
+                            ORDER BY 1 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+            tituloTable("Professores");
+            $chart = new Chart("Pie",$servidores);
+            $chart->set_idDiv("professores");
+            #$chart->set_legend(FALSE);
+            $chart->show();
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            #$tabela->set_titulo("Professores");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Cargo","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->show();            
+                
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
+            $panel->fecha();
+            break;
+            
+    ################################################################          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+        
+                
+            
             
             ###############################
             
@@ -751,7 +1006,10 @@ if($acesso){
     ##########################################            
 
                 # Sexo por Lotação
-                tituloTable("Por Lotação");
+                $painel = new Callout();
+                $painel->abre();
+                    
+                titulo("Por Lotação");
                 br();
                 
                 $grid3 = new Grid();
@@ -925,18 +1183,31 @@ if($acesso){
 
 
                 $grid3->fechaColuna();
+                $grid3->fechaGrid();
+                
+                $painel->fecha();
 
         ##########################################
-                
-                $grid3->abreColuna(6);
                 
                 # Sexo por Cargo
+                
+                $painel = new Callout();
+                $painel->abre();
+                
+                # Título
+                titulo("Por Cargo");
+                br();
+                
+                $grid3 = new Grid();
+                $grid3->abreColuna(6);
+                                
                 # Adm/Tec
                 $selectGrafico = 'SELECT tbtipocargo.cargo, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                                   JOIN tbcargo USING (idCargo)
                                                   JOIN tbtipocargo USING (idTipoCargo)
                                    WHERE tbservidor.situacao = 1
+                                   AND tbtipocargo.tipo = "Adm/Tec"
                                 GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                                 ORDER BY 1';
 
@@ -994,7 +1265,7 @@ if($acesso){
                 # Tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($arrayEscolaridade);
-                $tabela->set_titulo("por Cargo");
+                $tabela->set_titulo("Adm/Tec");
                 $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
                 $tabela->set_width(array(55,15,15,15));
                 $tabela->set_align(array("left","center"));
@@ -1012,12 +1283,13 @@ if($acesso){
                 
                 $grid3->abreColuna(6);
                 
-                # Adm/Tec
+                # Professor
                 $selectGrafico = 'SELECT tbtipocargo.cargo, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                                   JOIN tbcargo USING (idCargo)
                                                   JOIN tbtipocargo USING (idTipoCargo)
                                    WHERE tbservidor.situacao = 1
+                                   AND tbtipocargo.tipo = "Professor"
                                 GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                                 ORDER BY 1';
 
@@ -1075,7 +1347,7 @@ if($acesso){
                 # Tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($arrayEscolaridade);
-                $tabela->set_titulo("por Cargo");
+                $tabela->set_titulo("Professor");
                 $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
                 $tabela->set_width(array(55,15,15,15));
                 $tabela->set_align(array("left","center"));
@@ -1089,17 +1361,34 @@ if($acesso){
 
 
                 $grid3->fechaColuna();
+                $grid3->fechaGrid();
+                
+                $painel->fecha();
                 
     #########################################
                 
+                # Por Escolaridade                
+                $painel = new Callout();
+                $painel->abre();
+                                
+                # Título
+                titulo("Por Escolaridade");
+                br();
+                
+                # Monta o grid
+                $grid3 = new Grid();
                 $grid3->abreColuna(6);
                 
-                # Sexo por Escolaridade
+                # Adm/Tec
                 $selectGrafico = 'SELECT tbescolaridade.escolaridade, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                                     JOIN tbformacao USING (idPessoa)
                                                     JOIN tbescolaridade USING (idEscolaridade)
-                                   WHERE tbservidor.situacao = 1 AND idEscolaridade <> 12
+                                                    JOIN tbcargo USING (idCargo)
+                                                    JOIN tbtipocargo USING (idTipoCargo)
+                                   WHERE tbservidor.situacao = 1
+                                   AND idEscolaridade <> 12
+                                   AND tbtipocargo.tipo = "Adm/Tec"
                                 GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
                                 ORDER BY tbescolaridade.idEscolaridade';
 
@@ -1157,7 +1446,7 @@ if($acesso){
                 # Tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($arrayEscolaridade);
-                $tabela->set_titulo("por Escolaridade");
+                $tabela->set_titulo("Adm/Tec");
                 $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
                 $tabela->set_width(array(55,15,15,15));
                 $tabela->set_align(array("left","center"));
@@ -1170,16 +1459,97 @@ if($acesso){
                 $tabela->show();
 
                 $grid3->fechaColuna();
+
+        ##########################################
                 
-                ##############
+                $grid3->abreColuna(6);               
                 
+                
+                # Professor
+                $selectGrafico = 'SELECT tbescolaridade.escolaridade, tbpessoa.sexo, count(tbservidor.idServidor) as jj
+                                    FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                                    JOIN tbformacao USING (idPessoa)
+                                                    JOIN tbescolaridade USING (idEscolaridade)
+                                                    JOIN tbcargo USING (idCargo)
+                                                    JOIN tbtipocargo USING (idTipoCargo)
+                                   WHERE tbservidor.situacao = 1
+                                   AND idEscolaridade <> 12
+                                   AND tbtipocargo.tipo = "Professor"
+                                GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
+                                ORDER BY tbescolaridade.idEscolaridade';
+
+                $servidores = $pessoal->select($selectGrafico);
+
+                # Novo array 
+                $arrayEscolaridade = array();
+
+                # Valores anteriores
+                $escolaridadeAnterior = NULL;
+                
+                # inicia as variáveis
+                $masc = 0;
+                $femi = 0;
+                $totalMasc = 0;
+                $totalFemi = 0;
+                $total = 0;
+
+                # Modelar o novo array
+                foreach ($servidores as $value) {
+                    # Carrega as variáveis
+                    $escolaridade = $value[0];
+                    $sexo = $value[1];                    
+                    $contagem = $value[2];
+
+                    # Verifica se mudou de escolaridade
+                    if($escolaridade <> $escolaridadeAnterior){
+                        if(is_null($escolaridadeAnterior)){
+                            $escolaridadeAnterior = $escolaridade;
+                        }else{
+                            $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
+                            $masc = 0;
+                            $femi = 0;
+                            $escolaridadeAnterior = $escolaridade;
+                            $total += ($femi+$masc);
+                        }
+                    }
+                    
+                    if($sexo == 'Masculino'){
+                       $masc = $contagem;
+                       $totalMasc += $masc;
+                    }else{
+                       $femi = $contagem;
+                       $totalFemi += $femi; 
+                    }   
+                }
+                
+                $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
+
+                # Soma a coluna do count
+                $total = array_sum(array_column($servidores, "jj"));          
+                
+                $arrayEscolaridade[] = array("Total",$totalFemi,$totalMasc,$total);
+
+                # Tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($arrayEscolaridade);
+                $tabela->set_titulo("Professor");
+                $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
+                $tabela->set_width(array(55,15,15,15));
+                $tabela->set_align(array("left","center"));
+                $tabela->set_totalRegistro(FALSE);
+                $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'estatisticaTotal')));
+    
+                $tabela->show();
+
+                $grid3->fechaColuna();                
                 $grid3->fechaGrid();
             
             $grid2->fechaColuna();
             $grid2->fechaGrid();
-            
-            
-            hr();
+            $painel->fecha();
             break;
             
 ####################################################################################################
@@ -1515,67 +1885,17 @@ if($acesso){
             
             ############################################################
             
-            $grid2->abreColuna(6); 
+            $grid2->abreColuna(9); 
             
-            # Faixa Etária Geral
-            $select = "SELECT CASE 
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN 'de 21 a 30'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN 'de 31 a 40'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN 'de 41 a 50'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN 'de 51 a 60'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN 'de 61 a 70'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN 'de 71 a 80'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN 'de 81 a 90'
-            END,
-            COUNT(idPessoa),
-            ROUND((COUNT(idPessoa)*100)/".$total.",1)
-            FROM tbpessoa JOIN tbservidor USING (idPessoa)
-           WHERE situacao = 1
-            GROUP BY 1 ORDER BY 1";
             
-            $servidores = $pessoal->select($select);
             
-            # Chart
-            tituloTable("por Faixa Etária");
-            $chart = new Chart("Pie",$servidores);
-            $chart->set_idDiv("faixa");
-            $chart->set_legend(FALSE);
-            $chart->show();
+            ############################33
             
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($servidores);
-            #$tabela->set_titulo("por Faixa Etária");
-            $tabela->set_label(array("Faixa","Servidores","%"));
-            $tabela->set_align(array("center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
             
-            $grid2->fechaColuna();
             
-            ############################################################
             
-            $grid2->abreColuna(3);
-            
-            $select = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade,
-                              count(tbservidor.idServidor) as jj
-                                FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1
-                            GROUP BY idade
-                            ORDER BY 1';
-
-            $servidores = $pessoal->select($select);
-            
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($servidores);
-            $tabela->set_titulo("por Cada Idade");
-            $tabela->set_label(array("Idade","Servidores"));
-            $tabela->set_align(array("center"));
-            $tabela->set_width(array(50,50));
-            $tabela->set_rodape("Total de Servidores: ".$total);
-            $tabela->show();
+            $grid3->fechaColuna();            
+            $grid3->fechaGrid();
 
             $grid2->fechaColuna();            
             $grid2->fechaGrid();           

@@ -75,7 +75,7 @@ if($acesso){
                                       CASE planoAtual                                        
                                             WHEN 1 THEN "Vigente"
                                             ELSE "Antigo"
-                                       end,                                  
+                                       end,
                                       idPlano
                                  FROM tbplano
                                 WHERE numDecreto LIKE "%'.$parametro.'%"
@@ -105,10 +105,13 @@ if($acesso){
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual"));
+    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual","Lei"));
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array (NULL,NULL,NULL,"date_to_php","date_to_php","date_to_php"));
+    
+    $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,NULL,'PlanoCargos']);
+    $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,NULL,'exibeLei']);
 
     $objeto->set_formatacaoCondicional(array(
                                              array('coluna' => 6,

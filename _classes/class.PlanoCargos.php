@@ -357,5 +357,34 @@ class PlanoCargos{
         $menu1->show();
     }
 
-    ##########################################################
+    ###########################################################
+    
+    public function exibeLei($idPlano){
+    /**
+     * Exibe um link para a lei quando o campo link tiver sido preenchido
+     * 
+     * @param $idPlano integer NULL O id do plano
+     * 
+     * @syntax $plano->exibeLei($idPlano);
+     */
+    
+        # Pega os projetos cadastrados
+        $select = 'SELECT link
+                     FROM tbplano
+                     WHERE idPlano = '.$idPlano;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,false);
+        
+        if(is_null($row[0])){
+            echo "-";
+        }else{
+            $link = new Link(NULL,$row[0],"Exibe a Lei");
+            $link->set_imagem(PASTA_FIGURAS_GERAIS."ver.png",20,20);
+            $link->set_target("_blank");
+            $link->show();     
+        }
+    }
+    
+    ###########################################################
 }

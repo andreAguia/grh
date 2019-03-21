@@ -105,7 +105,7 @@ if($acesso){
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual","Lei"));
+    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual","DO"));
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array (NULL,NULL,NULL,"date_to_php","date_to_php","date_to_php"));
@@ -235,8 +235,8 @@ if($acesso){
             
             # Texto da Lei
             if(!vazio($dados[4])){
-                $botaoRel = new Button("Lei","../_legislacao/".$dados[4]);
-                $botaoRel->set_title("Texto da Lei");
+                $botaoRel = new Button("Diário Oficial","../_legislacao/".$dados[4]);
+                $botaoRel->set_title("Publicação da Lei");
                 $botaoRel->set_target("_blank");
                 $menu->add_link($botaoRel,"right");
             }

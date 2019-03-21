@@ -379,7 +379,7 @@ class PlanoCargos{
         if(is_null($row[0])){
             echo "-";
         }else{
-            $link = new Link(NULL,$row[0],"Exibe a Lei");
+            $link = new Link(NULL,"../_legislacao/".$row[0],"Exibe a Lei");
             $link->set_imagem(PASTA_FIGURAS_GERAIS."ver.png",20,20);
             $link->set_target("_blank");
             $link->show();     

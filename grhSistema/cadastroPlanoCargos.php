@@ -187,7 +187,7 @@ if($acesso){
         array ('linha' => 3,
                'col' => 12,
                'nome' => 'link',
-               'label' => 'Link do Decreto ou Lei:',
+               'label' => 'Nome do arquivo da Lei:',
                'title' => 'texto do Decreto',
                'tipo' => 'texto',
                'bloqueadoEsconde' => TRUE,
@@ -235,7 +235,7 @@ if($acesso){
             
             # Texto da Lei
             if(!vazio($dados[4])){
-                $botaoRel = new Button("Lei",$dados[4]);
+                $botaoRel = new Button("Lei","../_legislacao/".$dados[4]);
                 $botaoRel->set_title("Texto da Lei");
                 $botaoRel->set_target("_blank");
                 $menu->add_link($botaoRel,"right");

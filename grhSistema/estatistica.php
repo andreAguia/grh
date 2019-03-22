@@ -463,7 +463,7 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             #$tabela->set_titulo("Adm/Tec");
-            $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
+            $tabela->set_label(array("Cargo","Feminino","Masculino","Total"));
             $tabela->set_width(array(55,15,15,15));
             $tabela->set_align(array("left","center"));
             $tabela->set_totalRegistro(FALSE);
@@ -560,7 +560,7 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             #$tabela->set_titulo("Professor");
-            $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
+            $tabela->set_label(array("Cargo","Feminino","Masculino","Total"));
             $tabela->set_width(array(55,15,15,15));
             $tabela->set_align(array("left","center"));
             $tabela->set_totalRegistro(FALSE);

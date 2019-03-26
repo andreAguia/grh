@@ -96,7 +96,7 @@ if($acesso){
         $menu->add_item('link','Por Escolaridade','?fase=escolaridade');
         $menu->add_item('link','Por Nacionalidade','?fase=nacionalidade');
         $menu->add_item('link','Por Estado Civil','?fase=estadoCivil');
-        $menu->add_item('link','Por Cidade','?fase=cidade');
+        $menu->add_item('link','Por Cidade de Moradia','?fase=cidade');
         #$menu->add_item('link','Temporal','?fase=temporalCargo');  # Retirado por imprecisão
         
         $menu->show();
@@ -1254,7 +1254,7 @@ if($acesso){
         $painel = new Callout();
         $painel->abre();
 
-        titulotable("por Cidade");
+        titulotable("por Cidade de Moradia");
         br(); 
 
         $grid = new Grid();

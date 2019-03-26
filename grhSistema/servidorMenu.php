@@ -128,7 +128,7 @@ if($acesso){
             Grh::exibeOcorênciaServidor($idServidorPesquisado);
             
             # monta o menu do servidor
-            Grh::menuServidor($idServidorPesquisado,$idUsuario);
+            Grh::menuServidor2($idServidorPesquisado,$idUsuario);
             br();
             
             # Exibe os vinculos anteriores do servidor na uenf (se tiver)

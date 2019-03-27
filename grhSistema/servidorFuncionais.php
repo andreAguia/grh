@@ -15,13 +15,12 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase','editar');
+    $fase = get('fase','ver');
     
     # Começa uma nova página
     $page = new Page();			
@@ -291,8 +290,9 @@ if($acesso)
     ################################################################
 
     switch ($fase){
+        case "ver" :  
         case "editar" :
-            $objeto->$fase($idServidorPesquisado);  
+            $objeto->$fase($idServidorPesquisado);
             break;
 
         case "gravar" :

@@ -42,7 +42,12 @@ img#foto{
     transform: translate(-50%, -50%);
 }
 
-
+img#foto2{
+    display: block;
+    position:relative;
+    left:50%;
+    transform: translate(-50%);
+}
 /*******************************************
  * Check up
  *******************************************/

@@ -20,7 +20,7 @@ if($acesso){
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase','editar');
+    $fase = get('fase','ver');
     
     # Pega dados dessa matrícula
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -257,7 +257,7 @@ if($acesso){
     switch ($fase)
     {	
         case "editar" :            
-        case "excluir" :	
+        case "ver" :	
         case "gravar" :
             $objeto->$fase($idPessoa);
             break;

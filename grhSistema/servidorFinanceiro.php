@@ -34,8 +34,8 @@ if($acesso)
     Grh::listaDadosServidor($idServidorPesquisado);
 
     # Limita o tamanho da tela
-    $grid = new Grid();
-    $grid->abreColuna(12);
+    $grid = new Grid("center");
+    $grid->abreColuna(6);
     
     # Pega os dados financeiros
     $salario = $pessoal->get_salarioBase($idServidorPesquisado);
@@ -66,13 +66,13 @@ if($acesso)
                                          'id' => 'total'));
 
     # Exibe o título
-    $top = new TopBar('Resumo Financeiro');
-    $top->set_title('Resumo Financeiro');
-    $top->show();
+    #$top = new TopBar('Resumo Financeiro');
+    #$top->set_title('Resumo Financeiro');
+    #$top->show();
         
     # Monta a tabela
     $tabela = new Tabela();
-    #$tabela->set_titulo('Resumo Financeiro');
+    $tabela->set_titulo('Resumo Financeiro');
     $tabela->set_conteudo($conteudo);
     $tabela->set_cabecalho($label,$width,$align);
     $tabela->set_funcao($function);

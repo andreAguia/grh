@@ -20,7 +20,7 @@ if($acesso){
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase','editar');
+    $fase = get('fase','ver');
     
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -203,6 +203,7 @@ if($acesso){
 
     ################################################################
     switch ($fase){
+        case "ver" :  
         case "editar" :            
         case "excluir" :
             $objeto->$fase($idPessoa);

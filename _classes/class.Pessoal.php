@@ -744,7 +744,7 @@ class Pessoal extends Bd {
 
 
     /**
-     * Método get_perfil
+     * Método get_perfilSimples
      * Informa o perfil do servidor sem informar o rogao de origem do cedido
      * 
      * @param   string $idServidor  idServidor do servidor

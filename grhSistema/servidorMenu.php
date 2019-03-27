@@ -20,6 +20,9 @@ set_session('sessionPaginacao');	# Zera a session de pagina��o da classe mod
 # Verifica se veio dos alertas
 $alertas = get_session("alertas");
 
+# Pega o tema
+$tema = get("tema","padrao");
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
@@ -101,6 +104,17 @@ if($acesso){
             $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');        
             $linkBotao4->set_accessKey('H');
             $menu->add_link($linkBotao4,"right");
+            
+            # Mudar Tema
+            if($tema == "padrao"){
+                $tema = "novo";
+            }else{
+                $tema = "padrao";
+            }
+            $linkBotao5 = new Link("Tema","?tema=".$tema);
+            $linkBotao5->set_class('success button');
+            $linkBotao5->set_title('Muda Tema');
+            $menu->add_link($linkBotao5,"right");
 
             # Excluir
             $linkBotao5 = new Link("Excluir","servidorExclusao.php");
@@ -128,8 +142,12 @@ if($acesso){
             Grh::exibeOcorênciaServidor($idServidorPesquisado);
             
             # monta o menu do servidor
-            Grh::menuServidor2($idServidorPesquisado,$idUsuario);
-            br();
+            if($tema <> "padrao"){
+                Grh::menuServidor2($idServidorPesquisado,$idUsuario);
+            }else{
+                Grh::menuServidor($idServidorPesquisado,$idUsuario);
+                br();
+            }
             
             # Exibe os vinculos anteriores do servidor na uenf (se tiver)
             Grh::exibeVinculos($idServidorPesquisado);
@@ -508,6 +526,14 @@ if($acesso){
                 if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
                     $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idPessoa);
                     echo $upload->salvar();
+                    
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Alterou a foto do servidor ".$pessoal->get_nome($idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
+                    
+                    # Volta para o menu
                     loadPage("?");
                 }
                 

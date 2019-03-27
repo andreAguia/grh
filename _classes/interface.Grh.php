@@ -1433,12 +1433,16 @@ class Grh{
 
             # Exibe os vinculos
             $vinculos = $pessoal->get_vinculos($idServidor);
+            
+            # Percorre os vínculos
             foreach($vinculos as $rr){
-                # Verifica se não é o registro que está sendo editado
-                if($rr[0]<>$idServidor){
+                
+                # Descarta o vinculo em tela
+                if($rr[0] <> $idServidor){
                     $dtAdm = $pessoal->get_dtAdmissao($rr[0]);
                     $dtSai = $pessoal->get_dtSaida($rr[0]);
-                    $menu->add_item("link",$pessoal->get_perfil($rr[0])."&nbsp;(".$dtAdm." - ".$dtSai.")",'servidor.php?fase=editar&id='.$rr[0]);
+                    $perfil = $pessoal->get_perfilSimples($rr[0]);
+                    $menu->add_item("link",$perfil."&nbsp;(".$dtAdm." - ".$dtSai.")",'servidor.php?fase=editar&id='.$rr[0]);
                 }
             }
 
@@ -1702,196 +1706,279 @@ class Grh{
         $pessoal = new Pessoal();
         
         # Pega o perfil desse servidor
-        $perfil = $pessoal->get_idPerfil($idServidor);
-
-        # Divide a tela        
+        $perfil = $pessoal->get_idPerfil($idServidor); 
         
+        $grid1 = new Grid();
+        $grid1->abreColuna(10);
         
-            ###################################
-            $grid = new Grid();
-            $grid->abreColuna(12,6,3);
-                        
-            # Funcionais
-            $painel = new Callout();
-            $painel->abre();
+        ###################################
+        
+        $grid = new Grid();
+        $grid->abreColuna(12,6,4);
 
-                $menu = new Menu("menuServidor");
-                $menu->add_item("titulo","Funcionais");
-                $menu->add_item("link","Funcionais","servidorFuncionais.php",'Dados Funcionais do Servidor');
-                $menu->add_item("link","Admissão","servidorFuncionais.php");
-                $menu->add_item("link","Saída","servidorFuncionais.php");
-                $menu->add_item("link","Lotação","servidorLotacao.php",'Histórico da Lotação do Servidor');
-                
-                if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
-                    $menu->add_item("link","Cessão","servidorCessao.php",'Histórico de Cessões do Servidor');
-                }elseif($perfil == 2){ // se for cedido
-                    $menu->add_item("link","Cessão","servidorCessaoCedido.php",'Dados da Cessão do Servidor');
-                }
-                
-                if($pessoal->get_perfilComissao($perfil) == "Sim"){                
-                    $menu->add_item("link","Cargo em Comissão","servidorComissao.php",'Histórico dos Cargos em Comissão do Servidor');
-                }
-                
-                if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
-                    $menu->add_item("link","Tempo de Serviço","servidorAverbacao.php",'Cadastro de Tempo de Serviço Averbado');
-                }
-                
-                $menu->add_item("link","Elogios & Advertências","servidorElogiosAdvertencias.php",'Cadastro de Elogios e Advertências do Servidor');
-                $menu->add_item("link","Observações","servidorObs.php",'Observações Gerais do Servidor');
-                $menu->add_item("link","Pasta Funcional","?fase=pasta",'Pasta funcional do servidor');
-                
-                $menu->show();                
-            
-            $painel->fecha();
-            $grid->fechaColuna();
-            
-            ###################################
-                        
-            $grid->abreColuna(12,6,3);
-            
-            # Pessoais
-            $painel = new Callout();
-            $painel->abre();
+        # Define o tipo do callout
+        $tipo = "secondary";
 
-                $menu = new Menu("menuServidor");
-                $menu->add_item("titulo","Pessoais");
-                $menu->add_item("link","Pessoais","servidorPessoais.php","Dados Pessoais Gerais do Servidor");
-                $menu->add_item("link","Endereço","servidorEndereco.php","Endereço do Servidor");
-                $menu->add_item("link","Contatos","servidorContatos.php","Dados dos Contatos do Servidor");
-                $menu->add_item("link","Documentos","servidorDocumentos.php","Cadastro da Documentação do Servidor");
-                $menu->add_item("link","Formação","servidorFormacao.php",'Cadastro de Formação Escolar do Servidor');
-                $menu->add_item("link","Dependentes","servidorDependentes.php",'Cadastro dos Dependentes do Servidor');
-                $menu->show();                
-            
-            $painel->fecha();
-            $grid->fechaColuna();
-            
-            ###################################
-            
-            /*# Foto 
-            $grid->abreColuna(12,6,3); 
+        # Funcionais
+        $painel = new Callout($tipo);
+        $painel->abre();
 
-                $idPessoa = $pessoal->get_idPessoa($idServidor);
+        $div = new Div("ajustaMenuServidor");
+        $div->abre();
 
-                # Define a pasta
-                $arquivo = "../../_fotos/$idPessoa.jpg";
-                
-                # Verifica se tem pasta desse servidor
-                if(file_exists($arquivo)){
-                    $foto = new Imagem($arquivo,'Foto do Servidor',150,100);
-                    $foto->set_id('foto');
-                    $foto->show();                
-                }else{                
-                    $foto = new Imagem(PASTA_FIGURAS.'foto.png','Foto do Servidor',150,100);
-                    $foto->set_id('foto');
-                    $foto->show();
-                }
-                
-            $grid->fechaColuna();
-            */
-            ###################################
-            
-            # Afastamentos
-            $grid->abreColuna(12,6,3);
-            $painel = new Callout();
-            $painel->abre();
+            $divFigura = new Div("figuraMenuServidor");
+            $divFigura->abre();
 
-                $menu = new Menu("menuServidor");
-                $menu->add_item("titulo","Afastamentos");
-                
-                if($pessoal->get_perfilFerias($perfil) == "Sim"){
-                    $menu->add_item("link","Férias","servidorFerias.php","Cadastro das Férias do Servidor");
-                }
-                
-                if($pessoal->get_perfilLicenca($perfil) == "Sim"){
-                    $menu->add_item("link","Licenças e Afastamentos","servidorLicenca.php","Cadastro de Licenças do Servidor");
-                    $menu->add_item("link",$pessoal->get_licencaNome(6),"servidorLicencaPremio.php","Cadastro de Licenças Prêmio do Servidor");
-                }
-                
-                $menu->add_item("link","Atestados (Faltas Abonadas)","servidorAtestado.php","Cadastro de Atestados do Servidor");
-                $menu->add_item("link","Faltas","servidorFaltas.php","Cadastro de Faltas do Servidor");
-                $menu->add_item("link","TRE","servidorTre.php","Cadastro de dias trabalhados no TRE com controle de folgas");
+            $figura = new Imagem(PASTA_FIGURAS.'funcional.jpg','Dados Funcionais',40,40);
+            $figura->show();
+
+            $divFigura->fecha();
+
+            $menu = new Menu("menuServidor");
+            $menu->add_item("titulo","Funcionais");
+            $menu->add_item("link","Funcionais","servidorFuncionais.php",'Dados Funcionais do Servidor');
+            #$menu->add_item("link","Admissão","servidorFuncionais.php");
+            #$menu->add_item("link","Saída","servidorFuncionais.php");
+            $menu->add_item("link","Lotação","servidorLotacao.php",'Histórico da Lotação do Servidor');
+
+            if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
+                $menu->add_item("link","Cessão","servidorCessao.php",'Histórico de Cessões do Servidor');
+            }elseif($perfil == 2){ // se for cedido
+                $menu->add_item("link","Cessão","servidorCessaoCedido.php",'Dados da Cessão do Servidor');
+            }
+
+            if($pessoal->get_perfilComissao($perfil) == "Sim"){                
+                $menu->add_item("link","Cargo em Comissão","servidorComissao.php",'Histórico dos Cargos em Comissão do Servidor');
+            }
+
+            if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
+                $menu->add_item("link","Tempo de Serviço","servidorAverbacao.php",'Cadastro de Tempo de Serviço Averbado');
+            }
+
+            $menu->add_item("link","Elogios & Advertências","servidorElogiosAdvertencias.php",'Cadastro de Elogios e Advertências do Servidor');
+            $menu->add_item("link","Observações","servidorObs.php",'Observações Gerais do Servidor');
+            $menu->add_item("link","Pasta Funcional","?fase=pasta",'Pasta funcional do servidor');
+
+            $menu->show();                
+
+        $div->fecha();
+
+        $painel->fecha();
+        $grid->fechaColuna();
+
+        ###################################
+
+        $grid->abreColuna(12,6,4);
+
+        # Pessoais
+        $painel = new Callout($tipo);
+        $painel->abre();
+
+        $div = new Div("ajustaMenuServidor");
+        $div->abre();
+
+            $divFigura = new Div("figuraMenuServidor");
+            $divFigura->abre();
+
+            $figura = new Imagem(PASTA_FIGURAS.'pessoais.jpg','Dados Pessoais',40,40);
+            $figura->show();
+
+            $divFigura->fecha();
+
+            $menu = new Menu("menuServidor");
+            $menu->add_item("titulo","Pessoais");
+            $menu->add_item("link","Pessoais","servidorPessoais.php","Dados Pessoais Gerais do Servidor");
+            $menu->add_item("link","Endereço","servidorEndereco.php","Endereço do Servidor");
+            $menu->add_item("link","Contatos","servidorContatos.php","Dados dos Contatos do Servidor");
+            $menu->add_item("link","Documentos","servidorDocumentos.php","Cadastro da Documentação do Servidor");
+            $menu->add_item("link","Formação","servidorFormacao.php",'Cadastro de Formação Escolar do Servidor');
+            $menu->add_item("link","Dependentes","servidorDependentes.php",'Cadastro dos Dependentes do Servidor');
+            $menu->show();                
+
+        $div->fecha();    
+
+        $painel->fecha();
+        $grid->fechaColuna();
+
+        ###################################
+
+        # Afastamentos
+        $grid->abreColuna(12,6,4);
+        $painel = new Callout($tipo);
+        $painel->abre();
+
+        $div = new Div("ajustaMenuServidor");
+        $div->abre();
+
+            $divFigura = new Div("figuraMenuServidor");
+            $divFigura->abre();
+
+            $figura = new Imagem(PASTA_FIGURAS.'ferias.jpg','Dados dos Afastamentos',40,40);
+            $figura->show();
+
+            $divFigura->fecha();
+
+            $menu = new Menu("menuServidor");
+            $menu->add_item("titulo","Afastamentos");
+
+            if($pessoal->get_perfilFerias($perfil) == "Sim"){
                 $menu->add_item("link","Férias","servidorFerias.php","Cadastro das Férias do Servidor");
-                $menu->show();                
-            
-            $painel->fecha();
-            $grid->fechaColuna();
+            }
+
+            if($pessoal->get_perfilLicenca($perfil) == "Sim"){
+                $menu->add_item("link","Licenças e Afastamentos","servidorLicenca.php","Cadastro de Licenças do Servidor");
+                $menu->add_item("link",$pessoal->get_licencaNome(6),"servidorLicencaPremio.php","Cadastro de Licenças Prêmio do Servidor");
+            }
+
+            $menu->add_item("link","Atestados (Faltas Abonadas)","servidorAtestado.php","Cadastro de Atestados do Servidor");
+            $menu->add_item("link","Faltas","servidorFaltas.php","Cadastro de Faltas do Servidor");
+            $menu->add_item("link","TRE","servidorTre.php","Cadastro de dias trabalhados no TRE com controle de folgas");
+            $menu->add_item("link","Férias","servidorFerias.php","Cadastro das Férias do Servidor");
+            $menu->show();                
+
+        $div->fecha();
+
+        $painel->fecha();
+        $grid->fechaColuna();
+
+        ###################################
+
+        # Financeiro
+        $grid->abreColuna(12,6,4);
+        $painel = new Callout($tipo);
+        $painel->abre();
+
+        $div = new Div("ajustaMenuServidor");
+        $div->abre();
+
+            $divFigura = new Div("figuraMenuServidor");
+            $divFigura->abre();
+
+            $figura = new Imagem(PASTA_FIGURAS.'salario.jpg','Dados Financeiros',40,40);
+            $figura->show();
+
+            $divFigura->fecha();
+
+            $menu = new Menu("menuServidor");
+            $menu->add_item("titulo","Financeiro");
+            if($pessoal->get_perfilProgressao($perfil) == "Sim"){
+                $menu->add_item("link","Progressão e Enquadramento","servidorProgressao.php","Cadastro de Progressões e Enquadramentos do Servidor");
+            }
+
+            if($pessoal->get_perfilTrienio($perfil) == "Sim"){
+                $menu->add_item("link","Triênio","servidorTrienio.php","Histórico das Gratificações Especiais do Servidor");
+            }
+
+            if($pessoal->get_perfilGratificacao($perfil) == "Sim"){
+                $menu->add_item("link","Gratificação Especial","servidorGratificacao.php","Histórico das Gratificações Especiais do Servidor");
+            }
+
+            $menu->add_item("link","Direito Pessoal","servidorDireitoPessoal.php","Cadastro de Abono / Direito Pessoal");
+
+            if ($perfil == 1){   // Ser for estatutário
+                $menu->add_item("link","Abono Permanencia","servidorAbono.php","Cadastro de Abono Permanencia");
+            }
+
+
+            $menu->add_item("link","Diárias","servidorDiaria.php","Controle de Diárias");
+            $menu->add_item("link","Dados Bancários","servidorBancario.php","Cadastro dos dados bancários do Servidor");
+            $menu->add_item("link","Resumo Financeiro","servidorFinanceiro.php","Informações sobre os valores recebidos pelo servidor");
+            $menu->show(); 
+
+        $div->fecha();    
+
+        $painel->fecha();
+        $grid->fechaColuna();
+
+        ###################################
+
+        # Benefícios
+        $grid->abreColuna(12,6,4);
+        $painel = new Callout($tipo);
+        $painel->abre();
+
+        $div = new Div("ajustaMenuServidor");
+        $div->abre();
+
+            $divFigura = new Div("figuraMenuServidor");
+            $divFigura->abre();
+
+            $figura = new Imagem(PASTA_FIGURAS.'readaptacao.png','Dados dos Benefícios',40,40);
+            $figura->show();
+
+            $divFigura->fecha();
+
+            $menu = new Menu("menuServidor");
+            $menu->add_item("titulo","Benefícios");                
+            $menu->add_item("link","Redução da Carga Horária","servidorReducao.php","Controle de Redução da Carga Horária");
+            $menu->add_item("link","Readaptação","#","Controle de Readaptação");
+            $menu->show();                
+
+        $div->fecha();    
+        $painel->fecha();
+        $grid->fechaColuna();
+
+        ###################################
+
+        # Relatórios
+        $grid->abreColuna(12,6,4);
+        $painel = new Callout($tipo);
+        $painel->abre();
+
+        $div = new Div("ajustaMenuServidor");
+        $div->abre();
+
+            $divFigura = new Div("figuraMenuServidor");
+            $divFigura->abre();
+
+            $figura = new Imagem(PASTA_FIGURAS.'print.png','Relatórios',40,40);
+            $figura->show();
+
+            $divFigura->fecha();
+
+            $menu = new Menu("menuServidor");
+            $menu->add_item("titulo","Relatórios");                
+            $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
+            $menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
+            #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
+            $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
+            $menu->show();                
+
+        $div->fecha();    
+        $painel->fecha();
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+
+        ###################################
         
-            ###################################
-            
-            # Financeiro
-            $grid->abreColuna(12,6,3);
-            $painel = new Callout();
-            $painel->abre();
-
-                $menu = new Menu("menuServidor");
-                $menu->add_item("titulo","Financeiro");
-                if($pessoal->get_perfilProgressao($perfil) == "Sim"){
-                    $menu->add_item("link","Progressão e Enquadramento","servidorProgressao.php","Cadastro de Progressões e Enquadramentos do Servidor");
-                }
-                
-                if($pessoal->get_perfilTrienio($perfil) == "Sim"){
-                    $menu->add_item("link","Triênio","servidorTrienio.php","Histórico das Gratificações Especiais do Servidor");
-                }
-                
-                if($pessoal->get_perfilGratificacao($perfil) == "Sim"){
-                    $menu->add_item("link","Gratificação Especial","servidorGratificacao.php","Histórico das Gratificações Especiais do Servidor");
-                }
-                
-                $menu->add_item("link","Direito Pessoal","servidorDireitoPessoal.php","Cadastro de Abono / Direito Pessoal");
-                
-                if ($perfil == 1){   // Ser for estatutário
-                    $menu->add_item("link","Abono Permanencia","servidorAbono.php","Cadastro de Abono Permanencia");
-                }
-                
-                
-                $menu->add_item("link","Diárias","servidorDiaria.php","Controle de Diárias");
-                $menu->add_item("link","Dados Bancários","servidorBancario.php","Cadastro dos dados bancários do Servidor");
-                $menu->add_item("link","Resumo Financeiro","servidorFinanceiro.php","Informações sobre os valores recebidos pelo servidor");
-                $menu->show();                
-            
-            $painel->fecha();
-            $grid->fechaColuna();
-            
-            ###################################
-            
-            # Relatórios
-            $grid->abreColuna(12,6,3);
-            $painel = new Callout();
-            $painel->abre();
-
-                $menu = new Menu("menuServidor");
-                $menu->add_item("titulo","Relatórios");                
-                $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
-                $menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
-                #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
-                $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
-                $menu->show();                
-            
-            $painel->fecha();
-            $grid->fechaColuna();
-            
-            ###################################
-            
-            # Benefícios
-            $grid->abreColuna(12,6,3);
-            $painel = new Callout();
-            $painel->abre();
-
-                $menu = new Menu("menuServidor");
-                $menu->add_item("titulo","Benefícios");                
-                $menu->add_item("link","Redução da Carga Horária","servidorReducao.php","Controle de Redução da Carga Horária");
-                $menu->add_item("link","Readaptação","#","Controle de Readaptação");
-                $menu->show();                
-            
-            $painel->fecha();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            
-            ###################################
-            
-            
+        $grid1->fechaColuna();        
         
+        # Foto 
+        $grid1->abreColuna(2); 
+        
+        $painel = new Callout($tipo);
+        $painel->abre("center");
+
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Define a pasta
+            $arquivo = "../../_fotos/$idPessoa.jpg";
+
+            # Verifica se tem pasta desse servidor
+            if(file_exists($arquivo)){
+                $foto = new Imagem($arquivo,'Foto do Servidor',150,100);
+                $foto->set_id('foto2');
+                $foto->show();                
+            }else{                
+                $foto = new Imagem(PASTA_FIGURAS.'foto.png','Servidor sem fotografia cadastrada',150,100);
+                $foto->set_id('foto2');
+                $foto->show();
+            }
+
+        $painel->fecha();
+        
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
         
     }     
     

@@ -200,14 +200,14 @@ if($acesso){
                                        'size' => 20,
                                        'required' => TRUE,
                                        'title' => 'Data da Nomeação.',
-                                       'col' => 2,
+                                       'col' => 3,
                                        'linha' => 3),
                                array ( 'nome' => 'dtAtoNom',
                                        'label' => 'Data do Ato do Reitor:',
                                        'title' => 'Data do Ato do Reitor da Nomeação',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'col' => 2,
+                                       'col' => 3,
                                        'linha' => 3),
                                array ( 'nome' => 'numProcNom',
                                        'label' => 'Processo:',
@@ -220,53 +220,53 @@ if($acesso){
                                        'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'col' => 2,
+                                       'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 3),
+                                       'linha' => 4),
                                array ( 'nome' => 'ciGepagNom',                                   
                                        'label' => 'Documento:',
                                        'tipo' => 'texto',
-                                       'col' => 3,
+                                       'col' => 6,
                                        'size' => 30,                                   
                                        'title' => 'Documento.',
-                                       'linha' => 3),
+                                       'linha' => 4),
                                array ( 'nome' => 'dtExo',
                                        'label' => 'Data da Exoneração:',
                                        'fieldset' => 'Dados da Exoneração',
                                        'tipo' => 'data',
-                                       'col' => 2,
+                                       'col' => 3,
                                        'size' => 20,
                                        'title' => 'Data da Exoneração.',
-                                       'linha' => 4),
+                                       'linha' => 5),
                                array ( 'nome' => 'dtAtoExo',
                                        'label' => 'Data do Ato do Reitor:',
                                        'title' => 'Data do Ato do Reitor da Exoneraçao',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'col' => 2,
-                                       'linha' => 4),
+                                       'col' => 3,
+                                       'linha' => 5),
                                array ( 'nome' => 'numProcExo',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
                                        'col' => 3,
                                        'title' => 'Processo de Exoneração',
-                                       'linha' => 4), 
+                                       'linha' => 5), 
                                array ( 'nome' => 'dtPublicExo',
                                        'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
-                                       'col' => 2,
+                                       'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 4),
+                                       'linha' => 6),
                                array ( 'nome' => 'ciGepagExo',                                   
                                        'label' => 'Documento:',
                                        'tipo' => 'texto',
                                        'size' => 30,
-                                       'col' => 3,                                   
+                                       'col' => 6,                                   
                                        'title' => 'Documento.',
-                                       'linha' => 4), 
-                                array ('linha' => 5,
+                                       'linha' => 6), 
+                                array ('linha' => 7,
                                        'nome' => 'obs',
                                        'col' => 12,
                                        'label' => 'Observação:',
@@ -333,6 +333,23 @@ if($acesso){
             #}
             #else // se é editar
             
+            # Ato de Nomeação
+            $botao1 = new Button("Ato de Nomeação");
+            $botao1->set_title("Imprime o Ato de Nomeação");
+            $botao1->set_url("?fase=atoNomeacao&id=$id");
+            
+            # Termo de Posse
+            $botao2 = new Button("Termo de Posse");
+            $botao2->set_title("Imprime o Termo de Posse");
+            $botao2->set_url("?fase=termoPosse&id=$id");
+            
+            # Ato de Exoneração
+            $botao3 = new Button("Ato de Exoneração");
+            $botao3->set_title("Imprime o Ato de Exoneração");
+            $botao3->set_url("?fase=atoExoneracao&id=$id");
+            
+            #$objeto->set_botaoEditarExtra(array($botao1,$botao2,$botao3));
+            
             $objeto->editar($id);
     
             # Botões 
@@ -355,6 +372,7 @@ if($acesso){
             $comissao = $pessoal->get_dadosComissao($id);
             $ocupanteAnterior = $comissao['ocupanteAnterior'];
             $dtAtoNom = date_to_php($comissao['dtAtoNom']);
+            $msgErro = NULL;
             
             # Verifica se tem ocupante anterior esta preenchido
             if(is_null($ocupanteAnterior)){
@@ -376,7 +394,7 @@ if($acesso){
                 back(1);
             }	
             
-            loadPage('?');
+            #loadPage('?');
             break;
             
         case "termoPosse" :
@@ -384,6 +402,7 @@ if($acesso){
             $comissao = $pessoal->get_dadosComissao($id);
             $publicacao = $comissao['dtPublicNom'];
             $dtAtoNom = $comissao['dtAtoNom'];
+            $msgErro = NULL;
             
             # Verifica se tem ocupante anterior esta preenchido
             if(is_null($publicacao)){
@@ -414,6 +433,7 @@ if($acesso){
             $comissao = $pessoal->get_dadosComissao($id);
             $dtExo = $comissao['dtExo'];
             $dtAtoExo = date_to_php($comissao['dtAtoExo']);
+            $msgErro = NULL;
             
             # Verifica se tem ocupante anterior esta preenchido
             if(is_null($dtExo)){

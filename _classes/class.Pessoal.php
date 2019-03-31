@@ -2081,7 +2081,7 @@ class Pessoal extends Bd {
         $vagas = $this->get_cargoComissaoVagas($id);
         $ocupadas = $this->get_servidoresCargoComissao($id);
         $disponiveis = $vagas - $ocupadas;
-
+        
         return $disponiveis;
     }
 

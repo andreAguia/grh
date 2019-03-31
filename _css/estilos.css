@@ -190,15 +190,17 @@ tr#trePendente{
  *******************************************/ 
  
 tr#comissaoSemVagas{
-     background-color:#6699ff;
+     background-color:#99ccff;
 }
 
 tr#comissaoComVagas{
-    background-color:#66ff66;
+    background-color:#c4e695;
 }
 
 tr#comissaoVagasNegativas{
-    background-color:#ff6666;
+    color: #cc3300;
+    font-weight:bold;
+    background-color:#f3acac;
 }
 
 /*******************************************

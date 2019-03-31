@@ -118,11 +118,18 @@ if($acesso){
     $objeto->set_orderTipo($orderTipo);
     $objeto->set_orderChamador('?fase=listar');
     
-    $objeto->set_formatacaoCondicional(array( array('coluna' => 6,
+    $objeto->set_formatacaoCondicional(array(array('coluna' => 6,
                                                     'valor' => 0,
                                                     'operador' => '<',
-                                                    'id' => 'arquivado')                                              
-                                                    ));
+                                                    'id' => "comissaoVagasNegativas"),
+                                             array('coluna' => 6,
+                                                    'valor' => 0,
+                                                    'operador' => '=',
+                                                    'id' => "comissaoSemVagas"),
+                                             array('coluna' => 6,
+                                                    'valor' => 0,
+                                                    'operador' => '>',
+                                                    'id' => "comissaoComVagas")));
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');

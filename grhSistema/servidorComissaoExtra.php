@@ -6,7 +6,7 @@
  */
 
 $nomeacao = $campoValor[4];     // Data de Nomeação
-$exoneracao = $campoValor[8];   // Data de Exoneração
+$exoneracao = $campoValor[9];   // Data de Exoneração
 $idServidor = $campoValor[15];  // Matrícula do servidor
 
 $pessoal = new Pessoal();

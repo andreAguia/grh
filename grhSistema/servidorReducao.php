@@ -179,7 +179,7 @@ if($acesso){
         $botaoFluxo = new Button();
         $botaoFluxo->set_imagem($imagem);
         $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo redução da carga horária");
-        $botaoFluxo->set_onClick("window.open('../_diagramas/reducao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1300,height=700');");
+        $botaoFluxo->set_onClick("window.open('../_diagramas/reducao.jpg','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1100,height=1100');");
         $menu->add_link($botaoFluxo,"right");
         
         $menu->show();
@@ -419,7 +419,7 @@ if($acesso){
         #########################################################################################################
 
             # Processo
-            $grid->abreColuna(12,6,3);
+            $grid->abreColuna(12,6);
             
                 #$processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));
                 $painel = new Callout();
@@ -452,7 +452,7 @@ if($acesso){
         #########################################################################################################
             
             # Contatos
-            $grid->abreColuna(12,6,3);
+            $grid->abreColuna(12,6);
             
                 # Pega os telefones
                 $telefones = $pessoal->get_telefones($idServidorPesquisado);
@@ -495,6 +495,7 @@ if($acesso){
         #########################################################################################################
             
             # tarefas
+            /*
             $grid->abreColuna(12,12,6);
                 
                 $painel = new Callout();
@@ -524,6 +525,8 @@ if($acesso){
                 $painel->fecha();
                 
             $grid->fechaColuna();
+             
+             */
             
             $grid->fechaGrid();        
             $objeto->listar(); 

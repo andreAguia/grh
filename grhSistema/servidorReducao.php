@@ -42,11 +42,11 @@ if($acesso){
                 if(pendencia == 1){
                     $("#dadosPendencia").show();
                     $("#dtEnvioPendencia").show();
-                    $("#div7").show();
+                    $("#div8").show();
                 }else{
                     $("#dadosPendencia").hide();
                     $("#dtEnvioPendencia").hide();
-                    $("#div7").hide();
+                    $("#div8").hide();
                 }
                 
                 // Pega os valores do resultado
@@ -59,14 +59,14 @@ if($acesso){
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div9").show();
+                    $("#div10").show();
                 }else{
                     $("#dtPublicacao").hide();
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div9").hide();
+                    $("#div10").hide();
                 }
         
                 // Verifica o valor da pendência quando se muda o valor do campo
@@ -76,11 +76,11 @@ if($acesso){
                     if(pendencia == 1){
                         $("#dadosPendencia").show();
                         $("#dtEnvioPendencia").show();
-                        $("#div7").show();
+                        $("#div8").show();
                     }else{
                         $("#dadosPendencia").hide();
                         $("#dtEnvioPendencia").hide();
-                        $("#div7").hide();
+                        $("#div8").hide();
                     }
                 });
                 
@@ -94,14 +94,14 @@ if($acesso){
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div9").show();
+                        $("#div10").show();
                     }else{
                         $("#dtPublicacao").hide();
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div9").hide();
+                        $("#div10").hide();
                     }                
                 });
                 
@@ -209,12 +209,8 @@ if($acesso){
     $objeto->set_selectLista('SELECT idReducao,
                                      dtSolicitacao,
                                      idReducao,
-                                     CASE
-                                     WHEN resultado = 1 THEN "Deferido"
-                                     WHEN resultado = 2 THEN "Indeferido"
-                                     ELSE "---"
-                                     END,
-                                     dtPublicacao,
+                                     idReducao,
+                                     idReducao,
                                      idReducao,
                                      idReducao,                                   
                                      idReducao
@@ -224,15 +220,17 @@ if($acesso){
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtSolicitacao,
-                                     arquivado,
+                                     status,
                                      dtEnvioPericia,
                                      dtChegadaPericia,
                                      dtAgendadaPericia,
                                      pendencia,
                                      resultado,
+                                     dtCiencia,
                                      dadosPendencia,
                                      dtEnvioPendencia,                                     
                                      dtPublicacao,
+                                     pgPublicacao,
                                      dtInicio,
                                      periodo,
                                      numCiInicio,
@@ -255,17 +253,21 @@ if($acesso){
                                               array('coluna' => 0,
                                                     'valor' => 'Arquivado',
                                                     'operador' => '=',
-                                                    'id' => 'arquivado')                                           
+                                                    'id' => 'arquivado'),
+                                              array('coluna' => 0,
+                                                    'valor' => 'Vigente',
+                                                    'operador' => '=',
+                                                    'id' => 'vigente')   
                                                     ));
 
     # Parametros da tabela
     $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Período","CI"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center","center","left","center","center","left","left"));
-    $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,"date_to_php"));
+    $objeto->set_funcao(array(NULL,"date_to_php"));
     
-    $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia",NULL,NULL,"exibePeriodo","exibeCi"));
+    $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeCi"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -293,12 +295,14 @@ if($acesso){
                                        'title' => 'A data da Solicitação.',
                                        'col' => 3,                                    
                                        'linha' => 1),
-                               array ( 'nome' => 'arquivado',
-                                       'label' => 'Arquivado:',
-                                       'tipo' => 'simnao',
+                               array ( 'nome' => 'status',
+                                       'label' => 'Status:',
+                                       'tipo' => 'combo',
+                                       'array' => array(array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado")),
                                        'size' => 2,
                                        'valor' => 0,
                                        'col' => 2,
+                                       'disabled' => TRUE,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
                                        'linha' => 1),
                                array ( 'nome' => 'dtEnvioPericia',
@@ -337,7 +341,14 @@ if($acesso){
                                        'size' => 20,                               
                                        'title' => 'Se o processo foi deferido ou indeferido',
                                        'col' => 3,
-                                       'linha' => 3),    
+                                       'linha' => 3), 
+                                array ( 'nome' => 'dtCiencia',
+                                       'label' => 'Data da Ciência do Servidor:',
+                                       'tipo' => 'data',
+                                       'size' => 10,
+                                       'col' => 3,
+                                       'title' => 'A data da ciência do servidor.',
+                                       'linha' => 3),
                                 array ('linha' => 4,
                                        'col' => 9,
                                        'nome' => 'dadosPendencia',
@@ -361,35 +372,42 @@ if($acesso){
                                        'title' => 'A Data da Publicação no DOERJ.',
                                        'fieldset' => 'Quando Deferido',
                                        'linha' => 5),
+                               array ( 'nome' => 'pgPublicacao',
+                                       'label' => 'Página da Publicação:',
+                                       'tipo' => 'texto',
+                                       'size' => 5,
+                                       'col' => 2,
+                                       'title' => 'A página da Publicação no DOERJ.',
+                                       'linha' => 5),
                                array ( 'nome' => 'dtInicio',
                                        'label' => 'Data do Inicio do Benefício:',
                                        'tipo' => 'data',
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'A data em que o servidor passou a receber o benefício.',
-                                       'linha' => 5),
+                                       'linha' => 6),
                                array ( 'nome' => 'periodo',
                                        'label' => 'Período em Meses:',
                                        'tipo' => 'texto',
                                        'size' => 10,
                                        'col' => 2,
                                        'title' => 'O período em meses do benefício.',
-                                       'linha' => 5),
+                                       'linha' => 6),
                                array ( 'nome' => 'numCiInicio',
                                        'label' => 'CI informando Início:',
                                        'tipo' => 'texto',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Número da Ci informando a chefia imediata do servidor da data de início do benefício.',
-                                       'linha' => 6),
+                                       'linha' => 7),
                                array ( 'nome' => 'numCiTermino',
                                        'label' => 'CI informando Término:',
                                        'tipo' => 'texto',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Número da Ci informando a chefia imediata do servidor da data de término do benefício.',
-                                       'linha' => 6),
-                               array ('linha' => 7,
+                                       'linha' => 7),
+                               array ('linha' => 8,
                                        'col' => 12,
                                        'nome' => 'obs',
                                        'label' => 'Obs:',
@@ -537,9 +555,8 @@ if($acesso){
             break;
 
         case "gravar" :
-            $objeto->gravar($id);              
+            $objeto->gravar($id,"servidorReducaoExtra.php");
             break;
-
     }									 	 		
 
     $page->terminaPagina();

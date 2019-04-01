@@ -45,7 +45,7 @@ if($acesso)
                       WHEN resultado = 2 THEN 'Indeferido'
                       ELSE '---'
                       END,
-                      dtPublicacao,
+                      idReducao,
                       idReducao,
                       idReducao,                                   
                       idReducao               
@@ -64,10 +64,10 @@ if($acesso)
     $relatorio->set_subtitulo("Processo: ".$processo);
     
     $relatorio->set_align(array("center","center","left","center","center","left","left"));
-    $relatorio->set_funcao(array(NULL,"date_to_php",NULL,NULL,"date_to_php"));
+    $relatorio->set_funcao(array(NULL,"date_to_php"));
     
-    $relatorio->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $relatorio->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia",NULL,NULL,"exibePeriodo","exibeCi"));
+    $relatorio->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+    $relatorio->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia",NULL,"exibePublicacao","exibePeriodo","exibeCi"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

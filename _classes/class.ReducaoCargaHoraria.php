@@ -374,6 +374,87 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
+    function exibePublicacao($idReducao){
+
+    /**
+     * Informe os dados da Publicação de uma solicitação de redução de carga horária específica
+     * 
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT dtPublicacao, pgPublicacao, resultado
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        if($row[2] == 1){
+            if(is_null($row[0])){
+                $retorno = trataNulo($row[0]);
+            }else{
+                $retorno = date_to_php($row[0])."<br/>Pag.: ".trataNulo($row[1]);
+            }
+            
+        }else{
+            $retorno = NULL;
+        }
+                                
+        return $retorno;
+    }
+    
+    ###########################################################
+    
+    function exibeResultado($idReducao){
+
+    /**
+     * Informe os dados do resultado de uma solicitação de redução de carga horária específica
+     * 
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT resultado, dtCiencia
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        $resultado = $row[0];
+        $dataCiencia = $row[1];
+        
+        # Verifica o resultado
+        switch ($resultado){
+            case NULL:
+                $retorno = $resultado;
+                break;
+            
+            case 1:
+                $retorno = "Deferido";
+                
+                # Data da Ciência
+                if(!is_null($dataCiencia)){
+                    
+                }
+                break;
+            
+            case 2:
+                $retorno = "Indeferido";
+                break;
+        }
+                                
+        return $retorno;
+    }
+    
+    ###########################################################
+    
     function exibeStatus($idReducao){
 
     /**
@@ -385,22 +466,32 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT arquivado, pendencia
+        $select = 'SELECT status, pendencia
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
+        $retorno = NULL;
+        
+        # Verifica o status
+        switch ($row[0]){
+            case 1:
+                $retorno = "Em Aberto";
+                break;
+            
+            case 2:
+                $retorno = "Vigente";
+                break;
+            
+            case 3:
+                $retorno = "Arquivado";
+                break;
+        }
         
         # Verifica se há pendências
-        if($row[0] == 0){
-            $retorno = "Em Aberto";
-            
-            if($row[1] == 1){
-                $retorno.= "<br/><span title='Existem pendências nessa solicitação de redução de carga horária!' class='warning label'>Com Pendência!</span>";
-            }
-        }else{
-            $retorno = "Arquivado";
+        if($row[1] == 1){
+            $retorno.= "<br/><span title='Existem pendências nessa solicitação de redução de carga horária!' class='warning label'>Com Pendência!</span>";
         }
                                 
         return $retorno;

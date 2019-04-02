@@ -372,8 +372,12 @@ tr#arquivado{
     background-color:#e6e6e6;
 }
 
+tr#vigenteReducao{
+    background-color:#bbd0de;
+}
+
 tr#emAberto{
-    background-color:#fff;
+    background-color:#cdf3d3;
 }
 
 p#processoAntigoReducao{

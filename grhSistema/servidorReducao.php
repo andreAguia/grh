@@ -257,7 +257,7 @@ if($acesso){
                                               array('coluna' => 0,
                                                     'valor' => 'Vigente',
                                                     'operador' => '=',
-                                                    'id' => 'vigente')   
+                                                    'id' => 'vigenteReducao')   
                                                     ));
 
     # Parametros da tabela

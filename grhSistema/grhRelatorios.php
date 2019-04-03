@@ -87,7 +87,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Sispatri','?fase=sispatri','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Histórico','?fase=historico','','','divMenuRelatorioGrh');
                 $menu->show();
             $callout->fecha();
             $divMenu2->fecha();
@@ -375,7 +375,7 @@ if($acesso){
          case "contatos";
             $menu = new Menu();
             $menu->add_item('titulo','Contatos');
-            $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php');
+            $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php');            
             $menu->add_item('linkWindow','Telefones dos Servidores','../grhRelatorios/telefone.php');
 
             $menu->show();
@@ -404,10 +404,13 @@ if($acesso){
         
         ######################################
 
-        case "outros";        
+        case "historico";        
             $menu = new Menu();
-            $menu->add_item('titulo','Outros');
-            $menu->add_item('linkWindow','Relatório de Servidores Ativos Ex-Fenorte','../grhRelatorios/servidoresAtivosExFenorte.php');             
+            $menu->add_item('titulo','Histórico');
+            $menu->add_item('linkWindow','Relatório de Servidores Ativos Ex-Fenorte','../grhRelatorios/servidoresAtivosExFenorte.php');
+            $menu->add_item('linkWindow','Servidores Por Ano de Admissão Com Email e CPF Por Tipo de Cargo','../grhRelatorios/servidoresPorAnoAdmissaoComEmailCpf.php');
+            $menu->add_item('linkWindow','Servidores Por Ano de Saída Com Email e CPF Por Tipo de Cargo','../grhRelatorios/servidoresPorAnoDemissaoComEmailCpf.php');
+            $menu->add_item('linkWindow','Servidores Ativo em um Determinado Ano','../grhRelatorios/servidoresAtivosPorAno.php');
             $menu->show();
             break;
 

@@ -14,8 +14,9 @@ $idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Zera session usadas
-set_session('sessionParametro');	# Zera a session do par�metro de pesquisa da classe modelo1
-set_session('sessionPaginacao');	# Zera a session de pagina��o da classe modelo1
+set_session('sessionParametro');	# Zera a session do parâetro de pesquisa da classe modelo1
+set_session('sessionPaginacao');	# Zera a session de paginação da classe modelo1
+set_session('origem');                  # Zera a session da origem da área de recadastramento
 
 # Verifica se veio dos alertas
 $alertas = get_session("alertas");

@@ -915,6 +915,28 @@ class Grh{
         $grid2->fechaColuna();   
         
         #######################################################################
+                
+        # Outros 
+        
+        $grid2->abreColuna(12,5);        
+            titulo('Outros');
+            br();
+
+            $menu = new MenuGrafico(4);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Recadastramento');
+            $botao->set_url('areaRecadastramento.php?fase=editar&origem=menuServidor&id='.$idServidor);
+            $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Recadastramento do Servidor');
+            $menu->add_item($botao);
+
+            $menu->show();
+            br();
+            
+        $grid2->fechaColuna();   
+        
+        #######################################################################
         
         $grid2->fechaGrid();
     }     
@@ -1758,6 +1780,7 @@ class Grh{
             $menu->add_item("link","Elogios & Advertências","servidorElogiosAdvertencias.php",'Cadastro de Elogios e Advertências do Servidor');
             $menu->add_item("link","Observações","servidorObs.php",'Observações Gerais do Servidor');
             $menu->add_item("link","Pasta Funcional","?fase=pasta",'Pasta funcional do servidor');
+            $menu->add_item("link","Recadastramento",'areaRecadastramento.php?fase=editar&origem=menuServidor&id='.$idServidor,'Recadastramento do servidor');
 
             $menu->show();                
 

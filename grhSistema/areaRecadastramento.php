@@ -23,13 +23,8 @@ if($acesso){
     $fase = get('fase');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
-        # Grava no log a atividade
-        $atividade = "Visualizou a área de Recadastramento";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
-    }
+    $origem = get('origem',get_session('origem'));
+    set_session('origem',$origem);
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -53,7 +48,7 @@ if($acesso){
     AreaServidor::cabecalho();
     
     $grid = new Grid();
-    $grid->abreColuna(12);      
+    $grid->abreColuna(12);
             
 ################################################################
     
@@ -346,7 +341,11 @@ if($acesso){
         case "editar" :
             
             # Botao voltar
-            botaoVoltar("?");
+            if($origem == "menuServidor"){
+                botaoVoltar("servidorMenu.php");
+            }else{
+                botaoVoltar("?");
+            }
             
             # Dados do Servidor
             get_DadosServidor($id);
@@ -715,7 +714,13 @@ if($acesso){
                 
                 # Grava o log tbpessoa
                 $intra->registraLog($idUsuario,$data,$atividade,"tbpessoa",$idPessoa,$tipoLog,$idServidor);
-                loadPage("?");
+                
+                if($origem == "menuServidor"){
+                    loadPage("servidorMenu.php");
+                }else{
+                    loadPage("?");
+                }
+                
             }else{
                 alert($msgErro);
                 back(1);

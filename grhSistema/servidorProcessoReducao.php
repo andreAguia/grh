@@ -107,7 +107,7 @@ if($acesso){
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado);  
+            $objeto->gravar($idServidorPesquisado,"servidorProcessoReducaoExtra.php");  
             break;
     }
     $page->terminaPagina();

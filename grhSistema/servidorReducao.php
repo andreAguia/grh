@@ -437,7 +437,7 @@ if($acesso){
         #########################################################################################################
 
             # Processo
-            $grid->abreColuna(12,6);
+            $grid->abreColuna(12,4);
             
                 #$processo = trataNulo($pessoal->get_numProcessoReducao($idServidorPesquisado));
                 $painel = new Callout();
@@ -470,7 +470,7 @@ if($acesso){
         #########################################################################################################
             
             # Contatos
-            $grid->abreColuna(12,6);
+            $grid->abreColuna(12,8);
             
                 # Pega os telefones
                 $telefones = $pessoal->get_telefones($idServidorPesquisado);
@@ -480,11 +480,11 @@ if($acesso){
                 $emailUenf = $pessoal->get_emailUenf($idServidorPesquisado);
                 $emails = NULL;
                 
-                # Junta os emails
+                # junta os Emails
                 if(!vazio($emailPessoal)){
                     $emails .= "$emailPessoal<br/>"; 
                 }
-                
+
                 if(!vazio($emailUenf)){
                     $emails .= "$emailUenf<br/>"; 
                 }
@@ -496,8 +496,22 @@ if($acesso){
                 
                     tituloTable("Contatos:");
                     br();
+                    
+                    # Divide em 2 colunas
+                    $grid2 = new Grid();
+                    $grid2->abreColuna(6);
+                    
+                    #p("Telefone(s)","center","f12");
                     p($telefones,"center","f14");
+                    
+                    $grid2->fechaColuna();
+                    $grid2->abreColuna(6);
+                    
+                    #p("E-mail(s)","center","f12");
                     p($emails,"center","f14");
+                    
+                    $grid2->fechaColuna();
+                    $grid2->fechaGrid();
                                     
                     $div = new Div("divEditaProcesso");
                     $div->abre();

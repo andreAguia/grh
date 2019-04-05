@@ -563,7 +563,17 @@ if($acesso){
             $grid->fechaGrid();        
             $objeto->listar(); 
             break;
-        case "editar" :			
+            
+        case "editar" :
+            $menu = new Menu();
+            $menu->add_item('titulo','Documentos');
+            $menu->add_item('linkWindow','CI de Início do Benefício','../grhRelatorios/reducaoCiInicio.php');
+            
+            $objeto->set_menuLateralEditar($menu);
+            
+            $objeto->editar($id); 
+            break;
+        
         case "excluir" :
             $objeto->$fase($id); 
             break;

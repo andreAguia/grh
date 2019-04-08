@@ -241,7 +241,7 @@ if($acesso){
                                WHERE idReducao = '.$id);
 
     # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
+    $objeto->set_linkEditar('?fase=ver');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
@@ -564,16 +564,18 @@ if($acesso){
             $objeto->listar(); 
             break;
             
-        case "editar" :
+        case "ver" :
             $menu = new Menu();
             $menu->add_item('titulo','Documentos');
-            $menu->add_item('linkWindow','CI de Início do Benefício','../grhRelatorios/reducaoCiInicio.php');
+            $menu->add_item('linkWindow','CI de Início do Benefício','../grhRelatorios/ciReducaoInicio.php?id='.$id);
+            $menu->add_item('linkWindow','CI de Término do Benefício','../grhRelatorios/ciReducaotermino.php?id='.$id);
             
             $objeto->set_menuLateralEditar($menu);
             
-            $objeto->editar($id); 
+            $objeto->ver($id); 
             break;
         
+        case "editar" :
         case "excluir" :
             $objeto->$fase($id); 
             break;

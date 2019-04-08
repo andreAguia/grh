@@ -25,6 +25,20 @@ class ReducaoCargaHoraria{
         
     ###########################################################
     
+    public function set_idServidor($idServidor){
+    /**
+     * Informa o idServidor quando não se pode informar no instanciamento da classe
+     * 
+     * @param $idServidor string NULL O idServidor
+     * 
+     * @syntax $input->set_id($id);  
+     */
+    
+        $this->set_idServidor = $idServidor;
+    }
+    
+    ###########################################################
+    
     function get_numProcesso(){
 
     /**
@@ -114,6 +128,29 @@ class ReducaoCargaHoraria{
         }else{
             return NULL;
         }
+    }
+    
+    ###########################################################
+    
+    function get_dadosCiInicio($idReducao){
+        
+    /**
+     * fornece a próxima tarefa a ser realizada
+     */
+        
+        # Pega os dados
+        $select="SELECT numCiInicio,
+                        dtInicio,
+                        dtPublicacao,
+                        pgPublicacao,
+                        idServidor
+                   FROM tbreducao
+                  WHERE idReducao = $idReducao";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select,FALSE);
+        
+        return $dados;
     }
     
     ###########################################################

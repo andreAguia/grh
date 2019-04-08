@@ -317,9 +317,11 @@ if($acesso){
             $controle->set_autofocus($autofocus);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
+            $controle->set_formation('?');
             $controle->set_disabled($disabled);
             $controle->set_col(12);
             $form->add_item($controle);
+            
             $form->show();
             
             $grid1->fechaColuna();            

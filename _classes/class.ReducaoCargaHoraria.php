@@ -321,7 +321,7 @@ class ReducaoCargaHoraria{
             if(vazio($row[1])){
                 $periodo = "---";
             }else{
-                $periodo = $row[1]." meses";
+                $periodo = $row[1]." m";
             }
 
             # Trata a data de término
@@ -331,11 +331,21 @@ class ReducaoCargaHoraria{
                 $dttermino = date_to_php($row[2]);
             }
         
-            $retorno = "Início  : ".$dtInicio."<br/>"
-                     . "Período : ".$periodo."<br/>"
-                     . "Término : ".$dttermino;
+            $retorno = "Início : ".$dtInicio."<br/>"
+                     . "Período: ".$periodo."<br/>"
+                     . "Término: ".$dttermino;
         }else{
             $retorno = NULL;
+        }
+        
+        # Verifica se estamos a 90 dias da data Termino
+        if(!vazio($row[2])){
+            $hoje = date("d/m/Y");
+            $dias = dataDif($hoje, $dttermino);
+
+            if(($dias > 0) AND ($dias < 90)){
+                $retorno.= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+            }
         }
                                 
         return $retorno;
@@ -420,7 +430,7 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT resultado, dtCiencia
+        $select = 'SELECT resultado, pendencia
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
@@ -448,6 +458,11 @@ class ReducaoCargaHoraria{
             case 2:
                 $retorno = "Indeferido";
                 break;
+        }
+        
+        # Verifica se há pendências
+        if($row[1] == 1){
+            $retorno.= "<br/><span title='Existem pendências nessa solicitação de redução de carga horária!' class='warning label'>Pendências</span>";
         }
                                 
         return $retorno;
@@ -488,13 +503,92 @@ class ReducaoCargaHoraria{
                 $retorno = "Arquivado";
                 break;
         }
-        
-        # Verifica se há pendências
-        if($row[1] == 1){
-            $retorno.= "<br/><span title='Existem pendências nessa solicitação de redução de carga horária!' class='warning label'>Com Pendência!</span>";
-        }
                                 
         return $retorno;
+    }
+    
+    ###########################################################
+    
+    function mudaStatus($idServidor = NULL){
+
+    /**
+     * 
+     * Percorre a tabela de redução de carga horária alterando o status
+     * 
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT resultado, 
+                          status,
+                          dtInicio,
+                          periodo,
+                          idReducao
+                     FROM tbreducao';
+        
+        if(!is_null($idServidor)){
+            $select .= ' WHERE idServidor = "'.$idServidor.'"';
+        } 
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+        
+        # Percorre o array
+        foreach($row as $reducao){
+            
+            $resultado = $reducao[0];
+            $status = $reducao[1];
+            $dtInicio = date_to_php($reducao[2]);
+            $periodo = $reducao[3];
+            $idReducao = $reducao[4];
+            
+            $statusCerto = NULL;
+            
+            # Preenche o status de acordo com o resultado            
+            switch ($resultado){
+
+                # Resultado: nulo - Ainda não saiu o resultado
+                # Status: 1 - Em aberto
+                case NULL:
+                    $statusCerto = 1;
+                    break;
+
+                # Resultado: 1 - Deferido
+                # Status:    2 - Vigente até o término do benefício, após essa data passa para 3 - Arquivado
+                case 1:
+
+                    # Verifica se já está cadastrada a data de início e o período
+                    if((is_null($dtInicio)) OR (is_null($periodo))){
+                        $statusCerto = 2;
+                    }else{
+                        $dtTermino = addMeses($dtInicio,$periodo);
+
+                        # Verifica se a data de término já passou
+                        if(jaPassou($dtTermino)){
+                            $statusCerto = 3; // Arquivado
+                        }else{
+                            $statusCerto = 2; // Vigente
+                        }
+                    }
+                    break;
+
+                # Resultado: 2 - Indeferido
+                # Status:    3 - Arquivado
+                case 2:
+                    $statusCerto = 3;
+                    break;
+            }
+            
+            # Verifica se o status está correto, senão grava o correto
+            if($status <> $statusCerto){
+                # Define a tabela 
+                $pessoal->set_tabela("tbreducao");
+                $pessoal->set_idCampo("idReducao");
+                $pessoal->gravar("status",$statusCerto,$idReducao);
+                
+            }
+        }        
     }
     
     ###########################################################

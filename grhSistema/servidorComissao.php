@@ -154,8 +154,8 @@ if($acesso){
     # Pega os dados da combo tipo de Comissão
     $comissao = $pessoal->select('SELECT idTipoComissao,
                                          CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
-                                    FROM tbtipocomissao WHERE ativo
-                                ORDER BY simbolo');    
+                                    FROM tbtipocomissao
+                                ORDER BY ativo desc, simbolo');    
             
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',

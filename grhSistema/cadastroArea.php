@@ -39,10 +39,6 @@ if($acesso)
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -64,22 +60,15 @@ if($acesso)
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
-
-    # ordenação
-    if(is_null($orderCampo))
-            $orderCampo = "2";
-
-    if(is_null($orderTipo))
-            $orderTipo = 'asc';
         
     # select da lista
     $select = "SELECT idarea,
-                        tbtipocargo.cargo,
-                        area,
-                        idarea
-                   FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
-                  WHERE area LIKE '%$parametro%'
-               ORDER BY $orderCampo $orderTipo";
+                       tbtipocargo.cargo,
+                       area,
+                       idarea
+                  FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
+                 WHERE area LIKE '%$parametro%'
+              ORDER BY 2 asc";
     
     $objeto->set_selectLista($select);
 
@@ -91,11 +80,6 @@ if($acesso)
                                 FROM tbarea
                                WHERE idarea = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     #$objeto->set_linkExcluir('?fase=excluir');
@@ -106,6 +90,7 @@ if($acesso)
     $objeto->set_label(array("id","Cargo","Area","Servidores<br/>Ativos"));
     $objeto->set_width(array(5,20,60,10));
     $objeto->set_align(array("center","left","left","center"));
+    #$objeto->set_rowspan(1);
 
     $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,"get_servidoresArea"));

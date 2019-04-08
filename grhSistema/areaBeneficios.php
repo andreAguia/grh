@@ -18,6 +18,10 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    
+    # Roda a rotina que verifica os status
+    $reducao = new ReducaoCargaHoraria();
+    $reducao->mudaStatus();
 	
     # Verifica a fase do programa
     $fase = get('fase','listaReducao');
@@ -102,18 +106,13 @@ if($acesso){
                               idReducao,
                               dtSolicitacao,
                               idReducao,
-                              CASE
-                                WHEN resultado = 1 THEN 'Deferido'
-                                WHEN resultado = 2 THEN 'Indeferido'
-                                ELSE '---'
-                              END,
-                              dtPublicacao,
-                               idReducao,
-                               idServidor
-                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                          JOIN tbreducao USING (idServidor)
-                         WHERE NOT arquivado
-                      ORDER BY dtSolicitacao desc";
+                              idReducao,
+                              idReducao,
+                              idReducao,
+                              idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbreducao USING (idServidor)
+                     ORDER BY status, dtInicio";
             
             $resumo = $servidor->select($select);
 
@@ -122,15 +121,32 @@ if($acesso){
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Id/Matrícula","Nome","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
             $tabela->set_align(array("center","left","center","center","left","center","center","left"));
-            $tabela->set_funcao(array("idMatricula",NULL,NULL,"date_to_php",NULL,NULL,"date_to_php"));
-            $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria",NULL,NULL,"ReducaoCargaHoraria"));
-            $tabela->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeDadosPericia",NULL,NULL,"exibePeriodo"));
-            $tabela->set_titulo("Servidores com Solicitação de Redução de Carga Horária Em Aberto");
+            $tabela->set_funcao(array("idMatricula",NULL,NULL,"date_to_php"));
+            
+            $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+            $tabela->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            
+            $tabela->set_titulo("Servidores com Solicitação de Redução de Carga Horária");
             
             $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->set_nomeColunaEditar("Acessar");
             $tabela->set_editarBotao("ver.png");
             $tabela->set_idCampo('idServidor');
+            
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
+                                                    'valor' => 'Em Aberto',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),  
+                                              array('coluna' => 2,
+                                                    'valor' => 'Arquivado',
+                                                    'operador' => '=',
+                                                    'id' => 'arquivado'),
+                                              array('coluna' => 2,
+                                                    'valor' => 'Vigente',
+                                                    'operador' => '=',
+                                                    'id' => 'vigenteReducao')   
+                                                    ));
+            
             $tabela->show();
             
             # Pega o time final

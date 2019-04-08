@@ -141,10 +141,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_licencaPremioVencendo
@@ -206,10 +213,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_trienioVencendo
@@ -294,10 +308,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+       }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
-    ###########################################################
+
+    ##########################################################
 
     /**
      * Método get_trienioVencido
@@ -382,10 +403,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_auxilioCrecheVencido
@@ -448,10 +476,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_motoristaCarteiraVencida
@@ -520,10 +555,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
-    ###########################################################
+
+    ##########################################################
     
      /**
      * Método get_motoristaSemDataCarteira
@@ -590,10 +632,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+       }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
-    ###########################################################
+
+    ##########################################################
     
      /**
      * Método get_motoristaSemCarteira
@@ -659,10 +708,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
-    ###########################################################
+
+    ##########################################################
     
      /**
      * Método get_servidorCom74
@@ -727,10 +783,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
-    ###########################################################
+
+    ##########################################################
     
      /**
      * Método get_servidorComMais74
@@ -794,10 +857,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+       }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorComMaisde1MatriculaAtiva
@@ -870,10 +940,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorComPerfilOutros
@@ -941,10 +1018,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorSemPerfil
@@ -1012,10 +1096,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorTecnicoEstatutarioSemConcurso
@@ -1087,10 +1178,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-     ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorProfessorEstatutarioSemConcurso
@@ -1161,10 +1259,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_cargoComissaoNomeacaoIgualExoneracao
@@ -1233,10 +1338,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorCom10MesesLicencaSemVencimento
@@ -1306,10 +1418,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorComMaisde1AnoLicencaSemVencimento
@@ -1378,10 +1497,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorSemIdFuncional
@@ -1450,10 +1576,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
     
      /**
      * Método get_servidorSemDtNasc
@@ -1516,9 +1649,16 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
+
     ##########################################################
     
      /**
@@ -1590,9 +1730,16 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
+
     ##########################################################
     
      /**
@@ -1664,9 +1811,16 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
+
     ##########################################################
     
      /**
@@ -1735,6 +1889,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -1806,6 +1967,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -1875,10 +2043,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
-    
-    ###########################################################
+
+    ##########################################################
     
      /**
      * Método get_servidorInativoComPerfilOutros
@@ -1946,6 +2121,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2017,6 +2199,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2088,6 +2277,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2161,6 +2357,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2229,6 +2432,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2298,6 +2508,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2368,10 +2585,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_feriasAntesAdmissao
@@ -2434,10 +2658,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_licencaPremioEstranha
@@ -2503,6 +2734,13 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
@@ -2577,10 +2815,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_folgaFruidaTreMaiorConcedida
@@ -2644,10 +2889,17 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
 
     /**
      * Método get_progressaoImportada
@@ -2710,8 +2962,239 @@ class Checkup {
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
             }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
         }
     }
 
-    ###########################################################
+    ##########################################################
+    
+     /**
+     * Método get_celetistaInativoFimCessao
+     * 
+     * Celetista com situação Fim de Cessão
+     */
+    
+    public function get_celetistaInativoFimCessao($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)                                     
+                    WHERE situacao = 6 AND idPerfil = 4';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Celetista(s) com situação Fim de Cessão.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação'];
+        $align = ['center','center','left','center','left'];
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
+        $funcao = [NULL,"dv"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorSemSexo
+     * 
+     * Servidor sem Sexo Cadastrado
+     */
+    
+    public function get_servidorSemSexo($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)                                     
+                    WHERE sexo is NULL';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidor sem sexo cadastrado no sistema.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação'];
+        $align = ['center','center','left','center','left'];
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
+        $funcao = [NULL,"dv"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorSemSexo
+     * 
+     * Servidor sem Sexo Cadastrado
+     */
+    
+    public function get_servidorSemEstCiv($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)                                     
+                    WHERE estciv is NULL';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidor sem estado civil cadastrado no sistema.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação'];
+        $align = ['center','center','left','center','left'];
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
+        $funcao = [NULL,"dv"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }}elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
 }

@@ -18,6 +18,10 @@ $acesso = Verifica::acesso($idUsuario,2);
 if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    
+    # Roda a rotina que verifica os status
+    $reducao = new ReducaoCargaHoraria($idServidorPesquisado);
+    $reducao->mudaStatus();
 	
     # Verifica a fase do programa
     $fase = get('fase','editar');
@@ -107,7 +111,7 @@ if($acesso){
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado,"servidorProcessoReducaoExtra.php");  
+            $objeto->gravar($idServidorPesquisado);  
             break;
     }
     $page->terminaPagina();

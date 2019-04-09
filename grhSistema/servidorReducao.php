@@ -234,6 +234,7 @@ if($acesso){
                                      dtInicio,
                                      periodo,
                                      numCiInicio,
+                                     dtCiInicio,
                                      numCiTermino,
                                      obs,
                                      idServidor
@@ -241,7 +242,7 @@ if($acesso){
                                WHERE idReducao = '.$id);
 
     # Caminhos
-    $objeto->set_linkEditar('?fase=ver');
+    $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
@@ -400,14 +401,21 @@ if($acesso){
                                        'col' => 3,
                                        'title' => 'Número da Ci informando a chefia imediata do servidor da data de início do benefício.',
                                        'linha' => 8),
+                               array ( 'nome' => 'dtCiInicio',
+                                       'label' => 'Data da Ci:',
+                                       'tipo' => 'data',
+                                       'size' => 10,
+                                       'col' => 3,
+                                       'title' => 'A data da CI de inicio.',
+                                       'linha' => 8),        
                                array ( 'nome' => 'numCiTermino',
                                        'label' => 'CI informando Término:',
                                        'tipo' => 'texto',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Número da Ci informando a chefia imediata do servidor da data de término do benefício.',
-                                       'linha' => 8),
-                               array ('linha' => 9,
+                                       'linha' => 9),
+                               array ('linha' => 10,
                                        'col' => 12,
                                        'nome' => 'obs',
                                        'label' => 'Obs:',
@@ -420,7 +428,7 @@ if($acesso){
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,
-                                       'linha' => 10)));
+                                       'linha' => 11)));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

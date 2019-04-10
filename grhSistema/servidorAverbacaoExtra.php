@@ -25,12 +25,12 @@ if($dtInicial > $dtAdmissao){
 
 # Verifica se a data de término é posterior a de admissao
 if($dFinal > $dtAdmissao){
-    $msgErro.='Você não pode ter tempo cadastrado concomitante ao tempo de Uenf!\nA data de Término está errada!';
+    $msgErro.='Você não pode ter tempo cadastrado concomitante ao tempo de Uenf!\nA data final está errada!';
     $erro = 1;
 }
 
 # Verifica se a data de término é posterior a data inicial
 if($dFinal < $dtInicial){
-    $msgErro.='Você não pode ter a data de término anterior a data inicial!';
+    $msgErro.='Você não pode ter a data final anterior a data inicial!';
     $erro = 1;
 }

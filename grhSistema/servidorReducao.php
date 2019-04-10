@@ -236,6 +236,7 @@ if($acesso){
                                      numCiInicio,
                                      dtCiInicio,
                                      numCiTermino,
+                                     dtCiTermino,
                                      obs,
                                      idServidor
                                 FROM tbreducao
@@ -415,6 +416,13 @@ if($acesso){
                                        'col' => 3,
                                        'title' => 'Número da Ci informando a chefia imediata do servidor da data de término do benefício.',
                                        'linha' => 9),
+                               array ( 'nome' => 'dtCiTermino',
+                                       'label' => 'Data da Ci:',
+                                       'tipo' => 'data',
+                                       'size' => 10,
+                                       'col' => 3,
+                                       'title' => 'A data da CI de término.',
+                                       'linha' => 9),  
                                array ('linha' => 10,
                                        'col' => 12,
                                        'nome' => 'obs',

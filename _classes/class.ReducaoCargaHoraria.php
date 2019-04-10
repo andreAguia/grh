@@ -410,13 +410,14 @@ class ReducaoCargaHoraria{
         
         # Retorno
         if($row[2] == 1){
-            $link = new Link("Início: $row[0]","../grhRelatorios/ciReducaoInicio.php?id='.$idReducao.'");
-            $link->set_target("_blank");
-            $link->show();
-
-            
+            $retorno = "CI de Início  : ".trataNulo($row[0])."<br/>"
+                     . "CI de Término : ".trataNulo($row[1]);
+        }else{
+            $retorno = NULL;
         }
-    }
+
+        return $retorno;
+        }
     
     ###########################################################
     

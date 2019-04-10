@@ -410,13 +410,22 @@ class ReducaoCargaHoraria{
         
         # Retorno
         if($row[2] == 1){
-            $retorno = "CI de Início  : ".trataNulo($row[0])."<br/>"
-                     . "CI de Término : ".trataNulo($row[1]);
-        }else{
-            $retorno = NULL;
+            # Ci início
+            #echo "CI Início  : ".trataNulo($row[0]);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_url('#');
+            $botao->set_label("CI Início  : ".trataNulo($row[0]));
+            $botao->set_target("_blank");
+            $botao->set_imagem(PASTA_FIGURAS.'printer.png',20,20);
+            $botao->set_title('Imprime a Ci de início');
+            $botao->show();
+            
+            br();
+            
+            # Ci Término
+            echo "CI Término : ".trataNulo($row[1]);
         }
-
-        return $retorno;
         }
     
     ###########################################################

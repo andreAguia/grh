@@ -65,25 +65,25 @@ if($acesso){
     }
     
     $select = 'SELECT dtInicial,
-                    dtFinal,
-                    dias,
-                    empresa,
-                    CASE empresaTipo
-                       WHEN 1 THEN "Pública"
-                       WHEN 2 THEN "Privada"
-                    END,
-                    CASE regime
-                       WHEN 1 THEN "Celetista"
-                       WHEN 2 THEN "Estatutário"
-                       WHEN 3 THEN "Próprio"
-                    END,
-                    cargo,
-                    dtPublicacao,
-                    processo,
-                    idAverbacao
-               FROM tbaverbacao
-              WHERE idServidor = '.$idServidorPesquisado.'
-           ORDER BY '.$orderCampo.' '.$orderTipo;
+                      dtFinal,
+                      dias,
+                      empresa,
+                      CASE empresaTipo
+                         WHEN 1 THEN "Pública"
+                         WHEN 2 THEN "Privada"
+                      END,
+                      CASE regime
+                         WHEN 1 THEN "Celetista"
+                         WHEN 2 THEN "Estatutário"
+                         WHEN 3 THEN "Próprio"
+                      END,
+                      cargo,
+                      dtPublicacao,
+                      processo,
+                      idAverbacao
+                 FROM tbaverbacao
+                WHERE idServidor = '.$idServidorPesquisado.'
+             ORDER BY '.$orderCampo.' '.$orderTipo;
 
     # select da lista
     $objeto->set_selectLista($select);
@@ -506,7 +506,7 @@ if($acesso){
             $grid1->fechaColuna();
             
             #############################################################
-            # Resumo
+            # Resumo            
             
             $grid1->abreColuna(3); 
             
@@ -537,11 +537,9 @@ if($acesso){
             $grid1->fechaColuna();
             
             #############################################################
-            # Aposentadoria
+            # Aposentadoria            
             
             $grid1->abreColuna(3);
-            
-            
             
             # Monta a tabela do resumo de tempo
             $tabela = new Tabela();
@@ -570,6 +568,11 @@ if($acesso){
             $tabela->set_idCampo('idAverbacao');
             $tabela->set_editar('?fase=editar&id=');
             $tabela->set_excluir('?fase=excluir&id=');
+
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                           'valor' => "Total",
+                                                           'operador' => '=',
+                                                           'id' => 'diasFaltando')));
             $tabela->show();
             
             $grid->fechaColuna();
@@ -577,9 +580,12 @@ if($acesso){
             break;
             
         case "editar" :			
-        case "excluir" :	
-        case "gravar" :
+        case "excluir" :
             $objeto->$fase($id);
+            break;
+            
+        case "gravar" :
+            $objeto->gravar($id,"servidorAverbacaoExtra.php");
             break;
     }									 	 		
 

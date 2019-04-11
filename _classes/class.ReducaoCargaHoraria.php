@@ -33,13 +33,13 @@ class ReducaoCargaHoraria{
      * 
      * @syntax $input->set_id($id);  
      */
-    
+        
         $this->set_idServidor = $idServidor;
     }
     
     ###########################################################
     
-    function get_numProcesso(){
+    function get_numProcesso($idServidor = NULL){
 
     /**
      * Informe o número do processo de solicitação de redução de carga horária de um servidor
@@ -47,10 +47,15 @@ class ReducaoCargaHoraria{
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
+        # Verifica se foi informado
+        if(vazio($idServidor)){
+            $idServidor = $this->idServidor;
+        }
+        
         # Pega os dias publicados
-        $select = 'SELECT processoReducao, processoAntigoReducao
+        $select = 'SELECT processoReducao
                      FROM tbservidor
-                    WHERE idServidor = '.$this->idServidor;
+                    WHERE idServidor = '.$idServidor;
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
@@ -61,7 +66,7 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
-    function get_numProcessoAntigo(){
+    function get_numProcessoAntigo($idServidor = NULL){
 
     /**
      * Informe o número do processo Antigo de solicitação de redução de carga horária de um servidor
@@ -69,10 +74,15 @@ class ReducaoCargaHoraria{
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
+        # Verifica se foi informado
+        if(vazio($idServidor)){
+            $idServidor = $this->idServidor;
+        }
+        
         # Pega os dias publicados
         $select = 'SELECT processoAntigoReducao
                      FROM tbservidor
-                    WHERE idServidor = '.$this->idServidor;
+                    WHERE idServidor = '.$idServidor;
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
@@ -146,7 +156,7 @@ class ReducaoCargaHoraria{
                         idServidor
                    FROM tbreducao
                   WHERE idReducao = $idReducao";
-
+        
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select,FALSE);
         
@@ -410,23 +420,67 @@ class ReducaoCargaHoraria{
         
         # Retorno
         if($row[2] == 1){
+            $retorno = "CI Início  : ".trataNulo($row[0])."<br/>"
+                     . "CI Término : ".trataNulo($row[1]);
+        }else{
+            $retorno = NULL;
+        }
+        
+        return $retorno;
+    }
+    
+    ###########################################################
+    
+    function exibeBotaoCi($idReducao){
+
+    /**
+     * Exibe o botão de imprimir as Cis de uma solicitação de redução de carga horária específica
+     * 
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT numCiInicio, numCiTermino, resultado
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        if($row[2] == 1){
             # Ci início
             #echo "CI Início  : ".trataNulo($row[0]);
+            #echo "CI Término : ".trataNulo($row[1]);
             
+            
+            $tamanhoImage = 20;
+            $menu = new MenuGrafico(2);
+            
+            # Ci Início
             $botao = new BotaoGrafico();
-            $botao->set_url('#');
-            $botao->set_label("CI Início  : ".trataNulo($row[0]));
+            #$botao->set_url('../grhRelatorios/ciReducaoInicio.php?id='.$idReducao);
+            $botao->set_url('../grhRelatorios/emManutencao.php');
+            $botao->set_label("CI Início");
             $botao->set_target("_blank");
-            $botao->set_imagem(PASTA_FIGURAS.'printer.png',20,20);
+            $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
-            $botao->show();
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label("CI Término");
+            $botao->set_url('../grhRelatorios/emManutencao.php');
+            $botao->set_target("_blank");
+            $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Imprime a Ci de término');
+            $menu->add_item($botao);
             
-            br();
+            $menu->show();
             
-            # Ci Término
-            echo "CI Término : ".trataNulo($row[1]);
         }
-        }
+    }
     
     ###########################################################
     

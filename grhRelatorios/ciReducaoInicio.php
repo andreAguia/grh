@@ -47,8 +47,7 @@ if($acesso)
     $pgPublicacao = $dados[3];
     $idServidor = $dados[4];
     
-    $reducao->set_idServidor($idServidor);
-    $processo = $reducao->get_numProcesso();
+   $processo = $reducao->get_numProcesso($idServidor);
 
     ## Monta o Relatório 
     # Menu
@@ -58,8 +57,8 @@ if($acesso)
     $menuRelatorio->set_formCampos(array(
               array ('nome' => 'ci',
                      'label' => 'CI',
-                     'tipo' => 'numero',
-                     'valor' => $ci,
+                     'tipo' => 'texto',
+                     'valor' => $numCi,
                      'size' => 5,
                      'title' => 'Número da Ci',
                      'onChange' => 'formPadrao.submit();',
@@ -78,34 +77,7 @@ if($acesso)
 
     # Cabeçalho do Relatório (com o logotipo)
     $relatorio = new Relatorio();
-    $relatorio->exibeCabecalho(); 
-
-    $valor = str_replace('.','',$valor);            // retira o ponto do milhar p/não dar problema na rotina de extenso
-    $valor = str_replace(',','.',$valor);           // passa a vírgula dos centavos para ponto (padrão americano)
-    $extenso = moedaExtenso($valor);                // pega o extenso
-    $valor = number_format($valor, 2, '.', ',');    // passa para o formato de moeda (padrão americano)
-    $valor = str_replace('.','*',$valor);           // passa o ponto (dos centavos) para *
-    $valor = str_replace(',','.',$valor);           // passa a vírgula (do milhar) para ponto (do milhar)
-    $valor = str_replace('*',',',$valor);           // passa o * para vírgula dos centavos
-
-    # Pega os dados do servidor
-    $select = 'SELECT tbservidor.idFuncional,
-                      tbpessoa.nome,
-                      tbdocumentacao.cpf,
-                      tbpessoa.endereco,
-                      tbpessoa.complemento,
-                      tbpessoa.bairro,
-                      tbpessoa.cidade,
-                      tbpessoa.UF,
-                      tbpessoa.cep,
-                      tbpessoa.agencia,
-                      tbpessoa.conta
-             FROM tbservidor
-             JOIN tbpessoa on (tbservidor.idPessoa = tbpessoa.idPessoa)
-             JOIN tbdocumentacao on (tbpessoa.idPessoa = tbdocumentacao.idpessoa)
-        WHERE tbservidor.idServidor = '.$idServidorPesquisado;
-    
-    $row = $pessoal->select($select,FALSE); 
+    $relatorio->exibeCabecalho();
     
     br(2);
     
@@ -113,7 +85,7 @@ if($acesso)
     p($assunto,'pDiaria');
     
     # CI
-    p('CI '.$lotacaoCi.' nº '.$ci,'pDiaria');
+    p('C.I.UENF/DGA/GRH Nº '.$numCi,'pDiaria');
     
     # Data
     p('Campos dos Goytacazes,'.dataExtenso($data),'pDiariaData');

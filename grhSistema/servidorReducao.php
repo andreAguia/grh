@@ -269,7 +269,7 @@ if($acesso){
     $objeto->set_funcao(array(NULL,"date_to_php"));
     
     $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeCi"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoCi"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);

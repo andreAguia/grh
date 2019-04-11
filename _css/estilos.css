@@ -48,6 +48,15 @@ img#foto2{
     left:50%;
     transform: translate(-50%);
 }
+
+a#alteraFoto{
+    font-size: 12px;
+    text-align: center;
+    color: #02548b;
+    margin: 0px;
+    width: 100;
+}
+
 /*******************************************
  * Check up
  *******************************************/

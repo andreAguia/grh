@@ -639,10 +639,10 @@ class Grh{
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_label('Endereço');
-            $botao->set_url('servidorEndereco.php');
+            $botao->set_label('Endereço & Contatos');
+            $botao->set_url('servidorEnderecoContatos.php');
             $botao->set_imagem(PASTA_FIGURAS.'bens.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Endereço do Servidor');            
+            $botao->set_title('Endereço e Contatos do Servidor');            
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();
@@ -650,7 +650,7 @@ class Grh{
             $botao->set_url('servidorContatos.php');
             $botao->set_imagem(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Dados dos Contatos do Servidor');
-            $menu->add_item($botao);
+            #$menu->add_item($botao);
 
             $botao = new BotaoGrafico();
             $botao->set_label('Documentos');
@@ -689,19 +689,31 @@ class Grh{
 
             # Define a pasta
             $arquivo = "../../_fotos/$idPessoa.jpg";
-            #echo $arquivo;
+            
             # Verifica se tem pasta desse servidor
             if(file_exists($arquivo)){
-                $foto = new Imagem($arquivo,'Foto do Servidor',150,100);
-                $foto->set_id('foto');
-                $foto->show();                
+                br();
+                
+                $botao = new BotaoGrafico();
+                $botao->set_url('?fase=exibeFoto');
+                $botao->set_imagem($arquivo,'Foto do Servidor',150,100);
+                $botao->set_title('Foto do Servidor');
+                $botao->show();
             }else{                
                 $foto = new Imagem(PASTA_FIGURAS.'foto.png','Foto do Servidor',150,100);
                 $foto->set_id('foto');
                 $foto->show();
+                br();
             }
             
-            #echo '<img alt="jujuba" src="../../../_fotos/11783.jpg" height="100" width="150">';
+            $div = new Div("center");
+            $div->abre();
+            
+            $link = new Link("Alterar Foto","?fase=uploadFoto");
+            $link->set_id("alteraFoto");
+            $link->show();
+            
+            $div->fecha();
            
         $grid2->fechaColuna();
         
@@ -1811,8 +1823,8 @@ class Grh{
             $menu = new Menu("menuServidor");
             $menu->add_item("titulo","Pessoais");
             $menu->add_item("link","Pessoais","servidorPessoais.php","Dados Pessoais Gerais do Servidor");
-            $menu->add_item("link","Endereço","servidorEndereco.php","Endereço do Servidor");
-            $menu->add_item("link","Contatos","servidorContatos.php","Dados dos Contatos do Servidor");
+            $menu->add_item("link","Endereço & Contatos","servidorEnderecoContatos.php","Endereço e Contatos do Servidor");
+            #$menu->add_item("link","Contatos","servidorContatos.php","Dados dos Contatos do Servidor");
             $menu->add_item("link","Documentos","servidorDocumentos.php","Cadastro da Documentação do Servidor");
             $menu->add_item("link","Formação","servidorFormacao.php",'Cadastro de Formação Escolar do Servidor');
             $menu->add_item("link","Dependentes","servidorDependentes.php",'Cadastro dos Dependentes do Servidor');
@@ -1989,14 +2001,25 @@ class Grh{
 
             # Verifica se tem pasta desse servidor
             if(file_exists($arquivo)){
-                $foto = new Imagem($arquivo,'Foto do Servidor',150,100);
-                $foto->set_id('foto2');
-                $foto->show();                
+                br();
+                
+                $botao = new BotaoGrafico();
+                $botao->set_url('?fase=exibeFoto');
+                $botao->set_imagem($arquivo,'Foto do Servidor',130,85);
+                $botao->set_title('Foto do Servidor');
+                $botao->show();
             }else{                
-                $foto = new Imagem(PASTA_FIGURAS.'foto.png','Servidor sem fotografia cadastrada',150,100);
+                $foto = new Imagem(PASTA_FIGURAS.'foto.png','Foto do Servidor',150,100);
                 $foto->set_id('foto2');
                 $foto->show();
             }
+            
+            $div = new Div("center");
+            $div->abre();
+            
+            $link = new Link("Alterar Foto","?fase=uploadFoto");
+            $link->set_id("alteraFoto");
+            $link->show();
 
         $painel->fecha();
         

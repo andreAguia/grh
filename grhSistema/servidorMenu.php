@@ -96,7 +96,7 @@ if($acesso){
         $linkBotao3 = new Link("Foto","?fase=uploadFoto");
         $linkBotao3->set_class('button'); 
         $linkBotao3->set_title('Upload uma nova foto');
-        $menu->add_link($linkBotao3,"right");
+        #$menu->add_link($linkBotao3,"right");
 
         if(Verifica::acesso($idUsuario,1)){
             # Histórico
@@ -502,9 +502,41 @@ if($acesso){
         
         ##################################################################
             
+            case "exibeFoto" :
+                $grid = new Grid("center");
+                $grid->abreColuna(6);
+
+                # Define a pasta
+                $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+                $arquivo = "../../_fotos/$idPessoa.jpg";
+                
+                br(2);
+                
+                $painel = new Callout("secondary","center");
+                $painel->abre();
+                
+                $foto = new Imagem($arquivo,'Foto do Servidor',500,300);
+                $foto->show();
+                
+                br(2);
+                
+                $link = new Link("Alterar Foto","?fase=uploadFoto");
+                $link->set_id("alteraFoto");
+                $link->show();
+                
+                $painel->fecha();
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
+                
+        ##################################################################
+            
             case "uploadFoto" :
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
+                
+                # 
                 
                 echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>

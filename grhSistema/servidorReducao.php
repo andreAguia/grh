@@ -263,13 +263,13 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Período","CI"));
+    $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center","center","left","center","center","left","left"));
     $objeto->set_funcao(array(NULL,"date_to_php"));
     
     $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoCi"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -486,7 +486,7 @@ if($acesso){
         #########################################################################################################
             
             # Contatos
-            $grid->abreColuna(12,8);
+            $grid->abreColuna(12,4);
             
                 # Pega os telefones
                 $telefones = $pessoal->get_telefones($idServidorPesquisado);
@@ -513,21 +513,10 @@ if($acesso){
                     tituloTable("Contatos:");
                     br();
                     
-                    # Divide em 2 colunas
-                    $grid2 = new Grid();
-                    $grid2->abreColuna(6);
-                    
                     #p("Telefone(s)","center","f12");
                     p($telefones,"center","f14");
-                    
-                    $grid2->fechaColuna();
-                    $grid2->abreColuna(6);
-                    
                     #p("E-mail(s)","center","f12");
                     p($emails,"center","f14");
-                    
-                    $grid2->fechaColuna();
-                    $grid2->fechaGrid();
                                     
                     $div = new Div("divEditaProcesso");
                     $div->abre();
@@ -535,6 +524,27 @@ if($acesso){
                         $link->set_id("editaProcesso");
                         $link->show();
                     $div->fecha();  
+                
+                $painel->fecha();
+                
+            $grid->fechaColuna();
+            
+        #########################################################################################################
+            
+            # Relatório
+            $grid->abreColuna(12,4);
+                
+                $painel = new Callout();
+                $painel->abre();
+                
+                tituloTable("Documentos:");
+                br();
+                
+                $menu = new Menu();
+                #$menu->add_item('titulo','Documentos');
+                $menu->add_item('linkWindow','Declaração de Atribuições','../grhRelatorios/ciReducaoInicio.php?id='.$id);
+                $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/ciReducaotermino.php?id='.$id);
+                $menu->show();
                 
                 $painel->fecha();
                 

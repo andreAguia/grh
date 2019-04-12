@@ -431,10 +431,10 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
-    function exibeBotaoCi($idReducao){
+    function exibeBotaoDocumentos($idReducao){
 
     /**
-     * Exibe o botão de imprimir as Cis de uma solicitação de redução de carga horária específica
+     * Exibe o botão de imprimir os documentos de uma solicitação de redução de carga horária específica
      * 
      * @obs Usada na tabela inicial do cadastro de redução
      */
@@ -442,7 +442,7 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT numCiInicio, numCiTermino, resultado
+        $select = 'SELECT resultado
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
@@ -450,31 +450,35 @@ class ReducaoCargaHoraria{
         $row = $pessoal->select($select,FALSE);
         
         # Retorno
-        if($row[2] == 1){
-            # Ci início
-            #echo "CI Início  : ".trataNulo($row[0]);
-            #echo "CI Término : ".trataNulo($row[1]);
-            
+        if($row[0] == 1){
             
             $tamanhoImage = 20;
-            $menu = new MenuGrafico(2);
+            $menu = new MenuGrafico(3);
             
             # Ci Início
             $botao = new BotaoGrafico();
-            #$botao->set_url('../grhRelatorios/ciReducaoInicio.php?id='.$idReducao);
-            $botao->set_url('../grhRelatorios/emManutencao.php');
-            $botao->set_label("CI Início");
+            $botao->set_url('../grhRelatorios/reducaoCiInicio.php?id='.$idReducao);
+            #$botao->set_url('../grhRelatorios/emManutencao.php');
+            $botao->set_label("Início");
             $botao->set_target("_blank");
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_label("CI Término");
+            $botao->set_label("Término");
             $botao->set_url('../grhRelatorios/emManutencao.php');
             $botao->set_target("_blank");
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');
+            $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label("Ato");
+            $botao->set_url('../grhRelatorios/emManutencao.php');
+            $botao->set_target("_blank");
+            $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Imprime o Ato do Reitor');
             $menu->add_item($botao);
             
             $menu->show();

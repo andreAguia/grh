@@ -59,23 +59,7 @@ if($acesso)
 
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
             p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>","left");
-
-            /*
-            if(is_numeric($lotacao)){
-                $chefe = $servidor->get_Nome($servidor->get_gerente($lotacao));
-                if(is_null($chefe)){
-                    $diretoria = $servidor->get_lotacaoDiretoria($lotacao);
-                    $chefe = $servidor->get_Nome($servidor->get_diretor($diretoria));
-                    p("Para: $chefe<br/>Diretor(a) do $diretoria","left");
-                }else{
-                    p("Para: $chefe<br/>".$servidor->get_nomeCompletoLotacao($lotacao),"left");
-                }
-            }else{
-                $chefe = $servidor->get_Nome($servidor->get_diretor($lotacao));
-                p("Para: $chefe<br/>Diretor do(a) $lotacao","left");
-            }
-             * 
-             */
+            
             p("Para: Simonne Teixeira<br/>Casa de Cultura Vila Maria","left");
             
             p("Prezado(a) Senhor(a)","left");

@@ -571,13 +571,13 @@ class Pessoal extends Bd {
 ###########################################################
 
     /**
-     * Método get_idlotacao
+     * Método get_idLotacao
      * Informa o id da lotação atual do servidor
      *
      * @param	string $idServidor  id do servidor
      */
 
-    public function get_idlotacao($idServidor){
+    public function get_idLotacao($idServidor){
         $select = 'SELECT  tblotacao.idlotacao
                       FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
                      WHERE tbhistlot.idServidor = '.$idServidor.'
@@ -4486,7 +4486,7 @@ class Pessoal extends Bd {
     
      /**
       * 
-      * Retorna o idServidor do gerente/chefe de laboratorio do setor
+      * Retorna o idServidor do gerente/chefe de laboratorio da lotação fornecida
       * 
       * @param $idLotacao integer o id da lotaçao
       * 
@@ -4509,13 +4509,13 @@ class Pessoal extends Bd {
 
    ##########################################################################################
 
-    function get_diretor($diretoria){
+    function get_diretor($idLotacao){
     
      /**
       * 
-      * Retorna o idServidor do diretor do setor
+      * Retorna o idServidor do diretor da lotação fornecida
       * 
-      * @param $diretoria varchar  sigla da diretoria
+      * @param $idLotacao integer o id da lotaçao
       * 
       */
     
@@ -4528,11 +4528,55 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is NULL AND tbtipocomissao.idTipoComissao = 16
-                     AND (tblotacao.DIR = '$diretoria')";
+                     AND (tblotacao.idlotacao = $idLotacao)";
         
         $row = parent::select($select,false);
         return $row[0];
     }
 
-   ###########################################################
+   ##########################################################################################
+
+    function get_gerenteServidor($idServidor){
+    
+     /**
+      * 
+      * Retorna o idServidor do gerente/chefe de laboratorio de Um servidor
+      * 
+      * @param $idLotacao integer o id da lotaçao
+      * 
+      */
+        
+        # Pega a lotação do servidor
+        $idLotacao = $this->get_idLotacao($idServidor);
+        
+        # Pega o idServidor do Gerente dessa Lotação
+        $idGerente = $this->get_gerente($idLotacao);
+        
+        # Retorna
+        return $idGerente;
+    }
+
+   ##########################################################################################
+
+    function get_diretorServidor($idServidor){
+    
+     /**
+      * 
+      * Retorna o idServidor do gerente/chefe de laboratorio de Um servidor
+      * 
+      * @param $idLotacao integer o id da lotaçao
+      * 
+      */
+        
+        # Pega a lotação do servidor
+        $idLotacao = $this->get_idLotacao($idServidor);
+        
+        # Pega o idServidor do Gerente dessa Lotação
+        $idDiretor = $this->get_diretor($idLotacao);
+        
+        # Retorna
+        return $idDiretor;
+    }
+
+   ######################################################################################
 }

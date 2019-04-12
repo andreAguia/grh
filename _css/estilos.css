@@ -502,33 +502,21 @@ p#termodePosse{
 
  
  /*******************************************
- * CI Diária
+ * CI 
  *******************************************/
  
- p#pDiaria{
+ p#pCi{
      text-align: justify;
      font-size: 14px;
+     line-height: 1.5;
  }
  
- p#pDiariaData{
+ p#pCiData{
      text-align: right;
      font-size: 14px;
  }
- 
- table#tableDiaria td{
-     border:#000000 solid 1px;
-     border-collapse:collapse;
-     text-align: left;
- }
- 
- table#tableDiaria th {
-     border:#000000 solid 1px;
-     font-size: 16px;
-     text-align: center;
-     border-collapse:collapse;
- }
- 
- p#pDiariaAssinatura{
+  
+ p#pCiAssinatura{
      text-align: center;
      font-size: 14px;
  }

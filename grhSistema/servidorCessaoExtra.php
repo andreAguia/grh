@@ -23,7 +23,7 @@ if(($dtInicial < $dtAdmissao) AND (!is_null($dtInicial))){
 $lotacaoCedidos = 113;
 if(!$erro){
     # Somente altera a lotação se ele já não estiver na 113
-    $lotacaoAtual = $pessoal->get_idlotacao($idServidor);
+    $lotacaoAtual = $pessoal->get_idLotacao($idServidor);
     if($lotacaoAtual <> $lotacaoCedidos){
         # Grava a nova lotação
         $campos = array("idServidor","data","lotacao","motivo");

@@ -150,10 +150,11 @@ class ReducaoCargaHoraria{
         
         # Pega os dados
         $select="SELECT numCiInicio,
+                        dtCiInicio,
                         dtInicio,
                         dtPublicacao,
                         pgPublicacao,
-                        idServidor
+                        periodo
                    FROM tbreducao
                   WHERE idReducao = $idReducao";
         

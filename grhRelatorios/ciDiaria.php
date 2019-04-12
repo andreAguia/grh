@@ -87,25 +87,25 @@ if($acesso)
     br(2);
     
     # Assunto
-    p($assunto,'pDiaria');
+    p($assunto,'pCi');
     
     # CI
-    p('CI '.$lotacaoCi.' nº '.$ci,'pDiaria');
+    p('CI '.$lotacaoCi.' nº '.$ci,'pCi');
     
     # Data
-    p('Campos dos Goytacazes,'.dataExtenso($data),'pDiariaData');
+    p('Campos dos Goytacazes,'.dataExtenso($data),'pCiData');
     br(2);
     
     # Origem
-    p('De: '.$lotacaoOrigem,'pDiaria');
+    p('De: '.$lotacaoOrigem,'pCi');
     br();
     
     # Destino
-    p('Para: '.$lotacaoDestino,'pDiaria');
+    p('Para: '.$lotacaoDestino,'pCi');
     br(2);
     
     # Texto
-    p('Encaminhamos o presente Processo referente a diária(s), no valor total de R$ '.$valor.' ('.$extenso.'), do servidor(a) abaixo relacionado(a), para as providências que fizerem necessárias.','pDiaria');
+    p('Encaminhamos o presente Processo referente a diária(s), no valor total de R$ '.$valor.' ('.$extenso.'), do servidor(a) abaixo relacionado(a), para as providências que fizerem necessárias.','pCi');
     br(3);
     
     # Tabela
@@ -163,8 +163,8 @@ if($acesso)
     br(4);
     
     # Assinatura
-    p('____________________________________________________','pDiariaAssinatura');
-    p('Gerente','pDiariaAssinatura');
+    p('____________________________________________________','pCiAssinatura');
+    p('Gerente','pCiAssinatura');
 
     $grid->fechaColuna();
     $grid->fechaGrid();

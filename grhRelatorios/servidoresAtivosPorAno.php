@@ -35,6 +35,7 @@ if($acesso)
     
     $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
+                     tbservidor.idServidor,
                      tbdocumentacao.cpf,
                      tbpessoa.emailUenf,
                      tbpessoa.emailPessoal,
@@ -53,12 +54,15 @@ if($acesso)
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores com E-mail e CPF');
-    $relatorio->set_subtitulo('Por Tipo de Cargo e Ordenados pelo Nome');
     $relatorio->set_tituloLinha2($cargo." Ativos em  ".$parametroAno);
-    $relatorio->set_label(array('IdFuncional','Nome','CPF','Email UENF','Email Pessoal','Admissão','Saída'));
+    $relatorio->set_subtitulo('Por Tipo de Cargo e Ordenados pelo Nome');
+    $relatorio->set_label(array('IdFuncional','Nome','Lotação','CPF','Email UENF','Email Pessoal','Admissão','Saída'));
     #$relatorio->set_width(array(10,30,16,22,22));
-    $relatorio->set_align(array("center","left","center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
+    $relatorio->set_align(array("center","left","left","center","left","left"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
+    
+    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_Lotacao"));
     
     $relatorio->set_conteudo($result);
     

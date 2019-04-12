@@ -164,14 +164,15 @@ if($acesso){
         $botaoLegis->set_disabled(TRUE);
         $botaoLegis->set_title('Exibe as Legislação pertinente');
         #$botaoLegis->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRfb7P06MCBHAwd15hKm6KWV4-y0I8yBzlac58uAA-xCHeaL9aCbtSGCgGguZzaPQafvXYvGqWhwG0r/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-        $menu->add_link($botaoLegis,"right");
+        #$menu->add_link($botaoLegis,"right");
 
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de redução da carga horária");
-        $botaoRel->set_onClick("window.open('../grhRelatorios/servidorReducao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+        $botaoRel->set_url("../grhRelatorios/servidorReducao.php");
+        $botaoRel->set_target("_blank");        
         $menu->add_link($botaoRel,"right");
         
         # Fluxograma
@@ -179,7 +180,8 @@ if($acesso){
         $botaoFluxo = new Button();
         $botaoFluxo->set_imagem($imagem);
         $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo redução da carga horária");
-        $botaoFluxo->set_onClick("window.open('../_diagramas/reducao.jpg','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=1100,height=1100');");
+        $botaoFluxo->set_url("../_diagramas/reducao.jpg");
+        $botaoFluxo->set_target("_blank");        
         $menu->add_link($botaoFluxo,"right");
         
         $menu->show();
@@ -531,7 +533,7 @@ if($acesso){
             
         #########################################################################################################
             
-            # Relatório
+            # Documentos
             $grid->abreColuna(12,4);
                 
                 $painel = new Callout();

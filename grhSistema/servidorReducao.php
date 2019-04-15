@@ -611,6 +611,64 @@ if($acesso){
         case "gravar" :
             $objeto->gravar($id,"servidorReducaoExtra.php");
             break;
+        
+        case "ciInicio" : 
+            
+            # Pega os Dados
+            $dados = $reducao->get_dadosCiInicio($id);
+
+            # Da Redução
+            $numCiInicio = $dados[0];
+            $dtCiInicio = $dados[1];
+            $dtInicio = date_to_php($dados[2]);
+            $dtPublicacao = date_to_php($dados[3]);
+            $pgPublicacao = $dados[4];
+            $periodo = $dados[5];
+            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da Ci
+            if(vazio($numCiInicio)){
+                $msgErro.='Não tem número de Ci de Início cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da CI
+            if(vazio($dtCiInicio)){
+                $msgErro.='Não tem data da Ci de Início cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da Publicação
+            if(vazio($dtPublicacao)){
+                $msgErro.='Não tem data da Publicação cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data de Início
+            if(vazio($dtInicio)){
+                $msgErro.='Não tem data de início do benefício cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica o período
+            if(vazio($periodo)){
+                $msgErro.='O período não foi cadastrado!\n';
+                $erro = 1;
+            }
+            
+            # Verifica se teve erro
+            if($erro == 0){
+                loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id,"_blank");
+                loadPage("?");
+            }else{
+                alert($msgErro);
+                loadPage("?");
+            }	
+            break;
     }									 	 		
 
     $page->terminaPagina();

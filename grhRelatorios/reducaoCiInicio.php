@@ -35,23 +35,23 @@ if($acesso)
 
     # pega os dados
     $dados = $reducao->get_dadosCiInicio($id);
-
-    # Número da Ci
-    $numCi = $dados[0];
-    
-    # Data da CI
-    $dtCiInicio = date_to_php($dados[1]);
-    if(vazio($dtCiInicio)){
-        $dtCiInicio = date("d/m/YYYY");
-    }
     
     # Da Redução
+    $numCi = $dados[0];
+    $dtCiInicio = date_to_php($dados[1]);
     $dtInicio = date_to_php($dados[2]);
     $dtPublicacao = date_to_php($dados[3]);
     $pgPublicacao = $dados[4];
     $periodo = $dados[5];
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
     
+    # Trata a publicação
+    if(vazio($pgPublicacao)){
+        $publicacao = $dtPublicacao;
+    }else{
+        $publicacao = "$dtPublicacao, pág. $pgPublicacao";
+    }       
+            
     # Gerente do GRH (id 66)
     $idGerenteGrh = $pessoal->get_gerente(66);
     $nomeGerente = $pessoal->get_nome($idGerenteGrh);
@@ -63,6 +63,7 @@ if($acesso)
     $idGerenteDestino = $pessoal->get_gerente($idLotacao);
     $nomeGerenteDestino = $pessoal->get_nome($idGerenteDestino);
     $lotacaoDestino = $pessoal->get_nomeLotacao($idLotacao);
+    $gerenciaDescricao = $pessoal->get_gerenciaDescricao($idLotacao);
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -74,23 +75,7 @@ if($acesso)
     ## Monta o Relatório 
     # Menu
     $menuRelatorio = new menuRelatorio();
-    $menuRelatorio->set_botaoVoltar(NULL);
-    
-    $menuRelatorio->set_formCampos(array(
-              array ('nome' => 'ci',
-                     'label' => 'CI',
-                     'tipo' => 'texto',
-                     'valor' => $numCi,
-                     'size' => 5,
-                     'title' => 'Número da Ci',
-                     'onChange' => 'formPadrao.submit();',
-                     'col' => 3,
-                     'linha' => 1)
-        ));
-
-    $menuRelatorio->set_formFocus('contatos');		
-    $menuRelatorio->set_formLink('?');
-    
+    $menuRelatorio->set_botaoVoltar(NULL);    
     $menuRelatorio->show();
     
     # Cabeçalho do Relatório (com o logotipo)
@@ -113,25 +98,30 @@ if($acesso)
     $grid->abreColuna(6);
     
     # Data
-    p('Campos dos Goytacazes,'.dataExtenso($dtCiInicio),'pCiData');
+    p('Campos dos Goytacazes, '.dataExtenso($dtCiInicio),'pCiData');
     
     $grid->fechaColuna();
     $grid->fechaGrid();
     
     # Origem
-    p('De: '.$nomeGerente.'<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$lotacaoOrigem,'pCi');
+    p('De: '.$nomeGerente.'<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$lotacaoOrigem,'pCi');
     br();
     
     # Destino
-    p('Para: '.$nomeGerenteDestino.'<br/'.$lotacaoDestino,'pCi');
-    br(2);
+    p('Para: '.$nomeGerenteDestino.'<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$gerenciaDescricao,'pCi');
+    br();
     
     # Assunto
     p("Assunto: ".$assunto,'pCi');
+    br();
     
     # Texto
-    p("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspVimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>, ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, atendendo processo $processo, publicado no DOERJ de $dtPublicacao, pág. $pgPublicacao, em anexo.",'pCi');
-    br(3);
+    p("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspVimos informar a concessão"
+    . " de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
+    . " ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, "
+    . "atendendo processo $processo, publicado no DOERJ de $publicacao,"
+    . " em anexo.",'pCi');
+    br();
     
     # Atenciosamente
     p('Atenciosamente','pCi');

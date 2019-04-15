@@ -458,10 +458,11 @@ class ReducaoCargaHoraria{
             
             # Ci Início
             $botao = new BotaoGrafico();
-            $botao->set_url('../grhRelatorios/reducaoCiInicio.php?id='.$idReducao);
+            $botao->set_url('?fase=ciInicio&id='.$idReducao);
+            #$botao->set_url('../grhRelatorios/reducaoCiInicio.php?id='.$idReducao);
             #$botao->set_url('../grhRelatorios/emManutencao.php');
             $botao->set_label("Início");
-            $botao->set_target("_blank");
+            #$botao->set_target("_blank");
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
             $menu->add_item($botao);

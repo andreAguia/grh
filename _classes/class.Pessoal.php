@@ -4509,6 +4509,33 @@ class Pessoal extends Bd {
 
    ##########################################################################################
 
+    function get_gerenciaDescricao($idLotacao){
+    
+     /**
+      * 
+      * Retorna a descrição dessa gerência ou chefia de Laboratório da lotação fornecida
+      * 
+      * @param $idLotacao integer o id da lotaçao
+      * 
+      */
+    
+        # Monta o select
+        $select = "SELECT tbcomissao.descricao
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbcomissao.dtExo is NULL AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
+                     AND (tblotacao.idlotacao = $idLotacao)";
+        
+        $row = parent::select($select,false);
+        return $row[0];
+    }
+
+   ##########################################################################################
+
     function get_diretor($idLotacao){
     
      /**

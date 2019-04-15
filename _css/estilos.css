@@ -510,6 +510,11 @@ p#termodePosse{
      font-size: 14px;
      line-height: 1.5;
  }
+
+p#pCiNum{
+     text-align: left;
+     font-size: 14px;
+ }
  
  p#pCiData{
      text-align: right;

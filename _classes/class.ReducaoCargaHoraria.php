@@ -443,12 +443,19 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT resultado
+        $select = 'SELECT resultado,
+                          numCiInicio
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
+        
+        # Nome do botão de início
+        $nomeBotao = "Início";
+        if(!is_null($row[1])){
+            $nomeBotao = "Início<br/>Ci n° ".$row[1];
+        }
         
         # Retorno
         if($row[0] == 1){
@@ -461,7 +468,7 @@ class ReducaoCargaHoraria{
             $botao->set_url('?fase=ciInicio&id='.$idReducao);
             #$botao->set_url('../grhRelatorios/reducaoCiInicio.php?id='.$idReducao);
             #$botao->set_url('../grhRelatorios/emManutencao.php');
-            $botao->set_label("Início");
+            $botao->set_label($nomeBotao);
             #$botao->set_target("_blank");
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');

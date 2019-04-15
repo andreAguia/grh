@@ -58,12 +58,14 @@ if($acesso)
     $lotacaoOrigem = "Gerência de Recursos Humanos - GRH";
     $idFuncionalGerente = $pessoal->get_idFuncional($idGerenteGrh);
     
-    # Lotação Destino
-    $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
-    $idGerenteDestino = $pessoal->get_gerente($idLotacao);
-    $nomeGerenteDestino = $pessoal->get_nome($idGerenteDestino);
-    $lotacaoDestino = $pessoal->get_nomeLotacao($idLotacao);
-    $gerenciaDescricao = $pessoal->get_gerenciaDescricao($idLotacao);
+    # Chefia imediata
+    $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
+    $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
+    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);  // Pega a descrição da chefia imediata
+    
+    # Lotação
+    $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);                    // Pega o id da lotação do servidor
+    $lotacaoDestino = $pessoal->get_nomeLotacao($idLotacao);                        // Pega o nome da lotação
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -89,13 +91,13 @@ if($acesso)
     $grid->abreColuna(11);
     
     $grid = new Grid();
-    $grid->abreColuna(6);
+    $grid->abreColuna(5);
     
     # CI
-    p('C.I.UENF/DGA/GRH Nº '.$numCi,'pCi');
+    p('C.I.UENF/DGA/GRH Nº '.$numCi,'pCiNum');
     
     $grid->fechaColuna();
-    $grid->abreColuna(6);
+    $grid->abreColuna(7);
     
     # Data
     p('Campos dos Goytacazes, '.dataExtenso($dtCiInicio),'pCiData');
@@ -108,7 +110,7 @@ if($acesso)
     br();
     
     # Destino
-    p('Para: '.$nomeGerenteDestino.'<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$gerenciaDescricao,'pCi');
+    p('Para: '.$nomeGerenteDestino.'<br/>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$gerenciaImediataDescricao,'pCi');
     br();
     
     # Assunto

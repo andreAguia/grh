@@ -284,7 +284,8 @@ if($acesso){
         case "licenca";
             $menu = new Menu();
             $menu->add_item('titulo','Licença e Afastamentos');
-            $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença','../grhRelatorios/licencaMensal.php');
+            $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Por Lotação','../grhRelatorios/licencaMensal.php');
+            $menu->add_item('linkWindow','Relatório Anual de Servidores em Licença Por Lotação','../grhRelatorios/licencaAnualLotacao.php');
             $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Agrupados','../grhRelatorios/licencaMensalAgrupado.php');
             $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Sem Duplicidade','../grhRelatorios/licencaMensalAgrupadoSemDuplicidade.php');
             $menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');

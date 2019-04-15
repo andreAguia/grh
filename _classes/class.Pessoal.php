@@ -4527,7 +4527,8 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbcomissao.dtExo is NULL AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
+                     AND tbcomissao.dtExo is NULL 
+                     AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = $idLotacao)";
         
         $row = parent::select($select,false);
@@ -4554,7 +4555,8 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbcomissao.dtExo is NULL AND tbtipocomissao.idTipoComissao = 16
+                     AND tbcomissao.dtExo is NULL 
+                     AND tbtipocomissao.idTipoComissao = 16
                      AND (tblotacao.idlotacao = $idLotacao)";
         
         $row = parent::select($select,false);
@@ -4563,11 +4565,10 @@ class Pessoal extends Bd {
 
    ##########################################################################################
 
-    function get_gerenteServidor($idServidor){
+    function get_chefiaImediata($idServidor){
     
      /**
-      * 
-      * Retorna o idServidor do gerente/chefe de laboratorio de Um servidor
+      * Retorna o idServidor da chefia imediata de um servidor específico
       * 
       * @param $idLotacao integer o id da lotaçao
       * 
@@ -4576,11 +4577,56 @@ class Pessoal extends Bd {
         # Pega a lotação do servidor
         $idLotacao = $this->get_idLotacao($idServidor);
         
-        # Pega o idServidor do Gerente dessa Lotação
-        $idGerente = $this->get_gerente($idLotacao);
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbcomissao.dtExo is NULL
+                      AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
+                      AND (tblotacao.idlotacao = $idLotacao) 
+                 ORDER BY tbtipocomissao.simbolo desc LIMIT 1";
+        
+        $row = parent::select($select,false);
         
         # Retorna
-        return $idGerente;
+        return $row[0];
+    }
+
+   ##########################################################################################
+
+    function get_chefiaImediataDescricao($idServidor){
+    
+     /**
+      * Retorna o idServidor da chefia imediata de um servidor específico
+      * 
+      * @param $idLotacao integer o id da lotaçao
+      * 
+      */
+        
+        # Pega a lotação do servidor
+        $idLotacao = $this->get_idLotacao($idServidor);
+        
+        # Monta o select
+        $select = "SELECT tbcomissao.descricao
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbcomissao.dtExo is NULL
+                      AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
+                      AND (tblotacao.idlotacao = $idLotacao) 
+                 ORDER BY tbtipocomissao.simbolo desc LIMIT 1";
+        
+        $row = parent::select($select,false);
+        
+        # Retorna
+        return $row[0];
     }
 
    ##########################################################################################

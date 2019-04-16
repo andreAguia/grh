@@ -670,14 +670,14 @@ if($acesso){
             }	
             break;
             
-            case "ciTermino" : 
+        case "ciTermino" : 
             
             # Pega os Dados
-            $dados = $reducao->get_dadosCiInicio($id);
+            $dados = $reducao->get_dadosCiTermino($id);
 
             # Da Redução
-            $numCiInicio = $dados[0];
-            $dtCiInicio = $dados[1];
+            $numCitermino = $dados[0];
+            $dtCitermino = $dados[1];
             $dtInicio = date_to_php($dados[2]);
             $dtPublicacao = date_to_php($dados[3]);
             $pgPublicacao = $dados[4];
@@ -689,14 +689,14 @@ if($acesso){
             $erro = 0;
             
             # Verifica o número da Ci
-            if(vazio($numCiInicio)){
-                $msgErro.='Não tem número de Ci de Início cadastrada!\n';
+            if(vazio($numCitermino)){
+                $msgErro.='Não tem número de Ci de Término cadastrada!\n';
                 $erro = 1;
             }
             
             # Verifica a data da CI
-            if(vazio($dtCiInicio)){
-                $msgErro.='Não tem data da Ci de Início cadastrada!\n';
+            if(vazio($dtCitermino)){
+                $msgErro.='Não tem data da Ci de término cadastrada!\n';
                 $erro = 1;
             }
             

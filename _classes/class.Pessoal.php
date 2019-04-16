@@ -4612,7 +4612,12 @@ class Pessoal extends Bd {
       * @param $idLotacao integer o id da lotaçao
       * 
       */
-    
+        
+        # Pega a diretoria dessa lotação
+        $select = "SELECT DIR FROM tblotacao WHERE idLotacao = ".$idLotacao;
+        $row = parent::select($select,false);
+        $diretoria = $row[0];
+        
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -4623,7 +4628,7 @@ class Pessoal extends Bd {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is NULL 
                      AND tbtipocomissao.idTipoComissao = 16
-                     AND (tblotacao.idlotacao = $idLotacao)";
+                     AND (tblotacao.dir = '$diretoria')";
         
         $row = parent::select($select,false);
         return $row[0];
@@ -4654,12 +4659,18 @@ class Pessoal extends Bd {
                       AND tbcomissao.dtExo is NULL
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
                       AND (tblotacao.idlotacao = $idLotacao) 
-                 ORDER BY tbtipocomissao.simbolo desc LIMIT 1";
+                 ORDER BY tbtipocomissao.simbolo LIMIT 1";
         
         $row = parent::select($select,false);
+        $retorno = $row[0];
+        
+        # Verifica se o servidor é o cargo em comissão e procura o diretor
+        if($row[0] == $idServidor){
+            $retorno = $this->get_diretor($idLotacao);
+        }
         
         # Retorna
-        return $row[0];
+        return $retorno;
     }
 
    ##########################################################################################
@@ -4667,9 +4678,9 @@ class Pessoal extends Bd {
     function get_chefiaImediataDescricao($idServidor){
     
      /**
-      * Retorna o idServidor da chefia imediata de um servidor específico
+      * Retorna a descrição do cargo em comissão do servidor indcado
       * 
-      * @param $idLotacao integer o id da lotaçao
+      * @param $idServidor integer o id do servidor com cargo
       * 
       */
         
@@ -4686,8 +4697,8 @@ class Pessoal extends Bd {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbcomissao.dtExo is NULL
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
-                      AND (tblotacao.idlotacao = $idLotacao) 
-                 ORDER BY tbtipocomissao.simbolo desc LIMIT 1";
+                      AND (tbservidor.idServidor = $idServidor) 
+                 ORDER BY tbtipocomissao.simbolo LIMIT 1";
         
         $row = parent::select($select,false);
         

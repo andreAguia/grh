@@ -373,6 +373,7 @@ if($acesso){
             $ocupanteAnterior = $comissao['ocupanteAnterior'];
             $dtAtoNom = date_to_php($comissao['dtAtoNom']);
             $msgErro = NULL;
+            $erro = 0;
             
             # Verifica se tem ocupante anterior esta preenchido
             if(is_null($ocupanteAnterior)){
@@ -387,14 +388,14 @@ if($acesso){
             }
             
             # Verifica se tem algum erro
-            if ($erro == 0){
+            if($erro == 0){
                 loadPage('../grhRelatorios/comissao.AtoNomeacao.php?id='.$id,'_blank');
             }else{
                 alert($msgErro);
                 back(1);
             }	
             
-            #loadPage('?');
+            loadPage('?');
             break;
             
         case "termoPosse" :

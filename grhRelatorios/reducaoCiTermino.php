@@ -62,7 +62,7 @@ if($acesso)
     # Chefia imediata
     $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
     $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
-    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);  // Pega a descrição da chefia imediata
+    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);  // Pega a descrição da chefia imediata
     
     # Lotação
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);                    // Pega o id da lotação do servidor

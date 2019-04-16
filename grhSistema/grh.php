@@ -40,6 +40,7 @@ if($acesso){
     
     # Zera sessions
     set_session('areaTre');
+    set_session('comissao');
     set_session('areaReducao');
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');

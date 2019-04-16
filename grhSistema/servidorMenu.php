@@ -21,6 +21,9 @@ set_session('origem');                  # Zera a session da origem da área de r
 # Verifica se veio dos alertas
 $alertas = get_session("alertas");
 
+# Verifica se veio dos cargos em comissao
+$comissao = get_session("comissao");
+
 # Pega o tema
 $tema = get("tema","padrao");
 
@@ -73,10 +76,16 @@ if($acesso){
         $menu = new MenuBar();
 
         # Voltar
-        if(is_null($alertas)){
+        if((is_null($alertas)) AND (is_null($comissao))){
             $caminhoVolta = 'servidor.php';
         }else{
-            $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alertas;
+            if(!is_null($alertas)){
+                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alertas;
+            }
+            
+            if(!is_null($comissao)){
+                $caminhoVolta = 'cadastroCargoComissao.php?fase=listaServidores&id='.$comissao;
+            }
         }
 
         $linkBotao1 = new Link("Voltar",$caminhoVolta);

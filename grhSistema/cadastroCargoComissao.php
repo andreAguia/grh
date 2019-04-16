@@ -345,7 +345,8 @@ if($acesso){
                             tbcomissao.dtExo,
                             concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
                             idPerfil,
-                            concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                            concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
+                            tbservidor.idServidor
                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                             JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
@@ -368,6 +369,8 @@ if($acesso){
             $tabela->set_funcao($function);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('servidor.php?fase=editar&comissao='.$id);
             $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
                                                     'valor' => NULL,
                                                     'operador' => '=',

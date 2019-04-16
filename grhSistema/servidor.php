@@ -307,6 +307,10 @@ if($acesso){
         case "editar" :
             br(8);
             aguarde();
+            
+            # Verifica se veio do cadastro de Comissão
+            set_session("comissao",get("comissao"));
+            
             set_session('idServidorPesquisado',$id);
             loadPage('servidorMenu.php?origem=1');
             break; 

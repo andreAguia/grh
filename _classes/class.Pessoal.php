@@ -633,7 +633,7 @@ class Pessoal extends Bd {
         }
 
         if((!empty($comissao)) AND ($exibeComissao)){
-             $retorno .= '<br/><span id="orgaoCedido">('.$comissao.')</span)';
+             $retorno .= '<br/><span id="orgaoCedido">'.$comissao.'</span)';
         }
         
         return $retorno;
@@ -1734,18 +1734,22 @@ class Pessoal extends Bd {
 
         $row = parent::select($select,FALSE);
         $idCargo = $row[0];
+        
+        $retorno = NULL;
 
         # Pega o nome do id do cargo em comissão
         if (!is_null($idCargo)){
-                $select ='SELECT tbtipocomissao.descricao 
-                            FROM tbcomissao 
-                            JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                           WHERE idcomissao = '.$idCargo;
+            $select ='SELECT tbcomissao.descricao,
+                             tbtipocomissao.descricao 
+                        FROM tbcomissao 
+                        JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                       WHERE idcomissao = '.$idCargo;
 
-                $row = parent::select($select,FALSE);
+            $row = parent::select($select,FALSE);
+            $retorno = "[".$row[1]."] - ".$row[0];
         }
 
-        return $row[0];	
+        return $retorno;
 
     }
 

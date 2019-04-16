@@ -594,10 +594,11 @@ class Pessoal extends Bd {
      * Método get_cargo
      * Informa o cargo do servidor
      * 
-     * @param	string $idServidor  idServidor do servidor
+     * @param string $idServidor    NULL idServidor do servidor
+     * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
      */
 
-    public function get_cargo($idServidor){
+    public function get_cargo($idServidor, $exibeComissao = TRUE){
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
@@ -608,16 +609,16 @@ class Pessoal extends Bd {
 
         $row = parent::select($select,FALSE);
 
-        if(($row[0] == 1)OR($row[0] == 2)){ // Se é professor
+        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
             $tipoCargo = NULL;
         }else{
             $tipoCargo = $row[1];      
         }
 
         $nomeCargo = $row[2];
-        $comissao = $this->get_cargoComissao($idServidor);
-
         $retorno = NULL;
+        
+        $comissao = $this->get_cargoComissao($idServidor);
 
         if(!empty($tipoCargo)){
             $retorno = $tipoCargo;             
@@ -631,9 +632,74 @@ class Pessoal extends Bd {
             }
         }
 
-        if(!empty($comissao)){
+        if((!empty($comissao)) AND ($exibeComissao)){
              $retorno .= '<br/><span id="orgaoCedido">('.$comissao.')</span)';
         }
+        
+        return $retorno;
+    }
+
+    ###########################################################
+
+
+    /**
+     * Método get_cargoCompleto
+     * Informa o cargo completo do servidor
+     * 
+     * @param string $idServidor    NULL idServidor do servidor
+     * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
+     */
+
+    public function get_cargoCompleto($idServidor, $exibeComissao = TRUE){
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbarea.area,
+                          tbcargo.nome
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+
+        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+            $tipoCargo = NULL;
+            $area = NULL;
+        }else{
+            $tipoCargo = $row[1];
+            $area = $row[2];
+        }
+
+        $nomeCargo = $row[3];
+        $retorno = NULL;
+        
+        $comissao = $this->get_cargoComissao($idServidor);
+
+        if(!empty($tipoCargo)){
+            $retorno = $tipoCargo;             
+        }
+        
+        if(!empty($area)){
+            if(!empty($tipoCargo)){
+                $retorno .= ' - '.$area;
+            }else{
+                $retorno = $area;
+            }
+        }
+
+        if(!empty($nomeCargo)){
+            if(!empty($tipoCargo)){
+                $retorno .= ' - '.$nomeCargo;
+            }else{
+                $retorno = $nomeCargo;
+            }
+        }
+
+        if((!empty($comissao)) AND ($exibeComissao)){
+             $retorno .= '<br/><span id="orgaoCedido">('.$comissao.')</span)';
+        }
+        
         return $retorno;
     }
 
@@ -4651,5 +4717,63 @@ class Pessoal extends Bd {
         return $idDiretor;
     }
 
-   ######################################################################################
+   #####################################################################################
+
+    /**
+     * Método get_cargoAtribuicoes
+     * Informa as atribuições de um cargo
+     * 
+     * @param	string $idCargo  o id do cargo
+     */
+
+    public function get_cargoAtribuicoes($idCargo){
+        $select = 'SELECT atribuicoes
+                     FROM tbcargo
+                    WHERE idcargo = '.$idCargo;
+
+        $row = parent::select($select,FALSE);
+        
+        return $row[0];
+    }
+
+#####################################################################################
+
+    /**
+     * Método get_areaDescricao
+     * Informa as descrições / atribuições de uma área
+     * 
+     * @param	string $idArea o id da area
+     */
+
+    public function get_areaDescricao($idArea){
+        $select = 'SELECT descricao
+                     FROM tbarea
+                    WHERE idarea = '.$idArea;
+
+        $row = parent::select($select,FALSE);
+        
+        return $row[0];
+    }
+
+#####################################################################################
+
+    /**
+     * Método get_idAreaCargo
+     * Informa a idArea de um cargo
+     * 
+     * @param	string $idCargo o id da area
+     */
+
+    public function get_idAreaCargo($idCargo){
+        $select = 'SELECT idArea
+                     FROM tbcargo
+                    WHERE idCargo = '.$idCargo;
+
+        $row = parent::select($select,FALSE);
+        
+        return $row[0];
+    }
+
+######################################################################################
+
 }

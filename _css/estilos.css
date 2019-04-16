@@ -500,6 +500,22 @@ p#termodePosse{
      font-size: 16px;
 }
 
+/*******************************************
+ * Declaração
+ *******************************************/
+ 
+ p#pDeclaracaoTitulo{
+     text-align: center;
+     font-size: 14px;
+     font-weight: bolder;
+     text-transform: capitalize;
+     text-decoration: underline;     
+ }
+ 
+ p#pDeclaracaoData{
+     text-align: left;
+     font-size: 14px;
+ }
  
  /*******************************************
  * CI 
@@ -508,7 +524,7 @@ p#termodePosse{
  p#pCi{
      text-align: justify;
      font-size: 14px;
-     line-height: 1.5;
+     line-height: 2.0; 
  }
 
 p#pCiNum{

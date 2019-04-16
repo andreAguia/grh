@@ -34,12 +34,13 @@ if($acesso)
     $page->iniciaPagina();
 
     # pega os dados
-    $dados = $reducao->get_dadosCiInicio($id);
+    $dados = $reducao->get_dadosCiTermino($id);
     
     # Da Redução
     $numCi = $dados[0];
-    $dtCiInicio = date_to_php($dados[1]);
+    $dtCiTermino = date_to_php($dados[1]);
     $dtInicio = date_to_php($dados[2]);
+    $dtTermino = date_to_php($dados[6]);
     $dtPublicacao = date_to_php($dados[3]);
     $pgPublicacao = $dados[4];
     $periodo = $dados[5];
@@ -72,8 +73,8 @@ if($acesso)
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     
     # Assunto
-    $assunto = "Redução de Carga Horária de ".$nomeServidor;
-
+    $assunto = "Comunica <b>TÉRMINO</b> do prazo de Redução de Carga Horária de ".$nomeServidor;
+    
     ## Monta o Relatório 
     # Menu
     $menuRelatorio = new menuRelatorio();
@@ -100,7 +101,7 @@ if($acesso)
     $grid->abreColuna(7);
     
     # Data
-    p('Campos dos Goytacazes, '.dataExtenso($dtCiInicio),'pCiData');
+    p('Campos dos Goytacazes, '.dataExtenso($dtCiTermino),'pCiData');
     
     $grid->fechaColuna();
     $grid->fechaGrid();
@@ -120,10 +121,16 @@ if($acesso)
     br();
     
     # Texto
-    p("Vimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
-    . " ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, "
-    . "atendendo processo $processo, publicado no DOERJ de $publicacao,"
-    . " em anexo.",'pCi');
+    p("Vimos comunicar o <b>TÉRMINO</b> da"
+    . " de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
+    . " ID $idFuncional, em $dtTermino, conforme Ato do Reitor publicado no DOERJ de $publicacao,"
+    . " concedendo o benefício pelo prazo de $periodo meses.",'pCi');
+        
+    p("Esclarecemos que o referido servidor deverá cumprir"
+     . " a carga horária normal, enquanto aguarda o parecer da perícia médica oficial do Estado do RJ para concessão de"
+     . " prorrogação, se for o caso.",'pCi');
+            
+    P("Sem mais para o momento, reiteramos votos de estima e consideração.",'pCi');
     br();
     
     # Atenciosamente

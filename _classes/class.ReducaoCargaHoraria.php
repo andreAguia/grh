@@ -166,6 +166,32 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
+    function get_dadosCiTermino($idReducao){
+        
+    /**
+     * fornece a próxima tarefa a ser realizada
+     */
+        
+        # Pega os dados
+        $select="SELECT numCitermino,
+                        dtCiTermino,
+                        dtInicio,
+                        dtPublicacao,
+                        pgPublicacao,
+                        periodo,
+                        ADDDATE(dtInicio,INTERVAL periodo MONTH)
+                   FROM tbreducao
+                  WHERE idReducao = $idReducao";
+        
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select,FALSE);
+        
+        return $dados;
+    }
+    
+    ###########################################################
+    
+    
     function get_tarefas($idReducao){
         
     /**
@@ -444,7 +470,8 @@ class ReducaoCargaHoraria{
         
         # Pega os dias publicados
         $select = 'SELECT resultado,
-                          numCiInicio
+                          numCiInicio,
+                          numCiTermino
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
@@ -452,9 +479,15 @@ class ReducaoCargaHoraria{
         $row = $pessoal->select($select,FALSE);
         
         # Nome do botão de início
-        $nomeBotao = "Início";
+        $nomeBotaoInicio = "CI Início";
         if(!is_null($row[1])){
-            $nomeBotao = "Início<br/>Ci n° ".$row[1];
+            $nomeBotaoInicio = "CI Início<br/>n° ".$row[1];
+        }
+        
+        # Nome do botão de Término
+        $nomeBotaotermino = "CI Término";
+        if(!is_null($row[2])){
+            $nomeBotaotermino = "CI Término<br/>n° ".$row[2];
         }
         
         # Retorno
@@ -466,24 +499,20 @@ class ReducaoCargaHoraria{
             # Ci Início
             $botao = new BotaoGrafico();
             $botao->set_url('?fase=ciInicio&id='.$idReducao);
-            #$botao->set_url('../grhRelatorios/reducaoCiInicio.php?id='.$idReducao);
-            #$botao->set_url('../grhRelatorios/emManutencao.php');
-            $botao->set_label($nomeBotao);
-            #$botao->set_target("_blank");
+            $botao->set_label($nomeBotaoInicio);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_label("Término");
-            $botao->set_url('../grhRelatorios/emManutencao.php');
-            $botao->set_target("_blank");
+            $botao->set_url('?fase=ciTermino&id='.$idReducao);
+            $botao->set_label($nomeBotaotermino);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();
-            $botao->set_label("Ato");
+            $botao->set_label("Ato do Reitor");
             $botao->set_url('../grhRelatorios/emManutencao.php');
             $botao->set_target("_blank");
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);

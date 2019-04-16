@@ -888,8 +888,11 @@ class Grh{
             titulo('Relatórios');
             br();
             
+            $cargo = $pessoal->get_idCargo($idServidor);
+            
             $menu = new Menu();
             $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
+            $menu->add_item("linkWindow","Atribuições do Cargo (Mapa)","../grhRelatorios/mapaCargo.php?cargo=$cargo");
             $menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
             #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
             $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
@@ -1971,9 +1974,12 @@ class Grh{
 
             $divFigura->fecha();
 
+            $cargo = $pessoal->get_idCargo($idServidor);
+            
             $menu = new Menu("menuServidor");
-            $menu->add_item("titulo","Relatórios");                
+            $menu->add_item("titulo","Relatórios");    
             $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
+            $menu->add_item("linkWindow","Atribuições do Cargo (Mapa)","../grhRelatorios/mapaCargo.php?cargo=$cargo");
             $menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
             #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
             $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");

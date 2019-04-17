@@ -340,7 +340,7 @@ if($acesso){
             # select
             $select ='SELECT distinct tbservidor.idFuncional,
                             tbservidor.matricula,
-                            tbpessoa.nome,
+                            IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
                             tbcomissao.dtNom,
                             tbcomissao.dtExo,
                             concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),

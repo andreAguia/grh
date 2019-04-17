@@ -343,7 +343,7 @@ if($acesso){
                             IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
                             tbcomissao.dtNom,
                             tbcomissao.dtExo,
-                            concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
+                            concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
                             idPerfil,
                             concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
                             tbservidor.idServidor

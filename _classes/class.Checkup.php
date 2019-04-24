@@ -3351,4 +3351,81 @@ class Checkup {
     }
 
     ##########################################################
+    
+     /**
+     * Método get_servidorComReducaoMenor90Dias
+     * 
+     * Servidor sem Sexo Cadastrado
+     */
+    
+    public function get_servidorComReducaoMenor90Dias($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbservidor.dtAdmissao,
+                          ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH)
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbreducao USING (idServidor)
+                    WHERE tbservidor.dtAdmissao < tbaverbacao.dtFinal';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidor(es) com Reduçao de Tempo de Serviço terminando em menos de 90 dias.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação','Admissão','Data Final'];
+        $align = ['center','center','left','center','left'];
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
+        $funcao = [NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                $tabela->show();
+                set_session('alertas',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }}elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
 }

@@ -464,8 +464,8 @@ class ListaServidores{
                 
         # Relatório
         $relatorio = new Relatorio();
-        $relatorio->set_titulo($this->nomeLista);
-        #$relatorio->set_titulo("Servidores ".$this->titulo);
+        #$relatorio->set_titulo($this->nomeLista);
+        $relatorio->set_titulo("Servidores ".$this->titulo);
         if(!is_null($this->subTitulo)){
             $relatorio->set_subtitulo($this->subTitulo);
         }

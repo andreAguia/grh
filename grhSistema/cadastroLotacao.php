@@ -55,7 +55,9 @@ if($acesso){
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "relatorio"){
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();

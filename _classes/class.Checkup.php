@@ -3355,7 +3355,7 @@ class Checkup {
      /**
      * Método get_servidorComReducaoMenor90Dias
      * 
-     * Servidor sem Sexo Cadastrado
+     * Servidor Com redução da carga horário terminando em menos de 90 dias
      */
     
     public function get_servidorComReducaoMenor90Dias($idServidor = NULL){
@@ -3372,12 +3372,17 @@ class Checkup {
                           tbperfil.nome,                          
                           idServidor,
                           idServidor,
-                          tbservidor.dtAdmissao,
-                          ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH)
+                          tbreducao.dtInicio,
+                          ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),
+                          DATEDIFF(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),curdate())
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbreducao USING (idServidor)
-                    WHERE tbservidor.dtAdmissao < tbaverbacao.dtFinal';
+                    WHERE (
+                           (DATEDIFF(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),curdate()) > 0) 
+                       AND (DATEDIFF(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),curdate()) < 90)
+                          )';
+        
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
                 }                
@@ -3387,8 +3392,8 @@ class Checkup {
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidor(es) com Reduçao de Tempo de Serviço terminando em menos de 90 dias.';
-        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação','Admissão','Data Final'];
+        $titulo = 'Servidor(es) com redução da carga horária terminando em menos de 90 dias.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação','Data inicial','Data Final','Faltando'];
         $align = ['center','center','left','center','left'];
         $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
         $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];

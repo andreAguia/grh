@@ -31,6 +31,8 @@ if($acesso)
                     tbpessoa.nome,
                     tbservidor.idServidor,
                     tbservidor.idServidor,
+                    tbservidor.idServidor,
+                    tbrecadastramento.dataAtualizacao,
                     tbtipocargo.tipo
                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                LEFT JOIN tbrecadastramento USING (idServidor)
@@ -40,24 +42,25 @@ if($acesso)
                                JOIN tbcargo USING (idCargo)
                                JOIN tbtipocargo USING (idTipoCargo)
              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-               AND tbservidor.situacao = 1
-               AND tbrecadastramento.dataAtualizacao is NULL
+               AND tbservidor.situacao <> 1
+               AND tbrecadastramento.dataAtualizacao is NOT NULL
                ORDER BY tbtipocargo.nivel asc, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();            
             
-    $relatorio->set_titulo('Relatório De Servidores Ativos NÃO Recadastrados');
+    $relatorio->set_titulo('Relatório De Servidores Inativos Recadastrados');
     $relatorio->set_subtitulo('Agrupada por Tipo de Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Tipo'));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Situação','Atualizado em:','Tipo'));
     $relatorio->set_align(array("center","left","left","left"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_CargoRel","get_Lotacao"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_CargoRel","get_LotacaoRel","get_situacao"));
     
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(4);
+    $relatorio->set_numGrupo(6);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

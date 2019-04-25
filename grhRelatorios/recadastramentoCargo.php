@@ -30,7 +30,7 @@ if($acesso)
     $select ='SELECT tbservidor.idFuncional,
                     tbpessoa.nome,
                     tbservidor.idServidor,
-                    concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
+                    tbservidor.idServidor,
                     tbrecadastramento.dataAtualizacao,
                     tbtipocargo.tipo
                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -55,8 +55,8 @@ if($acesso)
     $relatorio->set_align(array("center","left","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
     
-    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_CargoRel"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_CargoRel","get_LotacaoRel"));
     
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);

@@ -187,21 +187,25 @@ class Grh{
 
         titulo('Área Especial');
         br();
+        
+        if(Verifica::acesso($idUsuario,1)){
+            $menuItem = 6;
+        }else{
+            $menuItem = 5;
+        }
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(7);
+        $menu = new MenuGrafico($menuItem);
         $botao = new BotaoGrafico();
         
-        $botao->set_label('Procedimentos');
         if(Verifica::acesso($idUsuario,1)){
+            $botao->set_label('Procedimentos');
             $botao->set_url('../../areaServidor/sistema/procedimentos.php');
-        }else{
-            $botao->set_onClick("alert('Rotina ainda não implementada.');");
+            $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Àrea de Procedimentos da GRH');
+            $menu->add_item($botao);
         }
-        $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Àrea de Procedimentos da GRH');
-        $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
         $botao->set_url('areaFeriasExercicio.php?origem=1');
@@ -242,7 +246,7 @@ class Grh{
         $botao->set_url('areaRecadastramento.php');
         $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Recadastramento de Servidores');
-        $menu->add_item($botao);
+        #$menu->add_item($botao);
         
         $menu->show();
         br();

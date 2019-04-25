@@ -29,15 +29,15 @@ if($acesso)
     $sisgen = get('sisgen',1);
     
     if($sisgen == 1){
-        $titulo = "Relatório De Docentes que Responderam REALIZEI no Anexo III do Recadastramento";
+        $titulo = "Relatório De Docentes Ativos que Responderam REALIZEI no Anexo III do Recadastramento";
     }
     
     if($sisgen == 0){
-        $titulo = "Relatório De Docentes que Responderam NÃO REALIZEI no Anexo III do Recadastramento";
+        $titulo = "Relatório De Docentes Ativos que Responderam NÃO REALIZEI no Anexo III do Recadastramento";
     }
     
     if($sisgen == 2){
-        $titulo = "Relatório De Docentes que NÃO RESPONDERAM o Anexo III do Recadastramento";
+        $titulo = "Relatório De Docentes Ativos que NÃO RESPONDERAM o Anexo III do Recadastramento";
     }
 
     ######

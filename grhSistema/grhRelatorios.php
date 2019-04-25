@@ -84,6 +84,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Recadastramento 2018','?fase=recad2018','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Sispatri','?fase=sispatri','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
                 #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
@@ -424,6 +425,164 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Servidores com Endereço, Emails e Telefones Agrupado por Lotaçao','../grhRelatorios/enderecoEmailLotacao.php');
             $menu->add_item('linkWindow','Relatório de Ativos e Aposentados Com Endereço','../grhRelatorios/enderecoAtivoAposentado.php');
             $menu->show();
+            break;
+
+        ######################################
+
+         case "recad2018";
+            
+            $menu = new Menu();
+            $menu->add_item('titulo','Recadastramento 2018');
+            $menu->add_item('titulo1','por Lotaçao');
+            $menu->add_item('linkWindow','Servidores Ativos Recadastrados','../grhRelatorios/recadastramentoLotacao.php');
+            $menu->add_item('linkWindow','Servidores Ativos NÃO Recadastrados','../grhRelatorios/recadastramentoFaltamLotacao.php');
+            $menu->add_item('linkWindow','Servidores Inativos Recadastrados','../grhRelatorios/recadastramentoLotacaoInativos.php');
+            $menu->add_item('titulo1','por Cargo');
+            $menu->add_item('linkWindow','Servidores Ativos Recadastrados','../grhRelatorios/recadastramentoCargo.php');
+            $menu->add_item('linkWindow','Servidores Ativos NÃO Recadastrados','../grhRelatorios/recadastramentoFaltamCargo.php');
+            $menu->add_item('linkWindow','Servidores Inativos Recadastrados','../grhRelatorios/recadastramentoCargoInativos.php');
+            $menu->add_item('titulo1','por Sisgen (Docentes Ativos)');
+            $menu->add_item('linkWindow','Realizou Sisgen','../grhRelatorios/recadastramentoSisgen.php?sisgen=1');
+            $menu->add_item('linkWindow','Nao Realizou Sisgem','../grhRelatorios/recadastramentoSisgen.php?sisgen=0');
+            $menu->add_item('linkWindow','Nao Responderam o Anexo III','../grhRelatorios/recadastramentoSisgen.php?sisgen=2');
+            $menu->show();
+            
+            #######
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(7);
+            
+            # Inicia o array
+            $resumo = array();
+            
+            # Total de Servidores Ativos
+            # Geral
+            $select = "SELECT idServidor "
+                    . "  FROM tbservidor "
+                    . " WHERE situacao = 1";
+            $totalServidores = $pessoal->count($select);
+            
+            # Total de Professores
+            $select = "SELECT idServidor "
+                    . "  FROM tbservidor JOIN tbcargo USING (idCargo)"
+                    . "                  JOIN tbtipocargo USING (idTipoCargo)"
+                    . " WHERE situacao = 1 "
+                    . "   AND tbtipocargo.tipo = 'Professor'";
+            $totalProfessores = $pessoal->count($select);
+            
+            # Total de Adm/Tec
+            $select = "SELECT idServidor "
+                    . "  FROM tbservidor JOIN tbcargo USING (idCargo)"
+                    . "                  JOIN tbtipocargo USING (idTipoCargo)"
+                    . " WHERE situacao = 1 "
+                    . "   AND tbtipocargo.tipo = 'Adm/Tec'";
+            $totalAdm = $pessoal->count($select);
+            
+            #####
+            
+            # Total Recadastrados Ativos
+            $select = "SELECT idRecadastramento "
+                    . "   FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor)"
+                    . "  WHERE situacao = 1";            
+            $recadastradosAtivosTotal = $pessoal->count($select);
+            
+            # Professores Recadastrados Ativos
+            $select = "SELECT idRecadastramento "
+                    . "   FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor) "
+                    . "                               JOIN tbcargo USING (idCargo) "
+                    . "                               JOIN tbtipocargo USING (idTipoCargo)"
+                    . " WHERE situacao = 1 "
+                    . "   AND tbtipocargo.tipo = 'Professor'";
+            $recadastradosProfessoresAtivos = $pessoal->count($select);
+            
+            # Adm/Tec Recadastrados Ativos
+            $select = "SELECT idRecadastramento "
+                    . "   FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor) "
+                    . "                               JOIN tbcargo USING (idCargo) "
+                    . "                               JOIN tbtipocargo USING (idTipoCargo)"
+                    . " WHERE situacao = 1 "
+                    . "   AND tbtipocargo.tipo = 'Adm/Tec'";
+            $recadastradosAdmAtivos = $pessoal->count($select);
+            
+            #####
+            
+            # Total Recadastrados Inativos
+            $select = "SELECT idRecadastramento "
+                    . "   FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor)"
+                    . "  WHERE situacao <> 1";            
+            $recadastradosInativosTotal = $pessoal->count($select);
+            
+            # Professores Recadastrados Inativos
+            $select = "SELECT idRecadastramento "
+                    . "   FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor) "
+                    . "                               JOIN tbcargo USING (idCargo) "
+                    . "                               JOIN tbtipocargo USING (idTipoCargo)"
+                    . " WHERE situacao <> 1 "
+                    . "   AND tbtipocargo.tipo = 'Professor'";
+            $recadastradosProfessoresInativos = $pessoal->count($select);
+            
+            # Adm/Tec Recadastrados Inativos
+            $select = "SELECT idRecadastramento "
+                    . "   FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor) "
+                    . "                               JOIN tbcargo USING (idCargo) "
+                    . "                               JOIN tbtipocargo USING (idTipoCargo)"
+                    . " WHERE situacao <> 1 "
+                    . "   AND tbtipocargo.tipo = 'Adm/Tec'";
+            $recadastradosAdmInativos = $pessoal->count($select);
+            
+            $resumo[] = array("Servidores Ativos",$totalAdm,$totalProfessores,$totalServidores);
+            $resumo[] = array("Recadastrados Ativos",$recadastradosAdmAtivos,$recadastradosProfessoresAtivos,$recadastradosAtivosTotal);
+            $resumo[] = array("Recadastrados Inativos",$recadastradosAdmInativos,$recadastradosProfessoresInativos,$recadastradosInativosTotal);
+            $resumo[] = array("NÃO Recadastrados Ativos",($totalAdm - $recadastradosAdmAtivos),($totalProfessores - $recadastradosProfessoresAtivos),($totalServidores - $recadastradosAtivosTotal));
+            
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Descrição","Adm/Tec","Professores","Total"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("left","center"));
+            $tabela->set_titulo("Resumo Geral");
+            #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(5);
+            
+            # Sisgem
+            
+            # Calcula quantos realizaram
+            $select5 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen = 1";
+            $realizaram = $pessoal->count($select5);
+            
+            # Calcula quantos nao realizaram
+            $select6 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen = 0";
+            $naoRealizaram = $pessoal->count($select6);
+            
+            # Calcula quantos nao responderam
+            $select7 = "SELECT idRecadastramento FROM tbrecadastramento LEFT JOiN tbservidor USING (idServidor) JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND (idTipoCargo = 1 OR idTipoCargo = 2) AND sisgen = 2";
+            $naoResponderam = $pessoal->count($select7);
+                        
+            $resumo = array();
+            
+            $resumo[] = array("Realizaram",$realizaram);
+            $resumo[] = array("Nao Realizaram",$naoRealizaram);
+            $resumo[] = array("Nao Responderam",$naoResponderam);
+            $total = $realizaram + $naoRealizaram+$naoResponderam;
+            $resumo[] = array("Total",$total);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("Descrição","Nº de Servidores"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("left","center"));
+            $tabela->set_titulo("Sisgen (Ativos)");
+            #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
+            $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
 
         ######################################

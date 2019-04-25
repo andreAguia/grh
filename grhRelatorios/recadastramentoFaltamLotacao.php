@@ -30,8 +30,7 @@ if($acesso)
     $select ='SELECT tbservidor.idFuncional,
                     tbpessoa.nome,
                     tbservidor.idServidor,
-                    concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
-                    tbrecadastramento.dataAtualizacao
+                    concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                LEFT JOIN tbrecadastramento USING (idServidor)
                                LEFT JOIN tbperfil USING (idPerfil)
@@ -48,11 +47,10 @@ if($acesso)
 
     $relatorio = new Relatorio();            
             
-    $relatorio->set_titulo('Relatório De Servidores Ativos Recadastrados');
+    $relatorio->set_titulo('Relatório De Servidores Ativos NÃO Recadastrados');
     $relatorio->set_subtitulo('Agrupada por Lotaçao - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:'));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação'));
     $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
     
     $relatorio->set_classe(array(NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,"get_CargoRel"));

@@ -696,7 +696,7 @@ class Grh{
                 
                 $botao = new BotaoGrafico();
                 $botao->set_url('?fase=exibeFoto');
-                $botao->set_imagem($arquivo,'Foto do Servidor',150,100);
+                $botao->set_imagem($arquivo,'Foto do Servidor',200,150);
                 $botao->set_title('Foto do Servidor');
                 $botao->show();
             }else{                

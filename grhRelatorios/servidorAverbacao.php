@@ -309,8 +309,8 @@ if($acesso){
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
-    #$relatorio->set_colunaSomatorio(2);
-    #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
+    $relatorio->set_colunaSomatorio(2);
+    $relatorio->set_textoSomatorio("Total de Dias Averbados:");
     $relatorio->set_exibeSomatorioGeral(FALSE);
     $relatorio->set_align(array('center','center','center','left'));
     $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));

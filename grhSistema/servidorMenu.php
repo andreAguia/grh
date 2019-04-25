@@ -115,16 +115,13 @@ if($acesso){
             $linkBotao4->set_accessKey('H');
             $menu->add_link($linkBotao4,"right");
             
-            # Mudar Tema
-            if($tema == "padrao"){
-                $tema = "novo";
-            }else{
-                $tema = "padrao";
-            }
-            $linkBotao5 = new Link("Tema","?tema=".$tema);
+            $linkBotao5 = new Link("Tema","?tema=novo");
             $linkBotao5->set_class('success button');
             $linkBotao5->set_title('Muda Tema');
-            $menu->add_link($linkBotao5,"right");
+            
+            if($tema == "padrao"){
+                $menu->add_link($linkBotao5,"right");
+            }
 
             # Excluir
             $linkBotao5 = new Link("Excluir","servidorExclusao.php");
@@ -519,13 +516,19 @@ if($acesso){
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                 $arquivo = "../../_fotos/$idPessoa.jpg";
                 
-                br(2);
+                br();
                 
                 $painel = new Callout("secondary","center");
                 $painel->abre();
                 
-                $foto = new Imagem($arquivo,'Foto do Servidor',500,300);
-                $foto->show();
+                $botao = new BotaoGrafico();
+                $botao->set_url('?');
+                $botao->set_imagem($arquivo,'Foto do Servidor',400,200);
+                $botao->set_title('Foto do Servidor');
+                $botao->show();
+                
+                #$foto = new Imagem($arquivo,'Foto do Servidor',300,180);
+                #$foto->show();
                 
                 br(2);
                 

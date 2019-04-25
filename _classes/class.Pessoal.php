@@ -431,7 +431,7 @@ class Pessoal extends Bd {
 
         # Verifica se está cedido para exibir onde o servidor está
         if($row[3] == 113){
-            $orgao = $this->emCessao($idServidor);
+            $orgao = $this->get_orgaoCedido($idServidor);
             if($orgao == ""){
                 $orgao = "-";
             }
@@ -446,7 +446,7 @@ class Pessoal extends Bd {
 ######################################################################################
 
     /**
-     * Método get_lotacao
+     * Método get_lotacaoRel
      * Informa a lotaçao atual do servidor para um relatorio
      * 
      * @param	string $idServidor  idServidor do servidor
@@ -465,7 +465,7 @@ class Pessoal extends Bd {
 
         # Verifica se está cedido para exibir onde o servidor está
         if($row[3] == 113){
-            $orgao = $this->emCessao($idServidor);
+            $orgao = $this->get_orgaoCedido($idServidor);
             if($orgao == ""){
                 $orgao = "-";
             }
@@ -619,6 +619,7 @@ class Pessoal extends Bd {
         $retorno = NULL;
         
         $comissao = $this->get_cargoComissao($idServidor);
+        $descricao = $this->get_cargoComissaoDescricao($idServidor);
 
         if(!empty($tipoCargo)){
             $retorno = $tipoCargo;             
@@ -633,7 +634,7 @@ class Pessoal extends Bd {
         }
 
         if((!empty($comissao)) AND ($exibeComissao)){
-             $retorno .= '<br/><span id="orgaoCedido">'.$comissao.'</span)';
+             $retorno .= '<br/><span title="'.$descricao.'" id="orgaoCedido">['.$comissao.']</span)';
         }
         
         return $retorno;
@@ -1235,6 +1236,31 @@ class Pessoal extends Bd {
                       AND current_date() >= dtInicio
                       AND (isNull(dtFim) OR current_date() <= dtFim)";
 
+        $row = parent::count($select,FALSE);
+        if($row == 0){
+            return FALSE;
+        }else{
+            return TRUE;
+        }
+    }
+
+    ##########################################################################################
+    
+    function get_orgaoCedido($idServidor)
+
+
+    # Função que informa o órgão onde o servidor da uenf está cedido
+    #
+    # Parâmetro: a matrícula a ser pesquisada
+
+    {
+        # Monta o select		
+        $select = "SELECT orgao 
+                     FROM tbhistcessao
+                    WHERE idServidor = '$idServidor'
+                      AND current_date() >= dtInicio
+                      AND (isNull(dtFim) OR current_date() <= dtFim)";
+
         $row = parent::select($select,FALSE);
         return $row[0];		
 
@@ -1739,6 +1765,44 @@ class Pessoal extends Bd {
 
         # Pega o nome do id do cargo em comissão
         if (!is_null($idCargo)){
+            $select ='SELECT tbtipocomissao.descricao 
+                        FROM tbcomissao 
+                        JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                       WHERE idcomissao = '.$idCargo;
+
+            $row = parent::select($select,FALSE);
+            $retorno = $row[0];
+        }
+
+        return $retorno;
+
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoComissaoDescricao
+     * Informa o cargo em Comiss�o do Servidor (se tiver)
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+
+    function get_cargoComissaoDescricao($idServidor){
+        
+        # Pega o id do cargo em comissão (se houver)		 
+        $select = 'SELECT idComissao
+                     FROM tbcomissao
+                    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+                       OR (dtExo is NULL))
+                    AND idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+        $idCargo = $row[0];
+        
+        $retorno = NULL;
+
+        # Pega o nome do id do cargo em comissão
+        if (!is_null($idCargo)){
             $select ='SELECT tbcomissao.descricao,
                              tbtipocomissao.descricao 
                         FROM tbcomissao 
@@ -1746,7 +1810,7 @@ class Pessoal extends Bd {
                        WHERE idcomissao = '.$idCargo;
 
             $row = parent::select($select,FALSE);
-            $retorno = "[".$row[1]."] - ".$row[0];
+            $retorno = $row[0];
         }
 
         return $retorno;

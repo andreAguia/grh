@@ -342,6 +342,7 @@ span#negativo{
 span#orgaoCedido{
     color: #0000cc;
     font-size: 10px;
+    cursor:pointer;
 }
 
 /*******************************************

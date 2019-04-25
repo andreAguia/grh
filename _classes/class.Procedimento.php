@@ -27,14 +27,14 @@ class Procedimento{
      * @syntax $projeto->get_dadosNota([$idNota]);  
      */
     
-        # Pega as notas
+        # Pega os procedimentos
         $select = 'SELECT idProcedimento,
                           categoria,
                           titulo,
                           texto,
                           numOrdem
                      FROM tbprocedimento
-                     WHERE idProcedimento = '.$idProcedimento;
+                    WHERE idProcedimento = '.$idProcedimento;
         
         $intra = new Intra();
         $row = $intra->select($select,false);

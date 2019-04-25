@@ -180,7 +180,7 @@ if($acesso){
         $botaoFluxo = new Button();
         $botaoFluxo->set_imagem($imagem);
         $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo redução da carga horária");
-        $botaoFluxo->set_url("../_diagramas/reducao.jpg");
+        $botaoFluxo->set_url("../_diagramas/reducao2.jpg");
         $botaoFluxo->set_target("_blank");        
         $menu->add_link($botaoFluxo,"right");
         

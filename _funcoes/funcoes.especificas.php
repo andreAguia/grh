@@ -518,6 +518,7 @@ function get_situacao($idServidor){
     $folgaTre = $pessoal->emFolgaTre($idServidor);
     $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
     $cedido = $pessoal->emCessao($idServidor);
+    $orgaoCedido = NULL;
     
     # Férias
     if($ferias){
@@ -548,8 +549,10 @@ function get_situacao($idServidor){
     }
 
     # Cedido
-    if(!is_null($cedido)){
+    if($cedido){
+        $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
         $especial = 'Cedido';
+        $title = $orgaoCedido;
     }
     
     # Monta variavel de retorno    

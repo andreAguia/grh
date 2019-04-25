@@ -194,7 +194,7 @@ class Grh{
         
         $botao->set_label('Procedimentos');
         if(Verifica::acesso($idUsuario,1)){
-            $botao->set_url('areaProcedimentos.php');
+            $botao->set_url('../../areaServidor/sistema/procedimentos.php');
         }else{
             $botao->set_onClick("alert('Rotina ainda não implementada.');");
         }
@@ -1058,6 +1058,7 @@ class Grh{
         $folgaTre = $pessoal->emFolgaTre($idServidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
         $cedido = $pessoal->emCessao($idServidor);
+        $orgaoCedido = NULL;
             
         # Férias
         if($ferias){
@@ -1091,8 +1092,9 @@ class Grh{
         }
 
         # Cedido
-        if(!is_null($cedido)){
-            $mensagem[] = 'Servidor Cedido a(o) '.$cedido;
+        if($cedido){
+            $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
+            $mensagem[] = 'Servidor Cedido a(o) '.$orgaoCedido;
         }
         
         ##### Ocorrências

@@ -351,11 +351,23 @@ if($acesso){
                         
                     if($editar == 1){
                         # Monta os array de servidores para cada turno
-                        $select1 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Manhã' order by nome";
+                        
+                        # Manhã
+                        $select1 = "SELECT nome "
+                                . "   FROM tbusuario JOIN grh.tbservidor USING (idServidor) "
+                                . "                  JOIN grh.tbpessoa USING (idPessoa) "
+                                . "   WHERE balcao = 'Manhã' OR  balcao = 'Ambos'"
+                                . "ORDER BY nome";
+                        
                         $manha = $intra->select($select1);
                         array_unshift($manha, array(NULL,NULL)); # Adiciona o valor de nulo
                         
-                        $select2 = "select nome FROM tbusuario JOIN grh.tbservidor USING (idServidor) JOIN grh.tbpessoa USING (idPessoa) WHERE balcao = 'Tarde' order by nome";
+                        $select2 = "SELECT nome "
+                                . "   FROM tbusuario JOIN grh.tbservidor USING (idServidor) "
+                                . "                  JOIN grh.tbpessoa USING (idPessoa) "
+                                . "   WHERE balcao = 'Tarde' OR  balcao = 'Ambos'"
+                                . "ORDER BY nome";
+                        
                         $tarde = $intra->select($select2);
                         array_unshift($tarde, array(NULL,NULL)); # Adiciona o valor de nulo
                         

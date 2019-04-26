@@ -934,28 +934,6 @@ class Grh{
         $grid2->fechaColuna();   
         
         #######################################################################
-                
-        # Outros 
-        
-        $grid2->abreColuna(12,5);        
-            titulo('Outros');
-            br();
-
-            $menu = new MenuGrafico(4);
-            
-            $botao = new BotaoGrafico();
-            $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php?fase=editar&origem=menuServidor&id='.$idServidor);
-            $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Recadastramento do Servidor');
-            $menu->add_item($botao);
-
-            $menu->show();
-            br();
-            
-        $grid2->fechaColuna();   
-        
-        #######################################################################
         
         $grid2->fechaGrid();
     }     

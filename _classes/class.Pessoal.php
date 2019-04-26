@@ -1579,20 +1579,20 @@ class Pessoal extends Bd {
      */
 
     function get_situacao($idServidor){
-            $select = 'SELECT tbsituacao.situacao
-                         FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
-                        WHERE idServidor = '.$idServidor;
+        $select = 'SELECT tbsituacao.situacao
+                     FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                    WHERE idServidor = '.$idServidor;
 
-            $situacao = parent::select($select,FALSE);
+        $situacao = parent::select($select,FALSE);
 
-            return $situacao[0];
+        return $situacao[0];
     }
 
     ###########################################################
 
     /**
      * Método get_idSituacao
-     * informa a idsitua��o de um servidor
+     * informa a idsituacao de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */

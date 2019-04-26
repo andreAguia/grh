@@ -541,11 +541,13 @@ function get_situacao($idServidor){
     # Folga TRE
     if($folgaTre){
         $especial = 'Folga TRE';
+        $title = 'Em folga do TRE';
     }
 
     # Afastamento TRE
     if($afastadoTre){
         $especial = 'TRE';
+        $title = 'Trabalhando no TRE';
     }
 
     # Cedido

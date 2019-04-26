@@ -57,14 +57,15 @@ if($acesso){
 
     # ordenação
     if (is_null($orderCampo)) {
-        $orderCampo = "1";
+        $orderCampo = "2";
     }
 
     if (is_null($orderTipo)) {
         $orderTipo = 'desc';
     }
     
-    $select = 'SELECT dtInicial,
+    $select = 'SELECT idAverbacao,
+                      dtInicial,
                       dtFinal,
                       dias,
                       empresa,
@@ -114,9 +115,9 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
-    $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
-    $align = array("center","center","center","left");
-    $funcao = array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+    $label = array("id","Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
+    $align = array("center","center","center","center","left");
+    $funcao = array(NULL,"date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
 
     # Parametros da tabela
     $objeto->set_label($label);
@@ -555,6 +556,48 @@ if($acesso){
             
             #############################################################
             
+            # Verifica se tem Tempo averbado sobreposto
+            
+            # Pega as averbações desse servidor
+            $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
+            $resultSobreposicao = $pessoal->select($selectSobreposicao);
+            
+            # Inicia a variável que informa se tem sobreposicao
+            $sobreposicao = FALSE;
+            
+            # Inicia o array que guarda os períodos problemáticos
+            $idsProblemáticos[] = NULL;
+            
+            # Percorre os registros
+            foreach($resultSobreposicao as $periodo){
+                $dtInicial1 = date_to_php($periodo[0]);
+                $dtFinal1 = date_to_php($periodo[1]);
+                $idAverbado1 = $periodo[2];
+                
+                # Percorre a mesma listagem novamente
+                foreach($resultSobreposicao as $periodoVerificado){
+                    
+                    $dtInicial2 = date_to_php($periodoVerificado[0]);
+                    $dtFinal2 = date_to_php($periodoVerificado[1]);
+                    $idAverbado2 = $periodoVerificado[2];
+                    
+                    # Evita que seja comparado com ele mesmo
+                    if($idAverbado1 <> $idAverbado2){
+                        if(verificaSobreposicao($dtInicial1,$dtFinal1,$dtInicial2,$dtFinal2)){
+                            $sobreposicao = TRUE;
+                            $idsProblemáticos[] = $idAverbado1;
+                            $idsProblemáticos[] = $idAverbado2;
+                        }
+                    }
+                }
+            }
+            
+            if($sobreposicao){
+                callout("Atenção - Períodos com sobreposição de dias !!!","alert");
+            }
+            
+            #############################################################
+            
             # Pega os dados
             $result = $pessoal->select($select);
             
@@ -569,8 +612,8 @@ if($acesso){
             $tabela->set_editar('?fase=editar&id=');
             $tabela->set_excluir('?fase=excluir&id=');
 
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                           'valor' => "Total",
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 8,
+                                                           'valor' => "fdfs",
                                                            'operador' => '=',
                                                            'id' => 'diasFaltando')));
             $tabela->show();

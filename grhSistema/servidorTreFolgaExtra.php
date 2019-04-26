@@ -6,7 +6,7 @@
  */
 
 $dtInicial = $campoValor[0];
-$idServidor = $campoValor[2];
+$idServidor = $campoValor[3];
 
 $pessoal = new Pessoal();
 

@@ -51,6 +51,7 @@ if($acesso){
     $objeto->set_selectLista('SELECT data,
                                      ADDDATE(data,dias-1),                                 
                                      dias,
+                                     obs,
                                      idFolga
                                 FROM tbfolga
                           WHERE idServidor='.$idServidorPesquisado.'
@@ -59,6 +60,7 @@ if($acesso){
     # select do edita
     $objeto->set_selectEdita('SELECT data,
                                      dias,
+                                     obs,
                                      idServidor
                                 FROM tbfolga
                                WHERE idFolga = '.$id);
@@ -75,8 +77,8 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data do Início","Data do Término","Folgas Fruídas"));
-    $objeto->set_width(array(30,30,30));	
+    $objeto->set_label(array("Data do Início","Data do Término","Folgas Fruídas","Observação"));
+    $objeto->set_width(array(10,10,10,60));	
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array ("date_to_php","date_to_php",NULL));
 
@@ -109,6 +111,12 @@ if($acesso){
                                        'required' => TRUE,
                                        'title' => 'Quantidade de dias folgados.',
                                        'linha' => 1),
+                               array ('linha' => 2,
+                                       'nome' => 'obs',
+                                       'label' => 'Observação:',
+                                       'tipo' => 'textarea',
+                                       'col' => 12,
+                                       'size' => array(80,5)),        
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',

@@ -562,6 +562,10 @@ if($acesso){
             $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
             $resultSobreposicao = $pessoal->select($selectSobreposicao);
             
+            # Acrescenta o tempo de UENF
+            $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
+            $resultSobreposicao[] = array($dtAdmissao,$dtFinal,NULL);
+            
             # Inicia a variável que informa se tem sobreposicao
             $sobreposicao = FALSE;
             
@@ -593,30 +597,123 @@ if($acesso){
             }
             
             if($sobreposicao){
-                callout("Atenção - Períodos com sobreposição de dias !!!","alert");
+                
+                $painel = new Callout("alert","center");
+                $painel->abre();
+                    echo "Atenção - Períodos com Sobreposição de Dias !!!";
+                    p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: ".date_to_php($dtAdmissao),"center","f11");
+                $painel->fecha();
             }
             
             #############################################################
             
             # Pega os dados
             $result = $pessoal->select($select);
+            $num = $pessoal->count($select);
             
-            # Monta a tabela de tempo averbado
-            $tabela = new Tabela();
-            $tabela->set_titulo('Cadastro de Tempo de Serviço Averbado');
-            $tabela->set_conteudo($result);
-            $tabela->set_label($label);
-            $tabela->set_align($align);
-            $tabela->set_funcao($funcao);
-            $tabela->set_idCampo('idAverbacao');
-            $tabela->set_editar('?fase=editar&id=');
-            $tabela->set_excluir('?fase=excluir&id=');
+            if($num > 0){
+                # Monta a tabela de tempo averbado
+                $tabela = new Tabela();
+                $tabela->set_titulo('Cadastro de Tempo de Serviço Averbado');
+                $tabela->set_conteudo($result);
+                $tabela->set_label($label);
+                $tabela->set_align($align);
+                $tabela->set_funcao($funcao);
+                $tabela->set_idCampo('idAverbacao');
+                $tabela->set_editar('?fase=editar&id=');
+                $tabela->set_excluir('?fase=excluir&id=');
 
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 8,
-                                                           'valor' => "fdfs",
-                                                           'operador' => '=',
-                                                           'id' => 'diasFaltando')));
-            $tabela->show();
+                $formatacaoCondicional[] = NULL;
+
+                foreach($idsProblemáticos as $uu){
+                    $formatacaoCondicional[] = array('coluna' => 0, 'valor' => $uu,'operador' => '=','id' => 'diasFaltando');
+                }
+
+                $tabela->set_formatacaoCondicional($formatacaoCondicional);
+                $tabela->show();
+            }
+
+            #############################################################
+            
+            # Exibe o timeline
+            $select1 = "SELECT empresa,
+                               dtInicial,
+                               dtFinal
+                          FROM tbaverbacao
+                         WHERE idServidor = $idServidorPesquisado ORDER BY 2 desc";
+
+            # Acessa o banco
+            $pessoal = new Pessoal();
+            $atividades1 = $pessoal->select($select1);
+            $numAtividades = $pessoal->count($select1);
+            $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
+
+            if($numAtividades > 0){
+                
+                tituloTable("Graficamente");
+
+                # Carrega a rotina do Google
+                echo '<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>';
+
+                # Inicia o script
+                echo "<script type='text/javascript'>";
+                echo "google.charts.load('current', {'packages':['timeline'], 'language': 'pt-br'});
+                      google.charts.setOnLoadCallback(drawChart);
+                      function drawChart() {
+                            var container = document.getElementById('timeline');
+                            var chart = new google.visualization.Timeline(container);
+                            var dataTable = new google.visualization.DataTable();";
+
+                echo "dataTable.addColumn({ type: 'string' });
+                      dataTable.addColumn({ type: 'date' });
+                      dataTable.addColumn({ type: 'date' });";
+
+                echo "dataTable.addRows([";
+
+                $separador = '-';
+                
+                # inclui o tempo de uenf
+                $dt1 = explode($separador,$dtAdmissao);
+                $dt2 = explode($separador,$dtFinal);
+                
+                echo "['UENF', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+                
+                if($numAtividades>0){
+                   echo ","; 
+                }
+
+                foreach ($atividades1 as $row){
+
+                    # Trata as datas
+                    $dt1 = explode($separador,$row['dtInicial']);
+                    $dt2 = explode($separador,$row['dtFinal']);
+
+                    echo "['".$row['empresa']."', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+
+                    $contador--;
+
+                    if($contador > 0){
+                        echo ",";
+                    }
+                }
+                
+                
+                echo "]);";
+
+                echo "var options = {
+                             timeline: { colorByRowLabel: true },
+                             backgroundColor: '#f2f2f2',
+                             timeline: { rowLabelStyle: {fontSize: 10}},
+                             hAxis: { format: 'yyyy', },
+                             };";
+                
+                echo "chart.draw(dataTable, options);";
+                echo "}";
+                echo "</script>";
+
+                $altura = (($numAtividades+1) * 45) + 50;
+                echo '<div id="timeline" style="height: '.$altura.'px; width: 100%;"></div>';
+            }        
             
             $grid->fechaColuna();
             $grid->fechaGrid();

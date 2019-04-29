@@ -110,7 +110,10 @@ if($acesso){
     
     # Começa uma nova página
     $page = new Page();
-    $page->set_ready($jscript);
+    
+    if($fase == "editar"){
+        $page->set_ready($jscript);
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -614,17 +617,96 @@ if($acesso){
         
         case "ciInicio" : 
             
+            loadPage('?fase=ciInicioForm&id='.$id,"_blank");
+            loadPage("?");
+            break;
+        
+        case "ciInicioForm" :
+            
             # Pega os Dados
             $dados = $reducao->get_dadosCiInicio($id);
 
             # Da Redução
             $numCiInicio = $dados[0];
             $dtCiInicio = $dados[1];
-            $dtInicio = date_to_php($dados[2]);
-            $dtPublicacao = date_to_php($dados[3]);
+            $dtInicio = $dados[2];
+            $dtPublicacao = $dados[3];
             $pgPublicacao = $dados[4];
             $periodo = $dados[5];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+            
+            # Título
+            titulo("Ci de início");
+            br();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=ciInicioFormValida&id='.$id);        
+
+            # numCiInicio
+            $controle = new Input('numCiInicio','texto','Ci n°:',1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($numCiInicio);
+            $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
+            $form->add_item($controle);
+
+            # dtCiInicio
+            $controle = new Input('dtCiInicio','data','Data da Ci:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor($dtCiInicio);
+            $controle->set_required(TRUE);
+            $controle->set_title('A data da CI de inicio.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('submit','submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "ciInicioFormValida" :
+            
+            # Pega os Dados do Banco
+            $dados = $reducao->get_dadosCiInicio($id);
+            $numCiInicio = $dados[0];
+            $dtCiInicio = $dados[1];
+            $dtInicio = $dados[2];
+            $dtPublicacao = $dados[3];
+            $pgPublicacao = $dados[4];
+            $periodo = $dados[5];
+            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Pega os dados Digitados
+            $numCiInicioDigitados = post("numCiInicio");
+            $dtCiInicioDigitado = post("dtCiInicio");
+            
+            # Verifica sd houve alterações
+            $alteracoes = NULL;
+            
+            # Verifica as alterações para o log
+            if($numCiInicio <> $numCiInicioDigitados){
+                $alteracoes .= '[numCiInicio] '.$numCiInicio.'->'.$numCiInicioDigitados.'; ';
+            }
+            if($dtCiInicio <> $dtCiInicioDigitado){
+                $alteracoes .= '[dtCiInicio] '.$dtCiInicio.'->'.$dtCiInicioDigitado.'; ';
+            }
             
             # Erro
             $msgErro = NULL;
@@ -658,16 +740,28 @@ if($acesso){
             if(vazio($periodo)){
                 $msgErro.='O período não foi cadastrado!\n';
                 $erro = 1;
-            }
+            }              
             
             # Verifica se teve erro
             if($erro == 0){
-                loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id,"_blank");
-                loadPage("?");
+                # Salva as alterações
+                $pessoal->set_tabela("tbreducao");
+                $pessoal->set_idCampo("idReducao");
+                $campoNome = array('numCiInicio','dtCiInicio');
+                $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
+                $pessoal->gravar($campoNome,$campoValor,$id);
+                
+                # Grava o log
+                $data = date("Y-m-d H:i:s");
+                $atividade .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividade,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                
+                # Exibe o relatório
+               # loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id);
             }else{
                 alert($msgErro);
-                loadPage("?");
-            }	
+            }            
             break;
             
         case "ciTermino" : 

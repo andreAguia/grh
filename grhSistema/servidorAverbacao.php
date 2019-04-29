@@ -650,7 +650,7 @@ if($acesso){
 
             if($numAtividades > 0){
                 
-                tituloTable("Graficamente");
+                tituloTable("Grafico");
 
                 # Carrega a rotina do Google
                 echo '<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>';

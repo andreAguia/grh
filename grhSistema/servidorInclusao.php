@@ -79,8 +79,7 @@ if($acesso){
     AreaServidor::cabecalho();
 
 ####################################################################################
-    switch ($fase)
-    {
+    switch ($fase){
         # Inclusão de Novo Servidor    
         case "incluir" :
             # Limita a tela

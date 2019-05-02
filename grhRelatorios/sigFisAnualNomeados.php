@@ -43,6 +43,7 @@ if($acesso)
                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                     JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
                 WHERE YEAR(tbcomissao.dtNom) = "'.$relatorioAno.'"
+                  AND tbservidor.idPerfil <> 10  
              ORDER BY MONTH(tbcomissao.dtNom), tbcomissao.dtNom';		
 
 

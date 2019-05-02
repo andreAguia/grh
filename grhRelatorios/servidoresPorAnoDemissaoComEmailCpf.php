@@ -46,7 +46,8 @@ if($acesso)
                                 JOIN tbcargo USING (idCargo)
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE year(dtDemissao) = "'.$parametroAno.'"
-                 AND tbtipocargo.tipo = "'.$cargo.'"  
+                 AND tbtipocargo.tipo = "'.$cargo.'"
+                 AND tbservidor.idPerfil <> 10    
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

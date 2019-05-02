@@ -34,6 +34,7 @@ if($acesso)
                      CONCAT("(",IFNULL(telRecadosDDD,"--"),") ",IFNULL(telRecados,"---"))
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
                WHERE tbservidor.situacao = 1
+                 AND idPerfil <> 10
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

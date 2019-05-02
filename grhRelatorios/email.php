@@ -33,6 +33,7 @@ if($acesso)
                      tbpessoa.emailPessoal
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
                WHERE tbservidor.situacao = 1
+                 AND idPerfil <> 10
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

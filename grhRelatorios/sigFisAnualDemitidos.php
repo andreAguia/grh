@@ -44,6 +44,7 @@ if($acesso)
                                  LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
                                  LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
                 WHERE YEAR(tbservidor.dtDemissao) = "'.$relatorioAno.'"
+                  AND tbservidor.idPerfil <> 10  
              ORDER BY MONTH(tbservidor.dtDemissao), dtDemissao';		
 
 

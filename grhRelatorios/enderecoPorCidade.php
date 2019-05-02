@@ -38,6 +38,7 @@ if($acesso){
                                      JOIN tbestado USING (idEstado)
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                WHERE tbservidor.situacao = 1 
+                 AND tbservidor.idPerfil <> 10
             ORDER BY tbestado.uf,tbcidade.nome,tbpessoa.nome';
 
     $result = $servidor->select($select);

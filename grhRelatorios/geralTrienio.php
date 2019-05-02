@@ -50,8 +50,8 @@ if($acesso)
     $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
 
     $relatorio->set_label(array('Id Funcional','Nome','Salário','Triênio','%','a Partir de','Período Aquisitivo','Próximo Triênio','Processo','Publicação'));
-    $relatorio->set_width(array(5,20,10,10,5,10,10,10,10,10));
-    $relatorio->set_align(array("center","left"));
+    #$relatorio->set_width(array(5,20,10,10,5,10,10,10,10,10));
+    $relatorio->set_align(array("center","left","right","right","center","center","center","center","right"));
     $relatorio->set_funcao(array(NULL,NULL,'formataMoeda','formataMoeda'));
     
     $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal","pessoal","pessoal","pessoal","pessoal","pessoal","pessoal"));

@@ -40,7 +40,8 @@ if($acesso)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                 AND tbservidor.situacao = 1                 
+                 AND tbservidor.situacao = 1
+                 AND tbservidor.idPerfil <> 10
             ORDER BY lotacao, tbpessoa.nome';
 
 

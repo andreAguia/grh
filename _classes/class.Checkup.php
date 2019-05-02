@@ -1512,7 +1512,7 @@ class Checkup {
      /**
      * Método get_servidorSemIdFuncional
      * 
-     * Exibe servidor ativo sem id Funcional cadastrado
+     * Exibe servidor ativo sem id Funcional cadastrado que não for bolsista
      */
     
     public function get_servidorSemIdFuncional($idServidor = NULL){
@@ -1535,6 +1535,7 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                     WHERE (idFuncional IS NULL OR idFuncional = "")
+                      AND idPerfil <> 10
                       AND tbservidor.situacao = 1';
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
@@ -1904,7 +1905,7 @@ class Checkup {
      /**
      * Método get_servidorSemCargo
      * 
-     * Servidor NÃO estatutário sem cargo cadastrado:
+     * Servidor NÃO estatutário E NÃO bolsista sem cargo cadastrado:
      */
     
     public function get_servidorSemCargo($idServidor = NULL){
@@ -1926,6 +1927,7 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                     WHERE (idCargo IS NULL OR idCargo = 0)
                       AND situacao = 1
+                      AND idPerfil <> 10
                       AND idPerfil <> 1';
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';

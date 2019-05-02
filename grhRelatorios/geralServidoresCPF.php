@@ -35,6 +35,7 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      JOIN tbdocumentacao USING (idpessoa)
                                      JOIN tbperfil USING (idPerfil)
+                WHERE tbservidor.idPerfil <> 10
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

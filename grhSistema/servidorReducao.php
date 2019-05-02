@@ -547,8 +547,8 @@ if($acesso){
                 
                 $menu = new Menu();
                 #$menu->add_item('titulo','Documentos');
-                $menu->add_item('linkWindow','Declaração de Atribuições','../grhRelatorios/reducaoAtribuicoes.php?id='.$id);
-                $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/reducaoInquerito.php?id='.$id);
+                $menu->add_item('linkWindow','Declaração de Atribuições','../grhRelatorios/declaracao.AtribuicoesCargo.php');
+                $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');
                 $menu->show();
                 
                 $painel->fecha();

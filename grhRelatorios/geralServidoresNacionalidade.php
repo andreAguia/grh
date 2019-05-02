@@ -35,7 +35,8 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                 LEFT JOIN tbnacionalidade ON (tbpessoa.nacionalidade = tbnacionalidade.idNacionalidade)
                                 LEFT JOIN tbpais ON (tbpessoa.paisOrigem = tbpais.idPais)
-               WHERE situacao = 1                       
+               WHERE situacao = 1
+                 AND tbservidor.idPerfil <> 10
             ORDER BY tbnacionalidade.nacionalidade, tbpessoa.nome';
     
     $result = $servidor->select($select);

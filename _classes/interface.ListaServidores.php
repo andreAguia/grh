@@ -373,9 +373,9 @@ class ListaServidores{
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
         if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
-            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacao");
+            $function = array ("trataNulo","dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacao");
         }else{
-            $function = array (NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacao");
+            $function = array ("trataNulo","dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacao");
         }            
         $classe = array(NULL,NULL,NULL,"pessoal","pessoal","pessoal");
         $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao","get_perfil");

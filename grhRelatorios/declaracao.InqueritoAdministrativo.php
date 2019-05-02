@@ -21,10 +21,6 @@ if($acesso)
 {    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-    $reducao = new ReducaoCargaHoraria();
-	
-    # Pega o número da CI
-    $ci = post('ci');
 
     # Começa uma nova página
     $page = new Page();			

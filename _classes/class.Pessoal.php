@@ -644,6 +644,53 @@ class Pessoal extends Bd {
 
 
     /**
+     * Método get_cargoSimples
+     * Informa o cargo do servidor sem o cargo em comissão
+     * 
+     * @param string $idServidor    NULL idServidor do servidor
+     */
+
+    public function get_cargoSimples($idServidor){
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.sigla,
+                          tbcargo.nome
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+
+        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+            $tipoCargo = NULL;
+        }else{
+            $tipoCargo = $row[1];      
+        }
+
+        $nomeCargo = $row[2];
+        $retorno = NULL;
+        
+        $descricao = $this->get_cargoComissaoDescricao($idServidor);
+
+        if(!empty($tipoCargo)){
+            $retorno = $tipoCargo;             
+        }
+
+        if(!empty($nomeCargo)){
+            if(!empty($tipoCargo)){
+                $retorno .= ' - '.$nomeCargo;
+            }else{
+                $retorno = $nomeCargo;
+            }
+        }
+        
+        return $retorno;
+    }
+
+    ###########################################################
+
+
+    /**
      * Método get_cargoCompleto
      * Informa o cargo completo do servidor
      * 
@@ -800,7 +847,9 @@ class Pessoal extends Bd {
         # Verifica se e cedido para exibir o orgao de origem
         if($row[0] == 2){
             $orgaoOrigem = $this->get_orgaoOrigem($idServidor);
-            $retorno .= '<br/><span id="orgaoCedido">('.$orgaoOrigem.')';
+            if(!vazio($orgaoOrigem)){
+                $retorno .= '<br/><span id="orgaoCedido">('.$orgaoOrigem.')';
+            }
         }
 
         return $retorno;
@@ -1959,9 +2008,13 @@ class Pessoal extends Bd {
                              ORDER BY percentual desc';
 
             $row = parent::select($select,FALSE);
-            $dataTrienio = date_to_php($row[0]);
-
-            $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
+            
+            if(!vazio($row[0])){
+                $dataTrienio = date_to_php($row[0]);
+                $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
+            }else{
+                $dataProximo = NULL;
+            }           
 
             return $dataProximo;
     }

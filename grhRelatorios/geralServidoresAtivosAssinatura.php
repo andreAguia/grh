@@ -33,6 +33,7 @@ if($acesso)
                      "_________________________"
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                WHERE tbservidor.situacao = 1
+                 AND tbservidor.idPerfil <> 10
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

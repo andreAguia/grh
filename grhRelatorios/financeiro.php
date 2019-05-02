@@ -38,7 +38,8 @@ if($acesso)
                      tbperfil.nome
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                    LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idperfil)
-               WHERE tbservidor.situacao = 1 
+               WHERE tbservidor.situacao = 1
+                 AND tbservidor.idPerfil <> 10
             ORDER BY 9,2';
 
     $result = $servidor->select($select);

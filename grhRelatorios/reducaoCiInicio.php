@@ -52,12 +52,6 @@ if($acesso)
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
     }       
             
-    # Gerente do GRH (id 66)
-    $idGerenteGrh = $pessoal->get_gerente(66);
-    $nomeGerente = $pessoal->get_nome($idGerenteGrh);
-    $lotacaoOrigem = "Gerência de Recursos Humanos - GRH";
-    $idFuncionalGerente = $pessoal->get_idFuncional($idGerenteGrh);
-    
     # Chefia imediata
     $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
     $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
@@ -74,67 +68,18 @@ if($acesso)
     # Assunto
     $assunto = "Redução de Carga Horária de ".$nomeServidor;
 
-    ## Monta o Relatório 
-    # Menu
-    $menuRelatorio = new menuRelatorio();
-    $menuRelatorio->set_botaoVoltar(NULL);    
-    $menuRelatorio->show();
-    
-    # Cabeçalho do Relatório (com o logotipo)
-    $relatorio = new Relatorio();
-    $relatorio->exibeCabecalho();
-    
-    hr();
-    
-    # Limita o tamanho da tela
-    $grid = new Grid("center");
-    $grid->abreColuna(11);
-    
-    $grid = new Grid();
-    $grid->abreColuna(5);
-    
-    # CI
-    p('C.I.UENF/DGA/GRH Nº '.$numCi,'pCiNum');
-    
-    $grid->fechaColuna();
-    $grid->abreColuna(7);
-    
-    # Data
-    p('Campos dos Goytacazes, '.dataExtenso($dtCiInicio),'pCiData');
-    
-    $grid->fechaColuna();
-    $grid->fechaGrid();
-    
-    # Origem
-    p('De:&nbsp&nbsp&nbsp&nbsp'.$nomeGerente.'<br/>'
-    . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$lotacaoOrigem,'pCi');
-    br();
-    
-    # Destino
-    p('Para:&nbsp&nbsp'.$nomeGerenteDestino.'<br/>'
-    . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$gerenciaImediataDescricao,'pCi');
-    br();
-    
-    # Assunto
-    p("Assunto: ".$assunto,'pCi');
-    br();
-    
-    # Texto
-    p("Vimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
+    # Monta a CI
+    $ci = new Ci();
+    $ci->set_ciNumero($numCi);
+    $ci->set_ciData($dtCiInicio);
+    $ci->set_destinoNome($nomeGerenteDestino);
+    $ci->set_destinoSetor($gerenciaImediataDescricao);
+    $ci->set_ciAssunto($assunto);
+    $ci->set_ciTexto("Vimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, "
     . "atendendo processo $processo, publicado no DOERJ de $publicacao,"
-    . " em anexo.",'pCi');
-    br();
+    . " em anexo.");
+    $ci->show();
     
-    # Atenciosamente
-    p('Atenciosamente','pCi');
-    br(4);
-    
-    # Assinatura
-    #p('____________________________________________________','pCiAssinatura');
-    p($nomeGerente.'<br/>'.$lotacaoOrigem.'<br/>Id Funcional n° '.$idFuncionalGerente,'pCiAssinatura');
-
-    $grid->fechaColuna();
-    $grid->fechaGrid();
     $page->terminaPagina();
 }

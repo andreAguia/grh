@@ -238,10 +238,6 @@ if($acesso){
                                      pgPublicacao,
                                      dtInicio,
                                      periodo,
-                                     numCiInicio,
-                                     dtCiInicio,
-                                     numCiTermino,
-                                     dtCiTermino,
                                      obs,
                                      idServidor
                                 FROM tbreducao
@@ -392,43 +388,15 @@ if($acesso){
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'A data em que o servidor passou a receber o benefício.',
-                                       'linha' => 7),
+                                       'linha' => 6),
                                array ( 'nome' => 'periodo',
                                        'label' => 'Período (Meses):',
                                        'tipo' => 'texto',
                                        'size' => 10,
                                        'col' => 2,
                                        'title' => 'O período em meses do benefício.',
-                                       'linha' => 7),
-                               array ( 'nome' => 'numCiInicio',
-                                       'label' => 'CI informando Início:',
-                                       'tipo' => 'texto',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Número da Ci informando a chefia imediata do servidor da data de início do benefício.',
-                                       'linha' => 8),
-                               array ( 'nome' => 'dtCiInicio',
-                                       'label' => 'Data da Ci:',
-                                       'tipo' => 'data',
-                                       'size' => 10,
-                                       'col' => 3,
-                                       'title' => 'A data da CI de inicio.',
-                                       'linha' => 8),        
-                               array ( 'nome' => 'numCiTermino',
-                                       'label' => 'CI informando Término:',
-                                       'tipo' => 'texto',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Número da Ci informando a chefia imediata do servidor da data de término do benefício.',
-                                       'linha' => 9),
-                               array ( 'nome' => 'dtCiTermino',
-                                       'label' => 'Data da Ci:',
-                                       'tipo' => 'data',
-                                       'size' => 10,
-                                       'col' => 3,
-                                       'title' => 'A data da CI de término.',
-                                       'linha' => 9),  
-                               array ('linha' => 10,
+                                       'linha' => 6),
+                                array ('linha' => 7,
                                        'col' => 12,
                                        'nome' => 'obs',
                                        'label' => 'Obs:',
@@ -615,6 +583,9 @@ if($acesso){
             $objeto->gravar($id,"servidorReducaoExtra.php");
             break;
         
+        ########################################################3
+        # Ci Início
+        
         case "ciInicio" : 
             
             loadPage('?fase=ciInicioForm&id='.$id,"_blank");
@@ -697,15 +668,16 @@ if($acesso){
             $numCiInicioDigitados = post("numCiInicio");
             $dtCiInicioDigitado = post("dtCiInicio");
             
-            # Verifica sd houve alterações
+            # Verifica se houve alterações
             $alteracoes = NULL;
+            $atividades = NULL;
             
             # Verifica as alterações para o log
             if($numCiInicio <> $numCiInicioDigitados){
                 $alteracoes .= '[numCiInicio] '.$numCiInicio.'->'.$numCiInicioDigitados.'; ';
             }
             if($dtCiInicio <> $dtCiInicioDigitado){
-                $alteracoes .= '[dtCiInicio] '.$dtCiInicio.'->'.$dtCiInicioDigitado.'; ';
+                $alteracoes .= '[dtCiInicio] '.date_to_php($dtCiInicio).'->'.date_to_php($dtCiInicioDigitado).'; ';
             }
             
             # Erro
@@ -713,13 +685,13 @@ if($acesso){
             $erro = 0;
             
             # Verifica o número da Ci
-            if(vazio($numCiInicio)){
+            if(vazio($numCiInicioDigitados)){
                 $msgErro.='Não tem número de Ci de Início cadastrada!\n';
                 $erro = 1;
             }
             
             # Verifica a data da CI
-            if(vazio($dtCiInicio)){
+            if(vazio($dtCiInicioDigitado)){
                 $msgErro.='Não tem data da Ci de Início cadastrada!\n';
                 $erro = 1;
             }
@@ -750,21 +722,39 @@ if($acesso){
                 $campoNome = array('numCiInicio','dtCiInicio');
                 $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
                 $pessoal->gravar($campoNome,$campoValor,$id);
-                
-                # Grava o log
                 $data = date("Y-m-d H:i:s");
-                $atividade .= 'Alterou: '.$alteracoes;
-                $tipoLog = 2;
-                $intra->registraLog($idUsuario,$data,$atividade,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                
+                # Grava o log das alterações caso tenha
+                if(!is_null($alteracoes)){
+                    $atividades .= 'Alterou: '.$alteracoes;
+                    $tipoLog = 2;
+                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                }
+                
+                # Grava o log da visualização do relatório
+                $data = date("Y-m-d H:i:s");
+                $atividades = 'Visualizou a Ci de início de redução da carga horária: ';
+                $tipoLog = 4;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
                 
                 # Exibe o relatório
-               # loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id);
+                loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id);
             }else{
                 alert($msgErro);
+                back(1);
             }            
             break;
             
+        ########################################################
+        # Ci Término
+        
         case "ciTermino" : 
+            
+            loadPage('?fase=ciTerminoForm&id='.$id,"_blank");
+            loadPage("?");
+            break;
+        
+        case "ciTerminoForm" :
             
             # Pega os Dados
             $dados = $reducao->get_dadosCiTermino($id);
@@ -778,19 +768,93 @@ if($acesso){
             $periodo = $dados[5];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+            
+            # Título
+            titulo("Ci de Término");
+            br();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=ciInicioFormValida&id='.$id);        
+
+            # numCiInicio
+            $controle = new Input('numCiTermino','texto','Ci n°:',1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($numCitermino);
+            $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de Término do benefício.');
+            $form->add_item($controle);
+
+            # dtCiInicio
+            $controle = new Input('dtCiTermino','data','Data da Ci:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor($dtCitermino);
+            $controle->set_required(TRUE);
+            $controle->set_title('A data da CI de término.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('submit','submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "ciTerminoFormValida" :
+            
+            # Pega os Dados do Banco
+            $dados = $reducao->get_dadosCiTermino($id);
+            $numCiTermino = $dados[0];
+            $dtCiTermino = $dados[1];
+            $dtInicio = $dados[2];
+            $dtPublicacao = $dados[3];
+            $pgPublicacao = $dados[4];
+            $periodo = $dados[5];
+            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Pega os dados Digitados
+            $numCiTerminoDigitados = post("numCiInicio");
+            $dtCiTerminoDigitado = post("dtCiInicio");
+            
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($numCiTermino <> $numCiTerminoDigitados){
+                $alteracoes .= '[numCiTermino] '.$numCiTermino.'->'.$numCiTerminoDigitados.'; ';
+            }
+            if($dtCiInicio <> $dtCiInicioDigitado){
+                $alteracoes .= '[dtCiTermino] '.date_to_php($dtCiTermino).'->'.date_to_php($dtCiTerminoDigitado).'; ';
+            }
+            
             # Erro
             $msgErro = NULL;
             $erro = 0;
             
             # Verifica o número da Ci
-            if(vazio($numCitermino)){
-                $msgErro.='Não tem número de Ci de Término cadastrada!\n';
+            if(vazio($numCiTerminoDigitados)){
+                $msgErro.='Não tem número de Ci de Início cadastrada!\n';
                 $erro = 1;
             }
             
             # Verifica a data da CI
-            if(vazio($dtCitermino)){
-                $msgErro.='Não tem data da Ci de término cadastrada!\n';
+            if(vazio($dtCiTerminoDigitado)){
+                $msgErro.='Não tem data da Ci de Início cadastrada!\n';
                 $erro = 1;
             }
             
@@ -810,17 +874,40 @@ if($acesso){
             if(vazio($periodo)){
                 $msgErro.='O período não foi cadastrado!\n';
                 $erro = 1;
-            }
+            }              
             
             # Verifica se teve erro
             if($erro == 0){
-                loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id,"_blank");
-                loadPage("?");
+                # Salva as alterações
+                $pessoal->set_tabela("tbreducao");
+                $pessoal->set_idCampo("idReducao");
+                $campoNome = array('numCiTermino','dtCiTermino');
+                $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
+                $pessoal->gravar($campoNome,$campoValor,$id);
+                $data = date("Y-m-d H:i:s");
+                
+                # Grava o log das alterações caso tenha
+                if(!is_null($alteracoes)){
+                    $atividades .= 'Alterou: '.$alteracoes;
+                    $tipoLog = 2;
+                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                }
+                
+                # Grava o log da visualização do relatório
+                $data = date("Y-m-d H:i:s");
+                $atividades = 'Visualizou a Ci de término de redução da carga horária: ';
+                $tipoLog = 4;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                
+                # Exibe o relatório
+                loadPage('../grhRelatorios/reducaoCiTerminoo.php?id='.$id);
             }else{
                 alert($msgErro);
-                loadPage("?");
-            }	
+                back(1);
+            }            
             break;
+            
+        ########################################################3
     }									 	 		
 
     $page->terminaPagina();

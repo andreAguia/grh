@@ -544,6 +544,12 @@ p#pCiNum{
      font-size: 14px;
  }
  
+ p#pCiRodape{
+     text-align: center;
+     font-size: 11px;
+     padding: 0px;
+ }
+ 
  /*******************************************
  * Folha de Presença
  *******************************************/

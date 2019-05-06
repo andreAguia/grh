@@ -778,7 +778,7 @@ if($acesso){
             br();
             
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
-            $form = new Form('?fase=ciInicioFormValida&id='.$id);        
+            $form = new Form('?fase=ciTerminoFormValida&id='.$id);        
 
             # numCiInicio
             $controle = new Input('numCiTermino','texto','Ci n°:',1);
@@ -827,8 +827,8 @@ if($acesso){
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
             # Pega os dados Digitados
-            $numCiTerminoDigitados = post("numCiInicio");
-            $dtCiTerminoDigitado = post("dtCiInicio");
+            $numCiTerminoDigitados = post("numCiTermino");
+            $dtCiTerminoDigitado = post("dtCiTermino");
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -838,7 +838,7 @@ if($acesso){
             if($numCiTermino <> $numCiTerminoDigitados){
                 $alteracoes .= '[numCiTermino] '.$numCiTermino.'->'.$numCiTerminoDigitados.'; ';
             }
-            if($dtCiInicio <> $dtCiInicioDigitado){
+            if($dtCiTermino <> $dtCiInicioDigitado){
                 $alteracoes .= '[dtCiTermino] '.date_to_php($dtCiTermino).'->'.date_to_php($dtCiTerminoDigitado).'; ';
             }
             
@@ -848,13 +848,13 @@ if($acesso){
             
             # Verifica o número da Ci
             if(vazio($numCiTerminoDigitados)){
-                $msgErro.='Não tem número de Ci de Início cadastrada!\n';
+                $msgErro.='Não tem número de Ci de Término cadastrada!\n';
                 $erro = 1;
             }
             
             # Verifica a data da CI
             if(vazio($dtCiTerminoDigitado)){
-                $msgErro.='Não tem data da Ci de Início cadastrada!\n';
+                $msgErro.='Não tem data da Ci de Término cadastrada!\n';
                 $erro = 1;
             }
             
@@ -900,7 +900,7 @@ if($acesso){
                 $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
                 
                 # Exibe o relatório
-                loadPage('../grhRelatorios/reducaoCiTerminoo.php?id='.$id);
+                loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id);
             }else{
                 alert($msgErro);
                 back(1);

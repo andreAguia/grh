@@ -69,16 +69,14 @@ if($acesso)
     $assunto = "Redução de Carga Horária de ".$nomeServidor;
 
     # Monta a CI
-    $ci = new Ci();
-    $ci->set_ciNumero($numCi);
-    $ci->set_ciData($dtCiInicio);
+    $ci = new Ci($numCi,$dtCiInicio,$assunto);
     $ci->set_destinoNome($nomeGerenteDestino);
     $ci->set_destinoSetor($gerenciaImediataDescricao);
-    $ci->set_ciAssunto($assunto);
-    $ci->set_ciTexto("Vimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
+    $ci->set_texto("Vimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, "
     . "atendendo processo $processo, publicado no DOERJ de $publicacao,"
     . " em anexo.");
+    $ci->set_saltoRodape(5);
     $ci->show();
     
     $page->terminaPagina();

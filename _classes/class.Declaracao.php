@@ -1,5 +1,5 @@
 <?php
-class Ci{
+class Declaracao{
  /**
   * Monta uma Ci
   * 
@@ -9,18 +9,13 @@ class Ci{
   * 
   */
     
-    private $numero = NULL;
     private $data = NULL;
-    private $assunto = NULL;
     private $texto = NULL;
     
     private $origemNome = NULL;
     private $origemSetor = NULL;
     private $origemDescricao = NULL;
     private $origemIdFuncional = NULL;
-    
-    private $destinoNome = NULL;
-    private $destinoSetor = NULL;
     
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
@@ -30,7 +25,7 @@ class Ci{
     
     ###########################################################
     
-    public function __construct($numero,$data,$assunto){
+    public function __construct(){
     /**
      * Inicia a Ci e preenche oas variáveis com valores padrão
      */
@@ -49,11 +44,6 @@ class Ci{
         $this->origemSetor = "UENF/DGA/GRH";
         $this->origemIdFuncional = $idFuncionalGerente;
         $this->origemDescricao = $descricao;
-        
-        # Valores informados
-        $this->numero = $numero;
-        $this->data = $data;
-        $this->assunto = $assunto;
     }
     
     ###########################################################
@@ -140,44 +130,20 @@ class Ci{
         # Limita o tamanho da tela
         $grid = new Grid("center");
         $grid->abreColuna(11);
-
-        $grid = new Grid();
-        $grid->abreColuna(5);
-
-        # CI
-        p('CI '.$this->origemSetor.' Nº '.$this->numero,'pCiNum');
-
-        $grid->fechaColuna();
-        $grid->abreColuna(7);
-
-        # Data
-        p('Campos dos Goytacazes, '.dataExtenso($this->data),'pCiData');
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-
-        # Origem
-        p('De:&nbsp&nbsp&nbsp&nbsp'.$this->origemNome.'<br/>'
-        . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$this->origemDescricao,'pCi');
-        br();
-
-        # Destino
-        p('Para:&nbsp&nbsp'.$this->destinoNome.'<br/>'
-        . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$this->destinoSetor,'pCi');
-        br();
-
-        # Assunto
-        p("Assunto: ".$this->assunto,'pCi');
-        br();
+        br(2);
+    
+        # Declaração
+        p('DECLARAÇÃO','pDeclaracaoTitulo');
+        br(2);
 
         # Texto
         foreach($this->texto as $textoCi){
-            p('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$textoCi,'pCi');
+            p($textoCi,'pCi');
         }
-        br();
-
-        # Atenciosamente
-        p('Atenciosamente','pCi');
+        br(2);
+        
+        # Data
+        p('Campos dos Goytacazes, '.dataExtenso($this->data),'pDeclaracaoData');
         br(3);
 
         # Assinatura

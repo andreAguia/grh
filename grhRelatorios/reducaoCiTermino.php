@@ -51,13 +51,7 @@ if($acesso)
         $publicacao = $dtPublicacao;
     }else{
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
-    }       
-            
-    # Gerente do GRH (id 66)
-    $idGerenteGrh = $pessoal->get_gerente(66);
-    $nomeGerente = $pessoal->get_nome($idGerenteGrh);
-    $lotacaoOrigem = "Gerência de Recursos Humanos - GRH";
-    $idFuncionalGerente = $pessoal->get_idFuncional($idGerenteGrh);
+    }
     
     # Chefia imediata
     $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
@@ -75,73 +69,23 @@ if($acesso)
     # Assunto
     $assunto = "Comunica <b>TÉRMINO</b> do prazo de Redução de Carga Horária de ".$nomeServidor;
     
-    ## Monta o Relatório 
-    # Menu
-    $menuRelatorio = new menuRelatorio();
-    $menuRelatorio->set_botaoVoltar(NULL);    
-    $menuRelatorio->show();
+    # Monta a CI
+    $ci = new Ci($numCi,$dtCiTermino,$assunto);
+    $ci->set_destinoNome($nomeGerenteDestino);
+    $ci->set_destinoSetor($gerenciaImediataDescricao);
     
-    # Cabeçalho do Relatório (com o logotipo)
-    $relatorio = new Relatorio();
-    $relatorio->exibeCabecalho();
-    
-    hr();
-    
-    # Limita o tamanho da tela
-    $grid = new Grid("center");
-    $grid->abreColuna(11);
-    
-    $grid = new Grid();
-    $grid->abreColuna(5);
-    
-    # CI
-    p('C.I.UENF/DGA/GRH Nº '.$numCi,'pCiNum');
-    
-    $grid->fechaColuna();
-    $grid->abreColuna(7);
-    
-    # Data
-    p('Campos dos Goytacazes, '.dataExtenso($dtCiTermino),'pCiData');
-    
-    $grid->fechaColuna();
-    $grid->fechaGrid();
-    
-    # Origem
-    p('De:&nbsp&nbsp&nbsp&nbsp'.$nomeGerente.'<br/>'
-    . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$lotacaoOrigem,'pCi');
-    br();
-    
-    # Destino
-    p('Para:&nbsp&nbsp'.$nomeGerenteDestino.'<br/>'
-    . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$gerenciaImediataDescricao,'pCi');
-    br();
-    
-    # Assunto
-    p("Assunto: ".$assunto,'pCi');
-    br();
-    
-    # Texto
-    p("Vimos comunicar o <b>TÉRMINO</b> da"
+    $ci->set_texto("Vimos comunicar o <b>TÉRMINO</b> da"
     . " de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, em $dtTermino, conforme Ato do Reitor publicado no DOERJ de $publicacao,"
-    . " concedendo o benefício pelo prazo de $periodo meses.",'pCi');
-        
-    p("Esclarecemos que o referido servidor deverá cumprir"
+    . " concedendo o benefício pelo prazo de $periodo meses.");
+    
+    $ci->set_texto("Esclarecemos que o referido servidor deverá cumprir"
      . " a carga horária normal, enquanto aguarda o parecer da perícia médica oficial do Estado do RJ para concessão de"
-     . " prorrogação, se for o caso.",'pCi');
-            
-    P("Sem mais para o momento, reiteramos votos de estima e consideração.",'pCi');
-    br();
+     . " prorrogação, se for o caso.");
     
-    # Atenciosamente
-    p('Atenciosamente','pCi');
-    br(4);
+    $ci->set_texto("Sem mais para o momento, reiteramos votos de estima e consideração.");
+    $ci->set_saltoRodape(1);
+    $ci->show();
     
-    # Assinatura
-    #p('____________________________________________________','pCiAssinatura');
-    p($nomeGerente.'<br/>'.$lotacaoOrigem.'<br/>Id Funcional n° '.$idFuncionalGerente,'pCiAssinatura');
-
-    $grid->fechaColuna();
-    $grid->fechaGrid();
     $page->terminaPagina();
 }

@@ -907,7 +907,137 @@ if($acesso){
             }            
             break;
             
-        ########################################################3
+        ########################################################
+        # Ato Reitor
+        
+        case "atoReitor" : 
+            
+            loadPage('?fase=atoReitorForm&id='.$id,"_blank");
+            loadPage("?");
+            break;
+        
+        case "atoReitorForm" :
+            
+            # Pega os Dados
+            $dados = $reducao->get_dadosReducao($id);
+
+            # Da Redução
+            $dtAtoReitor = $dados["dtAtoReitor"];            
+            
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+            
+            # Título
+            titulo("Ato do Reitor");
+            br();
+            
+            # Monta o formulário
+            $form = new Form('?fase=atoReitorFormValida&id='.$id);
+
+            # dtCiInicio
+            $controle = new Input('dtAtoReitor','data','Data do Ato do Reitor:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor($dtCitermino);
+            $controle->set_required(TRUE);
+            $controle->set_title('A data do Ato do Reitor.');
+            $form->add_item($controle);
+            
+            # dtDespacho
+            $controle = new Input('dtDespacho','data','Data do Despacho da Perícia:',1);
+            $controle->set_size(10);
+            $controle->set_linha(2);
+            $controle->set_col(4);
+            $controle->set_valor($dtCitermino);
+            $controle->set_required(TRUE);
+            $controle->set_title('A data do Despacho da Perícia.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('submit','submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "atoReitorFormValida" :
+            
+            # Pega os Dados
+            $dados = $reducao->get_dadosReducao($id);
+            $dtAtoReitor = $dados["dtAtoReitor"];            
+            $periodo = $dados["periodo"];
+            $processo = $reducao->get_numProcesso($idServidorPesquisado);            
+            
+            # Pega os dados Digitados
+            $dtAtoReitorDigitados = post("dtAtoReitor");
+            $dtDespacho = post("dtDespacho");
+            
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($dtAtoReitor <> $dtAtoReitorDigitados){
+                $alteracoes .= '[dtAtoReitor] '.$dtAtoReitor.'->'.$dtAtoReitorDigitados.'; ';
+            }
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da Ci
+            if(vazio($dtAtoReitorDigitados)){
+                $msgErro.='Não tem data do Ato do Reitor cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da Publicação
+            if(vazio($dtDespacho)){
+                $msgErro.='A Data do Despacho da Perícia deve ser Preenchida!\n';
+                $erro = 1;
+            }           
+            
+            # Verifica se teve erro
+            if($erro == 0){
+                # Salva as alterações
+                $pessoal->set_tabela("tbreducao");
+                $pessoal->set_idCampo("idReducao");
+                $campoNome = array('dtAtoReitor');
+                $campoValor = array($dtAtoReitorDigitados);
+                $pessoal->gravar($campoNome,$campoValor,$id);
+                $data = date("Y-m-d H:i:s");
+                
+                # Grava o log das alterações caso tenha
+                if(!is_null($alteracoes)){
+                    $atividades .= 'Alterou: '.$alteracoes;
+                    $tipoLog = 2;
+                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                }
+                
+                # Grava o log da visualização do relatório
+                $data = date("Y-m-d H:i:s");
+                $atividades = 'Visualizou O Ato do Reitor de redução da carga horária: ';
+                $tipoLog = 4;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                
+                # Exibe o relatório
+                loadPage('../grhRelatorios/reducaoAtoReitor.php?id='.$id);
+            }else{
+                alert($msgErro);
+                back(1);
+            }            
+            break;
+            
+        ########################################################33
     }									 	 		
 
     $page->terminaPagina();

@@ -4724,6 +4724,31 @@ class Pessoal extends Bd {
 
    ##########################################################################################
 
+    function get_reitor(){
+    
+     /**
+      * Retorna o idServidor do reitor da Universidade
+      */
+        
+        # Pega a diretoria dessa lotação
+        $select = "SELECT DIR FROM tblotacao WHERE idLotacao = ".$idLotacao;
+        $row = parent::select($select,false);
+        $diretoria = $row[0];
+        
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbcomissao.dtExo is NULL 
+                     AND tbtipocomissao.idTipoComissao = 13";
+        
+        $row = parent::select($select,false);
+        return $row[0];
+    }
+
+   ##########################################################################################
+
     function get_diretor($idLotacao){
     
      /**

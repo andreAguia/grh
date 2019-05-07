@@ -1,26 +1,17 @@
 <?php
-class Declaracao{
+class AtoReitor{
  /**
-  * Monta uma Ci
+  * Monta um Ato do Reitor
   * 
   * @author André Águia (Alat) - alataguia@gmail.com
-  * 
-  * @var private $projeto        integer NULL O id do projeto a ser acessado
   * 
   */
     
     private $data = NULL;
-    private $texto = NULL;
+    private $textoReitor = NULL;
+    private $textoPrincipal = NULL;
     
-    private $origemNome = NULL;
-    private $origemSetor = NULL;
-    private $origemDescricao = NULL;
-    private $origemIdFuncional = NULL;
-    
-    private $rodapeNome = "Gerência de Recursos Humanos - GRH";
-    private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
-    private $rodapeTelefone = "(22) 2739-7064";
-    
+    private $reitor = NULL;    
     private $saltoRodape = 3;
     
     ###########################################################
@@ -34,31 +25,11 @@ class Declaracao{
         $pessoal = new Pessoal();
         
     	# Gerente do GRH (id 66)
-        $idGerenteGrh = $pessoal->get_gerente(66);
-        $nomeGerente = $pessoal->get_nome($idGerenteGrh);
-        $idFuncionalGerente = $pessoal->get_idFuncional($idGerenteGrh);
-        $descricao = $pessoal->get_cargoComissaoDescricao($idGerenteGrh);
+        $idReitor = $pessoal->get_reitor();
+        $nomeReitor = $pessoal->get_nome($idReitor);
     
         # Valores padrão de Origem
-        $this->origemNome = $nomeGerente;
-        $this->origemSetor = "UENF/DGA/GRH";
-        $this->origemIdFuncional = $idFuncionalGerente;
-        $this->origemDescricao = $descricao;
-    }
-    
-    ###########################################################
-	    
-    public function set_texto($texto){
-    /**
-     * Inclui um objeto Input ao formulário
-     * 
-     * @syntax $form->add_item($objeto);
-     * 
-     * @param $controle object NULL Objeto Input a ser inserido no Formulário
-     * 
-     */
-    
-       $this->texto[] = $texto; 
+        $this->reitor = $nomeReitor;
     }
     
     ###########################################################
@@ -133,13 +104,16 @@ class Declaracao{
         br(2);
     
         # Declaração
-        p('DECLARAÇÃO','pDeclaracaoTitulo');
+        p('ATO DO REITOR','pDeclaracaoTitulo');
+        p('DE '.$this->data,'pDeclaracaoTitulo');
         br(2);
 
-        # Texto
-        foreach($this->texto as $textoCi){
-            p($textoCi,'pCi');
-        }
+        # Texto reitor
+        p($this->textoReitor,'pCi');
+        br(2);
+        
+        # Texto principal
+        p($this->textoPrincipal,'pCi');
         br(2);
         
         # Data
@@ -148,7 +122,7 @@ class Declaracao{
 
         # Assinatura
         #p('____________________________________________________','pCiAssinatura');
-        p($this->origemNome.'<br/>'.$this->origemDescricao.'<br/>Id Funcional n° '.$this->origemIdFuncional,'pCiAssinatura');
+        p('<b>'.$this->reitor.'<br/>REITOR</b>','pCiAssinatura');
 
         $this->rodape();
         

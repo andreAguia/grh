@@ -115,6 +115,30 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
+    function get_dataAtoReitor($idReducao){
+
+    /**
+     * Informe a data do ato do reitor
+     */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT dtAtoReitor
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        return date_to_php($row[0]);
+    }
+    
+    ###########################################################
+    
+    
     function get_ultimaSolicitacaoAberto(){
 
     /**
@@ -155,6 +179,25 @@ class ReducaoCargaHoraria{
                         dtPublicacao,
                         pgPublicacao,
                         periodo
+                   FROM tbreducao
+                  WHERE idReducao = $idReducao";
+        
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select,FALSE);
+        
+        return $dados;
+    }
+    
+    ###########################################################
+    
+    function get_dadosReducao($idReducao){
+        
+    /**
+     * fornece a próxima tarefa a ser realizada
+     */
+        
+        # Pega os dados
+        $select="SELECT *
                    FROM tbreducao
                   WHERE idReducao = $idReducao";
         
@@ -513,8 +556,7 @@ class ReducaoCargaHoraria{
             
             $botao = new BotaoGrafico();
             $botao->set_label("Ato do Reitor");
-            $botao->set_url('../grhRelatorios/emManutencao.php');
-            $botao->set_target("_blank");
+            $botao->set_url('?fase=atoReitor&id='.$idReducao);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime o Ato do Reitor');
             $menu->add_item($botao);

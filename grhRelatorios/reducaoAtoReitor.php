@@ -17,69 +17,61 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){
+    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $reducao = new ReducaoCargaHoraria();
 	
-    # Pega o número da CI
-    $ci = post('ci');
+    # Pega o id
+    $id = get('id');
 
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
-            
-    # Gerente do GRH (id 66)
-    $idGerenteGrh = $pessoal->get_gerente(66);
-    $nomeGerente = $pessoal->get_nome($idGerenteGrh);
-    $lotacaoOrigem = "Gerência de Recursos Humanos - GRH";
-    $idFuncionalGerente = $pessoal->get_idFuncional($idGerenteGrh);
+
+    # pega os dados
+    $dados = $reducao->get_dadosReducao($id);
+    $dtAtoReitor = date_to_php($dados["dtAtoReitor"]);
+    $dtDespacho = date_to_php($dados["dtDespacho"]);
+    $periodo = $dados["periodo"];
     
-    # Servidor
+    # do Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, FALSE);
+    $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
+    $sexo = $pessoal->get_sexo($idServidorPesquisado);
     
-    # Assunto
-    $assunto = "Redução de Carga Horária de ".$nomeServidor;
-
-    ## Monta o Relatório 
-    # Menu
-    $menuRelatorio = new menuRelatorio();
-    $menuRelatorio->set_botaoVoltar(NULL);    
-    $menuRelatorio->show();
+    # Altera parte do texto de acordo com o sexo (gênero) do servidor
+    if($sexo == "Masculino"){
+        $texto1 = "do servidor";
+        $texto2 = "lotado";        
+    }else{
+        $texto1 = "da servidora";
+        $texto2 = "lotada";
+    }
     
-    # Cabeçalho do Relatório (com o logotipo)
-    $relatorio = new Relatorio();
-    $relatorio->exibeCabecalho();
+    # da Redução
+    $processo = $reducao->get_numProcesso($idServidorPesquisado);
     
-    hr();
+    # do Ato
+    $textoReitor = "O <b>REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO – UENF</b>,"
+                 . " tendo em vista as suas atribuições estabelecidas no Decreto nº 30.672, de 18/02/2002 e o que consta no Processo nº $processo,";
     
-    # Limita o tamanho da tela
-    $grid = new Grid("center");
-    $grid->abreColuna(11);
-    br(2);
+    $textoPrincipal = "Reduz em 50% a carga horária de trabalho $texto1 <b>".strtoupper($nomeServidor)."</b>, $cargoEfetivo, ID nº $idFuncional, $texto2 na $lotacao,"
+                    . " pelo prazo de $periodo (".numero_to_letra($periodo).") meses ou enquanto responsável legal por pessoa portadora de necessidade caracterizada como permanente,"
+                    . " que requeira atenção do responsável, conforme artigo 6º do decreto nº 14.870/90, regulamentado pela Resolução SARE nº 3.004 de 20/05/2003"
+                    . " e o despacho da Coordenadoria Geral da Superintendência de Perícias Médicas e Saúde Ocupacional – SPMSO, da Secretaria de Estado de Saúde – SES,"
+                    . " datado de $dtDespacho, constante do presente processo.";
     
-    # Declaração
-    p('DECLARAÇÃO','pDeclaracaoTitulo');
-    br(2);
+    # Ato do Reitor
+    $ato = new AtoReitor();
+    $ato->set_data($dtAtoReitor);
+    $ato->set_textoReitor($textoReitor);
+    $ato->set_textoPrincipal($textoPrincipal);
+    $ato->set_saltoRodape(1);
+    $ato->show();
     
-    # Texto
-    $texto = "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspDeclaro para os devidos fins, que o(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
-           . " ID funcional nº $idFuncional, $cargoEfetivo, não está respondendo a inquérito administrativo por comunicação de faltas nesta Universidade Estadual do Norte Fluminense Darcy Ribeiro.";
-    
-    p($texto,'pCi');
-    br(2);
-    
-    # Data
-    p('Campos dos Goytacazes, '.dataExtenso(date("d/m/Y")).'.','pDeclaracaoData');
-    br(6);
-    
-    # Assinatura
-    #p('____________________________________________________','pCiAssinatura');
-    p($nomeGerente.'<br/>'.$lotacaoOrigem.'<br/>Id Funcional n° '.$idFuncionalGerente,'pCiAssinatura');
-
-    $grid->fechaColuna();
-    $grid->fechaGrid();
     $page->terminaPagina();
 }

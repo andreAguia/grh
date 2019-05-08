@@ -97,53 +97,22 @@ setlocale(LC_ALL, 'pt_BR');
  */
 
 function autoload($classe){
-    # Verifica se existe essa classe nas classes gerais
-    if (file_exists(PASTA_CLASSES_GERAIS."/class.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/class.{$classe}.php";
-    }
-        
-    if (file_exists(PASTA_CLASSES_GERAIS."/interface.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/interface.{$classe}.php";
-    }
-        
-    if (file_exists(PASTA_CLASSES_GERAIS."/container.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/container.{$classe}.php"; 
-    }
-        
-    if (file_exists(PASTA_CLASSES_GERAIS."/html.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/html.{$classe}.php";
-    }
-        
-    if (file_exists(PASTA_CLASSES_GERAIS."/outros.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/outros.{$classe}.php"; 
-    }
-
-    if (file_exists(PASTA_CLASSES_GERAIS."/rel.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/rel.{$classe}.php"; 
-    }
+    # Array com as pastas existentes
+    $pastasClasses = [PASTA_CLASSES_GERAIS,PASTA_CLASSES,PASTA_CLASSES_ADMIN];
+    $categoriasClasses = ["class","interface","container","html","outros","rel","bd","documento"];
     
-    if (file_exists(PASTA_CLASSES_GERAIS."/bd.{$classe}.php")){
-        include_once PASTA_CLASSES_GERAIS."/bd.{$classe}.php";
-    }
-
-    # Verifica se existe a classe nas classes específicas
-    if (file_exists(PASTA_CLASSES."/class.{$classe}.php")){
-        include_once PASTA_CLASSES."/class.{$classe}.php";
-    }
-        
-    if (file_exists(PASTA_CLASSES."/interface.{$classe}.php")){
-        include_once PASTA_CLASSES."/interface.{$classe}.php";
-    }
-        
-    # Verifica se existe a classe nas classes do sistema de Administração
-    if (file_exists(PASTA_CLASSES_ADMIN."/class.{$classe}.php")){
-        include_once PASTA_CLASSES_ADMIN."/class.{$classe}.php";
-    }
-        
-    if (file_exists(PASTA_CLASSES_ADMIN."/interface.{$classe}.php")){
-        include_once PASTA_CLASSES_ADMIN."/interface.{$classe}.php";
+    # Percorre as pastas
+    foreach($pastasClasses as $pasta){        
+        # Percorre as categorias
+        foreach($categoriasClasses as $categoria){            
+            if (file_exists($pasta.$categoria.".{$classe}.php")){
+                include_once $pasta.$categoria.".{$classe}.php";
+                
+            }
+        }
     }
 }
+
 spl_autoload_register("autoload");
 
 # Sobre o Sistema

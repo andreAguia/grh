@@ -920,9 +920,8 @@ if($acesso){
             
             # Pega os Dados
             $dados = $reducao->get_dadosReducao($id);
-
-            # Da Redução
-            $dtAtoReitor = $dados["dtAtoReitor"];            
+            $dtAtoReitor = $dados["dtAtoReitor"];
+            $dtDespacho = $dados["dtDespacho"];
             
             # Limita a tela
             $grid = new Grid();
@@ -941,7 +940,7 @@ if($acesso){
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_valor($dtCitermino);
+            $controle->set_valor($dtAtoReitor);
             $controle->set_required(TRUE);
             $controle->set_title('A data do Ato do Reitor.');
             $form->add_item($controle);
@@ -951,7 +950,7 @@ if($acesso){
             $controle->set_size(10);
             $controle->set_linha(2);
             $controle->set_col(4);
-            $controle->set_valor($dtCitermino);
+            $controle->set_valor($dtDespacho);
             $controle->set_required(TRUE);
             $controle->set_title('A data do Despacho da Perícia.');
             $form->add_item($controle);
@@ -973,13 +972,14 @@ if($acesso){
             
             # Pega os Dados
             $dados = $reducao->get_dadosReducao($id);
-            $dtAtoReitor = $dados["dtAtoReitor"];            
+            $dtAtoReitor = $dados["dtAtoReitor"];
+            $dtDespacho = $dados["dtDespacho"];
             $periodo = $dados["periodo"];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);            
             
             # Pega os dados Digitados
             $dtAtoReitorDigitados = post("dtAtoReitor");
-            $dtDespacho = post("dtDespacho");
+            $dtDespachoDigitado = post("dtDespacho");
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -988,6 +988,11 @@ if($acesso){
             # Verifica as alterações para o log
             if($dtAtoReitor <> $dtAtoReitorDigitados){
                 $alteracoes .= '[dtAtoReitor] '.$dtAtoReitor.'->'.$dtAtoReitorDigitados.'; ';
+            }
+            
+            # Verifica as alterações para o log
+            if($dtDespacho <> $dtDespachoDigitado){
+                $alteracoes .= '[dtDespacho] '.$dtDespacho.'->'.$dtDespachoDigitado.'; ';
             }
             
             # Erro
@@ -1001,7 +1006,7 @@ if($acesso){
             }
             
             # Verifica a data da Publicação
-            if(vazio($dtDespacho)){
+            if(vazio($dtDespachoDigitado)){
                 $msgErro.='A Data do Despacho da Perícia deve ser Preenchida!\n';
                 $erro = 1;
             }           
@@ -1011,8 +1016,8 @@ if($acesso){
                 # Salva as alterações
                 $pessoal->set_tabela("tbreducao");
                 $pessoal->set_idCampo("idReducao");
-                $campoNome = array('dtAtoReitor');
-                $campoValor = array($dtAtoReitorDigitados);
+                $campoNome = array('dtAtoReitor','dtDespacho');
+                $campoValor = array($dtAtoReitorDigitados,$dtDespachoDigitado);
                 $pessoal->gravar($campoNome,$campoValor,$id);
                 $data = date("Y-m-d H:i:s");
                 

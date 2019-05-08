@@ -25,9 +25,6 @@ if($acesso)
 	
     # Pega o id
     $id = get('id');
-    
-    # Pega o número da CI
-    $ci = post('ci');
 
     # Começa uma nova página
     $page = new Page();			
@@ -57,10 +54,6 @@ if($acesso)
     $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
     $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
     $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);  // Pega a descrição da chefia imediata
-    
-    # Lotação
-    $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);                    // Pega o id da lotação do servidor
-    $lotacaoDestino = $pessoal->get_nomeLotacao($idLotacao);                        // Pega o nome da lotação
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);

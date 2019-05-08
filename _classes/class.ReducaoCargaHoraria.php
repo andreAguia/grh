@@ -514,7 +514,8 @@ class ReducaoCargaHoraria{
         # Pega os dias publicados
         $select = 'SELECT resultado,
                           numCiInicio,
-                          numCiTermino
+                          numCiTermino,
+                          dtAtoReitor
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
@@ -531,6 +532,12 @@ class ReducaoCargaHoraria{
         $nomeBotaotermino = "CI Término";
         if(!is_null($row[2])){
             $nomeBotaotermino = "CI Término<br/>n° ".$row[2];
+        }
+        
+        # Nome do botão do Ato
+        $nomeBotaoAto = "Ato do Reitor";
+        if(!is_null($row[3])){
+            $nomeBotaoAto = "Ato do Reitor<br/>".date_to_php($row[3]);
         }
         
         # Retorno
@@ -555,7 +562,7 @@ class ReducaoCargaHoraria{
             $menu->add_item($botao);
             
             $botao = new BotaoGrafico();
-            $botao->set_label("Ato do Reitor");
+            $botao->set_label($nomeBotaoAto);
             $botao->set_url('?fase=atoReitor&id='.$idReducao);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime o Ato do Reitor');

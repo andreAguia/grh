@@ -4730,11 +4730,6 @@ class Pessoal extends Bd {
       * Retorna o idServidor do reitor da Universidade
       */
         
-        # Pega a diretoria dessa lotação
-        $select = "SELECT DIR FROM tblotacao WHERE idLotacao = ".$idLotacao;
-        $row = parent::select($select,false);
-        $diretoria = $row[0];
-        
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)

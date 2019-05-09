@@ -122,6 +122,10 @@ class Declaracao{
         $menuRelatorio->set_botaoVoltar(NULL);
         $menuRelatorio->set_aviso($this->aviso);
         $menuRelatorio->show();
+
+        # Cabeçalho do Relatório (com o logotipo)
+        $relatorio = new Relatorio();
+        $relatorio->exibeCabecalho();
         
         hr();
 

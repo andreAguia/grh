@@ -46,7 +46,8 @@ if($acesso){
            . " comunicação de faltas nesta Universidade Estadual do Norte Fluminense Darcy Ribeiro.");
     
     $dec->set_saltoRodape(10);
-    $dec->set_aviso("teste");
+    $dec->set_aviso("IMPORTANTE !! O sistema emite essa declaração mas NÃO faz nenhuma verificação a respeito!!<br/>"
+                  . "A GRH deverá se certificar que realmente o servidor $nomeServidor não responde a inquérito administrativo por comunicação de faltas.");
     $dec->show();
     $page->terminaPagina();
 }

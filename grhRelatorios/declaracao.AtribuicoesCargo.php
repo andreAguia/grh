@@ -23,9 +23,6 @@ if($acesso)
     $pessoal = new Pessoal();
     $reducao = new ReducaoCargaHoraria();
     
-    # Pega o número da CI
-    $ci = post('ci');    
-    
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
@@ -69,5 +66,12 @@ if($acesso)
     
     #$dec->set_saltoRodape(10);
     $dec->show();
+    
+    # Grava o log da visualização do relatório
+    $data = date("Y-m-d H:i:s");    
+    $atividades = 'Visualizou a Declaração de Atribuições do Cargo';
+    $tipoLog = 4;
+    $intra->registraLog($idUsuario,$data,$atividades,NULL,NULL,$tipoLog,$idServidorPesquisado);
+    
     $page->terminaPagina();
 }

@@ -47,7 +47,14 @@ if($acesso){
     
     $dec->set_saltoRodape(10);
     $dec->set_aviso("IMPORTANTE !! O sistema emite essa declaração mas NÃO faz nenhuma verificação a respeito!!<br/>"
-                  . "A GRH deverá se certificar que realmente o servidor $nomeServidor não responde a inquérito administrativo por comunicação de faltas.");
+                  . "A GRH deverá se certificar realmente se $texto1 $nomeServidor não responde a inquérito administrativo por comunicação de faltas.");
     $dec->show();
+    
+    # Grava o log da visualização do relatório
+    $data = date("Y-m-d H:i:s");
+    $atividades = 'Visualizou a Declaração que NÃO responde a inquérito administrativo';
+    $tipoLog = 4;
+    $intra->registraLog($idUsuario,$data,$atividades,NULL,NULL,$tipoLog,$idServidorPesquisado);
+    
     $page->terminaPagina();
 }

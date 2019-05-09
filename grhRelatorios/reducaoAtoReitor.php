@@ -72,6 +72,12 @@ if($acesso){
     $ato->set_textoPrincipal($textoPrincipal);
     $ato->set_saltoRodape(1);
     $ato->show();
+                
+    # Grava o log da visualização do relatório
+    $data = date("Y-m-d H:i:s");
+    $atividades = 'Visualizou O Ato do Reitor de redução da carga horária: ';
+    $tipoLog = 4;
+    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);                
     
     $page->terminaPagina();
 }

@@ -41,11 +41,11 @@ if($acesso){
     
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
-    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
+    $parametroStatus = post('parametroStatus',get_session('parametroStatus',0));
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
-    set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroStatus',$parametroStatus);
     
     # Começa uma nova página
     $page = new Page();
@@ -56,10 +56,12 @@ if($acesso){
         AreaServidor::cabecalho();
     }
     
-    switch ($fase){
-        
+    # Variáveis
+    $statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
+            
 ################################################################
-        
+    
+    switch ($fase){
         case "listaReducao" :
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -74,11 +76,20 @@ if($acesso){
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar,"left");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel,"right");
 
             # Redução da Carga Horária
             $botaoRel = new Button('Redução da Carga Horária');
             $botaoRel->set_url("?fase=listaReducao");
-            $menu1->add_link($botaoRel,"right");
+            #$menu1->add_link($botaoRel,"right");
             
             # Redução da Carga Horária
             $botaoRel = new Button('Redução da Carga Horária');
@@ -93,12 +104,38 @@ if($acesso){
             $menu1->show();
             
             ###
+            
+            # Formulário de Pesquisa
+            $form = new Form('?'); 
+
+            # Nome    
+            $controle = new Input('parametroNomeMat','texto','Servidor:',1);
+            $controle->set_size(100);
+            $controle->set_title('Filtra por Nome');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $controle->set_autofocus(TRUE);
+            $form->add_item($controle);
+
+            # Status    
+            $controle = new Input('parametroStatus','combo','Status:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Status');
+            $controle->set_array($statusPossiveis);
+            $controle->set_valor($parametroStatus);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            ###
                 
             # Pega o time inicial
             $time_start = microtime(TRUE);
-            
-            # Conecta com o banco de dados
-            $servidor = new Pessoal();
 
             # Pega os dados
             $select = "SELECT idServidor,
@@ -112,9 +149,22 @@ if($acesso){
                               idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbreducao USING (idServidor)
-                     ORDER BY status, dtInicio";
+                        WHERE tbservidor.idPerfil <> 10";
             
-            $resumo = $servidor->select($select);
+            # status
+            if($parametroStatus <> 0){
+                $select .= " AND status = ".$parametroStatus;
+            }
+            
+            # status
+            if(!is_null($parametroNomeMat)){
+                $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
+            }
+                    
+                    
+            $select .= " ORDER BY status, dtInicio";
+            
+            $resumo = $pessoal->select($select);
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -169,6 +219,62 @@ if($acesso){
         
 ################################################################
         
+        # Relatório
+        case "relatorio" :
+            
+            # Título & uSbtitulo
+            $subTitulo = NULL;
+            $titulo = "Servidores com Solicitação de Redução de Carga Horária";
+            
+            # Pega os dados
+            $select = "SELECT idServidor,
+                              tbpessoa.nome,
+                              idReducao,
+                              dtSolicitacao,
+                              idReducao,
+                              idReducao,
+                              idReducao,
+                              idReducao,
+                              idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbreducao USING (idServidor)
+                        WHERE tbservidor.idPerfil <> 10";
+            
+            # status
+            if($parametroStatus <> 0){
+                $select .= " AND status = ".$parametroStatus;
+                $subTitulo .= "Status: ".$statusPossiveis[$parametroStatus][1];
+            }
+            
+            # status
+            if(!is_null($parametroNomeMat)){
+                $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
+                $subTitulo .= "Nome: ".$parametroNomeMat;
+            }       
+                    
+            $select .= " ORDER BY status, dtInicio";
+            
+            $resumo = $pessoal->select($select);
+            
+            # Monta a tabela
+            $relatorio = new Relatorio();
+            $relatorio->set_conteudo($resumo);
+            $relatorio->set_label(array("Id/Matrícula","Nome","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $relatorio->set_align(array("center","left","center","center","left","center","center","left"));
+            $relatorio->set_funcao(array("idMatricula",NULL,NULL,"date_to_php"));
+            
+            $relatorio->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+            $relatorio->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            
+            $relatorio->set_titulo($titulo);
+            $relatorio->set_subtitulo($subTitulo);
+            
+            $relatorio->set_editar('?fase=editaServidor&id=');
+            $relatorio->set_nomeColunaEditar("Acessar");
+            $relatorio->set_editarBotao("ver.png");
+            $relatorio->set_idCampo('idServidor');
+            $relatorio->show();
+            break;
     }
     
     $page->terminaPagina();

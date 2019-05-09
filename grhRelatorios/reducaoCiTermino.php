@@ -79,6 +79,12 @@ if($acesso)
     $ci->set_texto("Sem mais para o momento, reiteramos votos de estima e consideração.");
     $ci->set_saltoRodape(1);
     $ci->show();
-    
+                
+    # Grava o log da visualização do relatório
+    $data = date("Y-m-d H:i:s");
+    $atividades = 'Visualizou a Ci de término de redução da carga horária: ';
+    $tipoLog = 4;
+    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+
     $page->terminaPagina();
 }

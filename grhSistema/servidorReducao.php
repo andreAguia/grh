@@ -583,9 +583,9 @@ if($acesso){
             $objeto->gravar($id,"servidorReducaoExtra.php");
             break;
         
-        ########################################################3
-        # Ci Início
+################################################################################################################
         
+        # Ci Início        
         case "ciInicio" : 
             
             loadPage('?fase=ciInicioForm&id='.$id,"_blank");
@@ -729,13 +729,7 @@ if($acesso){
                     $atividades .= 'Alterou: '.$alteracoes;
                     $tipoLog = 2;
                     $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
-                }
-                
-                # Grava o log da visualização do relatório
-                $data = date("Y-m-d H:i:s");
-                $atividades = 'Visualizou a Ci de início de redução da carga horária: ';
-                $tipoLog = 4;
-                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                }                
                 
                 # Exibe o relatório
                 loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id);
@@ -745,9 +739,9 @@ if($acesso){
             }            
             break;
             
-        ########################################################
-        # Ci Término
+################################################################################################################
         
+        # Ci Término        
         case "ciTermino" : 
             
             loadPage('?fase=ciTerminoForm&id='.$id,"_blank");
@@ -838,7 +832,7 @@ if($acesso){
             if($numCiTermino <> $numCiTerminoDigitados){
                 $alteracoes .= '[numCiTermino] '.$numCiTermino.'->'.$numCiTerminoDigitados.'; ';
             }
-            if($dtCiTermino <> $dtCiInicioDigitado){
+            if($dtCiTermino <> $dtCiTerminoDigitado){
                 $alteracoes .= '[dtCiTermino] '.date_to_php($dtCiTermino).'->'.date_to_php($dtCiTerminoDigitado).'; ';
             }
             
@@ -893,12 +887,6 @@ if($acesso){
                     $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
                 }
                 
-                # Grava o log da visualização do relatório
-                $data = date("Y-m-d H:i:s");
-                $atividades = 'Visualizou a Ci de término de redução da carga horária: ';
-                $tipoLog = 4;
-                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
-                
                 # Exibe o relatório
                 loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id);
             }else{
@@ -907,9 +895,9 @@ if($acesso){
             }            
             break;
             
-        ########################################################
+################################################################################################################
+
         # Ato Reitor
-        
         case "atoReitor" : 
             
             loadPage('?fase=atoReitorForm&id='.$id,"_blank");
@@ -987,12 +975,12 @@ if($acesso){
             
             # Verifica as alterações para o log
             if($dtAtoReitor <> $dtAtoReitorDigitados){
-                $alteracoes .= '[dtAtoReitor] '.$dtAtoReitor.'->'.$dtAtoReitorDigitados.'; ';
+                $alteracoes .= '[dtAtoReitor] '.date_to_php($dtAtoReitor).'->'.date_to_php($dtAtoReitorDigitados).'; ';
             }
             
             # Verifica as alterações para o log
             if($dtDespacho <> $dtDespachoDigitado){
-                $alteracoes .= '[dtDespacho] '.$dtDespacho.'->'.$dtDespachoDigitado.'; ';
+                $alteracoes .= '[dtDespacho] '.date_to_php($dtDespacho).'->'.date_to_php($dtDespachoDigitado).'; ';
             }
             
             # Erro
@@ -1027,12 +1015,6 @@ if($acesso){
                     $tipoLog = 2;
                     $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
                 }
-                
-                # Grava o log da visualização do relatório
-                $data = date("Y-m-d H:i:s");
-                $atividades = 'Visualizou O Ato do Reitor de redução da carga horária: ';
-                $tipoLog = 4;
-                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
                 
                 # Exibe o relatório
                 loadPage('../grhRelatorios/reducaoAtoReitor.php?id='.$id);

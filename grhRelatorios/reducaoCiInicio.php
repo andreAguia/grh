@@ -72,5 +72,11 @@ if($acesso){
     $ci->set_saltoRodape(5);
     $ci->show();
     
+    # Grava o log da visualização do relatório
+    $data = date("Y-m-d H:i:s");
+    $atividades = 'Visualizou a Ci de início de redução da carga horária: ';
+    $tipoLog = 4;
+    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+    
     $page->terminaPagina();
 }

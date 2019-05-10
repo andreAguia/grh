@@ -1114,7 +1114,11 @@ class Grh{
         }
         
         # Chefia Imediata
-        $mensagem[] = "Chefia Imediata: ".$pessoal->get_nome($pessoal->get_chefiaImediata($idServidor)). " (".$pessoal->get_chefiaImediataDescricao($idServidor).")";
+        $idChefe = $pessoal->get_chefiaImediata($idServidor);
+        
+        if(!is_null($idChefe)){
+            $mensagem[] = "Chefia Imediata: ".$pessoal->get_nome($idChefe). " (".$pessoal->get_chefiaImediataDescricao($idServidor).")";
+        }
         
         $qtdMensagem = count($mensagem);
         $contador = 1;

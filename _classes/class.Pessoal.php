@@ -4814,6 +4814,11 @@ class Pessoal extends Bd {
             $chefia = $this->get_reitor();
         }
         
+        # Verifica se o servidor é o reitor
+        if($chefia == $idServidor){
+            $chefia = NULL;
+        }
+        
         # Retorna
         return $chefia;
     }

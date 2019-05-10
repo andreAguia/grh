@@ -4803,15 +4803,20 @@ class Pessoal extends Bd {
                  ORDER BY tbtipocomissao.simbolo LIMIT 1";
         
         $row = parent::select($select,false);
-        $retorno = $row[0];
+        $chefia = $row[0];
         
         # Verifica se o servidor é o cargo em comissão e procura o diretor
-        if($row[0] == $idServidor){
-            $retorno = $this->get_diretor($idLotacao);
+        if($chefia == $idServidor){
+            $chefia = $this->get_diretor($idLotacao);
+        }
+        
+        # Verifica se o servidor é diretorr
+        if($chefia == $idServidor){
+            $chefia = $this->get_reitor();
         }
         
         # Retorna
-        return $retorno;
+        return $chefia;
     }
 
    ##########################################################################################
@@ -4825,21 +4830,14 @@ class Pessoal extends Bd {
       * 
       */
         
-        # Pega a lotação do servidor
-        $idLotacao = $this->get_idLotacao($idServidor);
+        # Pega a chefia imediata
+        $idChefe = $this->get_chefiaImediata($idServidor);
         
         # Monta o select
-        $select = "SELECT tbcomissao.descricao
-                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
-                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
-                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND tbcomissao.dtExo is NULL
-                      AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
-                      AND (tbservidor.idServidor = $idServidor) 
-                 ORDER BY tbtipocomissao.simbolo LIMIT 1";
+        $select = "SELECT descricao
+                     FROM tbcomissao 
+                    WHERE dtExo is NULL
+                      AND idServidor = $idChefe";
         
         $row = parent::select($select,false);
         

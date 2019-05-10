@@ -1060,7 +1060,7 @@ class Grh{
         $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
         $cedido = $pessoal->emCessao($idServidor);
         $orgaoCedido = NULL;
-            
+        
         # Férias
         if($ferias){
             $exercicio = $pessoal->emFeriasExercicio($idServidor);
@@ -1112,6 +1112,9 @@ class Grh{
                 }
             }
         }
+        
+        # Chefia Imediata
+        $mensagem[] = "Chefia Imediata: ".$pessoal->get_nome($pessoal->get_chefiaImediata($idServidor)). " (".$pessoal->get_chefiaImediataDescricao($idServidor).")";
         
         $qtdMensagem = count($mensagem);
         $contador = 1;

@@ -4783,7 +4783,6 @@ class Pessoal extends Bd {
       * Retorna o idServidor da chefia imediata de um servidor específico
       * 
       * @param $idLotacao integer o id da lotaçao
-      * 
       */
         
         # Pega a lotação do servidor
@@ -4806,12 +4805,12 @@ class Pessoal extends Bd {
         $chefia = $row[0];
         
         # Verifica se o servidor é o cargo em comissão e procura o diretor
-        if($chefia == $idServidor){
+        if(($chefia == $idServidor) OR (is_null($chefia))){
             $chefia = $this->get_diretor($idLotacao);
         }
         
         # Verifica se o servidor é diretorr
-        if($chefia == $idServidor){
+        if(($chefia == $idServidor) OR (is_null($chefia))){
             $chefia = $this->get_reitor();
         }
         

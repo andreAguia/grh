@@ -1576,7 +1576,7 @@ class Grh{
             echo $numero;
             
             # Botão de exibição dos servidores
-            $botao = new Link('','?fase=listaServidores&id='.$id);
+            $botao = new Link('','?fase=listaServidoresAtivos&id='.$id);
             $botao->set_id('aServidorTipoCargo');
             $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
             $botao->show();

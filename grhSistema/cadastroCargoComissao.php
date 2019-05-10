@@ -242,6 +242,7 @@ if($acesso){
     $objeto->set_botaoListarExtra($arrayBotoes);
 
     ################################################################
+    
     switch ($fase) {
         case "" :
         case "listar" :
@@ -256,8 +257,10 @@ if($acesso){
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
 
-        case "listaServidores" :
+        case "listaServidoresAtivos" :
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -272,55 +275,22 @@ if($acesso){
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
             
-            # Relatórios
-            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            # históico
+            $link = new Link("Histórico","?fase=historico&id=$id");
+            $link->set_class('button');
+            $link->set_title('Exibe o histórico e servidores neste cargo');
+            $menu->add_link($link,"right");
+            
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_onClick("abreFechaDivId('RelServidor');");
-            $botaoRel->set_imagem($imagem2);            
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&&id=".$id);
             $menu->add_link($botaoRel,"right");
              
             $menu->show();
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            
-            # Menu Relatório    
-            $div = new Div("RelServidor");
-            $div->abre();
-
-            $grid = new Grid("right");
-            $grid->abreColuna(3);
-
-            echo '<nav aria-label="You are here:" role="navigation">';
-            echo '<ul class="breadcrumbs">';
-
-            # Servidores
-            echo '<li>';
-            $link = new Link("Servidores Ativos","?fase=relatorio&&id=".$id);
-            $link->set_title("Exibe a lista de servidores ativos nesse cargo em comissão");
-            $link->set_target("_blank");   
-            $link->show();
-            echo '</li>';
-
-            # Histórico
-            echo '<li>';
-            $link = new Link("Histórico","../grhRelatorios/cargosComissionadosHistorico.php?cargo=".$id);
-            $link->set_title("Exibe o histórico de servidores nesse cargo em comissão");
-            $link->set_target("_blank");   
-            $link->show();
-            echo '</li>';
-
-            echo '</ul>';
-            echo '</nav>';
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            $div->fecha();
-            
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
             
             # Pega o nome do cargo
             $servidor = new Pessoal();  
@@ -333,23 +303,62 @@ if($acesso){
             $lista->set_cargoComissao($id);
             $lista->showTabela();
             
-            #---------------------            
-            # Histórico do cargo
-            #---------------------
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+################################################################
+        
+        case "historico" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
             
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+            
+            # Servidores atuais
+            $link = new Link("Servidores Ativos","?fase=listaServidoresAtivos&id=$id");
+            $link->set_class('button');
+            $link->set_title('Exibe o histórico e servidores neste cargo');
+            $menu->add_link($link,"right");
+            
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("../grhRelatorios/cargosComissionadosHistorico.php?cargo=".$id);
+            $menu->add_link($botaoRel,"right");
+             
+            $menu->show();
+            
+            # Pega o nome do cargo
+            $servidor = new Pessoal();  
+            $nomeCargo = $pessoal->get_nomeCargoComissao($id);
+            $simbolo = $pessoal->get_cargoComissaoSimbolo($id);
+                        
             # select
             $select ='SELECT distinct tbservidor.idFuncional,
-                            tbservidor.matricula,
-                            IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
-                            tbcomissao.dtNom,
-                            tbcomissao.dtExo,
-                            concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
-                            idPerfil,
-                            concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
-                            tbservidor.idServidor
-                       FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                       LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
-                                            JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                             tbservidor.matricula,
+                             IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
+                             tbcomissao.dtNom,
+                             tbcomissao.dtExo,
+                             concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
+                             idPerfil,
+                             concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
+                             tbservidor.idServidor
+                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                             JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.idTipoComissao = '.$id.'                    
                   ORDER BY 8, tbcomissao.descricao, 4 desc';
 
@@ -370,7 +379,7 @@ if($acesso){
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('servidor.php?fase=editar&comissao='.$id);
+            $tabela->set_editar('?fase=editarCargo&id='.$id);
             $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
                                                     'valor' => NULL,
                                                     'operador' => '=',
@@ -380,6 +389,8 @@ if($acesso){
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+################################################################
         
         case "relatorio" :
             # Pega o nome do cargo
@@ -392,6 +403,27 @@ if($acesso){
             $lista->set_cargoComissao($id);
             $lista->showRelatorio();
             break;
+        
+################################################################
+        
+        case "editarCargo" :
+            br(8);
+            aguarde();
+            
+            $comissao = new CargoComissao();
+            $dados = $comissao->get_dados($id);
+            $idServidor = $dados["idServidor"];
+            
+            # Informa o idComissao
+            set_session("comissao",$id);
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$idServidor);
+            
+            # Carrega a página específica
+            loadPage('servidorComissao.php?fase=editar&id='.$id);
+            break; 
+        
     }
     $page->terminaPagina();
 }else{

@@ -397,7 +397,7 @@ if($acesso){
             $form = new Form('?fase=historico&id='.$id);
             
             # Descrição do Cargo    
-            $controle = new Input('parametroDescricao','texto','Descrição do Cargo:',1);
+            $controle = new Input('parametroDescricao','texto','Descrição do Cargo ou Nome do Servidor:',1);
             $controle->set_size(80);
             $controle->set_autofocus(TRUE);
             $controle->set_title('Filtra pela descrição do cargo');
@@ -433,7 +433,8 @@ if($acesso){
             
             # Pega o parâmetro da pesquisa
             if(!is_null($parametroDescricao)){
-                $select .= ' AND tbcomissao.descricao LIKE "%'.$parametroDescricao.'%"';
+                $select .= ' AND (tbcomissao.descricao LIKE "%'.$parametroDescricao.'%"';
+                $select .= ' OR tbpessoa.nome LIKE "%'.$parametroDescricao.'%")';
             }
             
             $select .= ' ORDER BY 8, tbcomissao.descricao, 4 desc';

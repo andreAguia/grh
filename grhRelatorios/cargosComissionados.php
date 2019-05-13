@@ -26,7 +26,7 @@ if($acesso)
     $page->iniciaPagina();
     
     # Pega os parâmetros dos relatórios
-    $comissao = post('comissao');
+    $comissao = post('comissao',get('comissao'));
     if($comissao == '*'){
         $comissao = NULL;
     }
@@ -52,7 +52,7 @@ if($acesso)
         $select .= ' AND tbtipocomissao.idTipoComissao = '.$comissao; 
     }
         
-    $select .= ' ORDER BY 6, tbpessoa.nome';
+    $select .= ' ORDER BY 6, tbcomissao.descricao, tbcomissao.dtNom';
 
     $result = $servidor->select($select);
 

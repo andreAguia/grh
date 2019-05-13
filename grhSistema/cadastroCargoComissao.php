@@ -281,7 +281,7 @@ if($acesso){
             $linkVoltar->set_accessKey('V');
             $menu->add_link($linkVoltar,"left");
             
-            # históico
+            # histórico
             $link = new Link("Histórico","?fase=historico&id=$id");
             $link->set_class('button');
             $link->set_title('Exibe o histórico e servidores neste cargo');
@@ -293,8 +293,17 @@ if($acesso){
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&&id=".$id);
+            $botaoRel->set_url("../grhRelatorios/cargosComissionados.php?comissao=".$id);
             $menu->add_link($botaoRel,"right");
+            
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&id=".$id);
+            #$menu->add_link($botaoRel,"right");
              
             $menu->show();
             
@@ -309,7 +318,7 @@ if($acesso){
                              IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
                              tbcomissao.dtNom,
                              tbcomissao.dtExo,
-                             concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
+                             tbcomissao.idComissao,
                              idPerfil,
                              concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
                              idComissao
@@ -323,7 +332,7 @@ if($acesso){
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
             $align = array("center","center","left","center","center","left","center");
-            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php",NULL);
+            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php","descricaoComissao");
             $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal");
             $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,"get_perfil");
            

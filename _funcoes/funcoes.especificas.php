@@ -187,18 +187,25 @@ function descricaoComissao($idComissao){
  */
 
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();
+    $comissao = new CargoComissao();
     
     # Pega os dados da comissão
-    $comissao = $pessoal->get_dadosComissao($idComissao);
-    $descricao = $comissao['descricao'];
-    $protempore = $comissao['protempore'];
+    $dados = $comissao->get_dados($idComissao);
+    $descricao = $dados['descricao'];
+    $tipo = $dados['tipo'];
     
     $retorno = $descricao;
     
-    # Informa se é protempore
-    if($protempore){
-        $retorno .= "<br/><span id='orgaoCedido'>(pro tempore)</span>";
+    # Informa o tipo
+    switch ($tipo){
+    
+        case 1:
+            $retorno .= "<br/><span id='orgaoCedido'>(Pro Tempore)</span>";
+            break;
+        
+        case 2:
+            $retorno .= "<br/><span id='orgaoCedido'>(Designado)</span>";
+            break;
     }
 
     return $retorno;

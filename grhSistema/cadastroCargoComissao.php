@@ -422,7 +422,7 @@ if($acesso){
                              IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
                              tbcomissao.dtNom,
                              tbcomissao.dtExo,
-                             concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
+                             tbcomissao.idComissao,
                              idPerfil,
                              concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
                              idComissao
@@ -442,7 +442,7 @@ if($acesso){
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
             $align = array("center","center","left","center","center","left","center");
-            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php",NULL);
+            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php","descricaoComissao");
             $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal");
             $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,"get_perfil");
            

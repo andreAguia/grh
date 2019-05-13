@@ -22,6 +22,12 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
+    # Verifica o post de quando exibe os histórico de servidores nesse cargo
+    $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao'));
+    
+    # Joga os parâmetros par as sessions    
+    set_session('parametroDescricao',$parametroDescricao);
+        
     # Verifica se veio menu grh e registra o acesso no log
     $origem = get('origem',FALSE);
     if($origem){
@@ -260,7 +266,7 @@ if($acesso){
         
     ################################################################
 
-        case "listaServidoresAtivos" :
+        case "vigente" :
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -297,11 +303,46 @@ if($acesso){
             $nomeCargo = $pessoal->get_nomeCargoComissao($id);
             $simbolo = $pessoal->get_cargoComissaoSimbolo($id);
             
-            # Lista de Servidores Ativos
-            $lista = new ListaServidores('Servidores Ativos no Cargo de '.$nomeCargo.' ('.$simbolo.')');
-            $lista->set_situacao(1);
-            $lista->set_cargoComissao($id);
-            $lista->showTabela();
+            # select
+            $select ='SELECT distinct tbservidor.idFuncional,
+                             tbservidor.matricula,
+                             IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
+                             tbcomissao.dtNom,
+                             tbcomissao.dtExo,
+                             concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
+                             idPerfil,
+                             concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
+                             idComissao
+                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                             JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                       WHERE tbtipocomissao.idTipoComissao = '.$id.'
+                         AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                  ORDER BY 8, tbcomissao.descricao, 4 desc';
+
+            $result = $servidor->select($select);
+            $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
+            $align = array("center","center","left","center","center","left","center");
+            $function = array(NULL,"dv",NULL,"date_to_php","date_to_php",NULL);
+            $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal");
+            $metodo = array(NULL,NULL,NULL,NULL,NULL,NULL,"get_perfil");
+           
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label($label);
+            $tabela->set_titulo("Servidores Atualmente exercendo o Cargo: $nomeCargo [$simbolo]");
+            $tabela->set_align($align);
+            $tabela->set_funcao($function);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+            $tabela->set_idCampo('idComissao');
+            $tabela->set_editar('?fase=editarCargo1');
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
+                                                    'valor' => NULL,
+                                                    'operador' => '=',
+                                                    'id' => 'vigente')));
+            $tabela->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -325,7 +366,7 @@ if($acesso){
             $menu->add_link($linkVoltar,"left");
             
             # Servidores atuais
-            $link = new Link("Servidores Ativos","?fase=listaServidoresAtivos&id=$id");
+            $link = new Link("Vigentes","?fase=vigente&id=$id");
             $link->set_class('button');
             $link->set_title('Exibe o histórico e servidores neste cargo');
             $menu->add_link($link,"right");
@@ -341,6 +382,26 @@ if($acesso){
              
             $menu->show();
             
+            ###
+            
+            # Formulário de Pesquisa
+            $form = new Form('?fase=historico&id='.$id);
+            
+            # Descrição do Cargo    
+            $controle = new Input('parametroDescricao','texto','Descrição do Cargo:',1);
+            $controle->set_size(80);
+            $controle->set_autofocus(TRUE);
+            $controle->set_title('Filtra pela descrição do cargo');
+            $controle->set_valor($parametroDescricao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(5);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            ###
+            
             # Pega o nome do cargo
             $servidor = new Pessoal();  
             $nomeCargo = $pessoal->get_nomeCargoComissao($id);
@@ -355,12 +416,18 @@ if($acesso){
                              concat(tbcomissao.descricao," ",if(protempore = 1,"<br/><span id=\"orgaoCedido\">(pro tempore)</span>","")),
                              idPerfil,
                              concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
-                             tbservidor.idServidor
+                             idComissao
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbtipocomissao.idTipoComissao = '.$id.'                    
-                  ORDER BY 8, tbcomissao.descricao, 4 desc';
+                       WHERE tbtipocomissao.idTipoComissao = '.$id;
+            
+            # Pega o parâmetro da pesquisa
+            if(!is_null($parametroDescricao)){
+                $select .= ' AND tbcomissao.descricao LIKE "%'.$parametroDescricao.'%"';
+            }
+            
+            $select .= ' ORDER BY 8, tbcomissao.descricao, 4 desc';
 
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
@@ -373,13 +440,13 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
-            $tabela->set_titulo("Histórico");
+            $tabela->set_titulo("Histórico do Cargo: $nomeCargo [$simbolo]");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editarCargo&id='.$id);
+            $tabela->set_idCampo('idComissao');
+            $tabela->set_editar('?fase=editarCargo2');
             $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
                                                     'valor' => NULL,
                                                     'operador' => '=',
@@ -406,19 +473,49 @@ if($acesso){
         
 ################################################################
         
-        case "editarCargo" :
+        case "editarCargo1" :
+            # Vigentes
             br(8);
             aguarde();
             
             $comissao = new CargoComissao();
             $dados = $comissao->get_dados($id);
             $idServidor = $dados["idServidor"];
+            $idTipoComissao = $dados["idTipoComissao"];
             
             # Informa o idComissao
-            set_session("comissao",$id);
+            set_session("comissao",$idTipoComissao);
             
             # Informa o $id Servidor
             set_session('idServidorPesquisado',$idServidor);
+            
+            # Informa a origem
+            set_session('origem','cargoComissaoVigente');
+            
+            # Carrega a página específica
+            loadPage('servidorComissao.php?fase=editar&id='.$id);
+            break; 
+        
+################################################################
+        
+        case "editarCargo2" :
+            # Histórico
+            br(8);
+            aguarde();
+            
+            $comissao = new CargoComissao();
+            $dados = $comissao->get_dados($id);
+            $idServidor = $dados["idServidor"];
+            $idTipoComissao = $dados["idTipoComissao"];
+            
+            # Informa o idComissao
+            set_session("comissao",$idTipoComissao);
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$idServidor);
+            
+            # Informa a origem
+            set_session('origem','cargoComissaoHistorico');
             
             # Carrega a página específica
             loadPage('servidorComissao.php?fase=editar&id='.$id);

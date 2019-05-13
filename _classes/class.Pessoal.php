@@ -2204,7 +2204,7 @@ class Pessoal extends Bd {
     /**
      * Método get_servidoresCargoComissao
      * 
-     * Exibe o n�mero de servidores ativos em um determinado cargo em comissao
+     * Exibe o número de servidores ativos em um determinado cargo em comissao
      */
 
     public function get_servidoresCargoComissao($id)
@@ -2212,7 +2212,7 @@ class Pessoal extends Bd {
         $select = 'SELECT tbservidor.idServidor                             
                      FROM tbservidor JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                     WHERE situacao = 1
-                      AND dtExo is NULL
+                      AND (dtExo IS NULL OR CURDATE() < dtExo)
                       AND tbcomissao.idTipoComissao = '.$id;
 
         $numero = parent::count($select);

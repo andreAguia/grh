@@ -86,7 +86,7 @@ class Grh{
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(5);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
@@ -1576,7 +1576,7 @@ class Grh{
             echo $numero;
             
             # Botão de exibição dos servidores
-            $botao = new Link('','?fase=listaServidoresAtivos&id='.$id);
+            $botao = new Link('','?fase=vigente&id='.$id);
             $botao->set_id('aServidorTipoCargo');
             $botao->set_imagem(PASTA_FIGURAS_GERAIS.'ver.png',20,20);
             $botao->show();

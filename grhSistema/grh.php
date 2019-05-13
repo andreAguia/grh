@@ -52,6 +52,7 @@ if($acesso){
     set_session('parametroSituacao');
     set_session('parametroPaginacao');   
     set_session('parametroOrdenacao');   
+    set_session('parametroDescricao');
     set_session('sessionSelect');                      // Select para gerar relatório
     set_session('sessionTítulo');                      // Título do relatório
     set_session('sessionSubTítulo');                   // SubTítulo do relatório

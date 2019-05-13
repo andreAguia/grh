@@ -24,6 +24,10 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega o origem quando vier do cadastro de Cargo em comissão
+    $origem = get_session('origem');
+    $idTipoComissao = get_session("comissao");
 
     # Ordem da tabela
     $orderCampo = get('orderCampo');
@@ -299,6 +303,17 @@ if($acesso){
     $botaoRel->set_target("_blank");
         
     $objeto->set_botaoListarExtra(array($botaoRel,$botaoVagas));
+    
+    # Altera as rotinas de retorno quando veio do cadastro de comissão
+    if($origem == "cargoComissaoHistorico"){
+        $objeto->set_voltarForm("cadastroCargoComissao.php?fase=historico&id=".$idTipoComissao);
+        $objeto->set_linkListar("cadastroCargoComissao.php?fase=historico&id=".$idTipoComissao);
+    }
+    
+    if($origem == "cargoComissaoVigente"){
+        $objeto->set_voltarForm("cadastroCargoComissao.php?fase=vigente&id=".$idTipoComissao);
+        $objeto->set_linkListar("cadastroCargoComissao.php?fase=vigente&id=".$idTipoComissao);
+    }
     
     ################################################################
 

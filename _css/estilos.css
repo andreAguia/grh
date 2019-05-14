@@ -207,8 +207,6 @@ tr#comissaoComVagas{
 }
 
 tr#comissaoVagasNegativas{
-    color: #cc3300;
-    font-weight:bold;
     background-color:#cea4a8;
 }
 

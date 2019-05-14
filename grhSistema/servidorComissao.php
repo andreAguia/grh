@@ -160,6 +160,22 @@ if($acesso){
                                          CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
                                     FROM tbtipocomissao
                                 ORDER BY ativo desc, simbolo');    
+    
+    # Pega os dados da descrição
+    $descricao = $pessoal->select('SELECT DISTINCT tbcomissao.descricao 
+                                     FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
+                                    WHERE tbtipocomissao.ativo IS TRUE
+                                 ORDER BY 1');
+    
+    # Pega os dados do ocupante anterior
+    $ocupaAnterior = $pessoal->select('SELECT DISTINCT tbpessoa.nome,tbpessoa.nome
+                                         FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
+  			                                 JOIN tbservidor USING (idServidor)
+                                                         JOIN tbpessoa USING (idPessoa)
+                                        WHERE tbtipocomissao.ativo IS TRUE
+                                          AND tbcomissao.dtExo IS NOT NULL
+                                     ORDER BY tbpessoa.nome');
+    array_unshift($ocupaAnterior, array(NULL,NULL));
             
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -175,17 +191,17 @@ if($acesso){
                                 array ('linha' => 1,
                                        'col' => 8,
                                        'nome' => 'descricao',
-                                       'label' => 'Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria:',
+                                       'label' => 'Descrição do Cargo:',
                                        'tipo' => 'texto',
-                                       'title' => 'Em cargos onde exista mais de uma vaga deve-se diferenciá-los usando este campo informando o '
-                                                . 'nome do laboratório, do curso, da gerência, da diretoria ou da pró reitoria em que'
-                                                . 'o servidor irá exercê-lo.',
+                                       'datalist' => $descricao,
+                                       'title' => 'Chefe do Laboratório..., Gerente da ..., Diretor de ..., etc.',
                                        'size' => 100),
                                array ('linha' => 2,
                                        'col' => 10,
                                        'nome' => 'ocupanteAnterior',
                                        'label' => 'Ocupante Anterior:',
-                                       'tipo' => 'texto',
+                                       'tipo' => 'combo',
+                                       'array' => $ocupaAnterior,
                                        'title' => 'Nome do servidor que ocupava anteriormente esse cargo.',
                                        'size' => 100),
                                array ( 'nome' => 'tipo',

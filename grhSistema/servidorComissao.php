@@ -16,8 +16,9 @@ include ("_config.php");
 $acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso){    
-    # Conecta ao Banco de Dados
+    # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
+    $cargoComissao = new CargoComissao();
     
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -79,13 +80,13 @@ if($acesso){
     #}
 
     # select da lista
-    $objeto->set_selectLista('SELECT idComissao,
-                                     tbcomissao.descricao,
+    $objeto->set_selectLista('SELECT CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                                     idComissao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao,
                                      idComissao
-                                FROM tbcomissao
+                                FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                WHERE idServidor = '.$idServidorPesquisado.'
                             ORDER BY 3 desc');
 
@@ -136,10 +137,10 @@ if($acesso){
     $objeto->set_link(array("","","","",$botao1,$botao2,$botao3));
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Nome do Laboratório, do Curso,<br/>da Gerência, da Diretoria ou da Pró Reitoria","Data de<br/>Nomeação","Data de<br/>Exoneração","Ato de<br/>Nomeaçao","Termo de<br/>Posse","Ato de<br/>Exoneração"));
+    $objeto->set_label(array("Cargo","Descrição","Nomeação","Exoneração","Ato de<br/>Nomeaçao","Termo de<br/>Posse","Ato de<br/>Exoneração"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
-    $objeto->set_funcao(array("tipoComissaoProtempore",NULL,"date_to_php","date_to_php"));
+    $objeto->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
     #$objeto->set_classe(array(NULL,"pessoal"));
     #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
 
@@ -400,7 +401,7 @@ if($acesso){
         
         case "atoNomeacao" :
             # Verifica se o campo ocupante anterior foi preenchido
-            $comissao = $pessoal->get_dadosComissao($id);
+            $comissao = $cargoComissao->get_dados($id);
             $ocupanteAnterior = $comissao['ocupanteAnterior'];
             $dtAtoNom = date_to_php($comissao['dtAtoNom']);
             $msgErro = NULL;
@@ -431,7 +432,7 @@ if($acesso){
             
         case "termoPosse" :
             # Verifica se o campo ocupante anterior foi preenchido
-            $comissao = $pessoal->get_dadosComissao($id);
+            $comissao = $cargoComissao->get_dados($id);
             $publicacao = $comissao['dtPublicNom'];
             $dtAtoNom = $comissao['dtAtoNom'];
             $msgErro = NULL;
@@ -462,7 +463,7 @@ if($acesso){
         
         case "atoExoneracao" :
             # Verifica se o campo ocupante anterior foi preenchido
-            $comissao = $pessoal->get_dadosComissao($id);
+            $comissao = $cargoComissao->get_dados($id);
             $dtExo = $comissao['dtExo'];
             $dtAtoExo = date_to_php($comissao['dtAtoExo']);
             $msgErro = NULL;

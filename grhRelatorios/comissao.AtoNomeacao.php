@@ -24,21 +24,23 @@ if($acesso){
     
     # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
+    $cargoComissao = new CargoComissao();
      
     # pega os dados da comissao
-    $comissao = $pessoal->get_dadosComissao($idComissao);           // dados da comissao
-    $idTipoComissao = $comissao['idTipoComissao'];
+    $dadosComissao = $cargoComissao->get_dados($idComissao);           // dados da comissao
+    $idTipoComissao = $dadosComissao['idTipoComissao'];
+    
     $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
    
     # Preenche as variaveis da comissao
-    $nome = strtoupper($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
-    $idFuncional = $pessoal->get_idFuncional($comissao['idServidor']);  // idFuncional
-    $dtInicial = dataExtenso(date_to_php($comissao['dtNom']));
-    $descricao = $comissao['descricao'];
-    $ocupanteAnterior = $comissao['ocupanteAnterior'];
-    $protempore = $comissao['protempore'];
-    $publicacao = date_to_php($comissao['dtPublicNom']);
-    $dtAtoNom = date_to_php($comissao['dtAtoNom']);
+    $nome = strtoupper($pessoal->get_nome($dadosComissao['idServidor'])); // Nome do servidor
+    $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
+    $dtInicial = dataExtenso(date_to_php($dadosComissao['dtNom']));
+    $descricao = $dadosComissao['descricao'];
+    $ocupanteAnterior = $dadosComissao['ocupanteAnterior'];
+    $tipo = $dadosComissao['tipo'];
+    $publicacao = date_to_php($dadosComissao['dtPublicNom']);
+    $dtAtoNom = date_to_php($dadosComissao['dtAtoNom']);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -68,11 +70,18 @@ if($acesso){
     $grid->abreColuna(12);
     br(3);
     
-    # inclui ou nao o protempore e junta no nome
-    if($protempore){
-        $nome = ", <i>pro-tempore</i>, <b>".$nome."</b>";
+    # Inicia o texto
+    $textoInicio = NULL;
+    $verbo = "exercer";
+    
+    # inclui o status
+    if($tipo == 1){
+        $textoInicio = "<b>NOMEIA</b>, <i>pro-tempore</i>, <b>".$nome."</b>";
+    }elseif($tipo == 2){
+        $textoInicio = "<b>DESIGNA</b> <b>".$nome."</b>";
+        $verbo = "exercer";
     }else{
-        $nome = " <b>".$nome."</b>";
+        $textoInicio = "<b>NOMEIA</b> <b>".$nome."</b>";
     }
     
     # Cargos que so tem uma vaga na universidade

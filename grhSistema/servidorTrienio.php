@@ -49,6 +49,7 @@ if($acesso){
     $ultimoPercentual = $pessoal->get_trienioPercentual($idServidorPesquisado);
     $ultimoTrienio = $pessoal->get_trienioDataInicial($idServidorPesquisado);
     $dataAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
+    
     if(is_null($ultimoTrienio)){
         $proximoTrienio = addAnos($dataAdmissao, 3);
     }else{
@@ -56,9 +57,9 @@ if($acesso){
     }
 
     # retira o botão de incluir triênio quando estiver no máximo
-    if ($ultimoPercentual == "60"){
-        $objeto->set_botaoIncluir(FALSE);
-    }
+    #if ($ultimoPercentual == "60"){
+    #    $objeto->set_botaoIncluir(FALSE);
+    #}
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Triênios do Servidor');

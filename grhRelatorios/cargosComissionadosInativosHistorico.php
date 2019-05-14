@@ -38,7 +38,7 @@ if($acesso)
                      tbcomissao.idComissao,
                      tbcomissao.dtNom,
                      tbcomissao.dtExo,
-                     concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
+                     idComissao,
                      concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
@@ -60,7 +60,7 @@ if($acesso)
     $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Descrição','Nomeação','Exoneração'));
     #$relatorio->set_width(array(10,10,30,15,15,20,0));
     $relatorio->set_align(array("center","center","left","left","center","center"));
-    $relatorio->set_funcao(array(NULL,"dv",NULL,"descricaoComissao","date_to_php","date_to_php"));
+    $relatorio->set_funcao(array(NULL,"dv",NULL,"descricaoComissao","date_to_php","date_to_php","descricaoComissao"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(7);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

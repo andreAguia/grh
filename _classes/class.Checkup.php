@@ -1289,7 +1289,7 @@ class Checkup {
                         tbpessoa.nome,
                         tbcomissao.dtNom,
                         tbcomissao.dtExo,
-                        concat(tbcomissao.descricao," ",if(protempore = 1," (pro tempore)","")),
+                        idComissao,
                         concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
                         tbcomissao.descricao,
                         tbservidor.idServidor
@@ -1312,7 +1312,7 @@ class Checkup {
         $titulo = 'Cargo em comissão nomeado e exonerado no mesmo dia';
         #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
         #$rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
-        $funcao = array(NULL,"dv",NULL,"date_to_php","date_to_php");
+        $funcao = array(NULL,"dv",NULL,"date_to_php","date_to_php","descricaoComissao");
         $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela

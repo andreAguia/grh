@@ -137,44 +137,6 @@ function exibeDescricaoStatus($status){
 
 ##################################################################
     
-function tipoComissaoProtempore($idComissao){
- /**
- * Exibe informações sobre a o tipo de cargo mais informando se é protempore
- * 
- * @note Usado na rotina de cadastro de Cargo em comissão de um detrerminado servidor
- * 
- * @syntax tipoComissaoProtempore($idComissao);
- * 
- * @param $idComissao integer NULL o id do cargo em comissão
- */
-
-    # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();
-    
-    # Pega os dados da comissão
-    $comissao = $pessoal->get_dadosComissao($idComissao);
-    $idTipoComissao = $comissao['idTipoComissao'];
-    
-    # Pega os dados do tipo de comissão
-    $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);
-    
-    # Separa os dados
-    $cargo = $tipoComissao['descricao'];
-    $simbolo = $tipoComissao['simbolo'];
-    $protempore = $comissao['protempore'];
-    
-    $retorno = $cargo." (".$simbolo.")";
-    
-    # Informa se é protempore
-    if($protempore){
-        $retorno .= "<br/><span id='orgaoCedido'>(pro tempore)</span>";
-    }
-
-    return $retorno;
-}
-
-##################################################################
-    
 function descricaoComissao($idComissao){
  /**
  * Exibe informações sobre a Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria	
@@ -200,11 +162,11 @@ function descricaoComissao($idComissao){
     switch ($tipo){
     
         case 1:
-            $retorno .= "<br/><span id='orgaoCedido'>(Pro Tempore)</span>";
+            $retorno .= " <span id='orgaoCedido'>(Pro Tempore)</span>";
             break;
         
         case 2:
-            $retorno .= "<br/><span id='orgaoCedido'>(Designado)</span>";
+            $retorno .= " <span id='orgaoCedido'>(Designado)</span>";
             break;
     }
 

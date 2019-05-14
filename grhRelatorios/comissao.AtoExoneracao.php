@@ -27,19 +27,21 @@ if($acesso){
     
     # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
+    $cargoComissao = new CargoComissao();    
      
-    # pega os dados ta comissao
-    $comissao = $pessoal->get_dadosComissao($idComissao);           // dados da comissao
-    $idTipoComissao = $comissao['idTipoComissao'];
+    # Pega os dados da comissao
+    $dadosComissao = $cargoComissao->get_dados($idComissao);           // dados da comissao
+    $idTipoComissao = $dadosComissao['idTipoComissao'];
+    
     $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
    
     # Preenche as variaveis da comissao
-    $nome = strtoupper($pessoal->get_nome($comissao['idServidor'])); // Nome do servidor
-    $idFuncional = $pessoal->get_idFuncional($comissao['idServidor']);  // idFuncional
-    $dtExo = dataExtenso(date_to_php($comissao['dtExo']));
-    $descricao = $comissao['descricao'];
-    $publicacao = date_to_php($comissao['dtPublicExo']);
-    $dtAtoExo = date_to_php($comissao['dtAtoExo']);
+    $nome = strtoupper($pessoal->get_nome($dadosComissao['idServidor'])); // Nome do servidor
+    $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
+    $dtExo = dataExtenso(date_to_php($dadosComissao['dtExo']));
+    $descricao = $dadosComissao['descricao'];
+    $publicacao = date_to_php($dadosComissao['dtPublicExo']);
+    $dtAtoExo = date_to_php($dadosComissao['dtAtoExo']);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];

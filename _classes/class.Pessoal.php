@@ -1911,8 +1911,7 @@ class Pessoal extends Bd {
             $idCargo = $row[0];
 
             # Pega o sal�rio do id do cargo em comiss�o
-            if (!is_null($idCargo))
-            {
+            if (!is_null($idCargo)) {
                     $select ='SELECT tbtipocomissao.valsal 
                                             FROM tbcomissao 
                                             JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
@@ -4609,37 +4608,6 @@ class Pessoal extends Bd {
         }
 
     ##########################################################################################
-
-    function get_dadosComissao($idComissao){
-    
-     /**
-      * 
-      * Retorna dados de uma comissao de um servidor
-      * 
-      * @param $idComissao integer o id da comissao
-      * 
-      */
-    
-        # Monta o select
-        $select = "SELECT idServidor,
-                          idTipoComissao,
-                          ocupanteAnterior,
-                          descricao,
-                          dtNom,
-                          dtExo,
-                          protempore,
-                          dtPublicNom,
-                          dtPublicExo,
-                          dtAtoNom,
-                          dtAtoExo
-                     FROM tbcomissao
-                    WHERE idComissao = $idComissao";
-        
-        $row = parent::select($select,FALSE);
-        return $row;
-    }
-
-   ##########################################################################################
 
     function get_dadosTipoComissao($idTipoComissao){
     

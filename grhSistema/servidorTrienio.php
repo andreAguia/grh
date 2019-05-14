@@ -38,7 +38,7 @@ if($acesso){
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
-
+    
     ################################################################
 
     # Exibe os dados do Servidor

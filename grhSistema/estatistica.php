@@ -693,7 +693,7 @@ if($acesso){
             # Pega os Cargos Administrativos
             $selectCargo = "SELECT idTipoCargo, cargo"
                          . "  FROM tbtipocargo"
-                         . " WHERE tipo = 'Adm/Tec'";
+                         . " WHERE tipo = 'Adm/Tec' ORDER by 1 desc";
             
             $dadosCargo = $pessoal->select($selectCargo);
             

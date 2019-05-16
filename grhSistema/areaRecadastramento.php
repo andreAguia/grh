@@ -299,7 +299,7 @@ if($acesso){
             
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores');
-            $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:','Usuario','Editar','Formaçao'));
+            $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Atualizado em:','Usuario'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center","left","left","left"));
             $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
@@ -326,8 +326,8 @@ if($acesso){
             $botao2->set_imagem(PASTA_FIGURAS.'diploma.jpg',20,20);
             
             # Coloca o objeto link na tabela			
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_link(array("","","","","","",$botao1,$botao2));
+            #$tabela->set_idCampo('idServidor');
+            #$tabela->set_link(array("","","","","","",$botao1,$botao2));
 
             $tabela->set_conteudo($result);
             $tabela->show();

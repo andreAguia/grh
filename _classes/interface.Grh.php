@@ -189,9 +189,9 @@ class Grh{
         br();
         
         if(Verifica::acesso($idUsuario,1)){
-            $menuItem = 6;
+            $menuItem = 7;
         }else{
-            $menuItem = 5;
+            $menuItem = 6;
         }
 
         $tamanhoImage = 60;
@@ -246,7 +246,7 @@ class Grh{
         $botao->set_url('areaRecadastramento.php');
         $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Recadastramento de Servidores');
-        #$menu->add_item($botao);
+        $menu->add_item($botao);
         
         $menu->show();
         br();

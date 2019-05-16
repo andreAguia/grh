@@ -225,7 +225,17 @@ class ListaServidores{
         
         # ordenação
         $select .= " ORDER BY $this->ordenacao";
-                
+        
+        # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por nome
+        if(($this->ordenacao <> "3 asc") AND ($this->ordenacao <> "3 desc")){
+            $select .= ", 3 asc";
+        }
+        
+        # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por admissão
+        if(($this->ordenacao <> "7 asc") AND ($this->ordenacao <> "7 desc")){
+            $select .= ", 7 asc";
+        }
+        
         foreach($this->ordenacaoCombo as $value){
             if($value[0] == $this->ordenacao){
                 $this->subTitulo .= "Ordenado ".$value[1]."<br/>";

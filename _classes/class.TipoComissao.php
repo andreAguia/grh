@@ -1,7 +1,7 @@
 <?php
-class CargoComissao{
+class TipoComissao{
  /**
-  * Abriga as várias rotina do Cadastro de cargo em Comissao
+  * Abriga as várias rotina do Cadastro de tipos de cargo em Comissao
   * 
   * @author André Águia (Alat) - alataguia@gmail.com  
   */
@@ -18,7 +18,7 @@ class CargoComissao{
 
     ###########################################################
     
-    function get_dados($idComissao){
+    function get_dados($idTipoComissao){
         
     /**
      * fornece a próxima tarefa a ser realizada
@@ -26,8 +26,8 @@ class CargoComissao{
         
         # Pega os dados
         $select="SELECT *
-                   FROM tbcomissao
-                  WHERE idComissao = $idComissao";
+                   FROM tbtipocomissao
+                  WHERE idTipoComissao = $idTipoComissao";
         
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select,FALSE);

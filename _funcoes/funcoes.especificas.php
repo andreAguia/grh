@@ -667,8 +667,15 @@ function get_nomeSimples($nome){
                    WHERE idServidor = '.$idServidor;
 
        $row = $pessoal->select($select,FALSE);
+       $matricula = dv($row[1]);
        
-       return $row[0]."<br/>".dv($row[1]);
+       if(vazio($row[0]) OR vazio($matricula)){
+           $retorno = $row[0].$matricula;
+       }else{
+           $retorno = $row[0]." / ".$matricula;
+       }
+              
+       return $retorno;
     }
 
 ##########################################################

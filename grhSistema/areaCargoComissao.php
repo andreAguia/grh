@@ -56,6 +56,14 @@ if($acesso){
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
     $menu1->add_link($linkVoltar,"left");
+    
+    # Rotina antiga
+    if($fase == "inicial"){
+        $linkVoltar = new Link("Rotina Antiga","cadastroCargoComissao.php");   
+        $linkVoltar->set_class('button');
+        $linkVoltar->set_title('Rotina Antiga');
+        $menu1->add_link($linkVoltar,"right");
+    }
 
     $menu1->show();
     

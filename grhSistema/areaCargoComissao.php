@@ -313,8 +313,6 @@ if($acesso){
             $tabela->set_titulo("Exonerações");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
-            #$tabela->set_classe($classe);
-            #$tabela->set_metodo($metodo);
             #$tabela->set_idCampo('idComissao');
             #$tabela->set_editar('cadastroCargoComissao.php?fase=editarCargo2');
             #$tabela->set_formatacaoCondicional(array( array('coluna' => 3,
@@ -324,7 +322,32 @@ if($acesso){
             $tabela->show();
             break;
             
-            break;
+    ################################################################
+        
+        case "editarCargo" :
+            # Vigentes
+            br(8);
+            aguarde();
+            
+            $comissao = new CargoComissao();
+            $dados = $comissao->get_dados($id);
+            $idServidor = $dados["idServidor"];
+            $idTipoComissao = $dados["idTipoComissao"];
+            
+            # Informa o idComissao
+            set_session("comissao",$idTipoComissao);
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$idServidor);
+            
+            # Informa a origem
+            set_session('origem','cargoComissaoVigente');
+            
+            # Carrega a página específica
+            loadPage('servidorComissao.php?fase=editar&id='.$id);
+            break; 
+        
+################################################################
     }
     
     # Fecha o grid

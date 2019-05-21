@@ -125,7 +125,7 @@ if($acesso){
 
                 $controle = new Input('parametroAno','combo','Ano:',1);
                 $controle->set_size(30);
-                $controle->set_title('Ano');
+                $controle->set_title('Filtra pelo Ano');
                 $controle->set_array($anosPossiveis);
                 $controle->set_valor($parametroAno);
                 $controle->set_autofocus(TRUE);
@@ -136,7 +136,7 @@ if($acesso){
 
                 $controle = new Input('parametroMes','combo','Mês:',1);
                 $controle->set_size(30);
-                $controle->set_title('Filtra por Lotação');
+                $controle->set_title('Filtra pelo Mês');
                 $controle->set_array($mes);
                 $controle->set_valor($parametroMes);
                 $controle->set_onChange('formPadrao.submit();');

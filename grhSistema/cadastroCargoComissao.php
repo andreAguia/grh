@@ -23,10 +23,10 @@ if($acesso){
     $fase = get('fase','listar');
     
     # Verifica o post de quando exibe os histórico de servidores nesse cargo
-    $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao'));
+    $parametroComissao = post('parametroComissao',get_session('parametroComissao'));
     
     # Joga os parâmetros par as sessions    
-    set_session('parametroDescricao',$parametroDescricao);
+    set_session('parametroComissao',$parametroComissao);
         
     # Verifica se veio menu grh e registra o acesso no log
     $origem = get('origem',FALSE);
@@ -78,7 +78,7 @@ if($acesso){
     $objeto->set_nome('Cargos em Comissão'.$complemento);
     
     # botão de voltar da lista
-    $objeto->set_voltarLista('grh.php');
+    $objeto->set_voltarLista('areaCargoComissao.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
@@ -231,18 +231,19 @@ if($acesso){
     # Cargos Ativos
     $botaoAtivo = new Button("Cargos Ativos","?tipo=1");
     $botaoAtivo->set_title("Exibe os Cargos Ativos");
+    if($tipo){
+        $botaoAtivo->set_class("hollow button");
+    }
     
-    # Cargos Ativos
+    # Cargos Inativos
     $botaoInativo = new Button("Cargos Inativos","?tipo=0");
     $botaoInativo->set_title("Exibe os Cargos Inativos");
+    if(!$tipo){
+        $botaoInativo->set_class("hollow button");
+    }
     
     # Cria o array de botões
-    $arrayBotoes = array($botaoRel);
-    if($tipo){
-        array_unshift($arrayBotoes,$botaoInativo);
-    }else{
-        array_unshift($arrayBotoes,$botaoAtivo);
-    }
+    $arrayBotoes = array($botaoAtivo,$botaoInativo,$botaoRel);
     
     # Informa o array
     $objeto->set_botaoListarExtra($arrayBotoes);
@@ -397,11 +398,11 @@ if($acesso){
             $form = new Form('?fase=historico&id='.$id);
             
             # Descrição do Cargo    
-            $controle = new Input('parametroDescricao','texto','Descrição do Cargo ou Nome do Servidor:',1);
+            $controle = new Input('parametroComissao','texto','Descrição do Cargo ou Nome do Servidor:',1);
             $controle->set_size(80);
             $controle->set_autofocus(TRUE);
             $controle->set_title('Filtra pela descrição do cargo');
-            $controle->set_valor($parametroDescricao);
+            $controle->set_valor($parametroComissao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(5);
@@ -432,9 +433,9 @@ if($acesso){
                        WHERE tbtipocomissao.idTipoComissao = '.$id;
             
             # Pega o parâmetro da pesquisa
-            if(!is_null($parametroDescricao)){
-                $select .= ' AND (tbcomissao.descricao LIKE "%'.$parametroDescricao.'%"';
-                $select .= ' OR tbpessoa.nome LIKE "%'.$parametroDescricao.'%")';
+            if(!is_null($parametroComissao)){
+                $select .= ' AND (tbcomissao.descricao LIKE "%'.$parametroComissao.'%"';
+                $select .= ' OR tbpessoa.nome LIKE "%'.$parametroComissao.'%")';
             }
             
             $select .= ' ORDER BY 8, tbcomissao.descricao, 4 desc';

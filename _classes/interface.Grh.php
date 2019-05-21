@@ -114,11 +114,7 @@ class Grh{
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cargo em Comissão');
-        if(Verifica::acesso($idUsuario,1)){
-            $botao->set_url('areaCargoComissao.php?origem=1');
-        }else{
-            $botao->set_url('cadastroCargoComissao.php?origem=1');
-        }        
+        $botao->set_url('areaCargoComissao.php?origem=1');
         $botao->set_imagem(PASTA_FIGURAS.'usuarios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Cargos em Comissão');
         $botao->set_accesskey('g');

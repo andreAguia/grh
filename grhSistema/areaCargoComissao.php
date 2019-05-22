@@ -86,7 +86,12 @@ if($acesso){
                 $menu->add_item("link","Nomeações & Exonerações por Mês","?fase=movimentacao");   
                 $menu->show();
 
-
+                # Inicia o Menu de Relatório
+                $menu = new Menu();
+                $menu->add_item('titulo','Relatórios');
+                $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
+                $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
+                $menu->show();
 
                 # Pega os cargos
                 $select = "SELECT idTipoComissao,
@@ -110,12 +115,6 @@ if($acesso){
                         $menu->add_item('link',$item[2].' - '.$item[1],'?fase=inicial&parametroCargo='.$item[0]);
                     }
                 }        
-                $menu->show();
-
-                # Inicia o Menu de Relatório
-                $menu = new Menu();
-                $menu->add_item('titulo','Relatórios');
-                $menu->add_item('link','Planilhão','?fase=inicial&parametroCargo='.$item[0]);
                 $menu->show();
 
             $grid->fechaColuna();

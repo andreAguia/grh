@@ -130,7 +130,7 @@ if($acesso){
 
             # Descrição    
             $controle = new Input('parametroDescricao','texto','Descrição do Cargo ou Nome do Servidor:',1);
-            $controle->set_size(30);
+            $controle->set_size(200);
             $controle->set_title('Filtra por Descrição');
             $controle->set_valor($parametroDescricao);
             $controle->set_onChange('formPadrao.submit();');

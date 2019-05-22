@@ -22,9 +22,12 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','inicial');
     
+    # pega o id (se tiver)
+    $id = soNumeros(get('id'));
+    
     # Verifica o post de quando exibe os histórico de servidores nesse cargo
     $parametroCargo = get('parametroCargo',get_session('parametroCargo',13));
-    $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao',"todos"));
+    $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao'));
     $parametroStatus = post('parametroStatus',get_session('parametroStatus',"Vigente"));
     $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
     $parametroMes = post('parametroMes',get_session('parametroMes',date('m')));
@@ -70,7 +73,10 @@ if($acesso){
         case "inicial":
             $grid = new Grid();
 
-            ## Coluna do menu            
+            ####################################
+            ## Menu Lateral
+            ####################################
+            
             $grid->abreColuna(12,3);
 
                 # Inicia o Menu de Cadastro
@@ -114,14 +120,26 @@ if($acesso){
 
             $grid->fechaColuna();
 
-            ################################################################
-
-            # Coluna de Conteúdo
+            ####################################
+            ## Área central de conteúdo
+            ####################################
+            
             $grid->abreColuna(12,9);
             
             $form = new Form('?');
+
+            # Descrição    
+            $controle = new Input('parametroDescricao','texto','Descrição do Cargo ou Nome do Servidor:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Descrição');
+            $controle->set_valor($parametroDescricao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_autofocus(TRUE);
+            $controle->set_col(9);                
+            $form->add_item($controle);
             
-            # Status    
+             # Status    
             $controle = new Input('parametroStatus','combo','Status',1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Status');
@@ -129,32 +147,8 @@ if($acesso){
             $controle->set_valor($parametroStatus);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_autofocus(TRUE);
+            $controle->set_col(3);            
             $form->add_item($controle);
-            
-            if(($parametroCargo <> 13) AND ($parametroCargo <> 14) AND ($parametroCargo <> 23) AND ($parametroCargo <> 25) AND ($parametroCargo <> 18)){
-                # Formulário de Pesquisa
-                $selCargo = "SELECT DISTINCT tbcomissao.descricao, tbcomissao.descricao 
-                                     FROM tbcomissao
-                                    WHERE idTipoComissao = $parametroCargo
-                                 ORDER BY 1";
-                
-                $dadosCargo = $pessoal->select($selCargo);
-                array_unshift($dadosCargo, array("todos"," - Todos - "));
-
-                # Descrição    
-                $controle = new Input('parametroDescricao','combo','Descrição',1);
-                $controle->set_size(30);
-                $controle->set_title('Filtra por Descrição');
-                $controle->set_array($dadosCargo);
-                $controle->set_valor($parametroDescricao);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(9);
-                $controle->set_autofocus(TRUE);
-                $form->add_item($controle);
-            }
 
             $form->show();
                         
@@ -177,8 +171,8 @@ if($acesso){
                        WHERE tbtipocomissao.idTipoComissao = '.$parametroCargo;
             
             if(($parametroCargo <> 13) AND ($parametroCargo <> 14) AND ($parametroCargo <> 23) AND ($parametroCargo <> 25) AND ($parametroCargo <> 18)){
-                if($parametroDescricao <> "todos"){
-                    $select .= " AND tbcomissao.descricao = '".$parametroDescricao."'";
+                if(!vazio($parametroDescricao)){
+                    $select .= " AND tbcomissao.descricao LIKE '%".$parametroDescricao."%'";
                 }
             }
             
@@ -211,7 +205,7 @@ if($acesso){
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_idCampo('idComissao');
-            $tabela->set_editar('cadastroCargoComissao.php?fase=editarCargo2');
+            $tabela->set_editar('?fase=editarCargo');
             $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
                                                     'valor' => NULL,
                                                     'operador' => '=',
@@ -230,6 +224,7 @@ if($acesso){
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
+            $controle->set_autofocus(TRUE);
             $controle->set_col(3);
             $form->add_item($controle);
             
@@ -252,7 +247,8 @@ if($acesso){
                               tbcomissao.dtNom,
                               tbcomissao.dtPublicNom,
                               tbcomissao.dtAtoNom,
-                              tbcomissao.numProcNom
+                              tbcomissao.numProcNom,
+                              tbcomissao.idComissao
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
@@ -274,16 +270,10 @@ if($acesso){
             $tabela->set_titulo("Nomeações");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
-            #$tabela->set_classe($classe);
-            #$tabela->set_metodo($metodo);
-            #$tabela->set_idCampo('idComissao');
-            #$tabela->set_editar('cadastroCargoComissao.php?fase=editarCargo2');
-            #$tabela->set_formatacaoCondicional(array( array('coluna' => 3,
-            #                                        'valor' => NULL,
-            #                                        'operador' => '=',
-            #                                        'id' => 'vigente')));
+            $tabela->set_idCampo('idComissao');
+            $tabela->set_editar('?fase=editarCargo2');
             $tabela->show();
-            
+                        
             # Exonerações
             $select = 'SELECT tbservidor.idFuncional,
                               tbpessoa.nome,
@@ -291,7 +281,8 @@ if($acesso){
                               tbcomissao.dtExo,
                               tbcomissao.dtPublicExo,
                               tbcomissao.dtAtoExo,
-                              tbcomissao.numProcExo
+                              tbcomissao.numProcExo,
+                              tbcomissao.idComissao
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
@@ -303,8 +294,6 @@ if($acesso){
             $label = array('Id Funcional','Nome','Cargo','Exoneração','Publicação','Ato Reitor','Processo');
             $align = array("center","left","left","center","center","center","left");
             $function = array(NULL,NULL,NULL,"date_to_php","date_to_php","date_to_php");
-            #$classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");
-            #$metodo = array(NULL,NULL,NULL,NULL,NULL,"get_perfil");
             
             # Monta a tabela
             $tabela = new Tabela();
@@ -313,12 +302,8 @@ if($acesso){
             $tabela->set_titulo("Exonerações");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
-            #$tabela->set_idCampo('idComissao');
-            #$tabela->set_editar('cadastroCargoComissao.php?fase=editarCargo2');
-            #$tabela->set_formatacaoCondicional(array( array('coluna' => 3,
-            #                                        'valor' => NULL,
-            #                                        'operador' => '=',
-            #                                        'id' => 'vigente')));
+            $tabela->set_idCampo('idComissao');
+            $tabela->set_editar('?fase=editarCargo2');
             $tabela->show();
             break;
             
@@ -341,7 +326,32 @@ if($acesso){
             set_session('idServidorPesquisado',$idServidor);
             
             # Informa a origem
-            set_session('origem','cargoComissaoVigente');
+            set_session('origem','areaCargo');
+            
+            # Carrega a página específica
+            loadPage('servidorComissao.php?fase=editar&id='.$id);
+            break; 
+        
+################################################################
+        
+        case "editarCargo2" :
+            # Vigentes
+            br(8);
+            aguarde();
+            
+            $comissao = new CargoComissao();
+            $dados = $comissao->get_dados($id);
+            $idServidor = $dados["idServidor"];
+            $idTipoComissao = $dados["idTipoComissao"];
+            
+            # Informa o idComissao
+            set_session("comissao",$idTipoComissao);
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$idServidor);
+            
+            # Informa a origem
+            set_session('origem','areaCargo2');
             
             # Carrega a página específica
             loadPage('servidorComissao.php?fase=editar&id='.$id);

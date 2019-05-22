@@ -149,8 +149,8 @@ if($acesso){
     $objeto->set_align(array("center","left"));
     
     $objeto->set_funcao(array(NULL,NULL,NULL,"formataMoeda"));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'Grh','pessoal'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_numServidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

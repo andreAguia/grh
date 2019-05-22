@@ -332,6 +332,15 @@ if($acesso){
         $objeto->set_linkListar("cadastroCargoComissao.php?fase=vigente&id=".$idTipoComissao);
     }
     
+    if($origem == "areaCargo"){
+        $objeto->set_voltarForm("areaCargoComissao.php");
+        $objeto->set_linkListar("areaCargoComissao.php");
+    }
+    
+    if($origem == "areaCargo2"){
+        $objeto->set_voltarForm("areaCargoComissao.php?fase=movimentacao");
+        $objeto->set_linkListar("areaCargoComissao.php?fase=movimentacao");
+    }
     ################################################################
 
     switch ($fase){

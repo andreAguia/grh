@@ -58,6 +58,8 @@ if($acesso){
     set_session('sessionSubTítulo');                   // SubTítulo do relatório
     set_session('parametroAno');
     set_session('parametroMes');
+    set_session('idCategoria');
+    set_session('idProcedimento');
     
     set_session('sessionParametro');	# Zera a session do parâmetro de pesquisa da classe modelo
     set_session('sessionPaginacao');	# Zera a session de paginação da classe modelo

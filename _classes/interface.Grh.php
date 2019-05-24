@@ -187,24 +187,17 @@ class Grh{
 
         titulo('Área Especial');
         br();
-        
-        if(Verifica::acesso($idUsuario,1)){
-            $menuItem = 7;
-        }else{
-            $menuItem = 6;
-        }
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico($menuItem);
+        $menu = new MenuGrafico(7);
         $botao = new BotaoGrafico();
         
-        if(Verifica::acesso($idUsuario,1)){
-            $botao->set_label('Procedimentos');
-            $botao->set_url('../../areaServidor/sistema/procedimentos.php');
-            $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Àrea de Procedimentos da GRH');
-            $menu->add_item($botao);
-        }
+        $botao->set_label('Procedimentos');
+        $botao->set_target('blank');
+        $botao->set_url('../../areaServidor/sistema/procedimentos.php');
+        $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Àrea de Procedimentos da GRH');
+        $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');

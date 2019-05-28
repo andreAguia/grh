@@ -435,7 +435,8 @@ class Pessoal extends Bd {
             if($orgao == ""){
                 $orgao = "-";
             }
-            $retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
+            #$retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
+            $retorno = "Cedido para<br/><span id='orgaoCedido'>$orgao</span>";
         }else{
             $retorno = $row[0].'-'.$row[1].'-'.$row[2];
         }
@@ -469,7 +470,8 @@ class Pessoal extends Bd {
             if($orgao == ""){
                 $orgao = "-";
             }
-            $retorno = $row[0].'-'.$row[1].'-'.$row[2].' ('.$orgao.')</span>';
+            $retorno = "Cedido para <span id='orgaoCedido'>$orgao</span>";
+            #$retorno = $row[0].'-'.$row[1].'-'.$row[2].' ('.$orgao.')</span>';
         }else{
             $retorno = $row[0].'-'.$row[1].'-'.$row[2];
         }
@@ -500,7 +502,7 @@ class Pessoal extends Bd {
 
     /**
      * Método get_lotacao
-     * Informa a lotação atual do servidor sem o UADM
+     * Informa a lotação atual do servidor sem o UADM e sem informação de cessão
      * 
      * @param	string $idServidor  idServidor do servidor
      */
@@ -520,7 +522,7 @@ class Pessoal extends Bd {
 
     }
 
-###########################################################
+######################################################################################
 
     /**
      * Método get_servidoresAtivosLotacao

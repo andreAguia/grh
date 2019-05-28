@@ -188,16 +188,24 @@ class Grh{
         titulo('Área Especial');
         br();
 
+        if(Verifica::acesso($idUsuario,1)){
+            $menuItem = 7;
+        }else{
+            $menuItem = 6;
+        }
+
         $tamanhoImage = 60;
         $menu = new MenuGrafico(7);
         $botao = new BotaoGrafico();
         
-        $botao->set_label('Procedimentos');
-        $botao->set_target('blank');
-        $botao->set_url('../../areaServidor/sistema/procedimentos.php');
-        $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Àrea de Procedimentos da GRH');
-        $menu->add_item($botao);
+        if(Verifica::acesso($idUsuario,1)){
+            $botao->set_label('Procedimentos');
+            $botao->set_target('blank');
+            $botao->set_url('../../areaServidor/sistema/procedimentos.php');
+            $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Àrea de Procedimentos da GRH');
+            $menu->add_item($botao);
+        }
         
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
@@ -1051,7 +1059,7 @@ class Grh{
         $situacao = $pessoal->get_idSituacao($idServidor);
         $folgaTre = $pessoal->emFolgaTre($idServidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
-        $cedido = $pessoal->emCessao($idServidor);
+        #$cedido = $pessoal->emCessao($idServidor);
         $orgaoCedido = NULL;
         
         # Férias
@@ -1086,10 +1094,10 @@ class Grh{
         }
 
         # Cedido
-        if($cedido){
-            $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
-            $mensagem[] = 'Servidor Cedido a(o) '.$orgaoCedido;
-        }
+        #if($cedido){
+        #    $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
+        #    $mensagem[] = 'Servidor Cedido a(o) '.$orgaoCedido;
+        #}
         
         ##### Ocorrências
         
@@ -1107,11 +1115,11 @@ class Grh{
         }
         
         # Chefia Imediata
-        $idChefe = $pessoal->get_chefiaImediata($idServidor);
+        #$idChefe = $pessoal->get_chefiaImediata($idServidor);
         
-        if(!is_null($idChefe)){
-            $mensagem[] = "Chefia Imediata: ".$pessoal->get_nome($idChefe). " (".$pessoal->get_chefiaImediataDescricao($idServidor).")";
-        }
+        #if(!is_null($idChefe)){
+        #    $mensagem[] = "Chefia Imediata: ".$pessoal->get_nome($idChefe). " (".$pessoal->get_chefiaImediataDescricao($idServidor).")";
+        #}
         
         $qtdMensagem = count($mensagem);
         $contador = 1;

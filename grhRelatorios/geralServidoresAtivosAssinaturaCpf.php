@@ -29,9 +29,11 @@ if($acesso)
     
     $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
+                     tbdocumentacao.cpf,
                      tbservidor.idServidor,
                      "_________________________"
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                LEFT JOIN tbdocumentacao USING (idPessoa)
                WHERE tbservidor.situacao = 1
                  AND tbservidor.idPerfil <> 10
             ORDER BY tbpessoa.nome';
@@ -41,11 +43,11 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Assinatura');
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Assinatura'));
-    $relatorio->set_width(array(10,40,30,20));
-    $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoRel"));
+    $relatorio->set_label(array('IdFuncional','Nome','CPF','Lotação','Assinatura'));
+    $relatorio->set_width(array(10,30,10,30,20));
+    $relatorio->set_align(array("center","left","center","left"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_lotacaoRel"));
     
     $relatorio->set_conteudo($result);
     

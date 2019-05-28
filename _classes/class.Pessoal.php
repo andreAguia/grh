@@ -537,7 +537,7 @@ class Pessoal extends Bd {
             $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                          WHERE tbservidor.situacao = 1
+                          WHERE tbservidor.situacao = 1 AND idPerfil <> 10
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                             AND tbhistlot.lotacao = '.$idLotacao;
 
@@ -562,6 +562,7 @@ class Pessoal extends Bd {
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                           WHERE tbservidor.situacao <> 1
+                            AND idPerfil <> 10
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                             AND tbhistlot.lotacao = '.$idLotacao;
 
@@ -2174,8 +2175,9 @@ class Pessoal extends Bd {
     {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
-                    WHERE situacao = 1 AND 
-                          tbcargo.idTipoCargo = '.$id;
+                    WHERE situacao = 1 
+                    AND idPerfil <> 10
+                    AND tbcargo.idTipoCargo = '.$id;
 
         $numero = parent::count($select);
         return $numero;
@@ -2361,7 +2363,8 @@ class Pessoal extends Bd {
     {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
-                    WHERE situacao = '.$id;
+                    WHERE idPerfil <> 10
+                      AND situacao = '.$id;
 
         $numero = parent::count($select);
         return $numero;
@@ -3084,7 +3087,7 @@ class Pessoal extends Bd {
                      JOIN tbhistlot USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND situacao = 1';	
+                      AND situacao = 1 AND idPerfil <> 10';	
 
         # Lotação
         if((!is_null($idLotacao)) AND ($idLotacao <> "*")){
@@ -3134,7 +3137,8 @@ class Pessoal extends Bd {
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE situacao = 1                      
+                    WHERE situacao = 1
+                      AND idPerfil <> 10
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND idTipoCargo = '.$idCargo;
         

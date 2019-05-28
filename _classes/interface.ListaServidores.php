@@ -186,6 +186,8 @@ class ListaServidores{
         if(!is_null($this->perfil)){
             $select .= ' AND (tbperfil.idperfil = "'.$this->perfil.'")';
             $this->subTitulo .= "Perfil: ".$servidor->get_nomePerfil($this->perfil)."<br/>";
+        }else{
+            $select .= ' AND tbservidor.idPerfil <> 10';
         }
         
         # cargo

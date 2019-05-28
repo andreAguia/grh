@@ -134,7 +134,7 @@ if($acesso){
             $selectGrafico = 'SELECT count(tbservidor.idServidor) as jj,
                                      TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1
+                               WHERE situacao = 1 AND idPerfil <> 10
                             GROUP BY idade
                             ORDER BY 2';
 
@@ -181,7 +181,7 @@ if($acesso){
             $select = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade,
                               count(tbservidor.idServidor) as jj
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1
+                               WHERE situacao = 1 AND idPerfil <> 10
                             GROUP BY idade
                             ORDER BY 1';
 
@@ -236,7 +236,7 @@ if($acesso){
             COUNT(idPessoa),
             ROUND((COUNT(idPessoa)*100)/".$numServidores.",1)
             FROM tbpessoa JOIN tbservidor USING (idPessoa)
-           WHERE situacao = 1
+           WHERE situacao = 1 AND idPerfil <> 10
             GROUP BY 1 ORDER BY 1";
             
             $servidores = $pessoal->select($select);
@@ -296,7 +296,7 @@ if($acesso){
             # Geral - Por Perfil
             $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                               WHERE tbservidor.situacao = 1
+                               WHERE tbservidor.situacao = 1 AND tbservidor.idPerfil <> 10
                             GROUP BY tbperfil.nome
                             ORDER BY 2 DESC ';
 
@@ -352,7 +352,8 @@ if($acesso){
             $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE situacao = 1
+                               WHERE situacao = 1 
+                                 AND tbservidor.idPerfil <> 10
                             GROUP BY tbtipocargo.tipo
                             ORDER BY 2 DESC ';
 
@@ -388,7 +389,8 @@ if($acesso){
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
+                               WHERE tbservidor.situacao = 1 
+                                 AND tbservidor.idPerfil <> 10
                                  AND tbtipocargo.tipo = "Adm/Tec" GROUP BY tbtipocargo.cargo
                         ORDER BY 1 DESC ';
 
@@ -405,6 +407,7 @@ if($acesso){
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                               AND tbservidor.idPerfil <> 10
                                AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                             ORDER BY 1';
@@ -483,6 +486,7 @@ if($acesso){
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                                 AND tbservidor.idPerfil <> 10
                                  AND tbtipocargo.tipo = "Professor" GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
 
@@ -502,6 +506,7 @@ if($acesso){
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                               AND tbservidor.idPerfil <> 10
                                AND tbtipocargo.tipo = "Professor"
                             GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                             ORDER BY 1';
@@ -599,6 +604,7 @@ if($acesso){
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                                 AND tbservidor.idPerfil <> 10
                                  AND tbtipocargo.tipo = "Adm/Tec" GROUP BY tbtipocargo.cargo
                         ORDER BY 1 DESC ';
 
@@ -617,6 +623,7 @@ if($acesso){
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                               AND tbservidor.idPerfil <> 10
                                AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                             ORDER BY 1';
@@ -706,6 +713,7 @@ if($acesso){
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                                   JOIN tbcargo USING (idCargo)
                                    WHERE tbservidor.situacao = 1
+                                   AND tbservidor.idPerfil <> 10
                                    AND idTipoCargo = '.$cc[0].'
                                 GROUP BY tbcargo.nome, tbpessoa.sexo
                                 ORDER BY 1';
@@ -804,6 +812,7 @@ if($acesso){
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                 AND tbservidor.idPerfil <> 10
                                  AND situacao = 1
                                  AND ativo
                             GROUP BY tblotacao.dir
@@ -846,6 +855,7 @@ if($acesso){
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                     AND tbservidor.idPerfil <> 10
                                      AND situacao = 1
                                      AND ativo
                                      AND tbtipocargo.tipo = "Adm/Tec"
@@ -932,6 +942,7 @@ if($acesso){
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                     AND tbservidor.idPerfil <> 10
                                      AND situacao = 1
                                      AND ativo
                                      AND tbtipocargo.tipo = "Professor"
@@ -1113,6 +1124,7 @@ if($acesso){
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                 AND tbservidor.idPerfil <> 10
                                  AND situacao = 1
                                  AND ativo
                             GROUP BY tblotacao.dir
@@ -1128,6 +1140,7 @@ if($acesso){
                                         FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                         AND tbservidor.idPerfil <> 10
                                          AND situacao = 1
                                          AND ativo
                                          AND tblotacao.dir="'.$item[0].'" 
@@ -1186,6 +1199,7 @@ if($acesso){
                                                 JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                               AND tbservidor.idPerfil <> 10
                                AND idEscolaridade <> 12
                                AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
@@ -1272,6 +1286,7 @@ if($acesso){
                                                 JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
+                               AND tbservidor.idPerfil <> 10
                                AND idEscolaridade <> 12
                                AND tbtipocargo.tipo = "Professor"
                             GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
@@ -1367,6 +1382,7 @@ if($acesso){
                             FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
                                                  JOIN tbservidor USING (idPessoa)
                            WHERE situacao = 1
+                           AND tbservidor.idPerfil <> 10
                         GROUP BY tbnacionalidade.nacionalidade
                         ORDER BY 2 desc';
 
@@ -1420,6 +1436,7 @@ if($acesso){
                             FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
                                           JOIN tbservidor USING (idPessoa)
                            WHERE situacao = 1
+                           AND tbservidor.idPerfil <> 10
                         GROUP BY tbestciv.estciv
                         ORDER BY 2 desc';
 
@@ -1474,6 +1491,7 @@ if($acesso){
                                           JOIN tbcidade USING (idCidade)
                                           JOIN tbestado USING (idEstado)
                            WHERE situacao = 1
+                           AND tbservidor.idPerfil <> 10
                         GROUP BY 1
                         ORDER BY jj desc';
 
@@ -1548,6 +1566,7 @@ if($acesso){
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
                                WHERE YEAR(dtadmissao) <= "'.$ano.'" 
                                  AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
+                                 AND tbservidor.idPerfil <> 10    
                             GROUP BY tbtipocargo.tipo
                             ORDER BY 2 DESC ';
 
@@ -1589,6 +1608,7 @@ if($acesso){
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE YEAR(dtadmissao) <= "'.$ano.'" 
                                  AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
+                                 AND tbservidor.idPerfil <> 10
                                  AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
@@ -1617,6 +1637,7 @@ if($acesso){
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE YEAR(dtadmissao) <= "'.$ano.'" 
                                  AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
+                                 AND tbservidor.idPerfil <> 10    
                                  AND tbtipocargo.tipo = "Professor"
                             GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
@@ -1656,6 +1677,7 @@ if($acesso){
                                    WHERE YEAR(dtadmissao) <= "'.$ano.'" 
                                      AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "'.$ano.'"))
                                      AND tbtipocargo.cargo = "'.$valor.'"
+                                     AND tbservidor.idPerfil <> 10
                                 GROUP BY tbcargo.nome
                                 ORDER BY 2 DESC ';
 

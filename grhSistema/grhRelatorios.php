@@ -79,6 +79,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Faltas','?fase=faltas','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Férias','?fase=ferias','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Formação','?fase=formacao','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
@@ -213,6 +214,16 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório Anual pela Data do Processo','../grhRelatorios/diariasAnualDataProcesso.php');
             $menu->add_item('linkWindow','Relatório Mensal por Data de Saída','../grhRelatorios/diariasMensal.php');
             $menu->add_item('linkWindow','Relatório Anual por Data de Saída','../grhRelatorios/diariasAnual.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+    
+        case "formacao";
+            $menu = new Menu();
+            $menu->add_item('titulo','Formação dos Servidores');
+            $menu->add_item('linkWindow','Relatório dos Servidores por formação','../grhRelatorios/servidoresComFormacao.php');
 
             $menu->show();
             break;

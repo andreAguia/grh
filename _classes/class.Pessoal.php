@@ -840,7 +840,7 @@ class Pessoal extends Bd {
     {
         # Pega o cargo do servidor
         $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
-                     FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
+                     FROM tbservidor JOIN tbperfil USING (idPerfil)
                     WHERE idServidor = '.$idServidor;
 
         $row = parent::select($select,FALSE);

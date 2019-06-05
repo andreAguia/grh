@@ -223,7 +223,7 @@ if($acesso){
         case "formacao";
             $menu = new Menu();
             $menu->add_item('titulo','Formação dos Servidores');
-            $menu->add_item('linkWindow','Relatório dos Servidores por formação','../grhRelatorios/servidoresComFormacao.php');
+            $menu->add_item('linkWindow','Relatório dos Servidores por Formação','../grhRelatorios/servidoresComFormacao.php');
 
             $menu->show();
             break;

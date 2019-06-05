@@ -189,13 +189,13 @@ class Grh{
         br();
 
         if(Verifica::acesso($idUsuario,1)){
-            $menuItem = 7;
+            $menuItem = 8;
         }else{
-            $menuItem = 6;
+            $menuItem = 7;
         }
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(7);
+        $menu = new MenuGrafico($menuItem);
         $botao = new BotaoGrafico();
         
         if(Verifica::acesso($idUsuario,1)){
@@ -240,6 +240,13 @@ class Grh{
         $botao->set_url('areaBeneficios.php');
         $botao->set_imagem(PASTA_FIGURAS.'beneficios.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Formação');
+        $botao->set_url('areaFormacao.php');
+        $botao->set_imagem(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Formação Escolar dos Servidores');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();

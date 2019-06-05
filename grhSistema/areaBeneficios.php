@@ -256,7 +256,7 @@ if($acesso){
             
             $resumo = $pessoal->select($select);
             
-            # Monta a tabela
+            # Monta o Relatório
             $relatorio = new Relatorio();
             $relatorio->set_conteudo($resumo);
             $relatorio->set_label(array("Id/Matrícula","Nome","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
@@ -268,11 +268,6 @@ if($acesso){
             
             $relatorio->set_titulo($titulo);
             $relatorio->set_subtitulo($subTitulo);
-            
-            $relatorio->set_editar('?fase=editaServidor&id=');
-            $relatorio->set_nomeColunaEditar("Acessar");
-            $relatorio->set_editarBotao("ver.png");
-            $relatorio->set_idCampo('idServidor');
             $relatorio->show();
             break;
     }

@@ -128,7 +128,7 @@ class Declaracao{
         $relatorio = new Relatorio();
         $relatorio->exibeCabecalho();
         
-        hr();
+        #hr();
 
         # Limita o tamanho da tela
         $grid = new Grid("center");

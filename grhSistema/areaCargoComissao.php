@@ -163,8 +163,7 @@ if($acesso){
                              tbcomissao.dtNom,
                              tbcomissao.dtExo,
                              tbcomissao.idComissao,
-                             idPerfil,
-                             concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
+                             tbservidor.idServidor,
                              idComissao
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)

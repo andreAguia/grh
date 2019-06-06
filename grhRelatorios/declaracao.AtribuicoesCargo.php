@@ -58,9 +58,9 @@ if($acesso)
     
     $dec->set_texto(formataAtribuicao($atribuicoesCargo));
     
-    $dec->set_texto("Outrossim, declaramos para fins de comprovação junto à Superintendência de Perícia Médica e Saúde Ocupacional – SPMSO,"
-           . " que esta Universidade Estadual do Norte Fluminense Darcy Ribeiro – UENF é portadora do CNPJ nº 04.809.688/0001-06, com sede na Av. Alberto"
-           . " Lamego, 2.000, Parque Califórnia – Campos dos Goytacazes – RJ, CEP: 28.013-602.");
+    $dec->set_texto("Outrossim, declaramos que esta Universidade Estadual do Norte Fluminense Darcy Ribeiro – UENF"
+                  . " é portadora do CNPJ nº 04.809.688/0001-06, com sede na Av. Alberto"
+                  . " Lamego, 2.000, Parque Califórnia – Campos dos Goytacazes – RJ, CEP: 28.013-602.");
     
     $dec->set_texto("Sendo expressão da verdade, subscrevemo-nos.");
     

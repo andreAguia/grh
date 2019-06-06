@@ -4902,6 +4902,24 @@ class Pessoal extends Bd {
         return $row[0];
     }
 
-######################################################################################
+##########################################################
+
+    /**
+     * Método get_escolaridade
+     * informa a escolaridade a partir da idEscolaridade
+     * 
+     * @param	integer $idEscolaridade id da escolaridadeservidor
+     */
+
+    function get_escolaridade($idEscolaridade){
+        $select = 'SELECT escolaridade
+                     FROM tbescolaridade
+                    WHERE idEscolaridade = '.$idEscolaridade;
+
+        $retorno = parent::select($select,FALSE);
+        return $retorno[0];
+    }
+
+    ###########################################################
 
 }

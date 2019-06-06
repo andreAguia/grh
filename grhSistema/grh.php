@@ -42,6 +42,8 @@ if($acesso){
     set_session('areaTre');
     set_session('comissao');
     set_session('areaReducao');
+    set_session('areaFormacao');
+    set_session('areaRecadastramento');
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');
     set_session('parametroNomeMat');

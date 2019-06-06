@@ -15,8 +15,8 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){
+    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -24,8 +24,9 @@ if($acesso)
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
-    # Verifica se veio do recadastramento
+    # Verifica de onde veio
     $areaRecadastramento = get_session("areaRecadastramento");
+    $areaFormacao = get_session("areaFormacao");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -55,6 +56,8 @@ if($acesso)
     # botão de voltar da lista
     if($areaRecadastramento){
         $objeto->set_voltarLista('areaRecadastramento.php');
+    }elseif($areaFormacao){
+        $objeto->set_voltarLista('areaFormacao.php');
     }else{
         $objeto->set_voltarLista('servidorMenu.php');
     }

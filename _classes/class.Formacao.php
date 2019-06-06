@@ -32,9 +32,20 @@ class Formacao{
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select,FALSE);
         
+        $retorno = NULL;
         
+        # Escolaridade
+        #$retorno = '<span title="Nível do Curso" id="orgaoCedido">['.$pessoal->get_escolaridade($dados['idEscolaridade']).']</span><br/>';
         
-        return $dados;
+        # Nome do Curso
+        $retorno .= $dados['habilitacao'];
+        
+        # Ano de Término
+        if(!vazio($dados['anoTerm'])){
+            $retorno .= '<br/><span title="Ano de Conclusão" id="orgaoCedido">['.$dados['anoTerm'].']</span)';
+        }
+        
+        return $retorno;
     }
     
     ###########################################################

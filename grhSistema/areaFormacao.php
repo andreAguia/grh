@@ -137,7 +137,7 @@ if($acesso){
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbescolaridade.escolaridade,
-                      tbformacao.habilitacao
+                      idFormacao
                  FROM tbformacao JOIN tbpessoa USING (idPessoa)
                                  JOIN tbservidor USING (idPessoa)
                                  JOIN tbescolaridade USING (idEscolaridade)
@@ -155,7 +155,7 @@ if($acesso){
             }
             
             if(!vazio($parametroCurso)){
-                $select .= ' AND tbformacao.habilitacao like "%'.$parametroEscolaridade.'%"';
+                $select .= ' AND tbformacao.habilitacao LIKE "%'.$parametroCurso.'%"';
             }
                   
             $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
@@ -170,18 +170,33 @@ if($acesso){
             $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("center","left","left","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
+            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
+            
+            $tabela->set_editar('?fase=editaServidor&id=');
+            $tabela->set_nomeColunaEditar("Acessar");
+            $tabela->set_editarBotao("ver.png");
+            $tabela->set_idCampo('idServidor');
             
             $tabela->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-    
-    ################################################################        
-            
-            case "relatorio" :
+        
+################################################################
+
+        # Chama o menu do Servidor que se quer editar
+        case "editaServidor" :
+            set_session('idServidorPesquisado',$id);
+            set_session('areaFormacao',TRUE);
+            loadPage('servidorFormacao.php');
+            break; 
+        
+################################################################
+        
+        # Relatório
+        case "relatorio" :
                 
                 $subTitulo = NULL;
                 
@@ -191,7 +206,7 @@ if($acesso){
                           tbservidor.idServidor,
                           tbservidor.idServidor,
                           tbescolaridade.escolaridade,
-                          tbformacao.habilitacao
+                          idFormacao
                      FROM tbformacao JOIN tbpessoa USING (idPessoa)
                                      JOIN tbservidor USING (idPessoa)
                                      JOIN tbescolaridade USING (idEscolaridade)
@@ -202,17 +217,17 @@ if($acesso){
 
                 if($parametroNivel <> "Todos"){
                     $select .= ' AND tbtipocargo.nivel = "'.$parametroNivel.'"';
-                    $subTitulo .= 'Cargo Efetivo de Nível: '.$parametroNivel.'<br/>';
+                    $subTitulo .= 'Cargo Efetivo de Nível '.$parametroNivel.'<br/>';
                 }
 
                 if($parametroEscolaridade <> "*"){
                     $select .= ' AND tbformacao.idEscolaridade = '.$parametroEscolaridade;
-                    $subTitulo .= 'Curso de Nível: '.$parametroEscolaridade.'<br/>';
+                    $subTitulo .= 'Curso de Nível '.$pessoal->get_escolaridade($parametroEscolaridade).'<br/>';
                 }
 
                 if(!vazio($parametroCurso)){
-                    $select .= ' AND tbformacao.habilitacao like "%'.$parametroEscolaridade.'%"';
-                    $subTitulo .= 'Curso : '.$parametroCurso.'<br/>';
+                    $select .= ' AND tbformacao.habilitacao like "%'.$parametroCurso.'%"';
+                    $subTitulo .= 'Filtro : '.$parametroCurso.'<br/>';
                 }
 
                 $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
@@ -230,8 +245,8 @@ if($acesso){
                 $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
                 $relatorio->set_conteudo($result);
                 $relatorio->set_align(array("center","left","left","left","left","left"));
-                $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-                $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+                $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
+                $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
                 $relatorio->show();
                 break;
                 

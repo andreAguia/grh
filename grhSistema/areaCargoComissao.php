@@ -77,21 +77,7 @@ if($acesso){
             ## Menu Lateral
             ####################################
             
-            $grid->abreColuna(12,3);
-
-                # Inicia o Menu de Cadastro
-                $menu = new Menu();
-                $menu->add_item("titulo","Cadastro de Cargos");
-                $menu->add_item("link","Cadastro de Cargos em Comissão","cadastroCargoComissao.php");
-                $menu->add_item("link","Nomeações & Exonerações por Mês","?fase=movimentacao");   
-                $menu->show();
-
-                # Inicia o Menu de Relatório
-                $menu = new Menu();
-                $menu->add_item('titulo','Relatórios');
-                $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
-                $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
-                $menu->show();
+            $grid->abreColuna(12,3);                
 
                 # Pega os cargos
                 $select = "SELECT idTipoComissao,
@@ -105,7 +91,7 @@ if($acesso){
 
                 # Inicia o Menu de Cargos
                 $menu = new Menu();
-                $menu->add_item('titulo','Servidores por Cargos');
+                $menu->add_item('titulo','Cargos em Comissão');
 
                 # Preenche com os cargos
                 foreach($row as $item){
@@ -115,6 +101,22 @@ if($acesso){
                         $menu->add_item('link',$item[2].' - '.$item[1],'?fase=inicial&parametroCargo='.$item[0]);
                     }
                 }        
+                $menu->show();
+                
+                hr();
+                
+                # Inicia o Menu de Cadastro
+                $menu = new Menu();
+                #$menu->add_item("titulo","Cadastro de Cargos");
+                $menu->add_item("link","Editar o Cadastro","cadastroCargoComissao.php");
+                $menu->add_item("link","Movimentação Mensal","?fase=movimentacao","Nomeações & Exonerações por Mês");   
+                $menu->show();
+
+                # Inicia o Menu de Relatório
+                $menu = new Menu();
+                $menu->add_item('titulo','Relatórios');
+                $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
+                $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
                 $menu->show();
 
             $grid->fechaColuna();

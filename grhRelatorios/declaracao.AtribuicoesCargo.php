@@ -40,6 +40,7 @@ if($acesso)
     
     # Monta a Declaração
     $dec = new Declaracao();
+    $dec->set_carimboCnpj(TRUE);
     $dec->set_data(date("d/m/Y"));
     
     $dec->set_texto("Declaramos que o(a) Sr.(a) <b>".strtoupper($nomeServidor)."</b>, é servidor(a) desta"

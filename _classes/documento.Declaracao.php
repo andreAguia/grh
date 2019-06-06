@@ -23,6 +23,7 @@ class Declaracao{
     
     private $saltoRodape = 3;
     private $aviso = NULL;
+    private $carimboCnpj = FALSE;
     
     ###########################################################
     
@@ -142,10 +143,29 @@ class Declaracao{
         foreach($this->texto as $textoCi){
             p($textoCi,'pCi');
         }
-        br(2);
         
-        # Data
-        p('Campos dos Goytacazes, '.dataExtenso($this->data),'pDeclaracaoData');
+        if($this->carimboCnpj){
+            $grid = new Grid();
+            $grid->abreColuna(8);
+                
+                # Data
+                br(2);
+                p('Campos dos Goytacazes, '.dataExtenso($this->data),'pDeclaracaoData');
+                
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+                
+                $figura = new Imagem(PASTA_FIGURAS.'carimboCnpj.jpg',NULL,200,120);
+                $figura->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+        }else{
+            # Data
+            br(2);            
+            p('Campos dos Goytacazes, '.dataExtenso($this->data),'pDeclaracaoData');
+            
+        }
         br(3);
 
         # Assinatura

@@ -80,7 +80,7 @@ if($acesso){
     # Título
     titulo("Área de Férias");
     
-    ################################################################
+################################################################
     
     # Formulário de Pesquisa
     $form = new Form('?'); // retira o x da fase

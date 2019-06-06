@@ -40,6 +40,7 @@ if($acesso){
     
     # Monta a Declaração
     $dec = new Declaracao();
+    $dec->set_carimboCnpj(TRUE);
     $dec->set_data(date("d/m/Y"));
     $dec->set_texto("Declaro para os devidos fins, que $texto1 <b>".strtoupper($nomeServidor)."</b>,"
            . " ID funcional nº $idFuncional, $cargoEfetivo, não está respondendo a inquérito administrativo por"

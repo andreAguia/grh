@@ -124,7 +124,7 @@ if($acesso)
     #$objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);     
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Dependentes');
+    $objeto->set_nome('Cadastro de Parentes');
 
     # Define nome do Form
     $objeto->set_id('Dependente');
@@ -145,7 +145,7 @@ if($acesso)
                                      auxCreche,
                                      dtTermino,
                                      idDependente
-                                FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+                                FROM tbdependente LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
                           WHERE idPessoa='.$idPessoa.'
                        ORDER BY dtNasc desc');
 
@@ -204,13 +204,13 @@ if($acesso)
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'nome',
-                                       'label' => 'Nome do Dependente:',
+                                       'label' => 'Nome do Parente:',
                                        'tipo' => 'texto',
                                        'size' => 50,
                                        'required' => TRUE,
                                        'plm' => TRUE,
                                        'autofocus' => TRUE,
-                                       'title' => 'Nome do dependente.',
+                                       'title' => 'Nome do Parente.',
                                        'col' => 6,
                                        'linha' => 1),
                                array ( 'nome' => 'dtNasc',
@@ -226,7 +226,7 @@ if($acesso)
                                        'label' => 'CPF (quando houver):',
                                        'tipo' => 'cpf',
                                        'size' => 20,                                   
-                                       'title' => 'CPF do dependente.',
+                                       'title' => 'CPF do Parente',
                                        'col' => 3,
                                        'linha' => 1),
                                array ( 'nome' => 'parentesco',
@@ -235,7 +235,7 @@ if($acesso)
                                        'array' => $result,
                                        'required' => TRUE,
                                        'size' => 20,                                       
-                                       'title' => 'Parentesco do dependente.',
+                                       'title' => 'Parentesco do Parente',
                                        'col' => 3,
                                        'linha' => 2),
                                array ( 'nome' => 'sexo',
@@ -245,7 +245,7 @@ if($acesso)
                                        'required' => TRUE,
                                        'size' => 20,
                                        'col' => 2,
-                                       'title' => 'Gênero do dependente.',
+                                       'title' => 'Gênero do Parente.',
                                        'linha' => 2),
                                array ( 'nome' => 'dependente',
                                        'label' => 'Dependente no IR:',
@@ -304,7 +304,7 @@ if($acesso)
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Dependentes");
+    $botaoRel->set_title("Imprimir Relatório de Parente");
     $botaoRel->set_url("../grhRelatorios/servidorDependentes.php");
     $botaoRel->set_target("_blank");
     $objeto->set_botaoListarExtra(array($botaoRel));

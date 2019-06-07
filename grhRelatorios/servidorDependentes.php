@@ -27,7 +27,7 @@ if($acesso)
     ######
     
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Cadastro de Parentes');
     
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -65,7 +65,7 @@ if($acesso)
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Lista de Dependentes");
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Lista de Parentes");
     $relatorio->show();
 
     $page->terminaPagina();

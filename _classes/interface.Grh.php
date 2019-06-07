@@ -682,10 +682,10 @@ class Grh{
 
             if($perfil <> 10){          // Se não for bolsista
                 $botao = new BotaoGrafico();
-                $botao->set_label('Dependentes');
+                $botao->set_label('Parentes');
                 $botao->set_url('servidorDependentes.php');
                 $botao->set_imagem(PASTA_FIGURAS.'dependente.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro dos Dependentes do Servidor');
+                $botao->set_title('Cadastro dos Parentes do Servidor');
                 $menu->add_item($botao);
             }
 

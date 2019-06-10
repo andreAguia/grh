@@ -25,10 +25,10 @@ if($acesso){
     $editar = get('editar',0);
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou o cadastro de servidores";
+        $atividade = "Visualizou o controle de atendimento do balcão";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

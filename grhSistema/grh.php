@@ -39,11 +39,9 @@ if($acesso){
     }
     
     # Zera sessions
-    set_session('areaTre');
-    set_session('comissao');
-    set_session('areaReducao');
-    set_session('areaFormacao');
-    set_session('areaRecadastramento');
+    set_session('origem');                  // Informa a rotina de origem
+    set_session('origemId');                // Informa o id para a origem (se precisar)
+    
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');
     set_session('parametroNomeMat');
@@ -125,13 +123,14 @@ if($acesso){
             }
 
             # monta o menu principal
-            Grh::menu($idUsuario);
+            #Grh::menu2($idUsuario);
+            $menu = new MenuPrincipal($idUsuario);
     
             # Zera a session de alertas
             set_session('alertas');
             
             # Exibe o rodapé da página
-            br();
+            #br();
             Grh::rodape($idUsuario);
             break;
 

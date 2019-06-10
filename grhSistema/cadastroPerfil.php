@@ -24,8 +24,8 @@ if($acesso){
     $subFase = get('subFase',1);
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de perfil";
         $data = date("Y-m-d H:i:s");

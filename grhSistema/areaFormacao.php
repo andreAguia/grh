@@ -23,8 +23,8 @@ if($acesso){
     $fase = get('fase');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou a área de Formação";
         $data = date("Y-m-d H:i:s");
@@ -173,10 +173,9 @@ if($acesso){
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
             $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
             
-            $tabela->set_editar('?fase=editaServidor&id=');
-            $tabela->set_nomeColunaEditar("Acessar");
-            $tabela->set_editarBotao("ver.png");
             $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor');
+            $tabela->show();
             
             $tabela->show();
             
@@ -184,16 +183,23 @@ if($acesso){
             $grid->fechaGrid();
             break;
         
-################################################################
-
-        # Chama o menu do Servidor que se quer editar
+    ################################################################
+        
         case "editaServidor" :
+            br(8);
+            aguarde();
+            
+            # Informa o $id Servidor
             set_session('idServidorPesquisado',$id);
-            set_session('areaFormacao',TRUE);
+            
+            # Informa a origem
+            set_session('origem','areaFormacao');
+            
+            # Carrega a página específica
             loadPage('servidorFormacao.php');
             break; 
         
-################################################################
+    ################################################################
         
         # Relatório
         case "relatorio" :

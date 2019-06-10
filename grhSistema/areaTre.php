@@ -23,8 +23,8 @@ if($acesso){
     $fase = get('fase');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou a área de Tre";
         $data = date("Y-m-d H:i:s");
@@ -225,10 +225,8 @@ if($acesso){
                 $tabela->set_textoRessaltado($parametroNomeMat);
             }
             
-            $tabela->set_editar('?fase=editaServidor&id=');
-            $tabela->set_nomeColunaEditar("Acessar");
-            $tabela->set_editarBotao("ver.png");
             $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->show();
             
             # Pega o time final
@@ -244,8 +242,17 @@ if($acesso){
 
         # Chama o menu do Servidor que se quer editar
         case "editaServidor" :
+            
+            br(8);
+            aguarde();
+            
+            # Informa o $id Servidor
             set_session('idServidorPesquisado',$id);
-            set_session('areaTre',TRUE);
+            
+            # Informa a origem
+            set_session('origem','areaTre');
+            
+            # Carrega a página específica
             loadPage('servidorTre.php');
             break; 
         

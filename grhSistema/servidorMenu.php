@@ -14,15 +14,15 @@ $idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Zera session usadas
-set_session('sessionParametro');	# Zera a session do parâetro de pesquisa da classe modelo1
+set_session('sessionParametro');	# Zera a session do parâmetro de pesquisa da classe modelo1
 set_session('sessionPaginacao');	# Zera a session de paginação da classe modelo1
-set_session('origem');                  # Zera a session da origem da área de recadastramento
+
+# Verifica a origem 
+$origem = get_session("origem");
+$origemId = get_session("origemId");
 
 # Verifica se veio dos alertas
 $alertas = get_session("alertas");
-
-# Verifica se veio dos cargos em comissao
-$comissao = get_session("comissao");
 
 # Pega o tema
 $tema = get("tema","padrao");
@@ -43,15 +43,11 @@ if($acesso){
     # Joga os parâmetros par as sessions    
     set_session('parametroAno',$parametroAno);
     
-    # Registra no log
-    $origem = get('origem',FALSE);
-    if($origem){
-        # Grava no log a atividade
-        $atividade = "Visualizou o cadastro do servidor ".$pessoal->get_nome($idServidorPesquisado);
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
-    }
-
+    # Registra no log  
+    $atividade = "Visualizou o cadastro do servidor ".$pessoal->get_nome($idServidorPesquisado);
+    $data = date("Y-m-d H:i:s");
+    $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    
     # Começa uma nova página
     $page = new Page();
     if($fase == "uploadFoto"){
@@ -75,17 +71,17 @@ if($acesso){
         # Cria um menu
         $menu = new MenuBar();
 
-        # Voltar
-        if((is_null($alertas)) AND (is_null($comissao))){
-            $caminhoVolta = 'servidor.php';
-        }else{
-            if(!is_null($alertas)){
-                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alertas;
-            }
+        # Constroi o link de voltar de acordo com a origem
+        switch ($origem){           
             
-            if(!is_null($comissao)){
-                $caminhoVolta = 'cadastroCargoComissao.php?fase=listaServidores&id='.$comissao;
-            }
+            # Area dos Alertas
+            case "areaAlerta":
+                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$origemId;
+                break;
+            
+            default:
+                $caminhoVolta = 'servidor.php';
+                break;
         }
 
         $linkBotao1 = new Link("Voltar",$caminhoVolta);

@@ -25,8 +25,7 @@ if($acesso){
     $fase = get('fase','listar');
     
     # Verifica de onde veio
-    $areaRecadastramento = get_session("areaRecadastramento");
-    $areaFormacao = get_session("areaFormacao");
+    $origem = get_session("origem");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -54,9 +53,7 @@ if($acesso){
     $objeto->set_nome('Cadastro da Formação Escolar do Servidor');
 
     # botão de voltar da lista
-    if($areaRecadastramento){
-        $objeto->set_voltarLista('areaRecadastramento.php');
-    }elseif($areaFormacao){
+    if($origem == "areaFormacao"){
         $objeto->set_voltarLista('areaFormacao.php');
     }else{
         $objeto->set_voltarLista('servidorMenu.php');

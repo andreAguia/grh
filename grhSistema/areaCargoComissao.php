@@ -77,7 +77,10 @@ if($acesso){
             ## Menu Lateral
             ####################################
             
-            $grid->abreColuna(12,3);                
+            $grid->abreColuna(12,3);
+            
+            $painel = new Callout();
+            $painel->abre();
 
                 # Pega os cargos
                 $select = "SELECT idTipoComissao,
@@ -90,7 +93,9 @@ if($acesso){
                 $row = $pessoal->select($select);
 
                 # Inicia o Menu de Cargos
-                $menu = new Menu();
+                titulo("Menu");
+                
+                $menu = new Menu("menuProcedimentos");
                 $menu->add_item('titulo','Cargos em Comissão');
 
                 # Preenche com os cargos
@@ -100,24 +105,18 @@ if($acesso){
                     }else{
                         $menu->add_item('link',$item[2].' - '.$item[1],'?fase=inicial&parametroCargo='.$item[0]);
                     }
-                }        
-                $menu->show();
+                }
                 
-                hr();
-                
-                # Inicia o Menu de Cadastro
-                $menu = new Menu();
-                #$menu->add_item("titulo","Cadastro de Cargos");
+                $menu->add_item("titulo","Cadastro");
                 $menu->add_item("link","Editar o Cadastro","cadastroCargoComissao.php");
-                $menu->add_item("link","Movimentação Mensal","?fase=movimentacao","Nomeações & Exonerações por Mês");   
-                $menu->show();
-
-                # Inicia o Menu de Relatório
-                $menu = new Menu();
+                $menu->add_item("link","Movimentação Mensal","?fase=movimentacao","Nomeações & Exonerações por Mês");
+                
                 $menu->add_item('titulo','Relatórios');
                 $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
                 $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
                 $menu->show();
+                
+                $painel->fecha();
 
             $grid->fechaColuna();
 
@@ -319,17 +318,17 @@ if($acesso){
             $idServidor = $dados["idServidor"];
             $idTipoComissao = $dados["idTipoComissao"];
             
+            # Informa a origem
+            set_session('origem','areaCargo');
+            
             # Informa o idComissao
-            set_session("comissao",$idTipoComissao);
+            set_session("origemId",$idTipoComissao);
             
             # Informa o $id Servidor
             set_session('idServidorPesquisado',$idServidor);
             
-            # Informa a origem
-            set_session('origem','areaCargo');
-            
             # Carrega a página específica
-            loadPage('servidorComissao.php?fase=editar&id='.$id);
+            loadPage('servidorComissao.php');
             break; 
         
 ################################################################
@@ -344,17 +343,17 @@ if($acesso){
             $idServidor = $dados["idServidor"];
             $idTipoComissao = $dados["idTipoComissao"];
             
+            # Informa a origem
+            set_session('origem','areaCargo2');
+            
             # Informa o idComissao
-            set_session("comissao",$idTipoComissao);
+            set_session("origemId",$idTipoComissao);
             
             # Informa o $id Servidor
             set_session('idServidorPesquisado',$idServidor);
             
-            # Informa a origem
-            set_session('origem','areaCargo2');
-            
             # Carrega a página específica
-            loadPage('servidorComissao.php?fase=editar&id='.$id);
+            loadPage('servidorComissao.php');
             break; 
         
 ################################################################

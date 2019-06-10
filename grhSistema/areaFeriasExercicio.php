@@ -23,8 +23,8 @@ if($acesso){
     $fase = get('fase');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou a área de férias";
         $data = date("Y-m-d H:i:s");
@@ -83,7 +83,7 @@ if($acesso){
 ################################################################
     
     # Formulário de Pesquisa
-    $form = new Form('?'); // retira o x da fase
+    $form = new Form('?');
 
     # Cria um array com os anos possíveis
     $anoInicial = 1999;

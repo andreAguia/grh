@@ -29,7 +29,7 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Verifica se veio da área de TRE
-    $areaTre = get_session("areaTre");
+    $origem = get_session("origem");
     
     # Começa uma nova página
     $page = new Page();			
@@ -52,7 +52,7 @@ if($acesso){
             $folgasPendentes = $folgasConcedidas - $folgasFruidas;
             
             # botão de voltar da lista
-            if($areaTre){
+            if($origem == 'areaTre'){
                 $voltar = 'areaTre.php';
             }else{
                 $voltar = 'servidorMenu.php';

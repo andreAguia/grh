@@ -25,8 +25,8 @@ if($acesso){
     $grafico = get('grafico');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou a área de estatística";
         $data = date("Y-m-d H:i:s");
@@ -178,7 +178,7 @@ if($acesso){
             $chart = new Chart("ColumnChart",$dados);
             $chart->set_idDiv("idade");
             $chart->set_legend(FALSE);
-            $chart->set_label(array("Idade","Descrição"));
+            $chart->set_label(array("Descrição","Idade"));
             $chart->show();
 
             $grid2->fechaColuna();
@@ -197,7 +197,7 @@ if($acesso){
             #tituloTable("por Cada Idade");
             $chart = new Chart("ColumnChart",$servidores);
             $chart->set_idDiv("faixa");
-            $chart->set_label(array("Servidores","Idade"));
+            $chart->set_label(array("Idade","Servidores"));
             $chart->set_legend(FALSE);
             $chart->set_idDiv("cadaIdade");
             $chart->show();
@@ -251,7 +251,7 @@ if($acesso){
             tituloTable("por Faixa Etária");
             $chart = new Chart("ColumnChart",$servidores);
             $chart->set_idDiv("faixa");
-            $chart->set_label(array("Servidores","Faixa"));
+            $chart->set_label(array("Faixa","Servidores"));
             $chart->set_legend(FALSE);
             $chart->show();
             

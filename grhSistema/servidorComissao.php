@@ -28,7 +28,7 @@ if($acesso){
     
     # Pega o origem quando vier do cadastro de Cargo em comissão
     $origem = get_session('origem');
-    $idTipoComissao = get_session("comissao");
+    $idTipoComissao = get_session("origemId");
 
     # Ordem da tabela
     $orderCampo = get('orderCampo');
@@ -53,8 +53,20 @@ if($acesso){
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Cargos em Comissão');
 
-    # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
+    # Constroi o link de voltar de acordo com a origem
+    switch ($origem){
+         # Area da aposentadoria
+        case "areaCargo":
+            $objeto->set_voltarLista('areaCargoComissao.php');
+            break;
+
+        case "areaCargo2":
+            $objeto->set_voltarLista('areaCargoComissao.php?fase=movimentacao');
+            break;
+        
+        default:
+            $objeto->set_voltarLista('servidorMenu.php');
+    }
 
     # ordenação
     if(is_null($orderCampo)){
@@ -321,26 +333,6 @@ if($acesso){
         
     $objeto->set_botaoListarExtra(array($botaoRel,$botaoVagas));
     
-    # Altera as rotinas de retorno quando veio do cadastro de comissão
-    if($origem == "cargoComissaoHistorico"){
-        $objeto->set_voltarForm("cadastroCargoComissao.php?fase=historico&id=".$idTipoComissao);
-        $objeto->set_linkListar("cadastroCargoComissao.php?fase=historico&id=".$idTipoComissao);
-    }
-    
-    if($origem == "cargoComissaoVigente"){
-        $objeto->set_voltarForm("cadastroCargoComissao.php?fase=vigente&id=".$idTipoComissao);
-        $objeto->set_linkListar("cadastroCargoComissao.php?fase=vigente&id=".$idTipoComissao);
-    }
-    
-    if($origem == "areaCargo"){
-        $objeto->set_voltarForm("areaCargoComissao.php");
-        $objeto->set_linkListar("areaCargoComissao.php");
-    }
-    
-    if($origem == "areaCargo2"){
-        $objeto->set_voltarForm("areaCargoComissao.php?fase=movimentacao");
-        $objeto->set_linkListar("areaCargoComissao.php?fase=movimentacao");
-    }
     ################################################################
 
     switch ($fase){

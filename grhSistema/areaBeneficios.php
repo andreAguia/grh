@@ -27,8 +27,8 @@ if($acesso){
     $fase = get('fase','listaReducao');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou a área de Benefícios";
         $data = date("Y-m-d H:i:s");
@@ -178,10 +178,8 @@ if($acesso){
             
             $tabela->set_titulo("Servidores com Solicitação de Redução de Carga Horária");
             
-            $tabela->set_editar('?fase=editaServidor&id=');
-            $tabela->set_nomeColunaEditar("Acessar");
-            $tabela->set_editarBotao("ver.png");
             $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor');
             
             $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
                                                     'valor' => 'Em Aberto',
@@ -208,16 +206,23 @@ if($acesso){
             $grid->fechaGrid();
             break;
         
-################################################################
-
-        # Chama o menu do Servidor que se quer editar
+    ################################################################
+        
         case "editaServidor" :
+            br(8);
+            aguarde();
+            
+            # Informa o $id Servidor
             set_session('idServidorPesquisado',$id);
-            set_session('areaReducao',TRUE);
+            
+            # Informa a origem
+            set_session('origem','areaReducao');
+            
+            # Carrega a página específica
             loadPage('servidorReducao.php');
             break; 
         
-################################################################
+    ################################################################
         
         # Relatório
         case "relatorio" :

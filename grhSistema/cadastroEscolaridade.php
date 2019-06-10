@@ -24,8 +24,8 @@ if($acesso)
     $fase = get('fase','listar');
     
     # Verifica se veio menu grh e registra o acesso no log
-    $origem = get('origem',FALSE);
-    if($origem){
+    $grh = get('grh',FALSE);
+    if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de escolaridade";
         $data = date("Y-m-d H:i:s");

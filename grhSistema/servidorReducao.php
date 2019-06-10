@@ -32,7 +32,7 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Verifica se veio da área de Redução
-    $areaReducao = get_session("areaReducao");
+    $origem = get_session("origem");
     
     $jscript = '// Pega os valores da pendêencia
                 var pendencia = $("#pendencia").val();
@@ -130,7 +130,7 @@ if($acesso){
         $grid->abreColuna(12);
         
         # botão de voltar da lista
-        if($areaReducao){
+        if($origem == "areaReducao"){
             $voltar = 'areaBeneficios.php';
         }else{
             $voltar = 'servidorMenu.php';

@@ -22,6 +22,9 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','ver');
     
+    # Verifica de onde veio
+    $origem = get_session("origem");
+    
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -76,11 +79,32 @@ if($acesso){
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    #$objeto->set_linkListar('?');
-    $objeto->set_linkListar('servidorMenu.php');
+    
+    # Constroi o link de voltar de acordo com a origem
+    switch ($origem){
+         # Area da aposentadoria
+        case "areaAposentadoriaAno":
+            $caminhoVolta = 'areaAposentadoria.php';
+            $objeto->set_linkListar($caminhoVolta);
+            $objeto->set_voltarForm($caminhoVolta);
+            break;
 
-    # botão voltar
-    $objeto->set_voltarForm('servidorMenu.php');
+        case "areaAposentadoriaMotivo":
+            $caminhoVolta = 'areaAposentadoria.php?fase=motivo';
+            $objeto->set_linkListar($caminhoVolta);
+            $objeto->set_voltarForm($caminhoVolta);
+            break;
+
+        case "areaAposentadoriaIdade":
+            $caminhoVolta = 'areaAposentadoria.php?fase=dataIdade';
+            $objeto->set_linkListar($caminhoVolta);
+            $objeto->set_voltarForm($caminhoVolta);
+            break;
+        
+        default:
+            $objeto->set_linkListar('servidorMenu.php');
+            $objeto->set_voltarForm('servidorMenu.php');
+    }
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(FALSE);

@@ -1768,7 +1768,8 @@ if($acesso){
 
         # Monta o select
         $select = 'SELECT CONCAT(IFNULL(tblotacao.dir,"")," - ",IFNULL(tblotacao.ger,"")) lotacao,                          
-                          CONCAT(tbtipocargo.sigla," - ",tbcargo.nome) efetivo, count(tbservidor.idServidor) as jj
+                          CONCAT(tbtipocargo.sigla," - ",tbcargo.nome) efetivo, 
+                          count(tbservidor.idServidor) as jj
                     FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                           JOIN tbcargo USING (idCargo)
@@ -1788,8 +1789,8 @@ if($acesso){
 
         }
         
-        $select .= ' GROUP BY tblotacao.dir, tblotacao.ger, tbcargo.nome
-                     ORDER BY tblotacao.dir, tblotacao.ger, tbcargo.nome';
+        $select .= ' GROUP BY lotacao, efetivo
+                     ORDER BY lotacao, efetivo, tbcargo.nome';
         #echo $select;
         $servidores = $pessoal->select($select);
 

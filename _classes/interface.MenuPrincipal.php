@@ -232,31 +232,7 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS.'dinheiro.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
         $botao->set_accesskey('b');
-        #$menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Feriados');
-        $botao->set_url("cadastroFeriado.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Feriados');
-        #$botao->set_accesskey('S');
-        #$menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Atribuições');
-        $botao->set_url("cadastroAtribuicoes.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Atribuições de tarefas');
-        #$botao->set_accesskey('S');
-        #$menu->add_item($botao);            
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Balcão');
-        $botao->set_url("balcao.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Controle de Atendimento do Balcão');
-        #$botao->set_accesskey('S');
-        #$menu->add_item($botao);
+        #$menu->add_item($botao);        
 
         $menu->show();
         $painel->fecha();
@@ -345,6 +321,30 @@ class MenuPrincipal{
         $botao->set_url('areaAposentadoria.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Feriados');
+        $botao->set_url("cadastroFeriado.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Feriados');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Atribuições');
+        $botao->set_url("cadastroAtribuicoes.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Atribuições de tarefas');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);            
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Balcão');
+        $botao->set_url("balcao.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Atendimento do Balcão');
+        #$botao->set_accesskey('S');
         $menu->add_item($botao);
 
         $menu->show();

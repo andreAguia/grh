@@ -3458,10 +3458,10 @@ class Checkup {
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbdependente USING (idPessoa)
                                      LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-                    WHERE tbdependente.nome IN ( SELECT tbdependente.nome
-                                                   FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                                   LEFT JOIN tbdependente USING (idPessoa)
-                                                   WHERE situacao = 1';
+                    WHERE tbdependente.nome IN (SELECT tbdependente.nome
+                                                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                  LEFT JOIN tbdependente USING (idPessoa)
+                                                 WHERE situacao = 1';
         if(!is_null($idServidor)){
             $select .= ' AND idServidor = "'.$idServidor.'"';
         }
@@ -3469,7 +3469,7 @@ class Checkup {
         
         $select .= '                        GROUP BY tbdependente.nome
                                               HAVING COUNT(*) > 1 )
-                    AND situacao = 1                          ';
+                    AND situacao = 1';
         
         if(!is_null($idServidor)){
             $select .= ' AND idServidor = "'.$idServidor.'"';

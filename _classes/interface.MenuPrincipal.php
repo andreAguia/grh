@@ -49,10 +49,10 @@ class MenuPrincipal{
         # Terceira Coluna
         $grid->abreColuna(12,6,4);
         
-        # Módulos
-        $this->moduloAlertas();
+        # Módulos        
         $this->moduloBalcao();
         $this->moduloAniversariantes();
+        $this->moduloAlertas();
         
         $grid->fechaColuna();
         $grid->fechaGrid();        

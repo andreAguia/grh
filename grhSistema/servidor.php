@@ -21,6 +21,7 @@ if($acesso){
 	
     # Verifica a fase do programa
     $fase = get('fase');
+    $alerta = get('alerta'); // quando vem da rotina de alertas
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
@@ -308,8 +309,11 @@ if($acesso){
             br(8);
             aguarde();
             
-            # Verifica se veio do cadastro de Comissão
-            set_session("comissao",get("comissao"));
+            # Verifica se veio da rotina de alertas
+            if(!is_null($alerta)){
+                set_session("origem","alerta");
+                set_session("alerta",$alerta);
+            }
             
             set_session('idServidorPesquisado',$id);
             loadPage('servidorMenu.php?origem=1');

@@ -22,7 +22,7 @@ $origem = get_session("origem");
 $origemId = get_session("origemId");
 
 # Verifica se veio dos alertas
-$alertas = get_session("alertas");
+$alerta = get_session("alerta");
 
 # Pega o tema
 $tema = get("tema","padrao");
@@ -75,8 +75,8 @@ if($acesso){
         switch ($origem){           
             
             # Area dos Alertas
-            case "areaAlerta":
-                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$origemId;
+            case "alerta":
+                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alerta;
                 break;
             
             default:

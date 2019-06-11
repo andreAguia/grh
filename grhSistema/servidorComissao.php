@@ -61,7 +61,11 @@ if($acesso){
             break;
 
         case "areaCargo2":
-            $objeto->set_voltarLista('areaCargoComissao.php?fase=movimentacao');
+            $objeto->set_voltarLista('areaCargoComissao.php?fase=movimentacaoPorNomExo');
+            break;
+        
+        case "areaCargo3":
+            $objeto->set_voltarLista('areaCargoComissao.php?fase=movimentacaoPorPublicacao');
             break;
         
         default:

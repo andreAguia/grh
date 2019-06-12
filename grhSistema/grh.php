@@ -70,7 +70,7 @@ if($acesso){
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
      
     # Menu
-    if(($fase <> 'alertas') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes')){       
+    if(($fase <> 'alerta') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes')){       
         p(SISTEMA,'grhTitulo');
         p("Versão: ".VERSAO,"versao");
     
@@ -126,8 +126,8 @@ if($acesso){
             #Grh::menu2($idUsuario);
             $menu = new MenuPrincipal($idUsuario);
     
-            # Zera a session de alertas
-            set_session('alertas');
+            # Zera a session de alerta
+            set_session('alerta');
             
             # Exibe o rodapé da página
             #br();
@@ -148,7 +148,7 @@ if($acesso){
 
 ##################################################################
 
-        case "alertas" :
+        case "alerta" :
             # Botão voltar
             botaoVoltar('?');
             
@@ -165,6 +165,7 @@ if($acesso){
             
             if(is_null($alerta)){
                 $checkup->get_all();
+                set_session('alerta');
             }else{
                 $checkup->$alerta();
             }

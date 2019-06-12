@@ -20,8 +20,7 @@ if($acesso){
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase');
-    $alerta = get('alerta'); // quando vem da rotina de alertas
+    $fase = get('fase');    
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
@@ -309,14 +308,8 @@ if($acesso){
             br(8);
             aguarde();
             
-            # Verifica se veio da rotina de alertas
-            if(!is_null($alerta)){
-                set_session("origem","alerta");
-                set_session("alerta",$alerta);
-            }
-            
             set_session('idServidorPesquisado',$id);
-            loadPage('servidorMenu.php?origem=1');
+            loadPage('servidorMenu.php');
             break; 
         
         ###############################

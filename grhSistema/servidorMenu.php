@@ -70,18 +70,16 @@ if($acesso){
 
         # Cria um menu
         $menu = new MenuBar();
-
-        # Constroi o link de voltar de acordo com a origem
-        switch ($origem){           
-            
-            # Area dos Alertas
-            case "alerta":
-                $caminhoVolta = 'grh.php?fase=alertas&alerta='.$alerta;
-                break;
-            
-            default:
+        
+        # Verifica se veio de um alerta
+        if(!is_null($alerta)){
+            $caminhoVolta = 'grh.php?fase=alerta&alerta='.$alerta;
+        }else{
+            if(is_null($origem)){
                 $caminhoVolta = 'servidor.php';
-                break;
+            }else{
+                $caminhoVolta = $origem;
+            }
         }
 
         $linkBotao1 = new Link("Voltar",$caminhoVolta);

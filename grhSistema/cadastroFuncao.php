@@ -236,8 +236,8 @@ if($acesso)
     $objeto->set_botaoListarExtra([$botaoArea]);
 
     ################################################################
-    switch ($fase)
-    {
+    
+    switch ($fase){
         case "" :
         case "listar" :
             $objeto->listar();
@@ -247,15 +247,21 @@ if($acesso)
             $divServidores->abre();
             $divServidores->fecha();
             break;
+        
+    ################################################################    
 
         case "editar" :
             $objeto->$fase($id);        
             break;
+        
+    ################################################################    
 
         case "excluir" :	
         case "gravar" :		
             $objeto->$fase($id);
             break;
+        
+    ################################################################    
         
         case "aguarde" :
             br(10);
@@ -263,11 +269,16 @@ if($acesso)
             br();
             loadPage('?fase=listaServidores&id='.$id);
             break;
+        
+    ################################################################    
 
         case "listaServidores" :
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            # Informa a origem
+            set_session('origem','cadastroFuncao.php?fase=listaServidores&id='.$id);
             
             # Cria um menu
             $menu = new MenuBar();

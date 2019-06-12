@@ -69,7 +69,7 @@ class Checkup {
                 }
             }
             
-            $link = new Link($listaRetorno[0],"?fase=alertas&alerta=".$listaRetorno[1]);
+            $link = new Link($listaRetorno[0],"?fase=alerta&alerta=".$listaRetorno[1]);
             $link->set_id("checkupResumo".$listaRetorno[2]);
             echo "<li>";
             $link->show();
@@ -136,7 +136,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -208,7 +208,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -303,7 +303,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -398,7 +398,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -471,7 +471,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -550,7 +550,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada.<br/>Lembre-se de cadastrar no sistema, na área de documentos do motorista, a nova data, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -627,7 +627,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, a data da carteira, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -703,7 +703,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, os dados da carteira de habilitação, senão esta mensagem continuará sendo exibida para esse servidor.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -778,7 +778,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Avisar ao servidor sobre a aposentadoria compulsória.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -852,7 +852,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -935,7 +935,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Servidor com 2 matriculas Ativas !! Houve algum erro no sistema, favor verificar. Somente uma matrícula deveria estar ativa");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1013,7 +1013,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco. Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1091,7 +1091,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Algum erro no sistema, favor verificar. Todos os servidores devem tem um perfil cadastrado.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1173,7 +1173,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1254,7 +1254,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1333,7 +1333,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Cargo em comissão nomeado e exonerado no mesmo dia.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1413,7 +1413,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Avisar que após 1 ano ele terá que pagar o Rio Previdência ou pedir exoneração.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1492,7 +1492,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Certifique que ele esteja pagando em separado o Rio Previdência ou peça exoneração.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1572,7 +1572,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1645,7 +1645,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("O cadastro da data de nascimento do servidor é necessário para diversas rotinas do sistema. Verifique se na pasta do arquivo não tem nenhuma cópia de documento que tenha essa informação.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1726,7 +1726,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("O servidor cedido pela UENF deve estar cadastrado no setor Reitoria - Cessão.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1807,7 +1807,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Os servidores cedidos pela UENF que já terminaram o período de cessão deverão ser (re)lotados na universidade ou devem ter seu período de cessão renovado.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1885,7 +1885,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -1964,7 +1964,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2040,7 +2040,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("O servidor cedido psra a UENF deve ter cadastrado as informações da cessão.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2118,7 +2118,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco.<br/>Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2196,7 +2196,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2274,7 +2274,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2354,7 +2354,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("Verifique se não existem 2 lançamentos de lotação com o mesmo dia. Isso gera registros duplos em listagem onde é exibidda a lotação do servidor.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2429,7 +2429,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2505,7 +2505,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2582,7 +2582,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2655,7 +2655,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2731,7 +2731,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("A licença prêmio deve ter 30, 60 ou 90 dias. Valores diferentes podem ter sido causados na importação dos dados onde outro tipo de licença foi atribuido, erroneamente, como licença prêmio.");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2812,7 +2812,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2886,7 +2886,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -2959,7 +2959,7 @@ class Checkup {
                 return $titulo;
             }elseif($this->lista){
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3034,7 +3034,7 @@ class Checkup {
             }elseif($this->lista){
                 callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3109,7 +3109,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3184,7 +3184,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3261,7 +3261,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3338,7 +3338,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3420,7 +3420,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3507,7 +3507,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;
@@ -3583,7 +3583,7 @@ class Checkup {
             }elseif($this->lista){
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
                 $tabela->show();
-                set_session('alertas',$metodo[2]);
+                set_session('alerta',$metodo[2]);
             }else{
                 $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
                 return $retorna;

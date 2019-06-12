@@ -129,6 +129,9 @@ if($acesso){
             
             $grid->abreColuna(12,9);
             
+            # Informa a origem
+            set_session('origem','areaCargoComissao.php');
+            
             $form = new Form('?');
 
             # Descrição    
@@ -219,6 +222,9 @@ if($acesso){
             
         case "movimentacaoPorNomExo":
             
+            # Informa a origem
+            set_session('origem','areaCargoComissao.php?fase=movimentacaoPorNomExo');
+            
             $form = new Form('?fase=movimentacaoPorNomExo');
             $controle = new Input('parametroAno','texto','Ano:',1);
             $controle->set_size(8);
@@ -288,7 +294,7 @@ if($acesso){
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_idCampo('idComissao');
-            $tabela->set_editar('?fase=editarCargo2');
+            $tabela->set_editar('?fase=editarCargo');
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                                                            'valor' => "Exoneração",
                                                            'operador' => '=',
@@ -304,6 +310,9 @@ if($acesso){
     ################################################################
             
         case "movimentacaoPorPublicacao":
+            
+            # Informa a origem
+            set_session('origem','areaCargoComissao.php?fase=movimentacaoPorPublicacao');
             
             $form = new Form('?fase=movimentacaoPorPublicacao');
             $controle = new Input('parametroAno','texto','Ano:',1);
@@ -374,7 +383,7 @@ if($acesso){
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_idCampo('idComissao');
-            $tabela->set_editar('?fase=editarCargo3');
+            $tabela->set_editar('?fase=editarCargo');
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                                                            'valor' => "Exoneração",
                                                            'operador' => '=',
@@ -397,13 +406,6 @@ if($acesso){
             $comissao = new CargoComissao();
             $dados = $comissao->get_dados($id);
             $idServidor = $dados["idServidor"];
-            $idTipoComissao = $dados["idTipoComissao"];
-            
-            # Informa a origem
-            set_session('origem','areaCargo');
-            
-            # Informa o idComissao
-            set_session("origemId",$idTipoComissao);
             
             # Informa o $id Servidor
             set_session('idServidorPesquisado',$idServidor);
@@ -412,57 +414,7 @@ if($acesso){
             loadPage('servidorComissao.php?fase=editar&id='.$id);
             break; 
         
-################################################################
-        
-        case "editarCargo2" :
-            # Vigentes
-            br(8);
-            aguarde();
-            
-            $comissao = new CargoComissao();
-            $dados = $comissao->get_dados($id);
-            $idServidor = $dados["idServidor"];
-            $idTipoComissao = $dados["idTipoComissao"];
-            
-            # Informa a origem
-            set_session('origem','areaCargo2');
-            
-            # Informa o idComissao
-            set_session("origemId",$idTipoComissao);
-            
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado',$idServidor);
-            
-            # Carrega a página específica
-            loadPage('servidorComissao.php?fase=editar&id='.$id);
-            break; 
-        
-################################################################
-        
-        case "editarCargo3" :
-            # Vigentes
-            br(8);
-            aguarde();
-            
-            $comissao = new CargoComissao();
-            $dados = $comissao->get_dados($id);
-            $idServidor = $dados["idServidor"];
-            $idTipoComissao = $dados["idTipoComissao"];
-            
-            # Informa a origem
-            set_session('origem','areaCargo3');
-            
-            # Informa o idComissao
-            set_session("origemId",$idTipoComissao);
-            
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado',$idServidor);
-            
-            # Carrega a página específica
-            loadPage('servidorComissao.php?fase=editar&id='.$id);
-            break; 
-        
-################################################################
+    ################################################################
     }
     
     # Fecha o grid

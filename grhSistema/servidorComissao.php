@@ -27,9 +27,8 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Pega o origem quando vier do cadastro de Cargo em comissão
-    $origem = get_session('origem');
-    $idTipoComissao = get_session("origemId");
-
+    $origem = get_session('origem'); 
+    
     # Ordem da tabela
     $orderCampo = get('orderCampo');
     $orderTipo = get('orderTipo');
@@ -54,23 +53,15 @@ if($acesso){
     $objeto->set_nome('Cadastro de Cargos em Comissão');
 
     # Constroi o link de voltar de acordo com a origem
-    switch ($origem){
-         # Area da aposentadoria
-        case "areaCargo":
-            $objeto->set_voltarLista('areaCargoComissao.php');
-            break;
-
-        case "areaCargo2":
-            $objeto->set_voltarLista('areaCargoComissao.php?fase=movimentacaoPorNomExo');
-            break;
-        
-        case "areaCargo3":
-            $objeto->set_voltarLista('areaCargoComissao.php?fase=movimentacaoPorPublicacao');
-            break;
-        
-        default:
-            $objeto->set_voltarLista('servidorMenu.php');
+    if(vazio($origem)){
+        $caminhoVolta = 'servidorMenu.php';
+        echo "oi";
+    }else{
+        $caminhoVolta = $origem;
     }
+    
+    # botão de voltar da lista
+    $objeto->set_voltarLista($caminhoVolta);
 
     # ordenação
     if(is_null($orderCampo)){

@@ -210,6 +210,9 @@ if($acesso)
             $grid = new Grid();
             $grid->abreColuna(12);
             
+            # Informa a origem
+            set_session('origem','cadastroCargo.php?fase=exibeServidoresAtivos&id='.$id);
+            
             # Cria um menu
             $menu = new MenuBar();
 
@@ -262,6 +265,9 @@ if($acesso)
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            # Informa a origem
+            set_session('origem','cadastroCargo.php?fase=exibeServidoresInativos&id='.$id);
             
             # Cria um menu
             $menu = new MenuBar();

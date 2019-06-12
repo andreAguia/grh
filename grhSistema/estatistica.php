@@ -221,32 +221,158 @@ if($acesso){
         
         case "faixaEtaria":
             
-            # Abre um callout
-            $panel = new Callout();
-            $panel->abre();
+            # Abre o painel
+            $painel = new Callout();
+            $painel->abre();
+
+            titulotable("por Faixa Etária");
+            br(); 
+
+            ########
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=faixaEtaria');
+
+            # Lotação
+            $result = $pessoal->select('SELECT DISTINCT DIR, DIR
+                                          FROM tblotacao
+                                         WHERE ativo
+                                      ORDER BY DIR');
+            array_unshift($result,array("*",'Todas'));
+
+            $controle = new Input('parametroLotacao','combo','Diretoria/Centro:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(TRUE);
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            # Perfil
+            $result = $pessoal->select('SELECT DISTINCT idPerfil, nome
+                                          FROM tbperfil
+                                          WHERE idPerfil <> 10
+                                      ORDER BY nome');
+            array_unshift($result,array("*",'Todos'));
+
+            $controle = new Input('parametroPerfil','combo','Perfil:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Perfil');
+            $controle->set_array($result);
+            $controle->set_valor($parametroPerfil);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $form->show();
+
+            ########
             
             $grid3 = new Grid();
             $grid3->abreColuna(12);
             
             # Faixa Etária Geral
-            $select = "SELECT CASE 
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN 'até 20'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN '21 a 30'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN '31 a 40'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN '41 a 50'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN '51 a 60'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN '61 a 70'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN '71 a 80'
-                WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN '81 a 90'
-            END,
-            COUNT(idPessoa),
-            ROUND((COUNT(idPessoa)*100)/".$numServidores.",1)
-            FROM tbpessoa JOIN tbservidor USING (idPessoa)
-           WHERE situacao = 1 AND idPerfil <> 10
-            GROUP BY 1 ORDER BY 1";
+            $select = '  
+            SELECT CASE 
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN "até 20"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN "21 a 30"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN "31 a 40"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN "41 a 50"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN "51 a 60"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN "61 a 70"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN "71 a 80"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN "81 a 90"
+                   END,
+                   tbpessoa.sexo, count(tbservidor.idServidor) as jj
+              FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                            LEFT JOIN tbhistlot USING (idServidor)
+                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                            
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.idPerfil <> 10
+                     AND situacao = 1';
+               
+            if($parametroLotacao <> '*'){
+                $select .= ' AND tblotacao.dir="'.$parametroLotacao.'"';
+            }
+        
+            if($parametroPerfil <> '*'){
+                $select .= ' AND tbservidor.idPerfil="'.$parametroPerfil.'"';
+            }
+            
+            $select .= ' GROUP BY 1, tbpessoa.sexo ORDER BY 1';
             
             $servidores = $pessoal->select($select);
+
+            # Novo array 
+            $arrayResultado = array();
+
+            # Valores anteriores
+            $escolaridadeAnterior = NULL;
+
+            # inicia as variáveis
+            $masc = 0;
+            $femi = 0;
+            $totalMasc = 0;
+            $totalFemi = 0;
+            $total = 0;
+
+            # Modelar o novo array
+            foreach ($servidores as $value) {
+                # Carrega as variáveis
+                $escolaridade = $value[0];
+                $sexo = $value[1];                    
+                $contagem = $value[2];
+
+                # Verifica se mudou de escolaridade
+                if($escolaridade <> $escolaridadeAnterior){
+                    if(is_null($escolaridadeAnterior)){
+                        $escolaridadeAnterior = $escolaridade;
+                    }else{
+                        $arrayResultado[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
+                        $masc = 0;
+                        $femi = 0;
+                        $escolaridadeAnterior = $escolaridade;
+                        $total += ($femi+$masc);
+                    }
+                }
+
+                if($sexo == 'Masculino'){
+                   $masc = $contagem;
+                   $totalMasc += $masc;
+                }else{
+                   $femi = $contagem;
+                   $totalFemi += $femi; 
+                }   
+            }
+
+            $arrayResultado[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));          
+
+            $arrayResultado[] = array("Total",$totalFemi,$totalMasc,$total);
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($arrayResultado);
+            #$tabela->set_titulo("Professor");
+            $tabela->set_label(array("Faixa","Feminino","Masculino","Total"));
+            $tabela->set_width(array(55,15,15,15));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                'valor' => "Total",
+                                                'operador' => '=',
+                                                'id' => 'estatisticaTotal')));
+
+            $tabela->show(); 
             
+            /*
             # Chart
             tituloTable("por Faixa Etária");
             $chart = new Chart("ColumnChart",$servidores);
@@ -277,11 +403,12 @@ if($acesso){
             $chart->set_tamanho($largura = 400,$altura = 400);
             $chart->set_legend(FALSE);
             $chart->show();
+            * 
+             */
             
-            
-            $grid4->fechaColuna();            
-            $grid4->fechaGrid();            
-            $panel->fecha();
+            $grid3->fechaColuna();            
+            $grid3->fechaGrid();            
+            $painel->fecha();             
             break;
             
     ################################################################   
@@ -1715,7 +1842,7 @@ if($acesso){
             
     case "cargoGerencia":
             
-        # Sexo por Lotação
+        # Abre o painel
         $painel = new Callout();
         $painel->abre();
 

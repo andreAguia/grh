@@ -3437,93 +3437,6 @@ class Checkup {
     ##########################################################
     
      /**
-     * Método get_servidorComDependentesRepetidos
-     * 
-     * Servidor Com Dependentes (parentes) repetidos (problema causado pela importação)
-     */
-    
-    public function get_servidorComDependentesRepetidos($idServidor = NULL){
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
-        
-        $servidor = new Pessoal();
-        $metodo = explode(":",__METHOD__);
-
-        $select = 'SELECT tbdependente.nome,
-                          tbparentesco.Parentesco,
-                          idfuncional,
-                          matricula,
-                          tbpessoa.nome,
-                          idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbdependente USING (idPessoa)
-                                     LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-                    WHERE tbdependente.nome IN (SELECT tbdependente.nome
-                                                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                                  LEFT JOIN tbdependente USING (idPessoa)
-                                                 WHERE situacao = 1';
-        if(!is_null($idServidor)){
-            $select .= ' AND idServidor = "'.$idServidor.'"';
-        }
-        
-        
-        $select .= '                        GROUP BY tbdependente.nome
-                                              HAVING COUNT(*) > 1 )
-                    AND situacao = 1';
-        
-        if(!is_null($idServidor)){
-            $select .= ' AND idServidor = "'.$idServidor.'"';
-        }
-                
-        $select .= ' ORDER BY tbpessoa.nome';                 
-
-        $result = $servidor->select($select);
-        $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $titulo = 'Servidor(es) com parentes duplicados.';
-        $label = ['Parente','Parentesco','ID Funcional','Matrícula','Servidor'];
-        $align = ['left','center','center','center','left'];
-        #$classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
-        #$rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_situacao"];
-        #$funcao = [NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
-        # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
-        $tabela->set_titulo($titulo);
-        #$tabela->set_classe($classe);
-        #$tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
-        $tabela->set_idCampo('idServidor');
-       
-        if($count > 0){
-            if(!is_null($idServidor)){
-                return $titulo;
-            }elseif($this->lista){
-                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
-                $tabela->show();
-                set_session('alerta',$metodo[2]);
-            }else{
-                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
-                return $retorna;
-            }}elseif($this->lista){
-            br();
-            tituloTable($titulo);
-            $callout = new Callout();
-            $callout->abre();
-                p('Nenhum item encontrado !!','center');
-            $callout->fecha();
-        }
-    }
-
-    ##########################################################
-    
-     /**
      * Método get_servidorComDependentesSemParentesco
      * 
      * Servidor Com Dependentes (parentes) sem parentesco cadastrado
@@ -3531,7 +3444,7 @@ class Checkup {
     
     public function get_servidorComDependentesSemParentesco($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+        $prioridade = 2;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);

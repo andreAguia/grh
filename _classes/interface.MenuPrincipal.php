@@ -380,7 +380,7 @@ class MenuPrincipal{
     /**
      * Método moduloAniversariantes
      * 
-     * Exibe os Alertas
+     * Exibe os Aniversariantes
      */
     
     private function moduloAniversariantes(){
@@ -398,7 +398,6 @@ class MenuPrincipal{
         # Exibe os valores
         p("Aniversariantes do mês: ".$numServidores,"aniversariante");
         p("Aniversariantes de hoje: ".$numHoje,"aniversariante");
-        br();
 
         $div = new Div("divAniversariante");
         $div->abre();

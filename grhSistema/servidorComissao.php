@@ -55,7 +55,6 @@ if($acesso){
     # Constroi o link de voltar de acordo com a origem
     if(vazio($origem)){
         $caminhoVolta = 'servidorMenu.php';
-        echo "oi";
     }else{
         $caminhoVolta = $origem;
     }

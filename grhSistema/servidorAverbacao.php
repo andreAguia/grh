@@ -57,15 +57,14 @@ if($acesso){
 
     # ordenação
     if (is_null($orderCampo)) {
-        $orderCampo = "2";
+        $orderCampo = "1";
     }
 
     if (is_null($orderTipo)) {
         $orderTipo = 'desc';
     }
     
-    $select = 'SELECT idAverbacao,
-                      dtInicial,
+    $select = 'SELECT dtInicial,
                       dtFinal,
                       dias,
                       empresa,
@@ -115,9 +114,9 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
-    $label = array("id","Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
-    $align = array("center","center","center","center","left");
-    $funcao = array(NULL,"date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+    $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
+    $align = array("center","center","center","left");
+    $funcao = array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
 
     # Parametros da tabela
     $objeto->set_label($label);

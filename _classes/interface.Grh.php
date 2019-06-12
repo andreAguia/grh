@@ -1187,10 +1187,10 @@ class Grh{
         $situacao = $servidor->get_situacao($idServidor);
         
         if ($situacao == "Ativo"){
-            $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
+            $label = array("Id Funcional","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
             $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php");
         }else{
-            $label = array("Id","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação","Saída");
+            $label = array("Id Funcional","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação","Saída");
             $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php");
         }
         #$align = array("center");

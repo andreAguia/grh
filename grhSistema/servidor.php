@@ -166,6 +166,8 @@ if($acesso){
                 # junta os dois
                 $result = array_merge($result2,$result1);
                 
+                # acrescenta Professor
+                array_unshift($result,array('Professor','Professores'));
                                
                 # acrescenta todos
                 array_unshift($result,array('*','-- Todos --'));

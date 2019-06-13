@@ -196,8 +196,13 @@ class ListaServidores{
                 $select .= ' AND (tbcargo.idcargo = "'.$this->cargo.'")';
                 $this->subTitulo .= "Cargo: ".$servidor->get_nomeCompletoCargo($this->cargo)."<br/>";
             }else{ # senão é nivel do cargo
-                $select .= ' AND (tbtipocargo.cargo = "'.$this->cargo.'")';                
-                $this->subTitulo .= "Cargo: ".$this->cargo."<br/>";
+                if($this->cargo == "Professor"){
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';                
+                    $this->subTitulo .= "Cargo: Professor<br/>";
+                }else{
+                    $select .= ' AND (tbtipocargo.cargo = "'.$this->cargo.'")';                
+                    $this->subTitulo .= "Cargo: ".$this->cargo."<br/>";
+                }   
             }
         }
         

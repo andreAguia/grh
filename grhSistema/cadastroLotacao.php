@@ -202,7 +202,7 @@ if($acesso){
                'tipo' => 'combo',
                'array' => array(array(1,'Sim'),array(0,'Não')),
                'padrao' => 'Sim',
-               'size' => 10),
+               'size' => 5),
         array ('linha' => 3,
                'col' => 6,
                'nome' => 'ramais',

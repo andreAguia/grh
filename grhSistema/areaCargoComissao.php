@@ -133,11 +133,20 @@ if($acesso){
             set_session('origem','areaCargoComissao.php');
             
             $form = new Form('?');
+            
+            $descricao = $pessoal->select('SELECT idDescricaoComissao,
+                                              tbdescricaocomissao.descricao
+                                         FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
+                                        WHERE tbdescricaocomissao.idTipoComissao = '.$parametroCargo["idTipoComissao"].'  
+                                     ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao, tbdescricaocomissao.descricao');
+            
+            array_unshift($descricao, array(NULL,"Todos"));
 
             # Descrição    
-            $controle = new Input('parametroDescricao','texto','Descrição do Cargo ou Nome do Servidor:',1);
+            $controle = new Input('parametroDescricao','combo','Descrição do Cargo ou Nome do Servidor:',1);
             $controle->set_size(200);
             $controle->set_title('Filtra por Descrição');
+            $controle->set_array(array($descricao));
             $controle->set_valor($parametroDescricao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -175,10 +184,8 @@ if($acesso){
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.idTipoComissao = '.$parametroCargo;
             
-            if(($parametroCargo <> 13) AND ($parametroCargo <> 14) AND ($parametroCargo <> 23) AND ($parametroCargo <> 25) AND ($parametroCargo <> 18)){
-                if(!vazio($parametroDescricao)){
-                    $select .= " AND tbcomissao.descricao LIKE '%".$parametroDescricao."%'";
-                }
+            if($parametroDescricao <> "*"){
+                    $select .= " AND tbcomissao.idDescricaoComissao = $parametroDescricao";
             }
             
             if($parametroStatus == "Vigente"){
@@ -191,10 +198,10 @@ if($acesso){
             #    $select .= ' OR tbpessoa.nome LIKE "%'.$parametroDescricao.'%")';
             #}
             
-            $select .= ' ORDER BY tbcomissao.descricao, tbcomissao.dtNom desc';
+            $select .= ' ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
             $result = $pessoal->select($select);
-            $label = array('Id / Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
+            $label = array('Id / Matrícula','Nome','Nomeação','Exoneração','Descrição','Perfil');
             $align = array("center","left","center","center","left","center");
             $function = array("idMatricula",NULL,"date_to_php","date_to_php","descricaoComissao");
             $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");

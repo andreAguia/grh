@@ -153,7 +153,7 @@ function descricaoComissao($idComissao){
     
     # Pega os dados da comissão
     $dados = $comissao->get_dados($idComissao);
-    $descricao = $dados['descricao'];
+    $descricao = $comissao->get_descricaoCargo($idComissao);
     $tipo = $dados['tipo'];
     
     $retorno = $descricao;

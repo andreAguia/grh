@@ -51,16 +51,9 @@ if($acesso){
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Cargos em Comissão');
-
-    # Constroi o link de voltar de acordo com a origem
-    if(vazio($origem)){
-        $caminhoVolta = 'servidorMenu.php';
-    }else{
-        $caminhoVolta = $origem;
-    }
     
     # botão de voltar da lista
-    $objeto->set_voltarLista($caminhoVolta);
+    $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
     if(is_null($orderCampo)){
@@ -98,8 +91,7 @@ if($acesso){
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
-                                     descricao,
-                                     ocupanteAnterior,
+                                     idDescricaoComissao,
                                      tipo,
                                      dtNom,
                                      dtAtoNom,
@@ -163,26 +155,30 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
 
     # Pega os dados da combo tipo de Comissão
-    $comissao = $pessoal->select('SELECT idTipoComissao,
+    $tipoComissao = $pessoal->select('SELECT idTipoComissao,
                                          CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
                                     FROM tbtipocomissao
                                 ORDER BY ativo desc, simbolo');    
     
     # Pega os dados da descrição
-    $descricao = $pessoal->select('SELECT DISTINCT tbcomissao.descricao 
-                                     FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
-                                    WHERE tbtipocomissao.ativo IS TRUE
-                                 ORDER BY 1');
+    if(is_null($id)){
+        $descricao = $pessoal->select('SELECT idDescricaoComissao,
+                                              tbdescricaocomissao.descricao
+                                         FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
+                                     ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao,  tbdescricaocomissao.descricao');
     
-    # Pega os dados do ocupante anterior
-    $ocupaAnterior = $pessoal->select('SELECT DISTINCT tbpessoa.nome,tbpessoa.nome
-                                         FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
-  			                                 JOIN tbservidor USING (idServidor)
-                                                         JOIN tbpessoa USING (idPessoa)
-                                        WHERE tbtipocomissao.ativo IS TRUE
-                                          AND tbcomissao.dtExo IS NOT NULL
-                                     ORDER BY tbpessoa.nome');
-    array_unshift($ocupaAnterior, array(NULL,NULL));
+    }else{
+        $comissao = $cargoComissao->get_dados($id);
+        
+        $descricao = $pessoal->select('SELECT idDescricaoComissao,
+                                              tbdescricaocomissao.descricao
+                                         FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
+                                        WHERE tbdescricaocomissao.idTipoComissao = '.$comissao["idTipoComissao"].' 
+                                     ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao,  tbdescricaocomissao.descricao');
+    
+    }
+    
+    array_unshift($descricao, array(NULL,NULL));
             
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -190,26 +186,17 @@ if($acesso){
                                        'tipo' => 'combo',
                                        'required' => TRUE,
                                        'autofocus' => TRUE,
-                                       'array' => $comissao,
+                                       'array' => $tipoComissao,
                                        'size' => 20,
                                        'col' => 4,
                                        'title' => 'Tipo dp Cargo em Comissão',
                                        'linha' => 1),
                                 array ('linha' => 1,
-                                       'col' => 8,
-                                       'nome' => 'descricao',
+                                       'col' => 6,
+                                       'nome' => 'idDescricaoComissao',
                                        'label' => 'Descrição do Cargo:',
-                                       'tipo' => 'texto',
-                                       'datalist' => $descricao,
-                                       'title' => 'Chefe do Laboratório..., Gerente da ..., Diretor de ..., etc.',
-                                       'size' => 100),
-                               array ('linha' => 2,
-                                       'col' => 10,
-                                       'nome' => 'ocupanteAnterior',
-                                       'label' => 'Ocupante Anterior:',
                                        'tipo' => 'combo',
-                                       'array' => $ocupaAnterior,
-                                       'title' => 'Nome do servidor que ocupava anteriormente esse cargo.',
+                                       'array' => $descricao,
                                        'size' => 100),
                                array ( 'nome' => 'tipo',
                                        'label' => 'Tipo:',
@@ -219,7 +206,7 @@ if($acesso){
                                        'size' => 20,
                                        'col' => 2,
                                        'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
-                                       'linha' => 2),
+                                       'linha' => 1),
                                array ( 'nome' => 'dtNom',
                                        'label' => 'Data da Nomeação:',
                                        'fieldset' => 'Dados da Nomeação',
@@ -228,35 +215,35 @@ if($acesso){
                                        'required' => TRUE,
                                        'title' => 'Data da Nomeação.',
                                        'col' => 3,
-                                       'linha' => 3),
+                                       'linha' => 2),
                                array ( 'nome' => 'dtAtoNom',
                                        'label' => 'Data do Ato do Reitor:',
                                        'title' => 'Data do Ato do Reitor da Nomeação',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'linha' => 3),
+                                       'linha' => 2),
                                array ( 'nome' => 'numProcNom',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,                              
                                        'title' => 'Número do Processo',
                                        'col' => 3,
-                                       'linha' => 3), 
+                                       'linha' => 2), 
                                array ( 'nome' => 'dtPublicNom',
                                        'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 4),
+                                       'linha' => 3),
                                array ( 'nome' => 'ciGepagNom',                                   
                                        'label' => 'Documento:',
                                        'tipo' => 'texto',
                                        'col' => 6,
                                        'size' => 30,                                   
                                        'title' => 'Documento.',
-                                       'linha' => 4),
+                                       'linha' => 3),
                                array ( 'nome' => 'dtExo',
                                        'label' => 'Data da Exoneração:',
                                        'fieldset' => 'Dados da Exoneração',
@@ -264,36 +251,36 @@ if($acesso){
                                        'col' => 3,
                                        'size' => 20,
                                        'title' => 'Data da Exoneração.',
-                                       'linha' => 5),
+                                       'linha' => 4),
                                array ( 'nome' => 'dtAtoExo',
                                        'label' => 'Data do Ato do Reitor:',
                                        'title' => 'Data do Ato do Reitor da Exoneraçao',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'linha' => 5),
+                                       'linha' => 4),
                                array ( 'nome' => 'numProcExo',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
                                        'col' => 3,
                                        'title' => 'Processo de Exoneração',
-                                       'linha' => 5), 
+                                       'linha' => 4), 
                                array ( 'nome' => 'dtPublicExo',
                                        'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 6),
+                                       'linha' => 5),
                                array ( 'nome' => 'ciGepagExo',                                   
                                        'label' => 'Documento:',
                                        'tipo' => 'texto',
                                        'size' => 30,
                                        'col' => 6,                                   
                                        'title' => 'Documento.',
-                                       'linha' => 6), 
-                                array ('linha' => 7,
+                                       'linha' => 5), 
+                                array ('linha' => 6,
                                        'nome' => 'obs',
                                        'col' => 12,
                                        'label' => 'Observação:',
@@ -326,6 +313,13 @@ if($acesso){
     $botaoRel->set_target("_blank");
         
     $objeto->set_botaoListarExtra(array($botaoRel,$botaoVagas));
+    
+    # Constroi o link de voltar de acordo com a origem
+    if(!vazio($origem)){
+        $objeto->set_linkListar($origem);
+        $objeto->set_voltarForm($origem);
+    }
+    
     
     ################################################################
 
@@ -360,22 +354,19 @@ if($acesso){
             #}
             #else // se é editar
             
-            # Ato de Nomeação
-            $botao1 = new Button("Ato de Nomeação");
-            $botao1->set_title("Imprime o Ato de Nomeação");
-            $botao1->set_url("?fase=atoNomeacao&id=$id");
+            # Visivel somente para adm
+            if(Verifica::acesso($idUsuario,1)){
+                $comissao = $cargoComissao->get_dados($id);
+                echo $comissao['descricao'];
+            }
             
-            # Termo de Posse
-            $botao2 = new Button("Termo de Posse");
-            $botao2->set_title("Imprime o Termo de Posse");
-            $botao2->set_url("?fase=termoPosse&id=$id");
+            # Cadastrar Descrição
+            $botao1 = new Button("Descrição");
+            $botao1->set_title("Cadastra uma nova Descrição");
+            $botao1->set_target("_blank");
+            $botao1->set_url("cadastroDescricaoComissao.php?fase=editar");
             
-            # Ato de Exoneração
-            $botao3 = new Button("Ato de Exoneração");
-            $botao3->set_title("Imprime o Ato de Exoneração");
-            $botao3->set_url("?fase=atoExoneracao&id=$id");
-            
-            #$objeto->set_botaoEditarExtra(array($botao1,$botao2,$botao3));
+            $objeto->set_botaoEditarExtra(array($botao1));
             
             $objeto->editar($id);
     

@@ -503,6 +503,7 @@ class MenuPrincipal{
         # Menu
         $menu = new Menu("menuProcedimentos");
         #$menu->add_item('titulo','Tabelas Secundárias','#','Tabelas Secundárias');
+        $menu->add_item('link','Descrrição dos Cargos em Comissão','cadastroDescricaoComissao.php?grh=1','Acessa o Cadastro de Descrição dos Cargos em Comissão');
         $menu->add_item('link','Tabela Salarial','cadastroTabelaSalarial.php?grh=1','Acessa o Cadastro de Tabela Salarial');
         $menu->add_item('link','Banco','cadastroBanco.php?grh=1','Acessa o Cadastro de Bancos');
         $menu->add_item('link','Escolaridade','cadastroEscolaridade.php?grh=1','Acessa o Cadastro de Escolaridade');

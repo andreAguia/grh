@@ -27,18 +27,19 @@ if($acesso){
     ######
     
     $select ='SELECT tbservidor.idServidor,
-                             tbpessoa.nome,
-                             tbcomissao.dtNom,
-                             tbcomissao.dtPublicNom,
-                             tbcomissao.idComissao,
-                             idPerfil,
-                             concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
-                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
-                                             JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                    WHERE tbtipocomissao.ativo IS TRUE
-                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)                    
-                    ORDER BY tbtipocomissao.simbolo, tbcomissao.descricao, tbcomissao.dtNom desc';
+                    tbpessoa.nome,
+                    tbcomissao.dtNom,
+                    tbcomissao.dtPublicNom,
+                    tbcomissao.idComissao,
+                    idPerfil,
+                    concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+               FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                               LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                    JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                                    JOIN tbdescricaocomissao  USING (idDescricaoComissao)    
+           WHERE tbtipocomissao.ativo IS TRUE
+             AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)                    
+           ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
     $result = $pessoal->select($select);
     

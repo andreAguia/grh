@@ -1291,7 +1291,7 @@ class Checkup {
                         tbcomissao.dtExo,
                         idComissao,
                         concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao),
-                        tbcomissao.descricao,
+                        idComissao,
                         tbservidor.idServidor
                    FROM tbservidor LEFT JOIN tbpessoa USING (idpessoa)
                                    LEFT JOIN tbcomissao USING (idServidor)
@@ -1300,7 +1300,7 @@ class Checkup {
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
                 }                
-        $select .= ' ORDER BY 7, tbcomissao.descricao, 4 desc';
+        $select .= ' ORDER BY tbpessoa.nome';
               
 
         $result = $servidor->select($select);
@@ -1310,8 +1310,8 @@ class Checkup {
         $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Descrição');
         $align = array('center','center','left','center','center','left');
         $titulo = 'Cargo em comissão nomeado e exonerado no mesmo dia';
-        #$classe = array(NULL,NULL,NULL,NULL,"Pessoal","Pessoal");
-        #$rotina = array(NULL,NULL,NULL,NULL,"get_lotacao","get_cargo");
+        $classe = array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"CargoComisso");
+        $rotina = array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_descricaoCargo");
         $funcao = array(NULL,"dv",NULL,"date_to_php","date_to_php","descricaoComissao");
         $linkEditar = 'servidor.php?fase=editar&id=';
 

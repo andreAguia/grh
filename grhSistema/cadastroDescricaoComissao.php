@@ -63,7 +63,7 @@ if($acesso)
     $objeto->set_nome('Cadastro de Descrição do Cargo em Comissão');
 
     # botão de voltar da lista
-    #$objeto->set_voltarLista('grh.php');
+    $objeto->set_voltarLista('areaCargoComissao.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');

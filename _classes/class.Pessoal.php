@@ -1849,24 +1849,17 @@ class Pessoal extends Bd {
                     AND idServidor = '.$idServidor;
 
         $row = parent::select($select,FALSE);
-        $idCargo = $row[0];
+        $idComissao = $row[0];
         
         $retorno = NULL;
 
-        # Pega o nome do id do cargo em comissão
-        if (!is_null($idCargo)){
-            $select ='SELECT tbcomissao.descricao,
-                             tbtipocomissao.descricao 
-                        FROM tbcomissao 
-                        JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                       WHERE idcomissao = '.$idCargo;
-
-            $row = parent::select($select,FALSE);
-            $retorno = $row[0];
+        # Pega a descrição 
+        if (!is_null($idComissao)){
+            $comissao = new CargoComissao();
+            $retorno = $comissao->get_descricaoCargo($idComissao);
         }
 
         return $retorno;
-
     }
 
     ###########################################################
@@ -4681,11 +4674,12 @@ class Pessoal extends Bd {
       */
     
         # Monta o select
-        $select = "SELECT tbcomissao.descricao
+        $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                           JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is NULL 
@@ -4812,9 +4806,9 @@ class Pessoal extends Bd {
         $idChefe = $this->get_chefiaImediata($idServidor);
         
         # Monta o select
-        $select = "SELECT descricao
-                     FROM tbcomissao 
-                    WHERE dtExo is NULL
+        $select = "SELECT tbdescricaocomissao.descricao
+                     FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
+                    WHERE (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
         
         $row = parent::select($select,false);

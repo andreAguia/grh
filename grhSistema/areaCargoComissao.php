@@ -18,6 +18,7 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $comissao = new CargoComissao();
 	
     # Verifica a fase do programa
     $fase = get('fase','inicial');
@@ -27,11 +28,16 @@ if($acesso){
     
     # Verifica o post de quando exibe os histórico de servidores nesse cargo
     $parametroCargo = get('parametroCargo',get_session('parametroCargo',13));
-    $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao'));
+    $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao','Todos'));
     $parametroStatus = post('parametroStatus',get_session('parametroStatus',"Vigente"));
     $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
     $parametroMes = post('parametroMes',get_session('parametroMes',date('m')));
     
+    # Garante que quando se muda de cargo a descrição volta a todos
+    if($parametroCargo <> get_session('parametroCargo')){
+        $parametroDescricao = "Todos";
+    }
+
     # Joga os parâmetros par as sessions    
     set_session('parametroCargo',$parametroCargo);
     set_session('parametroDescricao',$parametroDescricao);
@@ -79,6 +85,10 @@ if($acesso){
             
             $grid->abreColuna(12,3);
             
+            # Pega o nome do cargo            
+            $nomeCargo = $pessoal->get_nomeCargoComissao($parametroCargo);
+            $simbolo = $pessoal->get_cargoComissaoSimbolo($parametroCargo);
+            
             $painel = new Callout();
             $painel->abre();
 
@@ -113,6 +123,7 @@ if($acesso){
                 
                 $menu->add_item("titulo","Cadastro");
                 $menu->add_item("link","Editar o Cadastro","cadastroCargoComissao.php");
+                $menu->add_item("link","Editar a Descrição","cadastroDescricaoComissao.php");
                 
                 $menu->add_item('titulo','Relatórios');
                 $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
@@ -134,19 +145,21 @@ if($acesso){
             
             $form = new Form('?');
             
-            $descricao = $pessoal->select('SELECT idDescricaoComissao,
-                                              tbdescricaocomissao.descricao
-                                         FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
-                                        WHERE tbdescricaocomissao.idTipoComissao = '.$parametroCargo["idTipoComissao"].'  
-                                     ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao, tbdescricaocomissao.descricao');
+            $select = 'SELECT idDescricaoComissao,
+                              tbdescricaocomissao.descricao
+                         FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
+                        WHERE tbdescricaocomissao.idTipoComissao = '.$parametroCargo.'  
+                     ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao, tbdescricaocomissao.descricao';
+        
+            $descricao = $pessoal->select($select);
             
-            array_unshift($descricao, array(NULL,"Todos"));
+            array_unshift($descricao, array("Todos","Todos"));
 
             # Descrição    
-            $controle = new Input('parametroDescricao','combo','Descrição do Cargo ou Nome do Servidor:',1);
+            $controle = new Input('parametroDescricao','combo','Descrição:',1);
             $controle->set_size(200);
             $controle->set_title('Filtra por Descrição');
-            $controle->set_array(array($descricao));
+            $controle->set_array($descricao);
             $controle->set_valor($parametroDescricao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -166,25 +179,24 @@ if($acesso){
             $form->add_item($controle);
 
             $form->show();
-                        
-            # Pega o nome do cargo            
-            $nomeCargo = $pessoal->get_nomeCargoComissao($parametroCargo);
-            $simbolo = $pessoal->get_cargoComissaoSimbolo($parametroCargo);
+            
+            $comissao->exibeResumo($parametroCargo);
                         
             # select
-            $select ='SELECT tbservidor.idServidor,
-                             tbpessoa.nome,
-                             tbcomissao.dtNom,
-                             tbcomissao.dtExo,
-                             tbcomissao.idComissao,
-                             tbservidor.idServidor,
-                             idComissao
-                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
-                                             JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbtipocomissao.idTipoComissao = '.$parametroCargo;
+            $select = "SELECT tbservidor.idServidor,
+                              tbpessoa.nome,
+                              tbcomissao.dtNom,
+                              tbcomissao.dtExo,
+                              tbcomissao.idComissao,
+                              tbservidor.idServidor,
+                              idComissao
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbcomissao USING(idServidor)
+                                         LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
+                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                       WHERE tbtipocomissao.idTipoComissao = $parametroCargo";
             
-            if($parametroDescricao <> "*"){
+            if($parametroDescricao <> "Todos"){
                     $select .= " AND tbcomissao.idDescricaoComissao = $parametroDescricao";
             }
             
@@ -192,13 +204,9 @@ if($acesso){
                 $select .= " AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)";
             }
             
-            # Pega o parâmetro da pesquisa
-            #if(!is_null($parametroDescricao)){
-            #    $select .= ' AND (tbcomissao.descricao LIKE "%'.$parametroDescricao.'%"';
-            #    $select .= ' OR tbpessoa.nome LIKE "%'.$parametroDescricao.'%")';
-            #}
+            $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
             
-            $select .= ' ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
+            #echo $select;
 
             $result = $pessoal->select($select);
             $label = array('Id / Matrícula','Nome','Nomeação','Exoneração','Descrição','Perfil');
@@ -211,7 +219,7 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
-            $tabela->set_titulo("$nomeCargo [$simbolo]");
+            $tabela->set_titulo("Servidores Nomeados");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_classe($classe);
@@ -297,7 +305,7 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
-            $tabela->set_titulo("Movimentação Mensal por Data de Nomeação & Exoneração");
+            $tabela->set_titulo("Nomeações & Exonerações de ".get_nomeMes($parametroMes)." de $parametroAno");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_idCampo('idComissao');
@@ -348,8 +356,8 @@ if($acesso){
             $select = 'SELECT * FROM 
                       (SELECT "Nomeação",
                               tbcomissao.dtPublicNom,
-                              tbcomissao.dtNom,
                               tbcomissao.dtAtoNom,
+                              tbcomissao.dtNom,                              
                               tbservidor.idFuncional,
                               tbpessoa.nome,
                               CONCAT(simbolo," - ",tbtipocomissao.descricao),
@@ -363,8 +371,8 @@ if($acesso){
                      UNION
                      SELECT "Exoneração",
                               tbcomissao.dtPublicExo,
-                              tbcomissao.dtExo,
                               tbcomissao.dtAtoExo,
+                              tbcomissao.dtExo,
                               tbservidor.idFuncional,
                               tbpessoa.nome,
                               CONCAT(simbolo," - ",tbtipocomissao.descricao),
@@ -375,10 +383,10 @@ if($acesso){
                                          JOIN tbpessoa USING (idPessoa)
                          WHERE YEAR(tbcomissao.dtPublicExo) = '.$parametroAno.' 
                            AND MONTH(tbcomissao.dtPublicExo) = '.$parametroMes.') a
-                     ORDER BY 2 asc';
+                     ORDER BY 2, 3, 6';
             
             $result = $pessoal->select($select);
-            $label = array('Tipo','Publicação','Data','Ato Reitor','Id Funcional','Nome','Cargo','Processo');
+            $label = array('Tipo','Publicação','Ato Reitor','Data','Id Funcional','Nome','Cargo','Processo');
             $align = array("center","center","center","center","center","left","left","left");
             $function = array(NULL,"date_to_php","date_to_php","date_to_php");
             
@@ -386,7 +394,7 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
-            $tabela->set_titulo("Movimentação Mensal por Data de Publicação");
+            $tabela->set_titulo("Nomeações & Exonerações Publicadas em ".get_nomeMes($parametroMes)." de $parametroAno");
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_idCampo('idComissao');
@@ -410,7 +418,6 @@ if($acesso){
             br(8);
             aguarde();
             
-            $comissao = new CargoComissao();
             $dados = $comissao->get_dados($id);
             $idServidor = $dados["idServidor"];
             

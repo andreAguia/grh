@@ -34,10 +34,11 @@ if($acesso){
                              idPerfil,
                              concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                        LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)                                        
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                                             JOIN tbdescricaocomissao USING (idDescricaoComissao)
                     WHERE tbtipocomissao.ativo IS TRUE                         
-                    ORDER BY tbtipocomissao.simbolo, tbcomissao.descricao, tbcomissao.dtNom desc';
+                    ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
     $result = $pessoal->select($select);
     

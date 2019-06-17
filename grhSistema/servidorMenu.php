@@ -142,10 +142,6 @@ if($acesso){
             # Ocorrencias do servidor
             Grh::exibeOcorênciaServidor($idServidorPesquisado);
             
-            echo "Chefia Imediata:".$pessoal->get_nome($pessoal->get_chefiaImediata($idServidorPesquisado));
-            br();
-            echo $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
-            
             # monta o menu do servidor
             if($tema <> "padrao"){
                 Grh::menuServidor2($idServidorPesquisado,$idUsuario);

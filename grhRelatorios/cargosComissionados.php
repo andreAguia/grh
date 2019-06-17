@@ -43,6 +43,7 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa) 
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
               WHERE tbservidor.situacao = 1
                 AND tbcomissao.dtExo is NULL';
@@ -52,7 +53,7 @@ if($acesso)
         $select .= ' AND tbtipocomissao.idTipoComissao = '.$comissao; 
     }
         
-    $select .= ' ORDER BY 6, tbcomissao.descricao, tbcomissao.dtNom';
+    $select .= ' ORDER BY 6, tbdescricaocomissao.descricao, tbcomissao.dtNom';
 
     $result = $servidor->select($select);
 

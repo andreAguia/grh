@@ -325,10 +325,11 @@ if($acesso){
                              idComissao
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                        LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.idTipoComissao = '.$id.'
                          AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
-                  ORDER BY 8, tbcomissao.descricao, 4 desc';
+                  ORDER BY 8, tbdescricaocomissao.descricao, 4 desc';
 
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');
@@ -429,16 +430,17 @@ if($acesso){
                              idComissao
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                        LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.idTipoComissao = '.$id;
             
             # Pega o parâmetro da pesquisa
             if(!is_null($parametroComissao)){
-                $select .= ' AND (tbcomissao.descricao LIKE "%'.$parametroComissao.'%"';
+                $select .= ' AND (tbdescricaocomissao.descricao LIKE "%'.$parametroComissao.'%"';
                 $select .= ' OR tbpessoa.nome LIKE "%'.$parametroComissao.'%")';
             }
             
-            $select .= ' ORDER BY 8, tbcomissao.descricao, 4 desc';
+            $select .= ' ORDER BY 8, tbdescricaocomissao.descricao, 4 desc';
 
             $result = $servidor->select($select);
             $label = array('IdFuncional','Matrícula','Nome','Nomeação','Exoneração','Nome do Cargo','Perfil');

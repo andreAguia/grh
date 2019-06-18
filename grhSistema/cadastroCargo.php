@@ -113,6 +113,8 @@ if($acesso)
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
+    
+    $objeto->set_grupoCorColuna(1);
 
     # Nome da tabela
     $objeto->set_tabela('tbtipocargo');

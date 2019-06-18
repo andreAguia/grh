@@ -140,6 +140,8 @@ if($acesso){
 
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao","get_numServidoresInativosLotacao"));
+    
+    $objeto->set_grupoCorColuna(3);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

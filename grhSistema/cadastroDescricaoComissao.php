@@ -36,7 +36,7 @@ if($acesso)
     $id = soNumeros(get('id'));    
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))){				# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){				        # Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
     }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
@@ -77,6 +77,7 @@ if($acesso)
                                  FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
                                 WHERE tbdescricaocomissao.descricao LIKE "%'.$parametro.'%"
                                    OR tbtipocomissao.descricao LIKE "%'.$parametro.'%"
+                                   OR tbtipocomissao.simbolo LIKE "%'.$parametro.'%"
                              ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao,  tbdescricaocomissao.descricao');
 
     # select do edita

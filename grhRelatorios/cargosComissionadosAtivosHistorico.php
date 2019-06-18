@@ -42,6 +42,7 @@ if($acesso)
                      concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
+                                LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                WHERE tbtipocomissao.ativo';
 				
@@ -49,7 +50,7 @@ if($acesso)
 		$select .= ' AND tbtipocomissao.idTipoComissao = '.$cargo;
 	}
 			                    
-    $select .= ' ORDER BY 8, tbcomissao.descricao,tbcomissao.dtNom desc';
+    $select .= ' ORDER BY 8, tbdescricaocomissao.descricao,tbcomissao.dtNom desc';
 
     $result = $servidor->select($select);
 

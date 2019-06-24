@@ -2194,27 +2194,7 @@ class Pessoal extends Bd {
         $numero = parent::count($select);
         return $numero;
     }
-
-    ###########################################################
-
-    /**
-     * Método get_servidoresCargoComissao
-     * 
-     * Exibe o número de servidores ativos em um determinado cargo em comissao
-     */
-
-    public function get_servidoresCargoComissao($id)
-    {
-        $select = 'SELECT tbservidor.idServidor                             
-                     FROM tbservidor JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
-                    WHERE situacao = 1
-                      AND (dtExo IS NULL OR CURDATE() < dtExo)
-                      AND tbcomissao.idTipoComissao = '.$id;
-
-        $numero = parent::count($select);
-        return $numero;
-    }
-
+    
     ###########################################################
 
     /**
@@ -2249,23 +2229,6 @@ class Pessoal extends Bd {
 
         $row = parent::select($select,FALSE);		
         return $row[0];
-    }
-
-    ###########################################################
-
-    /**
-     * Método get_cargoComissaoVagas
-     * 
-     * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
-     */
-
-    public function get_cargoComissaoVagasDisponiveis($id)
-    {
-        $vagas = $this->get_cargoComissaoVagas($id);
-        $ocupadas = $this->get_servidoresCargoComissao($id);
-        $disponiveis = $vagas - $ocupadas;
-        
-        return $disponiveis;
     }
 
     ###########################################################

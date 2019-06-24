@@ -98,6 +98,9 @@ if($acesso)
     $objeto->set_label(array("Id","Cargo em Comissão","Descrição","Ativo"));
     #$objeto->set_width(array(5,70,10));
     $objeto->set_align(array("center","left","left","center"));
+    
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

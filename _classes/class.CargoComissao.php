@@ -79,7 +79,7 @@ class CargoComissao{
     
     ###########################################################
     
-    function get_numServidoresCargo($idTipoCargo){
+    function get_numServidoresNomeados($idTipoCargo){
         
     /**
      * 
@@ -92,7 +92,54 @@ class CargoComissao{
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
                     WHERE tbcomissao.idTipoComissao = $idTipoCargo
                       AND situacao = 1
-                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)";
+                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                      AND (tbcomissao.tipo is NULL OR tbcomissao.tipo = 0 OR tbcomissao.tipo = 1)";  // Curioso bug... tbcomissao.tipo <> 2 não funcionou
+                                                                                                     // devido a alguns valores nulos cadastrado no campo tipo
+        $pessoal = new Pessoal();
+        $dados = $pessoal->count($select);
+        return $dados;
+    }
+    
+    ###########################################################
+    
+    function get_numServidoresDesignados($idTipoCargo){
+        
+    /**
+     * 
+     * Informa o número de servidores ativos nomeados para esse cargo
+     * 
+     */
+        
+        # Pega os dados
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
+                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                      AND situacao = 1
+                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                      AND tbcomissao.tipo = 2";
+        
+        $pessoal = new Pessoal();
+        $dados = $pessoal->count($select);
+        return $dados;
+    }
+    
+    ###########################################################
+    
+    function get_numServidoresProTempore($idTipoCargo){
+        
+    /**
+     * 
+     * Informa o número de servidores ativos nomeados para esse cargo
+     * 
+     */
+        
+        # Pega os dados
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
+                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                      AND situacao = 1
+                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                      AND tbcomissao.tipo = 1";
         
         $pessoal = new Pessoal();
         $dados = $pessoal->count($select);
@@ -104,7 +151,7 @@ class CargoComissao{
     /**
      * Método get_vagas
      * 
-     * Exibe o n�mero de vagas em um determinado cargo em comissao
+     * Exibe o número de vagas em um determinado cargo em comissao
      */
 
     public function get_vagas($idTipoCargo)
@@ -119,6 +166,23 @@ class CargoComissao{
     }
 
     ###########################################################
+
+    /**
+     * Método get_vagasDisponiveis
+     * 
+     * Exibe o número de vagas disponíveis em um determinado cargo em comissao
+     */
+
+    public function get_vagasDisponiveis($idTipoCargo)
+    {
+        $vagas = $this->get_vagas($idTipoCargo);
+        $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
+        $dispoinivel = $vagas - $nomeados;
+        
+        return $dispoinivel;
+    }
+
+    ###########################################################
     
     function exibeResumo($idTipoCargo){
         
@@ -129,8 +193,10 @@ class CargoComissao{
         # Pega os dados
         $dados = array();
         $vagas = $this->get_vagas($idTipoCargo);
-        $nomeados = $this->get_numServidoresCargo($idTipoCargo);
-        $dispoinivel = $vagas - $nomeados;
+        $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
+        $designados = $this->get_numServidoresDesignados($idTipoCargo);
+        $proTempore = $this->get_numServidoresProTempore($idTipoCargo);
+        $dispoinivel = $this->get_vagasDisponiveis($idTipoCargo);
         
         $simbolo = $this->get_simbolo($idTipoCargo);
         $valor = $this->get_valor($idTipoCargo);
@@ -141,12 +207,12 @@ class CargoComissao{
         
 
         # Coloca no array
-        $dados[] = array($nomeCargo,$simbolo,"R$ ".formataMoeda($valor),$vagas,$nomeados,$dispoinivel);
+        $dados[] = array($nomeCargo,$simbolo,"R$ ".formataMoeda($valor),$vagas,$nomeados,$dispoinivel,$proTempore,$designados);
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($dados);
-        $tabela->set_label(array("Cargo","Símbolo","Valor","Vagas","Nomeados","Disponíveis"));
+        $tabela->set_label(array("Cargo","Símbolo","Valor","Vagas","Nomeados","Disponíveis","Pro Tempore","Designados"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array("center"));
         $tabela->set_titulo($nomeCargo);

@@ -92,6 +92,9 @@ if($acesso){
     #$objeto->set_width(array(15,15,15,15,15,15));
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+    
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

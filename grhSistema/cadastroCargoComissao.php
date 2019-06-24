@@ -83,16 +83,7 @@ if($acesso){
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
-
-    # ordenação
-    if(is_null($orderCampo)){
-        $orderCampo = "8 desc, 3";
-    }
-
-    if(is_null($orderTipo)){
-        $orderTipo = 'asc';
-    }
-
+    
     # select da lista
     $objeto->set_selectLista ('SELECT idTipoComissao,
                                       descricao,
@@ -107,7 +98,7 @@ if($acesso){
                                   AND (descricao LIKE "%'.$parametro.'%"
                                    OR simbolo LIKE "%'.$parametro.'%" 
                                    OR idTipoComissao LIKE "%'.$parametro.'%") 
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY 8 desc, 3 asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT descricao,
@@ -118,11 +109,6 @@ if($acesso){
                                      obs
                                 FROM tbtipocomissao
                                WHERE idTipoComissao = '.$id);
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
     
     $objeto->set_formatacaoCondicional(array(array('coluna' => 6,
                                                     'valor' => 0,
@@ -149,8 +135,8 @@ if($acesso){
     $objeto->set_align(array("center","left"));
     
     $objeto->set_funcao(array(NULL,NULL,NULL,"formataMoeda"));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'pessoal','pessoal'));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,'CargoComissao','CargoComissao'));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,'get_numServidoresNomeados','get_vagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

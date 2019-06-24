@@ -260,7 +260,7 @@ class MenuPrincipal{
 
         if(Verifica::acesso($this->idUsuario,1)){
             $botao->set_label('Procedimentos');
-            $botao->set_target('blank');
+            #$botao->set_target('blank');
             $botao->set_url('../../areaServidor/sistema/procedimentos.php');
             $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Àrea de Procedimentos da GRH');
@@ -503,7 +503,7 @@ class MenuPrincipal{
         # Menu
         $menu = new Menu("menuProcedimentos");
         #$menu->add_item('titulo','Tabelas Secundárias','#','Tabelas Secundárias');
-        $menu->add_item('link','Descrrição dos Cargos em Comissão','cadastroDescricaoComissao.php?grh=1','Acessa o Cadastro de Descrição dos Cargos em Comissão');
+        #$menu->add_item('link','Descrrição dos Cargos em Comissão','cadastroDescricaoComissao.php?grh=1','Acessa o Cadastro de Descrição dos Cargos em Comissão');
         $menu->add_item('link','Tabela Salarial','cadastroTabelaSalarial.php?grh=1','Acessa o Cadastro de Tabela Salarial');
         $menu->add_item('link','Banco','cadastroBanco.php?grh=1','Acessa o Cadastro de Bancos');
         $menu->add_item('link','Escolaridade','cadastroEscolaridade.php?grh=1','Acessa o Cadastro de Escolaridade');

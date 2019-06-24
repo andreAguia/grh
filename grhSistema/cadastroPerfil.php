@@ -120,9 +120,11 @@ if($acesso){
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
+        
     if(Verifica::acesso($idUsuario,1)){
-        $objeto->set_linkExcluir('?fase=excluir');
+        $objeto->set_linkExcluir('?fase=excluir');  // Excluir somente para administradores
     }
+    
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 

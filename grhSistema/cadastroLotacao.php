@@ -78,20 +78,9 @@ if($acesso){
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
-
-    # ordenação
-    if(is_null($orderCampo)){
-        $orderCampo = "9 desc, 3 asc, 4 asc, 5";
-    }
-
-    if(is_null($orderTipo)){
-        $orderTipo = 'asc';
-    }
-
+    
     # select da lista
     $objeto->set_selectLista ('SELECT idLotacao,
-                                      codigo,
-                                      UADM,
                                       DIR,
                                       GER,
                                       nome,
@@ -101,13 +90,12 @@ if($acesso){
                                       idLotacao
                                  FROM tblotacao
                                 WHERE ativo = '.$tipo.'  
-                                AND (UADM LIKE "%'.$parametro.'%"
-                                   OR DIR LIKE "%'.$parametro.'%"
+                                AND (DIR LIKE "%'.$parametro.'%"
                                    OR GER LIKE "%'.$parametro.'%"
                                    OR nome LIKE "%'.$parametro.'%"
                                    OR ramais LIKE "%'.$parametro.'%"
                                    OR idLotacao LIKE "%'.$parametro.'%") 
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY 7 desc, 2 asc, 3 asc, 4 asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT codigo,
@@ -122,26 +110,22 @@ if($acesso){
                                 FROM tblotacao
                                WHERE idLotacao = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
+    #$objeto->set_linkExcluir('?fase=excluir');     // Retirado para evidar exclusão acidental
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Código","Unid.Adm.","Diretoria","Gerência","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
+    $objeto->set_label(array("id","Diretoria","Gerência","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
-    $objeto->set_align(array("center","center","center","center","center","left"));
+    $objeto->set_align(array("center","center","center","left"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao","get_numServidoresInativosLotacao"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao","get_numServidoresInativosLotacao"));
     
-    $objeto->set_grupoCorColuna(3);
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

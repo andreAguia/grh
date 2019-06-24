@@ -48,7 +48,9 @@ if($acesso){
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "exibeTabela"){
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -76,6 +78,7 @@ if($acesso){
                                             WHEN 1 THEN "Vigente"
                                             ELSE "Antigo"
                                        end,
+                                      idPlano,
                                       idPlano
                                  FROM tbplano
                                 WHERE numDecreto LIKE "%'.$parametro.'%"
@@ -101,17 +104,17 @@ if($acesso){
     
     # Dá acesso a exclusão somente ao administrador
     if(Verifica::acesso($idUsuario,1)){
-        $objeto->set_linkExcluir('?fase=excluir');
+        #$objeto->set_linkExcluir('?fase=excluir');
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual","DO"));
+    $objeto->set_label(array("id","Decreto / Lei","Servidores","Data do Decreto / Lei","Publicação no DOERJ","Data da Vigência","Plano Atual","DO","Tabela"));
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center","left"));
     $objeto->set_funcao(array (NULL,NULL,NULL,"date_to_php","date_to_php","date_to_php"));
     
-    $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,NULL,'PlanoCargos']);
-    $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,NULL,'exibeLei']);
+    $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,NULL,'PlanoCargos','PlanoCargos']);
+    $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,NULL,'exibeLei','exibeBotaoTabela']);
 
     $objeto->set_formatacaoCondicional(array(
                                              array('coluna' => 6,
@@ -266,6 +269,13 @@ if($acesso){
             
         case "editar2" :
             $objeto->editar($id);
+            break;
+        
+    ################################################################
+            
+        case "exibeTabela" :
+            $plano = new PlanoCargos();
+            $plano->exibeTabela($id,FALSE);
             break;
         
     ################################################################

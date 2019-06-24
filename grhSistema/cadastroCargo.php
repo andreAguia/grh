@@ -81,7 +81,7 @@ if($acesso)
                                       idTipoCargo
                                  FROM tbtipocargo
                                 WHERE cargo LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY 1 asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT cargo,
@@ -92,11 +92,6 @@ if($acesso)
                                      obs
                                 FROM tbtipocargo
                                WHERE idTipoCargo = '.$id);
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -110,11 +105,12 @@ if($acesso)
     
     $objeto->set_classe([NULL,NULL,NULL,NULL,NULL,NULL,'Grh','Pessoal','Grh']);
     $objeto->set_metodo([NULL,NULL,NULL,NULL,NULL,NULL,'get_numServidoresAtivosTipoCargo','get_tipoCargoVagasDisponiveis','get_numServidoresInativosTipoCargo']);
+    
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
-    
-    $objeto->set_grupoCorColuna(1);
 
     # Nome da tabela
     $objeto->set_tabela('tbtipocargo');

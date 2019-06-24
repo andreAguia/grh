@@ -90,7 +90,9 @@ if($acesso)
     $objeto->set_label(array("id","Cargo","Area","Servidores<br/>Ativos"));
     $objeto->set_width(array(5,20,60,10));
     $objeto->set_align(array("center","left","left","center"));
-    #$objeto->set_rowspan(1);
+    
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,"get_servidoresArea"));

@@ -77,15 +77,6 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenação
-    if(is_null($orderCampo)){
-        $orderCampo = " 2 asc, 3 asc, 4 asc, 5 asc, 6";
-    }
-
-    if(is_null($orderTipo)){
-        $orderTipo = 'asc';
-    }
-
     # select da lista
     $objeto->set_selectLista ('SELECT idCargo,
                                       tbtipocargo.cargo,
@@ -102,7 +93,7 @@ if($acesso)
                                    OR tbarea.area LIKE "%'.$parametro.'%" 
                                    OR nome LIKE "%'.$parametro.'%"     
                                    OR tbtipocargo.cargo LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY 2 asc, 3 asc, 4 asc, 5 asc, 6 asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idtipocargo,
@@ -114,11 +105,6 @@ if($acesso)
                                 FROM tbcargo
                                WHERE idCargo = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     #$objeto->set_linkExcluir('?fase=excluir');
@@ -129,6 +115,9 @@ if($acesso)
     $objeto->set_label(array("id","Cargo","Área","Função","Servidores<br/>Ativos","Ver"));
     #$objeto->set_width(array(5,20,25,25,10,5,5));
     $objeto->set_align(array("center","left","left","left"));
+    
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Pessoal"));
     $objeto->set_metodo([NULL,NULL,NULL,NULL,"get_servidoresCargo"]);

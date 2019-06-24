@@ -387,4 +387,21 @@ class PlanoCargos{
     }
     
     ###########################################################
+    
+    public function exibeBotaoTabela($idPlano){
+    /**
+     * Exibe um link para a lei quando o campo link tiver sido preenchido
+     * 
+     * @param $idPlano integer NULL O id do plano
+     * 
+     * @syntax $plano->exibeLei($idPlano);
+     */
+        $link = new Link(NULL,"?fase=exibeTabela&id=".$idPlano,"Exibe a tabela SalariaL");
+        $link->set_imagem(PASTA_FIGURAS_GERAIS."tabela.png",20,20);
+        $link->set_target("_blank");
+        $link->show();     
+       
+    }
+    
+    ###########################################################
 }

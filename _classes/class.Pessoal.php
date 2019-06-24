@@ -3047,7 +3047,11 @@ class Pessoal extends Bd {
 
         # Lotação
         if((!is_null($idLotacao)) AND ($idLotacao <> "*")){
-            $select .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+            if(is_numeric($idLotacao)){
+                $select .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")'; 
+            }else{ # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "'.$idLotacao.'")';
+            }
         }
 
         $count = parent::count($select);
@@ -3987,7 +3991,8 @@ class Pessoal extends Bd {
             # Pega o cargo do servidor
             $select = 'SELECT idServidor
                          FROM tbservidor
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = '.$idPessoa.'  
+                     ORDER BY situacao';
 
             $row = parent::select($select,FALSE);
             
@@ -4749,6 +4754,36 @@ class Pessoal extends Bd {
         if($chefia == $idServidor){
             $chefia = NULL;
         }
+        
+        # Retorna
+        return $chefia;
+    }
+
+   ##########################################################################################
+
+    function get_chefiaImediataIdLotacao($idLotacao){
+    
+     /**
+      * Retorna o idServidor da chefia imediata de uma lotação
+      * 
+      * @param $idLotacao integer o id da lotaçao
+      */
+        
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbcomissao.dtExo is NULL
+                      AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
+                      AND (tblotacao.idlotacao = $idLotacao) 
+                 ORDER BY tbtipocomissao.simbolo LIMIT 1";
+        
+        $row = parent::select($select,false);
+        $chefia = $row[0];
         
         # Retorna
         return $chefia;

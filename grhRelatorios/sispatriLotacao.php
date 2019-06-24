@@ -26,8 +26,9 @@ if($acesso)
     $page->iniciaPagina();
     
     # Pega os parâmetros dos relatórios
-    $lotacao = post('lotacao','*');
+    $lotacao = get_session('parametroLotacao');
     $ci = post('ci');
+    
     
     if($lotacao == "*"){
         $lotacao = NULL;
@@ -50,7 +51,7 @@ if($acesso)
             
             $grid = new Grid();
             $grid->abreColuna(5);
-                p("CI GRH/DGA/UENF n° $ci/18","left");
+                p("CI GRH/DGA/UENF n° $ci/19","left");
             $grid->fechaColuna();
             $grid->abreColuna(7);
                 p("Campos dos Goytacazes, ".dataExtenso(date('d/m/Y')),"right");
@@ -58,9 +59,11 @@ if($acesso)
             $grid->fechaGrid();
 
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
+            $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
+            $nomeLotacao = $servidor->get_nomeLotacao($lotacao);
             p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>","left");
             
-            p("Para: Simonne Teixeira<br/>Casa de Cultura Vila Maria","left");
+            p("Para: $chefiaImediata<br/>$nomeLotacao","left");
             
             p("Prezado(a) Senhor(a)","left");
             

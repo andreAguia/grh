@@ -346,6 +346,14 @@ class MenuPrincipal{
         $botao->set_title('Controle de Atendimento do Balcão');
         #$botao->set_accesskey('S');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Sispatri');
+        $botao->set_url("areaSispatri.php");
+        $botao->set_imagem(PASTA_FIGURAS.'sispatri.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Sispatri');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
 
         $menu->show();
         $painel->fecha();

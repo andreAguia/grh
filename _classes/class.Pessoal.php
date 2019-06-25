@@ -3992,7 +3992,7 @@ class Pessoal extends Bd {
             $select = 'SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = '.$idPessoa.'  
-                     ORDER BY situacao';
+                     ORDER BY idPerfil, dtAdmissao desc';
 
             $row = parent::select($select,FALSE);
             

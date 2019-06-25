@@ -20,7 +20,7 @@ if($acesso){
     $pessoal = new Pessoal();
 	
     # Verifica a fase do programa
-    $fase = get('fase');
+    $fase = get('fase',"resumo");
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
@@ -36,9 +36,11 @@ if($acesso){
     
     # Pega os parâmetros    
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','Todos'));
+    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao','Todos'));
     
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroSituacao',$parametroSituacao);
     
     # Começa uma nova página
     $page = new Page();
@@ -53,7 +55,7 @@ if($acesso){
 ################################################################
     
     switch ($fase){
-        case "" :
+        case "resumo" :
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -86,6 +88,7 @@ if($acesso){
             $select ='SELECT tbservidor.idfuncional,
                              tbpessoa.nome,
                              tbservidor.idServidor,
+                             tbservidor.idServidor,
                              tbservidor.idServidor
                         FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
@@ -93,7 +96,7 @@ if($acesso){
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
     
-            # lotacao
+            # Lotacao
             if($parametroLotacao <> "Todos"){
                 # Verifica se o que veio é numérico
                 if(is_numeric($parametroLotacao)){
@@ -102,65 +105,112 @@ if($acesso){
                     $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
                 }
             }
+            
+            # Situação
+            if($parametroSituacao <> "Todos"){
+                $select .= ' AND tbservidor.situacao = '.$parametroSituacao;
+            }
 
-            $select .= ' ORDER BY 1';
+            $select .= ' ORDER BY 2';
+            
+            #echo $select;
                         
         #########
             
             $numSispatri = $pessoal->count($select);
             
-            $grid = new Grid();
+            $grid = new Grid("center");
 
             ## Coluna do menu            
             $grid->abreColuna(12,3);
-
-                # Número de Servidores
+                
+                # Menu
                 $painel = new Callout();
                 $painel->abre();
-                    if($parametroLotacao == "Todos"){
-                        $numServidores = $pessoal->get_numServidoresAtivos();
-                        #p($numServidores,"estatisticaNumero");
-                        p("$numServidores Servidores Ativos","estatisticaTexto");
-                    }else{
-                        $numServidores = $pessoal->get_numServidoresAtivos($parametroLotacao);
-                        #p($numServidores,"estatisticaNumero");
-                        p("$numServidores Servidor(es) Ativo(s) <br/> Nesta Lotação","estatisticaTexto");
-                    }
-                    hr();
-                    
-                    switch ($numSispatri){
-                        
-                        case 0 :
-                            p("Todos Fizeram o Sispatri !!<br/>Fantástico !!!","estatisticaTexto");
-                            break;
-                        
-                        case 1 :
-                            p("Somente 1 Servidor <br/> Não Fez o Sispatri","estatisticaTexto");
-                            break;
-                        
-                        case ($numSispatri == $numServidores) :
-                            p("Ninguém Fez o Sispatri !!!<br/> Que Loucura !!","estatisticaTexto");
-                            break;
-                        
-                        case ($numSispatri>1) :
-                            p("$numSispatri Servidores <br/> Não Fizeram o Sispatri","estatisticaTexto");
-                            break;
-                    }
-                    
-                    hr();
-
-                    # Chart
-                    $chart = new Chart("Pie",array(array("Fez Sispatri",$numServidores-$numSispatri),array("Não Fez Sispatri",$numSispatri)));
-                    $chart->set_idDiv("sispatri");
-                    $chart->set_legend(FALSE);
-                    $chart->set_tamanho($largura = 250,$altura = 250);
-                    $chart->show();
                 
+                    titulo("Menu");
+                    br();
+
+                    $itens = array(
+                    array('Resumo','resumo'),
+                    array('Relatório','relatorio'),
+                    array('CI','ci'));
+                    
+                    if(Verifica::acesso($idUsuario,1)){
+                        array_push($itens,array('Importar','importar'));
+                        #array_push($itens,array('Limpar Tabela','limpar'));
+                    }
+
+                $menu = new Menu();
+                #$menu->add_item('titulo','Detalhada');
+
+                foreach($itens as $ii){
+                    if($fase == $ii[1]){
+                        $menu->add_item('link','<b>'.$ii[0].'</b>','?fase='.$ii[1]);
+                    }else{
+                        $menu->add_item('link',$ii[0],'?fase='.$ii[1]);
+                    }
+                }
+                
+                $menu->show();
+
                 $painel->fecha();
+
+                # Número de Servidores
+                if($parametroSituacao == 1){
+                    $painel = new Callout();
+                    $painel->abre();
+
+                    titulo("Resumo");
+                    br();
+
+                    $texto1 = Null;
+                    $texto2 = Null;
+
+
+                        if($parametroLotacao == "Todos"){
+                            $numServidores = $pessoal->get_numServidoresAtivos();
+                            $texto1 = "$numServidores Servidores Ativos";
+                        }else{
+                            $numServidores = $pessoal->get_numServidoresAtivos($parametroLotacao);
+                            $texto1 = "$numServidores Servidor(es) Ativo(s) <br/> Nesta Lotação";
+                        }
+
+                        switch ($numSispatri){
+
+                            case 0 :
+                                $texto2 = "Todos Fizeram o Sispatri !!<br/>Fantástico !!!";
+                                break;
+
+                            case 1 :
+                                $texto2 = "Somente 1 Servidor <br/> Não Fez o Sispatri";
+                                break;
+
+                            case ($numSispatri == $numServidores) :
+                                $texto2 = "Ninguém Fez o Sispatri !!!<br/> Que Loucura !!";
+                                break;
+
+                            case ($numSispatri>1) :
+                                $texto2 = "$numSispatri Servidores <br/> Não Fizeram o Sispatri";
+                                break;
+                        }
+
+                        # Chart
+                        $chart = new Chart("Pie",array(array("Fez Sispatri",$numServidores-$numSispatri),array("Não Fez Sispatri",$numSispatri)));
+                        $chart->set_idDiv("sispatri");
+                        $chart->set_legend(FALSE);
+                        $chart->set_tamanho($largura = "50%",$altura = "50%");
+                        $chart->show();
+
+                        p($texto1,"estatisticaTexto");
+                        p($texto2,"estatisticaTexto");
+
+                    $painel->fecha();
+                }
             
             $grid->fechaColuna();
 
-        ################################################################
+        ##############
 
             # Coluna de Conteúdo
             $grid->abreColuna(12,9);  
@@ -175,7 +225,7 @@ if($acesso){
                                           FROM tblotacao
                                          WHERE ativo)
                                       ORDER BY 2');
-            array_unshift($result,array('*','-- Todos --'));
+            array_unshift($result,array('Todos','-- Todos --'));
 
             $controle = new Input('parametroLotacao','combo','Lotação:',1);
             $controle->set_size(30);
@@ -183,52 +233,43 @@ if($acesso){
             $controle->set_array($result);
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(12);
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+            
+             # Situação
+            $result = $pessoal->select('SELECT idsituacao, situacao
+                                          FROM tbsituacao                                
+                                      ORDER BY 1');
+            array_unshift($result,array('Todos','-- Todos --'));
+
+            $controle = new Input('parametroSituacao','combo','Situação:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
 
         ##############
-           
-            # Pega os dados
-            $select ='SELECT tbservidor.idfuncional,
-                             tbpessoa.nome,
-                             tbservidor.idServidor,
-                             tbservidor.idServidor
-                        FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
-                                             JOIN tbpessoa USING (idPessoa)
-                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                       WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-    
-            # lotacao
-            if($parametroLotacao <> "Todos"){
-                # Verifica se o que veio é numérico
-                if(is_numeric($parametroLotacao)){
-                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
-                }else{ # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
-                }
-            }
-
-            $select .= ' ORDER BY 1';
-                        
-            #echo $select;
 
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();   
             $tabela->set_titulo('Relação de Servidores que Ainda NÃO Fizeram o Sispatri');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação"));
+            $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Situação"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("center","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao","get_situacao"));
             
-            #$tabela->set_idCampo('idServidor');
-            #$tabela->set_editar('?fase=editaServidor');
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
             
             # Fecha o grid
@@ -246,68 +287,87 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaFormacao');
+            set_session('origem','areaSispatri.php');
             
             # Carrega a página específica
-            loadPage('servidorFormacao.php');
+            loadPage('servidorMenu.php');
             break; 
         
     ################################################################
         
         # Relatório
         case "relatorio" :
-                
-                $subTitulo = NULL;
-                
-                # Pega os dados
-                $select ='SELECT tbservidor.idfuncional,
-                          tbpessoa.nome,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbescolaridade.escolaridade,
-                          idFormacao
-                     FROM tbformacao JOIN tbpessoa USING (idPessoa)
-                                     JOIN tbservidor USING (idPessoa)
-                                     JOIN tbescolaridade USING (idEscolaridade)
-                                     LEFT JOIN tbcargo USING (idCargo)
-                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
-                     WHERE situacao = 1
-                       AND idPerfil = 1';
-
-                if($parametroNivel <> "Todos"){
-                    $select .= ' AND tbtipocargo.nivel = "'.$parametroNivel.'"';
-                    $subTitulo .= 'Cargo Efetivo de Nível '.$parametroNivel.'<br/>';
-                }
-
-                if($parametroEscolaridade <> "*"){
-                    $select .= ' AND tbformacao.idEscolaridade = '.$parametroEscolaridade;
-                    $subTitulo .= 'Curso de Nível '.$pessoal->get_escolaridade($parametroEscolaridade).'<br/>';
-                }
-
-                if(!vazio($parametroCurso)){
-                    $select .= ' AND tbformacao.habilitacao like "%'.$parametroCurso.'%"';
-                    $subTitulo .= 'Filtro : '.$parametroCurso.'<br/>';
-                }
-
-                $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
-                
-                # Monta o Relatório
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório Geral de Formação Servidores');
-                
-                if(!is_null($subTitulo)){
-                    $relatorio->set_subtitulo($subTitulo);
-                }
-                
-                $result = $pessoal->select($select);
-                
-                $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
-                $relatorio->set_conteudo($result);
-                $relatorio->set_align(array("center","left","left","left","left","left"));
-                $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
-                $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
-                $relatorio->show();
                 break;
+                
+    ################################################################
+        
+        # Importar
+        case "importar" :
+            br(5);
+            aguarde("Importando");
+            
+            loadPage("?fase=importar2");
+            break;
+            
+        case "importar2" :
+            
+            $problema = 0;
+            
+            br();            
+            $select = 'SELECT idSispatri,
+                              nome,
+                              cpf
+                         FROM tbsispatri
+                     ORDER BY nome';
+                    
+            $row = $pessoal->select($select);
+            
+            $contador = 0;
+                        
+            foreach ($row as $tt){
+                
+                $novoCpf = $tt[2];
+                $len = strlen($novoCpf);
+                
+                $novoCpf = str_pad($novoCpf, 11 , "0", STR_PAD_LEFT);
+                
+                # CPF XXX.XXX.XXX-XX
+                
+                $parte1 = substr($novoCpf, 0,3);
+                $parte2 = substr($novoCpf, 3,3);
+                $parte3 = substr($novoCpf, 6,3);
+                $parte4 = substr($novoCpf, -2);
+                
+                $cpfFinalizado = "$parte1.$parte2.$parte3-$parte4";
+                
+                $select2 = "SELECT idPessoa
+                              FROM tbdocumentacao
+                             WHERE CPF = '$cpfFinalizado'";
+                    
+                $row2 = $pessoal->select($select2,FALSE);
+                
+                if(is_null($row2[0])){
+                    $problema++;
+                }else{
+                    $idServidorPesquisado = $pessoal->get_idServidoridPessoa($row2[0]);
+                    
+                    # Grava na tabela tbsispatri
+                    $campos = array("idServidor");
+                    $valor = array($idServidorPesquisado);                    
+                    $pessoal->gravar($campos,$valor,$tt[0],"tbsispatri","idSispatri");
+                }
+            }
+            
+            if($problema == 0){
+                loadPage("?");
+            }else{
+                echo "problemas $problema";
+            }
+            break;
+        
+    ################################################################
+        
+        
                 
     }
             

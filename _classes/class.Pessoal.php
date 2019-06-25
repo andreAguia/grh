@@ -2112,6 +2112,34 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_nomelotacao2
+     * Informa o nome da lota��o a partir do id
+     *
+     * @param	string $id  id da lota��o
+     */
+
+    public function get_nomeLotacao2($idLotacao)
+
+    {
+            if (!is_numeric($idLotacao))
+                return $idLotacao;
+            else
+            {
+                $select = 'SELECT DIR,
+                                  GER,
+                                  Nome
+                             FROM tblotacao
+                            WHERE idLotacao = '.$idLotacao;
+
+                $row = parent::select($select,FALSE);		
+                return $row[0].' - '.$row[1].' - '.$row[2];
+            }
+
+    }
+
+    ###########################################################
+
+    /**
      * Método get_nomeCOmpletolotacao
      * Informa o nome da COmpleto lota��o a partir do id
      *
@@ -4802,6 +4830,32 @@ class Pessoal extends Bd {
         
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediata($idServidor);
+        
+        # Monta o select
+        $select = "SELECT tbdescricaocomissao.descricao
+                     FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
+                    WHERE (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                      AND idServidor = $idChefe";
+        
+        $row = parent::select($select,false);
+        
+        # Retorna
+        return $row[0];
+    }
+
+   ##########################################################################################
+
+    function get_chefiaImediataDescricaoIdLotacao($idLotacao){
+    
+     /**
+      * Retorna a descrição do cargo em comissão da lotação indcado
+      * 
+      * @param $idLotacao integer o id da lotação
+      * 
+      */
+        
+        # Pega a chefia imediata
+        $idChefe = $this->get_chefiaImediataIdLotacao($idLotacao);
         
         # Monta o select
         $select = "SELECT tbdescricaocomissao.descricao

@@ -287,6 +287,14 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS.'tre.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Controle de Folgas do TRE');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Sispatri');
+        $botao->set_url("areaSispatri.php");
+        $botao->set_imagem(PASTA_FIGURAS.'sispatri.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Sispatri');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Estatística');
@@ -344,14 +352,6 @@ class MenuPrincipal{
         $botao->set_url("balcao.php?grh=1");
         $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de Atendimento do Balcão');
-        #$botao->set_accesskey('S');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Sispatri');
-        $botao->set_url("areaSispatri.php");
-        $botao->set_imagem(PASTA_FIGURAS.'sispatri.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Controle de Sispatri');
         #$botao->set_accesskey('S');
         $menu->add_item($botao);
 

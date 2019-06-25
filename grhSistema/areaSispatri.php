@@ -51,36 +51,38 @@ if($acesso){
     
     $grid = new Grid();
     $grid->abreColuna(12);
+    
+    # Cria um menu
+    $menu1 = new MenuBar();
+
+    # Voltar
+    $botaoVoltar = new Link("Voltar","grh.php");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Voltar a página anterior');
+    $botaoVoltar->set_accessKey('V');
+    $menu1->add_link($botaoVoltar,"left");
+
+    # Relatórios
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_title("Relatório dessa pesquisa");
+    $botaoRel->set_url("../grhRelatorios/sispatriLotacao.php");
+    $botaoRel->set_target("_blank");
+    $botaoRel->set_imagem($imagem);
+    #$menu1->add_link($botaoRel,"right");
+
+    $menu1->show();
+
+    # Titulo
+    titulo("Área do Sispatri");
+    br();
             
 ################################################################
     
     switch ($fase){
         case "resumo" :
 
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar","grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar,"left");
             
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/sispatriLotacao.php");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel,"right");
-            
-            $menu1->show();
-    
-            # Titulo
-            titulo("Área do Sispatri");
-            br();
             
         ##############
             
@@ -132,26 +134,17 @@ if($acesso){
                     br();
 
                     $itens = array(
-                    array('Resumo','resumo'),
-                    array('Relatório','relatorio'),
-                    array('CI','ci'));
-                    
-                    if(Verifica::acesso($idUsuario,1)){
-                        array_push($itens,array('Importar','importar'));
-                        #array_push($itens,array('Limpar Tabela','limpar'));
-                    }
+                        array('Resumo','resumo'),
+                        array('CI','ci'),
+                        array('Importar','importar'));
 
                 $menu = new Menu();
-                #$menu->add_item('titulo','Detalhada');
-
-                foreach($itens as $ii){
-                    if($fase == $ii[1]){
-                        $menu->add_item('link','<b>'.$ii[0].'</b>','?fase='.$ii[1]);
-                    }else{
-                        $menu->add_item('link',$ii[0],'?fase='.$ii[1]);
-                    }
-                }
+                $menu->add_item('link','Resumo','?fase=resumo');
                 
+                if($numSispatri > 0){
+                    $menu->add_item('linkWindow','CI','../grhRelatorios/ciSispatri.php');
+                }
+                $menu->add_item('link','Importar','?fase=importar');
                 $menu->show();
 
                 $painel->fecha();
@@ -270,7 +263,12 @@ if($acesso){
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
-            $tabela->show();
+            
+            if($numSispatri > 0){
+                $tabela->show();
+            }else{
+                callout("Não há dados para serem exibidos.","secondary");
+            }
             
             # Fecha o grid
             $grid->fechaColuna();
@@ -295,30 +293,123 @@ if($acesso){
         
     ################################################################
         
-        # Relatório
-        case "relatorio" :
+        # Ci
+        case "ci" :
                 break;
                 
     ################################################################
         
         # Importar
         case "importar" :
-            br(5);
-            aguarde("Importando");
             
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                    <input type='file' name='sispatri'>
+                    <p>Click aqui ou arraste o arquivo.</p>
+                    <button type='submit' name='submit'>Upload</button>
+                </form>";
+
+            $pasta = "../_temp/";
+            
+            if ((isset($_POST["submit"])) && (!empty($_FILES['sispatri']))){
+                $upload = new Upload($_FILES['sispatri'], $pasta,"sispatri");
+                echo $upload->salvar();
+
+                # Registra log
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $atividade = "Alterou a foto do servidor";
+                $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4);
+
+                # Volta para o menu
+                loadPage("?fase=importar1");
+            }          
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+            
+        case "importar1" :
+
+            br(5);
+            aguarde("Apagando a Base Antiga");
+
             loadPage("?fase=importar2");
             break;
             
         case "importar2" :
             
+            # Apaga a tabela
+            $select = 'SELECT idSispatri
+                         FROM tbsispatri';
+                    
+            $row = $pessoal->select($select);
+            
+            $pessoal->set_tabela("tbsispatri");
+            $pessoal->set_idCampo("idSispatri");
+                        
+            foreach ($row as $tt){
+                $pessoal->excluir($tt[0]);		
+            }
+            
+            loadPage("?fase=importar3");
+            break;
+            
+        case "importar3" :
+
+            br(5);
+            aguarde("Fazendo o upload do arquivo");
+
+            loadPage("?fase=importar4");
+            break;
+                
+            
+        case "importar4" :
+            # Define o arquivo a ser importado
+            $arquivo = "../_temp/sispatri.csv";
+            
+            # Verifica a existência do arquivo
+            if(file_exists($arquivo)){
+                $lines = file($arquivo);
+                
+                # Percorre o arquivo e guarda os dados em um array
+                foreach ($lines as $linha) {
+                 
+                    # Divide as colunas
+                    $parte = explode(";",$linha);
+                    
+                    foreach($parte as $pp) {
+                        if(is_numeric($pp)){
+                            
+                            # Grava na tabela tbsispatri
+                            $campos = array("cpf");
+                            $valor = array($pp);                    
+                            $pessoal->gravar($campos,$valor,NULL,"tbsispatri","idSispatri");
+                        }
+                    }
+                }
+            }
+            loadPage("?fase=importar5");
+            break;
+            
+        case "importar5" :
+            
+            br(5);
+            aguarde("Vinculando os dados importados<br/>com a base de dados existente.");
+
+            loadPage("?fase=importar6");
+            break;
+            
+        case "importar6" :
+            
             $problema = 0;
             
             br();            
             $select = 'SELECT idSispatri,
-                              nome,
                               cpf
-                         FROM tbsispatri
-                     ORDER BY nome';
+                         FROM tbsispatri';
                     
             $row = $pessoal->select($select);
             
@@ -326,7 +417,7 @@ if($acesso){
                         
             foreach ($row as $tt){
                 
-                $novoCpf = $tt[2];
+                $novoCpf = $tt[1];
                 $len = strlen($novoCpf);
                 
                 $novoCpf = str_pad($novoCpf, 11 , "0", STR_PAD_LEFT);

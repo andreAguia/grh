@@ -28,7 +28,7 @@ if($acesso)
     # Pega os parâmetros dos relatórios
     $lotacao = get_session('parametroLotacao');
     $ci = post('ci');
-    
+    $chefia = post('chefia');
     
     if($lotacao == "*"){
         $lotacao = NULL;
@@ -44,6 +44,7 @@ if($acesso)
         # Pega os parametros
         $lotacao = $parametro[0];
         $ci = $parametro[1];
+        $chefia = $parametro[2];
         
         if(!is_null($lotacao)){
             
@@ -60,23 +61,36 @@ if($acesso)
 
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
             $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
-            $nomeLotacao = $servidor->get_nomeLotacao($lotacao);
+            
+            if(vazio($chefia)){
+                $chefia = $chefiaImediata;
+            }
+            
+            #$nomeLotacao = $servidor->get_chefiaImediataDescricaoIdLotacao($lotacao);
+            $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
             p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>","left");
             
-            p("Para: $chefiaImediata<br/>$nomeLotacao","left");
+            p("Para: $chefia<br/>$nomeLotacao","left");
             
             p("Prezado(a) Senhor(a)","left");
             
             
-            $texto = "Conforme resolução conjunta CGE/SEFAZ nº 01 de 15 de agosto de 2018, em cumprimento ao disposto no art. 9º do Decreto nº 46.634, de 17 de julho de 2018, e tendo em vista o que consta no Processo Administrativo nº E-32/001/100001/2018 foi implantado o SISPATRI no âmbito do Poder Executivo Estadual. O agente público deve acessar www.servidor.rj.gov.br e fazer a declaração de bens e valores (DBV) on-line. Informamos abaixo em epígrafe relação dos agentes públicos da sua unidade administrativa que não entregaram a declaração até a presente data. <b>Salientamos que o prazo encerra em 08 de novembro de 2018.</b> Conforme art.6º §2º a não apresentação por parte do agente público acarretará a abertura de Processo Administrativo Disciplinar.";
+            $texto = "Conforme resolução conjunta CGE/SEFAZ nº 01 de 15 de agosto de 2018, em cumprimento ao"
+                    . " disposto no art. 9º do Decreto nº 46.634, de 17 de julho de 2018, e tendo em vista o"
+                    . " que consta no Processo Administrativo nº E-32/001/100001/2018 foi implantado o SISPATRI"
+                    . " no âmbito do Poder Executivo Estadual. O agente público deve acessar www.servidor.rj.gov.br"
+                    . " e fazer a declaração de bens e valores (DBV) on-line. Informamos abaixo em epígrafe relação"
+                    . " dos agentes públicos da sua unidade administrativa que não entregaram a declaração até a presente data."
+                    . " <b>Salientamos que o prazo encerra em 30 de junho de 2019.</b> Conforme art.6º §2º a não apresentação por"
+                    . " parte do agente público acarretará a abertura de Processo Administrativo Disciplinar.";
+            
             p($texto,"justify");
         }
     }
     
     #####
     
-    function exibeTextoFinal(){
-       
+    function exibeTextoFinal(){       
         
         $grid = new Grid();
         $grid->abreColuna(3);
@@ -129,7 +143,7 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $parametro = array($lotacao,$ci);
+    $parametro = array($lotacao,$ci,$chefia);
     $relatorio->set_funcaoAntesTitulo('exibeTextoSispatri');
     $relatorio->set_funcaoAntesTituloParametro($parametro);
     
@@ -155,15 +169,19 @@ if($acesso)
                                              WHERE ativo)
                                           ORDER BY 2');
     array_unshift($result,array('*','-- Todos --'));
+    
+    $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
+    if(vazio($chefia)){
+        $chefia = $chefiaImediata;
+    }
 
     $relatorio->set_formCampos(array(
-                               array ('nome' => 'lotacao',
-                                      'label' => 'Lotação:',
-                                      'tipo' => 'combo',
-                                      'array' => $result,
-                                      'size' => 30,
+                               array ('nome' => 'chefia',
+                                      'label' => 'Chefia Imediata:',
+                                      'tipo' => 'texto',
+                                      'size' => 200,
                                       'col' => 9,
-                                      'padrao' => $lotacao,
+                                      'padrao' => $chefia,
                                       'onChange' => 'formPadrao.submit();',
                                       'linha' => 1),
                                array ('nome' => 'ci',

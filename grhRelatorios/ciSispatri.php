@@ -60,14 +60,21 @@ if($acesso)
             $grid->fechaGrid();
 
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
-            $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
+            
+            if(is_numeric($lotacao)){
+                $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
+            }
             
             if(vazio($chefia)){
                 $chefia = $chefiaImediata;
             }
             
             #$nomeLotacao = $servidor->get_chefiaImediataDescricaoIdLotacao($lotacao);
-            $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
+            
+            if(is_numeric($lotacao)){
+                $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
+            }
+            
             p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>","left");
             
             p("Para: $chefia<br/>$nomeLotacao","left");
@@ -118,29 +125,11 @@ if($acesso)
         
     ######
     
-    $select ='SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                FROM tbsispatri JOIN tbservidor USING (idServidor)
-                                JOIN tbpessoa USING (idPessoa)
-                                JOIN tbdocumentacao USING (idPessoa)
-                                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-    
-    # lotacao
-    if(!is_null($lotacao)){
-        # Verifica se o que veio é numérico
-        if(is_numeric($lotacao)){
-            $select .= ' AND (tblotacao.idlotacao = "'.$lotacao.'")'; 
-        }else{ # senão é uma diretoria genérica
-            $select .= ' AND (tblotacao.DIR = "'.$lotacao.'")';
-        }
-    }
-    
-    $select .= ' ORDER BY tblotacao.UADM,tblotacao.DIR,tblotacao.GER,tbpessoa.nome';
+    # Inicia a Classe
+    $sispatri = new Sispatri();
+    $sispatri->set_lotacao($lotacao);
 
-    $result = $servidor->select($select);
+    $result = $sispatri->get_servidoresRelatorio();
 
     $relatorio = new Relatorio();
     $parametro = array($lotacao,$ci,$chefia);
@@ -151,24 +140,14 @@ if($acesso)
     
     #$relatorio->set_titulo('Relatório de Servidores Que nao Entregaram o Sispatri');
     
-    $relatorio->set_label(array('idFuncional','Nome','Lotaçao'));
+    $relatorio->set_label(array('idFuncional','Nome'));
     $relatorio->set_width(array(20,80));
     $relatorio->set_align(array("center","left"));
     $relatorio->set_subTotal(FALSE);
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_linhaNomeColuna(FALSE);
-    
-    $relatorio->set_numGrupo(2);
     $relatorio->set_conteudo($result);
-    
-    $result = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
-    array_unshift($result,array('*','-- Todos --'));
     
     $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
     if(vazio($chefia)){
@@ -193,8 +172,7 @@ if($acesso)
                                       'onChange' => 'formPadrao.submit();',
                                       'linha' => 1)
         ));
-
-    $relatorio->set_formFocus('lotacao');
+    
     $relatorio->set_formLink('?');
     $relatorio->show();
     

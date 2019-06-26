@@ -36,11 +36,9 @@ if($acesso){
     
     # Pega os parâmetros    
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao','Todos'));
-    $parametroSituacao = post('parametroSituacao',get_session('parametroSituacao','Todos'));
     
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao',$parametroLotacao);
-    set_session('parametroSituacao',$parametroSituacao);
     
     # Começa uma nova página
     $page = new Page();
@@ -62,144 +60,108 @@ if($acesso){
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar,"left");
 
-    # Relatórios
+    # Ci
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
-    $botaoRel->set_title("Relatório dessa pesquisa");
-    $botaoRel->set_url("../grhRelatorios/sispatriLotacao.php");
+    $botaoRel->set_title("CI");
+    $botaoRel->set_url("../grhRelatorios/ciSispatri.php");
     $botaoRel->set_target("_blank");
     $botaoRel->set_imagem($imagem);
-    #$menu1->add_link($botaoRel,"right");
+    
+    if($parametroLotacao <> "Todos"){
+        $menu1->add_link($botaoRel,"right");
+    }
+    
+    # Importar
+    $botaoImp = new Link("Importar","?fase=importar");
+    $botaoImp->set_class('button');
+    $botaoImp->set_title('Importa arquivo cvs');
+    $botaoImp->set_accessKey('I');
+    $menu1->add_link($botaoImp,"right");
 
     $menu1->show();
 
     # Titulo
     titulo("Área do Sispatri");
     br();
+    
+    # Inicia a Classe
+    $sispatri = new Sispatri();
+    $sispatri->set_lotacao($parametroLotacao);
             
 ################################################################
     
     switch ($fase){
+        
+        # Área Lateral
         case "resumo" :
-
             
+            # Pega o Número de Servidores
+            $numSispatriAtivos = $sispatri->get_numServidoresAtivos();
+            $numSispatriNaoAtivos = $sispatri->get_numServidoresNaoAtivos();
             
-        ##############
-            
-            # Pega os dados
-            $select ='SELECT tbservidor.idfuncional,
-                             tbpessoa.nome,
-                             tbservidor.idServidor,
-                             tbservidor.idServidor,
-                             tbservidor.idServidor
-                        FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
-                                             JOIN tbpessoa USING (idPessoa)
-                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                       WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-    
-            # Lotacao
-            if($parametroLotacao <> "Todos"){
-                # Verifica se o que veio é numérico
-                if(is_numeric($parametroLotacao)){
-                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
-                }else{ # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
-                }
-            }
-            
-            # Situação
-            if($parametroSituacao <> "Todos"){
-                $select .= ' AND tbservidor.situacao = '.$parametroSituacao;
-            }
-
-            $select .= ' ORDER BY 2';
-            
-            #echo $select;
-                        
-        #########
-            
-            $numSispatri = $pessoal->count($select);
-            
-            $grid = new Grid("center");
+            $grid = new Grid();
 
             ## Coluna do menu            
             $grid->abreColuna(12,3);
-                
-                # Menu
+            
+                # Número de Servidores
                 $painel = new Callout();
                 $painel->abre();
-                
-                    titulo("Menu");
-                    br();
 
-                    $itens = array(
-                        array('Resumo','resumo'),
-                        array('CI','ci'),
-                        array('Importar','importar'));
+                titulo("Resumo");
+                br();
 
-                $menu = new Menu();
-                $menu->add_item('link','Resumo','?fase=resumo');
-                
-                if($numSispatri > 0){
-                    $menu->add_item('linkWindow','CI','../grhRelatorios/ciSispatri.php');
+                $texto1 = Null;             
+
+                if($parametroLotacao == "Todos"){
+                    $numServidores = $pessoal->get_numServidoresAtivos();
+                    $texto1 = "Na UENF";
+                }else{
+                    $numServidores = $pessoal->get_numServidoresAtivos($parametroLotacao);
+                    $texto1 = "Nesta Lotação";
                 }
-                $menu->add_item('link','Importar','?fase=importar');
-                $menu->show();
+                
+                $array = array(
+                    array("Ativos",$numSispatriAtivos),
+                    array("Não Ativos",$numSispatriNaoAtivos,),
+                    array("Total",$numSispatriAtivos+$numSispatriNaoAtivos)
+                    );
+                
+                $tabela = new Tabela();
+                $tabela->set_titulo("Não Fizeram o Sispatri");
+                $tabela->set_conteudo($array);
+                $tabela->set_label(array("Descrição","Servidores"));
+                $tabela->set_align(array("left","center"));
+                $tabela->set_totalRegistro(FALSE);
+                $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                'valor' => "Total",
+                                                'operador' => '=',
+                                                'id' => 'estatisticaTotal')));
+                $tabela->show();
 
+                # Chart
+                $chart = new Chart("Pie",array(array("Fez Sispatri",$numServidores-$numSispatriAtivos),array("Não Fez Sispatri",$numSispatriAtivos)));
+                $chart->set_idDiv("sispatri");
+                $chart->set_legend(FALSE);
+                $chart->set_tamanho($largura = "50%",$altura = "50%");
+                $chart->show();
+
+                $array = array(
+                    array($texto1,$numServidores),
+                    array("Fizeram o Sispatri",$numServidores - $numSispatriAtivos),
+                    array("Não Fizeram o Sispatri",$numSispatriAtivos)
+                    );
+                
+                $tabela = new Tabela();
+                $tabela->set_titulo("Servidores Ativos");
+                $tabela->set_conteudo($array);
+                $tabela->set_label(array("Descrição","Servidores"));
+                $tabela->set_align(array("left","center"));
+                $tabela->set_totalRegistro(FALSE);
+                $tabela->show();
+                
                 $painel->fecha();
-
-                # Número de Servidores
-                if($parametroSituacao == 1){
-                    $painel = new Callout();
-                    $painel->abre();
-
-                    titulo("Resumo");
-                    br();
-
-                    $texto1 = Null;
-                    $texto2 = Null;
-
-
-                        if($parametroLotacao == "Todos"){
-                            $numServidores = $pessoal->get_numServidoresAtivos();
-                            $texto1 = "$numServidores Servidores Ativos";
-                        }else{
-                            $numServidores = $pessoal->get_numServidoresAtivos($parametroLotacao);
-                            $texto1 = "$numServidores Servidor(es) Ativo(s) <br/> Nesta Lotação";
-                        }
-
-                        switch ($numSispatri){
-
-                            case 0 :
-                                $texto2 = "Todos Fizeram o Sispatri !!<br/>Fantástico !!!";
-                                break;
-
-                            case 1 :
-                                $texto2 = "Somente 1 Servidor <br/> Não Fez o Sispatri";
-                                break;
-
-                            case ($numSispatri == $numServidores) :
-                                $texto2 = "Ninguém Fez o Sispatri !!!<br/> Que Loucura !!";
-                                break;
-
-                            case ($numSispatri>1) :
-                                $texto2 = "$numSispatri Servidores <br/> Não Fizeram o Sispatri";
-                                break;
-                        }
-
-                        # Chart
-                        $chart = new Chart("Pie",array(array("Fez Sispatri",$numServidores-$numSispatri),array("Não Fez Sispatri",$numSispatri)));
-                        $chart->set_idDiv("sispatri");
-                        $chart->set_legend(FALSE);
-                        $chart->set_tamanho($largura = "50%",$altura = "50%");
-                        $chart->show();
-
-                        p($texto1,"estatisticaTexto");
-                        p($texto2,"estatisticaTexto");
-
-                    $painel->fecha();
-                }
             
             $grid->fechaColuna();
 
@@ -227,33 +189,17 @@ if($acesso){
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
-            $form->add_item($controle);
-            
-             # Situação
-            $result = $pessoal->select('SELECT idsituacao, situacao
-                                          FROM tbsituacao                                
-                                      ORDER BY 1');
-            array_unshift($result,array('Todos','-- Todos --'));
-
-            $controle = new Input('parametroSituacao','combo','Situação:',1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Situação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroSituacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(12);
             $form->add_item($controle);
 
             $form->show();
 
         ##############
 
-            $result = $pessoal->select($select);
+            $result = $sispatri->get_servidoresAtivos();
 
             $tabela = new Tabela();   
-            $tabela->set_titulo('Relação de Servidores que Ainda NÃO Fizeram o Sispatri');
+            $tabela->set_titulo('Servidores Ativos que Não Fizeram Sispatri');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Situação"));
             $tabela->set_conteudo($result);
@@ -264,10 +210,30 @@ if($acesso){
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             
-            if($numSispatri > 0){
+            if($numSispatriAtivos > 0){
                 $tabela->show();
             }else{
                 callout("Não há dados para serem exibidos.","secondary");
+            }
+            
+         #######
+            
+            if($numSispatriNaoAtivos > 0){
+                $result = $sispatri->get_servidoresNaoAtivos();
+
+                $tabela = new Tabela();   
+                $tabela->set_titulo('Servidores Não Ativos que Não Fizeram Sispatri');
+                #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+                $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Situação"));
+                $tabela->set_conteudo($result);
+                $tabela->set_align(array("center","left","left","left"));
+                $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal","pessoal"));
+                $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao","get_situacao"));
+
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('?fase=editaServidor');
+
+                $tabela->show();
             }
             
             # Fecha o grid

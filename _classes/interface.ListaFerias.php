@@ -16,7 +16,7 @@ class ListaFerias{
     
     ###########################################################
     
-    public function __construct($ano){
+    public function __construct($anoExercicio){
                 
     /**
      * Inicia a classe atribuindo um valor ao anoExercicio
@@ -24,7 +24,7 @@ class ListaFerias{
      * @param $anoExercicio integer NULL O Ano de exercícios das férias
      */    
     
-        $this->anoExercicio = $ano;
+        $this->anoExercicio = $anoExercicio;
     }
         
     ###########################################################

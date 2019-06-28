@@ -199,13 +199,14 @@ if($acesso){
             $result = $sispatri->get_servidoresAtivos();
 
             $tabela = new Tabela();   
-            $tabela->set_titulo('Servidores Ativos que Não Fizeram Sispatri');
+            $tabela->set_titulo('Servidores Ativos que Não Fizeram Sispatriff');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Situação"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("center","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao","get_situacao"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"get_situacao"));
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

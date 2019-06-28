@@ -416,11 +416,7 @@ if($acesso){
                 }
             }
             
-            if($problema == 0){
-                loadPage("?");
-            }else{
-                echo "problemas $problema";
-            }
+            loadPage("?");
             break;
         
     ################################################################

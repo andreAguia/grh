@@ -4806,9 +4806,16 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbcomissao.dtExo is NULL
-                      AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
-                      AND (tblotacao.idlotacao = $idLotacao) 
-                 ORDER BY tbtipocomissao.simbolo LIMIT 1";
+                      AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)";
+        # Lotacao
+        # Verifica se o que veio é numérico
+        if(is_numeric($idLotacao)){
+            $select .= " AND (tblotacao.idlotacao = $idLotacao)"; 
+        }else{ # senão é uma diretoria genérica
+            $select .= " AND (tblotacao.DIR = '$idLotacao')";
+        }
+        
+        $select .= " ORDER BY tbtipocomissao.simbolo LIMIT 1";
         
         $row = parent::select($select,false);
         $chefia = $row[0];

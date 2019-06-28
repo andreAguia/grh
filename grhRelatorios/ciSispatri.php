@@ -16,8 +16,8 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){
+    
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
@@ -30,23 +30,60 @@ if($acesso)
     $ci = post('ci');
     $chefia = post('chefia');
     
+    # Trata Lotação
     if($lotacao == "*"){
         $lotacao = NULL;
     }
+    
+    # Pega o idServidor da Chefia
+    $idChefia = $servidor->get_chefiaImediataIdLotacao($lotacao);
+    
+    # Se nenhum Chefe foi digitado
+    if(vazio($chefia)){
+        
+        # Varifica se temos o idChefia
+        if(vazio($idChefia)){
+            $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
+            $chefia = NULL;
+        }else{
+            $nomeLotacao = $servidor->get_cargoComissaoDescricao($idChefia);
+            $chefia = $servidor->get_nome($idChefia);
+            
+            # Verifica se conseguiu  a descrição do cargo
+            if(vazio($nomeLotacao)){
+                $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
+            }
+        }
+    }else{
+        if(vazio($idChefia)){
+            $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
+        }else{
+            if($servidor->get_nome($idChefia) == $chefia){
+                $nomeLotacao = $servidor->get_cargoComissaoDescricao($idChefia);
+            }else{
+                $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
+            }
+        }
+    }
+    
+    # Parâmetro da função
+    $parametro = array($nomeLotacao,$ci,$chefia);
     
     $grid = new Grid();
     $grid->abreColuna(1);
     $grid->fechaColuna();
     $grid->abreColuna(10);
     
+    ####
+    
     function exibeTextoSispatri($parametro){
         
         # Pega os parametros
-        $lotacao = $parametro[0];
+        $nomeLotacao = $parametro[0];
         $ci = $parametro[1];
         $chefia = $parametro[2];
         
-        if(!is_null($lotacao)){
+        if(!is_null($nomeLotacao)){
             
             $servidor = new Pessoal();
             
@@ -60,20 +97,6 @@ if($acesso)
             $grid->fechaGrid();
 
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
-            
-            if(is_numeric($lotacao)){
-                $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
-            }
-            
-            if(vazio($chefia)){
-                $chefia = $chefiaImediata;
-            }
-            
-            #$nomeLotacao = $servidor->get_chefiaImediataDescricaoIdLotacao($lotacao);
-            
-            if(is_numeric($lotacao)){
-                $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
-            }
             
             p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>","left");
             
@@ -95,7 +118,7 @@ if($acesso)
         }
     }
     
-    #####
+    ####
     
     function exibeTextoFinal(){       
         
@@ -131,8 +154,7 @@ if($acesso)
 
     $result = $sispatri->get_servidoresRelatorio();
 
-    $relatorio = new Relatorio();
-    $parametro = array($lotacao,$ci,$chefia);
+    $relatorio = new Relatorio();    
     $relatorio->set_funcaoAntesTitulo('exibeTextoSispatri');
     $relatorio->set_funcaoAntesTituloParametro($parametro);
     
@@ -150,6 +172,7 @@ if($acesso)
     $relatorio->set_conteudo($result);
     
     $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
+    
     if(vazio($chefia)){
         $chefia = $chefiaImediata;
     }

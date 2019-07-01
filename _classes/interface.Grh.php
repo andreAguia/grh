@@ -1016,6 +1016,8 @@ class Grh{
                           valsal,
                           vagas,                               
                           idTipoComissao,
+                          idTipoComissao,
+                          idTipoComissao,
                           idTipoComissao
                      FROM tbtipocomissao
                     WHERE ativo
@@ -1033,12 +1035,25 @@ class Grh{
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Vagas Ocupadas","Vagas Disponíveis"));
-            $tabela->set_width(array(25,15,15,15,15,15));
+            $tabela->set_label(array("Cargo","Simbolo","Valor (R$)","Vagas","Nomeados","ProTempore","Designados","Vagas Disponíveis"));
+            #$tabela->set_width(array(25,15,15,15,15,15));
             $tabela->set_align(array("left"));
             $tabela->set_funcao(array(NULL,NULL,"formataMoeda"));
-            $tabela->set_classe(array(NULL,NULL,NULL,NULL,'pessoal','pessoal'));
-            $tabela->set_metodo(array(NULL,NULL,NULL,NULL,'get_servidoresCargoComissao','get_cargoComissaoVagasDisponiveis'));
+            $tabela->set_classe(array(NULL,NULL,NULL,NULL,'CargoComissao','CargoComissao','CargoComissao','CargoComissao'));
+            $tabela->set_metodo(array(NULL,NULL,NULL,NULL,'get_numServidoresNomeados','get_numServidoresProTempore','get_numServidoresDesignados','get_vagasDisponiveis'));
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 7,
+                                                    'valor' => 0,
+                                                    'operador' => '<',
+                                                    'id' => "comissaoVagasNegativas"),
+                                             array('coluna' => 7,
+                                                    'valor' => 0,
+                                                    'operador' => '=',
+                                                    'id' => "comissaoSemVagas"),
+                                             array('coluna' => 7,
+                                                    'valor' => 0,
+                                                    'operador' => '>',
+                                                    'id' => "comissaoSemVagas")));
+        
             $tabela->show();
         }
     }	

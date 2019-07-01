@@ -11,7 +11,7 @@
  */
 
 $dtInicial = $campoValor[4];
-$dFinal = $campoValor[5];
+$dtFinal = $campoValor[5];
 $idServidor = $campoValor[10];
 
 $pessoal = new Pessoal();
@@ -24,13 +24,13 @@ if($dtInicial >= $dtAdmissao){
 }
 
 # Verifica se a data de término é posterior a de admissao
-if($dFinal >= $dtAdmissao){
+if($dtFinal >= $dtAdmissao){
     $msgErro.='Você não pode ter tempo cadastrado concomitante ao tempo de Uenf!\nA data final está errada!';
     $erro = 1;
 }
 
 # Verifica se a data de término é posterior a data inicial
-if($dFinal < $dtInicial){
+if($dtFinal < $dtInicial){
     $msgErro.='Você não pode ter a data final anterior a data inicial!';
     $erro = 1;
 }

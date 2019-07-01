@@ -32,9 +32,24 @@ if($acesso){
     # Ordem da tabela
     $orderCampo = get('orderCampo');
     $orderTipo = get('orderTipo');
+    
+    # Rotina em jscript
+    $script = '
+            <script type="text/javascript" language="javascript">
+
+                    $(document).ready(function(){
+                        $("#idTipoComissao").change(function(){
+                            $("#idDescricaoComissao").load("servidorComissaoExtraCombo.php?tipo="+$("#idTipoComissao").val());
+                        })
+                    })
+
+            </script>';
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    if($fase == "editar"){
+        $page->set_jscript($script);
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -159,6 +174,8 @@ if($acesso){
                                          CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
                                     FROM tbtipocomissao
                                 ORDER BY ativo desc, simbolo');    
+    
+    array_unshift($tipoComissao, array(NULL,NULL));
     
     # Pega os dados da descrição
     if(is_null($id)){
@@ -356,18 +373,20 @@ if($acesso){
             
             # Visivel somente para adm
             if(Verifica::acesso($idUsuario,1)){
-                $comissao = $cargoComissao->get_dados($id);
-                echo $comissao['descricao'];
+                if(!is_null($id)){
+                    $comissao = $cargoComissao->get_dados($id);
+                    echo $comissao['descricao'];
+                }
+            
+                # Cadastrar Descrição
+                $botao1 = new Button("Descrição");
+                $botao1->set_title("Cadastra uma nova Descrição");
+                $botao1->set_target("_blank");
+                $botao1->set_url("cadastroDescricaoComissao.php?fase=editar");
+
+                $objeto->set_botaoEditarExtra(array($botao1));
             }
-            
-            # Cadastrar Descrição
-            $botao1 = new Button("Descrição");
-            $botao1->set_title("Cadastra uma nova Descrição");
-            $botao1->set_target("_blank");
-            $botao1->set_url("cadastroDescricaoComissao.php?fase=editar");
-            
-            $objeto->set_botaoEditarExtra(array($botao1));
-            
+
             $objeto->editar($id);
     
             # Botões 

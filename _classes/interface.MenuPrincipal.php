@@ -13,7 +13,7 @@ class MenuPrincipal{
     
     public function __construct($idUsuario){
     /**
-     * Inicia a Ci e preenche oas variáveis com valores padrão
+     * Inicia a classe
      */
         
         # Inicia o Grid

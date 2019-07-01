@@ -177,8 +177,6 @@ if($acesso){
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
             
-            $tabela->show();
-            
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;

@@ -5,9 +5,9 @@
  * 
  */
 
-$nomeacao = $campoValor[3];   // Data de Nomeação
-$exoneracao = $campoValor[8];  // Data de Exoneração
-$idServidor = $campoValor[14];      // id do servidor
+$nomeacao = $campoValor[3];     // Data de Nomeação
+$exoneracao = $campoValor[7];   // Data de Exoneração
+$idServidor = $campoValor[12];  // id do servidor
 
 $pessoal = new Pessoal();
 $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
@@ -20,7 +20,7 @@ if(($nomeacao < $dtAdmissao) AND (!is_null($nomeacao))){
 
 ## Verifica se a data de exoneração é anterior a data de nomeação é anterior a data de admissão
 if(($exoneracao < $nomeacao) AND (!is_null($nomeacao)) AND (!is_null($exoneracao))){
-    $msgErro.='Você não pode ser exonerado antes de ser nomeado!\nA data está errada!'.$nomeacao.'-'.$exoneracao.'\n';;
+    $msgErro.='Você não pode ser exonerado antes de ser nomeado!\nA data está errada!'.$nomeacao.'-'.$exoneracao.'\n';
     $erro = 1;
 }
 

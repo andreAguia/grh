@@ -112,12 +112,10 @@ if($acesso){
                                      dtAtoNom,
                                      numProcNom,
                                      dtPublicNom,
-                                     ciGepagNom,
                                      dtExo,
                                      dtAtoExo,
                                      numProcExo,
                                      dtPublicExo,
-                                     ciGepagExo,
                                      obs,
                                      idServidor
                                 FROM tbcomissao
@@ -196,6 +194,17 @@ if($acesso){
     }
     
     array_unshift($descricao, array(NULL,NULL));
+    
+    # Label
+    $labelDescricao = 'Descrição do Cargo:';
+    
+    # Exibe antiga descrição do cargo - Temporariamente
+    if(Verifica::acesso($idUsuario,1)){
+        if(!is_null($id)){
+            $comissao = $cargoComissao->get_dados($id);
+            $labelDescricao .= " (".$comissao['descricao']." )";
+        }
+    }
             
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -211,7 +220,7 @@ if($acesso){
                                 array ('linha' => 1,
                                        'col' => 6,
                                        'nome' => 'idDescricaoComissao',
-                                       'label' => 'Descrição do Cargo:',
+                                       'label' => $labelDescricao,
                                        'tipo' => 'combo',
                                        'array' => $descricao,
                                        'size' => 100),
@@ -253,14 +262,7 @@ if($acesso){
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'ciGepagNom',                                   
-                                       'label' => 'Documento:',
-                                       'tipo' => 'texto',
-                                       'col' => 6,
-                                       'size' => 30,                                   
-                                       'title' => 'Documento.',
-                                       'linha' => 3),
+                                       'linha' => 2),
                                array ( 'nome' => 'dtExo',
                                        'label' => 'Data da Exoneração:',
                                        'fieldset' => 'Dados da Exoneração',
@@ -268,49 +270,42 @@ if($acesso){
                                        'col' => 3,
                                        'size' => 20,
                                        'title' => 'Data da Exoneração.',
-                                       'linha' => 4),
+                                       'linha' => 3),
                                array ( 'nome' => 'dtAtoExo',
                                        'label' => 'Data do Ato do Reitor:',
                                        'title' => 'Data do Ato do Reitor da Exoneraçao',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
-                                       'linha' => 4),
+                                       'linha' => 3),
                                array ( 'nome' => 'numProcExo',
                                        'label' => 'Processo:',
                                        'tipo' => 'processo',
                                        'size' => 30,
                                        'col' => 3,
                                        'title' => 'Processo de Exoneração',
-                                       'linha' => 4), 
+                                       'linha' => 3), 
                                array ( 'nome' => 'dtPublicExo',
                                        'label' => 'Data da Publicação:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
                                        'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 5),
-                               array ( 'nome' => 'ciGepagExo',                                   
-                                       'label' => 'Documento:',
-                                       'tipo' => 'texto',
-                                       'size' => 30,
-                                       'col' => 6,                                   
-                                       'title' => 'Documento.',
-                                       'linha' => 5), 
-                                array ('linha' => 6,
+                                       'linha' => 3), 
+                                array ('linha' => 4,
                                        'nome' => 'obs',
                                        'col' => 12,
                                        'label' => 'Observação:',
                                        'tipo' => 'textarea',
                                        'fieldset' => 'fecha',
-                                       'size' => array(80,5)),                                   
+                                       'size' => array(80,2)),                                   
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
                                        'padrao' => $idServidorPesquisado,
                                        'size' => 5,
                                        'title' => 'Matrícula',
-                                       'linha' => 7)));
+                                       'linha' => 5)));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -346,39 +341,17 @@ if($acesso){
         case "listar" :
            $objeto->listar();
            break;
+       
+    ######################################   
            
         case "editar" :            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-           
-            ## Rotina abaixo retirado para "tirar o gesso" 
-            # Verifica se é incluir
-            #if(is_null($id)){
-            #    br(2);              
-            #    # Verifica se o número de vagas é 0
-            #    if($quantidadeCargos == 0){
-            #        $msg = 'Não há vagas disponíveis nos cargos em Comissão.\nTodas as vagas estão ocupadas.';
-            #        alert($msg);
-            #        back(1);
-            #    }elseif(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){  // se o servidor já possui cargo
-            #        $msg = 'Esse servidor já ocupa um cargo em comissão na data de hoje.\nSomente é permitido nomeação de servidor que não esteja ocupando cargo em comissão.';
-            #        alert($msg);
-            #        back(1);
-            #    }                    
-            #    else 
-            #        $objeto->editar();
-            #}
-            #else // se é editar
             
-            # Visivel somente para adm
+            # Cadastrar Descrição - visivel somente para adm
             if(Verifica::acesso($idUsuario,1)){
-                if(!is_null($id)){
-                    $comissao = $cargoComissao->get_dados($id);
-                    echo $comissao['descricao'];
-                }
-            
-                # Cadastrar Descrição
+                
                 $botao1 = new Button("Descrição");
                 $botao1->set_title("Cadastra uma nova Descrição");
                 $botao1->set_target("_blank");
@@ -388,21 +361,24 @@ if($acesso){
             }
 
             $objeto->editar($id);
-    
-            # Botões 
-            $menu = new MenuGrafico(5,'servicoBotoes');
             
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-        
+    
+    ######################################
+            
         case "excluir" :
             $objeto->$fase($id);  
             break;
+        
+    ######################################
 
         case "gravar" :
             $objeto->gravar($id,'servidorComissaoExtra.php');
             break;
+        
+    ######################################
         
         case "atoNomeacao" :
             # Verifica se o campo ocupante anterior foi preenchido
@@ -435,6 +411,8 @@ if($acesso){
             loadPage('?');
             break;
             
+    ######################################
+            
         case "termoPosse" :
             # Verifica se o campo ocupante anterior foi preenchido
             $comissao = $cargoComissao->get_dados($id);
@@ -464,7 +442,9 @@ if($acesso){
             }	
             
             loadPage('?');
-            break;    
+            break;
+            
+    ######################################
         
         case "atoExoneracao" :
             # Verifica se o campo ocupante anterior foi preenchido
@@ -495,6 +475,8 @@ if($acesso){
             
             loadPage('?');
             break;
+            
+    ######################################
         
         case "vagas" :
             # Limita o tamanho da tela

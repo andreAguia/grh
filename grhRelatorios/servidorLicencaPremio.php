@@ -27,38 +27,9 @@ if($acesso){
     
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Relatório de '.$pessoal->get_licencaNome(6));
-    
-    br(); 
-    
-    ###### Resumo
-    $licenca = new LicencaPremio();
-    $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
-    $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
-    $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
-    $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
     $nome = $pessoal->get_licencaNome(6);
-    
-    $tabela = array(array($numProcesso,$diasPublicados,$diasFruidos,$diasDisponiveis));
-    
-    $relatorio = new Relatorio();   
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
-    #$relatorio->set_subtitulo("Resumo");
-    $relatorio->set_label(array('Processo','Dias Publicados','Dias Fruídos','Disponíveis'));
-    #$relatorio->set_width(array(33,33,33));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-
-    $relatorio->set_conteudo($tabela);
-    #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
-    $relatorio->set_log(FALSE);            
-    $relatorio->show();
-    
     br();
+    
     ###### Licenças Prêmio Fruídas
     
     $select = 'SELECT tbpublicacaopremio.dtPublicacao,
@@ -96,6 +67,44 @@ if($acesso){
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de $nome");
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
+    br();
+    
+    ###### DAdos
+    $licenca = new LicencaPremio();
+    $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
+    $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
+    $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
+    $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);    
+    
+    # Tabela de Serviços
+    $tabela = array(array('Processo',$numProcesso),
+                    array('Dias Publicados',$diasPublicados),
+                    array('Dias Fruídos',$diasFruidos),
+                    array('Disponíveis',$diasDisponiveis));
+            
+    # Limita o tamanho da tela
+    $grid = new Grid();
+    $grid->abreColuna(3);
+        
+    $relatorio = new Relatorio();   
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_subtitulo("Dados");
+    $relatorio->set_label(array('Descrição','Valor'));
+    $relatorio->set_align(array('left','center'));
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+
+    $relatorio->set_conteudo($tabela);
+    #$relatorio->set_numGrupo(2);
+    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_log(FALSE);            
+    $relatorio->show();
+    
+     $grid->fechaColuna();
+     $grid->abreColuna(9);
     
     ###### Publicações
 
@@ -134,6 +143,9 @@ if($acesso){
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_log(FALSE);
     $relatorio->show();
+    
+    $grid->fechaColuna();
+    $grid->fechaGrid();   
 
     $page->terminaPagina();
 }

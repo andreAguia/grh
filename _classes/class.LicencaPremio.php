@@ -380,4 +380,119 @@ class LicencaPremio{
     }
 
     ###########################################################
+    
+    public function exibePublicacoesPremio($idServidor){
+        
+     /**
+     * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
+     */
+        
+        # Limita o tamanho da tela
+        $grid = new Grid();
+        $grid->abreColuna(3);
+        
+        # Pega os dados para o alerta
+        $diasPublicados = $this->get_numDiasPublicados($idServidor);
+        $diasFruidos = $this->get_numDiasFruidos($idServidor);
+        $diasDisponiveis = $this->get_numDiasDisponiveis($idServidor);
+        $numProcesso = $this->get_numProcesso($idServidor);
+
+            # Tabela de Serviços
+            $mesServico = date('m');
+            $tabela = array(array('Processo',$numProcesso),
+                            array('Dias Publicados',$diasPublicados),
+                            array('Dias Fruídos',$diasFruidos),
+                            array('Disponíveis',$diasDisponiveis));
+            
+            $estatistica = new Tabela();
+            $estatistica->set_conteudo($tabela);
+            $estatistica->set_label(array("Descrição","Valor"));
+            $estatistica->set_align(array("center"));
+            #$estatistica->set_width(array(60,40));
+            $estatistica->set_totalRegistro(FALSE);
+            $estatistica->set_titulo("Dados");
+            $estatistica->show();
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(9);
+                
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+    
+        # Exibe as Publicações
+        $select = 'SELECT dtPublicacao,
+                        dtInicioPeriodo,
+                        dtFimPeriodo,
+                        numDias,
+                        idPublicacaoPremio,
+                        idPublicacaoPremio,
+                        idPublicacaoPremio
+                   FROM tbpublicacaopremio
+                   WHERE idServidor = '.$idServidor.'
+               ORDER BY dtInicioPeriodo desc';
+
+        $result = $pessoal->select($select);
+        $count = $pessoal->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Publicações';
+        $label = array("Data da Publicação","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
+        $width = array(15,10,15,15,15,10,10,10);
+        $funcao = array('date_to_php','date_to_php','date_to_php');
+        $classe = array(NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
+        $metodo = array(NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
+        $align = array('center');            
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_align($align);
+        $tabela->set_label($label);
+        #$tabela->set_width($width);
+        $tabela->set_titulo($titulo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo);
+        $tabela->set_numeroOrdem(TRUE);
+        $tabela->set_numeroOrdemTipo("d");
+        
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
+                                                       'valor' => 0,
+                                                       'operador' => '<',
+                                                       'id' => 'alerta')));
+
+        $tabela->show();
+        
+        $grid->fechaColuna();
+        $grid->fechaGrid();   
+    }
+
+###########################################################
+    
+    public function exibeProcedimentos(){
+        
+     /**
+     * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
+     */
+        
+        # Inicia a classe de procedimentos
+        $procedimento = new Procedimento();
+
+        # Limita o tamanho da tela
+        $grid = new Grid();
+        $grid->abreColuna(6);
+        
+        $procedimento->exibeProcedimento(23);
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
+        
+        $procedimento->exibeProcedimento(22);
+        
+        $grid->fechaColuna();
+        $grid->fechaGrid();   
+    }
+
+###########################################################
+
 }

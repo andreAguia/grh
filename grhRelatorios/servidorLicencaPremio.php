@@ -145,7 +145,11 @@ if($acesso){
     $relatorio->show();
     
     $grid->fechaColuna();
-    $grid->fechaGrid();   
+    $grid->fechaGrid();
+    
+    # Procedimentos
+    #br();
+    #$licenca->exibeProcedimentos();
 
     $page->terminaPagina();
 }

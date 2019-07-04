@@ -256,7 +256,17 @@ if($acesso){
                 $menu->show();
                 
                 # Exibe as publicações de Licença Prêmio
-                Grh::exibePublicacoesPremio($idServidorPesquisado);
+                $licenca->exibePublicacoesPremio($idServidorPesquisado);
+                
+                # Exibe os procedimentos
+                $painel = new Callout();
+                $painel->abre();
+                
+                titulo("Procedimentos");
+                br();
+                $licenca->exibeProcedimentos();
+                
+                $painel->fecha();
 
                 $grid->fechaColuna();
                 $grid->fechaGrid();   
@@ -267,7 +277,7 @@ if($acesso){
                 br();
                 
                 # Exibe as publicações de Licença Prêmio
-                Grh::exibePublicacoesPremio($idServidorPesquisado);
+                $licenca->exibePublicacoesPremio($idServidorPesquisado);
                 break;
                 
             case "excluir" :       

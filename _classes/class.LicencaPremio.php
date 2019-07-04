@@ -482,12 +482,12 @@ class LicencaPremio{
         $grid = new Grid();
         $grid->abreColuna(6);
         
-        $procedimento->exibeProcedimento(23);
+        $procedimento->exibeProcedimento(11);
         
         $grid->fechaColuna();
         $grid->abreColuna(6);
         
-        $procedimento->exibeProcedimento(22);
+        $procedimento->exibeProcedimento(12);
         
         $grid->fechaColuna();
         $grid->fechaGrid();   

@@ -48,26 +48,16 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT tipo,
-                                     processo,
-                                     dtProcesso,
-                                     dtEnvio,
-                                     dtInicial,
-                                     ADDDATE(dtInicial,INTERVAL anos-1 YEAR),
-                                     anos,
-                                     obs,
+    $objeto->set_selectLista('SELECT case tipo
+                                        when 1 then "Ex-Ofício"
+                                        when 2 then "Solicitada"
+                                      end,  
                                      idReadaptacao
                                 FROM tbreadaptacao
                                WHERE idServidor = '.$idServidorPesquisado);
 
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,
-                                     processo,
-                                     dtProcesso,
-                                     dtEnvio,
-                                     dtInicial,
-                                     anos,
-                                     obs,
                                      idServidor
                                 FROM tbreadaptacao
                                WHERE idReadaptacao = '.$id);
@@ -79,10 +69,14 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Processo","Data do Processo","Enviado em","Data Inicial","Data Final","Anos"));
+    $objeto->set_label(array("Tipo"));
     #$objeto->set_width(array(20,20,20,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php","date_to_php","date_to_php"));
+    #$objeto->set_funcao(array(NULL,NULL,"date_to_php","date_to_php","date_to_php","date_to_php"));
+    
+    # Número de Ordem
+    $objeto->set_numeroOrdem(TRUE);
+    $objeto->set_numeroOrdemTipo("d");
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -100,53 +94,12 @@ if($acesso){
     $objeto->set_campos(array( array ( 'nome' => 'tipo',
                                        'label' => 'Tipo:',
                                        'tipo' => 'combo',
-                                       'array' => array(array(1,"Inicial"),array(2,"Prorrogação")),
+                                       'array' => array(array(1,"Ex-Ofício"),array(2,"Solicitado")),
                                        'col' => 3,
                                        'size' => 12,
                                        'required' => TRUE,
                                        'title' => 'O Tipo da solicitaçao de readaptaçao.',
                                        'linha' => 1),
-                               array ( 'nome' => 'processo',
-                                       'label' => 'Processo:',
-                                       'tipo' => 'processo',
-                                       'size' => 30,
-                                       'col' => 3,
-                                       'title' => 'Número do Processo',
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtProcesso',
-                                       'label' => 'Data do Processo:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Data do Processo.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtEnvio',
-                                       'label' => 'Data de Envio a SPMSO/SES:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Data da Pericia.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'dtInicial',
-                                       'label' => 'Data Inicial:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Data de Inicio da readaptaçao.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'anos',
-                                       'label' => 'Anos:',
-                                       'tipo' => 'processo',
-                                       'size' => 5,
-                                       'col' => 2,
-                                       'title' => 'Quantidade de anos definidos para ser readaptado',
-                                       'linha' => 3),
-                                array ('linha' => 4,
-                                       'col' => 12,
-                                       'nome' => 'obs',
-                                       'label' => 'Observação:',
-                                       'tipo' => 'textarea',
-                                       'size' => array(80,5)),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor:',
                                        'tipo' => 'hidden',
@@ -175,7 +128,7 @@ if($acesso){
     $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo de readaptação");
     $botaoFluxo->set_onClick("window.open('../_diagramas/readaptacao.png','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=900,height=800');");
     
-    $objeto->set_botaoListarExtra(array($botaoRel,$botaoFluxo,$botaoLegis));
+    #$objeto->set_botaoListarExtra(array($botaoRel,$botaoFluxo,$botaoLegis));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

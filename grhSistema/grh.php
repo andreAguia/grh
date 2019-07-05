@@ -45,6 +45,7 @@ if($acesso){
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');
     set_session('parametroNomeMat');
+    set_session('parametroNome');
     set_session('parametroCargo');
     set_session('parametroCargoComissao');
     set_session('parametroLotacao');

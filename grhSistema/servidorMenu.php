@@ -24,9 +24,6 @@ $origemId = get_session("origemId");
 # Verifica se veio dos alertas
 $alerta = get_session("alerta");
 
-# Pega o tema
-$tema = get("tema","padrao");
-
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
@@ -109,14 +106,6 @@ if($acesso){
             $linkBotao4->set_accessKey('H');
             $menu->add_link($linkBotao4,"right");
             
-            $linkBotao5 = new Link("Tema","?tema=novo");
-            $linkBotao5->set_class('success button');
-            $linkBotao5->set_title('Muda Tema');
-            
-            if($tema == "padrao"){
-                $menu->add_link($linkBotao5,"right");
-            }
-
             # Excluir
             $linkBotao5 = new Link("Excluir","servidorExclusao.php");
             $linkBotao5->set_class('alert button');
@@ -143,12 +132,8 @@ if($acesso){
             Grh::exibeOcorênciaServidor($idServidorPesquisado);
             
             # monta o menu do servidor
-            if($tema <> "padrao"){
-                Grh::menuServidor2($idServidorPesquisado,$idUsuario);
-            }else{
-                Grh::menuServidor($idServidorPesquisado,$idUsuario);
-                br();
-            }
+            Grh::menuServidor($idServidorPesquisado,$idUsuario);
+            br();
             
             # Exibe os vinculos anteriores do servidor na uenf (se tiver)
             Grh::exibeVinculos($idServidorPesquisado);

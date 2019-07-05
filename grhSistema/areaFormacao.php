@@ -56,7 +56,24 @@ if($acesso){
 ################################################################
     
     switch ($fase){
-        case "" :
+        case "" : 
+            br(4);
+            aguarde();
+            br();
+            
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+                p("Aguarde...","center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+        
+################################################################
+        
+        case "exibeLista" :
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
@@ -165,7 +182,7 @@ if($acesso){
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();   
-            $tabela->set_titulo('Relatório Geral de Formação Servidores');
+            $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
             $tabela->set_conteudo($result);

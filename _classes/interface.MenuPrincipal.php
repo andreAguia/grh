@@ -301,6 +301,20 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Parentes');
+        $botao->set_url('areaParente.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'parente.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área do Cadastro de Parentes dos Servidores');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Frequência');
+        $botao->set_url('areaFrequencia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'ponto.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Controle de Frequência');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('TRE');

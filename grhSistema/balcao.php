@@ -131,7 +131,7 @@ if($acesso){
                 $controle->set_autofocus(TRUE);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(4);
+                $controle->set_col(2);
                 $form->add_item($controle);
 
                 $controle = new Input('parametroMes','combo','Mês:',1);
@@ -141,7 +141,7 @@ if($acesso){
                 $controle->set_valor($parametroMes);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(4);
+                $controle->set_col(3);
                 $form->add_item($controle);
 
                 $form->show();

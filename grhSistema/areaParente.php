@@ -26,7 +26,7 @@ if($acesso){
     $grh = get('grh',FALSE);
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Formação";
+        $atividade = "Visualizou a área de ParentesS";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }
@@ -35,14 +35,10 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Pega os parâmetros    
-    $parametroNivel = post('parametroNivel',get_session('parametroNivel','Todos'));
-    $parametroEscolaridade = post('parametroEscolaridade',get_session('parametroEscolaridade','*'));
-    $parametroCurso = post('parametroCurso',get_session('parametroCurso'));
+    $parametroNome = post('parametroNome',get_session('parametroNome'));
     
     # Joga os parâmetros par as sessions   
-    set_session('parametroNivel',$parametroNivel);
-    set_session('parametroEscolaridade',$parametroEscolaridade);
-    set_session('parametroCurso',$parametroCurso);
+    set_session('parametroNome',$parametroNome);
     
     # Começa uma nova página
     $page = new Page();
@@ -56,7 +52,24 @@ if($acesso){
 ################################################################
     
     switch ($fase){
-        case "" :
+        case "" : 
+            br(4);
+            aguarde();
+            br();
+            
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+                p("Aguarde...","center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+        
+################################################################
+        
+        case "exibeLista" :
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
@@ -84,15 +97,18 @@ if($acesso){
             
         ##############
             
+            # Formulário de Pesquisa
+            $form = new Form('?');
+            
             # Nome 
             $controle = new Input('parametroNome','texto','Nome do Parente',1);
             $controle->set_size(55);
             $controle->set_title('Nome, matrícula ou ID:');
-            $controle->set_valor($parametroNomeMat);
+            $controle->set_valor($parametroNome);
             $controle->set_autofocus(TRUE);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             $form->show();
@@ -100,49 +116,42 @@ if($acesso){
         ##############
            
             # Pega os dados
-            $select ='SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
-                      tbservidor.idServidor,
-                      tbescolaridade.escolaridade,
-                      idFormacao
-                 FROM tbformacao JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbservidor USING (idPessoa)
-                                 JOIN tbescolaridade USING (idEscolaridade)
-                                 LEFT JOIN tbcargo USING (idCargo)
-                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
-                 WHERE situacao = 1
-                   AND idPerfil = 1';
+            $select ='SELECT tbdependente.nome,
+                             tbparentesco.Parentesco,
+                             tbpessoa.nome,
+                             tbservidor.idServidor,
+                             tbservidor.idServidor
+                        FROM tbdependente JOIN tbpessoa USING (idPessoa)
+                                          JOIN tbservidor USING (idPessoa)
+                                          JOIN tbparentesco ON (tbdependente.parentesco = tbparentesco.idParentesco)
+                       WHERE situacao = 1';
             
-            if($parametroNivel <> "Todos"){
-                $select .= ' AND tbtipocargo.nivel = "'.$parametroNivel.'"';
-            }
-            
-            if($parametroEscolaridade <> "*"){
-                $select .= ' AND tbformacao.idEscolaridade = '.$parametroEscolaridade;
-            }
-            
-            if(!vazio($parametroCurso)){
-                $select .= ' AND tbformacao.habilitacao LIKE "%'.$parametroCurso.'%"';
+            if(!vazio($parametroNome)){
+                $select .= ' AND tbdependente.nome LIKE "%'.$parametroNome.'%"';
             }
                   
-            $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
+            $select .= ' ORDER BY tbdependente.nome';
             
             #echo $select;
 
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();   
-            $tabela->set_titulo('Relatório Geral de Formação Servidores');
+            $tabela->set_titulo('Cadastro de Parentes de Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
+            $tabela->set_label(array("Parente","Parentesco","Servidor","Cargo","Lotação"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center","left","left","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
-            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
+            $tabela->set_align(array("left","center","left","left","left"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"get_Cargo","get_Lotacao"));
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
+            
+            if(!vazio($parametroNome)){
+                $tabela->set_textoRessaltado($parametroNome);
+            }
+            
             $tabela->show();
             
             $grid->fechaColuna();
@@ -159,10 +168,10 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaFormacao');
+            set_session('origem','areaParente.php');
             
             # Carrega a página específica
-            loadPage('servidorFormacao.php');
+            loadPage('servidorMenu.php');
             break; 
         
     ################################################################

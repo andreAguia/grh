@@ -562,20 +562,44 @@ class Grh{
             $tamanhoImage = 50;
             
             $menu = new MenuGrafico($itensMenu);
+            
+            # Funcionais
             $botao = new BotaoGrafico();
             $botao->set_label('Funcionais');
             $botao->set_url('servidorFuncionais.php');
             $botao->set_imagem(PASTA_FIGURAS.'funcional.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Dados Funcionais do Servidor');
             $menu->add_item($botao);
-
+            
+            # Lotação
             $botao = new BotaoGrafico();
             $botao->set_label('Lotação');
             $botao->set_url('servidorLotacao.php');
             $botao->set_imagem(PASTA_FIGURAS.'lotacao.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Histórico da Lotação do Servidor');
-            $menu->add_item($botao);
-
+            $menu->add_item($botao);            
+            
+            # Cargo em Comissão
+            if($pessoal->get_perfilComissao($perfil) == "Sim"){
+                $botao = new BotaoGrafico();
+                $botao->set_label('Cargo em Comissão');
+                $botao->set_url('servidorComissao.php');
+                $botao->set_imagem(PASTA_FIGURAS.'comissao.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Histórico dos Cargos em Comissão do Servidor');
+                $menu->add_item($botao);
+            }
+            
+            # Tempo de Serviço
+            if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
+                $botao = new BotaoGrafico();
+                $botao->set_label('Tempo de Serviço');
+                $botao->set_url('servidorAverbacao.php');
+                $botao->set_imagem(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Tempo de Serviço Averbado');
+                $menu->add_item($botao);
+            }
+            
+            # Cessão
             if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
                 $botao = new BotaoGrafico();
                 $botao->set_label('Cessão');
@@ -591,41 +615,8 @@ class Grh{
                 $botao->set_title('Dados da Cessão do Servidor');
                 $menu->add_item($botao);
             }
-
-            if($pessoal->get_perfilComissao($perfil) == "Sim"){
-                $botao = new BotaoGrafico();
-                $botao->set_label('Cargo em Comissão');
-                $botao->set_url('servidorComissao.php');
-                $botao->set_imagem(PASTA_FIGURAS.'comissao.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Histórico dos Cargos em Comissão do Servidor');
-                $menu->add_item($botao);
-            }
-
-            if(($perfil == 1) OR ($perfil == 4)){   // Ser for estatutário
-                $botao = new BotaoGrafico();
-                $botao->set_label('Tempo de Serviço');
-                $botao->set_url('servidorAverbacao.php');
-                $botao->set_imagem(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Tempo de Serviço Averbado');
-                $menu->add_item($botao);
-            }
             
-            $botao = new BotaoGrafico();
-            $botao->set_label('Readaptação');
-            $botao->set_url('servidorReadaptacao.php');
-            $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Controle de Readaptaçao do Servidor');
-            #$menu->add_item($botao);
-
-            if($perfil <> 10){          // Se não for bolsista
-                $botao = new BotaoGrafico();
-                $botao->set_label('Elogios / Advertências');
-                $botao->set_url('servidorElogiosAdvertencias.php');
-                $botao->set_imagem(PASTA_FIGURAS.'ocorrencia.jpg',$tamanhoImage,$tamanhoImage);
-                $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
-                $menu->add_item($botao);
-            }
-
+            # Obs
             $botao = new BotaoGrafico();
             $botao->set_label('Observações');
             $botao->set_url('servidorObs.php');
@@ -633,12 +624,23 @@ class Grh{
             $botao->set_title('Observações Gerais do Servidor');
             $menu->add_item($botao);
             
+            # Pasta Funcional
             $botao = new BotaoGrafico();
             $botao->set_label('Pasta Funcional');
             $botao->set_url('?fase=pasta');
             $botao->set_imagem(PASTA_FIGURAS.'arquivo.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Pasta funcional do servidor');
             $menu->add_item($botao);
+            
+            # Elogios e Advertências
+            if($perfil <> 10){          // Se não for bolsista
+                $botao = new BotaoGrafico();
+                $botao->set_label('Elogios & Advertências');
+                $botao->set_url('servidorElogiosAdvertencias.php');
+                $botao->set_imagem(PASTA_FIGURAS.'ocorrencia.jpg',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
+                $menu->add_item($botao);
+            }
             
             $menu->show();
             br();

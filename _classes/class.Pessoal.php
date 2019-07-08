@@ -1815,7 +1815,7 @@ class Pessoal extends Bd {
         
         $retorno = NULL;
 
-        # Pega o nome do id do cargo em comissão
+        # Pega a descrição do cargo em comissão
         if (!is_null($idCargo)){
             $select ='SELECT tbtipocomissao.descricao 
                         FROM tbcomissao 

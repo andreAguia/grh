@@ -51,6 +51,7 @@ class MenuPrincipal{
         
         # Módulos        
         $this->moduloBalcao();
+        $this->moduloGrh();
         $this->moduloAniversariantes();
         $this->moduloAlertas();
         
@@ -125,7 +126,7 @@ class MenuPrincipal{
     /**
      * Método moduloBalcao
      * 
-     * Exibe o menu de Legislação
+     * Exibe os servidores que atendem o balcão
      */
     
     private function moduloBalcao(){
@@ -149,6 +150,63 @@ class MenuPrincipal{
             echo "<tr><td>Tarde:</td><td>".trataNulo($sortudos[1])."</td></tr>";
             echo "</table>";
         }
+        $painel->fecha();
+    }
+        
+######################################################################################################################
+    
+    /**
+     * Método moduloGrh
+     * 
+     * Exibe o menu de assuntos pertinentes aos servidores da grh
+     */
+    
+    private function moduloGrh(){
+        
+        $painel = new Callout();
+        $painel->abre();
+        
+        titulo('GRH');           
+        br();
+
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(4);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Atribuições');
+        $botao->set_url("cadastroAtribuicoes.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Atribuições de tarefas');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Balcão');
+        $botao->set_url("balcao.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Atendimento do Balcão');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Feriados');
+        $botao->set_url("cadastroFeriado.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Cadastro de Feriados');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+        
+        if(Verifica::acesso($this->idUsuario,1)){
+            $botao = new BotaoGrafico();
+            $botao->set_label('Procedimentos');
+            #$botao->set_target('blank');
+            $botao->set_url('../../areaServidor/sistema/procedimentos.php');
+            $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Àrea de Procedimentos da GRH');
+            $menu->add_item($botao);
+        }    
+
+        $menu->show();
         $painel->fecha();
     }
         
@@ -256,16 +314,7 @@ class MenuPrincipal{
 
         $tamanhoImage = 60;
         $menu = new MenuGrafico(4);
-        $botao = new BotaoGrafico();
-
-        if(Verifica::acesso($this->idUsuario,1)){
-            $botao->set_label('Procedimentos');
-            #$botao->set_target('blank');
-            $botao->set_url('../../areaServidor/sistema/procedimentos.php');
-            $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Àrea de Procedimentos da GRH');
-            $menu->add_item($botao);
-        }        
+        $botao = new BotaoGrafico();            
         
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
@@ -338,36 +387,14 @@ class MenuPrincipal{
         $botao->set_title('Análise estatísticas');
         $menu->add_item($botao); 
         
-        $botao = new BotaoGrafico();
-        $botao->set_label('Atribuições');
-        $botao->set_url("cadastroAtribuicoes.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS.'atribuicoes.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Atribuições de tarefas');
-        #$botao->set_accesskey('S');
-        $menu->add_item($botao);            
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Feriados');
-        $botao->set_url("cadastroFeriado.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS.'faltas.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Cadastro de Feriados');
-        #$botao->set_accesskey('S');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Balcão');
-        $botao->set_url("balcao.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS.'balcao.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Controle de Atendimento do Balcão');
-        #$botao->set_accesskey('S');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Recadastramento');
-        $botao->set_url('areaRecadastramento.php');
-        $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Recadastramento de Servidores');
-        $menu->add_item($botao);
+        if(Verifica::acesso($this->idUsuario,1)){
+            $botao = new BotaoGrafico();
+            $botao->set_label('Recadastramento');
+            $botao->set_url('areaRecadastramento.php');
+            $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Recadastramento de Servidores');
+            $menu->add_item($botao);
+        }
         
         $menu->show();
         $painel->fecha();

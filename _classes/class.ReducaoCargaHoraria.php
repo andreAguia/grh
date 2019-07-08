@@ -20,7 +20,6 @@ class ReducaoCargaHoraria{
         if(!is_null($idServidor)){
             $this->idServidor = $idServidor;
         }
-        
     }
         
     ###########################################################

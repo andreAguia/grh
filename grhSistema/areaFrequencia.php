@@ -161,7 +161,8 @@ if($acesso){
                                tblicenca.dtInicial,
                                tblicenca.numDias,
                                ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),                               
-                               CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,""))
+                               CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                              tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                JOIN tbhistlot USING (idServidor)
                                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -190,7 +191,8 @@ if($acesso){
                              tblicencapremio.dtInicial,
                              tblicencapremio.numDias,
                              ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-                             (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6)
+                             (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                              tbservidor.idServidor
                         FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                            JOIN tbhistlot USING (idServidor)
                                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -219,7 +221,8 @@ if($acesso){
                               tbferias.dtInicial,
                               tbferias.numDias,
                               ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
-                              CONCAT("Férias ",tbferias.anoExercicio)
+                              CONCAT("Férias ",tbferias.anoExercicio),
+                              tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -247,7 +250,8 @@ if($acesso){
                               tbatestado.dtInicio,
                               tbatestado.numDias,
                               ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
-                              "Falta Abonada"
+                              "Falta Abonada",
+                              tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -275,7 +279,8 @@ if($acesso){
                               tbtrabalhotre.data,
                               tbtrabalhotre.dias,
                               ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
-                              "Trabalhando no TRE"
+                              "Trabalhando no TRE",
+                              tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -303,7 +308,8 @@ if($acesso){
                               tbfolga.data,
                               tbfolga.dias,
                               ADDDATE(tbfolga.data,tbfolga.dias-1),
-                              "Folga TRE"
+                              "Folga TRE",
+                              tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -338,7 +344,10 @@ if($acesso){
             
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
-
+            
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor');
+            
             $tabela->set_conteudo($result);
             
             if($cont>0){

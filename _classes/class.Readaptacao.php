@@ -19,7 +19,6 @@ class Readaptacao{
         if(!is_null($idServidor)){
             $this->idServidor = $idServidor;
         }
-        
     }
         
     ###########################################################
@@ -105,6 +104,34 @@ class Readaptacao{
     
     ###########################################################
     
+    function exibeSolicitacao($idReadaptacao){
+
+    /**
+     * Informe a data da solicitação
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dias publicados
+        $select = 'SELECT dtSolicitacao, tipo
+                     FROM tbreadaptacao
+                    WHERE idReadaptacao = '.$idReadaptacao;
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Verifica se é solicitado
+        if($row[1] == 2){
+            $retorno = date_to_php($row[0]);
+        }else{
+            $retorno = "";
+        }
+                                
+        return $retorno;
+    }
+    
+    ###########################################################
+    
     function exibeDadosPericia($idReadaptacao){
 
     /**
@@ -116,38 +143,44 @@ class Readaptacao{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT dtEnvioPericia, dtChegadaPericia, dtAgendadaPericia
+        $select = 'SELECT dtEnvioPericia, dtChegadaPericia, dtAgendadaPericia, tipo
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
         
-        # Trata a data de envio a perícia
-        if(vazio($row[0])){
-            $dtEnvioPericia = "---";
-        }else{
-            $dtEnvioPericia = date_to_php($row[0]);
-        }
+        # Verifica se é solicitado
+        if($row[3] == 2){
         
-        # Trata a data de chegada a perícia
-        if(vazio($row[1])){
-            $dtChegadaPericia = "---";
+            # Trata a data de envio a perícia
+            if(vazio($row[0])){
+                $dtEnvioPericia = "---";
+            }else{
+                $dtEnvioPericia = date_to_php($row[0]);
+            }
+
+            # Trata a data de chegada a perícia
+            if(vazio($row[1])){
+                $dtChegadaPericia = "---";
+            }else{
+                $dtChegadaPericia = date_to_php($row[1]);
+            }
+
+            # Trata a data de agendamento da perícia
+            if(vazio($row[2])){
+                $dtAgendadaPericia = "---";
+            }else{
+                $dtAgendadaPericia = date_to_php($row[2]);
+            }
+
+            # Retorno
+            $retorno = "Enviado em:    ".$dtEnvioPericia."<br/>"
+                     . "Chegou  em:    ".$dtChegadaPericia."<br/>"
+                     . "Agendado para: ".$dtAgendadaPericia;
         }else{
-            $dtChegadaPericia = date_to_php($row[1]);
+            $retorno = '';
         }
-        
-        # Trata a data de agendamento da perícia
-        if(vazio($row[2])){
-            $dtAgendadaPericia = "---";
-        }else{
-            $dtAgendadaPericia = date_to_php($row[2]);
-        }
-        
-        # Retorno
-        $retorno = "Enviado em:    ".$dtEnvioPericia."<br/>"
-                 . "Chegou  em:    ".$dtChegadaPericia."<br/>"
-                 . "Agendado para: ".$dtAgendadaPericia;
                                 
         return $retorno;
     }
@@ -344,14 +377,14 @@ class Readaptacao{
             
             # Ci Início
             $botao = new BotaoGrafico();
-            $botao->set_url('?fase=ciInicio&id='.$idReducao);
+            $botao->set_url('?fase=ciInicio&id='.$idReadaptacao);
             $botao->set_label($nomeBotaoInicio);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_url('?fase=ciTermino&id='.$idReducao);
+            $botao->set_url('?fase=ciTermino&id='.$idReadaptacao);
             $botao->set_label($nomeBotaotermino);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');

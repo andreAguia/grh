@@ -37,11 +37,11 @@ if($acesso){
                 if(pendencia == 1){
                     $("#dadosPendencia").show();
                     $("#dtEnvioPendencia").show();
-                    $("#div8").show();
+                    $("#div9").show();
                 }else{
                     $("#dadosPendencia").hide();
                     $("#dtEnvioPendencia").hide();
-                    $("#div8").hide();
+                    $("#div9").hide();
                 }
                 
                 // Pega os valores do resultado
@@ -54,14 +54,14 @@ if($acesso){
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div10").show();
+                    $("#div11").show();
                 }else{
                     $("#dtPublicacao").hide();
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div10").hide();
+                    $("#div11").hide();
                 }
                 
                 // Pega o valor do tipo
@@ -69,19 +69,33 @@ if($acesso){
                 
                 // Verifica o valor do tipo quando o form é carregado
                 if(tipo == 1){
+                    $("#labeldtSolicitacao").hide();
                     $("#dtSolicitacao").hide();
                     $("#dtEnvioPericia").hide();
                     $("#dtChegadaPericia").hide();
                     $("#dtChegadaPericia").hide();
                     $("#dtAgendadaPericia").hide();
-                    $("#pendencia").hide();
+                    $("#pericia").hide();
+                    $("#resultado").hide();
+                    $("#dtCiencia").hide();
+                    $("#div3").hide();
+                    $("#dtPublicacao").show();
+                    $("#dtInicio").show();
+                    $("#periodo").show();
+                    $("#numCiInicio").show();
+                    $("#numCiTermino").show();                    
+                    $("#div11").show();
                 }else{
+                    $("#labeldtSolicitacao").show();
                     $("#dtSolicitacao").show();
                     $("#dtEnvioPericia").show();
                     $("#dtChegadaPericia").show();
                     $("#dtChegadaPericia").show();
                     $("#dtAgendadaPericia").show();
-                    $("#pendencia").show();
+                    $("#pericia").show();
+                    $("#resultado").show();
+                    $("#dtCiencia").show();
+                    $("#div3").show();                    
                 }
         
                 // Verifica o valor da pendência quando se muda o valor do campo
@@ -91,11 +105,11 @@ if($acesso){
                     if(pendencia == 1){
                         $("#dadosPendencia").show();
                         $("#dtEnvioPendencia").show();
-                        $("#div8").show();
+                        $("#div9").show();
                     }else{
                         $("#dadosPendencia").hide();
                         $("#dtEnvioPendencia").hide();
-                        $("#div8").hide();
+                        $("#div9").hide();
                     }
                 });
                 
@@ -109,14 +123,14 @@ if($acesso){
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div10").show();
+                        $("#div11").show();
                     }else{
                         $("#dtPublicacao").hide();
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div10").hide();
+                        $("#div11").hide();
                     }                
                 });
                 
@@ -128,21 +142,35 @@ if($acesso){
 
                     // Verifica o valor do tipo quando o form é carregado
                     if(tipo == 1){
+                        $("#labeldtSolicitacao").hide();
                         $("#dtSolicitacao").hide();
                         $("#dtEnvioPericia").hide();
                         $("#dtChegadaPericia").hide();
                         $("#dtChegadaPericia").hide();
                         $("#dtAgendadaPericia").hide();
-                        $("#pendencia").hide();
+                        $("#pericia").hide();
+                        $("#resultado").hide();
+                        $("#dtCiencia").hide();
+                        $("#div3").hide();
+                        $("#dtPublicacao").show();
+                        $("#dtInicio").show();
+                        $("#periodo").show();
+                        $("#numCiInicio").show();
+                        $("#numCiTermino").show();                    
+                        $("#div11").show();
                     }else{
+                        $("#labeldtSolicitacao").show();
                         $("#dtSolicitacao").show();
                         $("#dtEnvioPericia").show();
                         $("#dtChegadaPericia").show();
                         $("#dtChegadaPericia").show();
                         $("#dtAgendadaPericia").show();
-                        $("#pendencia").show();
+                        $("#pericia").show();
+                        $("#resultado").show();
+                        $("#dtCiencia").show();
+                        $("#div3").show();                    
                     }
-                }
+                });
                 
 ';
     
@@ -230,7 +258,7 @@ if($acesso){
                                          ELSE "--"
                                      END,
                                      idReadaptacao,
-                                     dtSolicitacao,
+                                     idReadaptacao,
                                      idReadaptacao,
                                      idReadaptacao,
                                      idReadaptacao,
@@ -243,8 +271,8 @@ if($acesso){
 
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,
-                                     dtSolicitacao,
                                      status,
+                                     dtSolicitacao,
                                      dtEnvioPericia,
                                      dtChegadaPericia,
                                      dtAgendadaPericia,
@@ -257,7 +285,7 @@ if($acesso){
                                      pgPublicacao,
                                      dtInicio,
                                      periodo,
-                                     obs,
+                                     parecer,
                                      idServidor
                                 FROM tbreadaptacao
                                WHERE idReadaptacao = '.$id);
@@ -286,10 +314,10 @@ if($acesso){
     $objeto->set_label(array("Tipo","Status","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center","center","center","left","center","center","left","left"));
-    $objeto->set_funcao(array(NULL,NULL,"date_to_php"));
+    #$objeto->set_funcao(array(NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array(NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-    $objeto->set_metodo(array(NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
+    $objeto->set_classe(array(NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+    $objeto->set_metodo(array(NULL,"exibeStatus","exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -313,18 +341,10 @@ if($acesso){
                                        'tipo' => 'combo',
                                        'array' => array(array(1,"Ex-Ofício"),array(2,"Solicitada")),
                                        'size' => 2,
+                                       'autofocus' => TRUE,
                                        'valor' => 0,
                                        'col' => 2,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtSolicitacao',
-                                       'label' => 'Solicitado em:',
-                                       'tipo' => 'data',
-                                       'size' => 30,
-                                       'required' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'title' => 'A data da Solicitação.',
-                                       'col' => 3,                                    
                                        'linha' => 1),
                                array ( 'nome' => 'status',
                                        'label' => 'Status:',
@@ -335,6 +355,14 @@ if($acesso){
                                        'col' => 2,
                                        'disabled' => TRUE,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
+                                       'linha' => 1),
+                               array ( 'nome' => 'dtSolicitacao',
+                                       'label' => 'Solicitado em:',
+                                       'tipo' => 'data',
+                                       'size' => 30,
+                                       'required' => TRUE,                                      
+                                       'title' => 'A data da Solicitação.',
+                                       'col' => 3,                                    
                                        'linha' => 1),
                                array ( 'nome' => 'dtEnvioPericia',
                                        'label' => 'Data de Envio:',
@@ -426,11 +454,11 @@ if($acesso){
                                        'linha' => 6),
                                 array ('linha' => 7,
                                        'col' => 12,
-                                       'nome' => 'obs',
-                                       'label' => 'Obs:',
+                                       'nome' => 'parecer',
+                                       'label' => 'Parecer:',
                                        'tipo' => 'textarea',                                    
                                        'fieldset' => 'fecha',
-                                       'title' => 'Observações.',
+                                       'title' => 'Parecer descrevendo a readaptação do servidor.',
                                        'size' => array(80,4)),
                                array ( 'nome' => 'idServidor',
                                        'label' => 'idServidor',

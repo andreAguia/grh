@@ -19,7 +19,7 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    $reducao = new Readaptacao($idServidorPesquisado);
+    $readaptacao = new Readaptacao($idServidorPesquisado);
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -37,11 +37,11 @@ if($acesso){
                 if(pendencia == 1){
                     $("#dadosPendencia").show();
                     $("#dtEnvioPendencia").show();
-                    $("#div9").show();
+                    $("#div10").show();
                 }else{
                     $("#dadosPendencia").hide();
                     $("#dtEnvioPendencia").hide();
-                    $("#div9").hide();
+                    $("#div10").hide();
                 }
                 
                 // Pega os valores do resultado
@@ -54,14 +54,14 @@ if($acesso){
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div11").show();
+                    $("#div12").show();
                 }else{
                     $("#dtPublicacao").hide();
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div11").hide();
+                    $("#div12").hide();
                 }
                 
                 // Pega o valor do tipo
@@ -78,13 +78,16 @@ if($acesso){
                     $("#pericia").hide();
                     $("#resultado").hide();
                     $("#dtCiencia").hide();
-                    $("#div3").hide();
+                    $("#div4").hide();
+                    $("#dadosPendencia").hide();
+                    $("#dtEnvioPendencia").hide();
+                    $("#div10").hide();
                     $("#dtPublicacao").show();
                     $("#dtInicio").show();
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div11").show();
+                    $("#div12").show();
                 }else{
                     $("#labeldtSolicitacao").show();
                     $("#dtSolicitacao").show();
@@ -95,7 +98,7 @@ if($acesso){
                     $("#pericia").show();
                     $("#resultado").show();
                     $("#dtCiencia").show();
-                    $("#div3").show();                    
+                    $("#div4").show();                    
                 }
         
                 // Verifica o valor da pendência quando se muda o valor do campo
@@ -105,11 +108,11 @@ if($acesso){
                     if(pendencia == 1){
                         $("#dadosPendencia").show();
                         $("#dtEnvioPendencia").show();
-                        $("#div9").show();
+                        $("#div10").show();
                     }else{
                         $("#dadosPendencia").hide();
                         $("#dtEnvioPendencia").hide();
-                        $("#div9").hide();
+                        $("#div10").hide();
                     }
                 });
                 
@@ -123,14 +126,14 @@ if($acesso){
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div11").show();
+                        $("#div12").show();
                     }else{
                         $("#dtPublicacao").hide();
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div11").hide();
+                        $("#div12").hide();
                     }                
                 });
                 
@@ -151,13 +154,16 @@ if($acesso){
                         $("#pericia").hide();
                         $("#resultado").hide();
                         $("#dtCiencia").hide();
-                        $("#div3").hide();
+                        $("#div4").hide();
+                        $("#dadosPendencia").hide();
+                        $("#dtEnvioPendencia").hide();
+                        $("#div10").hide();
                         $("#dtPublicacao").show();
                         $("#dtInicio").show();
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div11").show();
+                        $("#div12").show();
                     }else{
                         $("#labeldtSolicitacao").show();
                         $("#dtSolicitacao").show();
@@ -168,7 +174,7 @@ if($acesso){
                         $("#pericia").show();
                         $("#resultado").show();
                         $("#dtCiencia").show();
-                        $("#div3").show();                    
+                        $("#div4").show();                    
                     }
                 });
                 
@@ -224,8 +230,8 @@ if($acesso){
         $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
-        $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de redução da carga horária");
-        $botaoRel->set_url("../grhRelatorios/servidorReducao.php");
+        $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de readaptação");
+        $botaoRel->set_url("../grhRelatorios/servidorReadaptacao.php");
         $botaoRel->set_target("_blank");        
         $menu->add_link($botaoRel,"right");        
         $menu->show();
@@ -272,6 +278,7 @@ if($acesso){
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,
                                      status,
+                                     processo,
                                      dtSolicitacao,
                                      dtEnvioPericia,
                                      dtChegadaPericia,
@@ -356,11 +363,17 @@ if($acesso){
                                        'disabled' => TRUE,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
                                        'linha' => 1),
+                               array ( 'linha' => 1,
+                                       'nome' => 'processo',
+                                       'label' => 'Processo:',
+                                       'tipo' => 'processo',
+                                       'col' => 3,
+                                       'size' => 25,
+                                       'title' => 'Número do processo.'),
                                array ( 'nome' => 'dtSolicitacao',
                                        'label' => 'Solicitado em:',
                                        'tipo' => 'data',
-                                       'size' => 30,
-                                       'required' => TRUE,                                      
+                                       'size' => 30,                                  
                                        'title' => 'A data da Solicitação.',
                                        'col' => 3,                                    
                                        'linha' => 1),
@@ -561,16 +574,16 @@ if($acesso){
         case "ciInicioForm" :
             
             # Pega os Dados
-            $dados = $reducao->get_dadosCiInicio($id);
+            $dados = $readaptacao->get_dados($id);
 
-            # Da Redução
-            $numCiInicio = $dados[0];
-            $dtCiInicio = $dados[1];
-            $dtInicio = $dados[2];
-            $dtPublicacao = $dados[3];
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
-            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            # Da Readaptação
+            $numCiInicio = $dados['numCiInicio'];
+            $dtCiInicio = $dados['dtCiInicio'];
+            $dtInicio = date_to_php($dados['dtInicio']);
+            $dtPublicacao = date_to_php($dados['dtPublicacao']);
+            $pgPublicacao = $dados['pgPublicacao'];
+            $periodo = $dados['periodo'];
+            $processo = $dados['processo'];
             
             # Limita a tela
             $grid = new Grid();
@@ -620,15 +633,17 @@ if($acesso){
         
         case "ciInicioFormValida" :
             
-            # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCiInicio($id);
-            $numCiInicio = $dados[0];
-            $dtCiInicio = $dados[1];
-            $dtInicio = $dados[2];
-            $dtPublicacao = $dados[3];
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
-            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            # Pega os Dados
+            $dados = $readaptacao->get_dados($id);
+
+            # Da Readaptação
+            $numCiInicio = $dados['numCiInicio'];
+            $dtCiInicio = $dados['dtCiInicio'];
+            $dtInicio = date_to_php($dados['dtInicio']);
+            $dtPublicacao = date_to_php($dados['dtPublicacao']);
+            $pgPublicacao = $dados['pgPublicacao'];
+            $periodo = $dados['periodo'];
+            $processo = $dados['processo'];
             
             # Pega os dados Digitados
             $numCiInicioDigitados = post("numCiInicio");
@@ -683,8 +698,8 @@ if($acesso){
             # Verifica se teve erro
             if($erro == 0){
                 # Salva as alterações
-                $pessoal->set_tabela("tbreducao");
-                $pessoal->set_idCampo("idReducao");
+                $pessoal->set_tabela("tbreadaptacao");
+                $pessoal->set_idCampo("idReadaptacao");
                 $campoNome = array('numCiInicio','dtCiInicio');
                 $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
                 $pessoal->gravar($campoNome,$campoValor,$id);
@@ -694,11 +709,11 @@ if($acesso){
                 if(!is_null($alteracoes)){
                     $atividades .= 'Alterou: '.$alteracoes;
                     $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
                 }                
                 
                 # Exibe o relatório
-                loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id);
+                loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id);
             }else{
                 alert($msgErro);
                 back(1);
@@ -717,16 +732,16 @@ if($acesso){
         case "ciTerminoForm" :
             
             # Pega os Dados
-            $dados = $reducao->get_dadosCiTermino($id);
+            $dados = $readaptacao->get_dados($id);
 
             # Da Redução
-            $numCitermino = $dados[0];
-            $dtCitermino = $dados[1];
-            $dtInicio = date_to_php($dados[2]);
-            $dtPublicacao = date_to_php($dados[3]);
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
-            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            $numCitermino = $dados['numCiTermino'];
+            $dtCitermino = $dados['dtCiTermino'];
+            $dtInicio = date_to_php($dados['dtInicio']);
+            $dtPublicacao = date_to_php($dados['dtPublicacao']);
+            $pgPublicacao = $dados['pgPublicacao'];
+            $periodo = $dados['periodo'];
+            $processo = $dados['processo'];
             
             # Limita a tela
             $grid = new Grid();
@@ -776,15 +791,17 @@ if($acesso){
         
         case "ciTerminoFormValida" :
             
-            # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCiTermino($id);
-            $numCiTermino = $dados[0];
-            $dtCiTermino = $dados[1];
-            $dtInicio = $dados[2];
-            $dtPublicacao = $dados[3];
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
-            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            # Pega os Dados
+            $dados = $readaptacao->get_dados($id);
+
+            # Da Redução
+            $numCitermino = $dados['numCiTermino'];
+            $dtCitermino = $dados['dtCiTermino'];
+            $dtInicio = date_to_php($dados['dtInicio']);
+            $dtPublicacao = date_to_php($dados['dtPublicacao']);
+            $pgPublicacao = $dados['pgPublicacao'];
+            $periodo = $dados['periodo'];
+            $processo = $dados['processo'];
             
             # Pega os dados Digitados
             $numCiTerminoDigitados = post("numCiTermino");
@@ -839,8 +856,8 @@ if($acesso){
             # Verifica se teve erro
             if($erro == 0){
                 # Salva as alterações
-                $pessoal->set_tabela("tbreducao");
-                $pessoal->set_idCampo("idReducao");
+                $pessoal->set_tabela("tbreadaptacao");
+                $pessoal->set_idCampo("idReadaptacao");
                 $campoNome = array('numCiTermino','dtCiTermino');
                 $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
                 $pessoal->gravar($campoNome,$campoValor,$id);
@@ -850,11 +867,11 @@ if($acesso){
                 if(!is_null($alteracoes)){
                     $atividades .= 'Alterou: '.$alteracoes;
                     $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
                 }
                 
                 # Exibe o relatório
-                loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id);
+                loadPage('../grhRelatorios/readaptacaoCiTermino.php?id='.$id);
             }else{
                 alert($msgErro);
                 back(1);

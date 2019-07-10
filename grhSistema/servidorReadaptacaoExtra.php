@@ -5,10 +5,10 @@
  * 
  */
 
-$resultado = $campoValor[7];
+$resultado = $campoValor[8];
 $status = $campoValor[1];
-$dtInicio = date_to_php($campoValor[13]);
-$periodo = $campoValor[14];
+$dtInicio = date_to_php($campoValor[14]);
+$periodo = $campoValor[15];
 $tipo = $campoValor[0];
 
 # Somente se for solicitada
@@ -62,5 +62,5 @@ if($tipo == 2){
             }
         }
         
-        $campoValor[7] = 1;
+        $campoValor[8] = 1;
 }

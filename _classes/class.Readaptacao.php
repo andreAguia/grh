@@ -52,7 +52,8 @@ class Readaptacao{
         }
         
         # Pega os dados
-        $select = 'SELECT *
+        $select = 'SELECT * ,
+                          ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
         

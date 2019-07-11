@@ -110,6 +110,9 @@ if($acesso){
         $grid->fechaGrid();
     }
     
+    $cal = new Calendario(4);
+    $cal->MostreCalendarioCompleto();
+    
 ##################################################################
     
     # Menu

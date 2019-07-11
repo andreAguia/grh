@@ -795,8 +795,8 @@ if($acesso){
             $dados = $readaptacao->get_dados($id);
 
             # Da Redução
-            $numCitermino = $dados['numCiTermino'];
-            $dtCitermino = $dados['dtCiTermino'];
+            $numCiTermino = $dados['numCiTermino'];
+            $dtCiTermino = $dados['dtCiTermino'];
             $dtInicio = date_to_php($dados['dtInicio']);
             $dtPublicacao = date_to_php($dados['dtPublicacao']);
             $pgPublicacao = $dados['pgPublicacao'];

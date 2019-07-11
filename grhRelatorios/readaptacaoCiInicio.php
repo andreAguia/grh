@@ -41,6 +41,7 @@ if($acesso){
     $pgPublicacao = $dados['pgPublicacao'];
     $periodo = $dados['periodo'];
     $processo = $dados['processo'];
+    $parecer = $dados['parecer'];
     
     # Trata a publicação
     if(vazio($pgPublicacao)){
@@ -59,16 +60,15 @@ if($acesso){
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     
     # Assunto
-    $assunto = "Redução de Carga Horária de ".$nomeServidor;
+    $assunto = "Readaptação de ".$nomeServidor;
 
     # Monta a CI
     $ci = new Ci($numCiInicio,$dtCiInicio,$assunto);
     $ci->set_destinoNome($nomeGerenteDestino);
     $ci->set_destinoSetor($gerenciaImediataDescricao);
     $ci->set_texto("Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
-    . " ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, "
-    . "atendendo processo $processo, publicado no DOERJ de $publicacao,"
-    . " em anexo.");
+    . " ID $idFuncional, pelo prazo de $periodo meses, '<i>$parecer</i>', conforme publicação no DOERJ em $publicacao"
+    . " em anexo, para fins de cumprimento.");
     $ci->set_saltoRodape(5);
     $ci->show();
     

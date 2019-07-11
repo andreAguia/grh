@@ -152,18 +152,19 @@ class Ci{
 
         # Data
         p('Campos dos Goytacazes, '.dataExtenso($this->data),'pCiData');
-
+        
         $grid->fechaColuna();
         $grid->fechaGrid();
-
+        br();
+        
         # Origem
-        p('De:&nbsp&nbsp&nbsp&nbsp'.$this->origemNome.'<br/>'
-        . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$this->origemDescricao,'pCi');
+        p('De: '.$this->origemNome,'pCiDePara1');
+        p($this->origemDescricao,'pCiDePara2');
         br();
 
         # Destino
-        p('Para:&nbsp&nbsp'.$this->destinoNome.'<br/>'
-        . '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$this->destinoSetor,'pCi');
+        p('Para: '.$this->destinoNome,'pCiDePara1');
+        p($this->destinoSetor,'pCiDePara2');
         br();
 
         # Assunto
@@ -172,7 +173,7 @@ class Ci{
 
         # Texto
         foreach($this->texto as $textoCi){
-            p('&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'.$textoCi,'pCi');
+            p($textoCi,'pCi');
         }
         br();
 

@@ -2924,17 +2924,17 @@ class Checkup {
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbprogressao USING (idServidor)
-                     WHERE idTpProgressao = 9'; 
+                     WHERE situacao = 1 AND idTpProgressao = 9'; 
                 if(!is_null($idServidor)){
                     $select .= ' AND idServidor = "'.$idServidor.'"';
                 }                
-        $select .= ' ORDER BY situacao,2';
+        $select .= ' ORDER BY tbpessoa.nome';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidor(es) com progressão e enquadramento importados';
+        $titulo = 'Servidor(es) ativos com progressão importada';
         $label = ['IdFuncional','Nome','Perfil','Lotação','Situação'];
         $funcao = [NULL];
         $classe = [NULL,NULL,NULL,"Pessoal","Pessoal"];

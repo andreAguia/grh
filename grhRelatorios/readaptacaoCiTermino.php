@@ -60,20 +60,20 @@ if($acesso)
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     
     # Assunto
-    $assunto = "Comunica <b>TÉRMINO</b> do prazo de Redução de Carga Horária de ".$nomeServidor;
+    $assunto = "<b>TÉRMINO</b> do período de Readaptação de ".$nomeServidor;
     
     # Monta a CI
     $ci = new Ci($numCitermino,$dtCiTermino,$assunto);
     $ci->set_destinoNome($nomeGerenteDestino);
     $ci->set_destinoSetor($gerenciaImediataDescricao);
     
-    $ci->set_texto("Vimos comunicar o <b>TÉRMINO</b> da"
+    $ci->set_texto("Vimos comunicar o <b>TÉRMINO</b> do período"
     . " de <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, em $dtTermino, conforme Ato do Reitor publicado no DOERJ de $publicacao,"
     . " concedendo o benefício pelo prazo de $periodo meses.");
     
-    $ci->set_texto("Esclarecemos que o referido servidor deverá cumprir"
-     . " a carga horária normal, enquanto aguarda o parecer da perícia médica oficial do Estado do RJ para concessão de"
+    $ci->set_texto("Esclarecemos que o referido servidor deverá voltar a cumprir"
+     . " as atividades carga horária normal, enquanto aguarda o parecer da perícia médica oficial do Estado do RJ para concessão de"
      . " prorrogação, se for o caso.");
     
     $ci->set_texto("Sem mais para o momento, reiteramos votos de estima e consideração.");

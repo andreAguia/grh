@@ -110,9 +110,6 @@ if($acesso){
         $grid->fechaGrid();
     }
     
-    $cal = new Calendario(4);
-    $cal->MostreCalendarioCompleto();
-    
 ##################################################################
     
     # Menu
@@ -127,14 +124,12 @@ if($acesso){
             }
 
             # monta o menu principal
-            #Grh::menu2($idUsuario);
             $menu = new MenuPrincipal($idUsuario);
     
             # Zera a session de alerta
             set_session('alerta');
             
             # Exibe o rodapé da página
-            #br();
             Grh::rodape($idUsuario);
             break;
 

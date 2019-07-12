@@ -160,6 +160,14 @@ if($acesso){
             ###########################################################################################################
             $grid1 = new Grid();
             $grid1->abreColuna(5);
+            
+            $painel = new Callout();
+            $painel->abre();
+            
+            $cal = new Calendario($parametroMes,$parametroAno);
+            $cal->show();
+            
+            $painel->fecha();
     
             # Define a data para o sql
             $data = $parametroAno.'-'.$parametroMes.'-01';

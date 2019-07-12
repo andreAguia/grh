@@ -17,8 +17,8 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){
+    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $readaptacao = new Readaptacao();
@@ -34,22 +34,22 @@ if($acesso)
     $dados = $readaptacao->get_dados($id);
 
     # Da Readaptação
-    $numCitermino = $dados['numCiTermino'];
-    $dtCiTermino = date_to_php($dados['dtCiTermino']);
+    $numCiInicio = $dados['numCiInicio'];
+    $dtCiInicio = date_to_php($dados['dtCiInicio']);
     $dtInicio = date_to_php($dados['dtInicio']);
-    $dtTermino = date_to_php($dados['dtTermino']);
     $dtPublicacao = date_to_php($dados['dtPublicacao']);
     $pgPublicacao = $dados['pgPublicacao'];
     $periodo = $dados['periodo'];
     $processo = $dados['processo'];
+    $parecer = $dados['parecer'];
     
     # Trata a publicação
     if(vazio($pgPublicacao)){
         $publicacao = $dtPublicacao;
     }else{
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
-    }
-    
+    }       
+            
     # Chefia imediata
     $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
     $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
@@ -60,31 +60,23 @@ if($acesso)
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     
     # Assunto
-    $assunto = "<b>TÉRMINO</b> do período de Readaptação de ".$nomeServidor;
-    
+    $assunto = "Prorrogação da Readaptação de ".$nomeServidor;
+
     # Monta a CI
-    $ci = new Ci($numCitermino,$dtCiTermino,$assunto);
+    $ci = new Ci($numCiInicio,$dtCiInicio,$assunto);
     $ci->set_destinoNome($nomeGerenteDestino);
     $ci->set_destinoSetor($gerenciaImediataDescricao);
-    
-    $ci->set_texto("Vimos comunicar o <b>TÉRMINO</b> do período"
-    . " de <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
-    . " ID $idFuncional, em $dtTermino, conforme Ato do Reitor publicado no DOERJ de $publicacao,"
-    . " concedendo o benefício pelo prazo de $periodo meses.");
-    
-    $ci->set_texto("Esclarecemos que o referido servidor deverá voltar a cumprir"
-     . " as atividades normalmente, enquanto aguarda o parecer da perícia médica oficial do Estado do RJ para concessão de"
-     . " prorrogação, se for o caso.");
-    
-    $ci->set_texto("Sem mais para o momento, reiteramos votos de estima e consideração.");
-    $ci->set_saltoRodape(1);
+    $ci->set_texto("Vimos informar a concessão da prorrogação da <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
+    . " ID $idFuncional, por um período de $periodo meses, a contar de $dtInicio, '<i>$parecer</i>', conforme publicação no DOERJ em $publicacao"
+    . " em anexo.");
+    $ci->set_saltoRodape(5);
     $ci->show();
-                
+    
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Ci de término de readaptação.';
+    $atividades = 'Visualizou a Ci de início de readaptacao.';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
-
+    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
+    
     $page->terminaPagina();
 }

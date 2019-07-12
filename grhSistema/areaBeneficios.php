@@ -62,6 +62,160 @@ if($acesso){
 ################################################################
     
     switch ($fase){
+        
+        case "listaReadaptacao" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel,"right");
+
+            # Redução da Carga Horária
+            $botaoRel = new Button('Redução da Carga Horária');
+            $botaoRel->set_url("?fase=listaReducao");
+            $menu1->add_link($botaoRel,"right");
+            
+            # Redução da Carga Horária
+            $botaoRel = new Button('Readaptação');
+            $botaoRel->set_url("?fase=listaReadaptacao");
+            #$menu1->add_link($botaoRel,"right");
+            
+            # Redução da Carga Horária
+            $botaoRel = new Button('Redução da Carga Horária');
+            $botaoRel->set_url("?fase=listaReducao");
+            #$menu1->add_link($botaoRel,"right");
+
+            $menu1->show();
+            
+            ###
+            
+            # Formulário de Pesquisa
+            $form = new Form('?'); 
+
+            # Nome    
+            $controle = new Input('parametroNomeMat','texto','Servidor:',1);
+            $controle->set_size(100);
+            $controle->set_title('Filtra por Nome');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $controle->set_autofocus(TRUE);
+            $form->add_item($controle);
+
+            # Status    
+            $controle = new Input('parametroStatus','combo','Status:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Status');
+            $controle->set_array($statusPossiveis);
+            $controle->set_valor($parametroStatus);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            ###
+                
+            # Pega o time inicial
+            $time_start = microtime(TRUE);
+            
+            # Pega os dados
+            $select = "SELECT idServidor,
+                              tbpessoa.nome,
+                              CASE tipo
+                                WHEN 1 THEN 'Ex-Ofício'
+                                WHEN 2 THEN 'Solicitada'
+                                ELSE '--'
+                              END,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,                                   
+                              idReadaptacao
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbreadaptacao USING (idServidor)
+                        WHERE tbservidor.idPerfil <> 10";
+            
+            # status
+            if($parametroStatus <> 0){
+                $select .= " AND status = ".$parametroStatus;
+            }
+            
+            # status
+            if(!is_null($parametroNomeMat)){
+                $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
+            }
+                    
+                    
+            $select .= " ORDER BY status, dtInicio";
+            
+            $resumo = $pessoal->select($select);
+            
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(array("idServidor","Nome","Tipo","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","center","center","center","left","center","center","left"));
+            $tabela->set_funcao(array("idMatricula"));
+            
+            $tabela->set_classe(array(NULL,NULL,NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus","exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            
+            $tabela->set_titulo("Servidores com Solicitação de Readaptação");
+            
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor');
+            
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
+                                                    'valor' => 'Em Aberto',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),  
+                                              array('coluna' => 3,
+                                                    'valor' => 'Arquivado',
+                                                    'operador' => '=',
+                                                    'id' => 'arquivado'),
+                                              array('coluna' => 3,
+                                                    'valor' => 'Vigente',
+                                                    'operador' => '=',
+                                                    'id' => 'vigenteReducao')   
+                                                    ));
+            
+            $tabela->show();
+            
+            # Pega o time final
+            $time_end = microtime(TRUE);
+            $time = $time_end - $time_start;
+            p(number_format($time, 4, '.', ',')." segundos","right","f10");
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
+        
         case "listaReducao" :
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -92,9 +246,9 @@ if($acesso){
             #$menu1->add_link($botaoRel,"right");
             
             # Redução da Carga Horária
-            $botaoRel = new Button('Redução da Carga Horária');
-            $botaoRel->set_url("?fase=listaReducao");
-            #$menu1->add_link($botaoRel,"right");
+            $botaoRel = new Button('Readaptação');
+            $botaoRel->set_url("?fase=listaReadaptacao");
+            $menu1->add_link($botaoRel,"right");
             
             # Redução da Carga Horária
             $botaoRel = new Button('Redução da Carga Horária');

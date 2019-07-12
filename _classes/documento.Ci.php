@@ -158,7 +158,7 @@ class Ci{
         br();
         
         # Origem
-        p('De: '.$this->origemNome,'pCiDePara1');
+        p('De: &nbsp&nbsp'.$this->origemNome,'pCiDePara1');
         p($this->origemDescricao,'pCiDePara2');
         br();
 

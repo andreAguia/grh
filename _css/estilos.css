@@ -561,11 +561,19 @@ p#termodePosse{
  * CI 
  *******************************************/
  
- p#pCiDePara{
+ p#pCiDePara1{
      text-align: left;
      font-size: 14px;
      line-height: 1.0;
      font-family: Arial, Helvetica, sans-serif;
+ }
+ 
+ p#pCiDePara2{
+     text-align: left;
+     font-size: 14px;
+     line-height: 1.0;
+     font-family: Arial, Helvetica, sans-serif;
+     text-indent: 2.5em;
  }
  
  p#pCi{

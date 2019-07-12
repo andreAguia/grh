@@ -601,7 +601,7 @@ if($acesso){
             $controle = new Input('numCiInicio','texto','Ci n°:',1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(2);
             $controle->set_required(TRUE);
             $controle->set_autofocus(TRUE);
             $controle->set_valor($numCiInicio);
@@ -616,6 +616,16 @@ if($acesso){
             $controle->set_valor($dtCiInicio);
             $controle->set_required(TRUE);
             $controle->set_title('A data da CI de inicio.');
+            $form->add_item($controle);
+            
+            # tipo
+            $controle = new Input('tipoCi','combo','Tipo:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_array(array("Inicial","Prorrogação"));
+            $controle->set_required(TRUE);
+            $controle->set_title('A data da CI de inicio ou prorrogação.');
             $form->add_item($controle);
 
             # submit
@@ -648,6 +658,7 @@ if($acesso){
             # Pega os dados Digitados
             $numCiInicioDigitados = post("numCiInicio");
             $dtCiInicioDigitado = post("dtCiInicio");
+            $ciTipo = post("tipoCi");
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -713,7 +724,11 @@ if($acesso){
                 }                
                 
                 # Exibe o relatório
-                loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id);
+                if($ciTipo == "Inicial"){
+                    loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id);
+                }else{
+                    loadPage('../grhRelatorios/readaptacaoCiProrrogacao.php?id='.$id);
+                }
             }else{
                 alert($msgErro);
                 back(1);

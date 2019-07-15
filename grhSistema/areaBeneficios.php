@@ -85,7 +85,7 @@ if($acesso){
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel,"right");
+            #$menu1->add_link($botaoRel,"right");
 
             # Redução da Carga Horária
             $botaoRel = new Button('Redução da Carga Horária');
@@ -107,7 +107,7 @@ if($acesso){
             ###
             
             # Formulário de Pesquisa
-            $form = new Form('?'); 
+            $form = new Form('?fase=listaReadaptacao'); 
 
             # Nome    
             $controle = new Input('parametroNomeMat','texto','Servidor:',1);
@@ -187,7 +187,7 @@ if($acesso){
             $tabela->set_titulo("Servidores com Solicitação de Readaptação");
             
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor');
+            $tabela->set_editar('?fase=editaServidor2');
             
             $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
                                                     'valor' => 'Em Aberto',
@@ -260,7 +260,7 @@ if($acesso){
             ###
             
             # Formulário de Pesquisa
-            $form = new Form('?'); 
+             $form = new Form('?fase=listaReducao'); 
 
             # Nome    
             $controle = new Input('parametroNomeMat','texto','Servidor:',1);
@@ -370,10 +370,26 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaReducao');
+            set_session('origem','areaBeneficios');
             
             # Carrega a página específica
             loadPage('servidorReducao.php');
+            break; 
+        
+    ################################################################
+        
+        case "editaServidor2" :
+            br(8);
+            aguarde();
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$id);
+            
+            # Informa a origem
+            set_session('origem','areaBeneficios');
+            
+            # Carrega a página específica
+            loadPage('servidorReadaptacao.php');
             break; 
         
     ################################################################

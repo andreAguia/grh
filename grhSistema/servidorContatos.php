@@ -58,12 +58,9 @@ if($acesso){
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    #$objeto->set_linkListar('?');
     $objeto->set_linkListar('servidorMenu.php');
-
-    # botão voltar
     $objeto->set_voltarForm('servidorMenu.php');
-
+    
     # retira o botão incluir
     $objeto->set_botaoIncluir(FALSE);
 

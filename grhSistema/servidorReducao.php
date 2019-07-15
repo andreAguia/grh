@@ -130,7 +130,7 @@ if($acesso){
         $grid->abreColuna(12);
         
         # botão de voltar da lista
-        if($origem == "areaReducao"){
+        if($origem == "areaBeneficios"){
             $voltar = 'areaBeneficios.php';
         }else{
             $voltar = 'servidorMenu.php';
@@ -491,12 +491,12 @@ if($acesso){
                     #p("E-mail(s)","center","f12");
                     p($emails,"center","f14");
                                     
-                    $div = new Div("divEditaProcesso");
-                    $div->abre();
-                        $link = new Link("Editar Contatos",'servidorContatos.php',"Edita os contatos do servidor");
-                        $link->set_id("editaProcesso");
-                        $link->show();
-                    $div->fecha();  
+                    #$div = new Div("divEditaProcesso");
+                    #$div->abre();
+                    #    $link = new Link("Editar Contatos",'?fase=editaContatos',"Edita os contatos do servidor");
+                    #    $link->set_id("editaProcesso");
+                    #    $link->show();
+                    #$div->fecha();  
                 
                 $painel->fecha();
                 
@@ -521,59 +521,13 @@ if($acesso){
                 
                 $painel->fecha();
                 
-            $grid->fechaColuna();
-            
-        #########################################################################################################
-            
-            # tarefas
-            /*
-            $grid->abreColuna(12,12,6);
-                
-                $painel = new Callout();
-                $painel->abre();
-                
-                    # Exibe o título
-                    tituloTable("Tarefas:");
-                    br();
-                    
-                    # Pega a ultima solicitação
-                    $idReducao = $reducao->get_ultimaSolicitacaoAberto();
-                    
-                    # Pega as tarefas
-                    if(is_null($idReducao)){
-                        $mensagem = NULL;
-                    }else{
-                        $mensagem = $reducao->get_tarefas($idReducao);
-                    }
-                
-                    # Verifica se tem mensagem a ser exibida
-                    if(!is_null($mensagem)){
-                        p($mensagem,'f13');
-                    }else{
-                        p('---','f14','center');
-                    }        
-                                    
-                $painel->fecha();
-                
-            $grid->fechaColuna();
-             
-             */
-            
+            $grid->fechaColuna();            
             $grid->fechaGrid();        
             $objeto->listar(); 
             break;
             
-        case "ver" :
-            $menu = new Menu();
-            $menu->add_item('titulo','Documentos');
-            $menu->add_item('linkWindow','CI de Início do Benefício','../grhRelatorios/ciReducaoInicio.php?id='.$id);
-            $menu->add_item('linkWindow','CI de Término do Benefício','../grhRelatorios/ciReducaotermino.php?id='.$id);
+#########################################################################################################
             
-            $objeto->set_menuLateralEditar($menu);
-            
-            $objeto->ver($id); 
-            break;
-        
         case "editar" :
         case "excluir" :
             $objeto->$fase($id); 
@@ -1023,8 +977,9 @@ if($acesso){
                 back(1);
             }            
             break;
+        
+################################################################################################################
             
-        ########################################################33
     }									 	 		
 
     $page->terminaPagina();

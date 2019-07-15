@@ -203,8 +203,8 @@ if($acesso){
         $grid->abreColuna(12);
         
         # botão de voltar da lista
-        if($origem == "areaBenefícios"){
-            $voltar = 'areaBeneficios.php';
+        if($origem == "areaBeneficios"){
+            $voltar = 'areaBeneficios.php?fase=listaReadaptacao';
         }else{
             $voltar = 'servidorMenu.php';
         }
@@ -527,12 +527,12 @@ if($acesso){
                     #p("E-mail(s)","center","f12");
                     p($emails,"center","f14");
                                     
-                    $div = new Div("divEditaProcesso");
-                    $div->abre();
-                        $link = new Link("Editar Contatos",'servidorContatos.php',"Edita os contatos do servidor");
-                        $link->set_id("editaProcesso");
-                        $link->show();
-                    $div->fecha();  
+                    #$div = new Div("divEditaProcesso");
+                    #$div->abre();
+                    #    $link = new Link("Editar Contatos",'servidorContatos.php',"Edita os contatos do servidor");
+                    #    $link->set_id("editaProcesso");
+                    #    $link->show();
+                    #$div->fecha();  
                 
                 $painel->fecha();
                 
@@ -584,7 +584,7 @@ if($acesso){
             $pgPublicacao = $dados['pgPublicacao'];
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
-            
+                        
             # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);

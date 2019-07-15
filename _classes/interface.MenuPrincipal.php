@@ -325,7 +325,7 @@ class MenuPrincipal{
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
         $botao->set_url('areaFeriasExercicio.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'ferias.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_imagem(PASTA_FIGURAS.'ferias2.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Férias');
         $menu->add_item($botao);
 
@@ -344,6 +344,15 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
+        $botao->set_label('Afastamentos');
+        $botao->set_url('areaFrequencia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
+        $menu->add_item($botao);
+        
+        
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Formação');
         $botao->set_url('areaFormacao.php');
         $botao->set_imagem(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
@@ -351,25 +360,11 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Aposentadoria');
-        $botao->set_url('areaAposentadoria.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área das rotinas de aposentadoria do serviodor');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
         $botao->set_label('Parentes');
         $botao->set_url('areaParente.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'parente.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área do Cadastro de Parentes dos Servidores');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Afastamentos');
-        $botao->set_url('areaFrequencia.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
-        $menu->add_item($botao);
+        $menu->add_item($botao);        
 
         $botao = new BotaoGrafico();
         $botao->set_label('TRE');
@@ -392,6 +387,13 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Análise estatísticas');
         $menu->add_item($botao); 
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Aposentadoria');
+        $botao->set_url('areaAposentadoria.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área das rotinas de aposentadoria do serviodor');
+        $menu->add_item($botao);
         
         if(Verifica::acesso($this->idUsuario,1)){
             $botao = new BotaoGrafico();

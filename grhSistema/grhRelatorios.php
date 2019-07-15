@@ -162,6 +162,7 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório dos Cargos em Comissão Ativos','../grhRelatorios/cargoComissaoAtivos.php');
             $menu->add_item('linkWindow','Relatório dos Cargos em Comissão Inativos','../grhRelatorios/cargoComissaoInativos.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo','../grhRelatorios/cargosComissionados.php');
+            $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG','../grhRelatorios/cargosComissionadosCpfRg.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão Ativos - Histórico','../grhRelatorios/cargosComissionadosAtivosHistorico.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Cargos em Comissão Inativos - Histórico','../grhRelatorios/cargosComissionadosInativosHistorico.php');
 

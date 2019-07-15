@@ -304,10 +304,6 @@ if($acesso){
             $grid = new Grid();
             $grid->abreColuna(3);
             
-            # Calendário
-            $cal = new Calendario($parametroMes,date('Y'),"p");
-            $cal->show();
-            
             # Resumo
             $pessoal = new Pessoal();
             $numAniversdariantes = $pessoal->get_numAniversariantes();
@@ -315,18 +311,22 @@ if($acesso){
             $numServidores = $pessoal->get_numServidoresAtivos();
 
             # Exibe os valores            
-            $dados[] = array("do Mês",$numAniversdariantes);
-            $dados[] = array("de Hoje",$numHoje);
+            $dados[] = array("Aniversariantes do Mês",$numAniversdariantes);
+            $dados[] = array("Aniversariantes de Hoje",$numHoje);
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
-            $tabela->set_titulo("Anivesariantes");
+            $tabela->set_titulo("Resumo");
             $tabela->set_label(array("",""));
-            $tabela->set_width(array(50,50));
+            $tabela->set_width(array(70,30));
             $tabela->set_totalRegistro(FALSE);
             $tabela->set_align(array("left","center"));
             $tabela->show();
+            
+            # Calendário
+            $cal = new Calendario($parametroMes,date('Y'),"p");
+            $cal->show();
             
             $grid->fechaColuna();
             $grid->abreColuna(9);

@@ -39,6 +39,7 @@ class MenuPrincipal{
         
         # Módulos
         $this->moduloTabelaAuxiliares();
+        $this->moduloGrh();
         $this->moduloAreaEspecial();
         $this->moduloLinksExternos();
         
@@ -51,7 +52,6 @@ class MenuPrincipal{
         
         # Módulos        
         $this->moduloBalcao();
-        $this->moduloGrh();
         $this->moduloAniversariantes();
         $this->moduloAlertas();
         
@@ -171,6 +171,14 @@ class MenuPrincipal{
 
         $tamanhoImage = 60;
         $menu = new MenuGrafico(4);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Férias da GRH');
+        #$botao->set_target('blank');
+        $botao->set_url('?fase=ferias');
+        $botao->set_imagem(PASTA_FIGURAS.'ferias2.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Férias dos Servidores da GRH');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Atribuições');
@@ -196,16 +204,14 @@ class MenuPrincipal{
         #$botao->set_accesskey('S');
         $menu->add_item($botao);
         
-        if(Verifica::acesso($this->idUsuario,1)){
-            $botao = new BotaoGrafico();
-            $botao->set_label('Procedimentos');
-            #$botao->set_target('blank');
-            $botao->set_url('../../areaServidor/sistema/procedimentos.php');
-            $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
-            $botao->set_title('Àrea de Procedimentos da GRH');
-            $menu->add_item($botao);
-        }    
-
+        $botao = new BotaoGrafico();
+        $botao->set_label('Procedimentos');
+        #$botao->set_target('blank');
+        $botao->set_url('../../areaServidor/sistema/procedimentos.php');
+        $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de Procedimentos da GRH');
+        #$menu->add_item($botao);
+        
         $menu->show();
         $painel->fecha();
     }
@@ -359,10 +365,10 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Frequência');
+        $botao->set_label('Afastamentos');
         $botao->set_url('areaFrequencia.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'ponto.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área de Controle de Frequência');
+        $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();

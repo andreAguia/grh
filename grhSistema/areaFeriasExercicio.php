@@ -67,18 +67,18 @@ if($acesso){
     $botaoVoltar = new Link("Ano Exercício");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Férias por Ano Exercício');
-    $menu1->add_link($botaoVoltar,"right");
+    #$menu1->add_link($botaoVoltar,"right");
     
     # Ano por Fruíção
-    $botaoVoltar = new Link("Ano de Fruição","areaFeriasFruicao.php");
-    $botaoVoltar->set_class('hollow button');
+    $botaoVoltar = new Link("por Ano de Fruição","areaFeriasFruicao.php");
+    $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Férias por Ano em que foi realmente fruído');
     $menu1->add_link($botaoVoltar,"right");
 
     $menu1->show();
     
     # Título
-    titulo("Área de Férias");
+    titulo("Área de Férias - Por Ano de Exercício");
     
 ################################################################
     

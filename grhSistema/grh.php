@@ -71,7 +71,7 @@ if($acesso){
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
      
     # Menu
-    if(($fase <> 'alerta') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes')){       
+    if(($fase <> 'alerta') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes') AND ($fase <> 'ferias')){       
         p(SISTEMA,'grhTitulo');
         p("Versão: ".VERSAO,"versao");
     
@@ -102,6 +102,12 @@ if($acesso){
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');
         $linkArea->set_title('Área do Servidor');
+	$menu->add_link($linkArea,"right");
+        
+        # Procedimentos
+        $linkArea = new Link("Procedimentos",'../../areaServidor/sistema/procedimentos.php');
+        $linkArea->set_class('button');
+        $linkArea->set_title('Área de Procedimentos da GRH');
 	$menu->add_link($linkArea,"right");
 
         $menu->show();
@@ -145,6 +151,66 @@ if($acesso){
             echo "</ul>";
             break;
 
+##################################################################	
+
+        case "ferias" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Botãp Voltar
+            botaoVoltar('?');
+            
+            # Pega o ano
+            $ano = date("Y");
+            
+            # Conecta com o banco de dados
+            $servidor = new Pessoal();
+
+            $select ="SELECT month(tbferias.dtInicial),
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         tbferias.anoExercicio,
+                         tbferias.dtInicial,
+                         tbferias.numDias,
+                         date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
+                         idFerias,
+                         tbferias.status,
+                         tbsituacao.situacao
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                                         JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                   WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND YEAR(tbferias.dtInicial) = $ano
+                     AND (tblotacao.idlotacao = 66)
+                ORDER BY dtInicial";
+
+            $result = $servidor->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo("Férias dos Servidores da GRH em $ano");
+            $tabela->set_label(array('Mês','Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status','Situação'));
+            $tabela->set_align(array("center","left","left"));
+            $tabela->set_funcao(array("get_nomeMes",NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
+            $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+            $tabela->set_conteudo($result);
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+            $tabela->show();
+            
+            # Grava no log a atividade
+            $atividade = 'Visualizou os servidores em férias da GRH';
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
 ##################################################################
 
         case "alerta" :
@@ -178,7 +244,7 @@ if($acesso){
             $grid->fechaGrid();
             break;
             
-        ##################################################################	
+##################################################################	
 
         case "aniversariantes" :
             br();
@@ -231,6 +297,39 @@ if($acesso){
             if($parametroLotacao == "*"){
                 $parametroLotacao = NULL;
             }
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            # Tabela
+            $grid = new Grid();
+            $grid->abreColuna(3);
+            
+            # Calendário
+            $cal = new Calendario($parametroMes,date('Y'),"p");
+            $cal->show();
+            
+            # Resumo
+            $pessoal = new Pessoal();
+            $numAniversdariantes = $pessoal->get_numAniversariantes();
+            $numHoje = $pessoal->get_numAniversariantesHoje();
+            $numServidores = $pessoal->get_numServidoresAtivos();
+
+            # Exibe os valores            
+            $dados[] = array("do Mês",$numAniversdariantes);
+            $dados[] = array("de Hoje",$numHoje);
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($dados);
+            $tabela->set_titulo("Anivesariantes");
+            $tabela->set_label(array("",""));
+            $tabela->set_width(array(50,50));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("left","center"));
+            $tabela->show();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
             
             # Exibe a tabela            
             $select ='SELECT DAY(tbpessoa.dtNasc),
@@ -265,11 +364,13 @@ if($acesso){
             $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
             $tabela->set_align(array("center","left","left","left"));
             $tabela->set_classe(array(NULL,NULL,'Pessoal','Pessoal','Pessoal'));
-            $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfil'));
+            $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfilSimples'));
             $tabela->set_titulo("Aniversariantes de ".get_nomeMes($parametroMes));
             if(date("m") == $parametroMes){
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));
             }
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
             $tabela->show();
             
             $grid->fechaColuna();

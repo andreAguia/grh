@@ -79,32 +79,8 @@ if($acesso){
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    
-    # Constroi o link de voltar de acordo com a origem
-    switch ($origem){
-         # Area da aposentadoria
-        case "areaAposentadoriaAno":
-            $caminhoVolta = 'areaAposentadoria.php';
-            $objeto->set_linkListar($caminhoVolta);
-            $objeto->set_voltarForm($caminhoVolta);
-            break;
-
-        case "areaAposentadoriaMotivo":
-            $caminhoVolta = 'areaAposentadoria.php?fase=motivo';
-            $objeto->set_linkListar($caminhoVolta);
-            $objeto->set_voltarForm($caminhoVolta);
-            break;
-
-        case "areaAposentadoriaIdade":
-            $caminhoVolta = 'areaAposentadoria.php?fase=dataIdade';
-            $objeto->set_linkListar($caminhoVolta);
-            $objeto->set_voltarForm($caminhoVolta);
-            break;
-        
-        default:
-            $objeto->set_linkListar('servidorMenu.php');
-            $objeto->set_voltarForm('servidorMenu.php');
-    }
+    $objeto->set_linkListar('servidorMenu.php');
+    $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(FALSE);

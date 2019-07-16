@@ -69,6 +69,18 @@ if($acesso){
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
     $menu1->add_link($linkVoltar,"left");
+    
+    # Cadastro de Cargos em Comissão
+    $botao = new Button('Cargos');
+    $botao->set_title('Acessa o Cadastro de Cargos em Comissão');
+    $botao->set_url("cadastroCargoComissao.php");
+    $menu1->add_link($botao,"right");
+    
+    # Cadastro de Descrição
+    $botao = new Button('Descrição');
+    $botao->set_title('Acessa o Cadastro de Descrição dos Cargos em Comissão');
+    $botao->set_url("cadastroDescricaoComissao.php");
+    $menu1->add_link($botao,"right");
 
     $menu1->show();
     
@@ -121,10 +133,6 @@ if($acesso){
                 $menu->add_item("link","Por Nomeação/Exoneração","?fase=movimentacaoPorNomExo","Movimentação Mensal por Data de Nomeações & Exonerações");
                 $menu->add_item("link","Por Data da Publicação","?fase=movimentacaoPorPublicacao","Movimentação Mensal por Data da Publicação");
                 $menu->add_item("link","Por Data do Ato do Reitor","?fase=movimentacaoPorAto","Movimentação Mensal por Data do Ato do Reitor");
-                
-                $menu->add_item("titulo","Cadastro");
-                $menu->add_item("link","Editar o Cadastro","cadastroCargoComissao.php");
-                $menu->add_item("link","Editar a Descrição","cadastroDescricaoComissao.php");
                 
                 $menu->add_item('titulo','Relatórios');
                 $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');

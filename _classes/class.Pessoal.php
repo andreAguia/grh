@@ -1804,7 +1804,7 @@ class Pessoal extends Bd {
     function get_cargoComissao($idServidor){
         
         # Pega o id do cargo em comissão (se houver)		 
-        $select = 'SELECT idComissao
+        $select = 'SELECT idComissao, tipo
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is NULL))
@@ -1812,6 +1812,16 @@ class Pessoal extends Bd {
 
         $row = parent::select($select,FALSE);
         $idCargo = $row[0];
+        $tipo = NULL;
+        
+        # Verifica se é designado ou protempore
+        if($row[1] == 1){
+            $tipo = " - Pro Tempore";
+        }
+        
+        if($row[1] == 2){
+            $tipo = " - Designado";
+        }
         
         $retorno = NULL;
 
@@ -1824,6 +1834,11 @@ class Pessoal extends Bd {
 
             $row = parent::select($select,FALSE);
             $retorno = $row[0];
+        }
+        
+        # Verifica se tem tipo
+        if(!vazio($tipo)){
+            $retorno .= $tipo;
         }
 
         return $retorno;

@@ -82,25 +82,15 @@ if($acesso){
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_url("../grhRelatorios/readaptacao.geral.php");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
+            $menu1->add_link($botaoRel,"right");
 
             # Redução da Carga Horária
             $botaoRel = new Button('Redução da Carga Horária');
             $botaoRel->set_url("?fase=listaReducao");
             $menu1->add_link($botaoRel,"right");
-            
-            # Redução da Carga Horária
-            $botaoRel = new Button('Readaptação');
-            $botaoRel->set_url("?fase=listaReadaptacao");
-            #$menu1->add_link($botaoRel,"right");
-            
-            # Redução da Carga Horária
-            $botaoRel = new Button('Redução da Carga Horária');
-            $botaoRel->set_url("?fase=listaReducao");
-            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
@@ -235,25 +225,15 @@ if($acesso){
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_url("../grhRelatorios/reducao.geral.php");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
-
-            # Redução da Carga Horária
-            $botaoRel = new Button('Redução da Carga Horária');
-            $botaoRel->set_url("?fase=listaReducao");
-            #$menu1->add_link($botaoRel,"right");
             
             # Redução da Carga Horária
             $botaoRel = new Button('Readaptação');
             $botaoRel->set_url("?fase=listaReadaptacao");
             $menu1->add_link($botaoRel,"right");
-            
-            # Redução da Carga Horária
-            $botaoRel = new Button('Redução da Carga Horária');
-            $botaoRel->set_url("?fase=listaReducao");
-            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
@@ -393,58 +373,6 @@ if($acesso){
             break; 
         
     ################################################################
-        
-        # Relatório
-        case "relatorio" :
-            
-            # Título & uSbtitulo
-            $subTitulo = NULL;
-            $titulo = "Servidores com Solicitação de Redução de Carga Horária";
-            
-            # Pega os dados
-            $select = "SELECT idServidor,
-                              tbpessoa.nome,
-                              idReducao,
-                              dtSolicitacao,
-                              idReducao,
-                              idReducao,
-                              idReducao,
-                              idReducao,
-                              idServidor
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbreducao USING (idServidor)
-                        WHERE tbservidor.idPerfil <> 10";
-            
-            # status
-            if($parametroStatus <> 0){
-                $select .= " AND status = ".$parametroStatus;
-                $subTitulo .= "Status: ".$statusPossiveis[$parametroStatus][1];
-            }
-            
-            # status
-            if(!is_null($parametroNomeMat)){
-                $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
-                $subTitulo .= "Nome: ".$parametroNomeMat;
-            }       
-                    
-            $select .= " ORDER BY status, dtInicio";
-            
-            $resumo = $pessoal->select($select);
-            
-            # Monta o Relatório
-            $relatorio = new Relatorio();
-            $relatorio->set_conteudo($resumo);
-            $relatorio->set_label(array("Id/Matrícula","Nome","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-            $relatorio->set_align(array("center","left","center","center","left","center","center","left"));
-            $relatorio->set_funcao(array("idMatricula",NULL,NULL,"date_to_php"));
-            
-            $relatorio->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-            $relatorio->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
-            
-            $relatorio->set_titulo($titulo);
-            $relatorio->set_subtitulo($subTitulo);
-            $relatorio->show();
-            break;
     }
     
     $page->terminaPagina();

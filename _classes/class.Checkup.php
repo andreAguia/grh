@@ -3359,7 +3359,7 @@ class Checkup {
      * 
      * Servidor Com redução da carga horário terminando em menos de 90 dias
      */
-    
+    /*
     public function get_servidorComReducaoMenor90Dias($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 1;
@@ -3433,7 +3433,7 @@ class Checkup {
             $callout->fecha();
         }
     }
-
+*/
     ##########################################################
     
      /**

@@ -107,8 +107,7 @@ if($acesso){
                 $menu->add_item('link','por Ano da Aposentadoria','?','Exibe os servidores aposentados por ano');
                 $menu->add_item('link','por Motivo da Aposentadoria','?fase=motivo','Exibe os servidores aposentados e o motivo da aposentadoris');
                 $menu->add_item('titulo','Servidores Ativos','#');
-                $menu->add_item('link','por Idade','?fase=dataIdade','Exibe os servidores e a idade para se aposentar');
-                $menu->add_item('link','por Tempo Averbado e Idade','?fase=dataIdadeTempo','Exibe os servidores com o tempo averbado e idade para aposentar');
+                $menu->add_item('link','previsão para Aposentadoria','?fase=previsao','Exibe os servidores ativos e a previsão para aposentadoria');
 
                 $menu->show();            
                 $painel->fecha();
@@ -363,66 +362,31 @@ if($acesso){
     
 ####################################################################################################################
     
-    # Listagem de idade para aposentadoria
-    case "dataIdade" : 
-    
-        # Formulário de Pesquisa
-        $form = new Form('?fase=dataIdade');
+    case "previsao" : 
+            br(4);
+            aguarde();
+            br();
+            
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+                p("Aguarde...","center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
 
-        $controle = new Input('parametroSexo','combo','Sexo:',1);
-        $controle->set_size(8);
-        $controle->set_title('Filtra pelo Sexo');
-        $controle->set_array(array("Masculino","Feminino"));
-        $controle->set_valor(date("Y"));
-        $controle->set_valor($parametroSexo);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(3);
-        $form->add_item($controle);
-
-        $form->show();
-
-        $select ='SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbservidor.idServidor,
-                     tbservidor.dtAdmissao,
-                     tbpessoa.dtNasc,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-               WHERE tbservidor.situacao = 1
-                 AND idPerfil = 1
-                 AND tbpessoa.sexo = "'.$parametroSexo.'"
-            ORDER BY tbpessoa.dtNasc';
-
-        $result = $pessoal->select($select);
-
-        $tabela = new Tabela();
-        $tabela->set_titulo('Relatório de Estatutários com Idade para Aposentadoria');
-        $tabela->set_subtitulo('Servidores do Sexo '.$parametroSexo);
-        $tabela->set_label(array('IdFuncional','Nome','Lotaçao','Admissão','Nascimento','Idade','Aposentadoria','Compulsória'));
-        #$relatorio->set_width(array(10,30,30,0,10,10,10));
-        $tabela->set_align(array("center","left","left"));
-        $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
-
-        $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,"pessoal","pessoal","pessoal"));
-        $tabela->set_metodo(array(NULL,NULL,"get_CargoRel",NULL,NULL,"get_idade","get_dataAposentadoria","get_dataCompulsoria"));
-
-        $tabela->set_conteudo($result);
+            loadPage('?fase=previsao1');
+            break;
         
-        $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editarIdade');
-        $tabela->show();
-        break;
-    
-    ####################################################################################################################
-    
-    # Listagem de idade e tempo averbado para aposentadoria
-    case "dataIdadeTempo" : 
+################################################################
+            
+    # Listagem de servidores ativos com previsão para posentadoria
+    case "previsao1" : 
+        
+         $grid2 = new Grid();
+         $grid2->abreColuna(6);
     
         # Formulário de Pesquisa
-        $form = new Form('?fase=dataIdadeTempo');
+        $form = new Form('?fase=previsao1');
 
         $controle = new Input('parametroSexo','combo','Sexo:',1);
         $controle->set_size(8);
@@ -436,6 +400,25 @@ if($acesso){
         $form->add_item($controle);
 
         $form->show();
+        
+        $grid2->fechaColuna();
+        $grid2->abreColuna(6);
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo('Valores de Referência para Aposentadoria');
+        
+        $valores = array();
+
+        $tabela->set_label(array('Descrição','Feminino','Masculino'));
+        #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+
+        $grid2->fechaColuna();
+        $grid->fechaGrid();
+
 
         $select ='SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
@@ -457,7 +440,7 @@ if($acesso){
         $result = $pessoal->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Relatório de Estatutários com Idade e Tempo de Serviço para Aposentadoria');
+        $tabela->set_titulo('Relatório de Estatutários Ativos com Previsão para Aposentadoria');
         $tabela->set_subtitulo('Servidores do Sexo '.$parametroSexo);
         $tabela->set_label(array('IdFuncional','Nome','Lotaçao','Admissão','Nascimento','Idade','Aposentadoria','Compulsória',"Tempo Serviço (dias)","Ocorrências (dias)","Dias Faltando"));
         #$relatorio->set_width(array(10,30,30,0,10,10,10));
@@ -470,12 +453,11 @@ if($acesso){
         $tabela->set_conteudo($result);
         
         $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editarTempo');
+        $tabela->set_editar('?fase=editarPrevisao');
         $tabela->show();
         break;
     
     ################################################################
-
         
         case "editarAno" :
             br(8);
@@ -509,7 +491,7 @@ if($acesso){
         
     ################################################################
         
-        case "editarIdade" :
+        case "editarPrevisao" :
             br(8);
             aguarde();
             
@@ -517,23 +499,7 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaAposentadoria.php?fase=dataIdade');
-            
-            # Carrega a página específica
-            loadPage('servidorMenu.php');
-            break; 
-        
-    ################################################################
-        
-        case "editarTempo" :
-            br(8);
-            aguarde();
-            
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
-            
-            # Informa a origem
-            set_session('origem','areaAposentadoria.php?fase=dataIdadeTempo');
+            set_session('origem','areaAposentadoria.php?fase=previsao');
             
             # Carrega a página específica
             loadPage('servidorMenu.php');

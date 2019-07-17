@@ -55,20 +55,16 @@ if($acesso){
                          titulo,
                          zona,
                          secao,
-                         tituloUf,';
-
-    if($idCargo == 63){ // id do motorista
-        $selectEdita.='motorista,dtVencMotorista,';
-    }
-
-
-    $selectEdita.='conselhoClasse,
-                   registroClasse,
-                   cp,
-                   serieCp,
-                   ufCp
-              FROM tbdocumentacao
-             WHERE idPessoa = '.$idPessoa;
+                         tituloUf,
+                         motorista,
+                         dtVencMotorista,
+                         conselhoClasse,
+                        registroClasse,
+                        cp,
+                        serieCp,
+                        ufCp
+                   FROM tbdocumentacao
+                  WHERE idPessoa = '.$idPessoa;
 
 
     # select do edita
@@ -187,65 +183,61 @@ if($acesso){
                           'tipo' => 'combo',
                           'array' => $estado,                           
                           'title' => 'Unidade de Federaçao do Titulo Eleitoral',
-                          'size' => 3));
-
-    if($idCargo == 63){ // id do motorista
-    
-    array_push($campos, array ('linha' => 4,
-                               'nome' => 'motorista',
-                               'label' => 'Número:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Carteira de Habilitação',
-                               'fieldset' => 'Carteira de Habilitação',
-                               'size' => 10),
-                       array ( 'linha' => 4,
-                               'nome' => 'dtVencMotorista',
-                               'label' => 'Data de Vencimento:',
-                               'tipo' => 'data',                           
-                               'size' => 15,
-                               'title' => 'Data de Vencimento da Carteira de Habilitação.'));                     
-
-    }
-    # os demais
-    array_push($campos,array  ('linha' => 7,
-                                'col' => 4,
-                               'nome' => 'conselhoClasse',
-                               'label' => 'Conselho de Classe:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Nome do Conselho de Classe',
-                               'fieldset' => 'Conselho de Classe',
-                               'size' => 50),
-                        array ('linha' => 7,
-                               'nome' => 'registroClasse',
-                                'col' => 4,
-                               'label' => 'Número:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Número do registro',
-                               'size' => 20),
-                       array  ('linha' => 8,
-                               'col' => 3,
-                               'nome' => 'cp',
-                               'label' => 'Numero:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Numero da Carteira Profissional CLT',
-                               'fieldset' => 'Carteira Profissional CLT',
-                               'size' => 20),
-                        array ('linha' => 8,
-                               'nome' => 'serieCp',
-                               'col' => 2,
-                               'label' => 'Serie:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Serie',
-                               'size' => 10),
-                        array ('linha' => 8,
-                               'nome' => 'ufCp',
-                               'col' => 2,
-                               'label' => 'UF:',
-                               'tipo' => 'combo',
-                                'array' => $estado,                         
-                               'title' => 'Unidade da Federaçao',
-                               'size' => 10)
-                                );
+                          'size' => 3),
+                   array ('linha' => 4,
+                          'col' => 4,
+                          'nome' => 'motorista',
+                          'label' => 'Número:',
+                          'tipo' => 'texto',                          
+                          'title' => 'Carteira de Habilitação',
+                          'fieldset' => 'Carteira de Habilitação',
+                          'size' => 10),
+                  array ( 'linha' => 4,
+                          'col' => 3,
+                          'nome' => 'dtVencMotorista',
+                          'label' => 'Data de Vencimento:',
+                          'tipo' => 'data',                           
+                          'size' => 15,
+                          'title' => 'Data de Vencimento da Carteira de Habilitação.'),
+                  array  ('linha' => 5,
+                          'col' => 4,
+                          'nome' => 'conselhoClasse',
+                          'label' => 'Conselho de Classe:',
+                          'tipo' => 'texto',                          
+                          'title' => 'Nome do Conselho de Classe',
+                          'fieldset' => 'Conselho de Classe',
+                          'size' => 50),
+                   array ('linha' => 5,
+                          'nome' => 'registroClasse',
+                          'col' => 3,
+                          'label' => 'Número:',
+                          'tipo' => 'texto',                          
+                          'title' => 'Número do registro',
+                          'size' => 20),
+                  array  ('linha' => 6,
+                          'col' => 3,
+                          'nome' => 'cp',
+                          'label' => 'Numero:',
+                          'tipo' => 'texto',                          
+                          'title' => 'Numero da Carteira Profissional CLT',
+                          'fieldset' => 'Carteira Profissional CLT',
+                          'size' => 20),
+                   array ('linha' => 6,
+                          'nome' => 'serieCp',
+                          'col' => 2,
+                          'label' => 'Serie:',
+                          'tipo' => 'texto',                          
+                          'title' => 'Serie',
+                          'size' => 10),
+                   array ('linha' => 6,
+                          'nome' => 'ufCp',
+                          'col' => 2,
+                          'label' => 'UF:',
+                          'tipo' => 'combo',
+                          'array' => $estado,                         
+                          'title' => 'Unidade da Federaçao',
+                          'size' => 10)
+                         );
 
     $objeto->set_campos($campos);
 

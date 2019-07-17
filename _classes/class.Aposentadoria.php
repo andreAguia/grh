@@ -227,4 +227,86 @@ class Aposentadoria{
 
     ###########################################################
 
+    /**
+     * Método podeAposentar
+     * informa se o servidor pode aposentar baseado nos critérios de tempo de serviço e idade
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    public function podeAposentar($idServidor) {
+        
+        # Conecta o banco de dados
+        $intra = new Intra();
+        $pessoal = new Pessoal();
+        
+    #########################################################################
+        
+        # Verifica o tempo de serviço
+
+        # Pega o sexo do servidor
+        $sexo = $pessoal->get_sexo($idServidor);
+        
+        # Define o tempo para cada gênero
+        switch ($sexo){
+            case "Masculino" :
+                $diasAposentadoria = $intra->get_variavel("diasAposentadoriaMasculino");
+                break;
+            case "Feminino" :
+                $diasAposentadoria = $intra->get_variavel("diasAposentadoriaFeminino");
+                break;
+        }
+        
+        $tempoGeral = $this->get_tempoGeral($idServidor);
+        $ocorrencias = $this->get_ocorrencias($idServidor);
+        
+        # Calcula o tempo de serviço geral
+        $totalTempoGeral = $tempoGeral - $ocorrencias;
+
+        # Dias que faltam
+        $faltam = $diasAposentadoria - $totalTempoGeral;
+        
+        # Analisa resultado
+        if($faltam < 0){
+            $tempo = TRUE;
+        }else{
+            $tempo = FALSE;
+        }
+        
+    #########################################################################
+        
+        # Verifica a idade
+        
+        # Pega a idade do servidor
+        $idade = $pessoal->get_idade($idServidor);
+        
+        # Define a idade para cada gênero
+        switch ($sexo){
+            case "Masculino" :
+                $idadeAposentadoria = $intra->get_variavel("idadeAposentadoriaMasculino");
+                break;
+            case "Feminino" :
+                $idadeAposentadoria = $intra->get_variavel("idadeAposentadoriaFeminino");
+                break;
+        }
+        
+        # Analisa o resultado
+        if($idade >= $idadeAposentadoria){
+            $idade = TRUE;
+        }else{
+            $idade = FALSE;
+        }
+        
+        # Monta o retorno
+        if(($tempo) AND ($idade)){
+            $retorno = TRUE;
+        }else{
+            $retorno = FALSE;
+        }
+        
+        return $retorno;
+    }
+
+    ###########################################################
+
 }

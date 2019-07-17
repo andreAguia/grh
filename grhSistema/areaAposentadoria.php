@@ -18,6 +18,7 @@ if($acesso){
     
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
     $aposentadoria = new Aposentadoria();
     
     # Verifica a fase do programa
@@ -363,7 +364,52 @@ if($acesso){
 ####################################################################################################################
     
     case "previsao" : 
-            br(4);
+        
+        $grid2 = new Grid();
+        $grid2->abreColuna(7);
+    
+        # Formulário de Pesquisa
+        $form = new Form('?fase=previsao');
+
+        $controle = new Input('parametroSexo','combo','Sexo:',1);
+        $controle->set_size(8);
+        $controle->set_title('Filtra pelo Sexo');
+        $controle->set_array(array("Masculino","Feminino"));
+        $controle->set_valor(date("Y"));
+        $controle->set_valor($parametroSexo);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(3);
+        $form->add_item($controle);
+
+        $form->show();
+        
+        $grid2->fechaColuna();
+        $grid2->abreColuna(5);
+
+        # Pega os valores de referência
+        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
+        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
+        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
+        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
+        $compulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+        
+        $valores = array(array("Feminino",$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$idadeAposentFeminino,$compulsoria),
+                         array("Masculino",$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$idadeAposentMasculino,$compulsoria));
+        
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_label(array('Sexo','Tempo de Serviço','Idade','Compulsória'));
+        #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+
+        $grid2->fechaColuna();
+        $grid->fechaGrid();
+        
+            br();
             aguarde();
             br();
             
@@ -382,11 +428,11 @@ if($acesso){
     # Listagem de servidores ativos com previsão para posentadoria
     case "previsao1" : 
         
-         $grid2 = new Grid();
-         $grid2->abreColuna(6);
+        $grid2 = new Grid();
+        $grid2->abreColuna(7);
     
         # Formulário de Pesquisa
-        $form = new Form('?fase=previsao1');
+        $form = new Form('?fase=previsao');
 
         $controle = new Input('parametroSexo','combo','Sexo:',1);
         $controle->set_size(8);
@@ -402,16 +448,23 @@ if($acesso){
         $form->show();
         
         $grid2->fechaColuna();
-        $grid2->abreColuna(6);
+        $grid2->abreColuna(5);
 
+        # Pega os valores de referência
+        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
+        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
+        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
+        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
+        $compulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+        
+        $valores = array(array("Feminino",$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$idadeAposentFeminino,$compulsoria),
+                         array("Masculino",$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$idadeAposentMasculino,$compulsoria));
+        
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
-        $tabela->set_titulo('Valores de Referência para Aposentadoria');
-        
-        $valores = array();
-
-        $tabela->set_label(array('Descrição','Feminino','Masculino'));
+        $tabela->set_label(array('Sexo','Tempo de Serviço','Idade','Compulsória'));
         #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+        $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array('left'));
         $tabela->set_conteudo($valores);
         $tabela->show();
@@ -420,40 +473,65 @@ if($acesso){
         $grid->fechaGrid();
 
 
-        $select ='SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbservidor.idServidor,
-                     tbservidor.dtAdmissao,
-                     tbpessoa.dtNasc,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-               WHERE tbservidor.situacao = 1
-                 AND idPerfil = 1
-                 AND tbpessoa.sexo = "'.$parametroSexo.'"
-            ORDER BY tbpessoa.dtNasc';
+        $select ='SELECT tbservidor.idServidor,
+                         tbservidor.idFuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         tbservidor.dtAdmissao,
+                         tbpessoa.dtNasc,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "'.$parametroSexo.'"
+                ORDER BY tbpessoa.dtNasc';
 
         $result = $pessoal->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Relatório de Estatutários Ativos com Previsão para Aposentadoria');
+        #$tabela->set_titulo('Relatório de Estatutários Ativos com Previsão para Aposentadoria');
         $tabela->set_subtitulo('Servidores do Sexo '.$parametroSexo);
-        $tabela->set_label(array('IdFuncional','Nome','Lotaçao','Admissão','Nascimento','Idade','Aposentadoria','Compulsória',"Tempo Serviço (dias)","Ocorrências (dias)","Dias Faltando"));
-        #$relatorio->set_width(array(10,30,30,0,10,10,10));
-        $tabela->set_align(array("center","left","left"));
-        $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
+        $tabela->set_label(array('','IdFuncional','Nome','Cargo','Admissão','Nascimento','Idade','Aposentadoria','Compulsória',"Tempo Serviço (dias)","Ocorrências (dias)","Dias Faltando"));
+        $tabela->set_width(array(5,8,20,12,8,8,4,8,8,5,5,5));
+        $tabela->set_align(array("center","center","left","left"));
+        $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
 
-        $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,"pessoal","pessoal","pessoal","Aposentadoria","Aposentadoria","Aposentadoria"));
-        $tabela->set_metodo(array(NULL,NULL,"get_Cargo",NULL,NULL,"get_idade","get_dataAposentadoria","get_dataCompulsoria","get_tempoGeral","get_ocorrencias","get_diasFaltando"));
+        $tabela->set_classe(array("Aposentadoria",NULL,NULL,"pessoal",NULL,NULL,"pessoal","pessoal","pessoal","Aposentadoria","Aposentadoria","Aposentadoria"));
+        $tabela->set_metodo(array("podeAposentar",NULL,NULL,"get_Cargo",NULL,NULL,"get_idade","get_dataAposentadoria","get_dataCompulsoria","get_tempoGeral","get_ocorrencias","get_diasFaltando"));
 
         $tabela->set_conteudo($result);
         
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editarPrevisao');
+        
+        $tabela->set_formatacaoCondicional(array( 
+                                              array('coluna' => 0,
+                                                    'valor' => TRUE,
+                                                    'operador' => '=',
+                                                    'id' => 'pode'),                                              
+                                              array('coluna' => 0,
+                                                    'valor' => FALSE,
+                                                    'operador' => '=',
+                                                    'id' => 'naoPode')                                       
+                                                    ));
+        
+        $pode = new Imagem(PASTA_FIGURAS.'accept.png','Pode Aposentar',15,15);
+        $naoPode = new Imagem(PASTA_FIGURAS.'bloqueado2.png','Ainda Tem Pendências',15,15);
+        
+        $tabela->set_imagemCondicional(array(array('coluna' => 0,
+                                                   'valor' => TRUE,
+                                                   'operador' => '=',
+                                                   'imagem' => $pode),
+                                             array('coluna' => 0,
+                                                   'valor' => FALSE,
+                                                   'operador' => '=',
+                                                   'imagem' => $naoPode)
+                                        ));
         $tabela->show();
         break;
     

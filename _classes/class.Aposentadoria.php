@@ -28,7 +28,8 @@ class Aposentadoria{
         
         $select = 'SELECT idServidor
                      FROM tbservidor
-                    WHERE situacao = 2';
+                    WHERE situacao = 2
+                    AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';
         
         $pessoal = new Pessoal();
         $count = $pessoal->count($select);
@@ -308,5 +309,34 @@ class Aposentadoria{
     }
 
     ###########################################################
+
+    function get_numEstatutariosPodemAposentar($sexo = NULL){
+
+    /**
+     * informa o número de Servidores Ativos que já alcançaram os requisitos para aposentadoria
+     * 
+     * @param integer $idPessoa do servidor
+     */
+        
+        $select = 'SELECT idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                    WHERE tbservidor.situacao = 1
+                      AND idPerfil = 1
+                      AND tbpessoa.sexo = "'.$sexo.'"';
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+        
+        $contador = 0;
+        foreach($row as $servidor){
+            if($this->podeAposentar($servidor[0])){
+                $contador++;
+            }
+        }
+        
+        return $contador;
+    }
+
+     ###########################################################
 
 }

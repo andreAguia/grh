@@ -3103,6 +3103,30 @@ class Pessoal extends Bd {
 
     ###########################################################
 
+    function get_numEstatutariosAtivosSexo($sexo = NULL){
+
+    /**
+     * informa o número de Servidores Ativos
+     * 
+     * @param integer $idPessoa do servidor
+     */
+        
+        $select = 'SELECT idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                    WHERE situacao = 1 AND idPerfil = 1';	
+
+        # Sexo
+        if(!is_null($sexo)){
+            $select .= ' AND sexo = "'.$sexo.'"'; 
+        }
+
+        $count = parent::count($select);
+        return $count;
+    }
+
+    ###########################################################
+
+
     function get_numServidoresAtivosPerfil($idPerfil = NULL){
 
     /**

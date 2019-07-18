@@ -60,7 +60,7 @@ if($acesso){
     $menu1 = new MenuBar();
 
     # Voltar
-    if($fase == ""){
+    if($fase == "previsao1"){
         $botaoVoltar = new Link("Voltar","grh.php");
     }else{
         $botaoVoltar = new Link("Voltar","?");
@@ -69,6 +69,38 @@ if($acesso){
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar,"left");
+    
+    # Servidores Aposentados
+    if($fase == ""){        
+        $botaoExercicio = new Link("Aposentados por Motivo","?fase=motivo");
+        $botaoExercicio->set_class('button');
+        $menu1->add_link($botaoExercicio,"right");
+        
+        $botaoExercicio = new Link("Servidores Ativos","?fase=previsao");
+        $botaoExercicio->set_class('button');
+        $menu1->add_link($botaoExercicio,"right");
+    }
+    
+    if($fase == "motivo"){  
+        $botaoExercicio = new Link("Aposentados por Ano","?");
+        $botaoExercicio->set_class('button');
+        $menu1->add_link($botaoExercicio,"right");
+        
+        $botaoExercicio = new Link("Servidores Ativos","?fase=previsao");
+        $botaoExercicio->set_class('button');
+        $menu1->add_link($botaoExercicio,"right");
+    }
+    
+    if($fase == "previsao"){  
+        $botaoExercicio = new Link("Aposentados por Ano","?");
+        $botaoExercicio->set_class('button');
+        $menu1->add_link($botaoExercicio,"right");
+        
+        $botaoExercicio = new Link("Aposentados por Motivo","?fase=motivo");
+        $botaoExercicio->set_class('button');
+        $menu1->add_link($botaoExercicio,"right");
+    }
+        
 
     $menu1->show();
     
@@ -77,258 +109,94 @@ if($acesso){
     br();
     
     switch ($fase){
-    
-####################################################################################################################
-    
-        # Aposentados por ano
-        case "" : 
-            
-            # Inicia o Grid
+        
+        case "" :
+             # Inicia o Grid
             $grid = new Grid();
             
-            # Coluna Lateral
-            $grid->abreColuna(12,12,3);
+            # Aposentados
+            $grid->abreColuna(12,6);
 
-                # Número de Servidores
-                $painel = new Callout("success");
-                $painel->abre();
-                    $numServidores = $aposentadoria->get_numServidoresAposentados();
-                    p($numServidores,"estatisticaNumero");
-                    p("Servidores Aposentados","estatisticaTexto");
-                $painel->fecha(); 
+            $painel = new Callout();
+            $painel->abre();
 
-                # Menu
-                $painel = new Callout();
-                $painel->abre();
-                titulo('Menu');
-                
-                # Inicia o menu 
-                $menu = new Menu("menuProcedimentos");
-                $menu->add_item('titulo','Servidores Aposentados','#');
-                $menu->add_item('link','por Ano da Aposentadoria','?','Exibe os servidores aposentados por ano');
-                $menu->add_item('link','por Motivo da Aposentadoria','?fase=motivo','Exibe os servidores aposentados e o motivo da aposentadoris');
-                $menu->add_item('titulo','Servidores Ativos','#');
-                $menu->add_item('link','previsão para Aposentadoria','?fase=previsao','Exibe os servidores ativos e a previsão para aposentadoria');
+            # Servidores
+            titulo('Servidores Aposentados');
+            br();
 
-                $menu->show();            
-                $painel->fecha();
+            $tamanhoImage = 180;
+            $menu = new MenuGrafico(2);
 
+            $botao = new BotaoGrafico();
+            $botao->set_label('Por Ano');
+            $botao->set_url('?fase=porAno');
+            $botao->set_imagem(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Servidores estatutários / celetistas por Ano de aposentadoria');
+            $menu->add_item($botao);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Por Tipo');
+            $botao->set_url('?fase=motivo');
+            $botao->set_imagem(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Servidores estatutários / celetistas por tipo de Aposentadoria');
+            $menu->add_item($botao);
+
+            $menu->show();        
+            $painel->fecha();
             $grid->fechaColuna();
-           
-            # Área Central 
-            $grid->abreColuna(12,12,9);
-    
-                $grid2 = new Grid();
-                $grid2->abreColuna(6);
-                
-                # Formulário de Pesquisa
-                $form = new Form('?');
 
-                # Cria um array com os anos possíveis
-                $anoInicial = 1999;
-                $anoAtual = date('Y');
-                $anosPossiveis = arrayPreenche($anoAtual,$anoInicial,"d");
+            ##########################################################
 
-                $controle = new Input('parametroAno','combo');
-                $controle->set_size(8);
-                $controle->set_title('Filtra por Ano exercício');
-                $controle->set_array($anosPossiveis);
-                $controle->set_valor(date("Y"));
-                $controle->set_valor($parametroAno);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(6);
-                $form->add_item($controle);
+            # Ativos
+            $grid->abreColuna(12,6);
+            
+            $painel = new Callout();
+            $painel->abre();
+            
+            $tamanhoImage = 180;
+            $menu = new MenuGrafico(2);
 
-                $form->show();
-                
-                $grid2->fechaColuna();
-                $grid2->abreColuna(6);
-                
-                # Cria um menu
-                $menu = new MenuBar();
-                
-                # Botão Estatística
-                $botao = new Button('Estatística','?fase=anoEstatistica');
-                $botao->set_title('Exibe estatística dos servidores aposentados por ano');
-                $menu->add_link($botao,"right");
-
-                $menu->show();
-                
-                $grid2->fechaColuna();
-                $grid->fechaGrid();
-
-                $select = 'SELECT tbservidor.idfuncional,
-                                  tbpessoa.nome,
-                                  tbservidor.idServidor,
-                                  tbservidor.dtAdmissao,
-                                  tbservidor.dtDemissao,
-                                  tbmotivo.motivo
-                             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                             LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                            WHERE YEAR(tbservidor.dtDemissao) = "'.$parametroAno.'"
-                              AND situacao = 2 
-                         ORDER BY dtDemissao';		
-
-
-                $result = $pessoal->select($select);
-
-                $tabela = new Tabela();
-                $tabela->set_titulo('Relatório Anual de Servidores Aposentados em '.$parametroAno);
-                $tabela->set_tituloLinha2('Com Informaçao de Contatos');
-                $tabela->set_subtitulo('Ordenado pela Data de Saída');
-
-                $tabela->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída','Motivo'));
-                #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-                $tabela->set_align(array('center','left','left','center','center','left'));
-                $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
-
-                $tabela->set_classe(array(NULL,NULL,"pessoal"));
-                $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
-
-                $tabela->set_conteudo($result);
-
-                $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('?fase=editarAno');
-                $tabela->show();
-
+            # Servidores Ativos
+            $botao = new BotaoGrafico();
+            $botao->set_label('Ativos');
+            $botao->set_url('?fase=previsao');
+            $botao->set_imagem(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Servidores estatutários / celetistas ativos com previsão de aposentadoria');
+            $menu->add_item($botao);
+            
+            $menu->show();        
+            $painel->fecha();
             $grid->fechaColuna();
-            $grid->fechaGrid();
+            $grid->fechaGrid();        
             break;
     
 ####################################################################################################################
-    
-        # Aposentadoria por Motivo
-        case "motivo" : 
+        
+        # Aposentados por ano
+        case "porAno" : 
             
-            # Inicia o Grid
-            $grid = new Grid();
+            $grid2 = new Grid();
+            $grid2->abreColuna(2);
             
-            # Coluna Lateral
-            $grid->abreColuna(12,12,4);
-
-                # Abre um callout
-                $panel = new Callout();
-                $panel->abre();
-                
-                # Geral - Por Perfil
-                $selectGrafico = 'SELECT tbmotivo.motivo, count(tbservidor.idServidor) as jj
-                                    FROM tbservidor LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                                   WHERE tbservidor.situacao = 2
-                                GROUP BY tbmotivo.motivo
-                                ORDER BY 2 DESC ';
-
-                $servidores = $pessoal->select($selectGrafico);
-
-                # Soma a coluna do count
-                $total = array_sum(array_column($servidores, "jj"));
-                
-                # Tabela
-                $tabela = new Tabela();
-                $tabela->set_titulo("Resumo");
-                $tabela->set_conteudo($servidores);
-                $tabela->set_label(array("Aposentadoria","Servidores"));
-                $tabela->set_width(array(80,20));
-                $tabela->set_align(array("left","center"));
-                $tabela->set_rodape("Total de Servidores: ".$total);                
-                $tabela->show();
-                
-                # Gráfico
-                $chart = new Chart("Pie",$servidores);
-                $chart->set_idDiv("perfil");
-                $chart->set_legend(FALSE);
-                #$chart->set_tamanho($largura = 300,$altura = 300);
-                #$chart->show();
-
-                $panel->fecha();
-
-            $grid->fechaColuna();
-           
-            # Área Central 
-            $grid->abreColuna(12,12,8);
-    
-    
-                # Formulário de Pesquisa
-                $form = new Form('?fase=motivo');
-
-                # Cria um array com os tipo possíveis
-                $selectMotivo = "SELECT DISTINCT idMotivo,
-                                      tbmotivo.motivo 
-                                 FROM tbmotivo JOIN tbservidor ON (tbservidor.motivo = tbmotivo.idMotivo)
-                                 WHERE situacao = 2
-                                 ORDER BY 2";
-
-                $motivosPossiveis = $pessoal->select($selectMotivo);
-
-                $controle = new Input('parametroMotivo','combo','Motivo:',1);
-                $controle->set_size(8);
-                $controle->set_title('Filtra por Motivo');
-                $controle->set_array($motivosPossiveis);
-                $controle->set_valor(date("Y"));
-                $controle->set_valor($parametroMotivo);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(6);
-                $form->add_item($controle);
-
-                $form->show();
-
-                $select = 'SELECT tbservidor.idfuncional,
-                                  tbpessoa.nome,
-                                  tbservidor.idServidor,
-                                  tbservidor.dtAdmissao,
-                                  tbservidor.dtDemissao
-                             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                             LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                            WHERE tbservidor.motivo = '.$parametroMotivo.'
-                              AND situacao = 2
-                         ORDER BY dtDemissao';		
-
-
-                $result = $pessoal->select($select);
-
-                $tabela = new Tabela();
-                $tabela->set_titulo('Relatório Anual de Servidores Aposentados por Motivo');
-                $tabela->set_tituloLinha2('Com Informaçao de Contatos');
-                $tabela->set_subtitulo('Ordenado pela Data de Saída');
-
-                $tabela->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída'));
-                #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-                $tabela->set_align(array('center','left','left','center','center','left'));
-                $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
-
-                $tabela->set_classe(array(NULL,NULL,"pessoal"));
-                $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
-
-                $tabela->set_conteudo($result);
-
-                $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('?fase=editarMotivo');
-                $tabela->show();
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-        break;
-    
-####################################################################################################################
-
-        # Estatística por Ano
-        case "anoEstatistica" : 
+            # Número de Servidores
+            $painel = new Callout("success");
+            $painel->abre();
+                $numServidores = $aposentadoria->get_numServidoresAposentados();
+                p($numServidores,"estatisticaNumero");
+                p("Servidores Aposentados<br/>(Estatutários e Celetistas)","estatisticaTexto");
+            $painel->fecha(); 
             
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            
-            # Abre um callout
-            $panel = new Callout();
-            $panel->abre();
+            $grid2->fechaColuna();
+            $grid2->abreColuna(10);
             
             # Título
             tituloTable("Estatística por Ano da Aposentadoria");
             
-            # Geral - Por Perfil
+            # monta o select
             $selectGrafico = 'SELECT YEAR(tbservidor.dtDemissao), count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
                                WHERE tbservidor.situacao = 2
+                                 AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                             GROUP BY YEAR(tbservidor.dtDemissao)
                             ORDER BY 1 asc ';
 
@@ -355,61 +223,73 @@ if($acesso){
             #$chart->set_tamanho($largura = 1000,$altura = 500);
             $chart->show();
             
-            $panel->fecha();
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            ###############
+            
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porAno');
 
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-        break;
+            # Cria um array com os anos possíveis
+            $anoInicial = 1999;
+            $anoAtual = date('Y');
+            $anosPossiveis = arrayPreenche($anoAtual,$anoInicial,"d");
+
+            $controle = new Input('parametroAno','combo');
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano exercício');
+            $controle->set_array($anosPossiveis);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $select = 'SELECT tbservidor.idfuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              tbservidor.dtAdmissao,
+                              tbservidor.dtDemissao,
+                              tbmotivo.motivo
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                        WHERE YEAR(tbservidor.dtDemissao) = "'.$parametroAno.'"
+                          AND situacao = 2
+                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                     ORDER BY dtDemissao';		
+
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores Estatutários / Celetistas Aposentados em '.$parametroAno);
+            $tabela->set_tituloLinha2('Com Informaçao de Contatos');
+            $tabela->set_subtitulo('Ordenado pela Data de Saída');
+
+            $tabela->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída','Motivo'));
+            #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+            $tabela->set_align(array('center','left','left','center','center','left'));
+            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
+
+            $tabela->set_classe(array(NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_cargo"));
+
+            $tabela->set_conteudo($result);
+
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarAno');
+            $tabela->show();
+            break;
     
 ####################################################################################################################
     
     case "previsao" : 
         
-        $grid2 = new Grid();
-        $grid2->abreColuna(7);
-    
-        # Formulário de Pesquisa
-        $form = new Form('?fase=previsao');
-
-        $controle = new Input('parametroSexo','combo','Sexo:',1);
-        $controle->set_size(8);
-        $controle->set_title('Filtra pelo Sexo');
-        $controle->set_array(array("Masculino","Feminino"));
-        $controle->set_valor(date("Y"));
-        $controle->set_valor($parametroSexo);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(3);
-        $form->add_item($controle);
-
-        $form->show();
-        
-        $grid2->fechaColuna();
-        $grid2->abreColuna(5);
-
-        # Pega os valores de referência
-        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
-        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
-        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
-        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
-        $compulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
-        
-        $valores = array(array("Feminino",$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$idadeAposentFeminino,$compulsoria),
-                         array("Masculino",$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$idadeAposentMasculino,$compulsoria));
-        
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_label(array('Sexo','Tempo de Serviço','Idade','Compulsória'));
-        #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
-
-        $grid2->fechaColuna();
-        $grid->fechaGrid();
-        
-            br();
+            br(5);
             aguarde();
             br();
             
@@ -429,10 +309,10 @@ if($acesso){
     case "previsao1" : 
         
         $grid2 = new Grid();
-        $grid2->abreColuna(7);
+        $grid2->abreColuna(4);
     
         # Formulário de Pesquisa
-        $form = new Form('?fase=previsao');
+        $form = new Form('?fase=previsao1');
 
         $controle = new Input('parametroSexo','combo','Sexo:',1);
         $controle->set_size(8);
@@ -442,13 +322,13 @@ if($acesso){
         $controle->set_valor($parametroSexo);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(3);
+        $controle->set_col(6);
         $form->add_item($controle);
 
         $form->show();
         
         $grid2->fechaColuna();
-        $grid2->abreColuna(5);
+        $grid2->abreColuna(8);
 
         # Pega os valores de referência
         $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
@@ -457,13 +337,19 @@ if($acesso){
         $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
         $compulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
         
-        $valores = array(array("Feminino",$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$idadeAposentFeminino,$compulsoria),
-                         array("Masculino",$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$idadeAposentMasculino,$compulsoria));
+        $numEstatutariosFeminino = $pessoal->get_numEstatutariosAtivosSexo("Feminino");
+        $numEstatutariosMasculino = $pessoal->get_numEstatutariosAtivosSexo("Masculino");
+        
+        $jaPodemFeminino = $aposentadoria->get_numEstatutariosPodemAposentar("Feminino");
+        $jaPodemMasculino = $aposentadoria->get_numEstatutariosPodemAposentar("Masculino");
+        
+        $valores = array(array("Feminino",$idadeAposentFeminino,$compulsoria,$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$numEstatutariosFeminino,$jaPodemFeminino),
+                         array("Masculino",$idadeAposentMasculino,$compulsoria,$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$numEstatutariosMasculino,$jaPodemMasculino));
         
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
-        $tabela->set_label(array('Sexo','Tempo de Serviço','Idade','Compulsória'));
-        #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+        $tabela->set_label(array('Sexo','Idade para Aposentar','Idade para a Compulsória','Tempo de Serviço para Aposentar','Número de Estatutários','Número de Servidores que Podem Aposentar'));
+        $tabela->set_width(array(12,14,14,18,15,22));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_align(array('left'));
         $tabela->set_conteudo($valores);
@@ -494,7 +380,7 @@ if($acesso){
         $result = $pessoal->select($select);
 
         $tabela = new Tabela();
-        #$tabela->set_titulo('Relatório de Estatutários Ativos com Previsão para Aposentadoria');
+        $tabela->set_titulo('Estatutários Ativos com Previsão para Aposentadoria - Sexo: '.$parametroSexo);
         $tabela->set_subtitulo('Servidores do Sexo '.$parametroSexo);
         $tabela->set_label(array('','IdFuncional','Nome','Cargo','Admissão','Nascimento','Idade','Aposentadoria','Compulsória',"Tempo Serviço (dias)","Ocorrências (dias)","Dias Faltando"));
         $tabela->set_width(array(5,8,20,12,8,8,4,8,8,5,5,5));
@@ -537,6 +423,116 @@ if($acesso){
     
     ################################################################
         
+        # Aposentadoria por Motivo
+        case "motivo" : 
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(4);
+            
+            # Número de Servidores
+            $painel = new Callout("success");
+            $painel->abre();
+                $numServidores = $aposentadoria->get_numServidoresAposentados();
+                p($numServidores,"estatisticaNumero");
+                p("Servidores Aposentados<br/>(Estatutários e Celetistas)","estatisticaTexto");
+            $painel->fecha(); 
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=motivo');
+
+            # Cria um array com os tipo possíveis
+            $selectMotivo = "SELECT DISTINCT idMotivo,
+                                  tbmotivo.motivo 
+                             FROM tbmotivo JOIN tbservidor ON (tbservidor.motivo = tbmotivo.idMotivo)
+                             WHERE situacao = 2
+                             AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                             ORDER BY 2";
+
+            $motivosPossiveis = $pessoal->select($selectMotivo);
+
+            $controle = new Input('parametroMotivo','combo','Motivo:',1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Motivo');
+            $controle->set_array($motivosPossiveis);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroMotivo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(4);
+            $grid2->fechaColuna();
+            $grid2->abreColuna(4);
+
+            # Monta o select
+            $selectGrafico = 'SELECT tbmotivo.motivo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                               WHERE tbservidor.situacao = 2
+                               AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                            GROUP BY tbmotivo.motivo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Tabela
+            $tabela = new Tabela();
+            #$tabela->set_titulo("Resumo");
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(array("Aposentadoria","Servidores"));
+            $tabela->set_width(array(80,20));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_rodape("Total de Servidores: ".$total);                
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+                
+
+            $select = 'SELECT tbservidor.idfuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              tbservidor.dtAdmissao,
+                              tbservidor.dtDemissao,
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                        WHERE tbservidor.motivo = '.$parametroMotivo.'
+                          AND situacao = 2
+                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                     ORDER BY dtDemissao';		
+
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores Estatutários / Celetistas Aposentados por Motivo');
+            $tabela->set_tituloLinha2('Com Informaçao de Contatos');
+            $tabela->set_subtitulo('Ordenado pela Data de Saída');
+
+            $tabela->set_label(array('IdFuncional','Nome','Cargo','Admissão','Saída','Perfil'));
+            #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
+            $tabela->set_align(array('center','left','left'));
+            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
+
+            $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,"pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_cargo",NULL,NULL,"get_perfil"));
+
+            $tabela->set_conteudo($result);
+
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarMotivo');
+            $tabela->show();
+            break;
+    
+####################################################################################################################
+        
         case "editarAno" :
             br(8);
             aguarde();
@@ -545,7 +541,7 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaAposentadoria.php');
+            set_session('origem','areaAposentadoria.php?');
             
             # Carrega a página específica
             loadPage('servidorMenu.php');

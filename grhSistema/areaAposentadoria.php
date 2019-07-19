@@ -60,7 +60,7 @@ if($acesso){
     $menu1 = new MenuBar();
     
     # Servidores Aposentados
-    if($fase == "porAno"){
+    if(($fase == "porAno") OR ($fase == "")){
         # Voltar
         $botaoVoltar = new Link("Voltar","grh.php");
         $botaoVoltar->set_class('button');

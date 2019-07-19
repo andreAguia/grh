@@ -173,11 +173,11 @@ class MenuPrincipal{
         $menu = new MenuGrafico(4);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Férias da GRH');
+        $botao->set_label('Afastamentos');
         #$botao->set_target('blank');
-        $botao->set_url('?fase=ferias');
-        $botao->set_imagem(PASTA_FIGURAS.'ferias2.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Férias dos Servidores da GRH');
+        $botao->set_url('grhAfastamentos.php');
+        $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Afastamentos dos Servidores da GRH');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();

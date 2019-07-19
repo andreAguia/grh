@@ -330,7 +330,7 @@ if($acesso){
                 }
             }
 
-            $select .= ') ORDER BY 2';
+            $select .= ') ORDER BY 2, 4';
 
             $result = $pessoal->select($select);
             $cont = $pessoal->count($select);

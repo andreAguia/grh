@@ -59,33 +59,16 @@ if($acesso){
     # Cria um menu
     $menu1 = new MenuBar();
 
-    # Servidores Aposentados
-    if(($fase == "porAno") OR ($fase == "")){
+    if($fase == "previsao1"){
         # Voltar
-        $botaoVoltar = new Link("Voltar","grh.php");
+        $botaoVoltar = new Link("Voltar","?");
         $botaoVoltar->set_class('button');
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
         $menu1->add_link($botaoVoltar,"left");
-
-        $botaoExercicio = new Link("Aposentados por Tipo","?fase=motivo");
-        $botaoExercicio->set_class('button');
-        $menu1->add_link($botaoExercicio,"right");
-
-        $botaoExercicio = new Link("Servidores Ativos","?fase=previsao");
-        $botaoExercicio->set_class('button success');
-        $menu1->add_link($botaoExercicio,"right");
-
-        # Botão Estatística
-        $botao = new Link('Estatística','?fase=anoEstatistica');
-        $botao->set_title('Exibe estatística dos servidores aposentados por ano');
-        $botao->set_class('button secondary');
-        $menu1->add_link($botao,"right");
-    }
-
-    if(($fase == "previsao1") OR ($fase == "motivo") OR ($fase == "anoEstatistica")){
+    }elseif(($fase == "") OR ($fase == "porAno")){
         # Voltar
-        $botaoVoltar = new Link("Voltar","?fase=porAno");
+        $botaoVoltar = new Link("Voltar","grh.php");
         $botaoVoltar->set_class('button');
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
@@ -105,6 +88,29 @@ if($acesso){
         # Aposentados por ano
         case "" :
         case "porAno" :
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(12,3);
+            
+            $painel = new Callout();
+            $painel->abre();
+            
+            $menu = new Menu("menuProcedimentos");
+            
+            $menu->add_item("titulo","Servidores Aposentados");
+            $menu->add_item("link","<b>Aposentados por Ano</b>","?fase=porAno","Servidores Aposentados por Ano de Aposentadoria");
+            $menu->add_item("link","Aposentados por Tipo","?fase=motivo","Servidores Aposentados por Tipo de Aposentadoria");
+            $menu->add_item("link","Estatística","?fase=anoEstatistica","Estatística dos Servidores Aposentados");
+            
+            $menu->add_item("titulo","Servidores Ativos");
+            $menu->add_item("link","Previsão de Aposentadoria","?fase=previsao","Previsão de Aposentadoria de Servidores Ativos");
+            
+            $menu->show();
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12,9);
 
             # Formulário de Pesquisa
             $form = new Form('?fase=porAno');
@@ -162,6 +168,9 @@ if($acesso){
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editarAno');
             $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
 
 ####################################################################################################################
@@ -169,15 +178,8 @@ if($acesso){
     case "previsao" :
 
             br(5);
-            aguarde();
+            aguarde("Calculando ...");
             br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-                p("Aguarde...","center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
 
             loadPage('?fase=previsao1');
             break;
@@ -210,30 +212,7 @@ if($acesso){
         $grid2->fechaColuna();
         $grid2->abreColuna(8);
 
-        # Pega os valores de referência
-        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
-        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
-        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
-        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
-        $compulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
-
-        $numEstatutariosFeminino = $pessoal->get_numEstatutariosAtivosSexo("Feminino");
-        $numEstatutariosMasculino = $pessoal->get_numEstatutariosAtivosSexo("Masculino");
-
-        $jaPodemFeminino = $aposentadoria->get_numEstatutariosPodemAposentar("Feminino");
-        $jaPodemMasculino = $aposentadoria->get_numEstatutariosPodemAposentar("Masculino");
-
-        $valores = array(array("Feminino",$idadeAposentFeminino,$compulsoria,$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$numEstatutariosFeminino,$jaPodemFeminino),
-                         array("Masculino",$idadeAposentMasculino,$compulsoria,$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$numEstatutariosMasculino,$jaPodemMasculino));
-
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_label(array('Sexo','Idade para Aposentar','Idade para a Compulsória','Tempo de Serviço para Aposentar','Número de Estatutários','Número de Servidores que Podem Aposentar'));
-        $tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
+       $aposentadoria->exibeResumoPrevisao();
 
         $grid2->fechaColuna();
         $grid->fechaGrid();
@@ -243,12 +222,11 @@ if($acesso){
                          tbservidor.idFuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
-                         tbservidor.dtAdmissao,
-                         tbpessoa.dtNasc,
                          tbservidor.idServidor,
                          tbservidor.idServidor,
                          tbservidor.idServidor,
                          tbservidor.idServidor,
+                         tbservidor.idServidor,                         
                          tbservidor.idServidor,
                          tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -262,13 +240,13 @@ if($acesso){
         $tabela = new Tabela();
         $tabela->set_titulo('Estatutários Ativos com Previsão para Aposentadoria - Sexo: '.$parametroSexo);
         $tabela->set_subtitulo('Servidores do Sexo '.$parametroSexo);
-        $tabela->set_label(array('','IdFuncional','Nome','Cargo','Admissão','Nascimento','Idade','Aposentadoria','Compulsória',"Tempo Serviço (dias)","Ocorrências (dias)","Dias Faltando"));
-        $tabela->set_width(array(5,8,20,12,8,8,4,8,8,5,5,5));
+        $tabela->set_label(array('','IdFuncional','Nome','Cargo','Idade','Data da Aposentadoria por idade','Data da Compulsória',"Tempo Serviço (dias)","Ocorrências (dias)","Dias Faltando",'Data da Aposentadoria por Tempo'));
+        $tabela->set_width(array(5,10,10,10,5,10,10,5,5,10));
         $tabela->set_align(array("center","center","left","left"));
-        $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
+        #$tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
 
-        $tabela->set_classe(array("Aposentadoria",NULL,NULL,"pessoal",NULL,NULL,"pessoal","pessoal","pessoal","Aposentadoria","Aposentadoria","Aposentadoria"));
-        $tabela->set_metodo(array("podeAposentar",NULL,NULL,"get_Cargo",NULL,NULL,"get_idade","get_dataAposentadoria","get_dataCompulsoria","get_tempoGeral","get_ocorrencias","get_diasFaltando"));
+        $tabela->set_classe(array("Aposentadoria",NULL,NULL,"pessoal","pessoal","pessoal","pessoal","Aposentadoria","Aposentadoria","Aposentadoria","Aposentadoria"));
+        $tabela->set_metodo(array("podeAposentar",NULL,NULL,"get_Cargo","get_idade","get_dataAposentadoria","get_dataCompulsoria","get_tempoGeral","get_ocorrencias","get_diasFaltando","get_dataAposentadoriaTS"));
 
         $tabela->set_conteudo($result);
 
@@ -305,6 +283,29 @@ if($acesso){
 
         # Aposentadoria por Motivo / Tipo
         case "motivo" :
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(12,3);
+            
+            $painel = new Callout();
+            $painel->abre();
+            
+            $menu = new Menu("menuProcedimentos");
+            
+            $menu->add_item("titulo","Servidores Aposentados");
+            $menu->add_item("link","Aposentados por Ano","?fase=porAno","Servidores Aposentados por Ano de Aposentadoria");
+            $menu->add_item("link","<b>Aposentados por Tipo</b>","?fase=motivo","Servidores Aposentados por Tipo de Aposentadoria");
+            $menu->add_item("link","Estatística","?fase=anoEstatistica","Estatística dos Servidores Aposentados");
+            
+            $menu->add_item("titulo","Servidores Ativos");
+            $menu->add_item("link","Previsão de Aposentadoria","?fase=previsao","Previsão de Aposentadoria de Servidores Ativos");
+            
+            $menu->show();
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12,9);
 
             # Formulário de Pesquisa
             $form = new Form('?fase=motivo');
@@ -367,6 +368,9 @@ if($acesso){
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editarMotivo');
             $tabela->show();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
 
 ####################################################################################################################
@@ -375,7 +379,24 @@ if($acesso){
         case "anoEstatistica" :
 
             $grid = new Grid();
-            $grid->abreColuna(3);
+            $grid->abreColuna(12,3);
+            
+            $painel = new Callout();
+            $painel->abre();
+            
+            $menu = new Menu("menuProcedimentos");
+            
+            $menu->add_item("titulo","Servidores Aposentados");
+            $menu->add_item("link","Aposentados por Ano","?fase=porAno","Servidores Aposentados por Ano de Aposentadoria");
+            $menu->add_item("link","Aposentados por Tipo","?fase=motivo","Servidores Aposentados por Tipo de Aposentadoria");
+            $menu->add_item("link","<b>Estatística</b>","?fase=anoEstatistica","Estatística dos Servidores Aposentados");
+            
+            $menu->add_item("titulo","Servidores Ativos");
+            $menu->add_item("link","Previsão de Aposentadoria","?fase=previsao","Previsão de Aposentadoria de Servidores Ativos");
+            
+            $menu->show();
+
+            $painel->fecha();
 
             # Número de Servidores
             $painel = new Callout("success");
@@ -389,7 +410,7 @@ if($acesso){
 
     #################################################################
 
-            $grid->abreColuna(9);
+            $grid->abreColuna(12,9);
             # Abre um callout
             $panel = new Callout();
             $panel->abre();

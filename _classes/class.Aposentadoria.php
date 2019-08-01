@@ -339,4 +339,40 @@ class Aposentadoria{
 
      ###########################################################
 
+    function exibeResumoPrevisao(){
+
+    /**
+     * Exibe uma tabela com as informações de previsão de aposentadoria dos servidorea ativos
+     */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+    
+        # Pega os valores de referência
+        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
+        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
+        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
+        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
+        $compulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+
+        $numEstatutariosFeminino = $pessoal->get_numEstatutariosAtivosSexo("Feminino");
+        $numEstatutariosMasculino = $pessoal->get_numEstatutariosAtivosSexo("Masculino");
+
+        $jaPodemFeminino = $this->get_numEstatutariosPodemAposentar("Feminino");
+        $jaPodemMasculino = $this->get_numEstatutariosPodemAposentar("Masculino");
+
+        $valores = array(array("Feminino",$idadeAposentFeminino,$compulsoria,$diasAposentFeminino." (".dias_to_diasMesAno($diasAposentFeminino).")",$numEstatutariosFeminino,$jaPodemFeminino),
+                         array("Masculino",$idadeAposentMasculino,$compulsoria,$diasAposentMasculino." (".dias_to_diasMesAno($diasAposentMasculino).")",$numEstatutariosMasculino,$jaPodemMasculino));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_label(array('Sexo','Idade para Aposentar','Idade para a Compulsória','Tempo de Serviço para Aposentar','Número de Estatutários','Número de Servidores que Podem Aposentar'));
+        $tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+    }
+
 }

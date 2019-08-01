@@ -1,7 +1,7 @@
 <?php
 /**
  * Estatística
- *  
+ *
  * By Alat
  */
 
@@ -14,39 +14,39 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso){    
+if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
     $comissao = new CargoComissao();
-	
+
     # Verifica a fase do programa
     $fase = get('fase','inicial');
-    
+
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Verifica o post de quando exibe os histórico de servidores nesse cargo
     $parametroCargo = get('parametroCargo',get_session('parametroCargo',13));
     $parametroDescricao = post('parametroDescricao',get_session('parametroDescricao','Todos'));
     $parametroStatus = post('parametroStatus',get_session('parametroStatus',"Vigente"));
     $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
     $parametroMes = post('parametroMes',get_session('parametroMes',date('m')));
-    
+
     # Garante que quando se muda de cargo a descrição volta a todos
     if($parametroCargo <> get_session('parametroCargo')){
         $parametroDescricao = "Todos";
     }
 
-    # Joga os parâmetros par as sessions    
+    # Joga os parâmetros par as sessions
     set_session('parametroCargo',$parametroCargo);
     set_session('parametroDescricao',$parametroDescricao);
     set_session('parametroStatus',$parametroStatus);
     set_session('parametroAno',$parametroAno);
     set_session('parametroMes',$parametroMes);
-    
+
     # Começa uma nova página
-    $page = new Page();        
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -69,13 +69,13 @@ if($acesso){
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
     $menu1->add_link($linkVoltar,"left");
-    
+
     # Cadastro de Cargos em Comissão
     $botao = new Button('Cargos');
     $botao->set_title('Acessa o Cadastro de Cargos em Comissão');
     $botao->set_url("cadastroCargoComissao.php");
     $menu1->add_link($botao,"right");
-    
+
     # Cadastro de Descrição
     $botao = new Button('Descrição');
     $botao->set_title('Acessa o Cadastro de Descrição dos Cargos em Comissão');
@@ -83,10 +83,10 @@ if($acesso){
     $menu1->add_link($botao,"right");
 
     $menu1->show();
-    
+
     titulo("Cargo em Comissão");
     br();
-    
+
     switch ($fase){
         case "inicial":
             $grid = new Grid();
@@ -94,13 +94,13 @@ if($acesso){
             ####################################
             ## Menu Lateral
             ####################################
-            
+
             $grid->abreColuna(12,3);
-            
-            # Pega o nome do cargo            
+
+            # Pega o nome do cargo
             $nomeCargo = $pessoal->get_nomeCargoComissao($parametroCargo);
             $simbolo = $pessoal->get_cargoComissaoSimbolo($parametroCargo);
-            
+
             $painel = new Callout();
             $painel->abre();
 
@@ -116,7 +116,7 @@ if($acesso){
 
                 # Inicia o Menu de Cargos
                 titulo("Menu");
-                
+
                 $menu = new Menu("menuProcedimentos");
                 $menu->add_item('titulo','Cargos em Comissão');
 
@@ -128,17 +128,17 @@ if($acesso){
                         $menu->add_item('link',$item[2].' - '.$item[1],'?fase=inicial&parametroCargo='.$item[0]);
                     }
                 }
-                
+
                 $menu->add_item("titulo","Movimentação Mensal");
                 $menu->add_item("link","Por Nomeação/Exoneração","?fase=movimentacaoPorNomExo","Movimentação Mensal por Data de Nomeações & Exonerações");
                 $menu->add_item("link","Por Data da Publicação","?fase=movimentacaoPorPublicacao","Movimentação Mensal por Data da Publicação");
                 $menu->add_item("link","Por Data do Ato do Reitor","?fase=movimentacaoPorAto","Movimentação Mensal por Data do Ato do Reitor");
-                
+
                 $menu->add_item('titulo','Relatórios');
                 $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
                 $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
                 $menu->show();
-                
+
                 $painel->fecha();
 
             $grid->fechaColuna();
@@ -146,25 +146,25 @@ if($acesso){
             ####################################
             ## Área central de conteúdo
             ####################################
-            
+
             $grid->abreColuna(12,9);
-            
+
             # Informa a origem
             set_session('origem','areaCargoComissao.php');
-            
+
             $form = new Form('?');
-            
+
             $select = 'SELECT idDescricaoComissao,
                               tbdescricaocomissao.descricao
                          FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
-                        WHERE tbdescricaocomissao.idTipoComissao = '.$parametroCargo.'  
+                        WHERE tbdescricaocomissao.idTipoComissao = '.$parametroCargo.'
                      ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao, tbdescricaocomissao.descricao';
-        
+
             $descricao = $pessoal->select($select);
-            
+
             array_unshift($descricao, array("Todos","Todos"));
 
-            # Descrição    
+            # Descrição
             $controle = new Input('parametroDescricao','combo','Descrição:',1);
             $controle->set_size(200);
             $controle->set_title('Filtra por Descrição');
@@ -173,10 +173,10 @@ if($acesso){
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_autofocus(TRUE);
-            $controle->set_col(9);                
+            $controle->set_col(9);
             $form->add_item($controle);
-            
-             # Status    
+
+             # Status
             $controle = new Input('parametroStatus','combo','Status',1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Status');
@@ -184,13 +184,13 @@ if($acesso){
             $controle->set_valor($parametroStatus);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);            
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
-            
+
             $comissao->exibeResumo($parametroCargo);
-                        
+
             # select
             $select = "SELECT tbservidor.idServidor,
                               tbpessoa.nome,
@@ -204,17 +204,17 @@ if($acesso){
                                          LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                               JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.idTipoComissao = $parametroCargo";
-            
+
             if($parametroDescricao <> "Todos"){
                     $select .= " AND tbcomissao.idDescricaoComissao = $parametroDescricao";
             }
-            
+
             if($parametroStatus == "Vigente"){
                 $select .= " AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)";
             }
-            
+
             $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
-            
+
             #echo $select;
 
             $result = $pessoal->select($select);
@@ -223,7 +223,7 @@ if($acesso){
             $function = array("idMatricula",NULL,"date_to_php","date_to_php","descricaoComissao");
             $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");
             $metodo = array(NULL,NULL,NULL,NULL,NULL,"get_perfil");
-           
+
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
@@ -241,14 +241,14 @@ if($acesso){
                                                     'id' => 'vigente')));
             $tabela->show();
             break;
-            
+
     ################################################################
-            
+
         case "movimentacaoPorNomExo":
-            
+
             # Informa a origem
             set_session('origem','areaCargoComissao.php?fase=movimentacaoPorNomExo');
-            
+
             $form = new Form('?fase=movimentacaoPorNomExo');
             $controle = new Input('parametroAno','texto','Ano:',1);
             $controle->set_size(8);
@@ -259,7 +259,7 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $controle->set_col(2);
             $form->add_item($controle);
-            
+
             $controle = new Input('parametroMes','combo','Mês:',1);
             $controle->set_size(30);
             $controle->set_title('Filtra pelo Mês');
@@ -269,11 +269,11 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
-            
+
             $form->show();
-            
+
             # Nomeações
-            $select = 'SELECT * FROM 
+            $select = 'SELECT * FROM
                       (SELECT "Nomeação",
                               tbcomissao.dtNom,
                               tbcomissao.dtPublicNom,
@@ -286,7 +286,7 @@ if($acesso){
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtNom) = '.$parametroAno.' 
+                         WHERE YEAR(tbcomissao.dtNom) = '.$parametroAno.'
                            AND MONTH(tbcomissao.dtNom) = '.$parametroMes.'
                      UNION
                      SELECT "Exoneração",
@@ -301,15 +301,15 @@ if($acesso){
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtExo) = '.$parametroAno.' 
+                         WHERE YEAR(tbcomissao.dtExo) = '.$parametroAno.'
                            AND MONTH(tbcomissao.dtExo) = '.$parametroMes.') a
-                     ORDER BY 2 asc';
-            
+                     ORDER BY 2, 6, 1 asc';
+
             $result = $pessoal->select($select);
             $label = array('Tipo','Data','Publicação','Ato Reitor','Id Funcional','Nome','Cargo','Processo');
             $align = array("center","center","center","center","center","left","left","left");
             $function = array(NULL,"date_to_php","date_to_php","date_to_php");
-            
+
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
@@ -327,17 +327,17 @@ if($acesso){
                                                            'valor' => "Nomeação",
                                                            'operador' => '=',
                                                            'id' => "comissaoComVagas")));
-            
+
             $tabela->show();
             break;
-            
+
     ################################################################
-            
+
         case "movimentacaoPorPublicacao":
-            
+
             # Informa a origem
             set_session('origem','areaCargoComissao.php?fase=movimentacaoPorPublicacao');
-                        
+
             $form = new Form('?fase=movimentacaoPorPublicacao');
             $controle = new Input('parametroAno','texto','Ano:',1);
             $controle->set_size(8);
@@ -348,7 +348,7 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $controle->set_col(2);
             $form->add_item($controle);
-            
+
             $controle = new Input('parametroMes','combo','Mês:',1);
             $controle->set_size(30);
             $controle->set_title('Filtra pelo Mês');
@@ -358,26 +358,26 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
-            
+
             $form->show();
-            
+
             # Verifica as publicações desse mês
-            $publicMes = "SELECT * FROM 
+            $publicMes = "SELECT * FROM
                           (SELECT tbcomissao.dtPublicNom FROM tbcomissao WHERE YEAR(tbcomissao.dtPublicNom) = $parametroAno AND MONTH(tbcomissao.dtPublicNom) = $parametroMes
                            UNION
                           SELECT tbcomissao.dtPublicExo FROM tbcomissao WHERE YEAR(tbcomissao.dtPublicExo) = $parametroAno AND MONTH(tbcomissao.dtPublicExo) = $parametroMes) b
                            ORDER BY 1";
-            
+
             $result1 = $pessoal->select($publicMes);
-            
+
             foreach($result1 as $dd){
-            
+
                 # Nomeações
-                $select = 'SELECT * FROM 
+                $select = 'SELECT * FROM
                           (SELECT "Nomeação",
                                   tbcomissao.dtPublicNom,
                                   tbcomissao.dtAtoNom,
-                                  tbcomissao.dtNom,                              
+                                  tbcomissao.dtNom,
                                   tbservidor.idFuncional,
                                   tbpessoa.nome,
                                   CONCAT(simbolo," - ",tbtipocomissao.descricao),
@@ -401,7 +401,7 @@ if($acesso){
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
                              WHERE tbcomissao.dtPublicExo = "'.$dd[0].'") a
-                         ORDER BY 2, 3, 6';
+                         ORDER BY 6, 1, 4';
 
                 $result = $pessoal->select($select);
                 $label = array('Tipo','Publicação','Ato Reitor','Data','Id Funcional','Nome','Cargo','Processo');
@@ -425,17 +425,16 @@ if($acesso){
                                                                'valor' => "Nomeação",
                                                                'operador' => '=',
                                                                'id' => "comissaoComVagas")));
-
                 $tabela->show();
             }
-            
+
             /*
             # Nomeações
-            $select = 'SELECT * FROM 
+            $select = 'SELECT * FROM
                       (SELECT "Nomeação",
                               tbcomissao.dtPublicNom,
                               tbcomissao.dtAtoNom,
-                              tbcomissao.dtNom,                              
+                              tbcomissao.dtNom,
                               tbservidor.idFuncional,
                               tbpessoa.nome,
                               CONCAT(simbolo," - ",tbtipocomissao.descricao),
@@ -444,7 +443,7 @@ if($acesso){
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtPublicNom) = '.$parametroAno.' 
+                         WHERE YEAR(tbcomissao.dtPublicNom) = '.$parametroAno.'
                            AND MONTH(tbcomissao.dtPublicNom) = '.$parametroMes.'
                      UNION
                      SELECT "Exoneração",
@@ -459,7 +458,7 @@ if($acesso){
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtPublicExo) = '.$parametroAno.' 
+                         WHERE YEAR(tbcomissao.dtPublicExo) = '.$parametroAno.'
                            AND MONTH(tbcomissao.dtPublicExo) = '.$parametroMes.') a
                      ORDER BY 2, 3, 6';
 
@@ -487,17 +486,17 @@ if($acesso){
                                                            'id' => "comissaoComVagas")));
 
             $tabela->show();
-             * 
+             *
              */
             break;
-            
+
     ################################################################
-            
+
         case "movimentacaoPorAto":
-            
+
             # Informa a origem
             set_session('origem','areaCargoComissao.php?fase=movimentacaoPorAto');
-                        
+
             $form = new Form('?fase=movimentacaoPorAto');
             $controle = new Input('parametroAno','texto','Ano:',1);
             $controle->set_size(8);
@@ -508,7 +507,7 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $controle->set_col(2);
             $form->add_item($controle);
-            
+
             $controle = new Input('parametroMes','combo','Mês:',1);
             $controle->set_size(30);
             $controle->set_title('Filtra pelo Mês');
@@ -518,26 +517,26 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
-            
+
             $form->show();
-            
+
             # Verifica as publicações desse mês
-            $publicMes = "SELECT * FROM 
+            $publicMes = "SELECT * FROM
                           (SELECT tbcomissao.dtAtoNom FROM tbcomissao WHERE YEAR(tbcomissao.dtAtoNom) = $parametroAno AND MONTH(tbcomissao.dtAtoNom) = $parametroMes
                            UNION
                           SELECT tbcomissao.dtAtoExo FROM tbcomissao WHERE YEAR(tbcomissao.dtAtoExo) = $parametroAno AND MONTH(tbcomissao.dtAtoExo) = $parametroMes) b
                            ORDER BY 1";
-            
+
             $result1 = $pessoal->select($publicMes);
-            
+
             foreach($result1 as $dd){
-            
+
                 # Nomeações
-                $select = 'SELECT * FROM 
+                $select = 'SELECT * FROM
                           (SELECT "Nomeação",
                                   tbcomissao.dtPublicNom,
                                   tbcomissao.dtAtoNom,
-                                  tbcomissao.dtNom,                              
+                                  tbcomissao.dtNom,
                                   tbservidor.idFuncional,
                                   tbpessoa.nome,
                                   CONCAT(simbolo," - ",tbtipocomissao.descricao),
@@ -561,7 +560,7 @@ if($acesso){
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
                              WHERE tbcomissao.dtAtoExo = "'.$dd[0].'") a
-                         ORDER BY 2, 3, 6';
+                         ORDER BY 6, 1';
 
                 $result = $pessoal->select($select);
                 $label = array('Tipo','Publicação','Ato Reitor','Data','Id Funcional','Nome','Cargo','Processo');
@@ -588,14 +587,14 @@ if($acesso){
 
                 $tabela->show();
             }
-            
+
             /*
             # Nomeações
-            $select = 'SELECT * FROM 
+            $select = 'SELECT * FROM
                       (SELECT "Nomeação",
                               tbcomissao.dtPublicNom,
                               tbcomissao.dtAtoNom,
-                              tbcomissao.dtNom,                              
+                              tbcomissao.dtNom,
                               tbservidor.idFuncional,
                               tbpessoa.nome,
                               CONCAT(simbolo," - ",tbtipocomissao.descricao),
@@ -604,7 +603,7 @@ if($acesso){
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtPublicNom) = '.$parametroAno.' 
+                         WHERE YEAR(tbcomissao.dtPublicNom) = '.$parametroAno.'
                            AND MONTH(tbcomissao.dtPublicNom) = '.$parametroMes.'
                      UNION
                      SELECT "Exoneração",
@@ -619,7 +618,7 @@ if($acesso){
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtPublicExo) = '.$parametroAno.' 
+                         WHERE YEAR(tbcomissao.dtPublicExo) = '.$parametroAno.'
                            AND MONTH(tbcomissao.dtPublicExo) = '.$parametroMes.') a
                      ORDER BY 2, 3, 6';
 
@@ -647,34 +646,34 @@ if($acesso){
                                                            'id' => "comissaoComVagas")));
 
             $tabela->show();
-             * 
+             *
              */
             break;
-            
+
     ################################################################
-        
+
         case "editarCargo" :
             # Vigentes
             br(8);
             aguarde();
-            
+
             $dados = $comissao->get_dados($id);
             $idServidor = $dados["idServidor"];
-            
+
             # Informa o $id Servidor
             set_session('idServidorPesquisado',$idServidor);
-            
+
             # Carrega a página específica
             loadPage('servidorComissao.php?fase=editar&id='.$id);
-            break; 
-        
+            break;
+
     ################################################################
     }
-    
+
     # Fecha o grid
     $grid1->fechaColuna();
     $grid1->fechaGrid();
-    
+
     $page->terminaPagina();
 }else{
     loadPage("../../areaServidor/sistema/login.php");

@@ -82,8 +82,8 @@ a#checkupResumo1{
     margin: 0px;
 }
 
-ul.checkupResumo li{ 
-    padding: 0px 0px 0px 0px;    
+ul.checkupResumo li{
+    padding: 0px 0px 0px 0px;
     text-align: left;
     font-size: 12px;
     list-style-type: none;
@@ -110,7 +110,7 @@ div#divQuadroLicenca{
     position: fixed;
     top: 2px;
     left: 61%;
-    width: 200px;   
+    width: 200px;
 }
 
 div#divNumProcessoPremio{
@@ -200,8 +200,8 @@ tr#trePendente{
 
 /*******************************************
  * Cadastro de Cargo Em comissão dos servidores
- *******************************************/ 
- 
+ *******************************************/
+
 tr#comissaoSemVagas{
     background-color:#cccccc;
 }
@@ -216,7 +216,7 @@ tr#comissaoVagasNegativas{
 
 /*******************************************
  * Cadastro de Tempo de Servico
- *******************************************/ 
+ *******************************************/
 
 tr#totalTempo{
      background-color:#99ccff;
@@ -459,6 +459,74 @@ div#menuSuspenso{
 }
 
 /*******************************************
+ * procedimentos
+ ******************************************/
+
+ p#procedimentoPai{
+     font-size: 12px;
+     padding: 0px;
+     margin: 0px;
+     text-align: left;
+ }
+
+ p#procedimentoTitulo{
+     font-size: 18px;
+     padding: 0px;
+     margin: 0px;
+     text-align: center;
+ }
+
+ p#procedimentoDescricao{
+     font-size: 11px;
+     padding: 0px;
+     margin: 0px;
+     text-align: center;
+ }
+
+ hr#procedimento{
+     padding: 0px;
+     margin: 0px;
+     margin-bottom: 10px;
+     margin-top: 10px;
+ }
+
+ div#divNota ul,li{
+     font-size: 12px;
+ }
+
+ div#divNota ul{
+   font-size: 12px;
+   padding-top: 3px;
+ }
+
+ div#divNota h1{
+     font-size: 18px;
+     padding-bottom: 5px;
+     padding-top: 3px;
+ }
+
+ div#divNota h2{
+     font-size: 18px;
+     padding-bottom: 3px;
+     padding-top: 3px;
+ }
+
+ div#divNota h3{
+     font-size: 14px;
+     padding-bottom: 2px;
+     padding-top: 3px;
+ }
+
+ div#divNota {
+     font-size: 12px;
+ }
+
+ div#editarProcedimento{
+     position: relative;
+     float: right;
+ }
+  
+/*******************************************
  * Relatórios
  *******************************************/
 
@@ -468,11 +536,11 @@ div#menuSuspenso{
 p#aim{
     font-size: 12px;
  }
- 
+
  /*******************************************
  * Ficha Cadastral
  *******************************************/
- 
+
  div#tituloFichaCadastral{
      background-color: #e6e6e6;
      font-weight: normal;
@@ -485,7 +553,7 @@ p#aim{
 /*******************************************
  * Ato de Nomeacao
  *******************************************/
- 
+
 p#preambulo{
      text-align: justify;
      margin-left: 10em;
@@ -516,29 +584,29 @@ p#termodePosse{
 }
 
 /*******************************************
- * Ato do Reitor 
+ * Ato do Reitor
  *******************************************/
- 
+
  p#pAto{
      text-align: justify;
      font-size: 16px;
-     line-height: 2.0; 
+     line-height: 2.0;
      text-indent: 50px;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  p#pAtoData{
      text-align: center;
      font-size: 16px;
      font-family: Arial, Helvetica, sans-serif;
  }
-  
+
  p#pAtoAssinatura{
      text-align: center;
      font-size: 16px;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  p#pAtoTitulo{
      text-align: center;
      font-size: 16px;
@@ -552,7 +620,7 @@ p#termodePosse{
 /*******************************************
  * Declaração
  *******************************************/
- 
+
  p#pDeclaracaoTitulo{
      text-align: center;
      font-size: 14px;
@@ -561,24 +629,24 @@ p#termodePosse{
      text-decoration: underline;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  p#pDeclaracaoData{
      text-align: left;
      font-size: 14px;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  /*******************************************
- * CI 
+ * CI
  *******************************************/
- 
+
  p#pCiDePara1{
      text-align: left;
      font-size: 14px;
      line-height: 1.0;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  p#pCiDePara2{
      text-align: left;
      font-size: 14px;
@@ -586,7 +654,7 @@ p#termodePosse{
      font-family: Arial, Helvetica, sans-serif;
      text-indent: 2.5em;
  }
- 
+
  p#pCi{
      text-align: justify;
      font-size: 14px;
@@ -600,37 +668,37 @@ p#pCiNum{
      font-size: 14px;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  p#pCiData{
      text-align: right;
      font-size: 14px;
      font-family: Arial, Helvetica, sans-serif;
  }
-  
+
  p#pCiAssinatura{
      text-align: center;
      font-size: 14px;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  p#pCiRodape{
      text-align: center;
      font-size: 11px;
      padding: 0px;
      font-family: Arial, Helvetica, sans-serif;
  }
- 
+
  /*******************************************
  * Folha de Presença
  *******************************************/
- 
+
  table#tableFolhaPresenca {
      border: 1px solid black;
      color: #000000;
      border-collapse:collapse;
      width: 100%;
  }
- 
+
  table#tableFolhaPresenca th{
      color: #000000;
      font-size: 14px;
@@ -638,7 +706,7 @@ p#pCiNum{
      border: 2px solid black;
      height: 20px;
  }
- 
+
  table#tableFolhaPresenca td{
      color: #000000;
      font-size: 12px;
@@ -646,31 +714,31 @@ p#pCiNum{
      border: 2px solid black;
      height: 20px;
  }
- 
+
  table#tableFolhaPresenca2 td{
      color: #000000;
      font-size: 12px;
      text-align: center;
      height: 20px;
  }
- 
+
  p#pFolhaPresencaRodape{
      color: #000000;
      text-align: left;
-     font-size: 10px;     
+     font-size: 10px;
   }
-  
+
  /*******************************************
  * relatório de Balcao
  *******************************************/
- 
+
  table#tableRelatorioBalcao {
      border: 1px solid black;
      color: #000000;
      border-collapse:collapse;
      width: 100%;
  }
- 
+
  table#tableRelatorioBalcao caption{
      font-size: 30px;
      text-align: center;
@@ -678,62 +746,61 @@ p#pCiNum{
      padding-bottom: 20px;
      padding-top: 20px;
  }
- 
+
  table#tableRelatorioBalcao th{
      color: #000000;
      font-size: 18px;
      text-align: center;
      border: 1px solid black;
  }
- 
+
  table#tableRelatorioBalcao td{
      color: #000000;
      font-size: 18px;
      text-align: center;
      border: 1px solid black;
  }
-  
+
   /*******************************************
  * Ficha de avaliação Funcional
  *******************************************/
-  
+
   p#fichaAvaliacaoLabel{
      font-size: 11px;
      padding: 2px;
      margin: 0px;
   }
-  
+
   p#fichaAvaliacaoCampo{
      font-size: 14px;
      padding: 2px;
      margin: 0px;
   }
-  
+
   table#faf1{
       width: 100%;
       border: 2px solid black;
  }
- 
+
  table#faf2{
       width: 100%;
       border: 2px solid black;
  }
-  
+
   table#faf1 th{
      text-align: center;
      border: 2px solid black;
      font-size: 12px;
  }
- 
+
  table#faf1 td{
      text-align: left;
      border: 2px solid black;
      font-size: 12px;
  }
- 
+
  table#faf2 td{
      text-align: center;
      border: 2px solid black;
      font-size: 12px;
  }
- 

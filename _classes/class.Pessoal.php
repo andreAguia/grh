@@ -4045,7 +4045,6 @@ class Pessoal extends Bd {
 	}
         
         ###########################################################
-
 	
 	/**
 	 * Método get_idServidoridPessoa
@@ -4065,74 +4064,7 @@ class Pessoal extends Bd {
             
             return $row[0];
 			
-	}
-        
-        ###########################################################
-	
-	/**
-	 * Método get_dataAposentadoria
-	 * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria
-	 * 
-	 * @param string $idServidor idServidor do servidor
-	 */
-
-	public function get_dataAposentadoria($idServidor){
-            # Pega o sexo do servidor
-            $sexo = $this->get_sexo($idServidor);
-            
-            # Conecta ao banco intra
-            $intra = new Intra();
-            
-            # Define a idade que dá direito para cada gênero
-            switch ($sexo){
-                case "Masculino" :
-                    $idade = $intra->get_variavel("idadeAposentadoriaMasculino");
-                    break;
-                case "Feminino" :
-                    $idade = $intra->get_variavel("idadeAposentadoriaFeminino");
-                    break;
-            }
-            
-            # Pega a data de nascimento (vem dd/mm/AAAA)
-            $dtNasc = $this->get_dataNascimento($idServidor);
-            $partes = explode("/",$dtNasc);
-            
-            # Soma
-            $novoAno  = $partes[2]+$idade;
-            
-            # Calcula a data
-            $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
-            return $novaData;			
-	}
-        
-        ###########################################################
-	
-	/**
-	 * Método get_dataCompulsoria
-	 * Informa a data em que o servidor é obrigado a se aposentar
-	 * 
-	 * @param string $idServidor idServidor do servidor
-	 */
-
-	public function get_dataCompulsoria($idServidor){
-            
-            # Conecta ao banco intra
-            $intra = new Intra();
-            
-            # Idade obrigatória
-            $idade = $intra->get_variavel("idadeAposentadoriaCompulsoria");
-            
-            # Pega a data de nascimento (vem dd/mm/AAAA)
-            $dtNasc = $this->get_dataNascimento($idServidor);
-            $partes = explode("/",$dtNasc);
-            
-            # Soma
-            $novoAno  = $partes[2]+$idade;
-            
-            # Calcula a data
-            $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
-            return $novaData;			
-	}
+	}        
         
         ###########################################################
 	

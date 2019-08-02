@@ -19,6 +19,7 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $aposentadoria = new Aposentadoria();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -400,8 +401,8 @@ if($acesso){
             # Aposentadoria
             $dtNascimento = $pessoal->get_dataNascimento($idServidorPesquisado);
             $idade = $pessoal->get_idade($idServidorPesquisado);
-            $aposentadoria = $pessoal->get_dataAposentadoria($idServidorPesquisado);
-            $Compulsoria = $pessoal->get_dataCompulsoria($idServidorPesquisado);
+            $dtAposentadoria = $aposentadoria->get_dataAposentadoria($idServidorPesquisado);
+            $dtCompulsoria = $aposentadoria->get_dataCompulsoria($idServidorPesquisado);
             
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
@@ -416,8 +417,8 @@ if($acesso){
             $dados4 = array(
                     array("Idade do Servidor ",$idade),
                     array("Data de Nascimento ",$dtNascimento),
-                    array("Data com Direito a Aposentadoria ($anosAposentadoria anos)",$aposentadoria),
-                    array("Data da Compulsória (75 anos)",$Compulsoria)
+                    array("Data com Direito a Aposentadoria ($anosAposentadoria anos)",$dtAposentadoria),
+                    array("Data da Compulsória (75 anos)",$dtCompulsoria)
             );
             
             ####

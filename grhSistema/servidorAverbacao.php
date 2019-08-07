@@ -344,9 +344,9 @@ if($acesso){
             $totalTempo = $uenf + $publica + $privada;
             
             $dados1 = array(
-                    array("Tempo de Serviço na UENF ",$uenf),
-                    array("Tempo Averbado Empresa Pública",$publica),
-                    array("Tempo Averbado Empresa Privada",$privada),
+                    array("UENF ",$uenf),
+                    array("Empresa Pública",$publica),
+                    array("Empresa Privada",$privada),
                     array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
             );
             
@@ -403,6 +403,8 @@ if($acesso){
             $idade = $pessoal->get_idade($idServidorPesquisado);
             $dtAposentadoria = $aposentadoria->get_dataAposentadoria($idServidorPesquisado);
             $dtCompulsoria = $aposentadoria->get_dataCompulsoria($idServidorPesquisado);
+            $dtTempoServiço = $aposentadoria->get_dataAposentadoriaTS($idServidorPesquisado);
+            $dtProporcional = $aposentadoria->get_dataProporcional($idServidorPesquisado);
             
             # Define a idade que dá direito para cada gênero
             switch ($sexo){
@@ -417,8 +419,11 @@ if($acesso){
             $dados4 = array(
                     array("Idade do Servidor ",$idade),
                     array("Data de Nascimento ",$dtNascimento),
-                    array("Data com Direito a Aposentadoria ($anosAposentadoria anos)",$dtAposentadoria),
-                    array("Data da Compulsória (75 anos)",$dtCompulsoria)
+                    array("Por Idade ($anosAposentadoria anos)",$dtAposentadoria),
+                    array("Por Tempo de Serviço",$dtTempoServiço),
+                    array("Proporcional",$dtProporcional),
+                    array("Compulsória (75 anos)",$dtCompulsoria)
+                    
             );
             
             ####
@@ -544,7 +549,7 @@ if($acesso){
             
             # Monta a tabela do resumo de tempo
             $tabela = new Tabela();
-            $tabela->set_titulo('Idade para Aposentadoria');
+            $tabela->set_titulo('Aposentadoria');
             $tabela->set_conteudo($dados4);
             $tabela->set_label(array("Descrição","Valor"));
             $tabela->set_align(array("left","center"));

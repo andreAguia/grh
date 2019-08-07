@@ -4944,6 +4944,34 @@ class Pessoal extends Bd {
         return $retorno[0];
     }
 
-    ###########################################################
+##########################################################
+
+    /**
+     * Método get_dataIdade
+     * informa a data em que o servidor terá a idade informada
+     * 
+     * @note usada na rotina de aposentadoria
+     * 
+     * @param integer $idServidor id do servidor
+     * @param integer $idade      a idade
+     */
+
+    function get_dataIdade($idServidor, $idade){
+        
+        # Pega a data de nascimento
+        $dtNasc = $this->get_dataNascimento($idServidor);
+        
+        # Calcula a data da idade
+        $dia = substr($dtNasc,0,2);
+        $mes = substr($dtNasc,3,2);
+        $ano = substr($dtNasc,6,4);
+        
+        $novoAno = $ano+$idade;
+        $dataFinal = $dia."/".$mes."/".$novoAno;
+        return $dataFinal;
+    }
+
+###########################################################
+
 
 }

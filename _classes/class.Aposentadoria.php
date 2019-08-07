@@ -218,7 +218,7 @@ class Aposentadoria{
         
         # Analisa resultado
         if($faltam < 0){
-            $retorno = "($faltam)";
+            $retorno = $faltam;
         }else{
             $retorno = $faltam;
         }
@@ -639,10 +639,61 @@ class Aposentadoria{
        
        # Pega os dias faltando
        $faltando = $this->get_diasFaltando($idServidor);
+       
        $novaData = addDias(date("d/m/Y"),$faltando,FALSE);
        
        return $novaData;			
    }
 
-   ########################################################### 
+   ###########################################################
+
+   /**
+    * Método get_dataProporcional
+    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional
+    * 
+    * @param string $idServidor idServidor do servidor
+    */
+
+   public function get_dataProporcional($idServidor){
+       
+       
+       # Conecta ao Banco de Dados
+       $pessoal = new Pessoal();
+       
+       ##### Tempo Público
+       
+       # Tempo de Serviço
+       $uenf = $this->get_tempoServicoUenf($idServidor);
+       $publico = $this->get_tempoAverbadoPublico($idServidor);
+       $publicoGeral = $uenf+$publico;
+              
+       # Verifica se o tempo público é maior que 10 anos (3650 dias)
+       $dezAnos = 3650;
+       $faltando = $dezAnos - $publicoGeral;
+       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
+       
+       ##### Idade
+       
+       # Define a idade que dá direito para cada gênero
+       $sexo = $pessoal->get_sexo($idServidor);
+       switch ($sexo){
+           case "Masculino" :
+               $dataIdade = $pessoal->get_dataIdade($idServidor,65);
+               break;
+           
+           case "Feminino" :
+               $dataIdade = $pessoal->get_dataIdade($idServidor,60);
+               break;
+       }
+        
+       if($dataIdade > $dataPublico){
+           $novaData = $dataPublico;
+       }else{
+           $novaData = $dataIdade;
+       }
+       
+       return $novaData;			
+   }
+
+   ###########################################################  
 }

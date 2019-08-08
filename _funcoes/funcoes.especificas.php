@@ -679,3 +679,19 @@ function get_nomeSimples($nome){
     }
 
 ##########################################################
+
+    function marcaSePassou($data){
+    /**
+     * Função exibe a data com uma marca se a data já passou
+     * 
+     * Usado na rotina da área de aposentadoria
+     */
+
+        if(jaPassou($data)){
+            label($data);
+        }else{
+           echo $data;
+        }
+    }
+
+##########################################################

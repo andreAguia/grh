@@ -217,9 +217,6 @@ if($acesso){
     # Listagem de servidores ativos com previsão para posentadoria
     case "previsao1" :
 
-        $grid2 = new Grid();
-        $grid2->abreColuna(4);
-
         # Formulário de Pesquisa
         $form = new Form('?fase=previsao');
 
@@ -232,21 +229,20 @@ if($acesso){
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_autofocus(TRUE);
         $controle->set_linha(1);
-        $controle->set_col(6);
+        $controle->set_col(3);
         $form->add_item($controle);
 
         $form->show();
 
-        $grid2->fechaColuna();
-        $grid2->abreColuna(8);
-
-       $aposentadoria->exibeResumoPrevisao();
-
-        $grid2->fechaColuna();
-        $grid->fechaGrid();
+        $painel = new Callout();
+        $painel->abre();
+        
+        $aposentadoria->exibeRegras();
+        
+        $painel->fecha();
         
         # Exibe a lista
-        $aposentadoria->exibeAtivosPrevisao($parametroSexo);        
+        $aposentadoria->exibeAtivosPrevisao2($parametroSexo);        
         break;
 
 ####################################################################################################################

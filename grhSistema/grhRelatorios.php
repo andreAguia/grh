@@ -85,6 +85,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
+                $menu->add_item('linkAjax','Processo Eleitoral','?fase=eleitoral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Recadastramento 2018','?fase=recad2018','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Sispatri','?fase=sispatri','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Triênio','?fase=trienio','','','divMenuRelatorioGrh');
@@ -188,7 +189,7 @@ if($acesso){
         case "concursos";
             $menu = new Menu();
             $menu->add_item('titulo','Concursos');
-            $menu->add_item('linkWindow','Relatório de Estatutários Ativos - Agrupados por Concurso','../grhRelatorios/estatutariosConcurso.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários Ativos - Agrupados por Concurso','../grhRelatorios/estatutariosConcurso.php');            
 
             $menu->show();
             break;
@@ -415,6 +416,16 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Com Data de Nascimento e Sexo','../grhRelatorios/professorIdadeSexo.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Lotaçao','../grhRelatorios/professorporLotacao.php'); 
+            $menu->show();
+            break;
+        
+        ######################################
+
+        case "eleitoral";        
+            $menu = new Menu();
+            $menu->add_item('titulo','Processo Eleitoral');
+            $menu->add_item('linkWindow','Relatório de Servidores Administrativos e Técnicos por Lotação','../grhRelatorios/eleitoralAdmTecPorLotacao.php'); 
+            $menu->add_item('linkWindow','Relatório de Docentes por Lotação','../grhRelatorios/eleitoralProfessoresPorLotacao.php'); 
             $menu->show();
             break;
         

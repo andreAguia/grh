@@ -350,8 +350,6 @@ class MenuPrincipal{
         $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
         $menu->add_item($botao);
         
-        
-        
         $botao = new BotaoGrafico();
         $botao->set_label('Formação');
         $botao->set_url('areaFormacao.php');

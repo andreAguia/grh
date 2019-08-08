@@ -597,6 +597,13 @@ class Grh{
                 $botao->set_imagem(PASTA_FIGURAS.'historico.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Cadastro de Tempo de Serviço Averbado');
                 $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Aposentadoria');
+                $botao->set_url('servidorAposentadoria.php');
+                $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Avalia a posentadoria do Servidor');
+                $menu->add_item($botao);
             }
             
             # Cessão

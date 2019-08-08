@@ -558,6 +558,52 @@ class Aposentadoria{
     
 ###########################################################
 
+    function exibeAtivosPrevisao2($parametroSexo = NULL){
+
+    /**
+     * Exibe tabela com a previsão de aposentadoria de servidores ativos
+     * 
+     * @param string $parametroSexo o sexo do servidor
+     */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Monta o select
+        $select ='SELECT tbservidor.idFuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "'.$parametroSexo.'"
+                ORDER BY tbpessoa.dtNasc';
+
+        $result = $pessoal->select($select);
+
+        $tabela = new Tabela();
+        $tabela->set_titulo('Estatutários Ativos com Previsão para Aposentadoria - Sexo: '.$parametroSexo);
+        $tabela->set_subtitulo('Servidores do Sexo '.$parametroSexo);
+        $tabela->set_label(array('IdFuncional','Nome','Cargo','Integral','Proporcional','Compulsória'));
+        #$tabela->set_width(array(30,15,15,15,15));
+        $tabela->set_align(array("center","left","left"));
+        $tabela->set_funcaoDepoisClasse(array(NULL,NULL,NULL,"marcaSePassou","marcaSePassou","marcaSePassou"));
+
+        $tabela->set_classe(array(NULL,NULL,"pessoal","Aposentadoria","Aposentadoria","Aposentadoria"));
+        $tabela->set_metodo(array(NULL,NULL,"get_CargoSimples","get_dataAposentadoriaIntegral","get_dataAposentadoriaProporcional","get_dataAposentadoriaCompulsoria"));
+
+        $tabela->set_conteudo($result);
+
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editarPrevisao');
+        $tabela->show();
+    } 
+    
+###########################################################
+
    /**
     * Método get_dataAposentadoria
     * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria
@@ -686,14 +732,248 @@ class Aposentadoria{
                break;
        }
         
-       if($dataIdade > $dataPublico){
-           $novaData = $dataPublico;
-       }else{
-           $novaData = $dataIdade;
-       }
+       $novaData = dataMaior($dataIdade,$dataPublico);
+       
+       return $novaData;			
+   }
+   ###########################################################
+   ###########################################################
+
+   /**
+    * Método get_dataAposentadoriaIntegral
+    * Informa se pode aposentar de forma integral
+    * 
+    * @param string $idServidor idServidor do servidor
+    */
+
+   public function get_dataAposentadoriaIntegral($idServidor){
+       
+        # Idade
+        $dataIdade = $this->get_dataAposentadoriaIntegralIdade($idServidor);
+       
+        # Tempo de Serviço
+        $dataTempo = $this->get_dataAposentadoriaIntegralTempo($idServidor);
+        
+        $novaData = dataMaior($dataIdade,$dataTempo);
+       
+        return $novaData;
+   }
+
+   ###########################################################
+
+   /**
+    * Método get_dataAposentadoriaIntegralIdade
+    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria integral
+    * 
+    * @param string $idServidor idServidor do servidor
+    */
+
+   public function get_dataAposentadoriaIntegralIdade($idServidor){
+       
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Pega o sexo do servidor
+        $sexo = $pessoal->get_sexo($idServidor);
+        
+        # Define a idade que dá direito para cada gênero
+        switch ($sexo){
+            case "Masculino" :
+                $idade = $intra->get_variavel("idadeAposentadoriaMasculino");
+                break;
+            case "Feminino" :
+                $idade = $intra->get_variavel("idadeAposentadoriaFeminino");
+                break;
+        }
+
+        # Pega a data de nascimento (vem dd/mm/AAAA)
+        $dtNasc = $pessoal->get_dataNascimento($idServidor);
+        $partes = explode("/",$dtNasc);
+
+        # Soma
+        $novoAno  = $partes[2]+$idade;
+
+        # Calcula a data
+        $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+        return $novaData;			
+   }
+
+   ###########################################################
+
+   /**
+    * Método get_dataAposentadoriaIntegralTempo
+    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria integral considerando o tempo de serviço
+    * 
+    * @param string $idServidor idServidor do servidor
+    */
+
+   public function get_dataAposentadoriaIntegralTempo($idServidor){
+       
+       # Pega os dias faltando
+       $faltando = $this->get_diasFaltando($idServidor);
+       
+       $novaData = addDias(date("d/m/Y"),$faltando,FALSE);
        
        return $novaData;			
    }
 
-   ###########################################################  
+    ###########################################################
+
+   /**
+    * Método get_dataAposentadoriaProporcional
+    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional
+    * 
+    * @param string $idServidor idServidor do servidor
+    */
+
+   public function get_dataAposentadoriaProporcional($idServidor){
+       
+       
+       # Conecta ao Banco de Dados
+       $pessoal = new Pessoal();
+       
+       ##### Tempo Público
+       
+       # Tempo de Serviço
+       $uenf = $this->get_tempoServicoUenf($idServidor);
+       $publico = $this->get_tempoAverbadoPublico($idServidor);
+       $publicoGeral = $uenf+$publico;
+              
+       # Verifica se o tempo público é maior que 10 anos (3650 dias)
+       $dezAnos = 3650;
+       $faltando = $dezAnos - $publicoGeral;
+       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
+       
+       ##### Idade
+       
+       # Define a idade que dá direito para cada gênero
+       $sexo = $pessoal->get_sexo($idServidor);
+       switch ($sexo){
+           case "Masculino" :
+               $dataIdade = $pessoal->get_dataIdade($idServidor,65);
+               break;
+           
+           case "Feminino" :
+               $dataIdade = $pessoal->get_dataIdade($idServidor,60);
+               break;
+       }
+        
+       $novaData = dataMaior($dataIdade,$dataPublico);
+       
+       return $novaData;			
+   }
+   ###########################################################
+	
+    /**
+     * Método get_dataAposentadoriaCompulsoria
+     * Informa a data em que o servidor é obrigado a se aposentar
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+
+    public function get_dataAposentadoriaCompulsoria($idServidor){
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+
+        # Idade obrigatória
+        $idade = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+
+        # Pega a data de nascimento (vem dd/mm/AAAA)
+        $dtNasc = $pessoal->get_dataNascimento($idServidor);
+        $partes = explode("/",$dtNasc);
+
+        # Soma
+        $novoAno  = $partes[2]+$idade;
+
+        # Calcula a data
+        $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+        return $novaData;			
+    }
+
+    ###########################################################
+
+    function exibeRegras(){
+
+    /**
+     * Exibe uma tabela com as regras da aposentadoria
+     */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Abre o Grid
+        $grid = new Grid();
+        $grid->abreColuna(4);
+        
+        # Aposentadoria Integral
+        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
+        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
+        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
+        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
+        
+        # Monta o array
+        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)),
+                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Integral");
+        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(5);
+        
+        # Aposentadoria Proporcional
+        $diasAposentMasculino = "10a";
+        $diasAposentFeminino = "10a";
+        $idadeAposentMasculino = 65;
+        $idadeAposentFeminino = 60;
+        
+        # Monta o array
+        $valores = array(array("Feminino",$idadeAposentFeminino,$diasAposentFeminino),
+                         array("Masculino",$idadeAposentMasculino,$diasAposentMasculino));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Proporcional");
+        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço Público'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(3);
+        
+        # Aposentadoria Compulsória
+        
+        # Monta o array
+        $valores = array(array("Feminino",75),
+                         array("Masculino",75));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Compulsória");
+        $tabela->set_label(array('Sexo','Idade'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+        
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+    }
+    
+###########################################################    
 }

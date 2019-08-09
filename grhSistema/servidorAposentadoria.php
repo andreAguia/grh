@@ -80,6 +80,18 @@ if($acesso){
     $botaoRel->set_url("../grhRelatorios/servidorAverbacao.php?data=$parametro");
     $botaoRel->set_target("_blank");
     #$menu->add_link($botaoRel,"right");
+    
+    $linkBotaoHistorico = new Button("Tempo de Serviço");
+    $linkBotaoHistorico->set_title('Exibe o tempo de Serviço desse Servidor');    
+    $linkBotaoHistorico->set_onClick("abreFechaDivId('divTempoServicoAposentadoria');");
+    $linkBotaoHistorico->set_class('success button');
+    $menu->add_link($linkBotaoHistorico,"right");
+    
+    $linkBotaoHistorico = new Button("Regras");
+    $linkBotaoHistorico->set_title('Exibe as regras da aposentadoria');
+    $linkBotaoHistorico->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
+    $linkBotaoHistorico->set_class('success button');
+    $menu->add_link($linkBotaoHistorico,"right");
 
     $menu->show();
 
@@ -102,30 +114,57 @@ if($acesso){
     $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
     $totalTempo = $uenf + $publica + $privada;
     
-    # Pega o Tempo de Serviço da aposentadoria Integral
+    # Aposentadoria Integral
+    $dtAposentadoriaIntegralIdade = $aposentadoria->get_dataAposentadoriaIntegralIdade($idServidorPesquisado);
+    $dtAposentadoriaIntegralTempo = $aposentadoria->get_dataAposentadoriaIntegralTempo($idServidorPesquisado);
+    $dtAposentadoriaIntegral = $aposentadoria->get_dataAposentadoriaIntegral($idServidorPesquisado);
+    
+    # Aposentadoria Proporcional
+    $totalPublico = $publica + $uenf;
+    $regraTempoProporcionalDias = 3650;
+    $dtAposentadoriaProporcional = $aposentadoria->get_dataAposentadoriaProporcional($idServidorPesquisado);
+    $dtAposentadoriaProporcionalIdade = $aposentadoria->get_dataProporcionalIdade($idServidorPesquisado);
+    $dtAposentadoriaProporcionalTempo = $aposentadoria->get_dataProporcionalTempo($idServidorPesquisado);
+    
+    # Aposentadoria Compulsória
+    $dtAposentadoriaCompulsoria = $aposentadoria->get_dataAposentadoriaCompulsoria($idServidorPesquisado);
+    $idadeAposentadoriaCompulsoria = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+    
+    # Pega o Tempo de Serviço da aposentadoria integral
     switch ($sexo){
         case "Masculino" :
-            $diasAposentadoria = $intra->get_variavel("diasAposentadoriaMasculino");
+            $diasAposentadoriaIntegral = $intra->get_variavel("diasAposentadoriaMasculino");
             break;
         case "Feminino" :
-            $diasAposentadoria = $intra->get_variavel("diasAposentadoriaFeminino");
+            $diasAposentadoriaIntegral = $intra->get_variavel("diasAposentadoriaFeminino");
             break;
     }
     
-    # Idade da Aposentadoria Integral
+    # Idade da Aposentadoria Integral e proporcional
     switch ($sexo){
         case "Masculino" :
             $anosAposentadoria = $intra->get_variavel("idadeAposentadoriaMasculino");
+            $idadeProporcional = 65;
             break;
         case "Feminino" :
             $anosAposentadoria = $intra->get_variavel("idadeAposentadoriaFeminino");
+            $idadeProporcional = 60;
             break;
     }
+    
+##############################################################################################################################################
+#   Regras
+##############################################################################################################################################
+    
+    echo '<div id="divRegrasAposentadoria">';   
+    $aposentadoria->exibeRegras();
+    echo '</div>';
     
 ##############################################################################################################################################
 #   Tempo de Serviço
 ##############################################################################################################################################
     
+    echo '<div id="divTempoServicoAposentadoria">';   
     $painel = new Callout();
     $painel->abre();
     
@@ -211,7 +250,7 @@ if($acesso){
     $totalTempoGeral = $totalTempo - $totalOcorrencias;
 
     # Dias que faltam
-    $faltam = $diasAposentadoria - $totalTempoGeral;
+    $faltam = $diasAposentadoriaIntegral - $totalTempoGeral;
 
     if($faltam < 0){
         $texto = "Dias Sobrando";
@@ -224,7 +263,7 @@ if($acesso){
               array("Tempo de Serviço ",$totalTempo),
               array("Ocorrências","($totalOcorrencias)"),
               array("Total",$totalTempoGeral),
-              array("Dias para aposentadoria",$diasAposentadoria),
+              array("Dias para aposentadoria",$diasAposentadoriaIntegral),
               array($texto,$faltam." dias<br/>(".dias_to_diasMesAno($faltam).")")
     );
 
@@ -256,36 +295,171 @@ if($acesso){
     $grid->fechaGrid();
     
     $painel->fecha();
+    echo '</div>';
     
 ##############################################################################################################################################
 #   Previsão de Aposentadoria
 ##############################################################################################################################################
     
+    $painel = new Callout();
+    $painel->abre();
+    
     $grid1 = new Grid();
+    $grid1->abreColuna(4);
+    
+    # Aposentadoria Integral
+    
+    # Monta o array
+    $dados1 = array(
+              array("Idade",$anosAposentadoria,$idade),
+              array("Tempo de Serviço",$diasAposentadoriaIntegral,$totalTempo));
+    
+    # Monta a tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo('Aposentadoria Integral');
+    $tabela->set_conteudo($dados1);
+    $tabela->set_label(array("Descrição","Regra","Valor"));
+    $tabela->set_align(array("left"));
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->show();
+    
+    $grid1->fechaColuna();
+    
+    #############################################
+    
+    # Aposentadoria Proporcional
     $grid1->abreColuna(4);
     
     # Monta o array
     $dados1 = array(
-              array("Idade do Servidor ",$idade),
-              array("Tempo de Serviço ",$totalTempo));
+              array("Idade",$idadeProporcional,$idade),
+              array("Tempo de Serviço Público",$regraTempoProporcionalDias,$totalPublico));
     
     # Monta a tabela
     $tabela = new Tabela();
-    $tabela->set_titulo('Integral');
+    $tabela->set_titulo('Aposentadoria Proporcional');
     $tabela->set_conteudo($dados1);
-    $tabela->set_label(array("Descrição","Valor"));
-    $tabela->set_align(array("left","center"));
+    $tabela->set_label(array("Descrição","Regra","Valor"));
+    $tabela->set_align(array("left"));
     $tabela->set_totalRegistro(FALSE);
-    $tabela->show();            
+    $tabela->show();
     
     $grid1->fechaColuna();
+    
+    #############################################
+    
+    # Aposentadoria Compulsória
     $grid1->abreColuna(4);
     
-    $grid1->fechaColuna();
-    $grid1->abreColuna(4);
+    # Monta o array
+    $dados1 = array(
+              array("Idade",$idadeAposentadoriaCompulsoria,$idade));
+    
+    # Monta a tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo('Aposentadoria Compulsória');
+    $tabela->set_conteudo($dados1);
+    $tabela->set_label(array("Descrição","Regra","Valor"));
+    $tabela->set_align(array("left"));
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->show();
     
     $grid1->fechaColuna();
     $grid1->fechaGrid();
+    
+    hr();
+    
+    $grid1 = new Grid();
+    $grid1->abreColuna(4);
+    
+    # Análise por idade
+    if($anosAposentadoria > $idade){
+        callout("O servidor ainda não alcançou os <b>$anosAposentadoria</b> anos de idade de para solicitar aposentadoria integral. Somente em $dtAposentadoriaIntegralIdade.","warning");
+    }else{
+        callout("O servidor já alcançou a idade para solicitar aposentadoria integral.","success");
+    }
+    
+    # Análise por Tempo de Serviço
+    if($diasAposentadoriaIntegral > $totalTempoGeral){
+        callout("Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoriaIntegral</b> dias de serviço necessários para solicitar a aposentadoria integral. Somente em $dtAposentadoriaIntegralTempo.","warning");
+    }else{
+        callout("O servidor já alcançou os <b>$diasAposentadoriaIntegral</b> dias de tempo de serviço para solicitar aposentadoria integral.","success");
+    }
+    
+    $grid1->fechaColuna();
+    
+    #############################################
+    
+    # Aposentadoria Proporcional
+    $grid1->abreColuna(4);
+    
+    # Dias que faltam
+    $faltamProporcional = $regraTempoProporcionalDias - $totalPublico;
+        
+    # Análise por idade
+    if($idadeProporcional > $idade){
+        callout("O servidor ainda não alcançou os <b>$idadeProporcional</b> anos de idade de para solicitar aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalIdade.","warning");
+    }else{
+        callout("O servidor já alcançou a idade para solicitar aposentadoria proporcional.","success");
+    }
+    
+    # Análise por Tempo de Serviço
+    if($regraTempoProporcionalDias > $totalPublico){
+        callout("Ainda faltam <b>$faltamProporcional</b> dias para o servidor alcançar os <b>$regraTempoProporcionalDias</b> dias de serviço necessários para solicitar a aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalTempo.","warning");
+    }else{
+        callout("O servidor já alcançou os <b>$regraTempoProporcionalDias</b> dias de tempo serviço público para solicitar aposentadoria proporcional.","success");
+    }
+    
+    $grid1->fechaColuna();
+    
+     #############################################
+    
+    # Aposentadoria Compulsória
+    $grid1->abreColuna(4);
+
+    # Análise por idade
+    if(75 > $idade){
+        callout("O servidor ainda não alcançou os <b>$idadeAposentadoriaCompulsoria</b> anos de idade de para a aposentadoria compulsória. Somente em $dtAposentadoriaCompulsoria.","warning");
+    }else{
+        callout("O servidor já alcançou a idade para a aposentadoria compulsória.","success");
+    }
+    
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
+    
+    hr();
+    
+    $grid1 = new Grid();
+    $grid1->abreColuna(4);
+    
+        if(jaPassou($dtAposentadoriaIntegral)){
+            callout("Conclusão: O Servidor já pode solicitar Aposentadoria Integral!","success");
+        }else{
+            callout("Conclusão: Aposentadoria Integral somente em: $dtAposentadoriaIntegral.","warning");
+        }
+    
+    $grid1->fechaColuna();
+    $grid1->abreColuna(4);
+    
+        if(jaPassou($dtAposentadoriaProporcional)){
+            callout("Conclusão: O Servidor já pode solicitar Aposentadoria Proporcional!","success");
+        }else{
+            callout("Conclusão: Aposentadoria Proporcional somente em: $dtAposentadoriaProporcional.","warning");
+        }
+    
+    $grid1->fechaColuna();
+    $grid1->abreColuna(4);
+    
+        if(jaPassou($dtAposentadoriaCompulsoria)){
+            callout("Conclusão: O Servidor terá que se aposentar compulsoriamente!","success");
+        }else{
+            callout("Conclusão: Aposentadoria Compulsória somente em: $dtAposentadoriaCompulsoria.","warning");
+        }
+   
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
+    
+    $painel->fecha();
 
     $page->terminaPagina();
 }else{

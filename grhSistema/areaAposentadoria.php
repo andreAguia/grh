@@ -242,7 +242,7 @@ if($acesso){
         $painel->fecha();
         
         # Exibe a lista
-        $aposentadoria->exibeAtivosPrevisao2($parametroSexo);        
+        $aposentadoria->exibeAtivosPrevisao($parametroSexo);        
         break;
 
 ####################################################################################################################

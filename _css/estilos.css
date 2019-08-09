@@ -306,6 +306,13 @@ tr#naoPode{
     background-color:#cccccc;
 }
 
+div#divRegrasAposentadoria{
+     display: none;
+}
+
+div#divTempoServicoAposentadoria{
+     display: none;
+}
 /*******************************************
  * Estatística
  *******************************************/

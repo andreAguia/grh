@@ -401,9 +401,9 @@ if($acesso){
             # Aposentadoria
             $dtNascimento = $pessoal->get_dataNascimento($idServidorPesquisado);
             $idade = $pessoal->get_idade($idServidorPesquisado);
-            $dtAposentadoria = $aposentadoria->get_dataAposentadoria($idServidorPesquisado);
+            $dtAposentadoria = $aposentadoria->get_dataAposentadoriaIntegralIdade($idServidorPesquisado);
             $dtCompulsoria = $aposentadoria->get_dataCompulsoria($idServidorPesquisado);
-            $dtTempoServiço = $aposentadoria->get_dataAposentadoriaTS($idServidorPesquisado);
+            $dtTempoServiço = $aposentadoria->get_dataAposentadoriaIntegralTempo($idServidorPesquisado);
             $dtProporcional = $aposentadoria->get_dataProporcional($idServidorPesquisado);
             
             # Define a idade que dá direito para cada gênero

@@ -39,10 +39,6 @@ if($acesso){
     $dtHoje = date("Y-m-d");                                      # Data de hoje
     $dtFinal = NULL;
 
-    # Dados para o controle
-    $disabled = FALSE;
-    $autofocus = TRUE;
-
     # Analisa a data
     if(!vazio($dtSaida)){           // Se tem saída é a saída
         $dtFinal = date_to_bd($dtSaida);
@@ -87,11 +83,11 @@ if($acesso){
     $linkBotaoHistorico->set_class('success button');
     $menu->add_link($linkBotaoHistorico,"right");
     
-    $linkBotaoHistorico = new Button("Regras");
-    $linkBotaoHistorico->set_title('Exibe as regras da aposentadoria');
-    $linkBotaoHistorico->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
-    $linkBotaoHistorico->set_class('success button');
-    $menu->add_link($linkBotaoHistorico,"right");
+    $linkRegras = new Button("Regras");
+    $linkRegras->set_title('Exibe as regras da aposentadoria');
+    $linkRegras->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
+    $linkRegras->set_class('success button');
+    $menu->add_link($linkRegras,"right");
 
     $menu->show();
 
@@ -174,6 +170,63 @@ if($acesso){
     # Limita a tela
     $grid = new Grid();
     
+    ################################################################
+    
+    $grid->abreColuna(12);
+            
+    # Verifica se tem Tempo averbado sobreposto
+
+    # Pega as averbações desse servidor
+    $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
+    $resultSobreposicao = $pessoal->select($selectSobreposicao);
+
+    # Acrescenta o tempo de UENF
+    $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
+    $resultSobreposicao[] = array($dtAdmissao,$dtFinal,NULL);
+
+    # Inicia a variável que informa se tem sobreposicao
+    $sobreposicao = FALSE;
+
+    # Inicia o array que guarda os períodos problemáticos
+    $idsProblemáticos[] = NULL;
+
+    # Percorre os registros
+    foreach($resultSobreposicao as $periodo){
+        $dtInicial1 = date_to_php($periodo[0]);
+        $dtFinal1 = date_to_php($periodo[1]);
+        $idAverbado1 = $periodo[2];
+
+        # Percorre a mesma listagem novamente
+        foreach($resultSobreposicao as $periodoVerificado){
+
+            $dtInicial2 = date_to_php($periodoVerificado[0]);
+            $dtFinal2 = date_to_php($periodoVerificado[1]);
+            $idAverbado2 = $periodoVerificado[2];
+
+            # Evita que seja comparado com ele mesmo
+            if($idAverbado1 <> $idAverbado2){
+                if(verificaSobreposicao($dtInicial1,$dtFinal1,$dtInicial2,$dtFinal2)){
+                    $sobreposicao = TRUE;
+                    $idsProblemáticos[] = $idAverbado1;
+                    $idsProblemáticos[] = $idAverbado2;
+                }
+            }
+        }
+    }
+
+    if($sobreposicao){
+
+        $painel = new Callout("alert","center");
+        $painel->abre();
+            echo "Atenção - Períodos com Sobreposição de Dias !!!";
+            p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: ".date_to_php($dtAdmissao),"center","f11");
+        $painel->fecha();
+    }
+    
+    $grid->fechaColuna();
+
+    #############################################################
+    
     # Tempo público e privado
     $grid->abreColuna(4);
     
@@ -236,7 +289,7 @@ if($acesso){
                                                    'valor' => "Total",
                                                    'operador' => '=',
                                                    'id' => 'totalTempo')
-        ));
+    ));
     
     $tabela->show();            
     $grid->fechaColuna();
@@ -301,11 +354,11 @@ if($acesso){
 #   Previsão de Aposentadoria
 ##############################################################################################################################################
     
-    $painel = new Callout();
-    $painel->abre();
-    
     $grid1 = new Grid();
     $grid1->abreColuna(4);
+    
+    $painel = new Callout();
+    $painel->abre();
     
     # Aposentadoria Integral
     
@@ -323,12 +376,39 @@ if($acesso){
     $tabela->set_totalRegistro(FALSE);
     $tabela->show();
     
+    # Análise por idade
+    if($anosAposentadoria > $idade){
+        p("O servidor ainda não alcançou os <b>$anosAposentadoria</b> anos de idade de para solicitar aposentadoria integral. Somente em $dtAposentadoriaIntegralIdade.","f14");
+    }else{
+        p("O servidor já alcançou a idade para solicitar aposentadoria integral.","f14");
+    }
+    
+    # Análise por Tempo de Serviço
+    if($diasAposentadoriaIntegral > $totalTempoGeral){
+        p("Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoriaIntegral</b> dias de serviço necessários para solicitar a aposentadoria integral. Somente em $dtAposentadoriaIntegralTempo.","f14");
+    }else{
+        p("O servidor já alcançou os <b>$diasAposentadoriaIntegral</b> dias de tempo de serviço para solicitar aposentadoria integral.","f14");
+    }
+    
+    if($sobreposicao){
+
+        $painel = new Callout("alert","center");
+        $painel->abre();
+            echo "Atenção - Períodos com Sobreposição de Dias !!!";
+            p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: ".date_to_php($dtAdmissao),"center","f11");
+        $painel->fecha();
+    }
+    
+    $painel->fecha();    
     $grid1->fechaColuna();
     
     #############################################
     
     # Aposentadoria Proporcional
     $grid1->abreColuna(4);
+    
+    $painel = new Callout();
+    $painel->abre();
     
     # Monta o array
     $dados1 = array(
@@ -344,12 +424,33 @@ if($acesso){
     $tabela->set_totalRegistro(FALSE);
     $tabela->show();
     
+    # Dias que faltam
+    $faltamProporcional = $regraTempoProporcionalDias - $totalPublico;
+        
+    # Análise por idade
+    if($idadeProporcional > $idade){
+        p("O servidor ainda não alcançou os <b>$idadeProporcional</b> anos de idade de para solicitar aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalIdade.","f14");
+    }else{
+        p("O servidor já alcançou a idade para solicitar aposentadoria proporcional.","f14");
+    }
+    
+    # Análise por Tempo de Serviço
+    if($regraTempoProporcionalDias > $totalPublico){
+        p("Ainda faltam <b>$faltamProporcional</b> dias para o servidor alcançar os <b>$regraTempoProporcionalDias</b> dias de serviço necessários para solicitar a aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalTempo.","f14");
+    }else{
+        p("O servidor já alcançou os <b>$regraTempoProporcionalDias</b> dias de tempo serviço público para solicitar aposentadoria proporcional.","f14");
+    }
+    
+    $painel->fecha();
     $grid1->fechaColuna();
     
     #############################################
     
     # Aposentadoria Compulsória
     $grid1->abreColuna(4);
+    
+    $painel = new Callout();
+    $painel->abre();
     
     # Monta o array
     $dados1 = array(
@@ -364,102 +465,46 @@ if($acesso){
     $tabela->set_totalRegistro(FALSE);
     $tabela->show();
     
-    $grid1->fechaColuna();
-    $grid1->fechaGrid();
-    
-    hr();
-    
-    $grid1 = new Grid();
-    $grid1->abreColuna(4);
-    
-    # Análise por idade
-    if($anosAposentadoria > $idade){
-        callout("O servidor ainda não alcançou os <b>$anosAposentadoria</b> anos de idade de para solicitar aposentadoria integral. Somente em $dtAposentadoriaIntegralIdade.","warning");
-    }else{
-        callout("O servidor já alcançou a idade para solicitar aposentadoria integral.","success");
-    }
-    
-    # Análise por Tempo de Serviço
-    if($diasAposentadoriaIntegral > $totalTempoGeral){
-        callout("Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoriaIntegral</b> dias de serviço necessários para solicitar a aposentadoria integral. Somente em $dtAposentadoriaIntegralTempo.","warning");
-    }else{
-        callout("O servidor já alcançou os <b>$diasAposentadoriaIntegral</b> dias de tempo de serviço para solicitar aposentadoria integral.","success");
-    }
-    
-    $grid1->fechaColuna();
-    
-    #############################################
-    
-    # Aposentadoria Proporcional
-    $grid1->abreColuna(4);
-    
-    # Dias que faltam
-    $faltamProporcional = $regraTempoProporcionalDias - $totalPublico;
-        
-    # Análise por idade
-    if($idadeProporcional > $idade){
-        callout("O servidor ainda não alcançou os <b>$idadeProporcional</b> anos de idade de para solicitar aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalIdade.","warning");
-    }else{
-        callout("O servidor já alcançou a idade para solicitar aposentadoria proporcional.","success");
-    }
-    
-    # Análise por Tempo de Serviço
-    if($regraTempoProporcionalDias > $totalPublico){
-        callout("Ainda faltam <b>$faltamProporcional</b> dias para o servidor alcançar os <b>$regraTempoProporcionalDias</b> dias de serviço necessários para solicitar a aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalTempo.","warning");
-    }else{
-        callout("O servidor já alcançou os <b>$regraTempoProporcionalDias</b> dias de tempo serviço público para solicitar aposentadoria proporcional.","success");
-    }
-    
-    $grid1->fechaColuna();
-    
-     #############################################
-    
-    # Aposentadoria Compulsória
-    $grid1->abreColuna(4);
-
     # Análise por idade
     if(75 > $idade){
-        callout("O servidor ainda não alcançou os <b>$idadeAposentadoriaCompulsoria</b> anos de idade de para a aposentadoria compulsória. Somente em $dtAposentadoriaCompulsoria.","warning");
+        p("O servidor ainda não alcançou os <b>$idadeAposentadoriaCompulsoria</b> anos de idade de para a aposentadoria compulsória. Somente em $dtAposentadoriaCompulsoria.","f14");
     }else{
-        callout("O servidor já alcançou a idade para a aposentadoria compulsória.","success");
+        p("O servidor já alcançou a idade para a aposentadoria compulsória.","f14");
     }
     
+    $painel->fecha();
     $grid1->fechaColuna();
-    $grid1->fechaGrid();
     
-    hr();
+    # Conclusão
     
-    $grid1 = new Grid();
     $grid1->abreColuna(4);
     
         if(jaPassou($dtAposentadoriaIntegral)){
-            callout("Conclusão: O Servidor já pode solicitar Aposentadoria Integral!","success");
+            callout("Desde $dtAposentadoriaIntegral o servidor já pode solicitar Aposentadoria Integral!","success");
         }else{
-            callout("Conclusão: Aposentadoria Integral somente em: $dtAposentadoriaIntegral.","warning");
+            callout("Aposentadoria Integral somente em: $dtAposentadoriaIntegral.","warning");
         }
     
     $grid1->fechaColuna();
     $grid1->abreColuna(4);
     
         if(jaPassou($dtAposentadoriaProporcional)){
-            callout("Conclusão: O Servidor já pode solicitar Aposentadoria Proporcional!","success");
+            callout("Desde $dtAposentadoriaProporcional o servidor já pode solicitar Aposentadoria Proporcional!","success");
         }else{
-            callout("Conclusão: Aposentadoria Proporcional somente em: $dtAposentadoriaProporcional.","warning");
+            callout("Aposentadoria Proporcional somente em: $dtAposentadoriaProporcional.","warning");
         }
     
     $grid1->fechaColuna();
     $grid1->abreColuna(4);
     
         if(jaPassou($dtAposentadoriaCompulsoria)){
-            callout("Conclusão: O Servidor terá que se aposentar compulsoriamente!","success");
+            callout("Desde $dtAposentadoriaCompulsoria o servidor terá que se aposentar compulsoriamente!","success");
         }else{
-            callout("Conclusão: Aposentadoria Compulsória somente em: $dtAposentadoriaCompulsoria.","warning");
+            callout("Aposentadoria Compulsória somente em: $dtAposentadoriaCompulsoria.","warning");
         }
    
     $grid1->fechaColuna();
     $grid1->fechaGrid();
-    
-    $painel->fecha();
 
     $page->terminaPagina();
 }else{

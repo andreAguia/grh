@@ -57,7 +57,7 @@ if($acesso){
     $grid->abreColuna(12);
 
     # Cria um menu
-    $menu1 = new MenuBar();
+    $menu = new MenuBar();
 
     if($fase == "previsao1"){
         # Voltar
@@ -65,17 +65,23 @@ if($acesso){
         $botaoVoltar->set_class('button');
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
-        $menu1->add_link($botaoVoltar,"left");
+        $menu->add_link($botaoVoltar,"left");
+        
+        $linkRegras = new Button("Regras");
+        $linkRegras->set_title('Exibe as regras da aposentadoria');
+        $linkRegras->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
+        $linkRegras->set_class('success button');
+        $menu->add_link($linkRegras,"right");
     }elseif(($fase == "") OR ($fase == "porAno")){
         # Voltar
         $botaoVoltar = new Link("Voltar","grh.php");
         $botaoVoltar->set_class('button');
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
-        $menu1->add_link($botaoVoltar,"left");
+        $menu->add_link($botaoVoltar,"left");
     }
 
-    $menu1->show();
+    $menu->show();
 
     # Título
     titulo("Área de Aposentadoria");
@@ -233,13 +239,11 @@ if($acesso){
         $form->add_item($controle);
 
         $form->show();
-
-        $painel = new Callout();
-        $painel->abre();
         
+        # Exibe as regras
+        echo '<div id="divRegrasAposentadoria">';   
         $aposentadoria->exibeRegras();
-        
-        $painel->fecha();
+        echo '</div>';
         
         # Exibe a lista
         $aposentadoria->exibeAtivosPrevisao($parametroSexo);        

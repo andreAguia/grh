@@ -84,6 +84,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Processo Eleitoral','?fase=eleitoral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Recadastramento 2018','?fase=recad2018','','','divMenuRelatorioGrh');
@@ -394,6 +395,16 @@ if($acesso){
             $menu->add_item('titulo','Contatos');
             $menu->add_item('linkWindow','Email dos Servidores','../grhRelatorios/email.php');            
             $menu->add_item('linkWindow','Telefones dos Servidores','../grhRelatorios/telefone.php');
+
+            $menu->show();
+            break;
+        
+        ######################################
+
+         case "outros";
+            $menu = new Menu();
+            $menu->add_item('titulo','Outros');    
+            $menu->add_item('linkWindow','Relatório de Servidores Com Nacionalidade, Documentos e Telefone','../grhRelatorios/relatorioOutro1.php');
 
             $menu->show();
             break;

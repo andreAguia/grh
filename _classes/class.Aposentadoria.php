@@ -397,13 +397,10 @@ class Aposentadoria{
 
         # Pega a data de nascimento (vem dd/mm/AAAA)
         $dtNasc = $pessoal->get_dataNascimento($idServidor);
-        $partes = explode("/",$dtNasc);
-
-        # Soma
-        $novoAno  = $partes[2]+$idade;
 
         # Calcula a data
-        $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+        $novaData  = addAnos($dtNasc,$idade);
+        
         return $novaData;			
     }
 
@@ -568,13 +565,10 @@ class Aposentadoria{
 
         # Pega a data de nascimento (vem dd/mm/AAAA)
         $dtNasc = $pessoal->get_dataNascimento($idServidor);
-        $partes = explode("/",$dtNasc);
-
-        # Soma
-        $novoAno  = $partes[2]+$idade;
 
         # Calcula a data
-        $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+        $novaData  = addAnos($dtNasc,$idade);
+        
         return $novaData;			
    }
 
@@ -662,13 +656,10 @@ class Aposentadoria{
 
         # Pega a data de nascimento (vem dd/mm/AAAA)
         $dtNasc = $pessoal->get_dataNascimento($idServidor);
-        $partes = explode("/",$dtNasc);
-
-        # Soma
-        $novoAno  = $partes[2]+$idade;
 
         # Calcula a data
-        $novaData = $partes[0]."/".$partes[1]."/".$novoAno;            
+        $novaData  = addAnos($dtNasc,$idade);
+        
         return $novaData;			
     }
 

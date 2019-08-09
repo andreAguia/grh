@@ -28,19 +28,28 @@ if($acesso)
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao',post('lotacao'));
     
+    if($lotacao == "*"){
+        $lotacao = NULL;
+    }
+    
     $subTitulo = NULL;
 
     ######
     
     $select ='SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                     tbservidor.idServidor,
+                     tbnacionalidade.nacionalidade,
+                     tbdocumentacao.cpf,
+                     CONCAT(IFNULL(tbdocumentacao.identidade,"")," / ",IFNULL(tbdocumentacao.orgaoId,"")),
                      CONCAT("(",IFNULL(telResidencialDDD,"--"),") ",IFNULL(telResidencial,"---")),
                      CONCAT("(",IFNULL(telCelularDDD,"--"),") ",IFNULL(telCelular,"---")),
                      CONCAT("(",IFNULL(telRecadosDDD,"--"),") ",IFNULL(telRecados,"---"))
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
-                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                JOIN tbnacionalidade ON (tbnacionalidade.idNacionalidade = tbpessoa.nacionalidade)
+                                JOIN tbdocumentacao USING (idPessoa)
+                                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
                  AND idPerfil <> 10
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
@@ -63,9 +72,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Telefones dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo.'Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Residencial','Celular','Recados'));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Nacionalidade','CPF','Identidade / Órgão','Residencial','Celular','Recados'));
     #$relatorio->set_width(array(10,40,50));
-    $relatorio->set_align(array("center","left","left","left","left"));
+    $relatorio->set_align(array("center","left","left","center","center","center","left","left","left"));
+    
+    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_cargoSimples"));
     
     $relatorio->set_conteudo($result);
     

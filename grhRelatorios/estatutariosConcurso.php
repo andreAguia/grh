@@ -41,6 +41,7 @@ if($acesso)
                                    LEFT JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
                 WHERE tbservidor.situacao = 1 AND tbservidor.idPerfil = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbconcurso.anoBase IS NOT NULL
              ORDER BY tbconcurso.anoBase, tbpessoa.nome';
 
     $result = $servidor->select($select);

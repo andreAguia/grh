@@ -692,7 +692,7 @@ class Aposentadoria{
         $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
         
         # Monta o array
-        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)),
+        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)." ($diasAposentFeminino dias)"),
                          array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)." ($diasAposentMasculino dias)"));
 
         # Tabela com os valores de aposentadoria

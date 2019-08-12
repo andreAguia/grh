@@ -40,7 +40,7 @@ if($acesso)
                                      JOIN tbtipocargo USING (idTipoCargo) 
                WHERE tbservidor.situacao = 1
                  AND (idPerfil = 1 OR idPerfil = 4)
-                 AND tbtipocargo.tipo = "Professor"
+                 AND tbtipocargo.tipo = "Adm/Tec"
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
     # lotacao
     if(!is_null($relatorioLotacao)){
@@ -57,9 +57,9 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Docentes Ativos');
+    $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos');
     $relatorio->set_tituloLinha2($relatorioLotacao);
-    $relatorio->set_subtitulo('Ordenados pela lotação e nome');
+    $relatorio->set_subtitulo('Ordenados pela Lotação e Nome');
     $relatorio->set_label(array('Nome','Lotação','Cargo'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("left","left","left"));

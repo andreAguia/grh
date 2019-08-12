@@ -435,8 +435,15 @@ if($acesso){
         case "eleitoral";        
             $menu = new Menu();
             $menu->add_item('titulo','Processo Eleitoral');
-            $menu->add_item('linkWindow','Relatório de Servidores Administrativos e Técnicos por Lotação','../grhRelatorios/eleitoralAdmTecPorLotacao.php'); 
-            $menu->add_item('linkWindow','Relatório de Docentes por Lotação','../grhRelatorios/eleitoralProfessoresPorLotacao.php'); 
+            
+            $menu->add_item('titulo1','Administrativo e Técnico'); 
+            $menu->add_item('linkWindow','Relatório de Servidores Com Cargo Por Lotação','../grhRelatorios/eleitoral.AdmTecPorLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Servidores Com CPF e Assinatura Por Lotação','../grhRelatorios/eleitoral.Assinatura.AdmTecPorLotacao.php'); 
+            
+            $menu->add_item('titulo1','Professores'); 
+            $menu->add_item('linkWindow','Relatório de Professores Com Cargo Por Lotação','../grhRelatorios/eleitoral.ProfessoresPorLotacao.php'); 
+            $menu->add_item('linkWindow','Relatório de Professores Com CPF e Assinatura','../grhRelatorios/eleitoral.Assinatura.ProfessoresPorLotacao.php');
+            
             $menu->show();
             break;
         

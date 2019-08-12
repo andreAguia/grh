@@ -692,8 +692,8 @@ class Aposentadoria{
         $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
         
         # Monta o array
-        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)." ($diasAposentFeminino dias)"),
-                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)." ($diasAposentMasculino dias)"));
+        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
+                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
 
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
@@ -715,8 +715,8 @@ class Aposentadoria{
         $idadeAposentFeminino = 60;
         
         # Monta o array
-        $valores = array(array("Feminino",$idadeAposentFeminino,$diasAposentFeminino),
-                         array("Masculino",$idadeAposentMasculino,$diasAposentMasculino));
+        $valores = array(array("Feminino",$idadeAposentFeminino,$diasAposentFeminino."<br/>(3650 dias)"),
+                         array("Masculino",$idadeAposentMasculino,$diasAposentMasculino."<br/>(3650 dias)"));
 
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();

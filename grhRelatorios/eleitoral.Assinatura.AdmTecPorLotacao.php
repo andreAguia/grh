@@ -31,13 +31,14 @@ if($acesso)
     ######
     
     $select ='SELECT tbpessoa.nome,
-                     concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,                     
-                     tbservidor.idServidor
+                     tbdocumentacao.cpf,                    
+                     "______________________________________________"
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                 LEFT JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo) 
+                                     JOIN tbdocumentacao using (idPessoa)
                WHERE tbservidor.situacao = 1
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND tbtipocargo.tipo = "Adm/Tec"
@@ -52,21 +53,21 @@ if($acesso)
         }
     }
     
-    $select .= ' ORDER BY tblotacao.GER, tbpessoa.nome';
+    $select .= ' ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos');
     $relatorio->set_tituloLinha2($relatorioLotacao);
-    $relatorio->set_subtitulo('Ordenados pela lotação e nome');
-    $relatorio->set_label(array('Nome','Lotação','Cargo'));
+    $relatorio->set_subtitulo('Ordenado pelo None');
+    $relatorio->set_label(array('Nome','CPF','Assinatura'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("left","left","left"));
     #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     
-    $relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_CargoSimples"));
+    #$relatorio->set_classe(array(NULL,NULL,"pessoal"));
+    #$relatorio->set_metodo(array(NULL,NULL,"get_CargoSimples"));
     
     $relatorio->set_conteudo($result);
     

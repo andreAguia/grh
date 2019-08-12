@@ -70,11 +70,27 @@ if($acesso){
         $linkRegras = new Button("Regras");
         $linkRegras->set_title('Exibe as regras da aposentadoria');
         $linkRegras->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
-        $linkRegras->set_class('success button');
+        $linkRegras->set_class('button');
         $menu->add_link($linkRegras,"right");
+        
+        $botao = new Link("Somatório","?fase=somatorio");
+        $botao->set_title('Exibe os Totais de servidores que já podem estar aposentados');
+        $botao->set_class('button');
+        $menu->add_link($botao,"right");
+        
     }elseif(($fase == "") OR ($fase == "porAno")){
+        
         # Voltar
         $botaoVoltar = new Link("Voltar","grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar,"left");
+   
+    }elseif($fase == "previsaoSomatorio"){
+        
+        # Voltar
+        $botaoVoltar = new Link("Voltar","?fase=previsao");
         $botaoVoltar->set_class('button');
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
@@ -222,7 +238,7 @@ if($acesso){
 
     # Listagem de servidores ativos com previsão para posentadoria
     case "previsao1" :
-
+        
         # Formulário de Pesquisa
         $form = new Form('?fase=previsao');
 
@@ -235,7 +251,7 @@ if($acesso){
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_autofocus(TRUE);
         $controle->set_linha(1);
-        $controle->set_col(3);
+        $controle->set_col(4);
         $form->add_item($controle);
 
         $form->show();
@@ -433,6 +449,28 @@ if($acesso){
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
+            break;
+
+    ################################################################
+        
+        case "somatorio" :
+
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            loadPage('?fase=previsaoSomatorio');
+            break;
+
+################################################################
+        
+        case "previsaoSomatorio" :
+            $painel = new Callout();
+            $painel->abre();
+            
+            $aposentadoria->exibeSomatorio();
+            
+            $painel->fecha();
             break;
 
     ################################################################

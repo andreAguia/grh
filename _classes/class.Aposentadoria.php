@@ -356,7 +356,7 @@ class Aposentadoria{
                    WHERE tbservidor.situacao = 1
                      AND idPerfil = 1
                      AND tbpessoa.sexo = "'.$parametroSexo.'"
-                ORDER BY tbpessoa.dtNasc';
+                ORDER BY tbpessoa.nome';
 
         $result = $pessoal->select($select);
 
@@ -753,6 +753,179 @@ class Aposentadoria{
         $painel->fecha();
     }
     
+##############################################################################################################################################
+
+    function exibeSomatorio(){
+
+    /**
+     * Exibe uma tabela com o somatório dos servidores ativos que já podem se aposentar
+     */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Aposentadoria Integral
+        $integralFerminino = $this->get_numServidoresAtivosPodemAposentarIntegral("Feminino");
+        $integralMasculino = $this->get_numServidoresAtivosPodemAposentarIntegral("Masculino");
+        $integralTotal = $integralFerminino + $integralMasculino;
+        
+        # Aposentadoria Proporcional
+        $proporcionalFerminino = $this->get_numServidoresAtivosPodemAposentarProporcional("Feminino");
+        $proporcionalMasculino = $this->get_numServidoresAtivosPodemAposentarProporcional("Masculino");
+        $proporcionalTotal = $proporcionalFerminino + $proporcionalMasculino;
+        
+        # Aposentadoria Compulsória
+        $compulsoriaFerminino = $this->get_numServidoresAtivosPodemAposentarCompulsoria("Feminino");
+        $compulsoriaMasculino = $this->get_numServidoresAtivosPodemAposentarCompulsoria("Masculino");
+        $compulsoriaTotal = $compulsoriaFerminino + $compulsoriaMasculino;
+        
+        $totalFeminino = $integralFerminino + $proporcionalFerminino + $compulsoriaFerminino;
+        $totalMasculino = $integralMasculino + $proporcionalMasculino + $compulsoriaMasculino;
+        $total = $integralTotal + $proporcionalTotal + $compulsoriaTotal;
+        
+        # Monta o array
+        $valores = array(array("Feminino",$integralFerminino,$proporcionalFerminino,$compulsoriaFerminino,$totalFeminino),
+                         array("Masculino",$integralMasculino,$proporcionalMasculino,$compulsoriaMasculino,$totalMasculino),
+                         array("Total:",$integralTotal,$proporcionalTotal,$compulsoriaTotal,$total));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Somatório de Servidores Ativos que Podem se Aposentar");
+        $tabela->set_label(array('Sexo','Integral','Proporcional','Compulsória','Total'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                            'valor' => "Total:",
+                                            'operador' => '=',
+                                            'id' => 'totalTempo')));
+        $tabela->show();
+    }
+    
+##############################################################################################################################################
+	
+    /**
+     * Método get_numServidoresAtivosPodemAposentarIntegral
+     * Informa o número de servidores que podem aposentar integralmente
+     * 
+     * @param string $parametroSexo sexo do servidor
+     */
+
+    public function get_numServidoresAtivosPodemAposentarIntegral($parametroSexo){
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Monta o select
+        $select ='SELECT tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "'.$parametroSexo.'"
+                ORDER BY tbpessoa.dtNasc';
+
+        $result = $pessoal->select($select);
+        
+        $contador = 0;
+        
+        # Percorre o banco para verificar se já pode aposentar
+        foreach($result as $lista){
+            
+            # Pega a data de aposentadoria desse servidor
+            $data = $this->get_dataAposentadoriaIntegral($lista[0]);
+            
+            # Verifica se a data colhida já passou
+            if(jaPassou($data)){
+                $contador++;
+            }
+        }
+        
+        return $contador;			
+    }
+
+##############################################################################################################################################
+	
+    /**
+     * Método get_numServidoresAtivosPodemAposentarProporcional
+     * Informa o número de servidores que podem aposentar Proporcional
+     * 
+     * @param string $parametroSexo sexo do servidor
+     */
+
+    public function get_numServidoresAtivosPodemAposentarProporcional($parametroSexo){
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Monta o select
+        $select ='SELECT tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "'.$parametroSexo.'"
+                ORDER BY tbpessoa.dtNasc';
+
+        $result = $pessoal->select($select);
+        
+        $contador = 0;
+        
+        # Percorre o banco para verificar se já pode aposentar
+        foreach($result as $lista){
+            
+            # Pega a data de aposentadoria desse servidor
+            $data = $this->get_dataAposentadoriaProporcional($lista[0]);
+            
+            # Verifica se a data colhida já passou
+            if(jaPassou($data)){
+                $contador++;
+            }
+        }
+        
+        return $contador;			
+    }
+
+##############################################################################################################################################
+	
+    /**
+     * Método get_numServidoresAtivosPodemAposentarCompulsoria
+     * Informa o número de servidores que podem aposentar Compulsória
+     * 
+     * @param string $parametroSexo sexo do servidor
+     */
+
+    public function get_numServidoresAtivosPodemAposentarCompulsoria($parametroSexo){
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Monta o select
+        $select ='SELECT tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "'.$parametroSexo.'"
+                ORDER BY tbpessoa.dtNasc';
+
+        $result = $pessoal->select($select);
+        
+        $contador = 0;
+        
+        # Percorre o banco para verificar se já pode aposentar
+        foreach($result as $lista){
+            
+            # Pega a data de aposentadoria desse servidor
+            $data = $this->get_dataAposentadoriaCompulsoria($lista[0]);
+            
+            # Verifica se a data colhida já passou
+            if(jaPassou($data)){
+                $contador++;
+            }
+        }
+        
+        return $contador;			
+    }
+
 ##############################################################################################################################################
     
 }

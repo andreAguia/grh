@@ -306,10 +306,10 @@ class Aposentadoria{
         # Define a idade que dá direito para cada gênero
         switch ($sexo){
             case "Masculino" :
-                $diasAposentadoriaIntegral = $intra->get_variavel("diasAposentadoriaMasculino");
+                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
                 break;
             case "Feminino" :
-                $diasAposentadoriaIntegral = $intra->get_variavel("diasAposentadoriaFeminino");
+                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
                 break;
         }
         
@@ -393,7 +393,7 @@ class Aposentadoria{
         $intra = new Intra();
 
         # Idade obrigatória
-        $idade = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
 
         # Pega a data de nascimento (vem dd/mm/AAAA)
         $dtNasc = $pessoal->get_dataNascimento($idServidor);
@@ -450,6 +450,7 @@ class Aposentadoria{
        
        # Conecta ao Banco de Dados
        $pessoal = new Pessoal();
+       $intra = new Intra();
        
        ##### Tempo Público
        
@@ -457,10 +458,24 @@ class Aposentadoria{
        $uenf = $this->get_tempoServicoUenf($idServidor);
        $publico = $this->get_tempoAverbadoPublico($idServidor);
        $publicoGeral = $uenf+$publico;
+       
+       # Pega a regra
+       $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+       $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
+       
+       # Define a idade que dá direito para cada gênero
+       $sexo = $pessoal->get_sexo($idServidor);
+       switch ($sexo){
+           case "Masculino" :
+               $faltando = $diasAposentMasculino - $publicoGeral;
+               break;
+           
+           case "Feminino" :
+               $faltando = $diasAposentFeminino - $publicoGeral;
+               break;
+       }
               
-       # Verifica se o tempo público é maior que 10 anos (3650 dias)
-       $dezAnos = 3650;
-       $faltando = $dezAnos - $publicoGeral;
+       # calcula a data
        $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
        
        return $dataPublico;			
@@ -556,10 +571,10 @@ class Aposentadoria{
         # Define a idade que dá direito para cada gênero
         switch ($sexo){
             case "Masculino" :
-                $idade = $intra->get_variavel("idadeAposentadoriaMasculino");
+                $idade = $intra->get_variavel("aposentadoria.integral.idade.masculino");
                 break;
             case "Feminino" :
-                $idade = $intra->get_variavel("idadeAposentadoriaFeminino");
+                $idade = $intra->get_variavel("aposentadoria.integral.idade.feminino");
                 break;
         }
 
@@ -652,7 +667,7 @@ class Aposentadoria{
         $intra = new Intra();
 
         # Idade obrigatória
-        $idade = $intra->get_variavel("idadeAposentadoriaCompulsoria");
+        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
 
         # Pega a data de nascimento (vem dd/mm/AAAA)
         $dtNasc = $pessoal->get_dataNascimento($idServidor);
@@ -686,10 +701,10 @@ class Aposentadoria{
         $grid->abreColuna(4);
         
         # Aposentadoria Integral
-        $diasAposentMasculino = $intra->get_variavel("diasAposentadoriaMasculino");
-        $diasAposentFeminino = $intra->get_variavel("diasAposentadoriaFeminino");
-        $idadeAposentMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
-        $idadeAposentFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
+        $diasAposentMasculino = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
+        $diasAposentFeminino = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
+        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
+        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
         
         # Monta o array
         $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
@@ -709,14 +724,14 @@ class Aposentadoria{
         $grid->abreColuna(4);
         
         # Aposentadoria Proporcional
-        $diasAposentMasculino = "10a";
-        $diasAposentFeminino = "10a";
-        $idadeAposentMasculino = 65;
-        $idadeAposentFeminino = 60;
+        $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+        $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
+        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
+        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.idade.feminino");
         
         # Monta o array
-        $valores = array(array("Feminino",$idadeAposentFeminino,$diasAposentFeminino."<br/>(3650 dias)"),
-                         array("Masculino",$idadeAposentMasculino,$diasAposentMasculino."<br/>(3650 dias)"));
+        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
+                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
 
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
@@ -927,5 +942,503 @@ class Aposentadoria{
     }
 
 ##############################################################################################################################################
+
+   /**
+     * Método exibeTempo
+     * Exibe tabela com o tempo de serviço do servidor
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+
+    public function exibeTempo($idServidorPesquisado){
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Verifica a data de saída
+        $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
+        $dtHoje = date("Y-m-d");                                      # Data de hoje
+        $dtFinal = NULL;
+
+        # Analisa a data
+        if(!vazio($dtSaida)){           // Se tem saída é a saída
+            $dtFinal = date_to_bd($dtSaida);
+        }else{                          // Não tem saída então é hoje
+            $dtFinal = $dtHoje;         
+        }
+        
+        # Gênero do servidor
+        $sexo = $pessoal->get_sexo($idServidorPesquisado);
+
+        # Tempo de Serviço
+        $uenf = $pessoal->get_tempoServicoUenf($idServidorPesquisado,$dtFinal);
+        $publica = $pessoal->get_totalAverbadoPublico($idServidorPesquisado);
+        $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
+        $totalTempo = $uenf + $publica + $privada;
+        
+        ###
+        
+        $painel = new Callout();
+        $painel->abre();
+
+        titulo("Tempo de Serviço");
+        br();
+        
+        ###
+        
+        # Verifica se tem sobreposição
+        $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
+        $resultSobreposicao = $pessoal->select($selectSobreposicao);
+        
+        # Acrescenta o tempo de UENF
+        $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
+        $resultSobreposicao[] = array($dtAdmissao,$dtFinal,NULL);
+
+        # Inicia a variável que informa se tem sobreposicao
+        $sobreposicao = FALSE;
+
+        # Inicia o array que guarda os períodos problemáticos
+        $idsProblemáticos[] = NULL;
+
+        # Percorre os registros
+        foreach($resultSobreposicao as $periodo){
+            $dtInicial1 = date_to_php($periodo[0]);
+            $dtFinal1 = date_to_php($periodo[1]);
+            $idAverbado1 = $periodo[2];
+
+            # Percorre a mesma listagem novamente
+            foreach($resultSobreposicao as $periodoVerificado){
+
+                $dtInicial2 = date_to_php($periodoVerificado[0]);
+                $dtFinal2 = date_to_php($periodoVerificado[1]);
+                $idAverbado2 = $periodoVerificado[2];
+
+                # Evita que seja comparado com ele mesmo
+                if($idAverbado1 <> $idAverbado2){
+                    if(verificaSobreposicao($dtInicial1,$dtFinal1,$dtInicial2,$dtFinal2)){
+                        $sobreposicao = TRUE;
+                        $idsProblemáticos[] = $idAverbado1;
+                        $idsProblemáticos[] = $idAverbado2;
+                    }
+                }
+            }
+        }
+
+        if($sobreposicao){
+
+            $painel = new Callout("alert","center");
+            $painel->abre();
+                echo "Atenção - Períodos com Sobreposição de Dias !!!";
+                p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: ".date_to_php($dtAdmissao),"center","f11");
+            $painel->fecha();
+        }
+        
+        ###
+
+        # Limita a tela
+        $grid = new Grid();
+
+        # Tempo público e privado
+        $grid->abreColuna(4);
+
+        # Monta o array
+        $dados1 = array(
+                array("UENF ",$uenf),
+                array("Empresa Pública",$publica),
+                array("Empresa Privada",$privada),
+                array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
+        );    
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo('Tempo de Serviço');
+        $tabela->set_conteudo($dados1);
+        $tabela->set_label(array("Descrição","Dias"));
+        $tabela->set_align(array("left","center"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                'valor' => "Total",
+                                                'operador' => '=',
+                                                'id' => 'totalTempo')));
+
+        $tabela->show();            
+        $grid->fechaColuna();
+
+    #############################3
+
+        # Ocorrências
+        $grid->abreColuna(4);
+
+        # Monta o select
+        $reducao = "SELECT tbtipolicenca.nome as tipo,
+                           SUM(numDias) as dias
+                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                     WHERE idServidor = $idServidorPesquisado
+                       AND tbtipolicenca.tempoServico IS TRUE
+                  GROUP BY tbtipolicenca.nome";
+
+        $dados2 = $pessoal->select($reducao);
+
+        # Somatório
+        $totalOcorrencias = array_sum(array_column($dados2, 'dias'));
+
+        # Adiciona na tabela
+        if($totalOcorrencias == 0){
+            array_push($dados2,array("Sem Ocorrências","---"));
+        }else{
+            array_push($dados2,array("Total",$totalOcorrencias));
+        }
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo('Ocorrências');
+        $tabela->set_conteudo($dados2);
+        $tabela->set_label(array("Descrição","Dias"));
+        $tabela->set_align(array("left","center"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                       'valor' => "Total",
+                                                       'operador' => '=',
+                                                       'id' => 'totalTempo')
+        ));
+
+        $tabela->show();            
+        $grid->fechaColuna();
+
+    #############################3
+
+        # Total do Tempo
+        $grid->abreColuna(4); 
+
+        # Calcula o tempo de serviço geral
+        $totalTempoGeral = $totalTempo - $totalOcorrencias;
+
+        # Monta o array
+        $dados3 = array(
+                  array("Tempo de Serviço ",$totalTempo),
+                  array("Ocorrências","($totalOcorrencias)"),
+                  array("Total",$totalTempoGeral)
+        );
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo('Resumo Geral');
+        $tabela->set_conteudo($dados3);
+        $tabela->set_label(array("Descrição","Dias"));
+        $tabela->set_align(array("left","center"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'totalTempo'),
+                                                array('coluna' => 0,
+                                                    'valor' => "Ocorrências",
+                                                    'operador' => '=',
+                                                    'id' => 'ocorrencia'),
+                                                 array('coluna' => 0,
+                                                       'valor' => "Dias Sobrando",
+                                                       'operador' => '=',
+                                                       'id' => 'diasSobrando'),
+                                                 array('coluna' => 0,
+                                                       'valor' => "Dias Faltando",
+                                                       'operador' => '=',
+                                                       'id' => 'diasFaltando')));
+        $tabela->show();            
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+
+        $painel->fecha();
+    }
     
+##############################################################################################################################################
+    
+    /**
+     * Método exibePrevisaoIntegral
+     * Exibe análise da aposentadoria integral do servidor
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+
+    public function exibePrevisaoIntegral($idServidorPesquisado){
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Verifica a data de saída
+        $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
+        $dtHoje = date("Y-m-d");                                      # Data de hoje
+        $dtFinal = NULL;
+
+        # Analisa a data
+        if(!vazio($dtSaida)){           // Se tem saída é a saída
+            $dtFinal = date_to_bd($dtSaida);
+        }else{                          // Não tem saída então é hoje
+            $dtFinal = $dtHoje;         
+        }
+        
+        # Gênero do servidor
+        $sexo = $pessoal->get_sexo($idServidorPesquisado);
+        
+        # Idade do Servidor
+        $idade = $pessoal->get_idade($idServidorPesquisado);
+        
+        # Idade da Aposentadoria
+        switch ($sexo){
+            case "Masculino" :
+                $anosAposentadoria = $intra->get_variavel("aposentadoria.integral.idade.masculino");
+                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
+                break;
+            case "Feminino" :
+                $anosAposentadoria = $intra->get_variavel("aposentadoria.integral.idade.feminino");
+                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
+                break;
+        }
+        
+        # Tempo de Serviço
+        $uenf = $this->get_tempoServicoUenf($idServidorPesquisado);
+        $publica = $this->get_tempoAverbadoPublico($idServidorPesquisado);
+        $privada = $this->get_tempoAverbadoPrivado($idServidorPesquisado);
+        $ocorrencia = $this->get_ocorrencias($idServidorPesquisado);
+        $totalTempo = ($uenf + $publica + $privada) - $ocorrencia;
+        
+        # Aposentadoria Integral
+        $dtAposentadoriaIntegralIdade = $this->get_dataAposentadoriaIntegralIdade($idServidorPesquisado);
+        $dtAposentadoriaIntegralTempo = $this->get_dataAposentadoriaIntegralTempo($idServidorPesquisado);
+        $dtAposentadoriaIntegral = $this->get_dataAposentadoriaIntegral($idServidorPesquisado);
+        $faltam = $diasAposentadoriaIntegral - $totalTempo;
+        
+        $painel = new Callout();
+        $painel->abre();
+
+        # Aposentadoria Integral
+
+        # Monta o array
+        $dados1 = array(
+                  array("Idade",$anosAposentadoria,$idade),
+                  array("Tempo de Serviço",$diasAposentadoriaIntegral,$totalTempo));
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo('Aposentadoria Integral');
+        $tabela->set_conteudo($dados1);
+        $tabela->set_label(array("Descrição","Regra","Valor"));
+        $tabela->set_align(array("left"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->show();
+        
+        if(jaPassou($dtAposentadoriaIntegral)){
+            callout("Desde $dtAposentadoriaIntegral o servidor já pode solicitar Aposentadoria Integral!","success");
+        }else{
+            callout("Aposentadoria Integral somente em: $dtAposentadoriaIntegral.","warning");
+        }
+
+        # Análise por idade
+        if($anosAposentadoria > $idade){
+            p("O servidor ainda não alcançou os <b>$anosAposentadoria</b> anos de idade de para solicitar aposentadoria integral. Somente em $dtAposentadoriaIntegralIdade.","f14");
+        }else{
+            p("O servidor já alcançou a idade para solicitar aposentadoria integral.","f14");
+        }
+
+        # Análise por Tempo de Serviço
+        if($diasAposentadoriaIntegral > $totalTempo){
+            p("Ainda faltam <b>$faltam</b> dias para o servidor alcançar os <b>$diasAposentadoriaIntegral</b> dias de serviço necessários para solicitar a aposentadoria integral. Somente em $dtAposentadoriaIntegralTempo.","f14");
+        }else{
+            p("O servidor já alcançou os <b>$diasAposentadoriaIntegral</b> dias de tempo de serviço para solicitar aposentadoria integral.","f14");
+        }
+        
+        ### sobreposição
+        
+        # Verifica se tem sobreposição
+        $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
+        $resultSobreposicao = $pessoal->select($selectSobreposicao);
+        
+        # Acrescenta o tempo de UENF
+        $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
+        $resultSobreposicao[] = array($dtAdmissao,$dtFinal,NULL);
+
+        # Inicia a variável que informa se tem sobreposicao
+        $sobreposicao = FALSE;
+
+        # Inicia o array que guarda os períodos problemáticos
+        $idsProblemáticos[] = NULL;
+
+        # Percorre os registros
+        foreach($resultSobreposicao as $periodo){
+            $dtInicial1 = date_to_php($periodo[0]);
+            $dtFinal1 = date_to_php($periodo[1]);
+            $idAverbado1 = $periodo[2];
+
+            # Percorre a mesma listagem novamente
+            foreach($resultSobreposicao as $periodoVerificado){
+
+                $dtInicial2 = date_to_php($periodoVerificado[0]);
+                $dtFinal2 = date_to_php($periodoVerificado[1]);
+                $idAverbado2 = $periodoVerificado[2];
+
+                # Evita que seja comparado com ele mesmo
+                if($idAverbado1 <> $idAverbado2){
+                    if(verificaSobreposicao($dtInicial1,$dtFinal1,$dtInicial2,$dtFinal2)){
+                        $sobreposicao = TRUE;
+                        $idsProblemáticos[] = $idAverbado1;
+                        $idsProblemáticos[] = $idAverbado2;
+                    }
+                }
+            }
+        }
+
+        if($sobreposicao){
+
+            $painel = new Callout("alert","center");
+            $painel->abre();
+                echo "Atenção - Períodos com Sobreposição de Dias !!!";
+                p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: ".date_to_php($dtAdmissao),"center","f11");
+            $painel->fecha();
+        }
+
+        $painel->fecha();
+    }
+    
+    ##############################################################################################################################################
+    
+    /**
+     * Método exibePrevisaoProporcional
+     * Exibe análise da aposentadoria proporcional do servidor
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+
+    public function exibePrevisaoProporcional($idServidorPesquisado){
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Gênero do servidor
+        $sexo = $pessoal->get_sexo($idServidorPesquisado);
+        
+        # Idade do Servidor
+        $idade = $pessoal->get_idade($idServidorPesquisado);
+        
+        # Aposentadoria Proporcional
+        $dtAposentadoriaProporcional = $this->get_dataAposentadoriaProporcional($idServidorPesquisado);
+        $dtAposentadoriaProporcionalIdade = $this->get_dataProporcionalIdade($idServidorPesquisado);
+        $dtAposentadoriaProporcionalTempo = $this->get_dataProporcionalTempo($idServidorPesquisado);
+        
+        # Idade da Aposentadoria
+        switch ($sexo){
+            case "Masculino" :
+                $regraIdadeProporcional = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
+                $regraTempoProporcional = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+                break;
+            case "Feminino" :
+                $regraIdadeProporcional = $intra->get_variavel("aposentadoria.proporcional.idade.feminino");
+                $regraTempoProporcional = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
+                break;
+        }
+        
+        # Tempo de Serviço
+        $uenf = $this->get_tempoServicoUenf($idServidorPesquisado);
+        $publica = $this->get_tempoAverbadoPublico($idServidorPesquisado);
+        $ocorrencia = $this->get_ocorrencias($idServidorPesquisado);
+        $totalPublico = ($uenf + $publica) - $ocorrencia;
+        
+        $painel = new Callout();
+        $painel->abre();
+
+        # Monta o array
+        $dados1 = array(
+                  array("Idade",$regraIdadeProporcional,$idade),
+                  array("Tempo de Serviço Público",$regraTempoProporcional,$totalPublico));
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo('Aposentadoria Proporcional');
+        $tabela->set_conteudo($dados1);
+        $tabela->set_label(array("Descrição","Regra","Valor"));
+        $tabela->set_align(array("left"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->show();
+        
+        if(jaPassou($dtAposentadoriaProporcional)){
+            callout("Desde $dtAposentadoriaProporcional o servidor já pode solicitar Aposentadoria Proporcional!","success");
+        }else{
+            callout("Aposentadoria Proporcional somente em: $dtAposentadoriaProporcional.","warning");
+        }
+
+        # Dias que faltam
+        $faltamProporcional = $regraTempoProporcional - $totalPublico;
+
+        # Análise por idade
+        if($regraIdadeProporcional > $idade){
+            p("O servidor ainda não alcançou os <b>$regraIdadeProporcional</b> anos de idade de para solicitar aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalIdade.","f14");
+        }else{
+            p("O servidor já alcançou a idade para solicitar aposentadoria proporcional.","f14");
+        }
+
+        # Análise por Tempo de Serviço
+        if($regraTempoProporcional > $totalPublico){
+            p("Ainda faltam <b>$faltamProporcional</b> dias para o servidor alcançar os <b>$regraTempoProporcional</b> dias de serviço necessários para solicitar a aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalTempo.","f14");
+        }else{
+            p("O servidor já alcançou os <b>$regraTempoProporcional</b> dias de tempo serviço público para solicitar aposentadoria proporcional.","f14");
+        }
+
+        $painel->fecha();
+    }
+    
+    ##############################################################################################################################################
+    
+    /**
+     * Método exibePrevisaoCompulsoria
+     * Exibe análise da aposentadoria compulsória
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+
+    public function exibePrevisaoCompulsoria($idServidorPesquisado){
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Idade do Servidor
+        $idade = $pessoal->get_idade($idServidorPesquisado);
+        
+        # Aposentadoria Compulsória
+        $dtAposentadoriaCompulsoria = $this->get_dataAposentadoriaCompulsoria($idServidorPesquisado);
+        $idadeAposentadoriaCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
+    
+        $painel = new Callout();
+        $painel->abre();
+
+        # Monta o array
+        $dados1 = array(
+                  array("Idade",$idadeAposentadoriaCompulsoria,$idade));
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo('Aposentadoria Compulsória');
+        $tabela->set_conteudo($dados1);
+        $tabela->set_label(array("Descrição","Regra","Valor"));
+        $tabela->set_align(array("left"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->show();
+        
+        br(2);
+        
+        if(jaPassou($dtAposentadoriaCompulsoria)){
+            callout("Desde $dtAposentadoriaCompulsoria o servidor terá que se aposentar compulsoriamente!","success");
+        }else{
+            callout("Aposentadoria Compulsória somente em: $dtAposentadoriaCompulsoria.","warning");
+        }
+
+        # Análise por idade
+        if(75 > $idade){
+            p("O servidor ainda não alcançou os <b>$idadeAposentadoriaCompulsoria</b> anos de idade de para a aposentadoria compulsória. Somente em $dtAposentadoriaCompulsoria.","f14");
+        }else{
+            p("O servidor já alcançou a idade para a aposentadoria compulsória.","f14");
+        }
+
+        $painel->fecha();
+    }
 }

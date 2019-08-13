@@ -29,8 +29,8 @@ if($acesso)
     ######
     
     # Pega os valores da aposentadoria   
-    $anosAposentadoriaMasculino = $intra->get_variavel("idadeAposentadoriaMasculino");
-    $anosAposentadoriaFeminino = $intra->get_variavel("idadeAposentadoriaFeminino");
+    $anosAposentadoriaMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
+    $anosAposentadoriaFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
     
     $select ='(SELECT tbservidor.idFuncional,
                      tbpessoa.nome,

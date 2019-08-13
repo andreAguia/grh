@@ -42,13 +42,16 @@ if($acesso)
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND tbtipocargo.tipo = "Adm/Tec"
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-    # lotacao
+    
+    # Lotação
     if(!is_null($relatorioLotacao)){
         # Verifica se o que veio é numérico
         if(is_numeric($relatorioLotacao)){
             $select .= ' AND (tblotacao.idlotacao = "'.$relatorioLotacao.'")';
+            $titulo = $servidor->get_nomeLotacao($relatorioLotacao);
         }else{ # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "'.$relatorioLotacao.'")';
+            $titulo = "Lotação: ".$relatorioLotacao."<br/>";
         }
     }
     
@@ -58,7 +61,7 @@ if($acesso)
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos');
-    $relatorio->set_tituloLinha2($relatorioLotacao);
+    $relatorio->set_tituloLinha2($titulo);
     $relatorio->set_subtitulo('Ordenados pela Lotação e Nome');
     $relatorio->set_label(array('Nome','Lotação','Cargo'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
@@ -71,19 +74,19 @@ if($acesso)
     $relatorio->set_conteudo($result);
     
     # Dados da combo lotacao
-    $lotacao = $servidor->select('SELECT distinct DIR, DIR
-                                   FROM tblotacao
-                                  WHERE ativo
-                               ORDER BY 2');
+    $lotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
     
-    #$relatorio->set_bordaInterna(TRUE);
-    #$relatorio->set_cabecalho(FALSE);
     $relatorio->set_formCampos(array(
                   array ('nome' => 'lotacao',
                          'label' => 'Lotação',
                          'tipo' => 'combo',
                          'array' => $lotacao,
-                         'col' => 3,
+                         'col' => 12,
                          'size' => 10,
                          'padrao' => $relatorioLotacao,
                          'title' => 'Filtra por Lotação.',

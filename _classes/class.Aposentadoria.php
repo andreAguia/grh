@@ -6,16 +6,6 @@ class Aposentadoria{
   * @author André Águia (Alat) - alataguia@gmail.com  
   */
     
-    
-##############################################################################################################################################
-    
-    /**
-    * Método Construtor
-    */
-    public function __construct(){
-        
-    }
-    
 ##############################################################################################################################################
 
     function get_numServidoresAposentados(){
@@ -143,6 +133,8 @@ class Aposentadoria{
     }   
     
 ##############################################################################################################################################
+#    Previsão de Aposentadoria de Ativo
+##############################################################################################################################################    
 
     /**
      * Método get_tempoServicoUenf
@@ -240,32 +232,13 @@ class Aposentadoria{
 ##############################################################################################################################################
 
     /**
-     * Método get_tempoGeral
-     * informa o total geral de dias
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-
-    public function get_tempoGeral($idServidor) {
-        
-        $uenf = $this->get_tempoServicoUenf($idServidor);
-        $publico = $this->get_tempoAverbadoPublico($idServidor);
-        $privado = $this->get_tempoAverbadoPrivado($idServidor);
-        $total = $uenf + $publico + $privado;
-        
-        return $total;
-    }
-
-##############################################################################################################################################
-
-    /**
-     * Método get_ocorrencias
+     * Método get_tempoOcorrencias
      * informa o total de dias de tempo averbado em empresa privada
      * 
      * @param	string $idServidor idServidor do servidor
      */
 
-    public function get_ocorrencias($idServidor) {
+    public function get_tempoOcorrencias($idServidor) {
 
         $reducao = "SELECT tbtipolicenca.nome as tipo,
                            SUM(numDias) as dias
@@ -288,6 +261,25 @@ class Aposentadoria{
 ##############################################################################################################################################
 
     /**
+     * Método get_tempoServicoTotal
+     * informa o total geral de dias sem considerar as ocorrências
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    public function get_tempoServicoTotal($idServidor) {
+        
+        $uenf = $this->get_tempoServicoUenf($idServidor);
+        $publico = $this->get_tempoAverbadoPublico($idServidor);
+        $privado = $this->get_tempoAverbadoPrivado($idServidor);
+        $total = $uenf + $publico + $privado;
+        
+        return $total;
+    }
+
+##############################################################################################################################################
+
+    /**
      * Método get_diasFaltandoIntegral
      * informa o total de dias que faltam para completar o tempo de serviço para aposentadoria Integral
      * 
@@ -296,40 +288,7 @@ class Aposentadoria{
 
     public function get_diasFaltandoIntegral($idServidor) {
         
-        # Conecta o banco de dados
-        $intra = new Intra();
-        $pessoal = new Pessoal();
-
-        # Pega o sexo do servidor
-        $sexo = $pessoal->get_sexo($idServidor);
         
-        # Define a idade que dá direito para cada gênero
-        switch ($sexo){
-            case "Masculino" :
-                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
-                break;
-            case "Feminino" :
-                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
-                break;
-        }
-        
-        $tempoGeral = $this->get_tempoGeral($idServidor);
-        $ocorrencias = $this->get_ocorrencias($idServidor);
-        
-        # Calcula o tempo de serviço geral
-        $totalTempoGeral = $tempoGeral - $ocorrencias;
-
-        # Dias que faltam
-        $faltam = $diasAposentadoriaIntegral - $totalTempoGeral;
-        
-        # Analisa resultado
-        if($faltam < 0){
-            $retorno = $faltam;
-        }else{
-            $retorno = $faltam;
-        }
-        
-        return $retorno;
     }
     
 ##############################################################################################################################################
@@ -378,157 +337,7 @@ class Aposentadoria{
         $tabela->show();
     } 
     
-##############################################################################################################################################	
-    /**
-     * Método get_dataCompulsoria
-     * Informa a data em que o servidor é obrigado a se aposentar
-     * 
-     * @param string $idServidor idServidor do servidor
-     */
-
-    public function get_dataCompulsoria($idServidor){
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        $intra = new Intra();
-
-        # Idade obrigatória
-        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
-
-        # Pega a data de nascimento (vem dd/mm/AAAA)
-        $dtNasc = $pessoal->get_dataNascimento($idServidor);
-
-        # Calcula a data
-        $novaData  = addAnos($dtNasc,$idade);
-        
-        return $novaData;			
-    }
-
-##############################################################################################################################################
-
-   /**
-    * Método get_dataProporcional
-    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional pela Idade
-    * 
-    * @param integer $idServidor idServidor do servidor
-    */
-
-   public function get_dataProporcionalIdade($idServidor){
-       
-       
-       # Conecta ao Banco de Dados
-       $pessoal = new Pessoal();
-       
-       ##### Idade
-       
-       # Define a idade que dá direito para cada gênero
-       $sexo = $pessoal->get_sexo($idServidor);
-       switch ($sexo){
-           case "Masculino" :
-               $dataIdade = $pessoal->get_dataIdade($idServidor,65);
-               break;
-           
-           case "Feminino" :
-               $dataIdade = $pessoal->get_dataIdade($idServidor,60);
-               break;
-       }
-       
-       return $dataIdade;			
-   }
-   
-##############################################################################################################################################
-
-   /**
-    * Método get_dataProporcionalTempo
-    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional pelo Tempo de Serviço Público
-    * 
-    * @param string $idServidor idServidor do servidor
-    */
-
-   public function get_dataProporcionalTempo($idServidor){
-       
-       
-       # Conecta ao Banco de Dados
-       $pessoal = new Pessoal();
-       $intra = new Intra();
-       
-       ##### Tempo Público
-       
-       # Tempo de Serviço
-       $uenf = $this->get_tempoServicoUenf($idServidor);
-       $publico = $this->get_tempoAverbadoPublico($idServidor);
-       $publicoGeral = $uenf+$publico;
-       
-       # Pega a regra
-       $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
-       $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
-       
-       # Define a idade que dá direito para cada gênero
-       $sexo = $pessoal->get_sexo($idServidor);
-       switch ($sexo){
-           case "Masculino" :
-               $faltando = $diasAposentMasculino - $publicoGeral;
-               break;
-           
-           case "Feminino" :
-               $faltando = $diasAposentFeminino - $publicoGeral;
-               break;
-       }
-              
-       # calcula a data
-       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
-       
-       return $dataPublico;			
-   }
-   
-##############################################################################################################################################
-
-   /**
-    * Método get_dataProporcional
-    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional
-    * 
-    * @param string $idServidor idServidor do servidor
-    */
-
-   public function get_dataProporcional($idServidor){
-       
-       
-       # Conecta ao Banco de Dados
-       $pessoal = new Pessoal();
-       
-       ##### Tempo Público
-       
-       # Tempo de Serviço
-       $uenf = $this->get_tempoServicoUenf($idServidor);
-       $publico = $this->get_tempoAverbadoPublico($idServidor);
-       $publicoGeral = $uenf+$publico;
-              
-       # Verifica se o tempo público é maior que 10 anos (3650 dias)
-       $dezAnos = 3650;
-       $faltando = $dezAnos - $publicoGeral;
-       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
-       
-       ##### Idade
-       
-       # Define a idade que dá direito para cada gênero
-       $sexo = $pessoal->get_sexo($idServidor);
-       switch ($sexo){
-           case "Masculino" :
-               $dataIdade = $pessoal->get_dataIdade($idServidor,65);
-               break;
-           
-           case "Feminino" :
-               $dataIdade = $pessoal->get_dataIdade($idServidor,60);
-               break;
-       }
-        
-       $novaData = dataMaior($dataIdade,$dataPublico);
-       
-       return $novaData;			
-   }
-   
-##############################################################################################################################################
-
+###############################################################################################################################################
 
    /**
     * Método get_dataAposentadoriaIntegral
@@ -601,6 +410,42 @@ class Aposentadoria{
        # Pega os dias faltando
        $faltando = $this->get_diasFaltandoIntegral($idServidor);
        
+       # Conecta o banco de dados
+        $intra = new Intra();
+        $pessoal = new Pessoal();
+
+        # Pega o sexo do servidor
+        $sexo = $pessoal->get_sexo($idServidor);
+        
+        # Define a idade que dá direito para cada gênero
+        switch ($sexo){
+            case "Masculino" :
+                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
+                break;
+            case "Feminino" :
+                $diasAposentadoriaIntegral = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
+                break;
+        }
+        
+        # Pega os valores
+        $tempoGeral = $this->get_tempoServicoTotal($idServidor);
+        $ocorrencias = $this->get_tempoOcorrencias($idServidor);
+        
+        # Calcula o tempo de serviço geral
+        $totalTempoGeral = $tempoGeral - $ocorrencias;
+
+        # Dias que faltam
+        $faltam = $diasAposentadoriaIntegral - $totalTempoGeral;
+        
+        # Analisa resultado
+        if($faltam < 0){
+            $retorno = $faltam;
+        }else{
+            $retorno = $faltam;
+        }
+        
+        return $retorno;
+       
        $novaData = addDias(date("d/m/Y"),$faltando,FALSE);
        
        return $novaData;			
@@ -617,9 +462,67 @@ class Aposentadoria{
 
    public function get_dataAposentadoriaProporcional($idServidor){
        
+       # Conecta ao Banco de Dados
+       $pessoal = new Pessoal();
+       $intra = new Intra();
+       
+       # Pega o sexo do servidor
+       $sexo = $pessoal->get_sexo($idServidor);
+       
+       # Tempo de Serviço Público
+       $uenf = $this->get_tempoServicoUenf($idServidor);
+       $publico = $this->get_tempoAverbadoPublico($idServidor);
+       $ocorrencia = $this->get_tempoOcorrencias($idServidor);
+       $publicoGeral = ($uenf+$publico)-$ocorrencia;
+              
+       # Verifica se o tempo público é maior o estipulado pela regra
+       switch ($sexo){
+           case "Masculino" :
+               $tempo = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+               break;
+           
+           case "Feminino" :
+               $tempo = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
+               break;
+       }
+       
+       $faltando = $tempo - $publicoGeral;
+       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
+       
+       ##### Idade
+       
+       # Define a idade       
+       switch ($sexo){
+           case "Masculino" :
+               $tempo = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
+               break;
+           
+           case "Feminino" :
+               $tempo = $intra->get_variavel("aposentadoria.proporcional.idade.feminino");
+               break; 
+       }
+       
+       $dataIdade = $pessoal->get_dataIdade($idServidor,$tempo); 
+       $novaData = dataMaior($dataIdade,$dataPublico);
+       
+       return $novaData;			
+   }
+   
+ ##############################################################################################################################################  
+
+   /**
+    * Método get_dataAposentadoriaProporcionalTempo
+    * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional pelo Tempo de Serviço Público
+    * 
+    * @param string $idServidor idServidor do servidor
+    */
+
+   public function get_dataAposentadoriaProporcionalTempo($idServidor){
+       
        
        # Conecta ao Banco de Dados
        $pessoal = new Pessoal();
+       $intra = new Intra();
        
        ##### Tempo Público
        
@@ -627,31 +530,31 @@ class Aposentadoria{
        $uenf = $this->get_tempoServicoUenf($idServidor);
        $publico = $this->get_tempoAverbadoPublico($idServidor);
        $publicoGeral = $uenf+$publico;
-              
-       # Verifica se o tempo público é maior que 10 anos (3650 dias)
-       $dezAnos = 3650;
-       $faltando = $dezAnos - $publicoGeral;
-       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
        
-       ##### Idade
+       # Pega a regra
+       $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+       $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
        
        # Define a idade que dá direito para cada gênero
        $sexo = $pessoal->get_sexo($idServidor);
        switch ($sexo){
            case "Masculino" :
-               $dataIdade = $pessoal->get_dataIdade($idServidor,65);
+               $faltando = $diasAposentMasculino - $publicoGeral;
                break;
            
            case "Feminino" :
-               $dataIdade = $pessoal->get_dataIdade($idServidor,60);
+               $faltando = $diasAposentFeminino - $publicoGeral;
                break;
        }
-        
-       $novaData = dataMaior($dataIdade,$dataPublico);
+              
+       # calcula a data
+       $dataPublico = addDias(date("d/m/Y"),$faltando,FALSE);
        
-       return $novaData;			
+       return $dataPublico;			
    }
+   
 ##############################################################################################################################################
+
 	
     /**
      * Método get_dataAposentadoriaCompulsoria
@@ -1199,7 +1102,7 @@ class Aposentadoria{
         $uenf = $this->get_tempoServicoUenf($idServidorPesquisado);
         $publica = $this->get_tempoAverbadoPublico($idServidorPesquisado);
         $privada = $this->get_tempoAverbadoPrivado($idServidorPesquisado);
-        $ocorrencia = $this->get_ocorrencias($idServidorPesquisado);
+        $ocorrencia = $this->get_tempoOcorrencias($idServidorPesquisado);
         $totalTempo = ($uenf + $publica + $privada) - $ocorrencia;
         
         # Aposentadoria Integral
@@ -1212,6 +1115,11 @@ class Aposentadoria{
         $painel->abre();
 
         # Aposentadoria Integral
+        if(jaPassou($dtAposentadoriaIntegral)){
+            callout("Desde $dtAposentadoriaIntegral o servidor já pode solicitar Aposentadoria Integral!","success");
+        }else{
+            callout("Aposentadoria Integral somente em: $dtAposentadoriaIntegral.","warning");
+        }
 
         # Monta o array
         $dados1 = array(
@@ -1227,11 +1135,7 @@ class Aposentadoria{
         $tabela->set_totalRegistro(FALSE);
         $tabela->show();
         
-        if(jaPassou($dtAposentadoriaIntegral)){
-            callout("Desde $dtAposentadoriaIntegral o servidor já pode solicitar Aposentadoria Integral!","success");
-        }else{
-            callout("Aposentadoria Integral somente em: $dtAposentadoriaIntegral.","warning");
-        }
+        hr("procedimento");
 
         # Análise por idade
         if($anosAposentadoria > $idade){
@@ -1239,6 +1143,8 @@ class Aposentadoria{
         }else{
             p("O servidor já alcançou a idade para solicitar aposentadoria integral.","f14");
         }
+        
+        hr("procedimento");
 
         # Análise por Tempo de Serviço
         if($diasAposentadoriaIntegral > $totalTempo){
@@ -1340,11 +1246,18 @@ class Aposentadoria{
         # Tempo de Serviço
         $uenf = $this->get_tempoServicoUenf($idServidorPesquisado);
         $publica = $this->get_tempoAverbadoPublico($idServidorPesquisado);
-        $ocorrencia = $this->get_ocorrencias($idServidorPesquisado);
+        $ocorrencia = $this->get_tempoOcorrencias($idServidorPesquisado);
         $totalPublico = ($uenf + $publica) - $ocorrencia;
         
         $painel = new Callout();
         $painel->abre();
+        
+        # Aposentadoria Proporcional
+        if(jaPassou($dtAposentadoriaProporcional)){
+            callout("Desde $dtAposentadoriaProporcional o servidor já pode solicitar Aposentadoria Proporcional!","success");
+        }else{
+            callout("Aposentadoria Proporcional somente em: $dtAposentadoriaProporcional.","warning");
+        }
 
         # Monta o array
         $dados1 = array(
@@ -1360,12 +1273,8 @@ class Aposentadoria{
         $tabela->set_totalRegistro(FALSE);
         $tabela->show();
         
-        if(jaPassou($dtAposentadoriaProporcional)){
-            callout("Desde $dtAposentadoriaProporcional o servidor já pode solicitar Aposentadoria Proporcional!","success");
-        }else{
-            callout("Aposentadoria Proporcional somente em: $dtAposentadoriaProporcional.","warning");
-        }
-
+        hr("procedimento");
+        
         # Dias que faltam
         $faltamProporcional = $regraTempoProporcional - $totalPublico;
 
@@ -1375,6 +1284,8 @@ class Aposentadoria{
         }else{
             p("O servidor já alcançou a idade para solicitar aposentadoria proporcional.","f14");
         }
+        
+        hr("procedimento");
 
         # Análise por Tempo de Serviço
         if($regraTempoProporcional > $totalPublico){
@@ -1410,6 +1321,13 @@ class Aposentadoria{
     
         $painel = new Callout();
         $painel->abre();
+        
+        # Aposentadoria Compulsória
+        if(jaPassou($dtAposentadoriaCompulsoria)){
+            callout("Desde $dtAposentadoriaCompulsoria o servidor terá que se aposentar compulsoriamente!","success");
+        }else{
+            callout("Aposentadoria Compulsória somente em: $dtAposentadoriaCompulsoria.","warning");
+        }
 
         # Monta o array
         $dados1 = array(
@@ -1424,13 +1342,8 @@ class Aposentadoria{
         $tabela->set_totalRegistro(FALSE);
         $tabela->show();
         
-        br(2);
-        
-        if(jaPassou($dtAposentadoriaCompulsoria)){
-            callout("Desde $dtAposentadoriaCompulsoria o servidor terá que se aposentar compulsoriamente!","success");
-        }else{
-            callout("Aposentadoria Compulsória somente em: $dtAposentadoriaCompulsoria.","warning");
-        }
+        br();
+        hr("procedimento");
 
         # Análise por idade
         if(75 > $idade){

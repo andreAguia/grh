@@ -264,7 +264,8 @@ if($acesso){
                                          ELSE "--"
                                      END,
                                      idReadaptacao,
-                                     idReadaptacao,
+                                     processo,
+                                     idReadaptacao,                                     
                                      idReadaptacao,
                                      idReadaptacao,
                                      idReadaptacao,
@@ -318,13 +319,13 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Status","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
+    $objeto->set_label(array("Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center","center","center","left","center","center","left","left"));
+    $objeto->set_align(array("center","center","center","center","left","center","center","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array(NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-    $objeto->set_metodo(array(NULL,"exibeStatus","exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
+    $objeto->set_classe(array(NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+    $objeto->set_metodo(array(NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -406,7 +407,7 @@ if($acesso){
                                        'title' => 'Se há pendências',
                                        'col' => 3,
                                        'linha' => 3),
-                                array ( 'nome' => 'resultado',
+                               array ( 'nome' => 'resultado',
                                        'label' => 'Resultado:',
                                        'tipo' => 'combo',
                                        'array' => array(array(NULL,""),array(1,"Deferido"),array(2,"Indeferido")),
@@ -414,14 +415,14 @@ if($acesso){
                                        'title' => 'Se o processo foi deferido ou indeferido',
                                        'col' => 3,
                                        'linha' => 3), 
-                                array ( 'nome' => 'dtCiencia',
+                               array ( 'nome' => 'dtCiencia',
                                        'label' => 'Data da Ciência:',
                                        'tipo' => 'data',
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'A data da ciência do servidor.',
                                        'linha' => 3),
-                                array ('linha' => 4,
+                               array ( 'linha' => 4,
                                        'col' => 9,
                                        'nome' => 'dadosPendencia',
                                        'label' => 'Pendências:',
@@ -453,19 +454,20 @@ if($acesso){
                                        'linha' => 6),
                                array ( 'nome' => 'dtInicio',
                                        'label' => 'Data de Inicio:',
+                                       'fieldset' => 'Quando Deferido',
                                        'tipo' => 'data',
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'A data em que o servidor passou a receber o benefício.',
-                                       'linha' => 6),
+                                       'linha' => 7),
                                array ( 'nome' => 'periodo',
                                        'label' => 'Período (Meses):',
                                        'tipo' => 'texto',
                                        'size' => 10,
                                        'col' => 2,
                                        'title' => 'O período em meses do benefício.',
-                                       'linha' => 6),
-                                array ('linha' => 7,
+                                       'linha' => 7),
+                               array ( 'linha' => 8,
                                        'col' => 12,
                                        'nome' => 'parecer',
                                        'label' => 'Parecer:',

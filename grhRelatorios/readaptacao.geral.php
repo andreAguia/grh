@@ -38,24 +38,25 @@ if($acesso)
 
     # Pega os dados
     $select = "SELECT idServidor,
-                              tbpessoa.nome,
-                              CASE tipo
-                                WHEN 1 THEN 'Ex-Ofício'
-                                WHEN 2 THEN 'Solicitada'
-                                ELSE '--'
-                              END,
-                              idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,                                   
-                              idReadaptacao
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbreadaptacao USING (idServidor)
-                        WHERE tbservidor.idPerfil <> 10";
+                      tbpessoa.nome,
+                      CASE tipo
+                        WHEN 1 THEN 'Ex-Ofício'
+                        WHEN 2 THEN 'Solicitada'
+                        ELSE '--'
+                      END,
+                      idReadaptacao,
+                      processo,
+                      idReadaptacao,
+                      idReadaptacao,
+                      idReadaptacao,
+                      idReadaptacao,
+                      idReadaptacao,
+                      idReadaptacao,
+                      idReadaptacao,                                   
+                      idReadaptacao
+                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                 JOIN tbreadaptacao USING (idServidor)
+                WHERE tbservidor.idPerfil <> 10";
             
     # status
     if($parametroStatus <> 0){
@@ -78,12 +79,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
     
-    $relatorio->set_label(array("idServidor","Nome","Tipo","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-    $relatorio->set_align(array("center","left","center","center","center","left","center","center","left"));
+    $relatorio->set_label(array("idServidor","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+    $relatorio->set_align(array("center","left","center","center","center","center","left","center","center","left"));
     $relatorio->set_funcao(array("idMatricula"));
 
-    $relatorio->set_classe(array(NULL,NULL,NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"exibeStatus","exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

@@ -137,6 +137,7 @@ if($acesso){
                                 ELSE '--'
                               END,
                               idReadaptacao,
+                              processo,
                               idReadaptacao,
                               idReadaptacao,
                               idReadaptacao,
@@ -167,12 +168,12 @@ if($acesso){
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("idServidor","Nome","Tipo","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-            $tabela->set_align(array("center","left","center","center","center","left","center","center","left"));
+            $tabela->set_label(array("idServidor","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","center","center","center","center","left","center","center","left"));
             $tabela->set_funcao(array("idMatricula"));
             
-            $tabela->set_classe(array(NULL,NULL,NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-            $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus","exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
             $tabela->set_titulo("Servidores com Solicitação de Readaptação");
             
@@ -274,7 +275,8 @@ if($acesso){
             # Pega os dados
             $select = "SELECT idServidor,
                               tbpessoa.nome,
-                              idReducao,
+                              idReducao,                              
+                              idServidor,
                               dtSolicitacao,
                               idReducao,
                               idReducao,
@@ -303,12 +305,12 @@ if($acesso){
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Id/Matrícula","Nome","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-            $tabela->set_align(array("center","left","center","center","left","center","center","left"));
-            $tabela->set_funcao(array("idMatricula",NULL,NULL,"date_to_php"));
+            $tabela->set_label(array("Id/Matrícula","Nome","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","left","center","center","left","center","center","left"));
+            $tabela->set_funcao(array("idMatricula",NULL,NULL,NULL,"date_to_php"));
             
-            $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-            $tabela->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+            $tabela->set_metodo(array(NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
             $tabela->set_titulo("Servidores com Solicitação de Redução de Carga Horária");
             

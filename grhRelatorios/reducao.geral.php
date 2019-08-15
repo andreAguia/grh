@@ -39,7 +39,8 @@ if($acesso)
     # Pega os dados
     $select = "SELECT idServidor,
                       tbpessoa.nome,
-                      idReducao,
+                      idReducao,                              
+                      idServidor,
                       dtSolicitacao,
                       idReducao,
                       idReducao,
@@ -69,12 +70,12 @@ if($acesso)
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-    $relatorio->set_label(array("Id/Matrícula","Nome","Status","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-    $relatorio->set_align(array("center","left","center","center","left","center","center","left"));
-    $relatorio->set_funcao(array("idMatricula",NULL,NULL,"date_to_php"));
-
-    $relatorio->set_classe(array(NULL,NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $relatorio->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+    $relatorio->set_label(array("Id/Matrícula","Nome","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+    $relatorio->set_align(array("center","left","center","center","center","left","center","center","left"));
+    $relatorio->set_funcao(array("idMatricula",NULL,NULL,NULL,"date_to_php"));
+    
+    $relatorio->set_classe(array(NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+    $relatorio->set_metodo(array(NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

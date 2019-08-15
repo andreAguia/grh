@@ -285,7 +285,7 @@ class Readaptacao{
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT dtInicio, periodo, ADDDATE(dtInicio, INTERVAL periodo MONTH), resultado
+        $select = 'SELECT dtInicio, periodo, DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY), resultado
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
 

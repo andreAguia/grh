@@ -100,7 +100,11 @@ if($acesso){
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->show();
     
+    $soma1 = $relatorio->get_totalRegistroValor();
+    
     #####
+    
+    hr();
     
     $select1 = "(SELECT tbservidor.idFuncional,
                         tbpessoa.nome,
@@ -142,6 +146,9 @@ if($acesso){
     
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->show();
+    $soma2 = $relatorio->get_totalRegistroValor();
+    
+    p("Total Geral de Registros: ".($soma1 + $soma2),"f12","center");
 
     $page->terminaPagina();
 }

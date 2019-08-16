@@ -30,9 +30,10 @@ if($acesso)
     
     ######
     
-    $select ='SELECT tbpessoa.nome,
+    $select ='SELECT tbservidor.idFuncional,
+                     tbpessoa.nome,
                      tbdocumentacao.cpf,                    
-                     "______________________________________________"
+                     "_________________________________________"
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -63,9 +64,9 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Professores Ativos');
     $relatorio->set_tituloLinha2($titulo);
     $relatorio->set_subtitulo('Ordenado pelo Nome');
-    $relatorio->set_label(array('Nome','CPF','Assinatura'));
+    $relatorio->set_label(array('IdFuncional','Nome','CPF','Assinatura'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("left","left","left"));
+    $relatorio->set_align(array("center","left","left","left"));
     #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     
     #$relatorio->set_classe(array(NULL,NULL,"pessoal"));
@@ -95,6 +96,7 @@ if($acesso)
 
     $relatorio->set_formFocus('ano');		
     $relatorio->set_formLink('?');
+    $relatorio->set_espacamento(3);
     $relatorio->show();
 
     $page->terminaPagina();

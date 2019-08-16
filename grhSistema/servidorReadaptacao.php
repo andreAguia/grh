@@ -49,19 +49,17 @@ if($acesso){
 
                 // Verifica o valor do resultado quando o form é carregado
                 if(resultado == 1){
-                    $("#dtPublicacao").show();
                     $("#dtInicio").show();
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div12").show();
+                    $("#div14").show();
                 }else{
-                    $("#dtPublicacao").hide();
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div12").hide();
+                    $("#div14").hide();
                 }
                 
                 // Pega o valor do tipo
@@ -87,7 +85,7 @@ if($acesso){
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div12").show();
+                    $("#div14").show();
                 }else{
                     $("#labeldtSolicitacao").show();
                     $("#dtSolicitacao").show();
@@ -121,19 +119,17 @@ if($acesso){
                     var resultado = $("#resultado").val();
                     
                     if(resultado == 1){
-                        $("#dtPublicacao").show();
                         $("#dtInicio").show();
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div12").show();
+                        $("#div14").show();
                     }else{
-                        $("#dtPublicacao").hide();
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div12").hide();
+                        $("#div14").hide();
                     }                
                 });
                 
@@ -163,7 +159,7 @@ if($acesso){
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div12").show();
+                        $("#div14").show();
                     }else{
                         $("#labeldtSolicitacao").show();
                         $("#dtSolicitacao").show();
@@ -443,7 +439,7 @@ if($acesso){
                                        'size' => 10,
                                        'col' => 3,
                                        'title' => 'A Data da Publicação.',
-                                       'fieldset' => 'Quando Deferido',
+                                       'fieldset' => 'Publicação:',
                                        'linha' => 6),
                                array ( 'nome' => 'pgPublicacao',
                                        'label' => 'Página:',

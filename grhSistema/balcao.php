@@ -146,15 +146,8 @@ if($acesso){
 
                 $form->show();
             }else{
-                $grid1 = new Grid();
-                $grid1->abreColuna(4);
-                $grid1->fechaColuna();
-                $grid1->abreColuna(4);
-                p(get_nomeMes($parametroMes)." / ".$parametroAno,"center","f18");
-                $grid1->fechaColuna();
-                $grid1->abreColuna(4);
-                $grid1->fechaColuna();
-                $grid1->fechaGrid();
+                tituloTable(get_nomeMes($parametroMes)." / ".$parametroAno);
+                br();
             }
 
             ###########################################################################################################

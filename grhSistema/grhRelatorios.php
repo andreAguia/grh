@@ -437,12 +437,13 @@ if($acesso){
             $menu->add_item('titulo','Processo Eleitoral');
             
             $menu->add_item('titulo1','Administrativo e Técnico'); 
-            $menu->add_item('linkWindow','Relatório de Servidores Com Cargo Por Lotação','../grhRelatorios/eleitoral.AdmTecPorLotacao.php');
-            $menu->add_item('linkWindow','Relatório de Servidores Com CPF e Assinatura Por Lotação','../grhRelatorios/eleitoral.Assinatura.AdmTecPorLotacao.php'); 
+            $menu->add_item('linkWindow','Relatório de Servidores Com Cargo Por Lotação','../grhRelatorios/eleitoral.AdmTec.PorLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Servidores Com Cargo Por Lotação e Nivel do Cargo','../grhRelatorios/eleitoral.AdmTec.NivelCargo.PorLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Servidores Com CPF e Assinatura Por Lotação','../grhRelatorios/eleitoral.Assinatura.AdmTec.PorLotacao.php'); 
             
             $menu->add_item('titulo1','Professores'); 
-            $menu->add_item('linkWindow','Relatório de Professores Com Cargo Por Lotação','../grhRelatorios/eleitoral.ProfessoresPorLotacao.php'); 
-            $menu->add_item('linkWindow','Relatório de Professores Com CPF e Assinatura','../grhRelatorios/eleitoral.Assinatura.ProfessoresPorLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Professores Com Cargo Por Lotação','../grhRelatorios/eleitoral.Professores.PorLotacao.php'); 
+            $menu->add_item('linkWindow','Relatório de Professores Com CPF e Assinatura','../grhRelatorios/eleitoral.Assinatura.Professores.PorLotacao.php');
             
             $menu->show();
             break;

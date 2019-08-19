@@ -1681,6 +1681,25 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_motivoAposentadoria
+     * informa o motivo de saída de um servidor pelo idMotivo
+     * 
+     * @param	string $idMotivo idMotivo
+     */
+
+    function get_motivoAposentadoria($idMotivo){
+            $select = 'SELECT tbmotivo.motivo
+                         FROM tbmotivo 
+                        WHERE idMotivo = '.$idMotivo;
+
+            $motivo = parent::select($select,FALSE);
+
+            return $motivo[0];
+    }
+
+    ###########################################################
+
+    /**
      * Método get_idPessoaAtiva
      * informa se a pessoa tem alguma matrícula ativa
      * 

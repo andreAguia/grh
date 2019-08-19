@@ -67,6 +67,14 @@ if($acesso){
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar,"left");
         
+        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $botaoRel = new Button();
+        $botaoRel->set_title("Relatório");
+        $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
+        $botaoRel->set_target("_blank");
+        $botaoRel->set_imagem($imagem2);
+        $menu->add_link($botaoRel,"right");
+        
         $linkRegras = new Button("Regras");
         $linkRegras->set_title('Exibe as regras da aposentadoria');
         $linkRegras->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
@@ -86,6 +94,24 @@ if($acesso){
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar,"left");
+        
+        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $botaoRel = new Button();
+        $botaoRel->set_title("Relatório de Aposentados por Ano de Saída");
+        $botaoRel->set_url("../grhRelatorios/aposentados.porAno.php");
+        $botaoRel->set_target("_blank");
+        $botaoRel->set_imagem($imagem2);
+        $menu->add_link($botaoRel,"right");
+   
+     }elseif($fase == "motivo"){
+        
+        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $botaoRel = new Button();
+        $botaoRel->set_title("Relatório de Aposentados por Tipo");
+        $botaoRel->set_url("../grhRelatorios/aposentados.porTipo.php");
+        $botaoRel->set_target("_blank");
+        $botaoRel->set_imagem($imagem2);
+        $menu->add_link($botaoRel,"right");
    
     }elseif($fase == "previsaoSomatorio"){
         

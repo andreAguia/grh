@@ -238,6 +238,9 @@ if($acesso){
                 # Limita o tamanho da tela
                 $grid = new Grid();
                 $grid->abreColuna(12);
+                
+                $vinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
+                #p("Vinculos: $vinculos");
 
                 # Cria um menu
                 $menu = new MenuBar();

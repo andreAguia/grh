@@ -70,7 +70,7 @@ if($acesso)
     #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
     
     $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_CargoSimples"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_CargoRel"));
     
     $relatorio->set_conteudo($result);
     

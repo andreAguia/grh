@@ -440,10 +440,15 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Servidores Com Cargo Por Lotação','../grhRelatorios/eleitoral.AdmTec.PorLotacao.php');
             $menu->add_item('linkWindow','Relatório de Servidores Com Cargo Por Lotação e Nivel do Cargo','../grhRelatorios/eleitoral.AdmTec.NivelCargo.PorLotacao.php');
             $menu->add_item('linkWindow','Relatório de Servidores Com CPF e Assinatura Por Lotação','../grhRelatorios/eleitoral.Assinatura.AdmTec.PorLotacao.php'); 
+            $menu->add_item('linkWindow','Relatório de Servidores Com CPF e Assinatura Por Lotação - Polo Macaé','../grhRelatorios/eleitoral.Assinatura.AdmTec.PoloMacae.php'); 
+            $menu->add_item('linkWindow','Relatório de Servidores Com CPF e Assinatura Por Lotação - Polo Campos','../grhRelatorios/eleitoral.Assinatura.AdmTec.PoloCampos.php'); 
             
             $menu->add_item('titulo1','Professores'); 
             $menu->add_item('linkWindow','Relatório de Professores Com Cargo Por Lotação','../grhRelatorios/eleitoral.Professores.PorLotacao.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Com CPF e Assinatura','../grhRelatorios/eleitoral.Assinatura.Professores.PorLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Professores Com CPF e Assinatura - Polo Macaé','../grhRelatorios/eleitoral.Assinatura.Professores.PoloMacae.php');
+            $menu->add_item('linkWindow','Relatório de Professores Com CPF e Assinatura - Polo Campos','../grhRelatorios/eleitoral.Assinatura.Professores.PoloCampos.php');
+            
             
             $menu->show();
             break;

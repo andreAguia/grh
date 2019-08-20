@@ -99,13 +99,7 @@ if($acesso){
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
                              concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
-                        FROM tblotacao';
-    
-    if(is_null($id)){
-        $selectLotacao .= ' WHERE ativo';
-    }
-                       
-    $selectLotacao .= ' ORDER BY lotacao';
+                        FROM tblotacao ORDER BY ativo desc, lotacao';
     
     $result = $pessoal->select($selectLotacao);
     array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo

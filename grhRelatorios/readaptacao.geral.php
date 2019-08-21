@@ -17,9 +17,11 @@ $acesso = Verifica::acesso($idUsuario,2);
 # Pega os parâmetros
 $parametroNomeMat = get_session('parametroNomeMat');
 $parametroStatus = get_session('parametroStatus',0);
+$parametroTipo = get_session('parametroTipo',0);
 
 # Variáveis
 $statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
+$tiposPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
 
 if($acesso)
 {    
@@ -61,13 +63,19 @@ if($acesso)
     # status
     if($parametroStatus <> 0){
         $select .= " AND status = ".$parametroStatus;
-        $subTitulo .= "Status: ".$statusPossiveis[$parametroStatus][1];
+        $subTitulo .= "Status: ".$statusPossiveis[$parametroStatus][1]." ";
+    }
+    
+    # tipo
+    if($parametroTipo <> 0){
+        $select .= " AND tipo = ".$parametroTipo;
+        $subTitulo .= "Tipo: ".$tiposPossiveis[$parametroTipo][1]." ";
     }
 
     # nome ou matrícula
     if(!is_null($parametroNomeMat)){
         $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
-        $subTitulo .= "Nome: ".$parametroNomeMat;
+        $subTitulo .= "Nome: ".$parametroNomeMat." ";
     }
                     
                     

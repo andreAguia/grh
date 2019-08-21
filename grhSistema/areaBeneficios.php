@@ -42,10 +42,12 @@ if($acesso){
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
     $parametroStatus = post('parametroStatus',get_session('parametroStatus',0));
+    $parametroTipo = post('parametroTipo',get_session('parametroTipo',0));
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
     set_session('parametroStatus',$parametroStatus);
+    set_session('parametroTipo',$parametroTipo);
     
     # Começa uma nova página
     $page = new Page();
@@ -58,6 +60,7 @@ if($acesso){
     
     # Variáveis
     $statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
+    $tiposPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
             
 ################################################################
     
@@ -106,8 +109,19 @@ if($acesso){
             $controle->set_valor($parametroNomeMat);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(6);
             $controle->set_autofocus(TRUE);
+            $form->add_item($controle);
+            
+            # Tipo    
+            $controle = new Input('parametroTipo','combo','Tipo:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array($tiposPossiveis);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Status    
@@ -118,7 +132,7 @@ if($acesso){
             $controle->set_valor($parametroStatus);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -155,7 +169,12 @@ if($acesso){
                 $select .= " AND status = ".$parametroStatus;
             }
             
-            # status
+            # tipo
+            if($parametroTipo <> 0){
+                $select .= " AND tipo = ".$parametroTipo;
+            }
+            
+            # nome
             if(!is_null($parametroNomeMat)){
                 $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
             }

@@ -221,7 +221,7 @@ if($acesso){
                                      idReducao
                                 FROM tbreducao
                                WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY dtSolicitacao desc');
+                            ORDER BY status, dtInicio');
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtSolicitacao,

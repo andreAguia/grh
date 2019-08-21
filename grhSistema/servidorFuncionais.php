@@ -134,7 +134,7 @@ if($acesso){
     $motivo = $pessoal->select('SELECT idmotivo,
                                        motivo
                                   FROM tbmotivo
-                              ORDER BY idmotivo');
+                              ORDER BY motivo');
 
     array_unshift($motivo, array(NULL,NULL)); 
 

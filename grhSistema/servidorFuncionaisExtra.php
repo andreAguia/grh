@@ -90,7 +90,7 @@ if(($situacao <> 1) AND ((is_null($dtSaida)) OR (is_null($motivo)))){
 if(!is_null($motivo)){
     switch ($perfil){
         case 1 :    // Estatutários
-            if(($motivo == 7) OR ($motivo == 8) OR ($motivo == 10) OR ($motivo == 12)){
+            if(($motivo == 7) OR ($motivo == 8) OR ($motivo == 12)){
                 $erro = 1;   
                 $msgErro.='Um servidor estatutário não pode sair da instituição por esse motivo!\n';
             }

@@ -389,32 +389,78 @@ class LicencaPremio{
         
         # Limita o tamanho da tela
         $grid = new Grid();
-        $grid->abreColuna(3);
+        $grid->abreColuna(4);
         
-        # Pega os dados para o alerta
-        $diasPublicados = $this->get_numDiasPublicados($idServidor);
-        $diasFruidos = $this->get_numDiasFruidos($idServidor);
-        $diasDisponiveis = $this->get_numDiasDisponiveis($idServidor);
-        $numProcesso = $this->get_numProcesso($idServidor);
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+        
+            # Verifica se tem dados de outros vínculos              
+            $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+            #p("Vinculos: $numVinculos");
 
-            # Tabela de Serviços
-            $mesServico = date('m');
-            $tabela = array(array('Processo',$numProcesso),
-                            array('Dias Publicados',$diasPublicados),
-                            array('Dias Fruídos',$diasFruidos),
-                            array('Disponíveis',$diasDisponiveis));
+            if($numVinculos > 0){
+                # Carrega um array com os idServidor de cada vinculo
+                $vinculos = $pessoal->get_vinculos($idServidor);                    
+
+                # Percorre os vinculos
+                foreach($vinculos as $tt){
+
+                    # Pega o perfil da cada vínculo
+                    $idPerfilPesquisado = $pessoal->get_idPerfil($tt[0]);
+
+                    if($idServidor <> $tt[0]){
+                        # Verifica se é estatutário
+                        if($idPerfilPesquisado == 1){
+                            $diasPublicados2 = $this->get_numDiasPublicados($tt[0]);
+                            $diasFruidos2 = $this->get_numDiasFruidos($tt[0]);
+                            $diasDisponiveis2 = $this->get_numDiasDisponiveis($tt[0]);
+                            $numProcesso2 = $this->get_numProcesso($tt[0]);
+                        }
+                    }
+                }
+            }
+        
+            # Pega os dados do vinculo principal
+            $diasPublicados = $this->get_numDiasPublicados($idServidor);
+            $diasFruidos = $this->get_numDiasFruidos($idServidor);
+            $diasDisponiveis = $this->get_numDiasDisponiveis($idServidor);
+            $numProcesso = $this->get_numProcesso($idServidor);
             
-            $estatistica = new Tabela();
-            $estatistica->set_conteudo($tabela);
-            $estatistica->set_label(array("Descrição","Valor"));
-            $estatistica->set_align(array("center"));
-            #$estatistica->set_width(array(60,40));
-            $estatistica->set_totalRegistro(FALSE);
-            $estatistica->set_titulo("Dados");
-            $estatistica->show();
+             if($numVinculos > 0){
+                # Tabela
+                $tabela = array(array('Processo',$numProcesso,$numProcesso2),
+                                array('Dias Publicados',$diasPublicados,$diasPublicados2),
+                                array('Dias Fruídos',$diasFruidos,$diasFruidos2),
+                                array('Disponíveis',$diasDisponiveis,$diasDisponiveis2));
+
+                $estatistica = new Tabela();
+                $estatistica->set_conteudo($tabela);
+                $estatistica->set_label(array("Descrição","Vínculo 1","Vínculo 2"));
+                $estatistica->set_align(array("center"));
+                #$estatistica->set_width(array(60,40));
+                $estatistica->set_totalRegistro(FALSE);
+                $estatistica->set_titulo("Dados");
+                $estatistica->show();
+                 
+             }else{
+                # Tabela
+                $tabela = array(array('Processo',$numProcesso),
+                                array('Dias Publicados',$diasPublicados),
+                                array('Dias Fruídos',$diasFruidos),
+                                array('Disponíveis',$diasDisponiveis));
+
+                $estatistica = new Tabela();
+                $estatistica->set_conteudo($tabela);
+                $estatistica->set_label(array("Descrição","Valor"));
+                $estatistica->set_align(array("center"));
+                #$estatistica->set_width(array(60,40));
+                $estatistica->set_totalRegistro(FALSE);
+                $estatistica->set_titulo("Dados");
+                $estatistica->show();
+             }
         
         $grid->fechaColuna();
-        $grid->abreColuna(9);
+        $grid->abreColuna(8);
                 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -523,13 +569,16 @@ class LicencaPremio{
         $dtAdm = $pessoal->get_dtAdmissao($idServidor);
         $dtSai = $pessoal->get_dtSaida($idServidor);
         
+        # Título
+        $titulo  = "Licença Prêmio de Outro Vínculo da Uenf:<br/>Admissão: $dtAdm - Saída: $dtSai";
+        
         if($count > 1){
 
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Licença Prêmio de Vínculo Anterior da Uenf como Estatutário:<br/>Admissão: $dtAdm - Saída: $dtSai");
+            $tabela->set_titulo($titulo);
             $tabela->set_conteudo($result);
-            $tabela->set_label(array("Data da Publicação","Período Aquisitivo<br/>Início","Período Aquisitivo<br/>Fim","Inicio","Dias","Término"));        
+            $tabela->set_label(array("Data da Publicaçãod","Período Aquisitivo<br/>Início","Período Aquisitivo<br/>Fim","Inicio","Dias","Término"));        
             $tabela->set_align(array("center"));
             $tabela->set_funcao(array('date_to_php','date_to_php','date_to_php','date_to_php',NULL,'date_to_php'));
             #$objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
@@ -542,7 +591,7 @@ class LicencaPremio{
         }else{
             
             br();
-            tituloTable("Licença Prêmio de Vínculo Anterior da Uenf como Estatutário:<br/>Admissão: $dtAdm - Saída: $dtSai");
+            tituloTable($titulo);
             $callout = new Callout();
             $callout->abre();
                 p('Nenhum item encontrado !!','center');

@@ -695,3 +695,16 @@ function get_nomeSimples($nome){
     }
 
 ##########################################################
+
+    function exibeLicencaPremio($idServidor){
+    /**
+     * Função exibe as licenças preomio de um servidor
+     * 
+     * Usado na rotina da área de Licença Premio
+     */
+        
+        $licenca = new LicencaPremio();
+        $licenca->exibeLicencaPremio($idServidor);
+    }
+
+##########################################################

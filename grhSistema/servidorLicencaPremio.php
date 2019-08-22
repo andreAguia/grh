@@ -201,44 +201,41 @@ if($acesso){
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
                 $problemaDisponivel = $licenca->get_publicacaoComDisponivelNegativo($idServidorPesquisado);
                 $nome = $pessoal->get_licencaNome(6);
+                
+                # inicia o array das rotinas extras
+                $rotinaExtra = array();
+                $rotinaExtraParametro = array();
+                $mensagem = NULL;
 
                 # Exibe alerta se $diasDisponíveis for negativo no geral
-                if($diasDisponiveis < 0){                    
-                    $mensagem1 = "Servidor tem mais dias fruídos de $nome do que publicados.";
-                    $objeto->set_rotinaExtraListar("callout");
-                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                if($diasDisponiveis < 0){ 
+                    $mensagem .= "Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
                     $objeto->set_botaoIncluir(FALSE);
                 }
 
                 # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
                 if($diasDisponiveis < 1){
-                    $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma $nome.";
-                    $objeto->set_rotinaExtraListar("callout");
-                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                    $mensagem .= "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma $nome.<br/>";
                     $objeto->set_botaoIncluir(FALSE);
                 }  
                 
                 # Servidor sem processo cadastrado
                 if(is_null($numProcesso)){
-                    $mensagem1 = "Servidor sem número de processo de $nome cadastrado.";
-                    $objeto->set_rotinaExtraListar("callout");
-                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                    $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
                     $objeto->set_botaoIncluir(FALSE);
                 } 
                 
                 # Servidor com problemas de dias em publicação
                 if($problemaDisponivel){
-                    $mensagem1 = "Servidor com publicação com mais dias fruídos que publicados.";
-                    $objeto->set_rotinaExtraListar("callout");
-                    $objeto->set_rotinaExtraListarParametro($mensagem1);
+                    $mensagem .= "Servidor com publicação com mais dias fruídos que publicados.";
                 }
-
-                $objeto->listar();
-
-                # Limita o tamanho da tela
-                $grid = new Grid();
-                $grid->abreColuna(12);
                 
+                if(!is_null($mensagem)){
+                    $rotinaExtra[] = "callout";
+                    $rotinaExtraParametro[] = $mensagem;
+                }
+                
+                # Exibe as licenças prêmio de outros vinculos com a UENF                
                 $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
                 #p("Vinculos: $numVinculos");
                 
@@ -255,12 +252,23 @@ if($acesso){
                         if($idServidorPesquisado <> $tt[0]){
                             # Verifica se é estatutário
                             if($idPerfilPesquisado == 1){
-                                $licenca->exibeLicencaPremio($tt[0]);
+                                $rotinaExtra[] = "exibeLicencaPremio";
+                                $rotinaExtraParametro[] = $tt[0];
                             }
                         }
                     }
                 }
+                
+                # Acrescenta as rotinas
+                $objeto->set_rotinaExtraListar($rotinaExtra);
+                $objeto->set_rotinaExtraListarParametro($rotinaExtraParametro);
+                
+                $objeto->listar();
 
+                # Limita o tamanho da tela
+                $grid = new Grid();
+                $grid->abreColuna(12);
+                
                 # Cria um menu
                 $menu = new MenuBar();
                 

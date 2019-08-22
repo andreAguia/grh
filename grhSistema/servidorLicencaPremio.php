@@ -239,8 +239,27 @@ if($acesso){
                 $grid = new Grid();
                 $grid->abreColuna(12);
                 
-                $vinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
-                #p("Vinculos: $vinculos");
+                $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
+                #p("Vinculos: $numVinculos");
+                
+                if($numVinculos > 0){
+                    #carrega um array com os idServidor de cada vinculo
+                    $vinculos = $pessoal->get_vinculos($idServidorPesquisado);                    
+                    
+                    # Percorre os vinculos
+                    foreach($vinculos as $tt){
+                        
+                        # Pega o perfil da cada vínculo
+                        $idPerfilPesquisado = $pessoal->get_idPerfil($tt[0]);
+                        
+                        if($idServidorPesquisado <> $tt[0]){
+                            # Verifica se é estatutário
+                            if($idPerfilPesquisado == 1){
+                                $licenca->exibeLicencaPremio($tt[0]);
+                            }
+                        }
+                    }
+                }
 
                 # Cria um menu
                 $menu = new MenuBar();

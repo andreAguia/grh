@@ -270,7 +270,7 @@ if($acesso){
                                      idReadaptacao
                                 FROM tbreadaptacao
                                WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY status, dtInicio');
+                            ORDER BY status, dtInicio desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,

@@ -494,5 +494,63 @@ class LicencaPremio{
     }
 
 ###########################################################
+    
+    public function exibeLicencaPremio($idServidor){
+        
+     /**
+     * Exibe uma tabela com as Licença Prêmio de um servidor
+     */
+        
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+        
+        # Exibe as Publicações
+        $select = 'SELECT tbpublicacaopremio.dtPublicacao,
+                          tbpublicacaopremio.dtInicioPeriodo,
+                          tbpublicacaopremio.dtFimPeriodo,
+                          dtInicial,
+                          tblicencapremio.numdias,
+                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          idLicencaPremio
+                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                    WHERE tblicencapremio.idServidor = '.$idServidor.'
+                 ORDER BY dtInicial desc';
+
+        $result = $pessoal->select($select);
+        $count = $pessoal->count($select);
+        
+        # Dados do vínculo
+        $dtAdm = $pessoal->get_dtAdmissao($idServidor);
+        $dtSai = $pessoal->get_dtSaida($idServidor);
+        
+        if($count > 1){
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Licença Prêmio de Vínculo Anterior da Uenf como Estatutário:<br/>Admissão: $dtAdm - Saída: $dtSai");
+            $tabela->set_conteudo($result);
+            $tabela->set_label(array("Data da Publicação","Período Aquisitivo<br/>Início","Período Aquisitivo<br/>Fim","Inicio","Dias","Término"));        
+            $tabela->set_align(array("center"));
+            $tabela->set_funcao(array('date_to_php','date_to_php','date_to_php','date_to_php',NULL,'date_to_php'));
+            #$objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
+            #$objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
+            $tabela->set_numeroOrdem(TRUE);
+            $tabela->set_numeroOrdemTipo("d");
+            $tabela->set_exibeTempoPesquisa(FALSE);
+            $tabela->show();
+            
+        }else{
+            
+            br();
+            tituloTable("Licença Prêmio de Vínculo Anterior da Uenf como Estatutário:<br/>Admissão: $dtAdm - Saída: $dtSai");
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+        
+    }
+
+###########################################################
 
 }

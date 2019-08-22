@@ -180,7 +180,7 @@ if($acesso){
             }
                     
                     
-            $select .= " ORDER BY status, dtInicio desc";
+            $select .= " ORDER BY status, dtInicio";
             
             $resumo = $pessoal->select($select);
             
@@ -317,7 +317,7 @@ if($acesso){
             }
                     
                     
-            $select .= " ORDER BY status, dtInicio desc";
+            $select .= " ORDER BY status, dtInicio";
             
             $resumo = $pessoal->select($select);
 

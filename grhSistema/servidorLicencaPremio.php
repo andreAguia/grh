@@ -194,13 +194,14 @@ if($acesso){
                 # Exibe quadro de licença prêmio
                 #Grh::quadroLicencaPremio($idServidorPesquisado);
 
-                # Pega os dados para o alerta
+                # Pega os dados 
                 $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
                 $problemaDisponivel = $licenca->get_publicacaoComDisponivelNegativo($idServidorPesquisado);
                 $nome = $pessoal->get_licencaNome(6);
+                $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
                 
                 # inicia o array das rotinas extras
                 $rotinaExtra = array();
@@ -239,21 +240,24 @@ if($acesso){
                 $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
                 #p("Vinculos: $numVinculos");
                 
-                if($numVinculos > 0){
-                    #carrega um array com os idServidor de cada vinculo
-                    $vinculos = $pessoal->get_vinculos($idServidorPesquisado);                    
-                    
-                    # Percorre os vinculos
-                    foreach($vinculos as $tt){
-                        
-                        # Pega o perfil da cada vínculo
-                        $idPerfilPesquisado = $pessoal->get_idPerfil($tt[0]);
-                        
-                        if($idServidorPesquisado <> $tt[0]){
-                            # Verifica se é estatutário
-                            if($idPerfilPesquisado == 1){
-                                $rotinaExtra[] = "exibeLicencaPremio";
-                                $rotinaExtraParametro[] = $tt[0];
+                if($idSituacao == 1){
+                    if($numVinculos > 0){
+                        # Carrega um array com os idServidor de cada vinculo
+                        $vinculos = $pessoal->get_vinculos($idServidorPesquisado);                    
+
+                        # Percorre os vinculos
+                        foreach($vinculos as $tt){
+
+                            # Pega o perfil da cada vínculo
+                            $idPerfilPesquisado = $pessoal->get_idPerfil($tt[0]);
+
+                            if($idServidorPesquisado <> $tt[0]){
+                                
+                                # Verifica se é estatutário
+                                if($idPerfilPesquisado == 1){
+                                    $rotinaExtra[] = "exibeLicencaPremio";
+                                    $rotinaExtraParametro[] = $tt[0];
+                                }
                             }
                         }
                     }
@@ -289,14 +293,14 @@ if($acesso){
                 $licenca->exibePublicacoesPremio($idServidorPesquisado);
                 
                 # Exibe os procedimentos
-                $painel = new Callout();
-                $painel->abre();
+                #$painel = new Callout();
+                #$painel->abre();
                 
-                titulo("Procedimentos");
-                br();
-                $licenca->exibeProcedimentos();
+                #titulo("Procedimentos");
+                #br();
+                #$licenca->exibeProcedimentos();
                 
-                $painel->fecha();
+                #$painel->fecha();
 
                 $grid->fechaColuna();
                 $grid->fechaGrid();   

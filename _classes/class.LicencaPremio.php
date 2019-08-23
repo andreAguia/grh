@@ -397,10 +397,10 @@ class LicencaPremio{
 
 
         # Cria os arrays da tabela
-        $diasPublicados = array("Processo");
-        $diasFruidos = array("Dias Publicados");
-        $diasDisponiveis = array("Dias Fruídos");
-        $numProcesso = array("Disponíveis");
+        $numProcesso = array("Processo");
+        $diasPublicados = array("Dias Publicados");
+        $diasFruidos = array("Dias Fruídos");
+        $diasDisponiveis = array("Disponíveis");
         $cargo = array("Descrição");
 
         # Totais (quando tiver mais de um vinculo)

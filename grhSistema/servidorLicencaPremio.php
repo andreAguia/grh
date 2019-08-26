@@ -116,12 +116,31 @@ if($acesso){
         # Tipo de label do formulário
         $objeto->set_formLabelTipo(1);
         
+        # Pega os Dados para exibir as publicações de todos os vinculos
+        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
+        $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
+        
         # Pega os dados da combo licenca
-        $publicacao = $pessoal->select('SELECT idPublicacaoPremio, 
-                                               CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
-                                          FROM tbpublicacaopremio
-                                         WHERE idServidor = '.$idServidorPesquisado.' 
-                                      ORDER BY dtInicioPeriodo desc');
+        $select = 'SELECT idPublicacaoPremio, 
+                          CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
+                     FROM tbpublicacaopremio
+                    WHERE idServidor = '.$idServidorPesquisado;            
+        
+        # Inclui as publicações de outros vinculos
+        if(($numVinculos > 0) AND ($idSituacao == 1)){
+            
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidorPesquisado);      
+            
+            # Percorre os vinculos
+            foreach($vinculos as $tt){
+                $select .= ' OR idServidor = '.$tt[0];
+            }            
+        }
+        
+        $select .= ' ORDER BY dtInicioPeriodo desc';
+        
+        $publicacao = $pessoal->select($select);
         
         array_unshift($publicacao, array(NULL,' -- Selecione uma Publicação')); # Adiciona o valor de nulo
         
@@ -195,11 +214,12 @@ if($acesso){
                 #Grh::quadroLicencaPremio($idServidorPesquisado);
 
                 # Pega os dados 
-                $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
-                $diasFruidos = $licenca->get_numDiasFruidos($idServidorPesquisado);
-                $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidorPesquisado);
+                $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidorPesquisado);
+                $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
+                $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidorPesquisado);
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
                 $problemaDisponivel = $licenca->get_publicacaoComDisponivelNegativo($idServidorPesquisado);
+                
                 $nome = $pessoal->get_licencaNome(6);
                 $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
                 
@@ -227,9 +247,9 @@ if($acesso){
                 } 
                 
                 # Servidor com problemas de dias em publicação
-                if($problemaDisponivel){
-                    $mensagem .= "Servidor com publicação com mais dias fruídos que publicados.";
-                }
+                #if($problemaDisponivel){
+                #    $mensagem .= "Servidor com publicação com mais dias fruídos que publicados.";
+                #}
                 
                 if(!is_null($mensagem)){
                     $rotinaExtra[] = "callout";
@@ -240,8 +260,12 @@ if($acesso){
                 $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
                 #p("Vinculos: $numVinculos");
                 
+                # Exibe o tempo de licença anterior somente de servidores ativos
                 if($idSituacao == 1){
+                    
+                    # Verifica se tem vinculos anteriores
                     if($numVinculos > 0){
+                        
                         # Carrega um array com os idServidor de cada vinculo
                         $vinculos = $pessoal->get_vinculos($idServidorPesquisado);                    
 

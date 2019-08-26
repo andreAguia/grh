@@ -276,18 +276,22 @@ function exibeDiasLicencaPremio($idServidor){
  * Usado na tabela da área de licença premio
  */
     
-    # Pega os dados
+    # Conecta ao Banco de Dados
     $licenca = new LicencaPremio;
-    $diasPublicados = $licenca->get_numDiasPublicados($idServidor);
-    $diasFruidos = $licenca->get_numDiasFruidos($idServidor);
-    $diasDisponíveis = $diasPublicados - $diasFruidos;
+
+    # Carrega os valores do servidor ativo
+    $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidor);
+    $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidor);
+    $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidor);
     
+    # Monta o retorno
     $retorno = $diasPublicados." / ".$diasFruidos." / ";
     
-    if($diasDisponíveis < 0){
-        $retorno .= "<span id='negativo'><B>".$diasDisponíveis."</B></span>";
+    # Coloca em vermelho quando negativo
+    if($diasDisponiveis < 0){
+        $retorno .= "<span id='negativo'><B>".$diasDisponiveis."</B></span>";
     }else{
-        $retorno .= $diasDisponíveis;
+        $retorno .= $diasDisponiveis;
     }
     
     return $retorno;
@@ -301,14 +305,24 @@ function exibeNumPublicacoesLicencaPremio($idServidor){
  * 
  * Usado na tabela da área de licença premio
  */
-    
-    # Pega os dados
+    # Conecta ao Banco de Dados
     $licenca = new LicencaPremio;
-    $numPublicacao = $licenca->get_numPublicacoes($idServidor);
-    $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveis($idServidor);
+
+    # Carrega os valores do servidor ativo
+    $numPublicacao = $licenca->get_numPublicacoesTotal($idServidor);
+    $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveisTotal($idServidor);
     $numPublicacaoFaltante = $numPublicacaoPossivel - $numPublicacao;
     
-    $retorno = $numPublicacao." / ".$numPublicacaoPossivel." / ".$numPublicacaoFaltante;
+    # Monta o retorno
+    $retorno = $numPublicacao." / ".$numPublicacaoPossivel." / ";
+    
+    # Coloca em vermelho quando negativo
+    if($numPublicacaoFaltante < 0){
+        $retorno .= "<span id='negativo'><B>".$numPublicacaoFaltante."</B></span>";
+    }else{
+        $retorno .= $numPublicacaoFaltante;
+    }
+    
     return $retorno;
 }
 

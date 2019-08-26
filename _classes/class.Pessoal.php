@@ -4565,9 +4565,10 @@ class Pessoal extends Bd {
             $idPessoa = $this->get_idPessoa($idServidor);
 
             # Monta o select		
-            $select = 'SELECT idServidor
+            $select = "SELECT idServidor
                          FROM tbservidor
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = $idPessoa
+                     ORDER BY dtadmissao";
 
             $row = parent::select($select);
             return $row;

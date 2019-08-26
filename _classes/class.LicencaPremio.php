@@ -66,6 +66,94 @@ class LicencaPremio{
             return $row[0];
     }
 
+    ###########################################################    
+    
+    function get_numDiasFruidosTotal($idServidor){
+
+    /**
+     * Informa a quantidade de dias fruídos em todos os vinculos
+     *  
+     * @note Se o vinculo for ativo exibe oas publicações de todos os vinculos como estatutário na UENF
+     * @note se for inativo exibirá somente os dias desse vinculo
+     */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os Dados 
+        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+    
+        # Pega quantos dias foram fruídos
+        $select = 'SELECT SUM(numDias) 
+                     FROM tblicencapremio 
+                    WHERE idServidor = '.$idServidor;
+        
+        # Inclui outros vinculos
+        if(($numVinculos > 0) AND ($idSituacao == 1)){
+            
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor);      
+            
+            # Percorre os vinculos
+            foreach($vinculos as $tt){
+                $select .= ' OR idServidor = '.$tt[0];
+            }            
+        }
+
+        # Pega os valores
+        $row = $pessoal->select($select,FALSE);
+
+        # Retorno
+        if (is_null($row[0]))
+            return 0;
+        else 
+            return $row[0];
+    }
+
+    ########################################################### 
+
+    function get_numDiasPublicadosTotal($idServidor){
+
+    /**
+     * Informe o número de dias publicados em todos os vinculos
+     */
+        
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os Dados 
+        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+    
+        # Pega quantos dias foram publicados
+        $select = 'SELECT SUM(numDias) 
+                     FROM tbpublicacaopremio 
+                    WHERE idServidor = '.$idServidor;
+        
+        # Inclui outros vinculos
+        if(($numVinculos > 0) AND ($idSituacao == 1)){
+            
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor);      
+            
+            # Percorre os vinculos
+            foreach($vinculos as $tt){
+                $select .= ' OR idServidor = '.$tt[0];
+            }            
+        }
+
+        # Pega os valores
+        $row = $pessoal->select($select,FALSE);
+        
+        # Retorno
+        if (is_null($row[0]))
+            return 0;
+        else 
+            return $row[0];
+    }
+
     ###########################################################
 
     function get_numDiasDisponiveis($idServidor){
@@ -76,6 +164,22 @@ class LicencaPremio{
 
         $diasPublicados = $this->get_NumDiasPublicados($idServidor);
         $diasFruidos = $this->get_NumDiasFruidos($idServidor);
+        $diasDisponiveis = $diasPublicados - $diasFruidos;
+        
+        # Retorno
+        return $diasDisponiveis;
+    }
+
+    ###########################################################
+
+    function get_numDiasDisponiveisTotal($idServidor){
+
+    /**
+     * Informe o número de dias disponíveis
+     */
+
+        $diasPublicados = $this->get_NumDiasPublicadosTotal($idServidor);
+        $diasFruidos = $this->get_NumDiasFruidosTotal($idServidor);
         $diasDisponiveis = $diasPublicados - $diasFruidos;
         
         # Retorno
@@ -334,6 +438,44 @@ class LicencaPremio{
 
     ########################################################### 
 
+    function get_numPublicacoesTotal($idServidor){
+
+    /**
+     * Informe o número de publicações de Licença Prêmio de todos os vinculod de um servidor
+     */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os Dados 
+        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+    
+        # Pega quantos dias foram publicados
+        $select = 'SELECT idPublicacaoPremio
+                     FROM tbpublicacaopremio 
+                    WHERE idServidor = '.$idServidor;
+        
+        # Inclui outros vinculos
+        if(($numVinculos > 0) AND ($idSituacao == 1)){
+            
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor);      
+            
+            # Percorre os vinculos
+            foreach($vinculos as $tt){
+                $select .= ' OR idServidor = '.$tt[0];
+            }            
+        }
+
+        # Pega os valores
+        $row = $pessoal->count($select);
+        return $row;
+    }
+
+    ########################################################### 
+ 
+
     function get_numPublicacoesPossiveis($idServidor){
 
     /**
@@ -348,16 +490,80 @@ class LicencaPremio{
         $parte = explode("/",$da);
         $anoAdmissao = $parte[2];
         
-        # Pega a ano atual
-        $anoAtual = date("Y");
+        # Pega os dados do servidor
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+        
+        # Se for inativo o calculo é feito na data de saída
+        if($idSituacao <> 1){
+            $ds = $pessoal->get_dtSaida($idServidor);
+            $parte = explode("/",$ds);
+            $anoFinal = $parte[2];
+        }else{
+            # Pega a ano atual
+            $anoFinal = date("Y");
+        }
         
         # Calcula a quantidade de publicações possíveis
-        $pp = intval(($anoAtual - $anoAdmissao) / 5);
+        $pp = intval(($anoFinal - $anoAdmissao) / 5);
         
         return $pp;
     }
 
     ########################################################### 
+ 
+
+    function get_numPublicacoesPossiveisTotal($idServidor){
+
+    /**
+     * Informe o número de publicações Possíveis de Licença Prêmio de um servidor, O número que ele deveria ter desde a data de admissão.
+     */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega os Dados 
+        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+        
+        # Pega o ano da Admissão
+        $da = $pessoal->get_dtAdmissao($idServidor);
+        $parte = explode("/",$da);
+        $anoAdmissao = $parte[2];
+        
+        # Pega o ano da Admissão
+        if(($numVinculos > 0) AND ($idSituacao == 1)){
+            
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor);      
+            
+            # Percorre os vinculos
+            foreach($vinculos as $tt){
+                if($pessoal->get_idPerfil($tt[0]) == 1){
+                    $da = $pessoal->get_dtAdmissao($tt[0]);
+                    $parte = explode("/",$da);
+                    $anoAdmissao = $parte[2];
+                    break;
+                }
+            }            
+        }
+        
+        # Se for inativo o calculo é feito na data de saída
+        if($idSituacao <> 1){
+            $ds = $pessoal->get_dtSaida($idServidor);
+            $parte = explode("/",$ds);
+            $anoFinal = $parte[2];
+        }else{
+            # Pega a ano atual
+            $anoFinal = date("Y");
+        }
+        
+        # Calcula a quantidade de publicações possíveis
+        $pp = intval(($anoFinal - $anoAdmissao) / 5);
+        
+        return $pp;
+    }
+
+    ###########################################################  
 
     function get_numPublicacoesFaltantes($idServidor){
 
@@ -408,6 +614,7 @@ class LicencaPremio{
         $diasFruidosTotal = 0;
         $diasDisponiveisTotal = 0;
 
+        # Verifica os vinculos anteriores
         if(($numVinculos > 0) AND ($idSituacao == 1)){
             $colunaDados = 5;
 

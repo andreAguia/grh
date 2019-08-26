@@ -128,15 +128,14 @@ if($acesso){
         # Exibe o Menu Inicial
         case "menu" :
             
-            # Ocorrencias do servidor
+             # Ocorrencias do servidor
             Grh::exibeOcorênciaServidor($idServidorPesquisado);
+            
+            # Exibe os vinculos anteriores do servidor na uenf (se tiver)
+            #Grh::exibeVinculos($idServidorPesquisado);
             
             # monta o menu do servidor
             Grh::menuServidor($idServidorPesquisado,$idUsuario);
-            br();
-            
-            # Exibe os vinculos anteriores do servidor na uenf (se tiver)
-            Grh::exibeVinculos($idServidorPesquisado);
             
             # Exibe o rodapé da página
             Grh::rodape($idUsuario,$idServidorPesquisado,$pessoal->get_idPessoa($idServidorPesquisado));
@@ -202,7 +201,7 @@ if($acesso){
                         # Divide o nome do arquivos
                         $partesArquivo = explode('.',$arquivo);
 
-                        # VErifica se arquivo é da pasta
+                        # Verifica se arquivo é da pasta
                         if(substr($arquivo, 0, 5) == "Pasta"){
                             $botao = new BotaoGrafico();
                             $botao->set_label($partesArquivo[0]);

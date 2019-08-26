@@ -56,8 +56,7 @@ class Grh{
         $situacao = $pessoal->get_situacao($idServidor);
             
         # Divide a tela        
-        $grid2 = new Grid();
-        
+        $grid2 = new Grid();        
         
         #######################################################################
         
@@ -683,8 +682,12 @@ class Grh{
         $qtdMensagem = count($mensagem);
         $contador = 1;
         
-        ##### Exibe a mensagem
-        if($qtdMensagem > 0){
+        # Vinculos do servidor
+        $numVinculos = $pessoal->get_numVinculos($idServidor);
+        
+        # Verifica se tem algo a ser exibido
+        if(($qtdMensagem > 0) OR ($numVinculos > 1)){
+            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -693,13 +696,80 @@ class Grh{
             $callout = new Callout("warning");
             $callout->abre();
             
-            # Percorre o array 
-            foreach ($mensagem as $mm) {
-                p("- ".$mm,"exibeOcorrencia");
-                if($contador < $qtdMensagem){
-                    $contador++;
-                }
+            # Verifica se tem os dois ou se tem um
+            if(($qtdMensagem > 0) AND ($numVinculos > 1)){
+                $coluna = 6;
+            }else{
+                $coluna = 12;
             }
+            
+            # Coluna Interna
+            $grid2 = new Grid();
+            
+            ##### Mensagens
+            if($qtdMensagem > 0){
+                
+                $grid2->abreColuna($coluna);
+            
+                # Percorre o array 
+                foreach ($mensagem as $mm) {
+                    p("- ".$mm,"exibeOcorrencia");
+                    if($contador < $qtdMensagem){
+                        $contador++;
+                    }
+                }
+                
+                $grid2->fechaColuna();
+            }
+            
+            ##### Vinculos
+           
+            # Número de Vinculos
+            if($numVinculos > 1){ 
+                
+                $grid2->abreColuna($coluna);
+                
+                p("- Outros Vínculos na UENF","exibeOcorrencia");
+
+                # Monta o menu
+                $menu = new Menu("menuVinculos");
+
+                # Exibe os vinculos
+                $vinculos = $pessoal->get_vinculos($idServidor);
+
+                # Percorre os vínculos
+                foreach($vinculos as $rr){
+
+                    # Descarta o vinculo em tela
+                    if($rr[0] <> $idServidor){
+                        $dtAdm = $pessoal->get_dtAdmissao($rr[0]);
+                        $dtSai = $pessoal->get_dtSaida($rr[0]);
+                        $perfil = $pessoal->get_perfilSimples($rr[0]);
+                        $cargo = $pessoal->get_cargoSimples($rr[0]);
+                        $motivo = $pessoal->get_motivo($rr[0]);
+                        $idSituacao = $pessoal->get_idSituacao($rr[0]);
+
+                        
+                        # Quando o cargo for null
+                        if(!vazio($cargo)){
+                            $cargo = "- ".$cargo;
+                        }
+                        
+                        # Cria um motivo Ativo
+                        if($idSituacao == 1){
+                            $motivo = "Ativo";
+                        }
+
+                        $menu->add_item("link","$cargo - $perfil ($dtAdm - $dtSai) - $motivo",'servidor.php?fase=editar&id='.$rr[0]);
+                    }
+                }
+                
+                # Exibe o menu
+                $menu->show();
+                $grid2->fechaColuna();
+            }
+            
+            $grid2->fechaGrid(); 
             
             $callout->fecha();
             $grid->fechaColuna();
@@ -938,13 +1008,14 @@ class Grh{
 
         # Número de Vinculos
         if($numVinculos > 1){               // So entra se tiver mais de um vinculo
-            $grid = new Grid();
-            $grid->abreColuna(12);        
-             
-            titulo("Outros Registros Desse Servidor no Sistema");
             
-            $callout = new Callout();
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            $callout = new Callout("success");
             $callout->abre();
+            p("Outros Vínculos na UENF","f13");
 
             # Monta o menu
             $menu = new Menu();
@@ -960,7 +1031,15 @@ class Grh{
                     $dtAdm = $pessoal->get_dtAdmissao($rr[0]);
                     $dtSai = $pessoal->get_dtSaida($rr[0]);
                     $perfil = $pessoal->get_perfilSimples($rr[0]);
-                    $menu->add_item("link",$perfil."&nbsp;(".$dtAdm." - ".$dtSai.")",'servidor.php?fase=editar&id='.$rr[0]);
+                    $cargo = $pessoal->get_cargoSimples($rr[0]);
+                    $motivo = $pessoal->get_motivo($rr[0]);
+                    $idSituação = $pessoal->get_idSituacao($rr[0]);
+                    
+                    if($idSituação == 1){
+                        $motivo = "Ativo";
+                    }
+                    
+                    $menu->add_item("link","$cargo - $perfil ($dtAdm - $dtSai) - $motivo",'servidor.php?fase=editar&id='.$rr[0]);
                 }
             }
 
@@ -968,9 +1047,8 @@ class Grh{
             $menu->show();
             
             $callout->fecha();
-            
             $grid->fechaColuna();
-            $grid->fechaGrid();
+            $grid->fechaGrid();  
         }
     }
 

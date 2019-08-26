@@ -93,13 +93,26 @@ ul.checkupResumo li{
 p#exibeOcorrencia{
     padding: 0px 0px 0px 0px;
     text-align: left;
-    font-size: 14px;
-     margin: 0px;
+    font-size: 12px;
+    margin: 0px;
 }
 
 hr#alerta{
     padding: 0px;
     margin: 5px;
+}
+
+ul.menuVinculos li{ 
+    padding: 0px 0px 0px 0px;    
+    text-align: left;
+    font-size: 12px;
+    list-style-type: none;
+    margin: 0px 0px 0px 0px;
+}
+
+ul.menuVinculos a { 
+    text-decoration:none;
+    color: #02548b;
 }
 
 /*******************************************

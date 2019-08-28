@@ -278,20 +278,64 @@ function exibeDiasLicencaPremio($idServidor){
     
     # Conecta ao Banco de Dados
     $licenca = new LicencaPremio;
-
+    
+    # Verifica o número de vínculos com licença premio
+    $numVinculos = $licenca->get_numVinculosPremio($idServidor);
+    
     # Carrega os valores do servidor ativo
-    $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidor);
-    $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidor);
-    $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidor);
+    $diasPublicados = $licenca->get_numDiasPublicados($idServidor);
+    $diasFruidos = $licenca->get_numDiasFruidos($idServidor);
+    $diasDisponiveis = $licenca->get_numDiasDisponiveis($idServidor);
+
+    if($numVinculos > 1){
+        # Carrega os valores do servidor ativo
+        $diasPublicadosTotal = $licenca->get_numDiasPublicadosTotal($idServidor);
+        $diasFruidosTotal = $licenca->get_numDiasFruidosTotal($idServidor);
+        $diasDisponiveisTotal = $licenca->get_numDiasDisponiveisTotal($idServidor);
+    }
     
     # Monta o retorno
-    $retorno = $diasPublicados." / ".$diasFruidos." / ";
+    $retorno = "$diasPublicados / $diasFruidos / ";
     
     # Coloca em vermelho quando negativo
     if($diasDisponiveis < 0){
         $retorno .= "<span id='negativo'><B>".$diasDisponiveis."</B></span>";
     }else{
         $retorno .= $diasDisponiveis;
+    }
+    
+    
+    if($numVinculos > 1){
+        # Pega o array dos vinculos
+        $vinculos = $licenca->get_vinculosPremio($idServidor);
+        
+        foreach($vinculos as $tt){
+            if($tt[0] <> $idServidor){
+                $diasPublicados = $licenca->get_numDiasPublicados($tt[0]);
+                $diasFruidos = $licenca->get_numDiasFruidos($tt[0]);
+                $diasDisponiveis = $licenca->get_numDiasDisponiveis($tt[0]);
+
+                $retorno .= "<br/>";
+                $retorno .= "$diasPublicados / $diasFruidos / ";
+
+                # Coloca em vermelho quando negativo
+                if($diasDisponiveis < 0){
+                    $retorno .= "<span id='negativo'><B>".$diasDisponiveis."</B></span>";
+                }else{
+                    $retorno .= $diasDisponiveis;
+                }
+            }
+        }
+        
+        $retorno .= "<hr id='alerta'/>";
+        $retorno .= "$diasPublicadosTotal / $diasFruidosTotal / ";
+
+        # Coloca em vermelho quando negativo
+        if($diasDisponiveisTotal < 0){
+            $retorno .= "<span id='negativo'><B>".$diasDisponiveisTotal."</B></span>";
+        }else{
+            $retorno .= $diasDisponiveisTotal;
+        }
     }
     
     return $retorno;
@@ -307,20 +351,64 @@ function exibeNumPublicacoesLicencaPremio($idServidor){
  */
     # Conecta ao Banco de Dados
     $licenca = new LicencaPremio;
-
+    
+    # Verifica o número de vínculos com licença premio
+    $numVinculos = $licenca->get_numVinculosPremio($idServidor);
+    
     # Carrega os valores do servidor ativo
-    $numPublicacao = $licenca->get_numPublicacoesTotal($idServidor);
-    $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveisTotal($idServidor);
+    $numPublicacao = $licenca->get_numPublicacoes($idServidor);
+    $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveis($idServidor);
     $numPublicacaoFaltante = $numPublicacaoPossivel - $numPublicacao;
+
+    if($numVinculos > 1){
+        # Carrega os valores do servidor ativo
+        $numPublicacaoTotal = $licenca->get_numPublicacoesTotal($idServidor);
+        $numPublicacaoPossivelTotal = $licenca->get_numPublicacoesPossiveisTotal($idServidor);
+        $numPublicacaoFaltanteTotal = $numPublicacaoPossivel - $numPublicacao;
+    }
+
     
     # Monta o retorno
-    $retorno = $numPublicacao." / ".$numPublicacaoPossivel." / ";
+    $retorno = "$numPublicacao / $numPublicacaoPossivel / ";
     
     # Coloca em vermelho quando negativo
     if($numPublicacaoFaltante < 0){
         $retorno .= "<span id='negativo'><B>".$numPublicacaoFaltante."</B></span>";
     }else{
         $retorno .= $numPublicacaoFaltante;
+    }
+        
+    if($numVinculos > 1){
+        # Pega o array dos vinculos
+        $vinculos = $licenca->get_vinculosPremio($idServidor);
+        
+        foreach($vinculos as $tt){
+            if($tt[0] <> $idServidor){
+                $numPublicacao = $licenca->get_numPublicacoes($tt[0]);
+                $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveis($tt[0]);
+                $numPublicacaoFaltante = $numPublicacaoPossivel - $numPublicacao;
+
+                $retorno .= "<br/>";
+                $retorno .= "$numPublicacao / $numPublicacaoPossivel / ";
+
+                # Coloca em vermelho quando negativo
+                if($numPublicacaoFaltante < 0){
+                    $retorno .= "<span id='negativo'><B>".$numPublicacaoFaltante."</B></span>";
+                }else{
+                    $retorno .= $numPublicacaoFaltante;
+                }
+            }
+        }
+        
+        $retorno .= "<hr id='alerta'/>";
+        $retorno .= "$numPublicacaoTotal / $numPublicacaoPossivelTotal / ";
+
+        # Coloca em vermelho quando negativo
+        if($numPublicacaoFaltanteTotal < 0){
+            $retorno .= "<span id='negativo'><B>".$numPublicacaoFaltanteTotal."</B></span>";
+        }else{
+            $retorno .= $numPublicacaoFaltanteTotal;
+        }
     }
     
     return $retorno;

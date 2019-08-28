@@ -43,7 +43,7 @@ if($acesso){
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Publicações de '.$pessoal->get_licencaNome(6));
+    $objeto->set_nome('Cadastro de Publicações de Licança Prêmio');
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('servidorLicencaPremio.php');

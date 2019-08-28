@@ -218,7 +218,6 @@ if($acesso){
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidorPesquisado);
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
-                $problemaDisponivel = $licenca->get_publicacaoComDisponivelNegativo($idServidorPesquisado);
                 
                 $nome = $pessoal->get_licencaNome(6);
                 $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
@@ -244,24 +243,29 @@ if($acesso){
                 if(is_null($numProcesso)){
                     $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
                     $objeto->set_botaoIncluir(FALSE);
-                } 
-                
-                # Servidor com problemas de dias em publicação
-                #if($problemaDisponivel){
-                #    $mensagem .= "Servidor com publicação com mais dias fruídos que publicados.";
-                #}
+                }
                 
                 if(!is_null($mensagem)){
                     $rotinaExtra[] = "callout";
                     $rotinaExtraParametro[] = $mensagem;
                 }
                 
+                # Acrescenta as rotinas
+                $objeto->set_rotinaExtraListar($rotinaExtra);
+                $objeto->set_rotinaExtraListarParametro($rotinaExtraParametro);
+                
+                $objeto->listar();
+                
+                # Limita o tamanho da tela
+                $grid = new Grid();
+                $grid->abreColuna(12);
+                
                 # Exibe as licenças prêmio de outros vinculos com a UENF                
-                $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
+                $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
                 #p("Vinculos: $numVinculos");
                 
                 # Exibe o tempo de licença anterior somente de servidores ativos
-                if($idSituacao == 1){
+                #if($idSituacao == 1){
                     
                     # Verifica se tem vinculos anteriores
                     if($numVinculos > 0){
@@ -279,23 +283,18 @@ if($acesso){
                                 
                                 # Verifica se é estatutário
                                 if($idPerfilPesquisado == 1){
-                                    $rotinaExtra[] = "exibeLicencaPremio";
-                                    $rotinaExtraParametro[] = $tt[0];
+                                    # Cria um menu
+                                    $menu = new MenuBar();
+
+                                    # Número do processo
+                                    $licenca->exibeLicencaPremio($tt[0]);
                                 }
                             }
                         }
                     }
-                }
+               # }
+               
                 
-                # Acrescenta as rotinas
-                $objeto->set_rotinaExtraListar($rotinaExtra);
-                $objeto->set_rotinaExtraListarParametro($rotinaExtraParametro);
-                
-                $objeto->listar();
-
-                # Limita o tamanho da tela
-                $grid = new Grid();
-                $grid->abreColuna(12);
                 
                 # Cria um menu
                 $menu = new MenuBar();
@@ -344,6 +343,17 @@ if($acesso){
 
             case "gravar" :
                 $objeto->gravar($id,"servidorLicencaPremioExtra.php"); 
+                break;	
+            
+            case "outroVinculo" :
+                br(8);
+                aguarde();
+
+                set_session('idServidorPesquisado',$id);
+                loadPage('servidorLicencaPremio.php');
+                break; 
+        
+        ###############################
                 break;	
         }
     }

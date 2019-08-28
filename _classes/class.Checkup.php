@@ -159,6 +159,8 @@ class Checkup {
      * Servidores com Licença Premio vencendo este ano
      */
     
+    /*
+    
     public function get_licencaPremioVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 3;
@@ -222,6 +224,8 @@ class Checkup {
             $callout->fecha();
         }
     }
+     * 
+     */
 
     ##########################################################
 

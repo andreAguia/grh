@@ -71,35 +71,21 @@ class LicencaPremio{
     function get_numDiasFruidosTotal($idServidor){
 
     /**
-     * Informa a quantidade de dias fruídos em todos os vinculos
-     *  
-     * @note Se o vinculo for ativo exibe oas publicações de todos os vinculos como estatutário na UENF
-     * @note se for inativo exibirá somente os dias desse vinculo
+     * Informa a quantidade de dias fruídos em todos os vinculos estatutários
      */
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
-        # Pega os Dados 
-        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
-        $idSituacao = $pessoal->get_idSituacao($idServidor);
+        # Pega o idPessoa
+        $idPessoa = $pessoal->get_idPessoa($idServidor);
     
         # Pega quantos dias foram fruídos
-        $select = 'SELECT SUM(numDias) 
-                     FROM tblicencapremio 
-                    WHERE idServidor = '.$idServidor;
-        
-        # Inclui outros vinculos
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
-            
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor);      
-            
-            # Percorre os vinculos
-            foreach($vinculos as $tt){
-                $select .= ' OR idServidor = '.$tt[0];
-            }            
-        }
+        $select = "SELECT SUM(numDias) 
+                     FROM tblicencapremio LEFT JOIN tbservidor USING (idServidor)
+                                          LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE idPessoa = $idPessoa
+                      AND tbservidor.idPerfil = 1";
 
         # Pega os valores
         $row = $pessoal->select($select,FALSE);
@@ -119,30 +105,18 @@ class LicencaPremio{
      * Informe o número de dias publicados em todos os vinculos
      */
         
-        
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
-        # Pega os Dados 
-        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
-        $idSituacao = $pessoal->get_idSituacao($idServidor);
+        # Pega o idPessoa
+        $idPessoa = $pessoal->get_idPessoa($idServidor);
     
         # Pega quantos dias foram publicados
-        $select = 'SELECT SUM(numDias) 
-                     FROM tbpublicacaopremio 
-                    WHERE idServidor = '.$idServidor;
-        
-        # Inclui outros vinculos
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
-            
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor);      
-            
-            # Percorre os vinculos
-            foreach($vinculos as $tt){
-                $select .= ' OR idServidor = '.$tt[0];
-            }            
-        }
+        $select = "SELECT SUM(numDias) 
+                     FROM tbpublicacaopremio LEFT JOIN tbservidor USING (idServidor)
+                                             LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE idPessoa = $idPessoa
+                      AND tbservidor.idPerfil = 1";
 
         # Pega os valores
         $row = $pessoal->select($select,FALSE);
@@ -186,50 +160,6 @@ class LicencaPremio{
         return $diasDisponiveis;
     }
 
-    ###########################################################
-
-    function get_idServidorPorPublicacao($idPublicacaoPremio){
-
-    /**
-     * Informe o idServidor de uma publicação
-     */
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega array com os dias publicados
-        $select = 'SELECT idServidor
-                     FROM tbpublicacaopremio 
-                    WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
-        
-       $row = $pessoal->select($select,FALSE);
-        
-        # Retorno
-        return $row[0];
-    }
-
-    ###########################################################
-
-    function get_idServidorPorLicenca($idLicencaPremio){
-
-    /**
-     * Informe o idServidor de uma licença
-     */
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega array com os dias publicados
-        $select = 'SELECT idServidor
-                     FROM tblicencapremio 
-                    WHERE idLicencaPremio = '.$idLicencaPremio;
-        
-       $row = $pessoal->select($select,FALSE);
-        
-        # Retorno
-        return $row[0];
-    }
-
     ###########################################################                          
 
     function get_publicacao($idLicencaPremio){
@@ -249,30 +179,6 @@ class LicencaPremio{
         $retorno = $pessoal->select($select,FALSE);
         
         return $retorno[0];
-    }
-
-    ###########################################################
-    
-    function get_dadosPublicacao($idPublicacaoPremio){
-
-    /**
-     * Informe a data e o período aquisitivo
-     */
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega array com os dias publicados
-        $select = 'SELECT dtPublicacao,
-                          dtInicioPeriodo,
-                          dtFimPeriodo
-                     FROM tbpublicacaopremio 
-                    WHERE idPublicacaoPremio = '.$idPublicacaoPremio;
-        
-        $retorno = $pessoal->select($select,FALSE);
-        
-        # Retorno
-        return $retorno;
     }
 
     ###########################################################
@@ -358,67 +264,6 @@ class LicencaPremio{
     
     ###########################################################
 
-    function get_proximaPublicacaoDisponivel($idServidor){
-
-    /**
-     * Informe a primeira publicação de licença prêmio com dias disponíveis
-     */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega as publicações desse servidor
-        $select = 'SELECT idPublicacaoPremio, 
-                          date_format(dtPublicacao,"%d/%m/%Y")
-                     FROM tbpublicacaopremio
-                    WHERE idServidor = '.$idServidor.'
-                 ORDER BY dtInicioPeriodo';
-        
-        $result = $pessoal->select($select);
-        
-        # Percorre cada publicação para ver se tem dias disponíiveis
-        foreach ($result as $publicacao){
-            $dias = $this->get_numDiasDisponiveisPorPublicacao($publicacao[0]);
-            if($dias > 0){
-                return array(array($publicacao[0],$publicacao[1]));
-                break;
-            }
-        }
-    }
-    
-    ###########################################################
-
-    function get_publicacaoComDisponivelNegativo($idServidor){
-
-    /**
-     * Informe se o servidor tem alguma publicação com mais dias fruídos que publicados
-     */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega as publicações desse servidor
-        $select = 'SELECT idPublicacaoPremio
-                     FROM tbpublicacaopremio
-                    WHERE idServidor = '.$idServidor.'
-                 ORDER BY dtInicioPeriodo';
-        
-        $result = $pessoal->select($select);
-        
-        # Percorre cada publicação para ver se tem dias disponíiveis
-        foreach ($result as $publicacao){
-            $dias = $this->get_numDiasDisponiveisPorPublicacao($publicacao[0]);
-            if($dias < 0){
-                # Retorna TRUE, ou seja, com problemas
-                return TRUE;
-                break;
-            }
-        }
-        
-        # Retorna FALSE, ou seja sem problemas
-        return FALSE;
-    }
-    
-    ########################################################### 
-
     function get_numPublicacoes($idServidor){
 
     /**
@@ -441,32 +286,21 @@ class LicencaPremio{
     function get_numPublicacoesTotal($idServidor){
 
     /**
-     * Informe o número de publicações de Licença Prêmio de todos os vinculod de um servidor
+     * Informe o número de publicações de Licença Prêmio de todos os vinculos de um servidor
      */
 
-        # Conecta ao Banco de Dados
+         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
-        # Pega os Dados 
-        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
-        $idSituacao = $pessoal->get_idSituacao($idServidor);
+        # Pega o idPessoa
+        $idPessoa = $pessoal->get_idPessoa($idServidor);
     
         # Pega quantos dias foram publicados
-        $select = 'SELECT idPublicacaoPremio
-                     FROM tbpublicacaopremio 
-                    WHERE idServidor = '.$idServidor;
-        
-        # Inclui outros vinculos
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
-            
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor);      
-            
-            # Percorre os vinculos
-            foreach($vinculos as $tt){
-                $select .= ' OR idServidor = '.$tt[0];
-            }            
-        }
+        $select = "SELECT idPublicacaoPremio
+                     FROM tbpublicacaopremio LEFT JOIN tbservidor USING (idServidor)
+                                             LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE idPessoa = $idPessoa
+                      AND tbservidor.idPerfil = 1";
 
         # Pega os valores
         $row = $pessoal->count($select);
@@ -496,17 +330,18 @@ class LicencaPremio{
         # Se for inativo o calculo é feito na data de saída
         if($idSituacao <> 1){
             $ds = $pessoal->get_dtSaida($idServidor);
-            $parte = explode("/",$ds);
-            $anoFinal = $parte[2];
         }else{
             # Pega a ano atual
-            $anoFinal = date("Y");
+            $ds = date("d/m/Y");
         }
-        
-        # Calcula a quantidade de publicações possíveis
-        $pp = intval(($anoFinal - $anoAdmissao) / 5);
-        
-        return $pp;
+                
+        $data1 = new DateTime(date_to_bd($da));
+        $data2 = new DateTime(date_to_bd($ds));
+
+        $intervalo = $data1->diff( $data2 );
+       
+        $pp = $intervalo->y;
+        return intval($pp/5);
     }
 
     ########################################################### 
@@ -522,7 +357,7 @@ class LicencaPremio{
         $pessoal = new Pessoal();
         
         # Pega os Dados 
-        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        $numVinculos = $pessoal->get_numVinculos($idServidor);
         $idSituacao = $pessoal->get_idSituacao($idServidor);
         
         # Pega o ano da Admissão
@@ -585,6 +420,28 @@ class LicencaPremio{
         
     }
 
+    ###########################################################  
+
+    function get_numPublicacoesFaltantesTotal($idServidor){
+
+    /**
+     * Informe o número de publicações Que faltam ser publicadas.
+     */
+
+        # Pega publicações feitas 
+        $pf = $this->get_numPublicacoesTotal($idServidor);
+        
+        # Pega o número de Publicações Possíveis
+        $pp = $this->get_numPublicacoesPossiveisTotal($idServidor);
+                
+        # Calcula o número de publicações faltantes
+        $pfalt = $pp - $pf;
+        
+        # Retorna o valor
+        return $pfalt;
+        
+    }
+
     ###########################################################
     
     public function exibePublicacoesPremio($idServidor){
@@ -597,7 +454,7 @@ class LicencaPremio{
         $pessoal = new Pessoal();
 
         # Pega os Dados 
-        $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidor);
+        $numVinculos = $this->get_numVinculosPremio($idServidor);
         $idSituacao = $pessoal->get_idSituacao($idServidor);
         $colunaDados = 3;
 
@@ -615,7 +472,7 @@ class LicencaPremio{
         $diasDisponiveisTotal = 0;
 
         # Verifica os vinculos anteriores
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
+        if($numVinculos > 0){
             $colunaDados = 5;
 
             # Carrega um array com os idServidor de cada vinculo
@@ -634,7 +491,7 @@ class LicencaPremio{
                         $diasFruidos[] = $this->get_numDiasFruidos($tt[0]);
                         $diasDisponiveis[] = $this->get_numDiasDisponiveis($tt[0]);
                         $numProcesso[] = $this->get_numProcesso($tt[0]);
-                        $cargo[] = "Vínculo Anterior<br>".$pessoal->get_cargoSimples($tt[0]);
+                        $cargo[] = "Vínculo<br>".$pessoal->get_cargoSimples($tt[0]);
 
                         # Totais
                         $diasPublicadosTotal += $this->get_numDiasPublicados($tt[0]);
@@ -650,14 +507,14 @@ class LicencaPremio{
         $diasFruidos[] = $this->get_numDiasFruidos($idServidor);
         $diasDisponiveis[] = $this->get_numDiasDisponiveis($idServidor);
         $numProcesso[] = $this->get_numProcesso($idServidor);
-        $cargo[] = "Vínculo Atual<br>".$pessoal->get_cargoSimples($idServidor);
+        $cargo[] = "Vínculo<br>".$pessoal->get_cargoSimples($idServidor);
 
-         # Totais
+        # Totais
         $diasPublicadosTotal += $this->get_numDiasPublicados($idServidor);
         $diasFruidosTotal += $this->get_numDiasFruidos($idServidor);
         $diasDisponiveisTotal += $this->get_numDiasDisponiveis($idServidor);
 
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
+        if($numVinculos > 0){
             $numProcesso[] = "";
             $diasPublicados[] = $diasPublicadosTotal;
             $diasFruidos[] = $diasFruidosTotal;
@@ -668,7 +525,7 @@ class LicencaPremio{
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna($colunaDados);
-                        
+            
             # Tabela
             $tabela = array($numProcesso,
                             $diasPublicados,
@@ -687,61 +544,76 @@ class LicencaPremio{
         $grid->fechaColuna();
         $grid->abreColuna(12-$colunaDados);
                 
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-    
-        # Exibe as Publicações
-        $select = 'SELECT dtPublicacao,
-                        dtInicioPeriodo,
-                        dtFimPeriodo,
-                        numDias,
-                        idPublicacaoPremio,
-                        idPublicacaoPremio,
-                        idPublicacaoPremio
-                   FROM tbpublicacaopremio
-                   WHERE idServidor = '.$idServidor;
-        
-        # Inclui as publicações de outros vinculos
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
-            # Percorre os vinculos
-            foreach($vinculos as $tt){
-                $select .= ' OR idServidor = '.$tt[0];
-            }            
-        }
-        
-        $select .= ' ORDER BY dtInicioPeriodo desc';
+        if($diasPublicadosTotal > 0){
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
 
-        $result = $pessoal->select($select);
-        $count = $pessoal->count($select);
+            # Exibe as Publicações
+            $select = 'SELECT idServidor, 
+                              dtPublicacao,
+                              dtInicioPeriodo,
+                              dtFimPeriodo,
+                              numDias,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio
+                         FROM tbpublicacaopremio
+                        WHERE idServidor = '.$idServidor;
 
-        # Cabeçalho da tabela
-        $titulo = 'Publicações';
-        $label = array("Data da Publicação","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
-        $width = array(15,10,15,15,15,10,10,10);
-        $funcao = array('date_to_php','date_to_php','date_to_php');
-        $classe = array(NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
-        $metodo = array(NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
-        $align = array('center');            
+            # Inclui as publicações de outros vinculos
+            if($numVinculos > 0){
+                # Percorre os vinculos
+                foreach($vinculos as $tt){
+                    $select .= ' OR idServidor = '.$tt[0];
+                }            
+            }
 
-        # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($result);
-        $tabela->set_align($align);
-        $tabela->set_label($label);
-        #$tabela->set_width($width);
-        $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($metodo);
-        $tabela->set_numeroOrdem(TRUE);
-        $tabela->set_numeroOrdemTipo("d");
-        
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
-                                                       'valor' => 0,
-                                                       'operador' => '<',
-                                                       'id' => 'alerta')));
+            $select .= ' ORDER BY dtInicioPeriodo desc';
 
-        $tabela->show();
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Cabeçalho da tabela
+            $titulo = 'Publicações';
+            $label = array("Vínculo","Data da Publicação","Período Aquisitivo <br/> Início","Período Aquisitivo <br/> Fim","Dias <br/> Publicados","Dias <br/> Fruídos","Dias <br/> Disponíveis");
+            #$width = array(15,10,15,15,15,10,10,10);
+            $funcao = array(NULL,'date_to_php','date_to_php','date_to_php');
+            $classe = array("Pessoal",NULL,NULL,NULL,NULL,'LicencaPremio','LicencaPremio');
+            $metodo = array("get_cargoSimples",NULL,NULL,NULL,NULL,'get_numDiasFruidosPorPublicacao','get_numDiasDisponiveisPorPublicacao');
+            $align = array(NULL,'center');            
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_align($align);
+            $tabela->set_label($label);
+            #$tabela->set_width($width);
+            $tabela->set_titulo($titulo);
+            $tabela->set_funcao($funcao);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->set_numeroOrdem(TRUE);
+            $tabela->set_numeroOrdemTipo("d");
+
+
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
+                                                           'valor' => 0,
+                                                           'operador' => '<',
+                                                           'id' => 'alerta')));
+
+            $tabela->show();
+        }else{
+            br();
+           tituloTable("Publicações");
+           $callout = new Callout();
+           $callout->abre();
+               p('Nenhum item encontrado !!','center');
+           $callout->fecha();
+       }
         
         $grid->fechaColuna();
         $grid->fechaGrid();   
@@ -779,7 +651,7 @@ class LicencaPremio{
         
      /**
      * Exibe uma tabela com as Licença Prêmio de um servidor
-     */
+     */         
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
         
@@ -803,9 +675,14 @@ class LicencaPremio{
         $dtSai = $pessoal->get_dtSaida($idServidor);
         $motivo = $pessoal->get_motivo($idServidor);
         $cargo = $pessoal->get_cargo($idServidor);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
         
-        # Título
-        $titulo  = "Licença Prêmio do Vínculo no Cargo $cargo:<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)";
+        if($idSituacao == 1){
+            $motivo = "Ativo";
+        }
+        
+        # TítuloLink
+        $titulo = "<a id='licencaPremio' href='?fase=outroVinculo&id=$idServidor'><b>Vínculo Anterior: Cargo $cargo:<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)</b></a>";
         
         if($count > 0){
 
@@ -832,6 +709,64 @@ class LicencaPremio{
         }        
     }
 
-###########################################################
+    ##########################################################################################
+
+    public function get_numVinculosPremio($idServidor){
+
+        # Função que retorna quantos vinculos esse servidor com direito a licença premio (estatutário)
+        #
+        # Parâmetro: id do servidor
+        
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }            
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = $idPessoa
+                          AND idPerfil = 1";  
+
+            $numero = $pessoal->count($select);
+            return $numero;
+        }
+
+    ##########################################################################################
+
+    public function get_vinculosPremio($idServidor){
+
+        # Função que retorna um array com o idServidor de cada vinculo
+        #
+        # Parâmetro: id do servidor
+        
+            # Conecta com o banco de dados
+            $pessoal = new Pessoal();
+        
+            # Valida parametro
+            if(is_null($idServidor)){
+                return FALSE;
+            }            
+
+            # Pega o idPessoa desse idServidor
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Monta o select		
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = $idPessoa
+                          AND idPerfil = 1";  
+
+            $row = $pessoal->select($select);
+            return $row;
+        }
+
+    ##########################################################################################
 
 }

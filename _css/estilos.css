@@ -93,7 +93,7 @@ ul.checkupResumo li{
 p#exibeOcorrencia{
     padding: 0px 0px 0px 0px;
     text-align: left;
-    font-size: 12px;
+    font-size: 14px;
     margin: 0px;
 }
 
@@ -368,6 +368,13 @@ span#negativo{
     color: #ff0000;
 }
 
+a#licencaPremio{
+    font-size: 16px;
+    text-align: left;
+    color: #02548b;
+    margin: 0px;
+    font-weight:bold;
+}
 /*******************************************
  * Método Pessoa->get_lotacao
  *******************************************/

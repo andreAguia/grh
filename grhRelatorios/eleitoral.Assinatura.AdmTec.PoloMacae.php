@@ -41,7 +41,7 @@ if($acesso)
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND tbtipocargo.tipo = "Adm/Tec"
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                 AND (tblotacao.idlotacao = 94 OR tblotacao.idlotacao = 90)
+                 AND (tblotacao.idlotacao = 94 OR tblotacao.idlotacao = 90 OR tblotacao.idlotacao = 120)
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

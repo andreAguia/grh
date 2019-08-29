@@ -838,7 +838,7 @@ class Grh{
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
-              
+        
         $tabela->show();
 
         $grid->fechaColuna();

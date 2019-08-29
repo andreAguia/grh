@@ -28,6 +28,17 @@ p#usuarioLogado{
     font-size: 11px;
     text-align: left;
     color: #02548b;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#idServidor{
+    font-size: 9px;
+    text-align: left;
+    color: #02548b;
+    padding: 0px;
+    margin: 0px;
+    float: right;
 }
 
 div#RelServidor{

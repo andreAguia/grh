@@ -325,8 +325,23 @@ if($acesso){
                 
                 #$painel->fecha();
 
+                
+
+                # Exibe o idServidor
+                $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+                $texto = '';
+
+                if(!is_null($idServidorPesquisado)){
+                    $texto .= "Servidor: ".$idServidorPesquisado;
+                }
+
+                if(!is_null($idPessoa)){
+                    $texto .= " - Pessoa: ".$idPessoa;
+                }
+
+                p($texto,'idServidor'); 
                 $grid->fechaColuna();
-                $grid->fechaGrid();   
+                $grid->fechaGrid();
                 break;
             
             case "editar" :                

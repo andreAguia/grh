@@ -321,8 +321,6 @@ class LicencaPremio{
         
         # Pega o ano da Admissão
         $da = $pessoal->get_dtAdmissao($idServidor);
-        $parte = explode("/",$da);
-        $anoAdmissao = $parte[2];
         
         # Pega os dados do servidor
         $idSituacao = $pessoal->get_idSituacao($idServidor);
@@ -357,45 +355,45 @@ class LicencaPremio{
         $pessoal = new Pessoal();
         
         # Pega os Dados 
-        $numVinculos = $pessoal->get_numVinculos($idServidor);
-        $idSituacao = $pessoal->get_idSituacao($idServidor);
-        
-        # Pega o ano da Admissão
-        $da = $pessoal->get_dtAdmissao($idServidor);
-        $parte = explode("/",$da);
-        $anoAdmissao = $parte[2];
-        
-        # Pega o ano da Admissão
-        if(($numVinculos > 0) AND ($idSituacao == 1)){
+        $numVinculos = $this->get_numVinculosPremio($idServidor);
             
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor);      
+        # Carrega um array com os idServidor de cada vinculo
+        $vinculos = $this->get_vinculosPremio($idServidor);     
+        
+        $contador = 0;
+        $ds = date("d/m/Y");
+
+        # Percorre os vinculos
+        foreach($vinculos as $tt){
             
-            # Percorre os vinculos
-            foreach($vinculos as $tt){
-                if($pessoal->get_idPerfil($tt[0]) == 1){
-                    $da = $pessoal->get_dtAdmissao($tt[0]);
-                    $parte = explode("/",$da);
-                    $anoAdmissao = $parte[2];
-                    break;
+            # Verifica se é o primeiro vínculo e pega a data de admissão
+            if($contador == 0){
+                $da = $pessoal->get_dtAdmissao($tt[0]);
+            }
+            
+            # Verifica se é o último vínculo e pega a data de saída
+            if($contador == ($numVinculos - 1)){
+                
+                # Pega a situação desse vinculo
+                $idSituacao = $pessoal->get_idSituacao($tt[0]);
+                
+                # Verifica se está ativo
+                if($idSituacao <> 1){
+                    $ds = $pessoal->get_dtSaida($tt[0]);
+                }else{
+                    $ds = date("d/m/Y");
                 }
-            }            
-        }
-        
-        # Se for inativo o calculo é feito na data de saída
-        if($idSituacao <> 1){
-            $ds = $pessoal->get_dtSaida($idServidor);
-            $parte = explode("/",$ds);
-            $anoFinal = $parte[2];
-        }else{
-            # Pega a ano atual
-            $anoFinal = date("Y");
-        }
-        
-        # Calcula a quantidade de publicações possíveis
-        $pp = intval(($anoFinal - $anoAdmissao) / 5);
-        
-        return $pp;
+            }
+            $contador++;
+        }            
+        #echo $da." - ".$ds;
+        $data1 = new DateTime(date_to_bd($da));
+        $data2 = new DateTime(date_to_bd($ds));
+
+        $intervalo = $data1->diff( $data2 );
+       
+        $pp = $intervalo->y;
+        return intval($pp/5);
     }
 
     ###########################################################  
@@ -568,7 +566,7 @@ class LicencaPremio{
                 }            
             }
 
-            $select .= ' ORDER BY dtInicioPeriodo desc';
+            $select .= ' ORDER BY idServidor, dtInicioPeriodo desc';
 
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
@@ -674,7 +672,7 @@ class LicencaPremio{
         $dtAdm = $pessoal->get_dtAdmissao($idServidor);
         $dtSai = $pessoal->get_dtSaida($idServidor);
         $motivo = $pessoal->get_motivo($idServidor);
-        $cargo = $pessoal->get_cargo($idServidor);
+        $cargo = $pessoal->get_cargoSimples($idServidor);
         $idSituacao = $pessoal->get_idSituacao($idServidor);
         
         if($idSituacao == 1){
@@ -761,7 +759,8 @@ class LicencaPremio{
             $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
-                          AND idPerfil = 1";  
+                          AND idPerfil = 1
+                     ORDER BY dtAdmissao";  
 
             $row = $pessoal->select($select);
             return $row;

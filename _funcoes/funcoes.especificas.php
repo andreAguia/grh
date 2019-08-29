@@ -364,7 +364,7 @@ function exibeNumPublicacoesLicencaPremio($idServidor){
         # Carrega os valores do servidor ativo
         $numPublicacaoTotal = $licenca->get_numPublicacoesTotal($idServidor);
         $numPublicacaoPossivelTotal = $licenca->get_numPublicacoesPossiveisTotal($idServidor);
-        $numPublicacaoFaltanteTotal = $numPublicacaoPossivel - $numPublicacao;
+        $numPublicacaoFaltanteTotal = $numPublicacaoPossivelTotal - $numPublicacaoTotal;
     }
 
     

@@ -720,6 +720,32 @@ if($acesso){
             titulo("Ci de início");
             br();
             
+            # Variáveis de verificação
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica a data da Publicação
+            if(vazio($dtPublicacao)){
+                $msgErro.='Não tem data da Publicação cadastrada!<br/>';
+                $erro = 1;
+            }
+            
+            # Verifica o número da Ci
+            if(vazio($numCi90)){
+                $msgErro.='Não tem número de Ci de 90 dias cadastrada!<br/>';
+                $erro = 1;
+            }
+            
+             # Verifica a data da CI
+            if(vazio($dtCi90)){
+                $msgErro.='Não tem Data de Ci cadastrada!<br/>';
+                $erro = 1;
+            }
+            
+            if($erro == 1){
+                callout($msgErro);
+            }
+            
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ci90FormValida&id='.$id);        
 
@@ -728,7 +754,7 @@ if($acesso){
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_autofocus(TRUE);
             $controle->set_valor($numCi90);
             $controle->set_title('Número da Ci informando que em 90 dias o benefício irá terminar.');
@@ -740,13 +766,13 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtCi90);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de 90 dias.');
             $form->add_item($controle);
 
             # submit
             $controle = new Input('submit','submit');
-            $controle->set_valor('Imprimir');
+            $controle->set_valor('Salvar');
             $controle->set_linha(5);
             $controle->set_col(3);
             $form->add_item($controle);
@@ -788,44 +814,46 @@ if($acesso){
             
             # Verifica o número da Ci
             if(vazio($numCi90Digitados)){
-                $msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
+                #$msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
                 $erro = 1;
             }
             
             # Verifica a data da CI
             if(vazio($dtCi90Digitado)){
-                $msgErro.='Não tem data da Ci de 90 dias cadastrada!\n';
+                $dtCi90Digitado = NULL;
                 $erro = 1;
             }
             
             # Verifica a data da Publicação
             if(vazio($dtPublicacao)){
-                $msgErro.='Não tem data da Publicação cadastrada!\n';
+                #$msgErro.='Não tem data da Publicação cadastrada!\n';
                 $erro = 1;
             }             
             
             # Verifica se teve erro
-            if($erro == 0){
-                # Salva as alterações
-                $pessoal->set_tabela("tbreducao");
-                $pessoal->set_idCampo("idReducao");
-                $campoNome = array('numCi90','dtCi90');
-                $campoValor = array($numCi90Digitados,$dtCi90Digitado);
-                $pessoal->gravar($campoNome,$campoValor,$id);
-                $data = date("Y-m-d H:i:s");
-                
-                # Grava o log das alterações caso tenha
-                if(!is_null($alteracoes)){
-                    $atividades .= 'Alterou: '.$alteracoes;
-                    $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
-                }                
+            
+            # Salva as alterações
+            $pessoal->set_tabela("tbreducao");
+            $pessoal->set_idCampo("idReducao");
+            $campoNome = array('numCi90','dtCi90');
+            $campoValor = array($numCi90Digitados,$dtCi90Digitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
+
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+            }                
                 
                 # Exibe o relatório
+            if($erro == 0){
                 loadPage('../grhRelatorios/reducaoCi90.php?id='.$id);
             }else{
-                alert($msgErro);
-                back(1);
+                #alert($msgErro);
+                echo "<script>window.close();</script>";
+                #back(1);
             }            
             break;
             

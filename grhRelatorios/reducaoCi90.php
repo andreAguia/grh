@@ -40,6 +40,21 @@ if($acesso){
     $pgPublicacao = $dados[3];
     $dtTermino = date_to_php($dados[4]);
     
+    # Verifica o número da Ci
+    if(vazio($numCi90)){
+        $$numCi90 = "????";
+    }
+
+    # Verifica a data da CI
+    if(vazio($dtCi90)){
+        $dtCi90 = "????";
+    }
+
+    # Verifica a data da Publicação
+    if(vazio($dtPublicacao)){
+        $dtPublicacao = "????";
+    }       
+    
     # Verifica se estamos a 90 dias da data Termino
     if(!vazio($dtTermino)){
         $hoje = date("d/m/Y");
@@ -56,15 +71,15 @@ if($acesso){
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-    $lotacao = $pessoal->get_lotacaoSimples($idServidorPesquisado);
+    $lotacao = $pessoal->get_nomeLotacao2($pessoal->get_idLotacao($idServidorPesquisado));
     
     # Assunto
     $assunto = "Aviso de prazo para fim do benefício.";
 
     # Monta a CI
     $ci = new Ci($numCi90,$dtCi90,$assunto);
-    $ci->set_destinoNome($nomeServidor);
-    $ci->set_destinoSetor($lotacao);
+    $ci->set_destinoNome($lotacao);
+    $ci->set_destinoSetor("A/C ".$nomeServidor);
     $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão de sua Redução de Carga Horária, conforme publicação no DOERJ de $publicacao.<br/>");
     $ci->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos sua manifestação o quanto antes para que os procedimentos administrativos sejam providenciados com a devida antecedência.");
     $ci->set_saltoRodape(5);

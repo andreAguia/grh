@@ -194,7 +194,7 @@ if($acesso){
             $tabela->set_classe(array(NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
             $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
-            $tabela->set_titulo("Servidores com Solicitação de Readaptação");
+            $tabela->set_titulo("Readaptação");
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor2');
@@ -331,7 +331,7 @@ if($acesso){
             $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
             $tabela->set_metodo(array(NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
-            $tabela->set_titulo("Servidores com Solicitação de Redução de Carga Horária");
+            $tabela->set_titulo("Redução de Carga Horária");
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

@@ -507,9 +507,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
 
-    public function get_lotacaoSimples($idServidor)
-
-    {
+    public function get_lotacaoSimples($idServidor)  {
             $select = 'SELECT  tblotacao.DIR,
                                tblotacao.GER
                           FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao

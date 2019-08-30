@@ -189,6 +189,29 @@ class ReducaoCargaHoraria{
     
     ###########################################################
     
+    function get_dadosCi90($idReducao){
+        
+    /**
+     * Informa os dados da ci de 90 dias
+     */
+        
+        # Pega os dados
+        $select="SELECT numCi90,
+                        dtCi90,
+                        dtPublicacao,
+                        pgPublicacao,
+                        DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY)
+                   FROM tbreducao
+                  WHERE idReducao = $idReducao";
+        
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select,FALSE);
+        
+        return $dados;
+    }
+    
+    ###########################################################
+    
     function get_dadosReducao($idReducao){
         
     /**
@@ -229,129 +252,6 @@ class ReducaoCargaHoraria{
         $dados = $pessoal->select($select,FALSE);
         
         return $dados;
-    }
-    
-    ###########################################################
-    
-    
-    function get_tarefas($idReducao){
-        
-    /**
-     * fornece a próxima tarefa a ser realizada
-     */
-        
-        # Pega os dados
-        $select="SELECT dtSolicitacao,
-                        dtEnvioPericia,
-                        dtChegadaPericia,
-                        dtAgendadaPericia,
-                        resultado,
-                        pendencia,
-                        dtEnvioPendencia,
-                        dtPublicacao,
-                        dtInicio,
-                        periodo,
-                        numCiInicio,
-                        numCiTermino
-                   FROM tbreducao
-                  WHERE idReducao = $idReducao";
-
-        $pessoal = new Pessoal();
-        $dados = $pessoal->select($select,FALSE);
-        $numero = $pessoal->count($select);
-        $mensagem = NULL;
-
-        # Quando Já enviou a CI de Término e não arquivou o processo
-        if(!is_null($dados[7])){
-            $mensagem = "- Arquivar processo.<br/>";
-        }
-
-        # Resultado Deferido
-        if($dados[4] == 1){
-            # Quando não enviou ci de término e a data atual já passou ou é inferior a 90 dias
-            if(is_null($dados[7])){
-
-                if((!is_null($dados[8])) AND (!is_null($dados[9]))){
-                    # Variáveis para calculo das datas
-                    $dtHoje = date("Y-m-d");
-                    $dtInicio = date_to_php($dados[8]);
-                    $periodo = $dados[9];
-                    $dtTermino = addMeses($dtInicio,$periodo);
-                    $dtAlerta = addDias($dtTermino,-90);
-
-                    # Verifica se a data do alerta já passou
-                    if(jaPassou($dtAlerta)){
-                        $mensagem = "- Perguntar ao servidor se há interesse em renovação;<br/>"
-                                  . "- Enviar CI para o setor do servidor informando o término do benefício;<br/>"
-                                  . "- Cadastrar a data de envio da CI de término no sistema.<br/>"
-                                  . "- Arquivar processo.<br/>";
-                    }
-                }
-            }
-
-            # Quando ainda não enviou a CI de início para a chefia do servidor
-            if(is_null($dados[10])){
-                $mensagem = "- Enviar CI para o setor do servidor informando a chefia imediata sobre o benefício concedido;<br/>"
-                          . "- Cadastrar o número da CI Inicial no sistema.<br/>";
-            }
-
-            # Quando ainda não preencheu o período
-            if(is_null($dados[9])){
-                $mensagem = "- Cadastrar no sistema o período (em meses).<br/>";
-            }
-
-            # Quando ainda não preencheu o início do benefício
-            if(is_null($dados[8])){
-                $mensagem = "- Cadastrar no sistema o início do benefício.<br/>";
-            }
-
-            # Quando ainda não foi publicado 
-            if(is_null($dados[7])){
-                $mensagem = "- Enviar o processo para o setor de publicação;<br/>"
-                          . "- Enviar email ao servidor informando do benefício concedido.<br/>";
-            }
-        
-        # Resultado indeferido
-        }elseif($dados[4] == 2){
-            $mensagem = "- Avisar o servidor da negativa;<br/>"
-                      . "- Arquivar processo.<br/>";
-        }
-
-        # Quando ainda não foi informado o resultado 
-        if(is_null($dados[4])){
-            
-            $mensagem = "- Aguardar o retorno do processo com o resultado;<br/>"
-                      . "- Assim que chegar, cadastrar no sistema o resultado.<br/>";
-                        
-            # Quando tem pendências
-            if($dados[5] == 1){
-                $mensagem = "- Resolver as pendências<br/>"
-                          . "- Cadastrar a data do envio das pendências no sistema.<br/>";
-            }
-            
-            # Verifica a data agendada
-            if(is_null($dados[3])){
-                $mensagem = "- Obter com a SPMSO/SES a data agendada e cadastrar no sistema.<br/>";
-            }
-            
-            # Verifica a data de chegada à perícia
-            if(is_null($dados[2])){
-                $mensagem = "- Verificar pelo UPO quando o processo chegar na SPMSO/SES;<br/>"
-                          . "- Assim que chegar, cadastrar no sistema a data de chegada;<br/>"
-                          . "- E avisar o servidor para enviar email marcando a perícia;<br/>";
-            }
-            
-            # Verifica a data de envio à perícia
-            if(is_null($dados[1])){
-                $mensagem = "- Assim que enviar o processo à$mensagem perícia cadastrar a data no sistema.";
-            }
-        }
-
-        if($numero == 0){
-            return NULL;
-        }else{
-            return $mensagem;
-        }          
     }
     
     ###########################################################
@@ -416,7 +316,10 @@ class ReducaoCargaHoraria{
         $pessoal = new Pessoal();
         
         # Pega os dias publicados
-        $select = 'SELECT dtInicio, periodo, DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY), resultado
+        $select = 'SELECT dtInicio, 
+                          periodo,
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY),
+                          resultado
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
@@ -460,7 +363,13 @@ class ReducaoCargaHoraria{
             $dias = dataDif($hoje, $dttermino);
 
             if(($dias > 0) AND ($dias < 90)){
-                $retorno.= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                if($dias == 1){
+                    $retorno.= "<br/><span title='Falta apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Falta apenas $dias dia</span>";
+                }else{
+                    $retorno.= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                }
+            }elseif($dias == 0){
+                $retorno.= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
             }
         }
                                 
@@ -514,36 +423,62 @@ class ReducaoCargaHoraria{
         $select = 'SELECT resultado,
                           numCiInicio,
                           numCiTermino,
-                          dtAtoReitor
+                          dtAtoReitor,
+                          numCi90,
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY)
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
         
-        $pessoal = new Pessoal();
+        
         $row = $pessoal->select($select,FALSE);
+        
+        # Pega os dados
+        $resultado = $row[0];
+        $ciInicio = $row[1];
+        $ciTermino = $row[2];
+        $atoReitor = $row[3];
+        $ci90 = $row[4];
+        $dtTermino = date_to_php($row[5]);
+        
+        # Calcula os dias
+        if(!is_null($dtTermino)){
+            $hoje = date("d/m/Y");
+            $dias = dataDif($hoje, $dtTermino);
+        }        
         
         # Nome do botão de início
         $nomeBotaoInicio = "CI Início";
-        if(!is_null($row[1])){
-            $nomeBotaoInicio = "CI Início<br/>n° ".$row[1];
+        if(!is_null($ciInicio)){
+            $nomeBotaoInicio = "CI Início<br/>n° ".$ciInicio;
+        }
+        
+        # Nome do botão de 90 Dias
+        $nomeBotao90 = "CI 90 Dias";
+        if(!is_null($ci90)){
+            $nomeBotao90 = "CI 90 Dias<br/>n° ".$ci90;
         }
         
         # Nome do botão de Término
         $nomeBotaotermino = "CI Término";
-        if(!is_null($row[2])){
-            $nomeBotaotermino = "CI Término<br/>n° ".$row[2];
+        if(!is_null($ciTermino)){
+            $nomeBotaotermino = "CI Término<br/>n° ".$ciTermino;
         }
         
         # Nome do botão do Ato
         $nomeBotaoAto = "Ato do Reitor";
-        if(!is_null($row[3])){
-            $nomeBotaoAto = "Ato do Reitor<br/>".date_to_php($row[3]);
+        if(!is_null($atoReitor)){
+            $nomeBotaoAto = "Ato do Reitor<br/>".date_to_php($atoReitor);
         }
         
         # Retorno
-        if($row[0] == 1){
+        if($resultado == 1){
             
             $tamanhoImage = 20;
-            $menu = new MenuGrafico(3);
+            if(($dias >= 0) AND($dias <= 90)){
+                $menu = new MenuGrafico(4);
+            }else{
+                $menu = new MenuGrafico(3);
+            }
             
             # Ci Início
             $botao = new BotaoGrafico();
@@ -552,7 +487,18 @@ class ReducaoCargaHoraria{
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
             $menu->add_item($botao);
+            
+            # Ci 90 dias
+            if(($dias >= 0) AND($dias <= 90)){
+                $botao = new BotaoGrafico();
+                $botao->set_url('?fase=ci90&id='.$idReducao);
+                $botao->set_label($nomeBotao90);
+                $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Imprime a Ci de 90 Dias');
+                $menu->add_item($botao);
+            }
 
+            # Ci Término
             $botao = new BotaoGrafico();
             $botao->set_url('?fase=ciTermino&id='.$idReducao);
             $botao->set_label($nomeBotaotermino);
@@ -560,6 +506,7 @@ class ReducaoCargaHoraria{
             $botao->set_title('Imprime a Ci de término');
             $menu->add_item($botao);
             
+            # Ato do Reitor
             $botao = new BotaoGrafico();
             $botao->set_label($nomeBotaoAto);
             $botao->set_url('?fase=atoReitor&id='.$idReducao);

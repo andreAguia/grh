@@ -329,10 +329,16 @@ class Readaptacao{
             $dias = dataDif($hoje, $dttermino);
 
             if(($dias > 0) AND ($dias < 90)){
-                $retorno.= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                if($dias == 1){
+                    $retorno.= "<br/><span title='Falta Apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                }else{
+                    $retorno.= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                }
+            }elseif($dias == 0){
+                $retorno.= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
             }
         }
-
+        
         return $retorno;
     }
 

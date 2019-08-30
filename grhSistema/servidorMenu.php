@@ -129,13 +129,14 @@ if($acesso){
         case "menu" :
             
             # Ocorrencias do servidor
-            Grh::exibeOcorênciaServidor($idServidorPesquisado);
+            #Grh::exibeOcorênciaServidor($idServidorPesquisado);
             
             # Exibe os vinculos anteriores do servidor na uenf (se tiver)
             #Grh::exibeVinculos($idServidorPesquisado);
             
             # monta o menu do servidor
-            Grh::menuServidor($idServidorPesquisado,$idUsuario);
+            #Grh::menuServidor($idServidorPesquisado,$idUsuario);
+            $memu = new MenuServidor($idServidorPesquisado,$idUsuario);
             
             # Exibe o rodapé da página
             Grh::rodape($idUsuario,$idServidorPesquisado,$pessoal->get_idPessoa($idServidorPesquisado));

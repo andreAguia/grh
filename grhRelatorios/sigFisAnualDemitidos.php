@@ -51,11 +51,11 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Servidores Demitidos e Exonerados em '.$relatorioAno);
+    $relatorio->set_titulo('Relatório Anual de Servidores Exonerados, Aposentados e Demitidos em '.$relatorioAno);
     $relatorio->set_tituloLinha2('Demitidos da UENF');
     $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
 
-    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Demissão','Publicação','Motivo','Mês'));
+    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Admissão','Saída','Publicação','Motivo','Mês'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center','left'));
     $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","date_to_php",NULL,"get_NomeMes"));

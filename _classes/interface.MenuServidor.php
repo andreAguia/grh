@@ -36,51 +36,55 @@ class MenuServidor{
         ##########################################################
                 
         # Inicia o Grid
+        
         $grid = new Grid();
-        
-        # Primeira coluna
-        $grid->abreColuna(12,12,8);
-        
-            $grid2 = new Grid();
-            $grid2->abreColuna(12,6);
+        $grid->abreColuna(6);
 
-            $this->moduloFuncionais();
+        $this->moduloOcorrencias();
         
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12,6);
-        
-            $this->moduloPessoais();
-        
-            $grid2->fechaColuna();
-            
-            $grid2->abreColuna(12,6);
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
 
-            $this->moduloBeneficios();
-        
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12,6);
-        
-            $this->moduloAfastamentos();
-            
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12);
-            
-            $this->moduloFinanceiro();
-        
-            $grid2->fechaColuna();      
-            $grid2->fechaGrid();
-            
-        $grid->fechaColuna();    
-        $grid->abreColuna(12,12,4); 
-        
-        $this->moduloOcorrencia();
         $this->moduloVinculos();
-        $this->moduloRelatorios();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+
+        $this->moduloFuncionais();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(3);
+
+        $this->moduloPessoais();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(3);
             
+        $this->moduloBeneficios();
+        
+        $grid->fechaColuna();
+        
+        $grid->abreColuna(2);
+        
         $this->moduloFoto();
-            
-       $grid->fechaColuna();
-       $grid->fechaGrid();
+        
+        $grid->fechaColuna();        
+        $grid->abreColuna(4);
+        
+        $this->moduloFinanceiro();    
+        
+        $grid->fechaColuna();        
+        $grid->abreColuna(4);
+
+        $this->moduloAfastamentos();
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+
+        $this->moduloRelatorios();
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
     }
 
 ######################################################################################################################
@@ -94,16 +98,16 @@ class MenuServidor{
     private function moduloFoto(){
         
         if($this->perfil <> 10){          // Se não for bolsista
+            
+            $fotoLargura = 140;
+            $fotoAltura = 180;
+            
+            titulo('Foto');
+            br();
         
             # Inicia o Grid
             $grid = new Grid();
-        
-            # Primeira coluna
-            $grid->abreColuna(2,0,2);
-            $grid->fechaColuna();
-            
-            # Primeira coluna
-            $grid->abreColuna(8,12,8);
+            $grid->abreColuna(12);
             
                 # Conecta o banco de dados
                 $pessoal = new Pessoal();
@@ -113,31 +117,28 @@ class MenuServidor{
                 # Define a pasta
                 $arquivo = "../../_fotos/$idPessoa.jpg";
                 
+                
+                
                 # Monta o Menu
                 $menu = new MenuGrafico(1);
-                br();
-
+                
                 # Verifica se tem pasta desse servidor
                 if(file_exists($arquivo)){
                     $botao = new BotaoGrafico("foto");
                     $botao->set_url('?fase=exibeFoto');
-                    $botao->set_imagem($arquivo,150,200);
+                    $botao->set_imagem($arquivo,$fotoLargura,$fotoAltura);
                     $botao->set_title('Foto do Servidor');
                     $menu->add_item($botao);
                 }else{ 
                     $botao = new BotaoGrafico("foto");
                     $botao->set_url('');
-                    $botao->set_imagem(PASTA_FIGURAS.'foto.png',150,200);
+                    $botao->set_imagem(PASTA_FIGURAS.'foto.png',$fotoLargura,$fotoAltura);
                     $botao->set_title('Servidor sem foto cadastrada');
                     $menu->add_item($botao);
                 }
 
                 $menu->show();
             
-            $grid->fechaColuna();
-            
-            # Primeira coluna
-            $grid->abreColuna(2,0,2);
             $grid->fechaColuna();
             $grid->fechaGrid();
 
@@ -149,7 +150,6 @@ class MenuServidor{
             $link->show();
 
             $div->fecha();
-            #$painel->fecha();
         }
     }
         
@@ -271,7 +271,7 @@ class MenuServidor{
      * Exibe os servidores que atendem o balcão
      */
     
-    private function moduloOcorrencia(){
+    private function moduloOcorrencias(){
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -353,28 +353,25 @@ class MenuServidor{
         $qtdMensagem = count($mensagem);
         $contador = 1;
         
+        $painel = new Callout("warning");
+        $painel->abre();
+        
+        p("Ocorrências","palertaServidor");
+        
         # Verifica se tem algo a ser exibido
         if($qtdMensagem > 0){
-            
-            ##### Mensagens
-            if($qtdMensagem > 0){
-                
-                $painel = new Callout("warning");
-                $painel->abre();
-                
-                titulo('Ocorrências');
-                br();
-            
-                # Percorre o array 
-                foreach ($mensagem as $mm) {
-                    p("- ".$mm,"exibeOcorrencia");
-                    if($contador < $qtdMensagem){
-                        $contador++;
-                    }
-                }                
-                $painel->fecha();
+
+            # Percorre o array 
+            foreach ($mensagem as $mm) {
+                p("- ".$mm,"exibeOcorrencia");
+                if($contador < $qtdMensagem){
+                    $contador++;
+                }
             }
+        }else{
+            p("Não há ocorrências deste servidor.","center","f12");
         }
+        $painel->fecha();
     }
     
 ######################################################################################################################
@@ -394,17 +391,16 @@ class MenuServidor{
         # Vinculos do servidor
         $numVinculos = $pessoal->get_numVinculos($this->idServidor);
         
+        $painel = new Callout("primary");
+        $painel->abre();
+
+        p("Vínculos","palertaServidor");
+
         # Número de Vinculos
         if($numVinculos > 1){
-            
-            $painel = new Callout("primary");
-            $painel->abre();
 
             # Conecta o banco de dados
             $pessoal = new Pessoal();
-
-            titulo('Vínculos');
-            br();
 
             # Monta o menu
             $menu = new Menu("menuVinculos");
@@ -443,8 +439,10 @@ class MenuServidor{
             # Exibe o menu
             $menu->show();
             
-            $painel->fecha();
-        }        
+        }else{
+            p("Não há vinculos anteriores deste servidor na Uenf.","center","f12");
+        }
+        $painel->fecha();
     }    
         
  ######################################################################################################################
@@ -460,8 +458,8 @@ class MenuServidor{
         # Relatórios
         if($this->perfil <> 10){          // Se não for bolsista
         
-            $painel = new Callout("success");
-            $painel->abre();
+            #$painel = new Callout("success");
+            #$painel->abre();
             
             # Conecta ao Banco de Dados
             $pessoal = new Pessoal();
@@ -485,7 +483,7 @@ class MenuServidor{
             #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
             $menu->show();
             
-            $painel->fecha();
+            #$painel->fecha();
         }
     }
         
@@ -502,9 +500,9 @@ class MenuServidor{
         
         # Define quantos itens por linha no menu 
         if($this->perfil == 10){          // Se for bolsista
-            $itensMenu = 4;
-        }else{
             $itensMenu = 3;
+        }else{
+            $itensMenu = 2;
         }
         
         # Exibe o título
@@ -662,7 +660,7 @@ class MenuServidor{
            titulo('Financeiro');
            br();
 
-           $menu = new MenuGrafico(8);
+           $menu = new MenuGrafico(3);
            if($pessoal->get_perfilProgressao($this->perfil) == "Sim"){
                $botao = new BotaoGrafico();
                $botao->set_label('Progressão e Enquadramento');
@@ -753,19 +751,19 @@ class MenuServidor{
            br();
 
            $menu = new MenuGrafico(2);
+           
+           $botao = new BotaoGrafico();
+           $botao->set_label('Readaptação');
+           $botao->set_url('servidorReadaptacao.php');
+           $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$this->tamanhoImagem,$this->tamanhoImagem);
+           $botao->set_title('Controle de Readaptação');
+           $menu->add_item($botao);
 
            $botao = new BotaoGrafico();
            $botao->set_label('Redução da Carga Horária');
            $botao->set_url('servidorReducao.php');
            $botao->set_imagem(PASTA_FIGURAS.'carga-horaria.svg',$this->tamanhoImagem,$this->tamanhoImagem);
            $botao->set_title('Controle de Redução da Carga Horária');
-           $menu->add_item($botao);
-
-           $botao = new BotaoGrafico();
-           $botao->set_label('Readaptação');
-           $botao->set_url('servidorReadaptacao.php');
-           $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$this->tamanhoImagem,$this->tamanhoImagem);
-           $botao->set_title('Controle de Readaptação');
            $menu->add_item($botao);
 
            $menu->show();

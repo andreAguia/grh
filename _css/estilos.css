@@ -53,6 +53,14 @@ a#alteraFoto{
     width: 100;
 }
 
+p#palertaServidor{
+    font-size: 12px;
+    padding: 1px;
+    margin: 0px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
 /*******************************************
  * Check up
  *******************************************/

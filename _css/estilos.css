@@ -45,21 +45,6 @@ div#RelServidor{
     display :none;
 }
 
-img#foto{
-    display: block;
-    position:relative;
-    left:50%;
-    top:30%;
-    transform: translate(-50%, -50%);
-}
-
-img#foto2{
-    display: block;
-    position:relative;
-    left:50%;
-    transform: translate(-50%);
-}
-
 a#alteraFoto{
     font-size: 12px;
     text-align: center;
@@ -104,7 +89,7 @@ ul.checkupResumo li{
 p#exibeOcorrencia{
     padding: 0px 0px 0px 0px;
     text-align: left;
-    font-size: 14px;
+    font-size: 12px;
     margin: 0px;
 }
 

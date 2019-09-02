@@ -136,7 +136,7 @@ if($acesso){
             
             # monta o menu do servidor
             #Grh::menuServidor($idServidorPesquisado,$idUsuario);
-            $memu = new MenuServidor($idServidorPesquisado,$idUsuario);
+            $menu = new MenuServidor($idServidorPesquisado,$idUsuario);
             
             # Exibe o rodapé da página
             Grh::rodape($idUsuario,$idServidorPesquisado,$pessoal->get_idPessoa($idServidorPesquisado));

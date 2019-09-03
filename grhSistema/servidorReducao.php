@@ -771,10 +771,17 @@ if($acesso){
             $form->add_item($controle);
 
             # submit
-            $controle = new Input('submit','submit');
-            $controle->set_valor('Salvar');
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar & Sair');
             $controle->set_linha(5);
-            $controle->set_col(3);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -793,9 +800,10 @@ if($acesso){
             $pgPublicacao = $dados[3];
             
             # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
             $numCi90Digitados = post("numCi90");
             $dtCi90Digitado = post("dtCi90");
-            
+             
             # Verifica se houve alterações
             $alteracoes = NULL;
             $atividades = NULL;
@@ -805,30 +813,39 @@ if($acesso){
                 $alteracoes .= '[numCi90] '.$numCi90.'->'.$numCi90Digitados.'; ';
             }
             if($dtCi90 <> $dtCi90Digitado){
-                $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->'.date_to_php($dtCi90Digitado).'; ';
+                if(vazio($dtCi90Digitado)){
+                    $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->  ; ';
+                    $dtCi90Digitado = NULL;
+                }else{
+                    $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->'.date_to_php($dtCi90Digitado).'; ';
+                }
             }
             
             # Erro
             $msgErro = NULL;
             $erro = 0;
             
-            # Verifica o número da Ci
-            if(vazio($numCi90Digitados)){
-                #$msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
-                $erro = 1;
-            }
+            # Verifica se apertou o imprimir
+            if($botaoEscolhido == "imprimir"){
             
-            # Verifica a data da CI
-            if(vazio($dtCi90Digitado)){
-                $dtCi90Digitado = NULL;
-                $erro = 1;
+                # Verifica o número da Ci
+                if(vazio($numCi90Digitados)){
+                    $msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
+                    $erro = 1;
+                }
+
+                # Verifica a data da CI
+                if(vazio($dtCi90Digitado)){
+                    $msgErro.='Não tem data da Ci de 90 dias cadastrada!\n';
+                    $erro = 1;
+                }
+
+                # Verifica a data da Publicação
+                if(vazio($dtPublicacao)){
+                    $msgErro.='Não tem data da Publicação cadastrada!\n';
+                    $erro = 1;
+                }
             }
-            
-            # Verifica a data da Publicação
-            if(vazio($dtPublicacao)){
-                #$msgErro.='Não tem data da Publicação cadastrada!\n';
-                $erro = 1;
-            }             
             
             # Verifica se teve erro
             
@@ -846,15 +863,18 @@ if($acesso){
                 $tipoLog = 2;
                 $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
             }                
-                
-                # Exibe o relatório
-            if($erro == 0){
-                loadPage('../grhRelatorios/reducaoCi90.php?id='.$id);
+               
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage('../grhRelatorios/reducaoCi90.php?id='.$id);
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
             }else{
-                #alert($msgErro);
                 echo "<script>window.close();</script>";
-                #back(1);
-            }            
+            }
             break;
             
 ################################################################################################################

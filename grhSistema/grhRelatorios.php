@@ -320,6 +320,7 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Lotações Ativas','../grhRelatorios/lotacao.php');
             $menu->add_item('linkWindow','Relatório de Aniversariantes - Por Lotação','../grhRelatorios/lotacaoAniversariantes.php');
             $menu->add_item('linkWindow','Relatório de Servidores Ativos - Por Lotação','../grhRelatorios/lotacaoServidoresAtivos.php');
+            $menu->add_item('linkWindow','Relatório de Servidores Ativos - Pro-Reitorias','../grhRelatorios/lotacaoServidoresAtivosProReitorias.php');
             #$menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
             $menu->show();
             break;    

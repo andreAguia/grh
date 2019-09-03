@@ -482,7 +482,7 @@ class ReducaoCargaHoraria{
             
             # Ci Início
             $botao = new BotaoGrafico();
-            $botao->set_url('?fase=ciInicio&id='.$idReducao);
+            $botao->set_url('?fase=ciInicioForm&id='.$idReducao);
             $botao->set_label($nomeBotaoInicio);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
@@ -491,7 +491,7 @@ class ReducaoCargaHoraria{
             # Ci 90 dias
             if(($dias >= 0) AND($dias <= 90)){
                 $botao = new BotaoGrafico();
-                $botao->set_url('?fase=ci90&id='.$idReducao);
+                $botao->set_url('?fase=ci90Form&id='.$idReducao);
                 $botao->set_label($nomeBotao90);
                 $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
                 $botao->set_title('Imprime a Ci de 90 Dias');

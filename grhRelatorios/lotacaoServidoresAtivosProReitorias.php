@@ -50,7 +50,7 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos das Pro-Reitorias');
+    $relatorio->set_titulo('Relatório de Servidores Ativos das Pro-Reitorias');
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
     $relatorio->set_width(array(10,30,30,0,10,10,10));

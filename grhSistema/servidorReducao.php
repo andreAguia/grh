@@ -567,9 +567,9 @@ if($acesso){
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
             # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
             
             # Título
             tituloTable("Controle de Redução da Carga Horária<br/>Ci de início");
@@ -735,9 +735,9 @@ if($acesso){
             $pgPublicacao = $dados[3];
             
             # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
             
             # Título
             tituloTable("Controle de Redução da Carga Horária<br/>Ci de 90 Dias (ou menos)");
@@ -828,21 +828,18 @@ if($acesso){
             
                 # Verifica o número da Ci
                 if(vazio($numCi90Digitados)){
-                    $numCi90Digitados = NULL;
                     $msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
                     $erro = 1;
                 }
 
                 # Verifica a data da CI
                 if(vazio($dtCi90Digitado)){
-                    $dtCi90Digitado = NULL;
                     $msgErro.='Não tem data da Ci de 90 dias cadastrada!\n';
                     $erro = 1;
                 }
 
                 # Verifica a data da Publicação
                 if(vazio($dtPublicacao)){
-                    $dtPublicacao = NULL;
                     $msgErro.='Não tem data da Publicação cadastrada!\n';
                     $erro = 1;
                 }
@@ -879,14 +876,14 @@ if($acesso){
             
 ################################################################################################################
         
-        # Ci Término        
-        case "ciTermino" : 
-            
-            loadPage('?fase=ciTerminoForm&id='.$id,"_blank");
-            loadPage("?");
-            break;
-        
+        # Ci Término
         case "ciTerminoForm" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
             
             # Pega os Dados
             $dados = $reducao->get_dadosCiTermino($id);
@@ -901,13 +898,14 @@ if($acesso){
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
             # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
             
             # Título
             titulo("Ci de Término");
-            br();
+            $painel = new Callout();
+            $painel->abre();
             
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ciTerminoFormValida&id='.$id);        
@@ -917,7 +915,7 @@ if($acesso){
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_autofocus(TRUE);
             $controle->set_valor($numCitermino);
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de Término do benefício.');
@@ -929,15 +927,22 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtCitermino);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de término.');
             $form->add_item($controle);
 
             # submit
-            $controle = new Input('submit','submit');
-            $controle->set_valor('Imprimir');
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
             $controle->set_linha(5);
-            $controle->set_col(3);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -959,8 +964,9 @@ if($acesso){
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
             # Pega os dados Digitados
-            $numCiTerminoDigitados = post("numCiTermino");
-            $dtCiTerminoDigitado = post("dtCiTermino");
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
+            $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -1006,57 +1012,64 @@ if($acesso){
             if(vazio($periodo)){
                 $msgErro.='O período não foi cadastrado!\n';
                 $erro = 1;
-            }              
+            } 
             
-            # Verifica se teve erro
-            if($erro == 0){
-                # Salva as alterações
-                $pessoal->set_tabela("tbreducao");
-                $pessoal->set_idCampo("idReducao");
-                $campoNome = array('numCiTermino','dtCiTermino');
-                $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
-                $pessoal->gravar($campoNome,$campoValor,$id);
-                $data = date("Y-m-d H:i:s");
+            # Salva as alterações
+            $pessoal->set_tabela("tbreducao");
+            $pessoal->set_idCampo("idReducao");
+            $campoNome = array('numCiTermino','dtCiTermino');
+            $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
                 
-                # Grava o log das alterações caso tenha
-                if(!is_null($alteracoes)){
-                    $atividades .= 'Alterou: '.$alteracoes;
-                    $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
-                }
-                
-                # Exibe o relatório
-                loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id);
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+            }
+            
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id,"_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
             }else{
-                alert($msgErro);
-                back(1);
-            }            
+                loadPage("?");
+            }
             break;
             
 ################################################################################################################
 
-        # Ato Reitor
-        case "atoReitor" : 
-            
-            loadPage('?fase=atoReitorForm&id='.$id,"_blank");
-            loadPage("?");
-            break;
-        
+        # Ato Reitor        
         case "atoReitorForm" :
             
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+                        
             # Pega os Dados
             $dados = $reducao->get_dadosReducao($id);
+            
+            # Da Redução
             $dtAtoReitor = $dados["dtAtoReitor"];
             $dtDespacho = $dados["dtDespacho"];
             
             # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
             
             # Título
             titulo("Ato do Reitor");
-            br();
+            $painel = new Callout();
+            $painel->abre();
             
             # Monta o formulário
             $form = new Form('?fase=atoReitorFormValida&id='.$id);
@@ -1067,25 +1080,32 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtAtoReitor);
-            $controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
             $controle->set_title('A data do Ato do Reitor.');
             $form->add_item($controle);
             
             # dtDespacho
             $controle = new Input('dtDespacho','data','Data do Despacho da Perícia:',1);
             $controle->set_size(10);
-            $controle->set_linha(2);
+            $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtDespacho);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_title('A data do Despacho da Perícia.');
             $form->add_item($controle);
 
             # submit
-            $controle = new Input('submit','submit');
-            $controle->set_valor('Imprimir');
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
             $controle->set_linha(5);
-            $controle->set_col(3);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -1104,8 +1124,9 @@ if($acesso){
             $processo = $reducao->get_numProcesso($idServidorPesquisado);            
             
             # Pega os dados Digitados
-            $dtAtoReitorDigitados = post("dtAtoReitor");
-            $dtDespachoDigitado = post("dtDespacho");
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $dtAtoReitorDigitados = vazioPraNulo(post("dtAtoReitor"));
+            $dtDespachoDigitado = vazioPraNulo(post("dtDespacho"));
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -1137,29 +1158,33 @@ if($acesso){
                 $erro = 1;
             }           
             
-            # Verifica se teve erro
-            if($erro == 0){
-                # Salva as alterações
-                $pessoal->set_tabela("tbreducao");
-                $pessoal->set_idCampo("idReducao");
-                $campoNome = array('dtAtoReitor','dtDespacho');
-                $campoValor = array($dtAtoReitorDigitados,$dtDespachoDigitado);
-                $pessoal->gravar($campoNome,$campoValor,$id);
-                $data = date("Y-m-d H:i:s");
+            # Salva as alterações
+            $pessoal->set_tabela("tbreducao");
+            $pessoal->set_idCampo("idReducao");
+            $campoNome = array('dtAtoReitor','dtDespacho');
+            $campoValor = array($dtAtoReitorDigitados,$dtDespachoDigitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");                
                 
-                # Grava o log das alterações caso tenha
-                if(!is_null($alteracoes)){
-                    $atividades .= 'Alterou: '.$alteracoes;
-                    $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
-                }
-                
-                # Exibe o relatório
-                loadPage('../grhRelatorios/reducaoAtoReitor.php?id='.$id);
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+            }
+            
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage('../grhRelatorios/reducaoAtoReitor.php?id='.$id,"_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
             }else{
-                alert($msgErro);
-                back(1);
-            }            
+                loadPage("?");
+            }
             break;
         
 ################################################################################################################

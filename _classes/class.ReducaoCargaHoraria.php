@@ -500,7 +500,7 @@ class ReducaoCargaHoraria{
 
             # Ci Término
             $botao = new BotaoGrafico();
-            $botao->set_url('?fase=ciTermino&id='.$idReducao);
+            $botao->set_url('?fase=ciTerminoForm&id='.$idReducao);
             $botao->set_label($nomeBotaotermino);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');
@@ -509,7 +509,7 @@ class ReducaoCargaHoraria{
             # Ato do Reitor
             $botao = new BotaoGrafico();
             $botao->set_label($nomeBotaoAto);
-            $botao->set_url('?fase=atoReitor&id='.$idReducao);
+            $botao->set_url('?fase=atoReitorForm&id='.$idReducao);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime o Ato do Reitor');
             $menu->add_item($botao);

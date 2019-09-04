@@ -440,6 +440,8 @@ class ReducaoCargaHoraria{
         $ci90 = $row[4];
         $dtTermino = date_to_php($row[5]);
         
+        $dias = NULL;
+        
         # Calcula os dias
         if(!is_null($dtTermino)){
             $hoje = date("d/m/Y");

@@ -357,41 +357,77 @@ class Readaptacao{
         # Pega os dias publicados
         $select = 'SELECT resultado,
                           numCiInicio,
-                          numCiTermino
+                          numCiTermino,
+                          numCi90,
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY)
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
 
-        $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
+        
+        # Pega os dados
+        $resultado = $row[0];
+        $ciInicio = $row[1];
+        $ciTermino = $row[2];
+        $ci90 = $row[3];
+        $dtTermino = date_to_php($row[4]);
+        
+        $dias = NULL;
+        
+        # Calcula os dias
+        if(!is_null($dtTermino)){
+            $hoje = date("d/m/Y");
+            $dias = dataDif($hoje, $dtTermino);
+        }    
 
         # Nome do botão de início
         $nomeBotaoInicio = "CI Início";
-        if(!is_null($row[1])){
-            $nomeBotaoInicio = "CI Início<br/>n° ".$row[1];
+        if(!is_null($ciInicio)){
+            $nomeBotaoInicio = "CI Início<br/>n° ".$ciInicio;
+        }
+        
+        # Nome do botão de 90 Dias
+        $nomeBotao90 = "CI 90 Dias";
+        if(!is_null($ci90)){
+            $nomeBotao90 = "CI 90 Dias<br/>n° ".$ci90;
         }
 
         # Nome do botão de Término
         $nomeBotaotermino = "CI Término";
-        if(!is_null($row[2])){
-            $nomeBotaotermino = "CI Término<br/>n° ".$row[2];
+        if(!is_null($ciTermino)){
+            $nomeBotaotermino = "CI Término<br/>n° ".$ciTermino;
         }
 
         # Retorno
-        if($row[0] == 1){
+        if($resultado == 1){
 
             $tamanhoImage = 20;
-            $menu = new MenuGrafico(2);
+            if(($dias >= 0) AND($dias <= 90)){
+                $menu = new MenuGrafico(3);
+            }else{
+                $menu = new MenuGrafico(2);
+            }
 
             # Ci Início
             $botao = new BotaoGrafico();
-            $botao->set_url('?fase=ciInicio&id='.$idReadaptacao);
+            $botao->set_url('?fase=ciInicioForm&id='.$idReadaptacao);
             $botao->set_label($nomeBotaoInicio);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de início');
             $menu->add_item($botao);
+            
+            # Ci 90 dias
+            if(($dias >= 0) AND($dias <= 90)){
+                $botao = new BotaoGrafico();
+                $botao->set_url('?fase=ci90Form&id='.$idReadaptacao);
+                $botao->set_label($nomeBotao90);
+                $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
+                $botao->set_title('Imprime a Ci de 90 Dias');
+                $menu->add_item($botao);
+            }
 
             $botao = new BotaoGrafico();
-            $botao->set_url('?fase=ciTermino&id='.$idReadaptacao);
+            $botao->set_url('?fase=ciTerminoForm&id='.$idReadaptacao);
             $botao->set_label($nomeBotaotermino);
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');

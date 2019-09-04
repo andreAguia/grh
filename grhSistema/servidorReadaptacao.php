@@ -563,13 +563,13 @@ if($acesso){
 ################################################################################################################
         
         # Ci Início        
-        case "ciInicio" : 
-            
-            loadPage('?fase=ciInicioForm&id='.$id,"_blank");
-            loadPage("?");
-            break;
-        
         case "ciInicioForm" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
             
             # Pega os Dados
             $dados = $readaptacao->get_dados($id);
@@ -584,13 +584,14 @@ if($acesso){
             $processo = $dados['processo'];
                         
             # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
             
             # Título
             titulo("Ci de início");
-            br();
+            $painel = new Callout();
+            $painel->abre();
             
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ciInicioFormValida&id='.$id);        
@@ -600,7 +601,7 @@ if($acesso){
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(2);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_autofocus(TRUE);
             $controle->set_valor($numCiInicio);
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
@@ -612,7 +613,7 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtCiInicio);
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de inicio.');
             $form->add_item($controle);
             
@@ -622,15 +623,22 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_array(array("Inicial","Prorrogação"));
-            $controle->set_required(TRUE);
+            #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de inicio ou prorrogação.');
             $form->add_item($controle);
 
             # submit
-            $controle = new Input('submit','submit');
-            $controle->set_valor('Imprimir');
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
             $controle->set_linha(5);
-            $controle->set_col(3);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -654,9 +662,10 @@ if($acesso){
             $processo = $dados['processo'];
             
             # Pega os dados Digitados
-            $numCiInicioDigitados = post("numCiInicio");
-            $dtCiInicioDigitado = post("dtCiInicio");
-            $ciTipo = post("tipoCi");
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCiInicioDigitados = vazioPraNulo(post("numCiInicio"));
+            $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
+            $ciTipo = vazioPraNulo(post("tipoCi"));
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -704,45 +713,211 @@ if($acesso){
                 $erro = 1;
             }              
             
-            # Verifica se teve erro
-            if($erro == 0){
-                # Salva as alterações
-                $pessoal->set_tabela("tbreadaptacao");
-                $pessoal->set_idCampo("idReadaptacao");
-                $campoNome = array('numCiInicio','dtCiInicio');
-                $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
-                $pessoal->gravar($campoNome,$campoValor,$id);
-                $data = date("Y-m-d H:i:s");
+            # Salva as alterações
+            $pessoal->set_tabela("tbreadaptacao");
+            $pessoal->set_idCampo("idReadaptacao");
+            $campoNome = array('numCiInicio','dtCiInicio');
+            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");                
                 
-                # Grava o log das alterações caso tenha
-                if(!is_null($alteracoes)){
-                    $atividades .= 'Alterou: '.$alteracoes;
-                    $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
-                }                
-                
-                # Exibe o relatório
-                if($ciTipo == "Inicial"){
-                    loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id);
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
+            }
+            
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    # Exibe o relatório
+                    if($ciTipo == "Inicial"){
+                        loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id);
+                    }else{
+                        loadPage('../grhRelatorios/readaptacaoCiProrrogacao.php?id='.$id);
+                    }
+                    loadPage("?");
                 }else{
-                    loadPage('../grhRelatorios/readaptacaoCiProrrogacao.php?id='.$id);
-                }
+                    alert($msgErro);
+                    back(1);
+                }            
             }else{
-                alert($msgErro);
-                back(1);
-            }            
+                loadPage("?");
+            }
             break;
             
 ################################################################################################################
         
-        # Ci Término        
-        case "ciTermino" : 
+        # Ci 90 Dias
+        case "ci90Form" :
             
-            loadPage('?fase=ciTerminoForm&id='.$id,"_blank");
-            loadPage("?");
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+
+            # Pega os Dados do Banco
+            $dados = $readaptacao->get_dadosCi90($id);
+            
+            # Da redução
+            $numCi90 = $dados[0];
+            $dtCi90= $dados[1];
+            $dtPublicacao = $dados[2];
+            $pgPublicacao = $dados[3];
+            
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+            
+            # Título
+            tituloTable("Controle de Redução da Carga Horária<br/>Ci de 90 Dias (ou menos)");
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=ci90FormValida&id='.$id);        
+
+            # numCiInicio
+            $controle = new Input('numCi90','texto','Ci n°:',1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            #$controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($numCi90);
+            $controle->set_title('Número da Ci informando que em 90 dias o benefício irá terminar.');
+            $form->add_item($controle);
+
+            # dtCiInicio
+            $controle = new Input('dtCi90','data','Data da Ci:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_valor($dtCi90);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A data da CI de 90 dias.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
         
+        case "ci90FormValida" :
+            
+            # Pega os Dados do Banco
+            $dados = $reducao->get_dadosCi90($id);
+            $numCi90 = $dados[0];
+            $dtCi90 = $dados[1];
+            $dtPublicacao = $dados[2];
+            $pgPublicacao = $dados[3];
+            
+            # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCi90Digitados = vazioPraNulo(post("numCi90"));
+            $dtCi90Digitado = vazioPraNulo(post("dtCi90"));
+             
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($numCi90 <> $numCi90Digitados){
+                $alteracoes .= '[numCi90] '.$numCi90.'->'.$numCi90Digitados.'; ';
+            }
+            if($dtCi90 <> $dtCi90Digitado){
+                if(vazio($dtCi90Digitado)){
+                    $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->  ; ';
+                }else{
+                    $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->'.date_to_php($dtCi90Digitado).'; ';
+                }
+            }
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica se apertou o imprimir
+            if($botaoEscolhido == "imprimir"){
+            
+                # Verifica o número da Ci
+                if(vazio($numCi90Digitados)){
+                    $msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
+                    $erro = 1;
+                }
+
+                # Verifica a data da CI
+                if(vazio($dtCi90Digitado)){
+                    $msgErro.='Não tem data da Ci de 90 dias cadastrada!\n';
+                    $erro = 1;
+                }
+
+                # Verifica a data da Publicação
+                if(vazio($dtPublicacao)){
+                    $msgErro.='Não tem data da Publicação cadastrada!\n';
+                    $erro = 1;
+                }
+            }
+            
+            # Salva as alterações
+            $pessoal->set_tabela("tbreducao");
+            $pessoal->set_idCampo("idReducao");
+            $campoNome = array('numCi90','dtCi90');
+            $campoValor = array($numCi90Digitados,$dtCi90Digitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
+
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+            }                
+               
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage('../grhRelatorios/reducaoCi90.php?id='.$id,"_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
+            }else{
+                loadPage("?");
+            }
+            break;
+            
+################################################################################################################
+        
+        # Ci Término
+        
         case "ciTerminoForm" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
             
             # Pega os Dados
             $dados = $readaptacao->get_dados($id);
@@ -757,13 +932,14 @@ if($acesso){
             $processo = $dados['processo'];
             
             # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
             
             # Título
             titulo("Ci de Término");
-            br();
+            $painel = new Callout();
+            $painel->abre();
             
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ciTerminoFormValida&id='.$id);        
@@ -790,10 +966,17 @@ if($acesso){
             $form->add_item($controle);
 
             # submit
-            $controle = new Input('submit','submit');
-            $controle->set_valor('Imprimir');
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
             $controle->set_linha(5);
-            $controle->set_col(3);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -806,8 +989,6 @@ if($acesso){
             
             # Pega os Dados
             $dados = $readaptacao->get_dados($id);
-
-            # Da Redução
             $numCiTermino = $dados['numCiTermino'];
             $dtCiTermino = $dados['dtCiTermino'];
             $dtInicio = date_to_php($dados['dtInicio']);
@@ -816,9 +997,10 @@ if($acesso){
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
             
-            # Pega os dados Digitados
-            $numCiTerminoDigitados = post("numCiTermino");
-            $dtCiTerminoDigitado = post("dtCiTermino");
+             # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
+            $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -866,29 +1048,33 @@ if($acesso){
                 $erro = 1;
             }              
             
-            # Verifica se teve erro
-            if($erro == 0){
-                # Salva as alterações
-                $pessoal->set_tabela("tbreadaptacao");
-                $pessoal->set_idCampo("idReadaptacao");
-                $campoNome = array('numCiTermino','dtCiTermino');
-                $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
-                $pessoal->gravar($campoNome,$campoValor,$id);
-                $data = date("Y-m-d H:i:s");
+            # Salva as alterações
+            $pessoal->set_tabela("tbreadaptacao");
+            $pessoal->set_idCampo("idReadaptacao");
+            $campoNome = array('numCiTermino','dtCiTermino');
+            $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");                
                 
-                # Grava o log das alterações caso tenha
-                if(!is_null($alteracoes)){
-                    $atividades .= 'Alterou: '.$alteracoes;
-                    $tipoLog = 2;
-                    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
-                }
-                
-                # Exibe o relatório
-                loadPage('../grhRelatorios/readaptacaoCiTermino.php?id='.$id);
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
+            }
+            
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage('../grhRelatorios/readaptacaoCiTermino.php?id='.$id,"_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
             }else{
-                alert($msgErro);
-                back(1);
-            }            
+                loadPage("?");
+            }
             break;
 
         ########################################################33

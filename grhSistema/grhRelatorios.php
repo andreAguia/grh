@@ -476,6 +476,7 @@ if($acesso){
             $menu->add_item('titulo','Endereço');
             $menu->add_item('linkWindow','Relatório de Servidores Agrupado por Cidade','../grhRelatorios/enderecoPorCidade.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Endereço, Emails e Telefones Agrupado por Lotaçao','../grhRelatorios/enderecoEmailLotacao.php');
+            $menu->add_item('linkWindow','Relatório de Servidores com Endereço, CPF, Emails e Telefones Agrupado por Lotaçao','../grhRelatorios/enderecoEmailLotacaoCpf.php');
             $menu->add_item('linkWindow','Relatório de Ativos e Aposentados Com Endereço','../grhRelatorios/enderecoAtivoAposentado.php');
             $menu->show();
             break;

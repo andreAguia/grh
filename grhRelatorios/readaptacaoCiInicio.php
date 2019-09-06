@@ -25,7 +25,7 @@ if($acesso){
 	
     # Pega o id
     $id = get('id');
-
+   
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -52,9 +52,11 @@ if($acesso){
             
     # Chefia imediata
     $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
-    $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
-    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);  // Pega a descrição da chefia imediata
     
+    $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
+    
+    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);  // Pega a descrição da chefia imediata
+    echo $idChefiaImediataDestino;
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);

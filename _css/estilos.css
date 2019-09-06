@@ -54,7 +54,8 @@ a#alteraFoto{
 }
 
 p#palertaServidor{
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: bold;
     padding: 1px;
     margin: 0px;
     margin-bottom: 5px;

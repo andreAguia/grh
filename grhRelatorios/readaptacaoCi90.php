@@ -21,7 +21,7 @@ if($acesso){
     
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-    $reducao = new ReducaoCargaHoraria();
+    $readaptacao = new Readaptacao();
 	
     # Pega o id
     $id = get('id');
@@ -31,14 +31,14 @@ if($acesso){
     $page->iniciaPagina();
 
     # pega os dados
-    $dados = $reducao->get_dadosCi90($id);
+    $dados = $readaptacao->get_dados($id);
     
     # Da Redução
-    $numCi90 = $dados[0];
-    $dtCi90 = date_to_php($dados[1]);
-    $dtPublicacao = date_to_php($dados[2]);
-    $pgPublicacao = $dados[3];
-    $dtTermino = date_to_php($dados[4]);
+    $numCi90 = $dados["numCi90"];
+    $dtCi90 = date_to_php($dados["dtCi90"]);
+    $dtPublicacao = date_to_php($dados["dtPublicacao"]);
+    $pgPublicacao = $dados["pgPublicacao"];
+    $dtTermino = date_to_php($dados["dtTermino"]);
     
     # Verifica o número da Ci
     if(vazio($numCi90)){
@@ -80,7 +80,7 @@ if($acesso){
     $ci = new Ci($numCi90,$dtCi90,$assunto);
     $ci->set_destinoNome($lotacao);
     $ci->set_destinoSetor("A/C ".$nomeServidor);
-    $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão de sua Redução de Carga Horária, conforme publicação no DOERJ de $publicacao.<br/>");
+    $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão de sua Readaptação, conforme publicação no DOERJ de $publicacao.<br/>");
     $ci->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos sua manifestação o quanto antes para que os procedimentos administrativos sejam providenciados com a devida antecedência.");
     $ci->set_saltoRodape(5);
     $ci->show();

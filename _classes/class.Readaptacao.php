@@ -53,7 +53,7 @@ class Readaptacao{
 
         # Pega os dados
         $select = 'SELECT * ,
-                          ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY) as dtTermino
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
 
@@ -359,7 +359,8 @@ class Readaptacao{
                           numCiInicio,
                           numCiTermino,
                           numCi90,
-                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY)
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY),
+                          dtInicio
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
 
@@ -371,6 +372,7 @@ class Readaptacao{
         $ciTermino = $row[2];
         $ci90 = $row[3];
         $dtTermino = date_to_php($row[4]);
+        $dtInicio = date_to_php($row[5]);
         
         $dias = NULL;
         
@@ -399,7 +401,7 @@ class Readaptacao{
         }
 
         # Retorno
-        if($resultado == 1){
+        if(!vazio($dtInicio)){
 
             $tamanhoImage = 20;
             if(($dias >= 0) AND($dias <= 90)){

@@ -60,13 +60,13 @@ if($acesso){
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     
     # Assunto
-    $assunto = "Prorrogação da Readaptação de ".$nomeServidor;
+    $assunto = "Renovação da Readaptação de ".$nomeServidor;
 
     # Monta a CI
     $ci = new Ci($numCiInicio,$dtCiInicio,$assunto);
     $ci->set_destinoNome($nomeGerenteDestino);
     $ci->set_destinoSetor($gerenciaImediataDescricao);
-    $ci->set_texto("Vimos informar a concessão da prorrogação da <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
+    $ci->set_texto("Vimos informar a concessão da renovação da <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, por um período de $periodo meses, a contar de $dtInicio, '<i>$parecer</i>', conforme publicação no DOERJ em $publicacao"
     . " em anexo.");
     $ci->set_saltoRodape(5);

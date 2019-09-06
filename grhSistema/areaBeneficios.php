@@ -143,7 +143,7 @@ if($acesso){
             $time_start = microtime(TRUE);
             
             # Pega os dados
-            $select = "SELECT idServidor,
+            $select = "SELECT idFuncional,
                               tbpessoa.nome,
                               CASE tipo
                                 WHEN 1 THEN 'Ex-Ofício'
@@ -159,7 +159,9 @@ if($acesso){
                               idReadaptacao,
                               idReadaptacao,
                               idReadaptacao,                                   
-                              idReadaptacao
+                              idReadaptacao,
+                              ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino,
+                              idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbreadaptacao USING (idServidor)
                         WHERE tbservidor.idPerfil <> 10";
@@ -180,16 +182,16 @@ if($acesso){
             }
                     
                     
-            $select .= " ORDER BY status, dtInicio";
+            $select .= " ORDER BY status, dtTermino, dtInicio";
             
             $resumo = $pessoal->select($select);
             
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("idServidor","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_label(array("idFuncional","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
             $tabela->set_align(array("center","left","center","center","center","center","left","center","center","left"));
-            $tabela->set_funcao(array("idMatricula"));
+            #$tabela->set_funcao(array("idMatricula"));
             
             $tabela->set_classe(array(NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
             $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
@@ -292,7 +294,7 @@ if($acesso){
             $time_start = microtime(TRUE);
 
             # Pega os dados
-            $select = "SELECT idServidor,
+            $select = "SELECT idFuncional,
                               tbpessoa.nome,
                               idReducao,                              
                               idServidor,
@@ -301,7 +303,8 @@ if($acesso){
                               idReducao,
                               idReducao,
                               idReducao,
-                              idServidor
+                              idServidor,
+                              ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbreducao USING (idServidor)
                         WHERE tbservidor.idPerfil <> 10";
@@ -317,16 +320,16 @@ if($acesso){
             }
                     
                     
-            $select .= " ORDER BY status, dtInicio";
+            $select .= " ORDER BY status, dtTermino, dtInicio";
             
             $resumo = $pessoal->select($select);
 
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Id/Matrícula","Nome","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-            $tabela->set_align(array("center","left","left","center","center","left","center","center","left"));
-            $tabela->set_funcao(array("idMatricula",NULL,NULL,NULL,"date_to_php"));
+            $tabela->set_label(array("IdFuncional","Nome","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","center","center","center","left","center","center","left"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
             
             $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
             $tabela->set_metodo(array(NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));

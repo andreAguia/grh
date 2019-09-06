@@ -993,67 +993,6 @@ class Grh{
     }
     
 ######################################################################################################################
-    
-    public static function exibeVinculos($idServidor){
-        
-     /**
-     * Exibe Um menu com os vinculos do servidor na uenf
-     */
-        
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-        
-        # Vinculos do servidor
-        $numVinculos = $pessoal->get_numVinculos($idServidor);
-
-        # Número de Vinculos
-        if($numVinculos > 1){               // So entra se tiver mais de um vinculo
-            
-            # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            
-            $callout = new Callout("success");
-            $callout->abre();
-            p("Outros Vínculos na UENF","f13");
-
-            # Monta o menu
-            $menu = new Menu();
-
-            # Exibe os vinculos
-            $vinculos = $pessoal->get_vinculos($idServidor);
-            
-            # Percorre os vínculos
-            foreach($vinculos as $rr){
-                
-                # Descarta o vinculo em tela
-                if($rr[0] <> $idServidor){
-                    $dtAdm = $pessoal->get_dtAdmissao($rr[0]);
-                    $dtSai = $pessoal->get_dtSaida($rr[0]);
-                    $perfil = $pessoal->get_perfilSimples($rr[0]);
-                    $cargo = $pessoal->get_cargoSimples($rr[0]);
-                    $motivo = $pessoal->get_motivo($rr[0]);
-                    $idSituação = $pessoal->get_idSituacao($rr[0]);
-                    
-                    if($idSituação == 1){
-                        $motivo = "Ativo";
-                    }
-                    
-                    $menu->add_item("link","$cargo - $perfil ($dtAdm - $dtSai) - $motivo",'servidor.php?fase=editar&id='.$rr[0]);
-                }
-            }
-
-            # Exibe o menu
-            $menu->show();
-            
-            $callout->fecha();
-            $grid->fechaColuna();
-            $grid->fechaGrid();  
-        }
-    }
-
-    
-    ###########################################################
 	
 	/**
 	 * Método exibe get_numServidoresAtivosTipoCargo

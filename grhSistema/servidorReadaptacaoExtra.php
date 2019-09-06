@@ -5,11 +5,13 @@
  * 
  */
 
-$resultado = $campoValor[8];
-$status = $campoValor[1];
-$dtInicio = date_to_php($campoValor[14]);
-$periodo = $campoValor[15];
+
 $tipo = $campoValor[0];
+$categoria = $campoValor[1];
+$status = $campoValor[2];
+$resultado = $campoValor[9];
+$dtInicio = date_to_php($campoValor[15]);
+$periodo = $campoValor[16];
 
 # Somente se for tipo solicitado
 if($tipo == 2){
@@ -19,7 +21,7 @@ if($tipo == 2){
         # Resultado: nulo - Ainda não saiu o resultado
         # Status: 1 - Em aberto
         case NULL:
-            $campoValor[1] = 1;
+            $campoValor[2] = 1;
             break;
 
         # Resultado: 1 - Deferido
@@ -28,15 +30,15 @@ if($tipo == 2){
 
             # Verifica se já está cadastrada a data de início e o período
             if((is_null($dtInicio)) OR (is_null($periodo))){
-                $campoValor[1] = 2;
+                $campoValor[2] = 2;
             }else{
                 $dtTermino = addMeses($dtInicio,$periodo);
 
                 # Verifica se a data de término já passou
                 if(jaPassou($dtTermino)){
-                    $campoValor[1] = 3; // Arquivado
+                    $campoValor[2] = 3; // Arquivado
                 }else{
-                    $campoValor[1] = 2; // Vigente
+                    $campoValor[2] = 2; // Vigente
                 }
             }
             break;
@@ -44,23 +46,23 @@ if($tipo == 2){
         # Resultado: 2 - Indeferido
         # Status:    3 - Arquivado
         case 2:
-            $campoValor[1] = 3;
+            $campoValor[2] = 3;
             break;
     }
 }else{ ## tipo EX-ofício
     # Verifica se já está cadastrada a data de início e o período
-        if((is_null($dtInicio)) OR (is_null($periodo))){
-            $campoValor[1] = 1;
+    if((is_null($dtInicio)) OR (is_null($periodo))){
+        $campoValor[2] = 1;
+        $campoValor[9] = NULL;
+    }else{
+        $dtTermino = addMeses($dtInicio,$periodo);
+        $campoValor[9] = 1;
+        # Verifica se a data de término já passou
+        if(jaPassou($dtTermino)){
+            $campoValor[2] = 3; // Arquivado
         }else{
-            $dtTermino = addMeses($dtInicio,$periodo);
-
-            # Verifica se a data de término já passou
-            if(jaPassou($dtTermino)){
-                $campoValor[1] = 3; // Arquivado
-            }else{
-                $campoValor[1] = 2; // Vigente
-            }
+            $campoValor[2] = 2; // Vigente
         }
-        
-        $campoValor[8] = 1;
+    }
+    
 }

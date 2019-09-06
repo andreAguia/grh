@@ -259,6 +259,11 @@ if($acesso){
                                          WHEN 2 THEN "Solicitada"
                                          ELSE "--"
                                      END,
+                                     CASE categoria
+                                         WHEN 1 THEN "Inicial"
+                                         WHEN 2 THEN "Renovação"
+                                         ELSE "--"
+                                     END,
                                      idReadaptacao,
                                      processo,
                                      idReadaptacao,                                     
@@ -274,6 +279,7 @@ if($acesso){
 
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,
+                                     categoria,
                                      status,
                                      processo,
                                      dtSolicitacao,
@@ -300,28 +306,28 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
-    $objeto->set_formatacaoCondicional(array( array('coluna' => 1,
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 2,
                                                     'valor' => 'Em Aberto',
                                                     'operador' => '=',
                                                     'id' => 'emAberto'),  
-                                              array('coluna' => 1,
+                                              array('coluna' => 2,
                                                     'valor' => 'Arquivado',
                                                     'operador' => '=',
                                                     'id' => 'arquivado'),
-                                              array('coluna' => 1,
+                                              array('coluna' => 2,
                                                     'valor' => 'Vigente',
                                                     'operador' => '=',
                                                     'id' => 'vigenteReducao')   
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
+    $objeto->set_label(array("Tipo","Categoria","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center","center","center","center","left","center","center","left","left"));
+    $objeto->set_align(array("center","center","center","center","center","left","center","center","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array(NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-    $objeto->set_metodo(array(NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
+    $objeto->set_classe(array(NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+    $objeto->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -349,6 +355,17 @@ if($acesso){
                                        'valor' => 0,
                                        'col' => 2,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
+                                       'linha' => 1),
+                               array ( 'nome' => 'categoria',
+                                       'label' => 'Status:',
+                                       'tipo' => 'combo',
+                                       'array' => array(array(NULL,NULL),
+                                                        array(1,"Inicial"),
+                                                        array(2,"Renovação")),
+                                       'size' => 2,
+                                       'valor' => 0,
+                                       'col' => 2,
+                                       'title' => 'Se é inicial ou renovação.',
                                        'linha' => 1),
                                array ( 'nome' => 'status',
                                        'label' => 'Status:',
@@ -582,7 +599,17 @@ if($acesso){
             $pgPublicacao = $dados['pgPublicacao'];
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
-                        
+            $categoria = $dados['categoria'];
+            
+            # Pega o idServidor da chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+            
+            # Pega o nome da chefia
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+    
+            # Pega a descrição da chefia imediata
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);
+                                    
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(10);
@@ -617,15 +644,39 @@ if($acesso){
             $controle->set_title('A data da CI de inicio.');
             $form->add_item($controle);
             
-            # tipo
-            $controle = new Input('tipoCi','combo','Tipo:',1);
+            # categoria
+            $controle = new Input('categoria','combo','Categoria:',1);
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_array(array("Inicial","Prorrogação"));
-            #$controle->set_required(TRUE);
-            $controle->set_title('A data da CI de inicio ou prorrogação.');
+            $controle->set_array(array(array(NULL,NULL),
+                                       array(1,"Inicial"),
+                                       array(2,"Renovação")));
+            $controle->set_valor($categoria);
+            $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Setor
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+            
+            
 
             # submit
             $controle = new Input('salvar','submit');
@@ -660,12 +711,13 @@ if($acesso){
             $pgPublicacao = $dados['pgPublicacao'];
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
+            $categoria = $dados['categoria'];
             
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
             $numCiInicioDigitados = vazioPraNulo(post("numCiInicio"));
             $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
-            $ciTipo = vazioPraNulo(post("tipoCi"));
+            $categoria = vazioPraNulo(post("categoria"));
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -713,11 +765,17 @@ if($acesso){
                 $erro = 1;
             }              
             
+            # Verifica o período
+            if(vazio($categoria)){
+                $msgErro.='Deve-se informar se é inicial ou renovação!\n';
+                $erro = 1;
+            }              
+            
             # Salva as alterações
             $pessoal->set_tabela("tbreadaptacao");
             $pessoal->set_idCampo("idReadaptacao");
-            $campoNome = array('numCiInicio','dtCiInicio');
-            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
+            $campoNome = array('numCiInicio','dtCiInicio','categoria');
+            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$categoria);
             $pessoal->gravar($campoNome,$campoValor,$id);
             $data = date("Y-m-d H:i:s");                
                 
@@ -732,10 +790,10 @@ if($acesso){
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
                     # Exibe o relatório
-                    if($ciTipo == "Inicial"){
-                        loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id);
+                    if($categoria == 1){
+                        loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id,"_blank");
                     }else{
-                        loadPage('../grhRelatorios/readaptacaoCiProrrogacao.php?id='.$id);
+                        loadPage('../grhRelatorios/readaptacaoCiProrrogacao.php?id='.$id,"_blank");
                     }
                     loadPage("?");
                 }else{
@@ -759,13 +817,20 @@ if($acesso){
             get_DadosServidor($idServidorPesquisado);
 
             # Pega os Dados do Banco
-            $dados = $readaptacao->get_dadosCi90($id);
+            $dados = $readaptacao->get_dados($id);
+            $numCi90 = $dados["numCi90"];
+            $dtCi90= $dados["dtCi90"];
+            $dtPublicacao = $dados["dtPublicacao"];
+            $pgPublicacao = $dados["pgPublicacao"];
             
-            # Da redução
-            $numCi90 = $dados[0];
-            $dtCi90= $dados[1];
-            $dtPublicacao = $dados[2];
-            $pgPublicacao = $dados[3];
+            # Pega o idServidor da chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+            
+            # Pega o nome da chefia
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+    
+            # Pega a descrição da chefia imediata
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);
             
             # Limita a tela
             $grid = new Grid("center");
@@ -800,6 +865,26 @@ if($acesso){
             #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de 90 dias.');
             $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(100);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Setor
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(100);
+            $controle->set_linha(3);
+            $controle->set_col(6);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
 
             # submit
             $controle = new Input('salvar','submit');
@@ -825,11 +910,11 @@ if($acesso){
         case "ci90FormValida" :
             
             # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCi90($id);
-            $numCi90 = $dados[0];
-            $dtCi90 = $dados[1];
-            $dtPublicacao = $dados[2];
-            $pgPublicacao = $dados[3];
+            $dados = $readaptacao->get_dados($id);
+            $numCi90 = $dados["numCi90"];
+            $dtCi90= $dados["dtCi90"];
+            $dtPublicacao = $dados["dtPublicacao"];
+            $pgPublicacao = $dados["pgPublicacao"];
             
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
@@ -879,8 +964,8 @@ if($acesso){
             }
             
             # Salva as alterações
-            $pessoal->set_tabela("tbreducao");
-            $pessoal->set_idCampo("idReducao");
+            $pessoal->set_tabela("tbreadaptacao");
+            $pessoal->set_idCampo("idReadaptacao");
             $campoNome = array('numCi90','dtCi90');
             $campoValor = array($numCi90Digitados,$dtCi90Digitado);
             $pessoal->gravar($campoNome,$campoValor,$id);
@@ -890,13 +975,13 @@ if($acesso){
             if(!is_null($alteracoes)){
                 $atividades .= 'Alterou: '.$alteracoes;
                 $tipoLog = 2;
-                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
             }                
                
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
-                    loadPage('../grhRelatorios/reducaoCi90.php?id='.$id,"_blank");
+                    loadPage('../grhRelatorios/readaptacaoCi90.php?id='.$id,"_blank");
                     loadPage("?");
                 }else{
                     alert($msgErro);

@@ -114,7 +114,7 @@ class Readaptacao{
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT dtSolicitacao, tipo
+        $select = 'SELECT dtSolicitacao, origem
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
 
@@ -144,7 +144,7 @@ class Readaptacao{
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT dtEnvioPericia, dtChegadaPericia, dtAgendadaPericia, tipo
+        $select = 'SELECT dtEnvioPericia, dtChegadaPericia, dtAgendadaPericia, origem
                      FROM tbreadaptacao
                     WHERE idReadaptacao = '.$idReadaptacao;
 

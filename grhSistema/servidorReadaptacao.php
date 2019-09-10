@@ -37,11 +37,11 @@ if($acesso){
                 if(pendencia == 1){
                     $("#dadosPendencia").show();
                     $("#dtEnvioPendencia").show();
-                    $("#div10").show();
+                    $("#div11").show();
                 }else{
                     $("#dadosPendencia").hide();
                     $("#dtEnvioPendencia").hide();
-                    $("#div10").hide();
+                    $("#div11").hide();
                 }
                 
                 // Pega os valores do resultado
@@ -53,20 +53,20 @@ if($acesso){
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div14").show();
+                    $("#div15").show();
                 }else{
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div14").hide();
+                    $("#div15").hide();
                 }
                 
-                // Pega o valor do tipo
-                var tipo = $("#tipo").val();
+                // Pega o valor do origem
+                var origem = $("#origem").val();
                 
-                // Verifica o valor do tipo quando o form é carregado
-                if(tipo == 1){
+                // Verifica o valor do origem quando o form é carregado
+                if(origem == 1){
                     $("#labeldtSolicitacao").hide();
                     $("#dtSolicitacao").hide();
                     $("#dtEnvioPericia").hide();
@@ -76,16 +76,16 @@ if($acesso){
                     $("#pericia").hide();
                     $("#resultado").hide();
                     $("#dtCiencia").hide();
-                    $("#div4").hide();
+                    $("#div5").hide();
                     $("#dadosPendencia").hide();
                     $("#dtEnvioPendencia").hide();
-                    $("#div10").hide();
+                    $("#div11").hide();
                     $("#dtPublicacao").show();
                     $("#dtInicio").show();
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div14").show();
+                    $("#div15").show();
                 }else{
                     $("#labeldtSolicitacao").show();
                     $("#dtSolicitacao").show();
@@ -96,7 +96,7 @@ if($acesso){
                     $("#pericia").show();
                     $("#resultado").show();
                     $("#dtCiencia").show();
-                    $("#div4").show();                    
+                    $("#div5").show();                    
                 }
         
                 // Verifica o valor da pendência quando se muda o valor do campo
@@ -106,11 +106,11 @@ if($acesso){
                     if(pendencia == 1){
                         $("#dadosPendencia").show();
                         $("#dtEnvioPendencia").show();
-                        $("#div10").show();
+                        $("#div11").show();
                     }else{
                         $("#dadosPendencia").hide();
                         $("#dtEnvioPendencia").hide();
-                        $("#div10").hide();
+                        $("#div11").hide();
                     }
                 });
                 
@@ -123,24 +123,24 @@ if($acesso){
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div14").show();
+                        $("#div15").show();
                     }else{
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div14").hide();
+                        $("#div15").hide();
                     }                
                 });
                 
                 // Verifica o valor do resultado quando se muda o valor do campo
-                $("#tipo").change(function(){
+                $("#origem").change(function(){
                 
-                    // Pega o valor do tipo
-                    var tipo = $("#tipo").val();
+                    // Pega o valor do origem
+                    var origem = $("#origem").val();
 
-                    // Verifica o valor do tipo quando o form é carregado
-                    if(tipo == 1){
+                    // Verifica o valor do origem quando o form é carregado
+                    if(origem == 1){
                         $("#labeldtSolicitacao").hide();
                         $("#dtSolicitacao").hide();
                         $("#dtEnvioPericia").hide();
@@ -150,16 +150,16 @@ if($acesso){
                         $("#pericia").hide();
                         $("#resultado").hide();
                         $("#dtCiencia").hide();
-                        $("#div4").hide();
+                        $("#div5").hide();
                         $("#dadosPendencia").hide();
                         $("#dtEnvioPendencia").hide();
-                        $("#div10").hide();
+                        $("#div11").hide();
                         $("#dtPublicacao").show();
                         $("#dtInicio").show();
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div14").show();
+                        $("#div15").show();
                     }else{
                         $("#labeldtSolicitacao").show();
                         $("#dtSolicitacao").show();
@@ -170,7 +170,7 @@ if($acesso){
                         $("#pericia").show();
                         $("#resultado").show();
                         $("#dtCiencia").show();
-                        $("#div4").show();                    
+                        $("#div5").show();                    
                     }
                 });
                 
@@ -254,12 +254,12 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT CASE tipo
+    $objeto->set_selectLista('SELECT CASE origem
                                          WHEN 1 THEN "Ex-Ofício"
                                          WHEN 2 THEN "Solicitada"
                                          ELSE "--"
                                      END,
-                                     CASE categoria
+                                     CASE tipo
                                          WHEN 1 THEN "Inicial"
                                          WHEN 2 THEN "Renovação"
                                          ELSE "--"
@@ -278,8 +278,8 @@ if($acesso){
                             ORDER BY status, dtInicio desc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT tipo,
-                                     categoria,
+    $objeto->set_selectEdita('SELECT origem,
+                                     tipo,
                                      status,
                                      processo,
                                      dtSolicitacao,
@@ -321,7 +321,7 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo","Categoria","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
+    $objeto->set_label(array("Origem","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center","center","center","center","center","left","center","center","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,"date_to_php"));
@@ -346,8 +346,8 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'tipo',
-                                       'label' => 'Tipo:',
+    $objeto->set_campos(array( array ( 'nome' => 'origem',
+                                       'label' => 'Origem:',
                                        'tipo' => 'combo',
                                        'array' => array(array(1,"Ex-Ofício"),array(2,"Solicitada")),
                                        'size' => 2,
@@ -356,8 +356,8 @@ if($acesso){
                                        'col' => 2,
                                        'title' => 'Se a solicitação foi arquivada ou não.',
                                        'linha' => 1),
-                               array ( 'nome' => 'categoria',
-                                       'label' => 'Status:',
+                               array ( 'nome' => 'tipo',
+                                       'label' => 'Tipo:',
                                        'tipo' => 'combo',
                                        'array' => array(array(NULL,NULL),
                                                         array(1,"Inicial"),
@@ -599,16 +599,12 @@ if($acesso){
             $pgPublicacao = $dados['pgPublicacao'];
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
-            $categoria = $dados['categoria'];
+            $tipo = $dados['tipo'];
             
-            # Pega o idServidor da chefia imediata desse servidor
-            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
-            
-            # Pega o nome da chefia
-            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
-    
-            # Pega a descrição da chefia imediata
-            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);
+            # Chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
                                     
             # Limita a tela
             $grid = new Grid("center");
@@ -623,7 +619,7 @@ if($acesso){
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ciInicioFormValida&id='.$id);        
 
-            # numCiInicio
+            # numCi
             $controle = new Input('numCiInicio','texto','Ci n°:',1);
             $controle->set_size(20);
             $controle->set_linha(1);
@@ -634,7 +630,7 @@ if($acesso){
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
             $form->add_item($controle);
 
-            # dtCiInicio
+            # dtCi
             $controle = new Input('dtCiInicio','data','Data da Ci:',1);
             $controle->set_size(10);
             $controle->set_linha(1);
@@ -644,15 +640,15 @@ if($acesso){
             $controle->set_title('A data da CI de inicio.');
             $form->add_item($controle);
             
-            # categoria
-            $controle = new Input('categoria','combo','Categoria:',1);
+            # tipo
+            $controle = new Input('tipo','combo','Tipo:',1);
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_array(array(array(NULL,NULL),
                                        array(1,"Inicial"),
                                        array(2,"Renovação")));
-            $controle->set_valor($categoria);
+            $controle->set_valor($tipo);
             $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
             
@@ -666,7 +662,7 @@ if($acesso){
             $controle->set_title('O nome da chefia imediata.');
             $form->add_item($controle);
             
-            # Setor
+            # Cargo
             $controle = new Input('cargo','texto','Cargo:',1);
             $controle->set_size(200);
             $controle->set_linha(3);
@@ -675,8 +671,6 @@ if($acesso){
             #$controle->set_required(TRUE);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
-            
-            
 
             # submit
             $controle = new Input('salvar','submit');
@@ -698,6 +692,8 @@ if($acesso){
             $grid->fechaGrid();
             break;
         
+#########################################################
+        
         case "ciInicioFormValida" :
             
             # Pega os Dados
@@ -711,13 +707,20 @@ if($acesso){
             $pgPublicacao = $dados['pgPublicacao'];
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
-            $categoria = $dados['categoria'];
+            $tipo = $dados['tipo'];
             
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
             $numCiInicioDigitados = vazioPraNulo(post("numCiInicio"));
             $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
-            $categoria = vazioPraNulo(post("categoria"));
+            $tipo = vazioPraNulo(post("tipo"));
+            
+            $chefeDigitado = post("chefia");
+            $cargoDigitado = post("cargo");
+            
+            # Prepara para enviar por get
+            $array = array($chefeDigitado,$cargoDigitado);
+            $array = serialize($array);
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -766,7 +769,7 @@ if($acesso){
             }              
             
             # Verifica o período
-            if(vazio($categoria)){
+            if(vazio($tipo)){
                 $msgErro.='Deve-se informar se é inicial ou renovação!\n';
                 $erro = 1;
             }              
@@ -774,8 +777,8 @@ if($acesso){
             # Salva as alterações
             $pessoal->set_tabela("tbreadaptacao");
             $pessoal->set_idCampo("idReadaptacao");
-            $campoNome = array('numCiInicio','dtCiInicio','categoria');
-            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$categoria);
+            $campoNome = array('numCiInicio','dtCiInicio','tipo');
+            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$tipo);
             $pessoal->gravar($campoNome,$campoValor,$id);
             $data = date("Y-m-d H:i:s");                
                 
@@ -790,10 +793,10 @@ if($acesso){
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
                     # Exibe o relatório
-                    if($categoria == 1){
-                        loadPage('../grhRelatorios/readaptacaoCiInicio.php?id='.$id,"_blank");
+                    if($tipo == 1){                        
+                        loadPage("../grhRelatorios/readaptacaoCiInicio.php?id=$id&array=$array","_blank");
                     }else{
-                        loadPage('../grhRelatorios/readaptacaoCiProrrogacao.php?id='.$id,"_blank");
+                        loadPage("../grhRelatorios/readaptacaoCiProrrogacao.php?id=$id&array=$array","_blank");
                     }
                     loadPage("?");
                 }else{
@@ -823,14 +826,10 @@ if($acesso){
             $dtPublicacao = $dados["dtPublicacao"];
             $pgPublicacao = $dados["pgPublicacao"];
             
-            # Pega o idServidor da chefia imediata desse servidor
-            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
-            
-            # Pega o nome da chefia
-            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
-    
-            # Pega a descrição da chefia imediata
-            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);
+            # Chefia imediata desse servidor
+            #$idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            #$nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            #$gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
             
             # Limita a tela
             $grid = new Grid("center");
@@ -866,26 +865,6 @@ if($acesso){
             $controle->set_title('A data da CI de 90 dias.');
             $form->add_item($controle);
             
-            # Chefia
-            $controle = new Input('chefia','texto','Chefia:',1);
-            $controle->set_size(100);
-            $controle->set_linha(2);
-            $controle->set_col(6);
-            $controle->set_valor($nomeGerenteDestino);
-            #$controle->set_required(TRUE);
-            $controle->set_title('O nome da chefia imediata.');
-            $form->add_item($controle);
-            
-            # Setor
-            $controle = new Input('cargo','texto','Cargo:',1);
-            $controle->set_size(100);
-            $controle->set_linha(3);
-            $controle->set_col(6);
-            $controle->set_valor($gerenciaImediataDescricao);
-            #$controle->set_required(TRUE);
-            $controle->set_title('O Cargo em comissão da chefia.');
-            $form->add_item($controle);
-
             # submit
             $controle = new Input('salvar','submit');
             $controle->set_valor('Salvar');
@@ -1016,6 +995,11 @@ if($acesso){
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
             
+            # Chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+            
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(10);
@@ -1029,7 +1013,7 @@ if($acesso){
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ciTerminoFormValida&id='.$id);        
 
-            # numCiInicio
+            # numCi
             $controle = new Input('numCiTermino','texto','Ci n°:',1);
             $controle->set_size(20);
             $controle->set_linha(1);
@@ -1040,7 +1024,7 @@ if($acesso){
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de Término do benefício.');
             $form->add_item($controle);
 
-            # dtCiInicio
+            # dtCi
             $controle = new Input('dtCiTermino','data','Data da Ci:',1);
             $controle->set_size(10);
             $controle->set_linha(1);
@@ -1048,6 +1032,26 @@ if($acesso){
             $controle->set_valor($dtCitermino);
             $controle->set_required(TRUE);
             $controle->set_title('A data da CI de término.');
+            $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Cargo
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
 
             # submit
@@ -1069,6 +1073,8 @@ if($acesso){
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+
+#########################################################
         
         case "ciTerminoFormValida" :
             
@@ -1082,10 +1088,17 @@ if($acesso){
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
             
-             # Pega os dados Digitados
+            # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
             $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
             $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
+            
+            $chefeDigitado = post("chefia");
+            $cargoDigitado = post("cargo");
+            
+            # Prepara para enviar por get
+            $array = array($chefeDigitado,$cargoDigitado);
+            $array = serialize($array);
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -1151,7 +1164,7 @@ if($acesso){
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
-                    loadPage('../grhRelatorios/readaptacaoCiTermino.php?id='.$id,"_blank");
+                    loadPage("../grhRelatorios/readaptacaoCiTermino.php?id=$id&array=$array","_blank");
                     loadPage("?");
                 }else{
                     alert($msgErro);

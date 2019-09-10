@@ -286,6 +286,8 @@ if($acesso){
             $menu = new Menu();
             $menu->add_item('titulo','Geral');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos','../grhRelatorios/geralServidoresAtivos.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Professores Ativos','../grhRelatorios/geralServidoresProfessoresAtivos.php');
+            $menu->add_item('linkWindow','Relatório Geral de Servidores Administrativos e Técnicos Ativos','../grhRelatorios/geralServidoresAdmTecAtivos.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoLotacao.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoLotacaoSexo.php');
             $menu->add_item('linkWindow','Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação','../grhRelatorios/geralServidoresAtivoCpf.php');

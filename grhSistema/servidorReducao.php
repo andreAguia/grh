@@ -42,11 +42,11 @@ if($acesso){
                 if(pendencia == 1){
                     $("#dadosPendencia").show();
                     $("#dtEnvioPendencia").show();
-                    $("#div8").show();
+                    $("#div9").show();
                 }else{
                     $("#dadosPendencia").hide();
                     $("#dtEnvioPendencia").hide();
-                    $("#div8").hide();
+                    $("#div9").hide();
                 }
                 
                 // Pega os valores do resultado
@@ -59,14 +59,14 @@ if($acesso){
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div10").show();
+                    $("#div11").show();
                 }else{
                     $("#dtPublicacao").hide();
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div10").hide();
+                    $("#div11").hide();
                 }
         
                 // Verifica o valor da pendência quando se muda o valor do campo
@@ -76,11 +76,11 @@ if($acesso){
                     if(pendencia == 1){
                         $("#dadosPendencia").show();
                         $("#dtEnvioPendencia").show();
-                        $("#div8").show();
+                        $("#div9").show();
                     }else{
                         $("#dadosPendencia").hide();
                         $("#dtEnvioPendencia").hide();
-                        $("#div8").hide();
+                        $("#div9").hide();
                     }
                 });
                 
@@ -94,14 +94,14 @@ if($acesso){
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div10").show();
+                        $("#div11").show();
                     }else{
                         $("#dtPublicacao").hide();
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div10").hide();
+                        $("#div11").hide();
                     }                
                 });
                 
@@ -211,7 +211,12 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT idReducao,
+    $objeto->set_selectLista('SELECT CASE tipo
+                                         WHEN 1 THEN "Inicial"
+                                         WHEN 2 THEN "Renovação"
+                                         ELSE "--"
+                                     END,
+                                     idReducao,
                                      dtSolicitacao,
                                      idReducao,
                                      idReducao,
@@ -225,6 +230,7 @@ if($acesso){
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtSolicitacao,
+                                     tipo,
                                      status,
                                      dtEnvioPericia,
                                      dtChegadaPericia,
@@ -249,28 +255,28 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
-    $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 1,
                                                     'valor' => 'Em Aberto',
                                                     'operador' => '=',
                                                     'id' => 'emAberto'),  
-                                              array('coluna' => 0,
+                                              array('coluna' => 1,
                                                     'valor' => 'Arquivado',
                                                     'operador' => '=',
                                                     'id' => 'arquivado'),
-                                              array('coluna' => 0,
+                                              array('coluna' => 1,
                                                     'valor' => 'Vigente',
                                                     'operador' => '=',
                                                     'id' => 'vigenteReducao')   
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Status","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
+    $objeto->set_label(array("Tipo","Status","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center","center","left","center","center","left","left"));
-    $objeto->set_funcao(array(NULL,"date_to_php"));
+    $objeto->set_align(array("center","center","center","left","center","center","left","left"));
+    $objeto->set_funcao(array(NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array("ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $objeto->set_metodo(array("exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
+    $objeto->set_classe(array(NULL,"ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+    $objeto->set_metodo(array(NULL,"exibeStatus",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
     
     # Número de Ordem
     $objeto->set_numeroOrdem(TRUE);
@@ -297,6 +303,17 @@ if($acesso){
                                        'autofocus' => TRUE,
                                        'title' => 'A data da Solicitação.',
                                        'col' => 3,                                    
+                                       'linha' => 1),
+                               array ( 'nome' => 'tipo',
+                                       'label' => 'Tipo:',
+                                       'tipo' => 'combo',
+                                       'array' => array(array(NULL,NULL),
+                                                        array(1,"Inicial"),
+                                                        array(2,"Renovação")),
+                                       'size' => 2,
+                                       'valor' => 0,
+                                       'col' => 2,
+                                       'title' => 'Se é inicial ou renovação.',
                                        'linha' => 1),
                                array ( 'nome' => 'status',
                                        'label' => 'Status:',
@@ -539,13 +556,7 @@ if($acesso){
         
 ################################################################################################################
         
-        # Ci Início        
-        case "ciInicio" : 
-            
-            loadPage('?fase=ciInicioForm&id='.$id,"_blank");
-            loadPage("?");
-            break;
-        
+        # Ci Início
         case "ciInicioForm" :
             
             # Voltar
@@ -555,17 +566,22 @@ if($acesso){
             get_DadosServidor($idServidorPesquisado);
             
             # Pega os Dados
-            $dados = $reducao->get_dadosCiInicio($id);
-
-            # Da Redução
-            $numCiInicio = $dados[0];
-            $dtCiInicio = $dados[1];
-            $dtInicio = $dados[2];
-            $dtPublicacao = $dados[3];
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
+            $dados = $reducao->get_dados($id);
+            
+            $numCiInicio = $dados["numCiInicio"];
+            $dtCiInicio = $dados["dtCiInicio"];
+            $dtInicio = $dados["dtInicio"];
+            $dtPublicacao = $dados["dtPublicacao"];
+            $pgPublicacao = $dados["pgPublicacao"];
+            $tipo = $dados["tipo"];
+            $periodo = $dados["periodo"];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
+            # Chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+                                    
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(10);
@@ -599,6 +615,38 @@ if($acesso){
             #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de inicio.');
             $form->add_item($controle);
+            
+            # tipo
+            $controle = new Input('tipo','combo','Tipo:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_array(array(array(NULL,NULL),
+                                       array(1,"Inicial"),
+                                       array(2,"Renovação")));
+            $controle->set_valor($tipo);
+            $controle->set_title('Se é Inicial ou Renovação.');
+            $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Cargo
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
 
            # submit
             $controle = new Input('salvar','submit');
@@ -623,20 +671,30 @@ if($acesso){
         
         case "ciInicioFormValida" :
             
-            # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCiInicio($id);
-            $numCiInicio = $dados[0];
-            $dtCiInicio = $dados[1];
-            $dtInicio = $dados[2];
-            $dtPublicacao = $dados[3];
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
+            # Pega os Dados
+            $dados = $reducao->get_dados($id);
+            
+            $numCiInicio = $dados["numCiInicio"];
+            $dtCiInicio = $dados["dtCiInicio"];
+            $dtInicio = date_to_php($dados['dtInicio']);
+            $dtPublicacao = date_to_php($dados['dtPublicacao']);
+            $pgPublicacao = $dados["pgPublicacao"];
+            $tipo = $dados["tipo"];
+            $periodo = $dados["periodo"];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
             $numCiInicioDigitados = vazioPraNulo(post("numCiInicio"));
             $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
+            $tipo = vazioPraNulo(post("tipo"));
+            
+            $chefeDigitado = post("chefia");
+            $cargoDigitado = post("cargo");
+            
+            # Prepara para enviar por get
+            $array = array($chefeDigitado,$cargoDigitado);
+            $array = serialize($array);
             
             # Verifica se houve alterações
             $alteracoes = NULL;
@@ -687,8 +745,8 @@ if($acesso){
             # Salva as alterações
             $pessoal->set_tabela("tbreducao");
             $pessoal->set_idCampo("idReducao");
-            $campoNome = array('numCiInicio','dtCiInicio');
-            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado);
+            $campoNome = array('numCiInicio','dtCiInicio','tipo');
+            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$tipo);
             $pessoal->gravar($campoNome,$campoValor,$id);
             $data = date("Y-m-d H:i:s");
 
@@ -703,7 +761,12 @@ if($acesso){
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
-                    loadPage('../grhRelatorios/reducaoCiInicio.php?id='.$id,"_blank");
+                    # Exibe o relatório
+                    if($tipo == 1){                        
+                        loadPage("../grhRelatorios/reducaoCiInicio.php?id=$id&array=$array","_blank");
+                    }else{
+                        loadPage("../grhRelatorios/reducaoCiRenovacao.php?id=$id&array=$array","_blank");
+                    }
                     loadPage("?");
                 }else{
                     alert($msgErro);
@@ -886,16 +949,20 @@ if($acesso){
             get_DadosServidor($idServidorPesquisado);
             
             # Pega os Dados
-            $dados = $reducao->get_dadosCiTermino($id);
-
-            # Da Redução
-            $numCitermino = $dados[0];
-            $dtCitermino = $dados[1];
-            $dtInicio = date_to_php($dados[2]);
-            $dtPublicacao = date_to_php($dados[3]);
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
+            $dados = $reducao->get_dados($id);
+            
+            $numCitermino = $dados["numCiTermino"];
+            $dtCitermino = $dados["dtCiTermino"];
+            $dtTermino = date_to_php($dados["dtTermino"]);
+            $dtPublicacao = date_to_php($dados["dtPublicacao"]);
+            $pgPublicacao = $dados["pgPublicacao"];
+            $periodo = $dados["periodo"];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
             
             # Limita a tela
             $grid = new Grid("center");
@@ -930,6 +997,26 @@ if($acesso){
             #$controle->set_required(TRUE);
             $controle->set_title('A data da CI de término.');
             $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Cargo
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
 
             # submit
             $controle = new Input('salvar','submit');
@@ -953,14 +1040,15 @@ if($acesso){
         
         case "ciTerminoFormValida" :
             
-            # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCiTermino($id);
-            $numCiTermino = $dados[0];
-            $dtCiTermino = $dados[1];
-            $dtInicio = $dados[2];
-            $dtPublicacao = $dados[3];
-            $pgPublicacao = $dados[4];
-            $periodo = $dados[5];
+            # Pega os Dados
+            $dados = $reducao->get_dados($id);
+            
+            $numCitermino = $dados["numCiTermino"];
+            $dtCitermino = $dados["dtCiTermino"];
+            $dtPublicacao = $dados["dtPublicacao"];
+            $pgPublicacao = $dados["pgPublicacao"];
+            $periodo = $dados["periodo"];
+            $dtInicio = $dados["dtInicio"];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
             
             # Pega os dados Digitados
@@ -968,6 +1056,13 @@ if($acesso){
             $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
             $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
             
+            $chefeDigitado = post("chefia");
+            $cargoDigitado = post("cargo");
+            
+            # Prepara para enviar por get
+            $array = array($chefeDigitado,$cargoDigitado);
+            $array = serialize($array);
+                        
             # Verifica se houve alterações
             $alteracoes = NULL;
             $atividades = NULL;
@@ -1032,7 +1127,7 @@ if($acesso){
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
-                    loadPage('../grhRelatorios/reducaoCiTermino.php?id='.$id,"_blank");
+                    loadPage("../grhRelatorios/reducaoCiTermino.php?id=$id&array=$array","_blank");
                     loadPage("?");
                 }else{
                     alert($msgErro);

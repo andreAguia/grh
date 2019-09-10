@@ -37,23 +37,27 @@ if($acesso)
     $processo = trataNulo($reducao->get_numProcesso());
     
     br();
-    $select = "SELECT CASE tipo
-                                WHEN 1 THEN 'Ex-Ofício'
-                                WHEN 2 THEN 'Solicitada'
-                                ELSE '--'
-                            END,
-                            idReadaptacao,
-                            processo,
-                            idReadaptacao,                                     
-                            idReadaptacao,
-                            idReadaptacao,
-                            idReadaptacao,
-                            idReadaptacao,
-                            idReadaptacao,                                   
-                            idReadaptacao
-                       FROM tbreadaptacao
-                      WHERE idServidor = $idServidorPesquisado
-                   ORDER BY dtSolicitacao desc";
+    $select = "SELECT CASE origem
+                            WHEN 1 THEN 'Ex-Ofício'
+                            WHEN 2 THEN 'Solicitada'
+                            ELSE '--'
+                        END,
+                        CASE tipo
+                            WHEN 1 THEN 'Inicial'
+                            WHEN 2 THEN 'Renovação'
+                            ELSE '--'
+                        END,
+                        idReadaptacao,
+                        processo,
+                        idReadaptacao,                                     
+                        idReadaptacao,
+                        idReadaptacao,
+                        idReadaptacao,
+                        idReadaptacao,
+                        idReadaptacao
+                   FROM tbreadaptacao
+                  WHERE idServidor = $idServidorPesquisado
+               ORDER BY status, dtInicio desc";
 
     $result = $pessoal->select($select);
 
@@ -62,12 +66,12 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));    
-    $relatorio->set_align(array("center","center","center","center","left","center","center","left","left"));
+    $relatorio->set_label(array("Origem","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));    
+    $relatorio->set_align(array("center","center","center","center","center","left","center","center","left","left"));
     #$relatorio->set_funcao(array(NULL,"date_to_php"));
     
-    $relatorio->set_classe(array(NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-    $relatorio->set_metodo(array(NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo","exibeBotaoDocumentos"));
+    $relatorio->set_classe(array(NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+    $relatorio->set_metodo(array(NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

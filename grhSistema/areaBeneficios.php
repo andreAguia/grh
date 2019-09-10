@@ -42,12 +42,12 @@ if($acesso){
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
     $parametroStatus = post('parametroStatus',get_session('parametroStatus',0));
-    $parametroTipo = post('parametroTipo',get_session('parametroTipo',0));
+    $parametroOrigem = post('parametroOrigem',get_session('parametroOrigem',0));
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
     set_session('parametroStatus',$parametroStatus);
-    set_session('parametroTipo',$parametroTipo);
+    set_session('parametroOrigem',$parametroOrigem);
     
     # Começa uma nova página
     $page = new Page();
@@ -60,7 +60,7 @@ if($acesso){
     
     # Variáveis
     $statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
-    $tiposPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
+    $origemsPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
             
 ################################################################
     
@@ -113,12 +113,12 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $form->add_item($controle);
             
-            # Tipo    
-            $controle = new Input('parametroTipo','combo','Tipo:',1);
+            # Origem    
+            $controle = new Input('parametroOrigem','combo','Origem:',1);
             $controle->set_size(30);
-            $controle->set_title('Filtra por Tipo');
-            $controle->set_array($tiposPossiveis);
-            $controle->set_valor($parametroTipo);
+            $controle->set_title('Filtra por Origem');
+            $controle->set_array($origemsPossiveis);
+            $controle->set_valor($parametroOrigem);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(3);
@@ -145,9 +145,14 @@ if($acesso){
             # Pega os dados
             $select = "SELECT idFuncional,
                               tbpessoa.nome,
-                              CASE tipo
+                              CASE origem
                                 WHEN 1 THEN 'Ex-Ofício'
                                 WHEN 2 THEN 'Solicitada'
+                                ELSE '--'
+                              END,
+                              CASE tipo
+                                WHEN 1 THEN 'Inicial'
+                                WHEN 2 THEN 'Renovação'
                                 ELSE '--'
                               END,
                               idReadaptacao,
@@ -171,9 +176,9 @@ if($acesso){
                 $select .= " AND status = ".$parametroStatus;
             }
             
-            # tipo
-            if($parametroTipo <> 0){
-                $select .= " AND tipo = ".$parametroTipo;
+            # origem
+            if($parametroOrigem <> 0){
+                $select .= " AND origem = ".$parametroOrigem;
             }
             
             # nome
@@ -189,31 +194,31 @@ if($acesso){
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("idFuncional","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-            $tabela->set_align(array("center","left","center","center","center","center","left","center","center","left"));
+            $tabela->set_label(array("idFuncional","Nome","Origem","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","center","center","center","center","center","left","center","center","left"));
             #$tabela->set_funcao(array("idMatricula"));
             
-            $tabela->set_classe(array(NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-            $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            $tabela->set_classe(array(NULL,NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
             $tabela->set_titulo("Readaptação");
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor2');
             
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
-                                                    'valor' => 'Em Aberto',
-                                                    'operador' => '=',
-                                                    'id' => 'emAberto'),  
-                                              array('coluna' => 3,
-                                                    'valor' => 'Arquivado',
-                                                    'operador' => '=',
-                                                    'id' => 'arquivado'),
-                                              array('coluna' => 3,
-                                                    'valor' => 'Vigente',
-                                                    'operador' => '=',
-                                                    'id' => 'vigenteReducao')   
-                                                    ));
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
+                                                            'valor' => 'Em Aberto',
+                                                            'operador' => '=',
+                                                            'id' => 'emAberto'),  
+                                                      array('coluna' => 4,
+                                                            'valor' => 'Arquivado',
+                                                            'operador' => '=',
+                                                            'id' => 'arquivado'),
+                                                      array('coluna' => 4,
+                                                            'valor' => 'Vigente',
+                                                            'operador' => '=',
+                                                            'id' => 'vigenteReducao')   
+                                                            ));
             
             $tabela->show();
             
@@ -296,7 +301,12 @@ if($acesso){
             # Pega os dados
             $select = "SELECT idFuncional,
                               tbpessoa.nome,
-                              idReducao,                              
+                              CASE tipo
+                                WHEN 1 THEN 'Inicial'
+                                WHEN 2 THEN 'Renovação'
+                                ELSE '--'
+                              END,                              
+                              idReducao,
                               idServidor,
                               dtSolicitacao,
                               idReducao,
@@ -327,31 +337,31 @@ if($acesso){
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("IdFuncional","Nome","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-            $tabela->set_align(array("center","left","center","center","center","left","center","center","left"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+            $tabela->set_label(array("IdFuncional","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","center","center","center","center","left","center","center","left"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
             
-            $tabela->set_classe(array(NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-            $tabela->set_metodo(array(NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
             $tabela->set_titulo("Redução de Carga Horária");
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
-                                                    'valor' => 'Em Aberto',
-                                                    'operador' => '=',
-                                                    'id' => 'emAberto'),  
-                                              array('coluna' => 2,
-                                                    'valor' => 'Arquivado',
-                                                    'operador' => '=',
-                                                    'id' => 'arquivado'),
-                                              array('coluna' => 2,
-                                                    'valor' => 'Vigente',
-                                                    'operador' => '=',
-                                                    'id' => 'vigenteReducao')   
-                                                    ));
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
+                                                            'valor' => 'Em Aberto',
+                                                            'operador' => '=',
+                                                            'id' => 'emAberto'),  
+                                                      array('coluna' => 3,
+                                                            'valor' => 'Arquivado',
+                                                            'operador' => '=',
+                                                            'id' => 'arquivado'),
+                                                      array('coluna' => 3,
+                                                            'valor' => 'Vigente',
+                                                            'operador' => '=',
+                                                            'id' => 'vigenteReducao')   
+                                                            ));
             
             $tabela->show();
             

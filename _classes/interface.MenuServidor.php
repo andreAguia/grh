@@ -11,6 +11,8 @@ class MenuServidor{
     private $idServidor = NULL;
     private $perfil = NULL;
     private $situacao = NULL;
+    private $cargoComissao = NULL;
+    private $orgaoCedido = NULL;
     private $tamanhoImagem = 50;
     
 ######################################################################################################################    
@@ -26,18 +28,35 @@ class MenuServidor{
         # Pega o perfil do servidor pesquisado
         $perfil = $pessoal->get_idPerfil($idServidor);
         $situacao = $pessoal->get_situacao($idServidor);
+        $cargoComissao = $pessoal->get_cargoComissao($idServidor);
+        $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
         
         # Preenche variável
         $this->idUsuario = $idUsuario;
         $this->idServidor = $idServidor;
         $this->perfil = $perfil;
         $this->situacao = $situacao;
+        $this->cargoComissao = $cargoComissao;
+        $this->orgaoCedido = $orgaoCedido;
         
         ##########################################################
                 
         # Inicia o Grid
         
         $grid = new Grid();
+        
+        if(!is_null($this->cargoComissao)){
+            $grid->abreColuna(12);
+            $this->moduloCargoComissao();        
+            $grid->fechaColuna();
+        }
+        
+        if(!is_null($this->orgaoCedido)){
+            $grid->abreColuna(12);
+            $this->moduloOrgaoCedido();        
+            $grid->fechaColuna();
+        }
+        
         $grid->abreColuna(6);
 
         $this->moduloOcorrencias();
@@ -769,6 +788,48 @@ class MenuServidor{
            $menu->show();
            br();
        }
+   }
+   
+   ######################################################################################################################
+    
+     /**
+      * Método moduloCargoComissao
+      *  
+      * Exibe os dados de cargo em comissão
+      */
+    
+    private function moduloCargoComissao(){
+        
+        $painel = new Callout("success");
+        $painel->abre();
+            
+           # Conecta ao Banco de Dados
+           $pessoal = new Pessoal();
+
+           $descricao = $pessoal->get_cargoComissaoDescricao($this->idServidor); 
+           p($descricao,"center");
+        
+        $painel->fecha();
+        
+   }
+   
+   ######################################################################################################################
+    
+     /**
+      * Método moduloOrgaoCedido
+      *  
+      * Informa o órgão onde o servidor está cedido
+      */
+    
+    private function moduloOrgaoCedido(){
+        
+        $painel = new Callout("success");
+        $painel->abre();
+        
+           p("Cedido para ".$this->orgaoCedido,"center");
+        
+        $painel->fecha();
+        
    }
    
 ######################################################################################################################

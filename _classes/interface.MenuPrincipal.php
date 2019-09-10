@@ -29,6 +29,10 @@ class MenuPrincipal{
         $this->moduloServidores();
         $this->moduloLegislacao();
         $this->moduloTabelasSecundarias();
+        
+        # Calendário
+        $cal = new Calendario(date('m'),date('Y'),"p");
+        $cal->show();
                 
         $grid->fechaColuna();
         

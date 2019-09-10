@@ -17,11 +17,11 @@ $acesso = Verifica::acesso($idUsuario,2);
 # Pega os parâmetros
 $parametroNomeMat = get_session('parametroNomeMat');
 $parametroStatus = get_session('parametroStatus',0);
-$parametroTipo = get_session('parametroTipo',0);
+$parametroOrigem = get_session('parametroOrigem',0);
 
 # Variáveis
 $statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
-$tiposPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
+$origemsPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
 
 if($acesso)
 {    
@@ -41,11 +41,16 @@ if($acesso)
     # Pega os dados
     $select = "SELECT idServidor,
                       tbpessoa.nome,
-                      CASE tipo
-                        WHEN 1 THEN 'Ex-Ofício'
-                        WHEN 2 THEN 'Solicitada'
-                        ELSE '--'
-                      END,
+                      CASE origem
+                                WHEN 1 THEN 'Ex-Ofício'
+                                WHEN 2 THEN 'Solicitada'
+                                ELSE '--'
+                              END,
+                              CASE tipo
+                                WHEN 1 THEN 'Inicial'
+                                WHEN 2 THEN 'Renovação'
+                                ELSE '--'
+                              END,
                       idReadaptacao,
                       processo,
                       idReadaptacao,
@@ -66,10 +71,10 @@ if($acesso)
         $subTitulo .= "Status: ".$statusPossiveis[$parametroStatus][1]." ";
     }
     
-    # tipo
-    if($parametroTipo <> 0){
-        $select .= " AND tipo = ".$parametroTipo;
-        $subTitulo .= "Tipo: ".$tiposPossiveis[$parametroTipo][1]." ";
+    # origem
+    if($parametroOrigem <> 0){
+        $select .= " AND origem = ".$parametroOrigem;
+        $subTitulo .= "Origem: ".$origemsPossiveis[$parametroOrigem][1]." ";
     }
 
     # nome ou matrícula
@@ -87,12 +92,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
     
-    $relatorio->set_label(array("idServidor","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-    $relatorio->set_align(array("center","left","center","center","center","center","left","center","center","left"));
+    $relatorio->set_label(array("idServidor","Nome","Origem","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+    $relatorio->set_align(array("center","left","center","center","center","center","center","left","center","center","left"));
     $relatorio->set_funcao(array("idMatricula"));
 
-    $relatorio->set_classe(array(NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

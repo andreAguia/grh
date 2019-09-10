@@ -37,6 +37,35 @@ class ReducaoCargaHoraria{
     }
     
     ###########################################################
+
+    function get_dados($idReducao){
+
+    /**
+     * Informe os dados de uma redução
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Verifica se foi informado
+        if(vazio($idReducao)){
+            alert("É necessário informar o id da Redução.");
+            return;
+        }
+
+        # Pega os dados
+        $select = 'SELECT * ,
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY) as dtTermino
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+
+        # Retorno
+        return $row;
+    }
+
+    ###########################################################
     
     function get_numProcesso($idServidor = NULL){
 

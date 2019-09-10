@@ -25,22 +25,26 @@ if($acesso)
 	
     # Pega o id
     $id = get('id');
+    
+    # Pega o nome e cargo do chefe
+    $array = unserialize(get('array'));
+    $chefe = $array[0];
+    $cargo = $array[1];
 
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
 
-    # pega os dados
-    $dados = $reducao->get_dadosCiTermino($id);
-    
-    # Da Redução
-    $numCi = $dados[0];
-    $dtCiTermino = date_to_php($dados[1]);
-    $dtInicio = date_to_php($dados[2]);
-    $dtTermino = date_to_php($dados[6]);
-    $dtPublicacao = date_to_php($dados[3]);
-    $pgPublicacao = $dados[4];
-    $periodo = $dados[5];
+    # Pega os Dados
+    $dados = $reducao->get_dados($id);
+
+    $numCitermino = $dados["numCiTermino"];
+    $dtCiTermino = date_to_php($dados['dtCiTermino']);
+    $dtTermino = date_to_php($dados["dtTermino"]);
+    $dtPublicacao = date_to_php($dados['dtPublicacao']);
+    $pgPublicacao = $dados["pgPublicacao"];
+    $periodo = $dados["periodo"];
+    $dtInicio = date_to_php($dados['dtInicio']);
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
     
     # Trata a publicação
@@ -63,9 +67,9 @@ if($acesso)
     $assunto = "Comunica <b>TÉRMINO</b> do prazo de Redução de Carga Horária de ".$nomeServidor;
     
     # Monta a CI
-    $ci = new Ci($numCi,$dtCiTermino,$assunto);
-    $ci->set_destinoNome($nomeGerenteDestino);
-    $ci->set_destinoSetor($gerenciaImediataDescricao);
+    $ci = new Ci($numCitermino,$dtCiTermino,$assunto);
+    $ci->set_destinoNome($chefe);
+    $ci->set_destinoSetor($cargo);
     
     $ci->set_texto("Vimos comunicar o <b>TÉRMINO</b> da"
     . " de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"

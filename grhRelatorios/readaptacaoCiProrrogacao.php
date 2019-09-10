@@ -25,6 +25,11 @@ if($acesso){
 	
     # Pega o id
     $id = get('id');
+    
+    # Pega o nome e cargo do chefe
+    $array = unserialize(get('array'));
+    $chefe = $array[0];
+    $cargo = $array[1];
 
     # Começa uma nova página
     $page = new Page();			
@@ -48,12 +53,7 @@ if($acesso){
         $publicacao = $dtPublicacao;
     }else{
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
-    }       
-            
-    # Chefia imediata
-    $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
-    $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
-    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);  // Pega a descrição da chefia imediata
+    }
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -64,8 +64,8 @@ if($acesso){
 
     # Monta a CI
     $ci = new Ci($numCiInicio,$dtCiInicio,$assunto);
-    $ci->set_destinoNome($nomeGerenteDestino);
-    $ci->set_destinoSetor($gerenciaImediataDescricao);
+    $ci->set_destinoNome($chefe);
+    $ci->set_destinoSetor($cargo);
     $ci->set_texto("Vimos informar a concessão da renovação da <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, por um período de $periodo meses, a contar de $dtInicio, '<i>$parecer</i>', conforme publicação no DOERJ em $publicacao"
     . " em anexo.");
@@ -74,7 +74,7 @@ if($acesso){
     
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Ci de início de readaptacao.';
+    $atividades = 'Visualizou a Ci de renovação de readaptacao.';
     $tipoLog = 4;
     $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
     

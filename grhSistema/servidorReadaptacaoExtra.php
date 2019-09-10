@@ -6,15 +6,14 @@
  */
 
 
-$tipo = $campoValor[0];
-$categoria = $campoValor[1];
+$origem = $campoValor[0];
 $status = $campoValor[2];
 $resultado = $campoValor[9];
 $dtInicio = date_to_php($campoValor[15]);
 $periodo = $campoValor[16];
 
-# Somente se for tipo solicitado
-if($tipo == 2){
+# Somente se for origem solicitado
+if($origem == 2){
     # Preenche o status de acordo com o resultado
     switch ($resultado){
 
@@ -49,7 +48,7 @@ if($tipo == 2){
             $campoValor[2] = 3;
             break;
     }
-}else{ ## tipo EX-ofício
+}else{ ## origem EX-ofício
     # Verifica se já está cadastrada a data de início e o período
     if((is_null($dtInicio)) OR (is_null($periodo))){
         $campoValor[2] = 1;

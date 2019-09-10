@@ -25,21 +25,26 @@ if($acesso){
 	
     # Pega o id
     $id = get('id');
-
+    
+    # Pega o nome e cargo do chefe
+    $array = unserialize(get('array'));
+    $chefe = $array[0];
+    $cargo = $array[1];
+   
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
 
-    # pega os dados
-    $dados = $reducao->get_dadosCiInicio($id);
-    
-    # Da Redução
-    $numCi = $dados[0];
-    $dtCiInicio = date_to_php($dados[1]);
-    $dtInicio = date_to_php($dados[2]);
-    $dtPublicacao = date_to_php($dados[3]);
-    $pgPublicacao = $dados[4];
-    $periodo = $dados[5];
+    # Pega os Dados
+    $dados = $reducao->get_dados($id);
+
+    $numCiInicio = $dados["numCiInicio"];
+    $dtCiInicio = date_to_php($dados["dtCiInicio"]);
+    $dtInicio = date_to_php($dados['dtInicio']);
+    $dtPublicacao = date_to_php($dados['dtPublicacao']);
+    $pgPublicacao = $dados["pgPublicacao"];
+    $tipo = $dados["tipo"];
+    $periodo = $dados["periodo"];
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
     
     # Trata a publicação
@@ -47,12 +52,7 @@ if($acesso){
         $publicacao = $dtPublicacao;
     }else{
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
-    }       
-            
-    # Chefia imediata
-    $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);             // Pega o idServidor da chefia imediata desse servidor
-    $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                         // Pega o nome da chefia
-    $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idChefiaImediataDestino);  // Pega a descrição da chefia imediata
+    } 
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -62,9 +62,9 @@ if($acesso){
     $assunto = "Redução de Carga Horária de ".$nomeServidor;
 
     # Monta a CI
-    $ci = new Ci($numCi,$dtCiInicio,$assunto);
-    $ci->set_destinoNome($nomeGerenteDestino);
-    $ci->set_destinoSetor($gerenciaImediataDescricao);
+    $ci = new Ci($numCiInicio,$dtCiInicio,$assunto);
+    $ci->set_destinoNome($chefe);
+    $ci->set_destinoSetor($cargo);
     $ci->set_texto("Vimos informar a concessão de <b>Redução de Carga Horária</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, por um período de $periodo meses, a contar <b>em $dtInicio</b>, "
     . "atendendo processo $processo, publicado no DOERJ de $publicacao,"

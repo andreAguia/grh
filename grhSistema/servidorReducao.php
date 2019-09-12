@@ -312,6 +312,7 @@ if($acesso){
                                                         array(2,"Renovação")),
                                        'size' => 2,
                                        'valor' => 0,
+                                       'required' => TRUE,
                                        'col' => 2,
                                        'title' => 'Se é inicial ou renovação.',
                                        'linha' => 1),

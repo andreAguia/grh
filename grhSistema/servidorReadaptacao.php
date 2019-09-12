@@ -362,6 +362,7 @@ if($acesso){
                                        'array' => array(array(NULL,NULL),
                                                         array(1,"Inicial"),
                                                         array(2,"Renovação")),
+                                       'required' => TRUE,
                                        'size' => 2,
                                        'valor' => 0,
                                        'col' => 2,

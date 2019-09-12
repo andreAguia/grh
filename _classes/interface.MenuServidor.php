@@ -496,7 +496,7 @@ class MenuServidor{
             $menu->add_item('titulo1','Declarações');
             $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');
             $menu->add_item('linkWindow','Declaração de Atribuições do Cargo','../grhRelatorios/declaracao.AtribuicoesCargo.php');
-            $menu->add_item('link','Declaração para o INSS','#');
+            #$menu->add_item('link','Declaração para o INSS','#');
 
             #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
             #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
@@ -783,6 +783,13 @@ class MenuServidor{
            $botao->set_url('servidorReducao.php');
            $botao->set_imagem(PASTA_FIGURAS.'carga-horaria.svg',$this->tamanhoImagem,$this->tamanhoImagem);
            $botao->set_title('Controle de Redução da Carga Horária');
+           $menu->add_item($botao);
+           
+           $botao = new BotaoGrafico();
+           $botao->set_label('Acumulação de Cargos Públicos');
+           $botao->set_url('servidorAcumulacao.php');
+           $botao->set_imagem(PASTA_FIGURAS.'acumulacao.jpg',$this->tamanhoImagem,$this->tamanhoImagem);
+           $botao->set_title('Controle de Acumulação de Cargo Público');
            $menu->add_item($botao);
 
            $menu->show();

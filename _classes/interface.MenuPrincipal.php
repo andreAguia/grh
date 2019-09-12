@@ -348,6 +348,13 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
+        $botao->set_label('Acumulação de Cargos Públicos');
+        #$botao->set_url('areaAcumulacao.php');
+        $botao->set_imagem(PASTA_FIGURAS.'acumulacao.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Acumulação de Cargo Público');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Afastamentos');
         $botao->set_url('areaFrequencia.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);

@@ -35,7 +35,7 @@ if($acesso){
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
                      tbservidor.dtAdmissao,
-                     "'.date_to_php($parametroPrazoInicio).' - '.date_to_php($parametroPrazoTermino).'",
+                     "'.$parametroPrazoInicio.' - '.$parametroPrazoTermino.'",
                      "___/___/___ (___)",
                      concat(tbservidor.idServidor,"&",'.$parametroAno.')
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -95,22 +95,31 @@ if($acesso){
                                       'linha' => 1),
                                array ('nome' => 'parametroPrazoInicio',
                                       'label' => 'Inicio do Prazo para Gozo:',
-                                      'tipo' => 'data',
+                                      'tipo' => 'texto',
                                       'size' => 30,
                                       'padrao' => $parametroPrazoInicio,
                                       'title' =>  'Inicio do Prazo para Gozo',
                                       'onChange' => 'formPadrao.submit();',
-                                      'col' => 4,
+                                      'col' => 3,
                                       'linha' => 1),
                                 array ('nome' => 'parametroPrazoTermino',
                                       'label' => 'Término do Prazo para Gozo:',
-                                      'tipo' => 'data',
+                                      'tipo' => 'texto',
                                       'size' => 30,
                                       'padrao' => $parametroPrazoTermino,
                                       'title' =>  'Término do Prazo para Gozo',
                                       'onChange' => 'formPadrao.submit();',
-                                      'col' => 4,
-                                      'linha' => 1)));
+                                      'col' => 3,
+                                      'linha' => 1),
+                                array ('nome' => 'Salva',
+                                       'label' => '&nbsp;', 
+                                       'valor' => 'Muda',
+                                      'tipo' => 'submit',
+                                      'size' => 10,
+                                      'col' => 3,
+                                      'linha' => 1),
+        
+        ));
 
     $relatorio->set_formFocus('mesBase');
     $relatorio->set_formLink('?');    

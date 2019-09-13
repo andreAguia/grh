@@ -67,7 +67,7 @@ class MenuServidor{
         $this->moduloVinculos();
 
         $grid->fechaColuna();
-        $grid->abreColuna(4);
+        $grid->abreColuna(5);
 
         $this->moduloFuncionais();
 
@@ -77,7 +77,7 @@ class MenuServidor{
         $this->moduloPessoais();
 
         $grid->fechaColuna();
-        $grid->abreColuna(3);
+        $grid->abreColuna(2);
             
         $this->moduloBeneficios();
         
@@ -188,7 +188,7 @@ class MenuServidor{
         titulo('Funcionais');
         br();
 
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(4);
 
         # Funcionais
         $botao = new BotaoGrafico();
@@ -251,6 +251,14 @@ class MenuServidor{
             $botao->set_title('Dados da Cessão do Servidor');
             $menu->add_item($botao);
         }
+           
+        # Acumulação
+        $botao = new BotaoGrafico();
+        $botao->set_label('Acumulação de Cargos Públicos');
+        $botao->set_url('servidorAcumulacao.php');
+        $botao->set_imagem(PASTA_FIGURAS.'acumulacao.jpg',$this->tamanhoImagem,$this->tamanhoImagem);
+        $botao->set_title('Controle de Acumulação de Cargo Público');
+        $menu->add_item($botao);
 
         # Obs
         $botao = new BotaoGrafico();
@@ -769,7 +777,7 @@ class MenuServidor{
            titulo('Benefícios');
            br();
 
-           $menu = new MenuGrafico(2);
+           $menu = new MenuGrafico(1);
            
            $botao = new BotaoGrafico();
            $botao->set_label('Readaptação');
@@ -783,13 +791,6 @@ class MenuServidor{
            $botao->set_url('servidorReducao.php');
            $botao->set_imagem(PASTA_FIGURAS.'carga-horaria.svg',$this->tamanhoImagem,$this->tamanhoImagem);
            $botao->set_title('Controle de Redução da Carga Horária');
-           $menu->add_item($botao);
-           
-           $botao = new BotaoGrafico();
-           $botao->set_label('Acumulação de Cargos Públicos');
-           $botao->set_url('servidorAcumulacao.php');
-           $botao->set_imagem(PASTA_FIGURAS.'acumulacao.jpg',$this->tamanhoImagem,$this->tamanhoImagem);
-           $botao->set_title('Controle de Acumulação de Cargo Público');
            $menu->add_item($botao);
 
            $menu->show();

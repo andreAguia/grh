@@ -106,6 +106,10 @@ if($acesso){
     #$objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
     $objeto->set_align($align);
     $objeto->set_funcao($funcao);
+    
+    $objeto->set_colunaSomatorio(1);
+    $objeto->set_textoSomatorio("Total de Jogos:");
+    $objeto->set_totalRegistro(FALSE);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -209,6 +213,17 @@ if($acesso){
                                        'size' => 5,
                                        'title' => 'Matrícula',
                                        'linha' => 10)));
+    
+    # Relatório
+    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $botaoRel = new Button();
+    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_title("Imprimir Relatório de Tempo de Serviço Averbado");    
+    $botaoRel->set_url("../grhRelatorios/servidorAverbacao.php");
+    $botaoRel->set_target("_blank");
+    
+    $objeto->set_botaoListarExtra(array($botaoRel));
+    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -223,7 +238,6 @@ if($acesso){
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-
             
             # Verifica a data de saída
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo

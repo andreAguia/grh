@@ -81,6 +81,13 @@ if($acesso){
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
+            
+            # Normas
+            $botao2 = new Button("Regras","servidorAcumulacao.php?fase=regras");
+            $botao2->set_title("Exibe as regras da acumulação");    
+            #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
+            $botao2->set_target("_blank");
+            $menu1->add_link($botao2,"right");
 
             $menu1->show();
             

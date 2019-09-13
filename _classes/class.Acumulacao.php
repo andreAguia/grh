@@ -98,4 +98,32 @@ class Acumulacao{
 
     ###########################################################
 
+    function exibePublicacao($idAcumulacao){
+
+    /**
+     * Informe os dados da Publicação de uma solicitação de Acumulação
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = 'SELECT dtPublicacao, pgPublicacao
+                     FROM tbacumulacao
+                    WHERE idAcumulacao = '.$idAcumulacao;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+
+        # Retorno
+        if(is_null($row[0])){
+            $retorno = trataNulo($row[0]);
+        }else{
+            $retorno = date_to_php($row[0])."<br/>Pag.: ".trataNulo($row[1]);
+        }
+
+        return $retorno;
+    }
+
+     ###########################################################
+
 }

@@ -349,7 +349,7 @@ class MenuPrincipal{
         
         $botao = new BotaoGrafico();
         $botao->set_label('Acumulação de Cargos Públicos');
-        #$botao->set_url('areaAcumulacao.php');
+        $botao->set_url('areaAcumulacao.php');
         $botao->set_imagem(PASTA_FIGURAS.'acumulacao.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de Acumulação de Cargo Público');
         $menu->add_item($botao);

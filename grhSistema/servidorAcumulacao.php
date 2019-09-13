@@ -25,10 +25,6 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -51,30 +47,21 @@ if($acesso){
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
 
-    # ordenação
-    if(is_null($orderCampo)){
-        $orderCampo = "1";
-    }
-
-    if(is_null($orderTipo)){
-        $orderTipo = 'desc';
-    }
-
     # select da lista
-    $objeto->set_selectLista('SELECT processo,
+    $objeto->set_selectLista('SELECT idAcumulacao,
                                      dtProcesso,
+                                     processo,
                                      instituicao,
-                                     matricula,
-                                     cargo,
-                                     idAcumulacao
+                                     cargo,                                     
+                                     matricula
                                 FROM tbacumulacao
                                WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY '.$orderCampo.' '.$orderTipo);
+                            ORDER BY dtProcesso');
 
     # select do edita
     $objeto->set_selectEdita('SELECT processo,
                                      dtProcesso,
-                                     origemUenf,
+                                     origemProcesso,
                                      dtEnvio,
                                      instituicao,
                                      cargo,                                     
@@ -96,24 +83,32 @@ if($acesso){
                                 FROM tbacumulacao
                                WHERE idAcumulacao = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                    'valor' => 'Em Aberto',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),  
+                                              array('coluna' => 0,
+                                                    'valor' => 'Ilícito',
+                                                    'operador' => '=',
+                                                    'id' => 'arquivado'),
+                                              array('coluna' => 0,
+                                                    'valor' => 'Lícito',
+                                                    'operador' => '=',
+                                                    'id' => 'vigenteReducao')   
+                                                    ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Processo","Data","Instituição","Matrícula","Cargo","Resultado"));
-    #$objeto->set_width(array(20,20,20,30));	
+    $objeto->set_label(array("Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(NULL,"date_to_php"));
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Acumulacao"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_resultado"));
+    $objeto->set_classe(array("Acumulacao"));
+    $objeto->set_metodo(array("get_resultado"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -143,16 +138,16 @@ if($acesso){
                                        'col' => 3,
                                        'title' => 'Data de entrada do processo.',
                                        'linha' => 1),
-                               array ( 'nome' => 'origemUenf',
-                                       'label' => 'Processo da Uenf:',
-                                       'tipo' => 'simnao',
-                                       'size' => 2,
+                               array ( 'nome' => 'origemProcesso',
+                                       'label' => 'Processo aberto por:',
+                                       'tipo' => 'texto',
+                                       'size' => 200,
                                        'valor' => NULL,
-                                       'col' => 2,
-                                       'title' => 'Se o processo originou-se da Uenf.',
+                                       'col' => 3,
+                                       'title' => 'Órgão que abriu o processo.',
                                        'linha' => 1),
                                array ( 'nome' => 'dtEnvio',
-                                       'label' => 'Data do Envio ao COCCPP/SECCG:',
+                                       'label' => 'Data do Envio à COCPP/SECCG:',
                                        'tipo' => 'data',
                                        'size' => 20,
                                        'col' => 3,
@@ -309,8 +304,8 @@ if($acesso){
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Acumulação de Cargo");    
-    $botaoRel->set_url("../grhRelatorios/servidorGratificacao.php");
+    $botaoRel->set_title("Imprimir Relatório de Acumulação de Cargo");    
+    $botaoRel->set_url("../grhRelatorios/servidorAcumulacao.php");
     $botaoRel->set_target("_blank");
     
     # Normas
@@ -339,9 +334,9 @@ if($acesso){
             $objeto->$fase($id); 
             break;
         
-        case "regra" :
+        case "regras" :
             $regra = new Procedimento();
-            $regra->exibeProcedimento(24, $idUsuario = NULL);
+            $regra->exibeProcedimento(24,$idUsuario);
             break;
     }
     $page->terminaPagina();

@@ -190,14 +190,15 @@ if($acesso){
                'padrao' => 'Sim',
                'size' => 5),
         array ('linha' => 3,
-               'col' => 6,
+               'col' => 12,
                'nome' => 'ramais',
                'label' => 'Ramais:',
                'title' => 'Número dos telefones/ramais/faxes da lotação',
-               'tipo' => 'texto',
-               'size' => 100),
-        array ('linha' => 3,
-               'col' => 6,
+               'tipo' => 'textarea',
+               'tagHtml' => TRUE,
+               'size' => array(80,4)),
+        array ('linha' => 4,
+               'col' => 12,
                'nome' => 'email',
                'label' => 'Email:',
                'title' => 'Email do Setor',
@@ -207,7 +208,7 @@ if($acesso){
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',
-               'size' => array(80,5))));
+               'size' => array(80,4))));
     
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

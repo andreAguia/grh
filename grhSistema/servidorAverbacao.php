@@ -107,8 +107,8 @@ if($acesso){
     $objeto->set_align($align);
     $objeto->set_funcao($funcao);
     
-    $objeto->set_colunaSomatorio(1);
-    $objeto->set_textoSomatorio("Total de Jogos:");
+    $objeto->set_colunaSomatorio(2);
+    $objeto->set_textoSomatorio("Total de Dias:");
     $objeto->set_totalRegistro(FALSE);
 
     # Classe do banco de dados

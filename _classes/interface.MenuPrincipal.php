@@ -369,6 +369,13 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
+        $botao->set_label('Telefones e Ramais');
+        $botao->set_url('areaTelefones.php');
+        $botao->set_imagem(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Exibe os telefones e ramais da UENF');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Parentes');
         $botao->set_url('areaParente.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'parente.png',$tamanhoImage,$tamanhoImage);

@@ -132,6 +132,7 @@ if($acesso){
                 $tabela->set_conteudo($resumo);
                 $tabela->set_label(array("Diretoria","Gerência","Nome","Telefones","Email"));
                 $tabela->set_align(array("center","center","left","left","left"));
+                $tabela->set_funcao(array(NULL,NULL,NULL,"nl2br"));
 
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);

@@ -94,7 +94,7 @@ if($acesso){
             # Nome    
             $controle = new Input('parametro','texto','Pesquisar:',1);
             $controle->set_size(100);
-            $controle->set_title('Filtra por Nome');
+            $controle->set_title('Pesquisa');
             $controle->set_valor($parametro);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -117,23 +117,30 @@ if($acesso){
                                email
                           FROM tblotacao
                          WHERE ativo
+                           AND (DIR LIKE '%$parametro%'
+                            OR GER LIKE '%$parametro%'
+                            OR nome LIKE '%$parametro%'
+                            OR ramais LIKE '%$parametro%')
                       ORDER BY DIR asc, GER asc, nome asc";
             
             $resumo = $pessoal->select($select);
             
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Diretoria","Gerência","Nome","Telefones","Email"));
-            $tabela->set_align(array("center","center","left","left","left"));
+            if (count($resumo) > 0){
             
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-            
-            $tabela->set_titulo("Telefones e Emails da UENF");
-            #$tabela->set_idCampo('idServidor');
-            #$tabela->set_editar('?fase=editaServidor');            
-            $tabela->show();
+                # Monta a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($resumo);
+                $tabela->set_label(array("Diretoria","Gerência","Nome","Telefones","Email"));
+                $tabela->set_align(array("center","center","left","left","left"));
+
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+
+                $tabela->set_titulo("Telefones e Emails da UENF");
+                #$tabela->set_idCampo('idServidor');
+                #$tabela->set_editar('?fase=editaServidor');            
+                $tabela->show();
+            }
             
             # Pega o time final
             $time_end = microtime(TRUE);

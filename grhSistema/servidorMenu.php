@@ -493,7 +493,16 @@ if($acesso){
 
                 # Define a pasta
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
-                $arquivo = "../../_fotos/$idPessoa.jpg";
+                
+                # Verifica qual arquivo foi gravado
+                $arquivo1 = "../../_fotos/$idPessoa.jpg";
+                $arquivo2 = "../../_fotos/$idPessoa.img";
+                
+                if(file_exists($arquivo1)){
+                    $arquivo = $arquivo1;
+                }else{
+                    $arquivo = $arquivo2;
+                }
                 
                 br();
                 
@@ -562,7 +571,7 @@ if($acesso){
                 }
                 
                 br();                
-                callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg.");
+                callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

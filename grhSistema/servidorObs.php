@@ -43,8 +43,7 @@ if($acesso)
     $objeto->set_selectEdita('SELECT obs
                                 FROM tbservidor
                                WHERE idServidor = '.$idServidorPesquisado);
-
-
+    
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
     #$objeto->set_linkListar('?');

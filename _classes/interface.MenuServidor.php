@@ -134,21 +134,27 @@ class MenuServidor{
                 $idPessoa = $pessoal->get_idPessoa($this->idServidor);
 
                 # Define a pasta
-                $arquivo = "../../_fotos/$idPessoa.jpg";
-                
+                $arquivo1 = "../../_fotos/$idPessoa.jpg";
+                $arquivo2 = "../../_fotos/$idPessoa.img";
                 
                 
                 # Monta o Menu
                 $menu = new MenuGrafico(1);
                 
                 # Verifica se tem pasta desse servidor
-                if(file_exists($arquivo)){
+                if(file_exists($arquivo1)){
                     $botao = new BotaoGrafico("foto");
                     $botao->set_url('?fase=exibeFoto');
-                    $botao->set_imagem($arquivo,$fotoLargura,$fotoAltura);
+                    $botao->set_imagem($arquivo1,$fotoLargura,$fotoAltura);
                     $botao->set_title('Foto do Servidor');
                     $menu->add_item($botao);
-                }else{ 
+                }elseif(file_exists($arquivo2)){
+                    $botao = new BotaoGrafico("foto");
+                    $botao->set_url('?fase=exibeFoto');
+                    $botao->set_imagem($arquivo2,$fotoLargura,$fotoAltura);
+                    $botao->set_title('Foto do Servidor');
+                    $menu->add_item($botao);
+                }else{
                     $botao = new BotaoGrafico("foto");
                     $botao->set_url('');
                     $botao->set_imagem(PASTA_FIGURAS.'foto.png',$fotoLargura,$fotoAltura);

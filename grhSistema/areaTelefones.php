@@ -1,6 +1,6 @@
 <?php
 /**
- * Área de Licença Prêmio
+ * Cadastro de Lotação
  *  
  * By Alat
  */
@@ -9,28 +9,24 @@
 $idUsuario = NULL;
 
 # Configuração
-include ("_config.php");
+include("_config.php");
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso){   
+if($acesso){    
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
     
-    # Roda a rotina que verifica os status
-    $reducao = new ReducaoCargaHoraria();
-    $reducao->mudaStatus();
-	
     # Verifica a fase do programa
-    $fase = get('fase');
+    $fase = get('fase','listar');
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Acumulação";
+        $atividade = "Visualizou a area de Telefones";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }
@@ -49,131 +45,113 @@ if($acesso){
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
-    
+
     # Cabeçalho da Página
     if($fase <> "relatorio"){
         AreaServidor::cabecalho();
     }
+
+    # Abre um novo objeto Modelo
+    $objeto = new Modelo();
+
+    ################################################################
+    $objeto->set_nome($pessoal->get_nomeCompletoLotacao($id));
+
+    # botão de voltar da lista
+    $objeto->set_voltarLista('grh.php');
+
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
     
-################################################################
+    # select da lista
+    $objeto->set_selectLista ("SELECT DIR,
+                                      GER,
+                                      nome,
+                                      ramais,
+                                      email,
+                                      idLotacao
+                                 FROM tblotacao
+                                WHERE ativo
+                                  AND (DIR LIKE '%$parametro%'
+                                   OR GER LIKE '%$parametro%'
+                                   OR nome LIKE '%$parametro%'
+                                   OR ramais LIKE '%$parametro%')
+                             ORDER BY DIR asc, GER asc, nome asc");
+
+    # select do edita
+    $objeto->set_selectEdita('SELECT ramais,
+                                     email
+                                FROM tblotacao
+                               WHERE idLotacao = '.$id);
+
+    # Caminhos
+    $objeto->set_linkEditar('?fase=editar');
+    #$objeto->set_linkExcluir('?fase=excluir');     // Retirado para evidar exclusão acidental
+    $objeto->set_linkGravar('?fase=gravar');
+    $objeto->set_linkListar('?fase=listar');
+    
+    $objeto->set_botaoIncluir(FALSE);
+
+    # Parametros da tabela
+    $objeto->set_label(array("Diretoria","Gerência","Nome","Telefones","Email"));
+    $objeto->set_align(array("center","center","left","left","left"));
+    $objeto->set_funcao(array(NULL,NULL,NULL,"nl2br"));
+    
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
+
+    # Classe do banco de dados
+    $objeto->set_classBd('Pessoal');
+
+    # Nome da tabela
+    $objeto->set_tabela('tblotacao');
+
+    # Nome do campo id
+    $objeto->set_idCampo('idLotacao');
+
+    # Tipo de label do formulário
+    $objeto->set_formlabelTipo(1);
+    
+    # Campos para o formulario
+    $objeto->set_campos(array(
+        array ('linha' => 1,
+               'col' => 12,
+               'nome' => 'ramais',
+               'label' => 'Ramais:',
+               'title' => 'Número dos telefones/ramais/faxes da lotação',
+               'tipo' => 'textarea',
+               'tagHtml' => TRUE,
+               'autofocus' => TRUE,
+               'size' => array(80,4)),
+        array ('linha' => 2,
+               'col' => 12,
+               'nome' => 'email',
+               'label' => 'Email:',
+               'title' => 'Email do Setor',
+               'tipo' => 'texto',
+               'size' => 50)));
+    
+    # idUsuário para o Log
+    $objeto->set_idUsuario($idUsuario);
+
+    ################################################################
     
     switch ($fase){
-        
-        case "" :
-        case "listaAcumulacao" :
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar","grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar,"left");
-            
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
-
-            $menu1->show();
-            
-            ###
-            
-            # Formulário de Pesquisa
-            $form = new Form('?'); 
-
-            # Nome    
-            $controle = new Input('parametro','texto','Pesquisar:',1);
-            $controle->set_size(100);
-            $controle->set_title('Pesquisa');
-            $controle->set_valor($parametro);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(6);
-            $controle->set_autofocus(TRUE);
-            $form->add_item($controle);
-
-            $form->show();
-            
-            ###
-                
-            # Pega o time inicial
-            $time_start = microtime(TRUE);
-            
-            # Pega os dados
-            $select = " SELECT DIR,
-                               GER,
-                               nome,
-                               ramais,
-                               email
-                          FROM tblotacao
-                         WHERE ativo
-                           AND (DIR LIKE '%$parametro%'
-                            OR GER LIKE '%$parametro%'
-                            OR nome LIKE '%$parametro%'
-                            OR ramais LIKE '%$parametro%')
-                      ORDER BY DIR asc, GER asc, nome asc";
-            
-            $resumo = $pessoal->select($select);
-            
-            if (count($resumo) > 0){
-            
-                # Monta a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($resumo);
-                $tabela->set_label(array("Diretoria","Gerência","Nome","Telefones","Email"));
-                $tabela->set_align(array("center","center","left","left","left"));
-                $tabela->set_funcao(array(NULL,NULL,NULL,"nl2br"));
-
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
-
-                $tabela->set_titulo("Telefones e Emails da UENF");
-                #$tabela->set_idCampo('idServidor');
-                #$tabela->set_editar('?fase=editaServidor');            
-                $tabela->show();
-            }
-            
-            # Pega o time final
-            $time_end = microtime(TRUE);
-            $time = $time_end - $time_start;
-            p(number_format($time, 4, '.', ',')." segundos","right","f10");
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+        case "" :            
+        case "listar" :            
+            $objeto->listar();
             break;
         
-    ################################################################
-        
-        case "editaServidor" :
-            br(8);
-            aguarde();
-            
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
-            
-            # Informa a origem
-            set_session('origem','areaAcumulacao.php');
-            
-            # Carrega a página específica
-            loadPage('servidorAcumulacao.php');
-            break; 
-        
-    ################################################################
+        case "editar" :
+        case "excluir" :	
+        case "gravar" :
+            $objeto->$fase($id);
+            break;
     }
-    
-    $page->terminaPagina();
+        
+    ################################################################
+        
 }else{
     loadPage("../../areaServidor/sistema/login.php");
 }
-
-

@@ -46,10 +46,6 @@ if($acesso){
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
     
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-    
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -103,9 +99,7 @@ if($acesso){
                                      DIR,
                                      GER,
                                      nome,
-                                     ativo,                                 
-                                     ramais,
-                                     email,
+                                     ativo,
                                      obs
                                 FROM tblotacao
                                WHERE idLotacao = '.$id);
@@ -188,22 +182,7 @@ if($acesso){
                'tipo' => 'combo',
                'array' => array(array(1,'Sim'),array(0,'Não')),
                'padrao' => 'Sim',
-               'size' => 5),
-        array ('linha' => 3,
-               'col' => 12,
-               'nome' => 'ramais',
-               'label' => 'Ramais:',
-               'title' => 'Número dos telefones/ramais/faxes da lotação',
-               'tipo' => 'textarea',
-               'tagHtml' => TRUE,
-               'size' => array(80,4)),
-        array ('linha' => 4,
-               'col' => 12,
-               'nome' => 'email',
-               'label' => 'Email:',
-               'title' => 'Email do Setor',
-               'tipo' => 'texto',
-               'size' => 50),           
+               'size' => 5),           
         array ('linha' => 5,
                'nome' => 'obs',
                'label' => 'Observação:',

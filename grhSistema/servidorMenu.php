@@ -490,33 +490,38 @@ if($acesso){
             case "exibeFoto" :
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
+                
+                $fotoLargura = 300;
+                $fotoAltura = 400;
 
                 # Define a pasta
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                 
                 # Verifica qual arquivo foi gravado
-                $arquivo1 = "../../_fotos/$idPessoa.jpg";
-                $arquivo2 = "../../_fotos/$idPessoa.img";
-                
-                if(file_exists($arquivo1)){
-                    $arquivo = $arquivo1;
-                }else{
-                    $arquivo = $arquivo2;
-                }
-                
-                br();
+                $arquivo = "../../_fotos/$idPessoa.jpg";
                 
                 $painel = new Callout("secondary","center");
                 $painel->abre();
                 
-                $botao = new BotaoGrafico();
-                $botao->set_url('?');
-                $botao->set_imagem($arquivo,'Foto do Servidor',400,200);
-                $botao->set_title('Foto do Servidor');
-                $botao->show();
+                # Monta o Menu
+                $menu = new MenuGrafico(1);
                 
-                #$foto = new Imagem($arquivo,'Foto do Servidor',300,180);
-                #$foto->show();
+                # Verifica se tem pasta desse servidor
+                if(file_exists($arquivo)){
+                    $botao = new BotaoGrafico("foto");
+                    $botao->set_url('?');
+                    $botao->set_imagem($arquivo,$fotoLargura,$fotoAltura);
+                    $botao->set_title('Foto do Servidor');
+                    $menu->add_item($botao);
+                }else{
+                    $botao = new BotaoGrafico("foto");
+                    $botao->set_url('?');
+                    $botao->set_imagem(PASTA_FIGURAS.'foto.png',$fotoLargura,$fotoAltura);
+                    $botao->set_title('Servidor sem foto cadastrada');
+                    $menu->add_item($botao);
+                }
+
+                $menu->show();
                 
                 br(2);
                 

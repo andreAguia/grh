@@ -128,30 +128,23 @@ class MenuServidor{
             $grid = new Grid();
             $grid->abreColuna(12);
             
+                
                 # Conecta o banco de dados
                 $pessoal = new Pessoal();
 
                 $idPessoa = $pessoal->get_idPessoa($this->idServidor);
 
                 # Define a pasta
-                $arquivo1 = "../../_fotos/$idPessoa.jpg";
-                $arquivo2 = "../../_fotos/$idPessoa.img";
-                
+                $arquivo = "../../_fotos/$idPessoa.jpg";
                 
                 # Monta o Menu
                 $menu = new MenuGrafico(1);
                 
                 # Verifica se tem pasta desse servidor
-                if(file_exists($arquivo1)){
+                if(file_exists($arquivo)){
                     $botao = new BotaoGrafico("foto");
                     $botao->set_url('?fase=exibeFoto');
-                    $botao->set_imagem($arquivo1,$fotoLargura,$fotoAltura);
-                    $botao->set_title('Foto do Servidor');
-                    $menu->add_item($botao);
-                }elseif(file_exists($arquivo2)){
-                    $botao = new BotaoGrafico("foto");
-                    $botao->set_url('?fase=exibeFoto');
-                    $botao->set_imagem($arquivo2,$fotoLargura,$fotoAltura);
+                    $botao->set_imagem($arquivo,$fotoLargura,$fotoAltura);
                     $botao->set_title('Foto do Servidor');
                     $menu->add_item($botao);
                 }else{

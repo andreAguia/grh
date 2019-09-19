@@ -411,6 +411,13 @@ class MenuPrincipal{
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
         
+        $botao = new BotaoGrafico();
+        $botao->set_label('Área de Fotografia');
+        $botao->set_url('areaFotografia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'fotografia.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de controle de fotos dos servidores');
+        $menu->add_item($botao);
+        
         if(Verifica::acesso($this->idUsuario,1)){
             $botao = new BotaoGrafico();
             $botao->set_label('Recadastramento');

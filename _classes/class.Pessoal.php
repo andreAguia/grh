@@ -723,7 +723,7 @@ class Pessoal extends Bd {
         $nomeCargo = $row[3];
         $retorno = NULL;
         
-        $comissao = $this->get_cargoComissao($idServidor);
+        $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
         if(!empty($tipoCargo)){
             $retorno = $tipoCargo;             

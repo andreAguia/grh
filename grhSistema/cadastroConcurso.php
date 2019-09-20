@@ -44,11 +44,7 @@ if($acesso)
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
+    
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -73,15 +69,6 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
-    if(is_null($orderCampo)){
-        $orderCampo = "2";
-    }
-
-    if(is_null($orderTipo)){
-        $orderTipo = 'asc';
-    }
-
     # select da lista
     $objeto->set_selectLista ('SELECT idConcurso,
                                       anobase,
@@ -96,7 +83,7 @@ if($acesso)
                                    OR regime LIKE "%'.$parametro.'%"
                                    OR orgExecutor LIKE "%'.$parametro.'%"
                                    OR idConcurso LIKE "%'.$parametro.'%" 
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY anobase desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT anobase,
@@ -106,11 +93,6 @@ if($acesso)
                                      obs
                                 FROM tbconcurso
                                WHERE idConcurso = '.$id);
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -122,6 +104,9 @@ if($acesso)
     $objeto->set_label(array("id","Ano Base","Regime","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     $objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
+    
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));

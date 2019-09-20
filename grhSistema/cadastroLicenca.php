@@ -123,7 +123,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero","Interrompe TS"));
+    $objeto->set_label(array("id","Licença / Afastamento","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero","Interrompe TS"));
     #$objeto->set_width(array(5,38,7,10,10,10,10,10));
     $objeto->set_align(array("center","left"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));

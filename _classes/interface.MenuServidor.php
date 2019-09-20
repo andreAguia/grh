@@ -118,9 +118,6 @@ class MenuServidor{
         
         if($this->perfil <> 10){          // Se não for bolsista
             
-            $fotoLargura = 140;
-            $fotoAltura = 180;
-            
             titulo('Foto');
             br();
         
@@ -133,29 +130,12 @@ class MenuServidor{
                 $pessoal = new Pessoal();
 
                 $idPessoa = $pessoal->get_idPessoa($this->idServidor);
-
-                # Define a pasta
-                $arquivo = "../../_fotos/$idPessoa.jpg";
                 
-                # Monta o Menu
-                $menu = new MenuGrafico(1);
-                
-                # Verifica se tem pasta desse servidor
-                if(file_exists($arquivo)){
-                    $botao = new BotaoGrafico("foto");
-                    $botao->set_url('?fase=exibeFoto');
-                    $botao->set_imagem($arquivo,$fotoLargura,$fotoAltura);
-                    $botao->set_title('Foto do Servidor');
-                    $menu->add_item($botao);
-                }else{
-                    $botao = new BotaoGrafico("foto");
-                    $botao->set_url('');
-                    $botao->set_imagem(PASTA_FIGURAS.'foto.png',$fotoLargura,$fotoAltura);
-                    $botao->set_title('Servidor sem foto cadastrada');
-                    $menu->add_item($botao);
-                }
-
-                $menu->show();
+                $foto = new ExibeFoto();
+                $foto->set_fotoLargura(140);
+                $foto->set_fotoAltura(180);
+                $foto->set_url('?fase=exibeFoto');
+                $foto->show($idPessoa);
             
             $grid->fechaColuna();
             $grid->fechaGrid();

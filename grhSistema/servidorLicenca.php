@@ -352,7 +352,7 @@ if($acesso){
                                       FROM tbtipolicenca
                                      WHERE idTpLicenca <> 6
                                   ORDER BY 2');
-        array_unshift($result, array('Inicial',' -- Selecione o Tipo de Licença --')); # Adiciona o valor de nulo
+        array_unshift($result, array('Inicial',' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
         
         # Habilita ou não os controles de acordo com a licença
         

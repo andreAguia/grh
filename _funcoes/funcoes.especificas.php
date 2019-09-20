@@ -814,3 +814,19 @@ function get_nomeSimples($nome){
     }
 
 ##########################################################
+
+    function exibeFoto($idPessoa){
+    /**
+     * Função exibe a foto do servidor 
+     * 
+     * Usado na rotina da área de fotografia
+     */
+        
+        $foto = new ExibeFoto();
+        $foto->set_fotoLargura(35);
+        $foto->set_fotoAltura(45);
+        $foto->set_url('?fase=exibeFoto&idPessoa='.$idPessoa);
+        $foto->show($idPessoa);
+    }
+
+##########################################################

@@ -34,10 +34,10 @@ if($acesso)
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
                      tbservidor.idServidor
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                   LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND tbservidor.idPerfil <> 10
             ORDER BY lotacao, tbpessoa.nome';

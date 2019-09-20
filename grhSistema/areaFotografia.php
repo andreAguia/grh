@@ -65,7 +65,23 @@ if($acesso){
     
     switch ($fase){
         
-        case "" :
+        case "" : 
+            br(4);
+            aguarde();
+            br();
+            
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+                p("Aguarde...","center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=lista');
+            break;
+        
+################################################################
+        
         case "lista" :
            
             br();
@@ -115,13 +131,15 @@ if($acesso){
             $time_start = microtime(TRUE);
             
             # Pega os dados
-            $select = "SELECT nome,
+            $select = "SELECT idFuncional,
+                              tbpessoa.nome,
+                              idServidor,
                               idServidor,
                               idPessoa
-                         FROM tbservidor JOIN tbpessoa USING(idPessoa)
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                         WHERE situacao = 1
-                          AND nome LIKE '%$parametro%'
-                     ORDER BY nome";
+                          AND tbpessoa.nome LIKE '%$parametro%'
+                     ORDER BY tbpessoa.nome";
             
             $resumo = $pessoal->select($select);
             
@@ -130,15 +148,17 @@ if($acesso){
                 # Monta a tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
-                $tabela->set_label(array("Nome","Lotação","Foto"));
-                $tabela->set_align(array("left","left","center"));
+                $tabela->set_titulo("Área deFotografias dos Servidores");
+                $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Foto"));
+                $tabela->set_align(array("center","left","left","left"));
                 
-                $tabela->set_classe(array(NULL,"Pessoal","ExibeFoto"));
-                $tabela->set_metodo(array(NULL,"get_Lotacao","show"));
-
-                $tabela->set_titulo("Telefones e Emails da UENF");
-                #$tabela->set_idCampo('idServidor');
-                #$tabela->set_editar('?fase=editaServidor');            
+                if(!is_null($parametro)){
+                    $tabela->set_textoRessaltado($parametro);
+                }
+                
+                $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"exibeFoto"));
+                $tabela->set_classe(array(NULL,NULL,"Pessoal","Pessoal"));
+                $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_Lotacao"));
                 $tabela->show();
             }
             
@@ -164,28 +184,16 @@ if($acesso){
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
                 
-                # Verifica qual arquivo foi gravado
-                $arquivo = "../../_fotos/$idPessoa.jpg";
-                
-                if(file_exists($arquivo)){
-                    $arquivo = $arquivo;
-                }else{
-                    $arquivo = PASTA_FIGURAS.'foto.png';
-                }
-                
                 br();
                 
                 $painel = new Callout("secondary","center");
                 $painel->abre();
                 
-                $botao = new BotaoGrafico();
-                $botao->set_url('?');
-                $botao->set_imagem($arquivo,'Foto do Servidor',400,200);
-                $botao->set_title('Foto do Servidor');
-                $botao->show();
-                
-                #$foto = new Imagem($arquivo,'Foto do Servidor',300,180);
-                #$foto->show();
+                $foto = new ExibeFoto();
+                $foto->set_fotoLargura(300);
+                $foto->set_fotoAltura(400);
+                $foto->set_url('?');
+                $foto->show($idPessoa);
                 
                 br(2);
                 

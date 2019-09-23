@@ -1,34 +1,52 @@
 <?php
-class Acumulacao{
+class Acumulacao
+{
  /**
-  * Abriga as várias rotina referentes ao afastamento do servidor
+  * Abriga as várias rotina referentes a acumulação de cargos públicos de um servidor
   *
   * @author André Águia (Alat) - alataguia@gmail.com
+  * 
+  * @var private $idAcumulacao integer NULL O id da acumulação
   */
+    
+    private $idAcumulacao = NULL;
 
+##############################################################
 
-
-    ###########################################################
-
+    public function __construct($idAcumulacao = NULL){
     /**
-    * Método Construtor
-    */
-    public function __construct(){
-
+     * Inicia a Classe somente
+     * 
+     * @param $idAcumulacao integer NULL O id da acumulação
+     * 
+     * @syntax $acumulacao = new Aculumacao([$idAcumulacao]);
+     */
+        
+        $this->idAcumulacao = $idAcumulacao;
     }
   
-    ###########################################################
+##############################################################
 
-    function get_dados($idAcumulacao){
+    public function get_dados($idAcumulacao){
 
     /**
      * Informa os dados da base de dados
+     * 
+     * @param $idAcumulacao integer NULL O id da acumulação
+     * 
+     * @syntax $acumulacao->get_dados([$idAcumulacao]);
      */
+        
+        # Joga o valor informado para a variável da classe
+        if(!vazio($idAcumulacao)){
+            $this->idAcumulacao = $idAcumulacao;
+        }
+        
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
         # Verifica se foi informado
-        if(vazio($idAcumulacao)){
+        if(vazio($this->idAcumulacao)){
             alert("É necessário informar o id da Acumulação.");
             return;
         }
@@ -36,7 +54,7 @@ class Acumulacao{
         # Pega os dados
         $select = 'SELECT * 
                      FROM tbacumulacao
-                    WHERE idAcumulacao = '.$idAcumulacao;
+                    WHERE idAcumulacao = '.$this->idAcumulacao;
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
@@ -45,18 +63,28 @@ class Acumulacao{
         return $row;
     }
 
-    ###########################################################
+##############################################################
 
-    function get_resultado($idAcumulacao){
+    public function get_resultado($idAcumulacao){
 
     /**
      * Informa o resultado final de uma acumulação
+     * 
+     * @param $idAcumulacao integer NULL O id da acumulação
+     * 
+     * @syntax $acumulacao->get_resultado([$idAcumulacao]);
      */
+        
+        # Joga o valor informado para a variável da classe
+        if(!vazio($idAcumulacao)){
+            $this->idAcumulacao = $idAcumulacao;
+        }
+        
         # Inicia a variável de retorno
         $retorno = NULL;
         
         # Pega os dados
-        $dados = $this->get_dados($idAcumulacao);
+        $dados = $this->get_dados($this->idAcumulacao);
         
         # Joga os resultados nas variáveis
         $resultado = $dados["resultado"];
@@ -96,20 +124,29 @@ class Acumulacao{
         return $retorno;
     }
 
-    ###########################################################
+##############################################################
 
-    function exibePublicacao($idAcumulacao){
+    public function exibePublicacao($idAcumulacao){
 
     /**
      * Informe os dados da Publicação de uma solicitação de Acumulação
+     * 
+     * @param $idAcumulacao integer NULL O id da acumulação
+     * 
+     * @syntax $acumulacao->exibePublicacao([$idAcumulacao]);
      */
+        # Joga o valor informado para a variável da classe
+        if(!vazio($idAcumulacao)){
+            $this->idAcumulacao = $idAcumulacao;
+        }
+
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
         $select = 'SELECT dtPublicacao, pgPublicacao
                      FROM tbacumulacao
-                    WHERE idAcumulacao = '.$idAcumulacao;
+                    WHERE idAcumulacao = '.$this->idAcumulacao;
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
@@ -124,6 +161,6 @@ class Acumulacao{
         return $retorno;
     }
 
-     ###########################################################
+##############################################################
 
 }

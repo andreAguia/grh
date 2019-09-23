@@ -81,19 +81,19 @@ if($acesso){
         $textoInicio = "<b>DESIGNA</b> <b>".$nome."</b>";
         $verbo = "exercer";
     }else{
-        $textoInicio = "<b>NOMEIA</b> <b>".$nome."</b>";
+        $textoInicio = "<b>NOMEIA $nome</b>";
     }
     
     # Cargos que so tem uma vaga na universidade
     if($vagas == 1){ 
         # Se tem uma unica vaga nao e necessario informar a o local pois e de toda a universidade
-        $principal = "<b>NOMEIA</b>$nome, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
+        $principal = "<b>NOMEIA $nome</b>, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
            . " o cargo em comissao de $cargo, simbolo $simbolo, da Universidade Estadual do Norte Fluminense"
            . " - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI,"
            . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro";
     }else{
         # Se tem uma mais de uma vaga e necessario informar o nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria
-        $principal = "<b>NOMEIA</b>$nome, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
+        $principal = "<b>NOMEIA $nome</b>, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
            . " o cargo em comissao de $cargo, simbolo $simbolo, do(a) $descricao da Universidade Estadual do Norte Fluminense"
            . " - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI,"
            . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro";

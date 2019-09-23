@@ -98,7 +98,6 @@ if($acesso){
                                      idComissao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
-                                     idComissao,
                                      idComissao
                                 FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                WHERE idServidor = '.$idServidorPesquisado.'
@@ -131,29 +130,15 @@ if($acesso){
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
-    
-    # Ato de Nomeação
-    $botao1 = new Link(NULL,'?fase=atoNomeacao&id=','Imprime o Ato de Nomeação');
-    $botao1->set_imagem(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
-    
-    # Termo de Posse
-    $botao2 = new Link(NULL,'?fase=termoPosse&id=','Imprime o Termo de Posse');
-    $botao2->set_imagem(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
-    
-    # Ato de Exoneração
-    $botao3 = new Link(NULL,'?fase=atoExoneracao&id=','Imprime o Ato de Exoneração');
-    $botao3->set_imagem(PASTA_FIGURAS_GERAIS.'relatorio.png',20,20);
-    
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("","","","",$botao1,$botao2,$botao3));
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo","Descrição","Nomeação","Exoneração","Ato de<br/>Nomeaçao","Termo de<br/>Posse","Ato de<br/>Exoneração"));
+    $objeto->set_label(array("Cargo","Descrição","Nomeação","Exoneração","Documentos"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left","left","center"));
     $objeto->set_funcao(array(NULL,"descricaoComissao","date_to_php","date_to_php"));
-    #$objeto->set_classe(array(NULL,"pessoal"));
-    #$objeto->set_metodo(array(NULL,"get_nomeCompletoLotacao"));
+    
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Cargocomissao"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"exibeBotaoDocumentos"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -197,14 +182,6 @@ if($acesso){
     
     # Label
     $labelDescricao = 'Descrição do Cargo:';
-    
-    # Exibe antiga descrição do cargo - Temporariamente
-    if(Verifica::acesso($idUsuario,1)){
-        if(!is_null($id)){
-            $comissao = $cargoComissao->get_dados($id);
-            $labelDescricao .= " (".$comissao['descricao']." )";
-        }
-    }
             
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idTipoComissao',
@@ -411,7 +388,161 @@ if($acesso){
             loadPage('?');
             break;
             
-    ######################################
+    ################################################################################################################
+        
+        # Ato Nomeação
+        case "atoNomeacao2" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            # Pega os Dados
+            $dados = $cargoComissao->get_dados($id);
+            $ocupanteAnterior = $dados['ocupanteAnterior'];
+            $dtAtoNom = $dados['dtAtoNom'];
+            $descricao = $cargoComissao->get_descricaoCargo($id);
+            
+            if(vazio($ocupanteAnterior)){
+                $ocupanteAnterior = $cargoComissao->get_ocupanteAnterior($id);
+            }
+            
+                                    
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+            
+            # Título
+            tituloTable("Ato de Nomeação de Cargo Em Comissão<br/>".$descricao);
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=atoNomeacaoFormValida&id='.$id);        
+
+            # ocupante Anterior
+            $controle = new Input('ocupanteAnterior','texto','Ocupente Anterior:',1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            #$controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($ocupanteAnterior);
+            $controle->set_title('Ocupante Anterior.');
+            $form->add_item($controle);
+
+            # DAta do Ato de Nomeação
+            $controle = new Input('dtAtoNom','data','Data do Ato de Nomeação:',1);
+            $controle->set_size(10);
+            $controle->set_linha(2);
+            $controle->set_col(3);
+            $controle->set_valor($dtAtoNom);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A data do Ato de Nomeação.');
+            $form->add_item($controle);
+
+           # submit
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            $form->show();
+            $painel->fecha();
+            
+            $cargoComissao->exibeNomeadosDescricao($id);
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();            
+            break;
+        
+        case "atoNomeacaoFormValida" :
+            
+            # Pega os Dados
+            $dados = $cargoComissao->get_dados($id);
+            $ocupanteAnterior = $dados['ocupanteAnterior'];
+            $dtAtoNom = $dados['dtAtoNom'];
+            
+            # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $ocupanteAnteriorDigitado = vazioPraNulo(post("ocupanteAnterior"));
+            $dtAtoNomDigitado = vazioPraNulo(post("dtAtoNom"));
+            
+            # Prepara para enviar por get
+            $array = array($ocupanteAnteriorDigitado,$dtAtoNomDigitado);
+            $array = serialize($array);
+            
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($ocupanteAnterior <> $ocupanteAnteriorDigitado){
+                $alteracoes .= "[numCiInicio] $ocupanteAnterior -> $ocupanteAnteriorDigitados; ";
+            }
+            if($dtAtoNom <> $dtAtoNomDigitado){
+                $alteracoes .= "[dtAtoNom] ".date_to_bd($dtAtoNom)."->".date_to_bd($dtAtoNomDigitado)."; ";
+            }
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da Ci
+            if(vazio($ocupanteAnteriorDigitado)){
+                $msgErro.='O ocuppante anterior deve ser informado!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da CI
+            if(vazio($dtAtoNomDigitado)){
+                $msgErro.='Não tem data do Ato de Nomeação cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Salva as alterações
+            $pessoal->set_tabela("tbcomissao");
+            $pessoal->set_idCampo("idComissao");
+            $campoNome = array('ocupanteAnterior','dtAtoNom');
+            $campoValor = array($ocupanteAnteriorDigitado,$dtAtoNomDigitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
+
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbcomissao",$id,$tipoLog,$idServidorPesquisado);
+            }                
+                
+                
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    # Exibe o relatório
+                    loadPage("../grhRelatorios/comissao.AtoNomeacao.php?id=$id","_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
+            }else{
+                loadPage("?");
+            }
+            break;
+            
+################################################################################################################
             
         case "termoPosse" :
             # Verifica se o campo ocupante anterior foi preenchido

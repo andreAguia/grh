@@ -173,8 +173,8 @@ class CargoComissao{
      * Exibe o número de vagas disponíveis em um determinado cargo em comissao
      */
 
-    public function get_vagasDisponiveis($idTipoCargo)
-    {
+    public function get_vagasDisponiveis($idTipoCargo) {
+        
         $vagas = $this->get_vagas($idTipoCargo);
         $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
         $dispoinivel = $vagas - $nomeados;
@@ -280,4 +280,122 @@ class CargoComissao{
     }
 
     ###########################################################
+    
+    function exibeBotaoDocumentos($idComissao){
+
+    /**
+     * Exibe o botão de imprimir os documentos de uma solicitação de redução de carga horária específica
+     * 
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        
+        $menu = new MenuGrafico(3);
+        
+        # Ato de Nomeação
+        $botao = new BotaoGrafico();
+        $botao->set_url('?fase=atoNomeacao2&id='.$idComissao);
+        $botao->set_label("Ato de Nomeação");
+        $botao->set_imagem(PASTA_FIGURAS.'print.png',20,20);
+        $botao->set_title("Imprime o Ato de Nomeação");
+        $menu->add_item($botao);
+        
+        # Termo de Posse
+        $botao = new BotaoGrafico();
+        $botao->set_url('?fase=termoPosse&id='.$idComissao);
+        $botao->set_label("Termo de Posse");
+        $botao->set_imagem(PASTA_FIGURAS.'print.png',20,20);
+        $botao->set_title("Imprime o Termo de Posse");
+        $menu->add_item($botao);
+        
+        # Ato de Exoneração
+        $botao = new BotaoGrafico();
+        $botao->set_url('?fase=atoExoneracao&id='.$idComissao);
+        $botao->set_label("Ato de Exoneração");
+        $botao->set_imagem(PASTA_FIGURAS.'print.png',20,20);
+        $botao->set_title("Imprime o Ato de Exoneração");
+        $menu->add_item($botao);
+        
+        $menu->show();
+    }
+    
+    ###########################################################
+
+    /**
+     * Método get_ocupanteAnterior
+     * 
+     * Exibe o valor de um determinado cargo em comissao
+     */
+
+    public function get_ocupanteAnterior($idComissao){
+        
+        # Pega a descrição
+        $dados = $this->get_dados($idComissao);
+        $idDescricaoComissao = $dados['idDescricaoComissao'];
+        
+        # Pega os Servidores com a mesma descrição
+        $select = "SELECT idServidor
+                     FROM tbcomissao
+                    WHERE idDescricaoComissao = $idDescricaoComissao 
+                 ORDER BY dtNom desc
+                    LIMIT 2";
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+        $idServidor = $row[1][0];
+        
+        # Pega o nome desse Servidor
+        $return = $pessoal->get_nome($idServidor);
+        return $return;
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeNomeadosDescricao
+     * 
+     * Exibe uma tabela com os servidores nomeados nessa descrição desde a criação da universidade 
+     */
+
+    public function exibeNomeadosDescricao($idComissao){
+        
+        # Pega a descrição
+        $dados = $this->get_dados($idComissao);
+        $idDescricaoComissao = $dados['idDescricaoComissao'];
+    
+    
+        # Pega os Servidores com a mesma descrição
+        $select = "SELECT tbpessoa.nome,
+                          tbcomissao.dtNom,
+                          tbcomissao.dtExo,
+                          idComissao
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbcomissao USING(idServidor)
+                                     LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
+                                          JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                   WHERE tbcomissao.idDescricaoComissao = $idDescricaoComissao
+                ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
+
+        $pessoal = new Pessoal();
+        $result = $pessoal->select($select);
+        $label = array('Nome','Nomeação','Exoneração','Descrição');
+        $align = array("left","center","center","left");
+        $function = array(NULL,"date_to_php","date_to_php","descricaoComissao");
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_titulo("Histórico de Servidores Nomeados Nesse Cargo");
+        $tabela->set_align($align);
+        $tabela->set_funcao($function);
+        #$tabela->set_classe($classe);
+        #$tabela->set_metodo($metodo);
+        $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
+                                                'valor' => NULL,
+                                                'operador' => '=',
+                                                'id' => 'vigente')));
+        $tabela->show();
+    }
+
+    ###########################################################        
 }

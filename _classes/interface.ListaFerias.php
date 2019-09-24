@@ -227,9 +227,20 @@ class ListaFerias{
         
         # Verifica se tem filtro por lotação
         if(!is_null($idLotacao)){ // dá prioridade ao filtro da função
-            $slctot .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")';
+            
+            if(is_numeric($idLotacao)){
+                $slctot .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")'; 
+            }else{ # senão é uma diretoria genérica
+                $slctot .= ' AND (tblotacao.DIR = "'.$idLotacao.'")'; 
+            }
+            
         }elseif(!is_null($this->lotacao)){  // senão verifica o da classe
-            $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            
+            if(is_numeric($this->lotacao)){
+                $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")'; 
+            }else{ # senão é uma diretoria genérica
+                $slctot .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")'; 
+            }
         }
         
         $slctot .= "GROUP BY idServidor
@@ -262,7 +273,11 @@ class ListaFerias{
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                         if(!is_null($this->lotacao)){
-                            $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+                            if(is_numeric($this->lotacao)){
+                                $slctot .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")'; 
+                            }else{ # senão é uma diretoria genérica
+                                $slctot .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")'; 
+                            }
                         }
 
              $slctot .= "
@@ -305,7 +320,13 @@ class ListaFerias{
         
         # Verifica se tem filtro por lotação
         if(!is_null($this->lotacao)){  // senão verifica o da classe
-            $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            
+            if(is_numeric($this->lotacao)){
+                $select1 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")'; 
+            }else{ # senão é uma diretoria genérica
+                $select1 .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")'; 
+            }
+            
         }
         
         $select1 .= "
@@ -348,7 +369,13 @@ class ListaFerias{
                  
         # Verifica se tem filtro por lotação
         if(!is_null($this->lotacao)){  // senão verifica o da classe
-            $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            
+            if(is_numeric($this->lotacao)){
+                $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")'; 
+            }else{ # senão é uma diretoria genérica
+                $select2 .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")'; 
+            }
+            
         }
 
         $select2 .= "
@@ -363,7 +390,13 @@ class ListaFerias{
                   AND anoExercicio = $this->anoExercicio";
 
         if(!is_null($this->lotacao)){
-            $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            
+            if(is_numeric($this->lotacao)){
+                $select2 .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")'; 
+            }else{ # senão é uma diretoria genérica
+                $select2 .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")'; 
+            }
+            
         }
 
         $select2 .= "

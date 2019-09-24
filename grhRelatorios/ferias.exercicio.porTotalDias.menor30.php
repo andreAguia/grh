@@ -53,7 +53,14 @@ if($acesso){
                       ";
                  
     if(!is_null($parametroLotacao)){ 
-        $select2 .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+        
+        # Verifica se o que veio é numérico
+        if(is_numeric($parametroLotacao)){
+            $select2 .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+        }else{ # senão é uma diretoria genérica
+            $select2 .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+        }
+        
     }
 
     $select2 .= "
@@ -68,7 +75,14 @@ if($acesso){
               AND anoExercicio = $parametroAno";
 
     if(!is_null($parametroLotacao)){
-        $select2 .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+        
+        # Verifica se o que veio é numérico
+        if(is_numeric($parametroLotacao)){
+            $select2 .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+        }else{ # senão é uma diretoria genérica
+            $select2 .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+        }
+        
     }
 
     $select2 .= "
@@ -123,7 +137,14 @@ if($acesso){
 
     # Verifica se tem filtro por lotação
     if(!is_null($parametroLotacao)){  // senão verifica o da classe
-        $select1 .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+    
+        # Verifica se o que veio é numérico
+        if(is_numeric($parametroLotacao)){
+            $select1 .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+        }else{ # senão é uma diretoria genérica
+            $select1 .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+        }
+        
     }
 
     $select1 .= " GROUP BY tbpessoa.nome

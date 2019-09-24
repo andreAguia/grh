@@ -65,8 +65,15 @@ if($acesso)
     
     # Lotação
     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
-    }
+        
+        # Verifica se o que veio é numérico
+        if(is_numeric($parametroLotacao)){
+            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+        }else{ # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+        }
+        
+    }      
 
     # Status
     if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){

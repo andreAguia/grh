@@ -104,12 +104,13 @@ if($acesso){
     $controle->set_col(2);
     $form->add_item($controle);
 
-    # Lotação
-    $result = $pessoal->select('SELECT idlotacao, 
-                                       concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                  FROM tblotacao
-                                 WHERE ativo
-                              ORDER BY ativo desc,lotacao');
+    # Lotação    
+    $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
     array_unshift($result,array("*",'Todas'));
     
     $controle = new Input('parametroLotacao','combo','Lotação:',1);
@@ -197,8 +198,13 @@ if($acesso){
 
                     # Lotação
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
-                    }
+                        # Verifica se o que veio é numérico
+                        if(is_numeric($parametroLotacao)){
+                            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+                        }else{ # senão é uma diretoria genérica
+                            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+                        }
+                    }                    
                     
                     # Status
                     if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
@@ -242,9 +248,15 @@ if($acesso){
                          WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
+                    # Lotação
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
-                    }
+                        # Verifica se o que veio é numérico
+                        if(is_numeric($parametroLotacao)){
+                            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+                        }else{ # senão é uma diretoria genérica
+                            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+                        }
+                    }        
                     
                     if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
                         $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
@@ -287,9 +299,15 @@ if($acesso){
                          WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
+                    # Lotação
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
-                    }
+                        # Verifica se o que veio é numérico
+                        if(is_numeric($parametroLotacao)){
+                            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+                        }else{ # senão é uma diretoria genérica
+                            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+                        }
+                    }        
 
                     $select .= " GROUP BY status ORDER BY status";
 
@@ -338,9 +356,15 @@ if($acesso){
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                          AND YEAR(tbferias.dtInicial) = $parametroAno";
 
+                    # Lotação
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                        $select .= " AND (tblotacao.idlotacao = '$parametroLotacao')";
-                    }
+                        # Verifica se o que veio é numérico
+                        if(is_numeric($parametroLotacao)){
+                            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+                        }else{ # senão é uma diretoria genérica
+                            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+                        }
+                    }        
                     
                     if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
                         $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';

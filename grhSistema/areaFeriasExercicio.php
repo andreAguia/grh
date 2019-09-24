@@ -101,12 +101,13 @@ if($acesso){
     $controle->set_col(3);
     $form->add_item($controle);
 
-    # Lotação
-    $result = $pessoal->select('SELECT idlotacao, 
-                                       concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                  FROM tblotacao
-                                 WHERE ativo
-                              ORDER BY ativo desc,lotacao');
+    # Lotação    
+    $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
     array_unshift($result,array("*",'Todas'));
     
     $controle = new Input('parametroLotacao','combo','Lotação:',1);

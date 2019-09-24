@@ -78,25 +78,28 @@ if($acesso){
     # select da lista
     $objeto->set_selectLista ('SELECT idLotacao,
                                       DIR,
+                                      campus,
                                       GER,
                                       nome,
                                       idLotacao,
                                       idLotacao,
                                       if(ativo = 0,"Não","Sim"),
                                       idLotacao
-                                 FROM tblotacao
+                                 FROM tblotacao LEFT JOIN tbcampus USING (idCampus)
                                 WHERE ativo = '.$tipo.'  
                                 AND (DIR LIKE "%'.$parametro.'%"
                                    OR GER LIKE "%'.$parametro.'%"
                                    OR nome LIKE "%'.$parametro.'%"
                                    OR ramais LIKE "%'.$parametro.'%"
+                                   OR campus LIKE "%'.$parametro.'%"    
                                    OR idLotacao LIKE "%'.$parametro.'%") 
-                             ORDER BY 7 desc, 2 asc, 3 asc, 4 asc');
+                             ORDER BY ativo desc, DIR asc, GER asc, nome asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT codigo,
                                      UADM,
                                      DIR,
+                                     idCampus,
                                      GER,
                                      nome,
                                      ativo,
@@ -111,12 +114,12 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Diretoria","Gerência","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
+    $objeto->set_label(array("id","Diretoria<br/>Centro","Campus<br/>Universitário","Gerência<br>Laboratório","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
-    $objeto->set_align(array("center","center","center","left"));
+    $objeto->set_align(array("center","center","center","center","left"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao","get_numServidoresInativosLotacao"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao","get_numServidoresInativosLotacao"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -132,18 +135,25 @@ if($acesso){
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Pega os dados da combo de Campus
+    $result3 = $pessoal->select('SELECT idCampus,
+                                        campus
+                                  FROM tbcampus
+                              ORDER BY campus');
+    array_push($result3, array(NULL,NULL));
 
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'col' => 3,
+               'col' => 2,
                'nome' => 'codigo',
                'label' => 'Código:',
                'tipo' => 'texto',
                'autofocus' => TRUE,
                'size' => 15),               
         array ('linha' => 1,
-               'col' => 3,
+               'col' => 2,
                'nome' => 'UADM',
                'label' => 'Unidade Administrativa:',
                'tipo' => 'combo',
@@ -151,7 +161,7 @@ if($acesso){
                'array' => array('UENF','FENORTE'),
                'size' => 15),
         array ('linha' => 1,
-               'col' => 3,
+               'col' => 2,
                'nome' => 'DIR',
                'label' => 'Sigla da Diretoria:',
                'title' => 'Sigla da Diretoria',
@@ -159,7 +169,15 @@ if($acesso){
                'required' => TRUE,
                'size' => 15),
         array ('linha' => 1,
-               'col' => 3,
+               'col' => 4,
+               'nome' => 'idCampus',
+               'label' => 'Campus:',
+               'tipo' => 'combo',
+               'required' => TRUE,
+               'array' => $result3,
+               'size' => 15),
+        array ('linha' => 1,
+               'col' => 2,
                'nome' => 'GER',
                'label' => 'Sigla da Gerência:',
                'title' => 'Sigla da Gerência',

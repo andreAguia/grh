@@ -51,13 +51,20 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
                                      JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
                WHERE anoExercicio = '.$parametroAno.'
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
     
     if(!is_null($parametroLotacao)){
-        $select .= ' AND tbhistlot.lotacao = '.$parametroLotacao;
+        
+        # Verifica se o que veio é numérico
+        if(is_numeric($parametroLotacao)){
+            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
+        }else{ # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+        }
+        
     }
     
     $select .= ' ORDER BY year(tbferias.dtInicial), month(tbferias.dtInicial), tbferias.dtInicial';

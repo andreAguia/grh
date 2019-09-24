@@ -28,6 +28,7 @@ if($acesso){
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
+    
     if($grh){
         # Grava no log a atividade
         $atividade = "Visualizou a área de Acumulação";
@@ -40,18 +41,23 @@ if($acesso){
     
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
+    $parametroNome = retiraAspas(post('parametroNome',get_session('parametroNome')));
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
+    set_session('parametroNome',$parametroNome);
     
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
     
     # Cabeçalho da Página
-    if($fase <> "relatorio"){
-        AreaServidor::cabecalho();
-    }
+    AreaServidor::cabecalho();
+    
+    # Limita a Tela 
+    $grid = new Grid();
+    $grid->abreColuna(12);
+    br();
     
 ################################################################
     
@@ -59,10 +65,7 @@ if($acesso){
         
         case "" :
         case "listaAcumulacao" :
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
-
+            
             # Cria um menu
             $menu1 = new MenuBar();
 
@@ -72,6 +75,11 @@ if($acesso){
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar,"left");
+            
+            # Incluir
+            $botaoInserir = new Button("Incluir","?fase=acumulacaoIncluir");
+            $botaoInserir->set_title("Incluir Acumulação de Servidor"); 
+            $menu1->add_link($botaoInserir,"right");
             
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -171,9 +179,6 @@ if($acesso){
             $time_end = microtime(TRUE);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',')." segundos","right","f10");
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
             break;
         
     ################################################################
@@ -193,7 +198,95 @@ if($acesso){
             break; 
         
     ################################################################
+        
+        case "acumulacaoIncluir" :
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","?");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar,"left");
+            
+            $menu->show();
+            
+            ###
+            
+            # Parâmetros
+            $form = new Form('?fase=acumulacaoIncluir');
+
+            # Nome ou Matrícula
+            $controle = new Input('parametroNome','texto','Nome do Servidor:',1);
+            $controle->set_size(100);
+            $controle->set_title('Nome, matrícula ou ID:');
+            $controle->set_valor($parametroNome);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            ###
+            
+            $select = 'SELECT idFuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa) 
+                         WHERE situacao = 1 AND idPerfil = 1';
+            # nome
+            if(!is_null($parametroNome)){
+                $select .= " AND tbpessoa.nome LIKE '%$parametroNome%'";
+            }
+                    
+            $select .= " ORDER BY tbpessoa.nome";
+            
+            # Pega os dados
+            $conteudo = $pessoal->select($select);
+        
+        
+            # Monta a tabela
+            $tabela = new Tabela();
+            
+            $tabela->set_titulo("Escolha o Servidor para incluir Processo de Acumulação");
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label(array("IdFuncional","Servidor","Cargo","Lotação"));
+            $tabela->set_align(array("center","left","left","left"));
+            $tabela->set_classe(array(NULL,NULL,"Pessoal","Pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,"get_cargo","get_lotacao"));
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=insereAcumulacao&id=');
+            $tabela->set_nomeColunaEditar("Inserir");
+            $tabela->set_textoRessaltado($parametroNome);
+            $tabela->show();
+            break; 
+        
+    ################################################################
+        
+        case "insereAcumulacao" :
+            br(8);
+            aguarde();
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$id);
+            
+            # Informa a origem
+            set_session('origem','areaAcumulacao.php');
+            
+            # Carrega a página específica
+            loadPage('servidorAcumulacao.php');
+            break; 
+        
+    ################################################################
     }
+            
+    $grid->fechaColuna();
+    $grid->fechaGrid();
     
     $page->terminaPagina();
 }else{

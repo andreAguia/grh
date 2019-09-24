@@ -43,9 +43,16 @@ if($acesso){
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Acumulações de Cargos Públicos');
+    
+    $origem = get_session("origem");
+    if(is_null($origem)){
+        $caminhoVolta = 'servidorMenu.php';
+    }else{
+        $caminhoVolta = $origem;
+    }
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
+    $objeto->set_voltarLista($caminhoVolta);
 
     # select da lista
     $objeto->set_selectLista('SELECT idAcumulacao,

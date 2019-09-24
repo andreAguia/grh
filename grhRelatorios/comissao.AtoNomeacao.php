@@ -35,12 +35,12 @@ if($acesso){
     # Preenche as variaveis da comissao
     $nome = strtoupper($pessoal->get_nome($dadosComissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
-    $dtInicial = dataExtenso(date_to_php($dadosComissao['dtNom']));
-    $descricao = $dadosComissao['descricao'];
+    $dtInicial = dataExtenso(date_to_php($dadosComissao['dtNom']));    
     $ocupanteAnterior = $dadosComissao['ocupanteAnterior'];
     $tipo = $dadosComissao['tipo'];
     $publicacao = date_to_php($dadosComissao['dtPublicNom']);
     $dtAtoNom = date_to_php($dadosComissao['dtAtoNom']);
+    $descricao = $cargoComissao->get_descricaoCargo($idComissao);
     
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -94,7 +94,7 @@ if($acesso){
     }else{
         # Se tem uma mais de uma vaga e necessario informar o nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria
         $principal = "<b>NOMEIA $nome</b>, ID Funcional n° $idFuncional, para exercer, com validade a contar de $dtInicial,"
-           . " o cargo em comissao de $cargo, simbolo $simbolo, do(a) $descricao da Universidade Estadual do Norte Fluminense"
+           . " o cargo em comissao, simbolo $simbolo, $descricao da Universidade Estadual do Norte Fluminense"
            . " - Darcy Ribeiro - UENF, da Secretaria de Estado de Ciencia, Tecnologia e Inovaçao - SECTI,"
            . " do Quadro Permanente de Pessoal Civil do Poder Executivo do Estado do Rio de Janeiro";
     }

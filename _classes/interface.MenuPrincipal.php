@@ -31,7 +31,7 @@ class MenuPrincipal{
         $this->moduloTabelasSecundarias();
         
         # Calendário
-        $cal = new Calendario(date('m'),date('Y'),"p");
+        $cal = new Calendario();
         $cal->show();
                 
         $grid->fechaColuna();

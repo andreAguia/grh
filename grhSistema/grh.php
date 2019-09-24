@@ -325,7 +325,7 @@ if($acesso){
             $tabela->show();
             
             # Calendário
-            $cal = new Calendario($parametroMes,date('Y'),"p");
+            $cal = new Calendario($parametroMes);
             $cal->show();
             
             $grid->fechaColuna();
@@ -357,21 +357,34 @@ if($acesso){
             $select .= ' ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
 
             $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = "Aniversariantes de ".get_nomeMes($parametroMes);
             
             # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($result);
-            $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
-            $tabela->set_align(array("center","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,'Pessoal','Pessoal','Pessoal'));
-            $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfilSimples'));
-            $tabela->set_titulo("Aniversariantes de ".get_nomeMes($parametroMes));
-            if(date("m") == $parametroMes){
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));
+            if($count > 0){
+                $tabela = new Tabela();
+                $tabela->set_conteudo($result);
+                $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
+                $tabela->set_align(array("center","left","left","left"));
+                $tabela->set_classe(array(NULL,NULL,'Pessoal','Pessoal','Pessoal'));
+                $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfilSimples'));
+                $tabela->set_titulo($titulo);
+                if(date("m") == $parametroMes){
+                    $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));
+                }
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+                $tabela->show();
+            
+            }else{
+
+                br();
+                tituloTable($titulo);
+                $callout = new Callout();
+                $callout->abre();
+                    p('Nenhum item encontrado !!','center');
+                $callout->fecha();
             }
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-            $tabela->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

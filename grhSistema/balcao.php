@@ -157,7 +157,7 @@ if($acesso){
             $painel = new Callout();
             $painel->abre();
 
-            $cal = new Calendario($parametroMes,$parametroAno,"m");
+            $cal = new Calendario($parametroMes,$parametroAno);            
             $cal->show();
 
             $painel->fecha();

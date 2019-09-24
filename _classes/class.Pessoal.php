@@ -645,6 +645,59 @@ class Pessoal extends Bd {
 
 
     /**
+     * Método get_cargo
+     * Informa o cargo do servidor
+     * 
+     * @param string $idServidor    NULL idServidor do servidor
+     * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
+     */
+
+    public function get_cargoSimples2($idServidor, $exibeComissao = TRUE){
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.sigla,
+                          tbcargo.nome
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                    WHERE idServidor = '.$idServidor;
+
+        $row = parent::select($select,FALSE);
+
+        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+            $tipoCargo = NULL;
+        }else{
+            $tipoCargo = $row[1];      
+        }
+
+        $nomeCargo = $row[2];
+        $retorno = NULL;
+        
+        $comissao = $this->get_cargoComissao($idServidor);
+        $descricao = $this->get_cargoComissaoDescricao($idServidor);
+
+        if(!empty($tipoCargo)){
+            $retorno = $tipoCargo;             
+        }
+
+        if(!empty($nomeCargo)){
+            if(!empty($tipoCargo)){
+                $retorno .= ' - '.$nomeCargo;
+            }else{
+                $retorno = $nomeCargo;
+            }
+        }
+
+        if((!empty($comissao)) AND ($exibeComissao)){
+             $retorno .= '<br/><span title="'.$descricao.'" id="orgaoCedido">['.$descricao.']</span>';
+        }
+        
+        return $retorno;
+    }
+
+    ###########################################################
+
+
+    /**
      * Método get_cargoSimples
      * Informa o cargo do servidor sem o cargo em comissão
      * 

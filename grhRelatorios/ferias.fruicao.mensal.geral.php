@@ -25,15 +25,19 @@ if($acesso)
     $page = new Page();			
     $page->iniciaPagina();
     
-    # Pega o ano exercicio
-    $parametroAno = get("parametroAno",date('Y'));
-    
-    # Pega a lotação
-    $parametroLotacao = get("parametroLotacao");
+    # Pega os parâmetros
+    $parametroAno = get_session('parametroAno',date("Y"));
+    $parametroLotacao = get_session('parametroLotacao');
+    $parametroStatus = get_session('parametroStatus');
     
     # Transforma em nulo a máscara *
     if($parametroLotacao == "*"){
         $parametroLotacao = NULL;
+    }
+    
+    # Transforma em nulo a máscara *
+    if($parametroStatus == "Todos"){
+        $parametroStatus = NULL;
     }
     
     # Pega o mes
@@ -59,15 +63,27 @@ if($acesso)
                  AND MONTH(tbferias.dtInicial) = $parametroMes
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
     
+    # Lotação
     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-        $select .= " AND tbhistlot.lotacao = ".$parametroLotacao;
+        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
     }
-    
+
+    # Status
+    if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
+        $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
+    }
+        
     $select .= " ORDER BY tbpessoa.nome";
     
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
+    
+    # Status no subtítulo
+    if(!is_null($parametroStatus)){
+        $relatorio->set_tituloLinha3('Ferias '.plm($parametroStatus).'s');
+    }
+    
     $relatorio->set_titulo('Relatório Mensal Geral de Férias');
     $relatorio->set_tituloLinha2(get_nomeMes($parametroMes)." / ".$parametroAno);
     

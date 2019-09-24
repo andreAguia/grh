@@ -24,15 +24,19 @@ if($acesso){
     $page = new Page();			
     $page->iniciaPagina();
     
-    # Pega o ano exercicio
-    $parametroAno = get("parametroAno",date('Y'));
-    
-    # Pega a lotação
-    $parametroLotacao = get("parametroLotacao");
+    # Pega os parâmetros
+    $parametroAno = get_session('parametroAno',date("Y"));
+    $parametroLotacao = get_session('parametroLotacao');
+    $parametroStatus = get_session('parametroStatus');
     
     # Transforma em nulo a máscara *
     if($parametroLotacao == "*"){
         $parametroLotacao = NULL;
+    }
+    
+    # Transforma em nulo a máscara *
+    if($parametroStatus == "Todos"){
+        $parametroStatus = NULL;
     }
     
     ######
@@ -55,8 +59,14 @@ if($acesso){
                WHERE YEAR(tbferias.dtInicial) = $parametroAno
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
     
-    if(!is_null($parametroLotacao)){
-        $select .= ' AND tbhistlot.lotacao = '.$parametroLotacao;
+    # Lotação
+    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+        $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
+    }
+
+    # Status
+    if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
+        $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
     }
     
     $select .= ' ORDER BY tbferias.dtInicial';
@@ -67,10 +77,19 @@ if($acesso){
     $relatorio->set_titulo('Relatório Anual de Férias');
     $relatorio->set_tituloLinha2($parametroAno);
     
+    $titulo3 = NULL;
+    
+    # Lotação no subtítulo
     if(!is_null($parametroLotacao)){
-        $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($parametroLotacao));
+        $titulo3 .= $servidor->get_nomeLotacao($parametroLotacao);
     }
     
+    # Status no subtítulo
+    if(!is_null($parametroStatus)){
+        $titulo3 .= '<br/>('.$parametroStatus.'s)';
+    }
+    
+    $relatorio->set_tituloLinha3($titulo3);
     $relatorio->set_subtitulo('Agrupados por Mês da data Inicial - Ordenados pela Data Inicial');
 
     $relatorio->set_label(array('IdFuncional','Nome','Lotação','Exercício','Dt Inicial','Dias','Dt Final','Período','Mês','Situação'));

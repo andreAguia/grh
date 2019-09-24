@@ -40,10 +40,12 @@ if($acesso){
     # Pega os parâmetros
     $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
     $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
+    $parametroStatus = post('parametroStatus',get_session('parametroStatus'));
         
     # Joga os parâmetros par as sessions    
     set_session('parametroAno',$parametroAno);
     set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroStatus',$parametroStatus);
     
     # Começa uma nova página
     $page = new Page();
@@ -69,7 +71,7 @@ if($acesso){
     $botaoExercicio = new Link("por Ano de Exercício","areaFeriasExercicio.php");
     $botaoExercicio->set_class('button');
     $botaoExercicio->set_title('Férias por Ano Exercício');
-    $menu1->add_link($botaoExercicio,"right");
+    #$menu1->add_link($botaoExercicio,"right");
     
     # Ano por Fruíção
     $botaoFruicao = new Link("Ano de Fruição");
@@ -99,7 +101,7 @@ if($acesso){
     $controle->set_valor($parametroAno);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(3);
+    $controle->set_col(2);
     $form->add_item($controle);
 
     # Lotação
@@ -117,7 +119,18 @@ if($acesso){
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(9);
+    $controle->set_col(8);
+    $form->add_item($controle);
+    
+     # Status    
+    $controle = new Input('parametroStatus','combo','Status:',1);
+    $controle->set_size(10);
+    $controle->set_title('Filtra por Status');
+    $controle->set_array(array("Todos","solicitada","fruída"));
+    $controle->set_valor($parametroStatus);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
     $form->add_item($controle);
 
     $form->show();
@@ -151,6 +164,26 @@ if($acesso){
             
             #######################################
             
+            # Menu
+            $menu = new Menu();
+            $menu->add_item('titulo','Menu');
+            $menu->add_item('link','por Ano de Exercício','areaFeriasExercicio.php');
+            $menu->add_item('link','<b>por Ano de Fruíção</b>','#');
+            $menu->show();
+            
+            #######################################
+            
+            # Relatórios
+            $menu = new Menu();
+            $menu->add_item('titulo','Relatórios');
+            $menu->add_item('linkWindow','Anual Agrupado por Mês','../grhRelatorios/ferias.fruicao.anual.porMes.php');
+            $menu->add_item('linkWindow','Anual Agrupado por Lotação','../grhRelatorios/ferias.fruicao.anual.porLotacao.php');
+            $menu->add_item('linkWindow','Mensal Geral','../grhRelatorios/ferias.fruicao.mensal.geral.php');
+            $menu->add_item('linkWindow','Mensal Agrupado por Lotação','../grhRelatorios/ferias.fruicao.mensal.porLotacao.php');
+            $menu->show();
+            
+            #######################################
+            
             # Resumo por Ano Exercício
             
             # Conecta com o banco de dados
@@ -165,10 +198,16 @@ if($acesso){
                         WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
+                    # Lotação
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
-
+                    
+                    # Status
+                    if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
+                        $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
+                    }
+                    
                     $select .= " GROUP BY anoExercicio ORDER BY anoExercicio";
 
             $resumo = $servidor->select($select);
@@ -209,6 +248,10 @@ if($acesso){
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
                     }
+                    
+                    if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
+                        $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
+                    }
 
                     $select .= " GROUP BY year(dtInicial),month(dtInicial) ORDER BY year(dtInicial),month(dtInicial)";
 
@@ -232,7 +275,6 @@ if($acesso){
             $tabela->show();
             
             #######################################
-            
             
             # Resumo por status
             
@@ -275,17 +317,6 @@ if($acesso){
             
             #######################################
             
-            # Relatórios
-            $menu = new Menu();
-            $menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow','Anual Agrupado por Mês','../grhRelatorios/ferias.fruicao.anual.porMes.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-            $menu->add_item('linkWindow','Anual Agrupado por Lotação','../grhRelatorios/ferias.fruicao.anual.porLotacao.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-            $menu->add_item('linkWindow','Mensal Geral','../grhRelatorios/ferias.fruicao.mensal.geral.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-            $menu->add_item('linkWindow','Mensal Agrupado por Lotação','../grhRelatorios/ferias.fruicao.mensal.porLotacao.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-            $menu->show();
-            
-            #######################################
-            
             # Área Principal            
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
@@ -313,6 +344,11 @@ if($acesso){
                     if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
                         $select .= " AND (tblotacao.idlotacao = '$parametroLotacao')";
                     }
+                    
+                    if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
+                        $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
+                    }
+
 
                     $select .= " ORDER BY dtInicial";
 

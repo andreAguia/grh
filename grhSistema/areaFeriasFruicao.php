@@ -165,16 +165,13 @@ if($acesso){
             #######################################
             
             # Menu
-            $menu = new Menu();
-            $menu->add_item('titulo','Menu');
+            tituloTable("Menu");
+            
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo','Tipo');
             $menu->add_item('link','por Ano de Exercício','areaFeriasExercicio.php');
             $menu->add_item('link','<b>por Ano de Fruíção</b>','#');
-            $menu->show();
             
-            #######################################
-            
-            # Relatórios
-            $menu = new Menu();
             $menu->add_item('titulo','Relatórios');
             $menu->add_item('linkWindow','Anual Agrupado por Mês','../grhRelatorios/ferias.fruicao.anual.porMes.php');
             $menu->add_item('linkWindow','Anual Agrupado por Lotação','../grhRelatorios/ferias.fruicao.anual.porLotacao.php');

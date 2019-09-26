@@ -28,8 +28,35 @@ if($acesso)
     
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Férias');
-    
     br();
+    
+    # Limita o tamanho da tela
+    $grid = new Grid();
+    $grid->abreColuna(3);
+    
+    $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
+    
+    p("Férias Fruídas","center","f14");
+
+    $relatorio = new Relatorio();   
+    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_label(array("Exercício","Dias"));
+
+    $relatorio->set_conteudo($lista);
+    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_dataImpressao(FALSE);
+
+    $relatorio->show();
+    
+    $grid->fechaColuna();
+    $grid->abreColuna(9);
+    
+    p("Histórico","center","f14");
+    
     $select = "SELECT anoExercicio,
                         status,
                         dtInicial,
@@ -60,6 +87,9 @@ if($acesso)
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Férias");
     $relatorio->show();
+    
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
     $page->terminaPagina();
 }

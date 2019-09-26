@@ -18,9 +18,6 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
-    # Verifica a fase do programa
-    $fase = get('fase','listar');
 		
     # Verifica a fase do programa
     $fase = get('fase','menu');
@@ -46,6 +43,16 @@ if($acesso){
             # Título do menu
             titulo('Menu de Relatórios');
             
+            # Verifica se veio da fase de ferias e se tem que mudar a data de entrega
+            $dataDev = post("dtEntrega");
+            
+            # Salva o novo valor
+            if(!vazio($dataDev)){            
+                # Arquiva a data
+                $intra->set_variavel("dataDevolucaoGrh",date_to_php($dataDev));
+                ajaxLoadPage('?fase=ferias','divMenuRelatorioGrh');
+            }
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             
@@ -124,6 +131,9 @@ if($acesso){
             # Fecha o grid
             $grid->fechaColuna();
             $grid->fechaGrid();
+            
+            
+            
             break;
 
         ######################################
@@ -253,7 +263,8 @@ if($acesso){
             $menu->add_item('titulo','Férias');
             $menu->add_item('linkWindow','Escala Anual de Férias de Servidores Tecnicos Estatutarios','../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
             $menu->add_item('linkWindow','Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao','../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
-            $menu->add_item('linkWindow','Escala Anual de Férias de Docentes Com Regencia de Turma','../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
+            
+            #$menu->add_item('linkWindow','Escala Anual de Férias de Docentes Com Regencia de Turma','../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
             #$menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
@@ -266,6 +277,7 @@ if($acesso){
             
             $menu->add_item('linkWindow','Servidores Em Férias Por Ano de Fruição','../grhRelatorios/ferias.fruicao.anual.porMes.emFerias.php');
             $menu->show();
+
             break;
 
         ######################################

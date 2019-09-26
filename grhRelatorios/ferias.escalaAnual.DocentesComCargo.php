@@ -24,8 +24,15 @@ if($acesso){
     $page = new Page();			
     $page->iniciaPagina();
     
-    # Pega o ano exercicio
+    # Pega o valor arquivado
+    $intra = new Intra();
+    $dataDev = $intra->get_variavel("dataDevolucaoGrh");
+    
+    # Pega os parâmetros
     $parametroAno = post("parametroAno",date('Y')+1);
+    $parametroData = post("parametroData",date_to_bd($dataDev));
+    
+    $intra->set_variavel("dataDevolucaoGrh",date_to_php($parametroData));
     
     ######
     
@@ -77,9 +84,24 @@ if($acesso){
                                       'size' => 10,
                                       'padrao' => $parametroAno,
                                       'title' => 'Ano',
-                                      'onChange' => 'formPadrao.submit();',
                                       'col' => 3,
-                                      'linha' => 1)));
+                                      'linha' => 1),
+                                array ('nome' => 'parametroData',
+                                       'label' => 'Data da Entrega:',
+                                       'tipo' => 'data',
+                                       'size' =>  20,
+                                       'linha' => 1,
+                                       'col' => 3,
+                                       'valor' => $parametroData,
+                                       'title' => 'A data da entrega das Escalas de férias'),
+                                array ('nome' => 'Salva',
+                                       'label' => '&nbsp;', 
+                                       'valor' => 'Muda',
+                                       'tipo' => 'submit',
+                                       'size' => 10,
+                                       'col' => 3,
+                                       'linha' => 1),
+            ));
 
     $relatorio->set_formFocus('mesBase');
     $relatorio->set_formLink('?');    

@@ -40,7 +40,6 @@ if($acesso){
     $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
     $inicio = dataExtenso2(date_to_php($dadosComissao['dtNom']));
     $dtNom = dataExtenso(date_to_php($dadosComissao['dtNom']));
-    $descricao = $dadosComissao['descricao'];
     $publicacao = mb_strtolower(dataExtenso(date_to_php($dadosComissao['dtPublicNom'])));
     $dtAtoNom = mb_strtolower(dataExtenso(date_to_php($dadosComissao['dtAtoNom'])));
         
@@ -80,7 +79,7 @@ if($acesso){
     
     # Preambulo
     $principal = "$inicio, na Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
-               . "$nome, identidade Funcional n° $idFuncional, nomeado(a), de acordo com o Inciso VII "
+               . plm($nome).", identidade Funcional n° $idFuncional, nomeado(a), de acordo com o Inciso VII "
                . "do artigo 20° do Decreto Estadual n° 30.672, de 18 de fevereiro de 2002, "
                . "para exercer, o Cargo em Comissão de $cargo, simbolo $simbolo, "
                . "da Universidade Estadual do Norte Fluminense Darcy Ribeiro - UENF, "
@@ -109,7 +108,7 @@ if($acesso){
     br(3);
     
     # Servidor
-    p("______________________________________<br/><b>".$nome."</b>","reitor");
+    p("______________________________________<br/><b>".plm($nome)."</b>","reitor");
     $grid->fechaColuna();
     
     # Rodapé

@@ -69,7 +69,8 @@ if($acesso){
     $relatorio->show();
     br();
     
-    ###### DAdos
+    ###### Dados
+    
     $licenca = new LicencaPremio();
     $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
     $diasPublicados = $licenca->get_numDiasPublicados($idServidorPesquisado);
@@ -103,8 +104,8 @@ if($acesso){
     $relatorio->set_log(FALSE);            
     $relatorio->show();
     
-     $grid->fechaColuna();
-     $grid->abreColuna(9);
+    $grid->fechaColuna();
+    $grid->abreColuna(9);
     
     ###### Publicações
 

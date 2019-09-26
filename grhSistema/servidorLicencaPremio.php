@@ -293,8 +293,6 @@ if($acesso){
                         }
                     }
                # }
-               
-                
                 
                 # Cria um menu
                 $menu = new MenuBar();
@@ -369,7 +367,6 @@ if($acesso){
                 break; 
         
         ###############################
-                break;	
         }
     }
     $page->terminaPagina();

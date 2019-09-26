@@ -39,7 +39,7 @@ if($acesso){
     $nome = strtoupper($pessoal->get_nome($dadosComissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
     $dtExo = dataExtenso(date_to_php($dadosComissao['dtExo']));
-    $descricao = $dadosComissao['descricao'];
+    #$descricao = $dadosComissao['descricao'];
     $publicacao = date_to_php($dadosComissao['dtPublicExo']);
     $dtAtoExo = date_to_php($dadosComissao['dtAtoExo']);
     

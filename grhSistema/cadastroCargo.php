@@ -51,7 +51,7 @@ if($acesso)
     ################################################################
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos');
+    $objeto->set_nome('Cargos Efetivos');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');

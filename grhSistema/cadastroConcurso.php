@@ -72,6 +72,7 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista ('SELECT idConcurso,
                                       anobase,
+                                      edital,
                                       regime,
                                       orgExecutor,
                                       tbplano.numDecreto,
@@ -87,6 +88,8 @@ if($acesso)
 
     # select do edita
     $objeto->set_selectEdita('SELECT anobase,
+                                     edital,
+                                     dtPublicacaoEdital,
                                      regime,
                                      orgExecutor,
                                      idPlano,
@@ -101,15 +104,15 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Regime","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
-    $objeto->set_width(array(5,10,20,20,20,10,10));
+    $objeto->set_label(array("id","Ano Base","Edital","Regime","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -137,31 +140,47 @@ if($acesso)
     $objeto->set_campos(array(
         array ('linha' => 1,
                'nome' => 'anobase',
-               'label' => 'Ano Base:',
+               'label' => 'Ano:',
                'tipo' => 'texto',
                'autofocus' => TRUE,
                'col' => 2,
-               'size' => 10),
-         array ('linha' => 1,
-               'nome' => 'regime',
-               'label' => 'Regime:',
+               'size' => 10,
+               'title' => 'Ano base do concurso'),
+        array ('linha' => 2,
+               'nome' => 'edital',
+               'label' => 'Processo do Edital:',
                'tipo' => 'texto',
+               'title' => 'Número do processo do edital do concurso',
                'col' => 3,
                'size' => 20),
-         array ('linha' =>1,
+        array ('linha' => 2,
+               'nome' => 'dtPublicacaoEdital',
+               'label' => 'Data da Publicação do Edital:',
+               'tipo' => 'data',
+               'title' => 'Data da Publicação do Edital',
+               'col' => 3,
+               'size' => 20),
+         array ('linha' => 3,
+               'nome' => 'regime',
+               'label' => 'Regime:',
+               'tipo' => 'combo',                              
+               'array' => array("CLT","Estatutário"),
+               'col' => 3,
+               'size' => 20),
+         array ('linha' => 3,
                'nome' => 'orgExecutor',
                'label' => 'Executor:',
                'tipo' => 'texto',
                 'col' => 4,
                'size' => 30),
-        array ('linha' => 1,
+        array ('linha' => 3,
                'nome' => 'idPlano',
                'label' => 'Plano de Cargos:',
                'tipo' => 'combo',
                'array' => $result,
                'col' => 3,
                'size' => 30),
-        array ('linha' => 2,
+        array ('linha' => 4,
                'col' => 12,
                'nome' => 'obs',
                'label' => 'Observação:',

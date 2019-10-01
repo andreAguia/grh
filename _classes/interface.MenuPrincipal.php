@@ -421,7 +421,7 @@ class MenuPrincipal{
         $botao = new BotaoGrafico();
         $botao->set_label('Área de Vagas');
         $botao->set_url('cadastroVagasProfessores.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'fotografia.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_imagem(PASTA_FIGURAS.'vaga.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de controle de Vagas de Professores');
         $menu->add_item($botao);
         

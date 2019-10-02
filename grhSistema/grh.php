@@ -122,12 +122,41 @@ if($acesso){
     switch ($fase){	
         # Exibe o Menu Inicial
         case "menu" :
-            # acessa a rotina de atualizar os status das férias
+            
+            ########
+            
+            # Atualiza status das férias
             if($intra->get_variavel('dataVerificaFeriasSolicitada') <> date("d/m/Y")){
                 $pessoal->mudaStatusFeriasSolicitadaFruida();                       // muda as férias solicitadas na data de hoje para fruídas
                 $intra->set_variavel('dataVerificaFeriasSolicitada',date("d/m/Y")); // muda a variável para hoje
                 $intra->registraLog($idUsuario,date("Y-m-d H:i:s"),'Rotina de verificação de férias executada.',NULL,NULL,6);
             }
+            
+            ########
+            
+            # Faz o backup de hora em hora
+            
+            # Verifica se o backup automático está habilitado
+            if($intra->get_variavel("backupAutomatico")){
+                
+                # Verifica a hora do último backup
+                $backupHora = $intra->get_variavel("backupHora");
+                
+                # Pega a hora atual
+                $hora = date("H");
+                
+                # Compara
+                if($hora <> $backupHora){
+                    echo "oi";
+                    # Realiza backup
+                    $processo = new Processo();
+                    $processo->run("php backupAutomatico.php");
+                }
+            }
+            
+            echo $hora;
+            echo $backupHora;
+            ########
 
             # monta o menu principal
             $menu = new MenuPrincipal($idUsuario);

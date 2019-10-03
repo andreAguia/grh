@@ -61,7 +61,7 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     
     $relatorio->set_label(array("Conclusão","Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
-    $relatorio->set_align(array("center"));
+    $relatorio->set_align(array("center","center","center","left","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,"date_to_php"));
     $relatorio->set_classe(array(NULL,"Acumulacao"));
     $relatorio->set_metodo(array(NULL,"get_resultado"));

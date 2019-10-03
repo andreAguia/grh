@@ -114,7 +114,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("Conclusão","Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
-    $objeto->set_align(array("center"));
+    $objeto->set_align(array("center","center","center","left","left","left"));
     $objeto->set_funcao(array(NULL,NULL,"date_to_php"));
     $objeto->set_classe(array(NULL,"Acumulacao"));
     $objeto->set_metodo(array(NULL,"get_resultado"));

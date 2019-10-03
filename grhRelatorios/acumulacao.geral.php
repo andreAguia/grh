@@ -56,7 +56,7 @@ if($acesso){
         $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
     }
 
-    $select .= " ORDER BY dtProcesso desc";
+    $select .= " ORDER BY conclusao, dtProcesso desc";
 
     $resumo = $pessoal->select($select);
 

@@ -154,7 +154,7 @@ if($acesso){
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Conclusão","Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
-            $tabela->set_align(array("center","center","center","left","center"));
+            $tabela->set_align(array("center","center","center","left","center","left","left","left"));
             $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
             
             $tabela->set_classe(array(NULL,"Acumulacao"));

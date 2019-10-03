@@ -64,7 +64,7 @@ if($acesso){
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
     $relatorio->set_label(array("Conclusão","Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
-    $relatorio->set_align(array("center","center","center","left","center"));
+    $relatorio->set_align(array("center","center","center","left","center","left","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
 
     $relatorio->set_classe(array(NULL,"Acumulacao"));

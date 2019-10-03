@@ -33,7 +33,12 @@ if($acesso){
     $titulo = "Servidores com Acumulação de Cargo Público";
 
     # Pega os dados
-            $select = "SELECT idAcumulacao,
+            $select = "SELECT CASE conclusao
+                                WHEN 1 THEN 'Pendente'
+                                WHEN 2 THEN 'Resolvido'
+                                ELSE '--'
+                              END,
+                              idAcumulacao,
                               idFuncional,
                               tbpessoa.nome,
                               dtProcesso,
@@ -58,12 +63,12 @@ if($acesso){
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-    $relatorio->set_label(array("Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
-    $relatorio->set_align(array("center","center","left","center"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+    $relatorio->set_label(array("Conclusão","Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
+    $relatorio->set_align(array("center","center","center","left","center"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
 
-    $relatorio->set_classe(array("Acumulacao"));
-    $relatorio->set_metodo(array("get_resultado"));
+    $relatorio->set_classe(array(NULL,"Acumulacao"));
+    $relatorio->set_metodo(array(NULL,"get_resultado"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

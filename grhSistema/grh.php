@@ -31,6 +31,7 @@ if($acesso){
     # Começa uma nova página
     $page = new Page();
     $page->set_bodyOnLoad("ajaxLoadPage('grh.php?fase=resumoAlertas','divAlertas',null);");
+    #$page->set_bodyOnLoad("ajaxLoadPage('alerta.php','divAlertas',null);");
     $page->iniciaPagina();
     
     # Cabeçalho da Página
@@ -139,23 +140,18 @@ if($acesso){
             # Verifica se o backup automático está habilitado
             if($intra->get_variavel("backupAutomatico")){
                 
-                # Verifica a hora do último backup
-                $backupHora = $intra->get_variavel("backupHora");
+                # Verifica as horas
+                $horaBackup = $intra->get_variavel("backupHora");
+                $horaAtual = date("H");
                 
-                # Pega a hora atual
-                $hora = date("H");
-                
-                # Compara
-                if($hora <> $backupHora){
-                    echo "oi";
+                # Compara se são diferentes
+                if($horaAtual <> $horaBackup){                    
                     # Realiza backup
                     $processo = new Processo();
-                    $processo->run("php backupAutomatico.php");
+                    $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
                 }
             }
             
-            echo $hora;
-            echo $backupHora;
             ########
 
             # monta o menu principal

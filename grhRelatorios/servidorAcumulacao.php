@@ -37,7 +37,11 @@ if($acesso)
     $processo = trataNulo($reducao->get_numProcesso());
     
     br();
-    $select = "SELECT if(conclusao = 1,'Pendente','Resolvido'),
+    $select = "SELECT CASE conclusao
+                        WHEN 1 THEN 'Pendente'
+                        WHEN 2 THEN 'Resolvido'
+                        ELSE '--'
+                      END,
                       idAcumulacao,
                       dtProcesso,
                       processo,

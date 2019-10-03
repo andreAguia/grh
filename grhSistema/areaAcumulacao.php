@@ -123,7 +123,11 @@ if($acesso){
             $time_start = microtime(TRUE);
             
             # Pega os dados
-            $select = "SELECT if(conclusao = 1,'Pendente','Resolvido'),
+            $select = "SELECT CASE conclusao
+                                WHEN 1 THEN 'Pendente'
+                                WHEN 2 THEN 'Resolvido'
+                                ELSE '--'
+                              END,
                               idAcumulacao,
                               idFuncional,
                               tbpessoa.nome,

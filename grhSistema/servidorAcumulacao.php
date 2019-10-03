@@ -55,7 +55,11 @@ if($acesso){
     $objeto->set_voltarLista($caminhoVolta);
 
     # select da lista
-    $objeto->set_selectLista('SELECT if(conclusao = 1,"Pendente","Resolvido"),
+    $objeto->set_selectLista('SELECT CASE conclusao
+                                        WHEN 1 THEN "Pendente"
+                                        WHEN 2 THEN "Resolvido"
+                                        ELSE "--"
+                                      END,
                                      idAcumulacao,
                                      dtProcesso,
                                      processo,

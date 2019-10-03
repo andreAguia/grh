@@ -123,7 +123,8 @@ if($acesso){
             $time_start = microtime(TRUE);
             
             # Pega os dados
-            $select = "SELECT idAcumulacao,
+            $select = "SELECT if(conclusao = 1,'Pendente','Resolvido'),
+                              idAcumulacao,
                               idFuncional,
                               tbpessoa.nome,
                               dtProcesso,
@@ -141,34 +142,30 @@ if($acesso){
                 $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
             }
                     
-            $select .= " ORDER BY resultado, dtProcesso desc";
+            $select .= " ORDER BY conclusao, dtProcesso desc";
             
             $resumo = $pessoal->select($select);
             
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
-            $tabela->set_align(array("center","center","left","center"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+            $tabela->set_label(array("Conclusão","Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
+            $tabela->set_align(array("center","center","center","left","center"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
             
-            $tabela->set_classe(array("Acumulacao"));
-            $tabela->set_metodo(array("get_resultado"));
+            $tabela->set_classe(array(NULL,"Acumulacao"));
+            $tabela->set_metodo(array(NULL,"get_resultado"));
     
             $tabela->set_titulo("Área de Acumulação");
             
             $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                                    'valor' => 'Em Aberto',
+                                                    'valor' => 'Resolvido',
                                                     'operador' => '=',
-                                                    'id' => 'emAberto'),  
+                                                    'id' => 'emAberto'),
                                               array('coluna' => 0,
-                                                    'valor' => 'Ilícito',
+                                                    'valor' => 'Pendente',
                                                     'operador' => '=',
-                                                    'id' => 'arquivado'),
-                                              array('coluna' => 0,
-                                                    'valor' => 'Lícito',
-                                                    'operador' => '=',
-                                                    'id' => 'vigenteReducao')   
+                                                    'id' => 'alerta')   
                                                     ));
             
             $tabela->set_idCampo('idServidor');

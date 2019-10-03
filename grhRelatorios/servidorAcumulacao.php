@@ -37,7 +37,8 @@ if($acesso)
     $processo = trataNulo($reducao->get_numProcesso());
     
     br();
-    $select = "SELECT idAcumulacao,
+    $select = "SELECT if(conclusao = 1,'Pendente','Resolvido'),
+                      idAcumulacao,
                       dtProcesso,
                       processo,
                       instituicao,
@@ -55,11 +56,11 @@ if($acesso)
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
     
-    $relatorio->set_label(array("Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
+    $relatorio->set_label(array("Conclusão","Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
     $relatorio->set_align(array("center"));
-    $relatorio->set_funcao(array(NULL,"date_to_php"));
-    $relatorio->set_classe(array("Acumulacao"));
-    $relatorio->set_metodo(array("get_resultado"));
+    $relatorio->set_funcao(array(NULL,NULL,"date_to_php"));
+    $relatorio->set_classe(array(NULL,"Acumulacao"));
+    $relatorio->set_metodo(array(NULL,"get_resultado"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

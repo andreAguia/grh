@@ -55,7 +55,8 @@ if($acesso){
     $objeto->set_voltarLista($caminhoVolta);
 
     # select da lista
-    $objeto->set_selectLista('SELECT idAcumulacao,
+    $objeto->set_selectLista('SELECT if(conclusao = 1,"Pendente","Resolvido"),
+                                     idAcumulacao,
                                      dtProcesso,
                                      processo,
                                      instituicao,
@@ -76,6 +77,7 @@ if($acesso){
                                      resultado,
                                      dtPublicacao,
                                      pgPublicacao,
+                                     conclusao,
                                      resultado1,
                                      dtPublicacao1,
                                      pgPublicacao1,
@@ -97,25 +99,21 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
     
     $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
-                                                    'valor' => 'Em Aberto',
+                                                    'valor' => 'Resolvido',
                                                     'operador' => '=',
-                                                    'id' => 'emAberto'),  
+                                                    'id' => 'emAberto'),
                                               array('coluna' => 0,
-                                                    'valor' => 'Ilícito',
+                                                    'valor' => 'Pendente',
                                                     'operador' => '=',
-                                                    'id' => 'arquivado'),
-                                              array('coluna' => 0,
-                                                    'valor' => 'Lícito',
-                                                    'operador' => '=',
-                                                    'id' => 'vigenteReducao')   
+                                                    'id' => 'alerta')   
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
+    $objeto->set_label(array("Conclusão","Resultado","Data","Processo","Instituição","Cargo","Matrícula"));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL,"date_to_php"));
-    $objeto->set_classe(array("Acumulacao"));
-    $objeto->set_metodo(array("get_resultado"));
+    $objeto->set_funcao(array(NULL,NULL,"date_to_php"));
+    $objeto->set_classe(array(NULL,"Acumulacao"));
+    $objeto->set_metodo(array(NULL,"get_resultado"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -209,6 +207,18 @@ if($acesso){
                                        'size' => 5,
                                        'col' => 2,
                                        'title' => 'A página da Publicação no DOERJ.',
+                                       'linha' => 4),
+                               array ( 'nome' => 'conclusao',
+                                       'label' => 'Conclusão:',
+                                       'tipo' => 'combo',
+                                       'array' => array(array(NULL,NULL),
+                                                        array(1,"Pendente"),
+                                                        array(2,"Resolvido")),
+                                       'size' => 2,
+                                       'required' => TRUE,
+                                       'valor' => NULL,
+                                       'col' => 2,
+                                       'title' => 'Conclusão.',
                                        'linha' => 4),
                                array ( 'nome' => 'resultado1',
                                        'fieldset' => 'Recursos:',

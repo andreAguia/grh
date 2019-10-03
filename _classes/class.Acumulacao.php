@@ -118,7 +118,7 @@ class Acumulacao
         }elseif($retorno == 2){
             $retorno = "Ilícito";
         }else{
-            $retorno = "Em Aberto";
+            $retorno = "---";
         }
         
         return $retorno;

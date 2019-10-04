@@ -59,7 +59,7 @@ if($acesso){
                                       idConcurso,
                                       idServidor,
                                       idConcursoVagaServidores
-                                 FROM tbconcursoVagaServidores
+                                 FROM tbconcursovagaservidores
                              ORDER BY centro');
 
     # select do edita
@@ -69,7 +69,7 @@ if($acesso){
                                      idConcurso,
                                      idServidor,
                                      obs
-                                FROM tbconcursoVagaServidores
+                                FROM tbconcursovagaservidores
                                WHERE idConcursoVagaServidores = '.$id);
 
     # Caminhos
@@ -87,7 +87,7 @@ if($acesso){
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbconcursoVagaServidores');
+    $objeto->set_tabela('tbconcursovagaservidores');
 
     # Nome do campo id
     $objeto->set_idCampo('idConcursoVagaServidores');

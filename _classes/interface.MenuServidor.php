@@ -585,7 +585,7 @@ class MenuServidor{
                 $botao = new BotaoGrafico();
                 $botao->set_label('Férias');
                 $botao->set_url('servidorFerias.php');
-                $botao->set_imagem(PASTA_FIGURAS.'ferias.jpg',$this->tamanhoImagem,$this->tamanhoImagem);
+                $botao->set_imagem(PASTA_FIGURAS.'ferias2.png',$this->tamanhoImagem,$this->tamanhoImagem);
                 $botao->set_title('Cadastro das Férias do Servidor');
                 $botao->set_accessKey('i');
                 $menu->add_item($botao);

@@ -80,6 +80,10 @@ if($acesso)
     $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
     $relatorio->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
     $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+    
+    $relatorio->set_rowspan(0);
+    $relatorio->set_grupoCorColuna(0);
+    
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

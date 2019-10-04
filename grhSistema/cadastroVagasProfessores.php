@@ -55,16 +55,16 @@ if($acesso){
     # select da lista
     $objeto->set_selectLista ('SELECT centro,
                                       tbcargo.nome,
-                                      tbconcursoVagas.obs,
+                                      tbconcursovagas.obs,
                                       idConcursoVagas
-                                 FROM tbconcursoVagas LEFT JOIN tbcargo USING (idCargo)
+                                 FROM tbconcursovagas LEFT JOIN tbcargo USING (idCargo)
                              ORDER BY centro');
 
     # select do edita
     $objeto->set_selectEdita('SELECT centro,
                                      idCargo,
                                      obs
-                                FROM tbconcursoVagas
+                                FROM tbconcursovagas
                                WHERE idConcursoVagas = '.$id);
 
     # Caminhos
@@ -82,7 +82,7 @@ if($acesso){
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbconcursoVagas');
+    $objeto->set_tabela('tbconcursovagas');
 
     # Nome do campo id
     $objeto->set_idCampo('idConcursoVagas');

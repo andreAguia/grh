@@ -43,7 +43,7 @@ if($acesso)
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Exercício","Dias"));
+    $relatorio->set_label(array("Exercício","Dias","Faltam"));
 
     $relatorio->set_conteudo($lista);
     $relatorio->set_botaoVoltar(FALSE);

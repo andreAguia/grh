@@ -3894,7 +3894,8 @@ class Pessoal extends Bd {
          */
 	
 	public function get_feriasResumo($idservidor){
-            $select = 'SELECT anoexercicio, SUM(numDias) as total                         
+            
+            $select = 'SELECT anoexercicio, SUM(numDias) as total                        
                          FROM tbferias
                         WHERE idservidor = '.$idservidor.'
                           AND (status = "fruída" OR status = "solicitada" OR status = "confirmada")
@@ -3917,9 +3918,10 @@ class Pessoal extends Bd {
                 # Verifica ano a ano
                 for($i = $maiorAno;$i >= $menorAno;$i--){
                    if(array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
-                       $novoArray[]=array($i,0);               // Acrescenta o ano com valor 0
+                       $novoArray[]=array($i,0,30);               // Acrescenta o ano com valor 0
                    }else{
-                       $novoArray[]=array($i,$this->get_feriasSomaDias($i, $idservidor));  // Acrescenta o ano com valor 0
+                       $dias = $this->get_feriasSomaDias($i, $idservidor);
+                       $novoArray[]=array($i,$dias, 30 - $dias);  // Acrescenta o ano com valor 0
                    }
                 }
              }

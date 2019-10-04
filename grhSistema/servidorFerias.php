@@ -227,7 +227,7 @@ if($acesso){
                     $tabela = new Tabela();
                     $tabela->set_conteudo($lista);
                     $tabela->set_titulo('Resumo');
-                    $tabela->set_label(array("Exercício","Dias"));
+                    $tabela->set_label(array("Exercício","Dias","Faltam"));
                     $tabela->set_align(array("center"));
                     $tabela->set_formatacaoCondicional(array( array('coluna' => 1,
                                                                     'valor' => 30,
@@ -276,7 +276,7 @@ if($acesso){
                 $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
                 $tabela = new Tabela();
                 $tabela->set_conteudo($lista);
-                $tabela->set_label(array("Exercício","Dias"));
+                $tabela->set_label(array("Exercício","Dias","Falta"));
                 $tabela->set_align(array("center"));
                 $tabela->show();
 

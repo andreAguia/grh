@@ -18,6 +18,27 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    
+    ########
+            
+    # Faz o backup de hora em hora
+
+    # Verifica se o backup automático está habilitado
+    if($intra->get_variavel("backupAutomatico")){
+
+        # Verifica as horas
+        $horaBackup = $intra->get_variavel("backupHora");
+        $horaAtual = date("H");
+
+        # Compara se são diferentes
+        if($horaAtual <> $horaBackup){                    
+            # Realiza backup
+            $processo = new Processo();
+            $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
+        }
+    }
+
+    ########
 	
     # Verifica a fase do programa
     $fase = get('fase');    

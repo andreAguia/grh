@@ -3906,7 +3906,7 @@ class Pessoal extends Bd {
              
              $novoArray = NULL;
              
-             # Pga o menor ano cadastrado
+             # Pega o menor ano cadastrado
              if($quantos > 0){
                 $menorValor = $row[$quantos-1];
                 $menorAno = $menorValor['anoexercicio'];

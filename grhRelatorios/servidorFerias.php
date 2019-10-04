@@ -36,7 +36,7 @@ if($acesso)
     
     $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
     
-    p("Férias Fruídas","center","f14");
+    p("Férias Fruídas & Solicitadas","center","f14");
 
     $relatorio = new Relatorio();   
     $relatorio->set_cabecalhoRelatorio(FALSE);
@@ -65,7 +65,7 @@ if($acesso)
                         ADDDATE(dtInicial,numDias-1)
                    FROM tbferias
                   WHERE idServidor = $idServidorPesquisado
-               ORDER BY dtInicial desc";
+               ORDER BY anoExercicio desc, dtInicial desc";
 
     $result = $pessoal->select($select);
 

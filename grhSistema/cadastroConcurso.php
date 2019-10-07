@@ -90,7 +90,7 @@ if($acesso)
                                    OR regime LIKE "%'.$parametro.'%"
                                    OR orgExecutor LIKE "%'.$parametro.'%"
                                    OR idConcurso LIKE "%'.$parametro.'%" 
-                             ORDER BY anobase desc');
+                             ORDER BY anobase desc, dtPublicacaoEdital desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT anobase,

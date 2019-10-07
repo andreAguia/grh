@@ -75,7 +75,11 @@ if($acesso)
                                       edital,
                                       dtPublicacaoEdital,
                                       regime,
-                                      tipo,
+                                      CASE tipo
+                                        WHEN 1 THEN "Adm & Tec"
+                                        WHEN 2 THEN "Professor"
+                                        ELSE "--"
+                                      END,
                                       orgExecutor,
                                       tbplano.numDecreto,
                                       idConcurso,
@@ -113,6 +117,8 @@ if($acesso)
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
+    
+    $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php'));
 
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));

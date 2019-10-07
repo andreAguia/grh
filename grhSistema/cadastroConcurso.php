@@ -74,6 +74,7 @@ if($acesso)
                                       anobase,
                                       edital,
                                       regime,
+                                      tipo,
                                       orgExecutor,
                                       tbplano.numDecreto,
                                       idConcurso,
@@ -91,6 +92,7 @@ if($acesso)
                                      edital,
                                      dtPublicacaoEdital,
                                      regime,
+                                     tipo,
                                      orgExecutor,
                                      idPlano,
                                      obs
@@ -99,20 +101,20 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Edital","Regime","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Ano Base","Edital","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -165,6 +167,14 @@ if($acesso)
                'label' => 'Regime:',
                'tipo' => 'combo',                              
                'array' => array("CLT","Estatutário"),
+               'col' => 3,
+               'size' => 20),
+        array ('linha' => 3,
+               'nome' => 'tipo',
+               'label' => 'Tipo:',
+               'tipo' => 'combo',                              
+               'array' => array(array(1,"Adm & Tec"),
+                                array(2,"Professor")),
                'col' => 3,
                'size' => 20),
          array ('linha' => 3,

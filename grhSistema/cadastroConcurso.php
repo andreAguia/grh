@@ -37,10 +37,9 @@ if($acesso)
     $id = soNumeros(get('id'));
     
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    }else{ 
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -72,7 +71,6 @@ if($acesso)
     # select da lista
     $objeto->set_selectLista ('SELECT idConcurso,
                                       anobase,
-                                      edital,
                                       dtPublicacaoEdital,
                                       regime,
                                       CASE tipo
@@ -106,22 +104,26 @@ if($acesso)
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    # Exclusão somente para administradores
+    if(Verifica::acesso($idUsuario,1)){
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Edital <br/>Processo","Edital <br/>Publicação","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
     
-    $objeto->set_funcao(array(NULL,NULL,NULL,'date_to_php'));
+    $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

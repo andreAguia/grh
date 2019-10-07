@@ -73,6 +73,7 @@ if($acesso)
     $objeto->set_selectLista ('SELECT idConcurso,
                                       anobase,
                                       edital,
+                                      dtPublicacaoEdital,
                                       regime,
                                       tipo,
                                       orgExecutor,
@@ -106,15 +107,15 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Edital","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Ano Base","Edital <br/>Processo","Edital <br/>Publicação","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

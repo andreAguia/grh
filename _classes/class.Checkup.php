@@ -237,7 +237,7 @@ class Checkup {
     
     public function get_trienioVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+        $prioridade = 1;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -332,7 +332,7 @@ class Checkup {
     
     public function get_trienioVencido($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+        $prioridade = 1;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);

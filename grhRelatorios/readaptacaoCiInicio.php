@@ -69,7 +69,7 @@ if($acesso){
     $ci->set_texto("Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
     . " ID $idFuncional, pelo prazo de $periodo meses, '<i>$parecer</i>', conforme publicação no DOERJ em $publicacao"
     . " em anexo, para fins de cumprimento.");
-    $ci->set_saltoRodape(5);
+    $ci->set_saltoRodape(3);
     $ci->show();
     
     # Grava o log da visualização do relatório

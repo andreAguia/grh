@@ -47,25 +47,23 @@ if($acesso){
     ################################################################
 
     # Nome do Modelo
-    $objeto->set_nome('Controle de Vagas de Professores');
+    $objeto->set_nome('Controle de Vagas de Docentes');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
     
     # select da lista
     $objeto->set_selectLista ('SELECT centro,
-                                      tbcargo.nome,
-                                      tbconcursovagas.obs,
-                                      idConcursoVagas
-                                 FROM tbconcursovagas LEFT JOIN tbcargo USING (idCargo)
+                                      tbcargo.nome
+                                      idVagaDocente
+                                 FROM tbvagadocente LEFT JOIN tbcargo USING (idCargo)
                              ORDER BY centro');
 
     # select do edita
     $objeto->set_selectEdita('SELECT centro,
-                                     idCargo,
-                                     obs
-                                FROM tbconcursovagas
-                               WHERE idConcursoVagas = '.$id);
+                                     idCargo
+                                FROM tbvagadocente
+                               WHERE idVagaDocente = '.$id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -74,18 +72,18 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Obs"));
-    $objeto->set_width(array(15,30,45));
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_label(array("Centro","Cargo"));
+    #$objeto->set_width(array(15,30,45));
+    $objeto->set_align(array("center","center"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbconcursovagas');
+    $objeto->set_tabela('tbvagadocente');
 
     # Nome do campo id
-    $objeto->set_idCampo('idConcursoVagas');
+    $objeto->set_idCampo('idVagaDocente');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -106,7 +104,7 @@ if($acesso){
                'nome' => 'centro',
                'label' => 'Centro:',
                'tipo' => 'combo',
-               'array' => array("CCT","CCTA","CCH","CBB"),
+               'array' => array(NULL,"CCT","CCTA","CCH","CBB"),
                'required' => TRUE,
                'autofocus' => TRUE,
                'size' => 30),
@@ -117,12 +115,7 @@ if($acesso){
                'tipo' => 'combo',
                'array' => $cargo,
                'required' => TRUE,
-               'size' => 30),
-        array ('linha' => 2,
-               'nome' => 'obs',
-               'label' => 'Observação:',
-               'tipo' => 'textarea',
-               'size' => array(80,5))));
+               'size' => 30)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

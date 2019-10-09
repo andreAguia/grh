@@ -51,7 +51,7 @@ if($acesso){
                                      JOIN tbtipocargo USING (idTipoCargo)
                                      JOIN tbcomissao USING (idServidor)
                WHERE tbservidor.situacao = 1
-                 AND idPerfil = 1
+                 AND (idPerfil = 1 OR idPerfil = 2 OR idPerfil = 4)
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND tbtipocargo.tipo = "Professor"
                  AND ((CURRENT_DATE BETWEEN tbcomissao.dtNom AND tbcomissao.dtExo) OR (tbcomissao.dtExo is NULL))';

@@ -61,13 +61,14 @@ if($acesso){
     $objeto->set_voltarLista('grh.php');
     
     # select da lista
-    $objeto->set_selectLista ('SELECT idConcurso,
-                                      idLotacao,
+    $objeto->set_selectLista ('SELECT concat(tbconcurso.anoBase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
+                                      concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
                                       area,
                                       idServidor,
-                                      obs,
+                                      tbconcursovaga.obs,
                                       idConcursoVaga
-                                 FROM tbconcursovaga
+                                 FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
+                                                     JOIN tblotacao USING (idLotacao)
                                 WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY idConcurso');
 
     # select do edita
@@ -88,7 +89,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("Concurso","Laboratório","Área","Servidor","Obs"));
-    #$objeto->set_width(array(15,30,45));
+    $objeto->set_funcao(array(NULL,NULL,NULL));
     $objeto->set_align(array("left","left","left","left","left"));
 
     # Classe do banco de dados

@@ -265,8 +265,7 @@ if($acesso){
             $menu->add_item('linkWindow','Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao','../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
             $menu->add_item('linkWindow','Escala Anual de Férias de Docentes Com Regencia de Turma','../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
             
-            #$menu->add_item('linkWindow','Escala Anual de Férias UENF - Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
-            
+            #$menu->add_item('linkWindow','Escala Anual de Férias de Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação','../grhRelatorios/escalaMensalFeriasGeralPorLotacao.php');
             #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação - Assinatura','../grhRelatorios/escalaMensalFeriasGeralPorLotacaoComAssinatura.php');
@@ -274,8 +273,8 @@ if($acesso){
             #$menu->add_item('linkWindow','Escala Semestral de Férias (Setembro - Janeiro)','../grhRelatorios/escalaSemestralFeriasGeralSetembroJaneiro.php');
             #$menu->add_item('linkWindow','Total de Férias por Ano do Exercício','../grhRelatorios/totalFeriasAnual.php');
             #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Férias','../grhRelatorios/servidorEmFerias.php');
+            #$menu->add_item('linkWindow','Servidores Em Férias Por Ano de Fruição','../grhRelatorios/ferias.fruicao.anual.porMes.emFerias.php');
             
-            $menu->add_item('linkWindow','Servidores Em Férias Por Ano de Fruição','../grhRelatorios/ferias.fruicao.anual.porMes.emFerias.php');
             $menu->show();
 
             break;

@@ -47,6 +47,7 @@ if($acesso){
     $periodo = $dados['periodo'];
     $processo = $dados['processo'];
     $parecer = $dados['parecer'];
+    $textoCi = $dados['textoCi'];
     
     # Trata a publicação
     if(vazio($pgPublicacao)){
@@ -67,7 +68,7 @@ if($acesso){
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
     $ci->set_texto("Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
-    . " ID $idFuncional, pelo prazo de $periodo meses, '<i>$parecer</i>', conforme publicação no DOERJ em $publicacao"
+    . " ID $idFuncional, pelo prazo de $periodo meses, <i>$textoCi</i>, conforme publicação no DOERJ em $publicacao"
     . " em anexo, para fins de cumprimento.");
     $ci->set_saltoRodape(3);
     $ci->show();

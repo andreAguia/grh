@@ -31,6 +31,7 @@ if($acesso){
     # Pega os parâmetros
     $parametroAno = post("parametroAno",date('Y')+1);
     $parametroData = post("parametroData",date_to_bd($dataDev));
+    $parametroLotacao = post("parametroLotacao","*");
     
     $intra->set_variavel("dataDevolucaoGrh",date_to_php($parametroData));
     
@@ -53,9 +54,14 @@ if($acesso){
                  AND idPerfil = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND tbtipocargo.tipo = "Professor"
-                 AND ((CURRENT_DATE BETWEEN tbcomissao.dtNom AND tbcomissao.dtExo) OR (tbcomissao.dtExo is NULL)) 
-            ORDER BY 3,tbpessoa.nome';
-
+                 AND ((CURRENT_DATE BETWEEN tbcomissao.dtNom AND tbcomissao.dtExo) OR (tbcomissao.dtExo is NULL))';
+    
+    if($parametroLotacao <> "*"){
+        $select .= ' AND idLotacao = '.$parametroLotacao;
+    }
+    
+    $select .= ' ORDER BY 3,tbpessoa.nome';
+    
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
@@ -77,6 +83,13 @@ if($acesso){
     $relatorio->set_dataImpressao(FALSE);
     $relatorio->set_funcaoFinalGrupo("textoEscalaFerias");
     $relatorio->set_funcaoFinalGrupoParametro(NULL);
+    
+    $listaLotacao = $servidor->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                           WHERE tblotacao.ativo  
+                                          ORDER BY ativo desc,lotacao');
+    array_unshift($listaLotacao,array('*','Todos'));
+        
     $relatorio->set_formCampos(array(
                                array ('nome' => 'parametroAno',
                                       'label' => 'Ano:',
@@ -84,7 +97,7 @@ if($acesso){
                                       'size' => 10,
                                       'padrao' => $parametroAno,
                                       'title' => 'Ano',
-                                      'col' => 3,
+                                      'col' => 2,
                                       'linha' => 1),
                                 array ('nome' => 'parametroData',
                                        'label' => 'Data da Entrega:',
@@ -94,12 +107,22 @@ if($acesso){
                                        'col' => 3,
                                        'valor' => $parametroData,
                                        'title' => 'A data da entrega das Escalas de férias'),
+                                array ('nome' => 'parametroLotacao',
+                                       'label' => 'Lotação:',
+                                       'tipo' => 'combo',
+                                       'array' => $listaLotacao,
+                                       'size' => 30,
+                                       'padrao' => $parametroLotacao,
+                                       'onChange' => 'formPadrao.submit();',
+                                       'title' => 'Mês',
+                                       'col' => 5,
+                                       'linha' => 1),
                                 array ('nome' => 'Salva',
                                        'label' => '&nbsp;', 
                                        'valor' => 'Muda',
                                        'tipo' => 'submit',
                                        'size' => 10,
-                                       'col' => 3,
+                                       'col' => 2,
                                        'linha' => 1),
             ));
 

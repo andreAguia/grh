@@ -176,13 +176,13 @@ if($acesso){
                 
 ';
     
-    
     # Começa uma nova página
     $page = new Page();
     
     if($fase == "editar"){
         $page->set_ready($jscript);
     }
+    
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -601,7 +601,24 @@ if($acesso){
             $periodo = $dados['periodo'];
             $processo = $dados['processo'];
             $tipo = $dados['tipo'];
+            $parecer = $dados['parecer'];
+            $textoCi = $dados['textoCi'];
             
+            # Servidor
+            $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
+            $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
+            
+            # Trata a publicação
+            if(vazio($pgPublicacao)){
+                $publicacao = $dtPublicacao;
+            }else{
+                $publicacao = "$dtPublicacao, pág. $pgPublicacao";
+            }
+            
+            if(vazio($textoCi)){
+                $textoCi = $parecer;
+            }
+                        
             # Chefia imediata desse servidor
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
             $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
@@ -657,7 +674,7 @@ if($acesso){
             $controle = new Input('chefia','texto','Chefia:',1);
             $controle->set_size(200);
             $controle->set_linha(2);
-            $controle->set_col(12);
+            $controle->set_col(6);
             $controle->set_valor($nomeGerenteDestino);
             #$controle->set_required(TRUE);
             $controle->set_title('O nome da chefia imediata.');
@@ -666,13 +683,23 @@ if($acesso){
             # Cargo
             $controle = new Input('cargo','texto','Cargo:',1);
             $controle->set_size(200);
-            $controle->set_linha(3);
-            $controle->set_col(12);
+            $controle->set_linha(2);
+            $controle->set_col(6);
             $controle->set_valor($gerenciaImediataDescricao);
             #$controle->set_required(TRUE);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
-
+            
+            # texto da ci
+            $controle = new Input('textoCi','textarea','Texto da Ci:',1);
+            $controle->set_size(array(80,5));
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($textoCi);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O texto da CI.');
+            $form->add_item($controle);
+            
             # submit
             $controle = new Input('salvar','submit');
             $controle->set_valor('Salvar');
@@ -718,6 +745,7 @@ if($acesso){
             
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
+            $textoCi = post("textoCi");
             
             # Prepara para enviar por get
             $array = array($chefeDigitado,$cargoDigitado);
@@ -778,8 +806,8 @@ if($acesso){
             # Salva as alterações
             $pessoal->set_tabela("tbreadaptacao");
             $pessoal->set_idCampo("idReadaptacao");
-            $campoNome = array('numCiInicio','dtCiInicio','tipo');
-            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$tipo);
+            $campoNome = array('numCiInicio','dtCiInicio','tipo','textoCi');
+            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$tipo,$textoCi);
             $pessoal->gravar($campoNome,$campoValor,$id);
             $data = date("Y-m-d H:i:s");                
                 

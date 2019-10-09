@@ -12,6 +12,9 @@ $resultado = $campoValor[9];
 $dtInicio = date_to_php($campoValor[15]);
 $periodo = $campoValor[16];
 
+# Passa o parecer para caixa baixa
+$campoValor[17] = mb_strtolower($campoValor[17]);
+
 # Somente se for origem solicitado
 if($origem == 2){
     # Preenche o status de acordo com o resultado

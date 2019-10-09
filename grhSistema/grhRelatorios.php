@@ -90,7 +90,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
-                $menu->add_item('linkAjax','Movimentação de Pessoal (SigFis)','?fase=sigFis','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Movimentação de Pessoal','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Processo Eleitoral','?fase=eleitoral','','','divMenuRelatorioGrh');
@@ -367,10 +367,16 @@ if($acesso){
 
          case "sigFis";
             $menu = new Menu();
-            $menu->add_item('titulo','Movimentação de Pessoal (SigFis)');
+            $menu->add_item('titulo','Movimentação de Pessoal');
+            
+            $menu->add_item('titulo1','SigFis'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Admitidos','../grhRelatorios/sigFisAnualAdmitidos.php'); 
             $menu->add_item('linkWindow','Relatório Anual de Servidores Demitidos e Exonerados','../grhRelatorios/sigFisAnualDemitidos.php'); 
-            $menu->add_item('linkWindow','Relatório Anual de Servidores Nomeados','../grhRelatorios/sigFisAnualNomeados.php'); 
+            $menu->add_item('linkWindow','Relatório Anual de Servidores Nomeados','../grhRelatorios/sigFisAnualNomeados.php');
+            
+            $menu->add_item('titulo1','Vagas de Docentes'); 
+            $menu->add_item('linkWindow','Relatório Anual de Docentes Admitidos','../grhRelatorios/docentes.AnualAdmitidos.php');
+            $menu->add_item('linkWindow','Relatório Anual de Docentes Demitidos e Exonerados','../grhRelatorios/docentes.AnualDemitidos.php'); 
             $menu->show();
             break; 
         

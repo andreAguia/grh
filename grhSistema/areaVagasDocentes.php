@@ -54,7 +54,7 @@ if($acesso){
     
     # select da lista
     $objeto->set_selectLista ('SELECT centro,
-                                      tbcargo.nome
+                                      tbcargo.nome,
                                       idVagaDocente
                                  FROM tbvagadocente LEFT JOIN tbcargo USING (idCargo)
                              ORDER BY centro');
@@ -128,6 +128,13 @@ if($acesso){
             break;
 
         case "editar" :	
+            if(!vazio($id)){
+                set_session('idVagaDocente',$id);
+                loadPage("cadastroConcursoVaga.php");
+            }else{
+                $objeto->editar();
+            }
+            break;
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);

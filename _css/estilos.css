@@ -491,6 +491,28 @@ div#menuSuspenso{
 }
 
 /*******************************************
+ * Área de Vagas de Docentes
+ ******************************************/
+
+p#vagasAtivo {
+    font-size: 11px;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    font-weight:bold;
+    color: green;
+}
+
+p#vagasInativo {
+    font-size: 11px;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    font-weight:bold;
+    color: red;
+}
+
+/*******************************************
  * procedimentos
  ******************************************/
 

@@ -55,6 +55,11 @@ if($acesso){
     # select da lista
     $objeto->set_selectLista ('SELECT centro,
                                       tbcargo.nome,
+                                      idVagaDocente,
+                                      idVagaDocente,
+                                      idVagaDocente,
+                                      idVagaDocente,
+                                      idVagaDocente,
                                       idVagaDocente
                                  FROM tbvagadocente LEFT JOIN tbcargo USING (idCargo)
                              ORDER BY centro');
@@ -70,11 +75,27 @@ if($acesso){
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 2,
+                                                    'valor' => 'em Aberto',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),
+                                              array('coluna' => 2,
+                                                    'valor' => 'Ocupado',
+                                                    'operador' => '=',
+                                                    'id' => 'alerta')
+                                                    ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo"));
+    $objeto->set_label(array("Centro","Cargo","Status","Concurso","Laboratório","Área","Último Ocupante","Obs"));
     #$objeto->set_width(array(15,30,45));
-    $objeto->set_align(array("center","center"));
+    $objeto->set_align(array("center","center","center","center","left","center"));
+    
+    $objeto->set_classe(array(NULL,NULL,"VagaDocente","VagaDocente","VagaDocente","VagaDocente","VagaDocente","VagaDocente"));
+    $objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante"));
+    
+    #$objeto->set_rowspan(0);
+    #$objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -41,6 +41,7 @@ if($acesso){
     
     $centro = $vagaDados['centro'];
     $idCargo = $vagaDados['idCargo'];
+    $nomeCargo = $pessoal->get_nomeCargo($idCargo);
     
     # Começa uma nova página
     $page = new Page();			
@@ -53,12 +54,16 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
+    
+    # Exibe os dados do Servidor
+    $objeto->set_rotinaExtra("exibeDadosVaga");
+    $objeto->set_rotinaExtraParametro($idVagaDocente); 
 
     # Nome do Modelo
-    $objeto->set_nome('Controle de Vagas de Professores');
+    $objeto->set_nome("Histórico de Docentes Desta Vaga");
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('grh.php');
+    $objeto->set_voltarLista('areaVagasDocentes.php');
     
     # select da lista
     $objeto->set_selectLista ('SELECT concat(tbconcurso.anoBase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
@@ -69,7 +74,7 @@ if($acesso){
                                       idConcursoVaga
                                  FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
                                                      JOIN tblotacao USING (idLotacao)
-                                WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY idConcurso');
+                                WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idVagaDocente,
@@ -86,12 +91,22 @@ if($acesso){
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    if($vaga->get_status($idVagaDocente) == "Ocupado"){
+        $objeto->set_botaoIncluir(FALSE);
+    }
+    
+    $objeto->set_numeroOrdem(TRUE);
+    $objeto->set_numeroOrdemTipo('d');
 
     # Parametros da tabela
     $objeto->set_label(array("Concurso","Laboratório","Área","Servidor","Obs"));
     $objeto->set_funcao(array(NULL,NULL,NULL));
     $objeto->set_align(array("left","left","left","left","left"));
-
+    
+    $objeto->set_classe(array(NULL,NULL,NULL,"VagaDocente"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,"get_Nome"));
+            
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -139,13 +154,23 @@ if($acesso){
     
     ###############
     
+    # Pega o cargo dessa vaga
+    $idCargo = $vaga->get_idCargoVaga($idVagaDocente);
+    
     # Pega os dados da combo idServidor
     $select = 'SELECT idServidor,
                       tbpessoa.nome
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa) 
-                WHERE (idCargo = 128 OR idCargo = 129)
-                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
-             ORDER BY tbpessoa.nome';
+                WHERE idCargo = '.$idCargo.' 
+                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';
+    
+    if(vazio($id)){
+        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbconcursovaga WHERE idServidor IS NOT NULL) ';
+    }else{
+        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbconcursovaga WHERE idServidor IS NOT NULL AND idConcursoVaga <> '.$id.') ';
+    }
+                  
+    $select .= ' ORDER BY tbpessoa.nome';
 
     $docente = $pessoal->select($select);
     array_unshift($docente, array(NULL,NULL)); # Adiciona o valor de nulo
@@ -209,7 +234,7 @@ if($acesso){
     ################################################################
     switch ($fase){
         case "" :
-        case "listar" :
+        case "listar" :            
             $objeto->listar();
             break;
 

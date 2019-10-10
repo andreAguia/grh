@@ -104,12 +104,12 @@ if($acesso){
                               ORDER BY nome');
 
     array_unshift($perfil, array(NULL,NULL)); 
-
+    
     # Pega os dados da combo concurso
     $concurso = $pessoal->select('SELECT idconcurso,
-                                         concat(anobase," - ",regime) as nome
+                                         concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y")) as concurso
                                     FROM tbconcurso
-                                ORDER BY nome');
+                                ORDER BY dtPublicacaoEdital desc');
 
     array_unshift($concurso, array(NULL,NULL)); 
 

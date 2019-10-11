@@ -55,26 +55,28 @@ if($acesso){
     # select da lista
     $objeto->set_selectLista ('SELECT centro,
                                       tbcargo.nome,
-                                      idVagaDocente,
-                                      idVagaDocente,
-                                      idVagaDocente,
-                                      idVagaDocente,
-                                      idVagaDocente,
-                                      idVagaDocente
-                                 FROM tbvagadocente LEFT JOIN tbcargo USING (idCargo)
+                                      idVaga,
+                                      idVaga,
+                                      idVaga,
+                                      idVaga,
+                                      idVaga,
+                                      idVaga,
+                                      idVaga
+                                 FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
                              ORDER BY centro');
 
     # select do edita
     $objeto->set_selectEdita('SELECT centro,
                                      idCargo
-                                FROM tbvagadocente
-                               WHERE idVagaDocente = '.$id);
+                                FROM tbvaga
+                               WHERE idVaga = '.$id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    
     
     $objeto->set_formatacaoCondicional(array( array('coluna' => 2,
                                                     'valor' => 'em Aberto',
@@ -87,12 +89,14 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Concurso","Laboratório","Área","Último Ocupante","Obs"));
+    $objeto->set_label(array("Centro","Cargo","Status","Concurso","Laboratório","Área","Último Ocupante","Obs","Núm<br/>Concursos"));
     #$objeto->set_width(array(15,30,45));
     $objeto->set_align(array("center","center","center","center","left","center"));
     
-    $objeto->set_classe(array(NULL,NULL,"VagaDocente","VagaDocente","VagaDocente","VagaDocente","VagaDocente","VagaDocente"));
-    $objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante"));
+    $objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
+    
+    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
+    $objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
     
     #$objeto->set_rowspan(0);
     #$objeto->set_grupoCorColuna(0);
@@ -101,10 +105,10 @@ if($acesso){
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbvagadocente');
+    $objeto->set_tabela('tbvaga');
 
     # Nome do campo id
-    $objeto->set_idCampo('idVagaDocente');
+    $objeto->set_idCampo('idVaga');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -150,8 +154,8 @@ if($acesso){
 
         case "editar" :	
             if(!vazio($id)){
-                set_session('idVagaDocente',$id);
-                loadPage("cadastroConcursoVaga.php");
+                set_session('idVaga',$id);
+                loadPage("cadastroVagaHistorico.php");
             }else{
                 $objeto->editar();
             }

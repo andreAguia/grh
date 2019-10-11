@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Banco
+ * Cadastro de Histórico de Vagas de Docentes
  *  
  * By Alat
  */
@@ -33,11 +33,12 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    $idVagaDocente = get_session('idVagaDocente');
+    $idVaga = get_session('idVaga');
     
     # Pega os dados dessa vaga
-    $vaga = new VagaDocente();
-    $vagaDados = $vaga->get_dados($idVagaDocente);
+    $vaga = new Vaga();
+    $vagaDados = $vaga->get_dados($idVaga);
+    $numConcursos = $vaga->get_numConcursoVaga($idVaga);
     
     $centro = $vagaDados['centro'];
     $idCargo = $vagaDados['idCargo'];
@@ -57,10 +58,10 @@ if($acesso){
     
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("exibeDadosVaga");
-    $objeto->set_rotinaExtraParametro($idVagaDocente); 
+    $objeto->set_rotinaExtraParametro($idVaga); 
 
     # Nome do Modelo
-    $objeto->set_nome("Histórico de Docentes Desta Vaga");
+    $objeto->set_nome("Histórico de Concursos");
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('areaVagasDocentes.php');
@@ -70,21 +71,21 @@ if($acesso){
                                       concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
                                       area,
                                       idServidor,
-                                      tbconcursovaga.obs,
-                                      idConcursoVaga
-                                 FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
+                                      tbvagahistorico.obs,
+                                      idVagaHistorico
+                                 FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                                                      JOIN tblotacao USING (idLotacao)
-                                WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc');
+                                WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idVagaDocente,
+    $objeto->set_selectEdita('SELECT idVaga,
                                      idConcurso,
                                      idLotacao,
                                      area,
                                      idServidor,
                                      obs
-                                FROM tbconcursovaga
-                               WHERE idConcursoVaga = '.$id);
+                                FROM tbvagahistorico
+                               WHERE idVagaHistorico = '.$id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -92,7 +93,7 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
-    if($vaga->get_status($idVagaDocente) == "Ocupado"){
+    if($vaga->get_status($idVaga) == "Ocupado"){
         $objeto->set_botaoIncluir(FALSE);
     }
     
@@ -104,17 +105,17 @@ if($acesso){
     $objeto->set_funcao(array(NULL,NULL,NULL));
     $objeto->set_align(array("left","left","left","left","left"));
     
-    $objeto->set_classe(array(NULL,NULL,NULL,"VagaDocente"));
+    $objeto->set_classe(array(NULL,NULL,NULL,"Vaga"));
     $objeto->set_metodo(array(NULL,NULL,NULL,"get_Nome"));
             
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbconcursovaga');
+    $objeto->set_tabela('tbvagahistorico');
 
     # Nome do campo id
-    $objeto->set_idCampo('idConcursoVaga');
+    $objeto->set_idCampo('idVagaHistorico');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -122,10 +123,10 @@ if($acesso){
     ###############
     
     # Pega os dados da combo de vagas
-    $vagas = $pessoal->select('SELECT idVagaDocente,
+    $vagas = $pessoal->select('SELECT idVaga,
                                       concat(centro," / ",tbcargo.nome)
-                                 FROM tbvagadocente LEFT JOIN tbcargo USING (idCargo)
-                                 WHERE idVagaDocente = '.$idVagaDocente);
+                                 FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
+                                 WHERE idVaga = '.$idVaga);
 
     array_unshift($vagas, array(0,NULL));
     
@@ -155,7 +156,7 @@ if($acesso){
     ###############
     
     # Pega o cargo dessa vaga
-    $idCargo = $vaga->get_idCargoVaga($idVagaDocente);
+    $idCargo = $vaga->get_idCargoVaga($idVaga);
     
     # Pega os dados da combo idServidor
     $select = 'SELECT idServidor,
@@ -165,9 +166,9 @@ if($acesso){
                   AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';
     
     if(vazio($id)){
-        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbconcursovaga WHERE idServidor IS NOT NULL) ';
+        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT NULL) ';
     }else{
-        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbconcursovaga WHERE idServidor IS NOT NULL AND idConcursoVaga <> '.$id.') ';
+        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT NULL AND idVagaHistorico <> '.$id.') ';
     }
                   
     $select .= ' ORDER BY tbpessoa.nome';
@@ -180,12 +181,12 @@ if($acesso){
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'idVagaDocente',
+               'nome' => 'idVaga',
                'label' => 'Centro / Cargo',
                'tipo' => 'combo',
                'array' => $vagas,
                'col' => 3,
-               'padrao' => $idVagaDocente,
+               'padrao' => $idVaga,
                'size' => 30),
         array ('linha' => 1,
                'nome' => 'idConcurso',

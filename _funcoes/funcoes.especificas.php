@@ -831,7 +831,7 @@ function get_nomeSimples($nome){
 
 ##########################################################
 
-    function exibeDadosVaga($idVagaDocente){
+    function exibeDadosVaga($idVaga){
     /**
      * Função exibe dados de uma vaga
      * 
@@ -839,8 +839,8 @@ function get_nomeSimples($nome){
      */
         
         # Exibe dados da vaga
-        $vaga = new VagaDocente();
-        $vaga->exibeDadosVaga($idVagaDocente);
+        $vaga = new Vaga();
+        $vaga->exibeDadosVaga($idVaga);
     }
 
 ##########################################################

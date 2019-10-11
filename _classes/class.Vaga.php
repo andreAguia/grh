@@ -1,5 +1,5 @@
 <?php
-class VagaDocente{
+class Vaga{
  /**
   * Abriga as várias rotina do Controle de Vagas de Docentes
   * 
@@ -18,7 +18,7 @@ class VagaDocente{
 
     ###########################################################
     
-    function get_dados($idVagaDocente){
+    function get_dados($idVaga){
         
     /**
      * fornece a próxima tarefa a ser realizada
@@ -26,8 +26,8 @@ class VagaDocente{
         
         # Pega os dados
         $select="SELECT *
-                   FROM tbvagadocente
-                  WHERE idVagaDocente = $idVagaDocente";
+                   FROM tbvaga
+                  WHERE idVaga = $idVaga";
         
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select,FALSE);
@@ -77,25 +77,25 @@ class VagaDocente{
      * Método get_servidorOcupante
      * fornece o nome do servidor ocupante da último edital para esta vaga
      * 
-     * @param	string $idVagaDocente O id da vaga do servidor
+     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_servidorOcupante($idVagaDocente){
+    function get_servidorOcupante($idVaga){
         
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
             $select = 'SELECT idServidor
-                         FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
-                        WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
             
             $dado = $pessoal->select($select,FALSE);
             return $this->get_nome($dado[0]);
             
         }else{
-            return $idVagaDocente;
+            return $idVaga;
         }
     }
 
@@ -105,25 +105,25 @@ class VagaDocente{
      * Método get_laboratorioOcupante
      * fornece o nome do laboratório de servidor ocupante da último edital para esta vaga
      * 
-     * @param	string $idVagaDocente O id da vaga do servidor
+     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_laboratorioOcupante($idVagaDocente)
+    function get_laboratorioOcupante($idVaga)
     {
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
             $select = 'SELECT idLotacao
-                         FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
-                        WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
             
             $dado = $pessoal->select($select,FALSE);
             return $pessoal->get_nomeLotacao2($dado[0]);
             
         }else{
-            return $idVagaDocente;
+            return $idVaga;
         }
     }
 
@@ -133,25 +133,25 @@ class VagaDocente{
      * Método get_concursoOcupante
      * fornece o nome do concurso de servidor ocupante da último edital para esta vaga
      * 
-     * @param	string $idVagaDocente O id da vaga do servidor
+     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_concursoOcupante($idVagaDocente)
+    function get_concursoOcupante($idVaga)
     {
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
             $select = 'SELECT concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y"))
-                         FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
-                        WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
             
             $dado = $pessoal->select($select,FALSE);
             return $dado[0];
             
         }else{
-            return $idVagaDocente;
+            return $idVaga;
         }
     }
 
@@ -161,25 +161,25 @@ class VagaDocente{
      * Método get_areaOcupante
      * fornece area do concurso de servidor ocupante da último edital para esta vaga
      * 
-     * @param	string $idVagaDocente O id da vaga do servidor
+     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_areaOcupante($idVagaDocente)
+    function get_areaOcupante($idVaga)
     {
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
             $select = 'SELECT area
-                         FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
-                        WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
             
             $dado = $pessoal->select($select,FALSE);
             return $dado[0];
             
         }else{
-            return $idVagaDocente;
+            return $idVaga;
         }
     }
 
@@ -189,25 +189,25 @@ class VagaDocente{
      * Método get_obsOcupante
      * fornece a obs da vaga do servidor ocupante da último edital para esta vaga
      * 
-     * @param	string $idVagaDocente O id da vaga do servidor
+     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_obsOcupante($idVagaDocente)
+    function get_obsOcupante($idVaga)
     {
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
-            $select = 'SELECT tbconcursovaga.obs
-                         FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
-                        WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+            $select = 'SELECT tbvagahistorico.obs
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
             
             $dado = $pessoal->select($select,FALSE);
             return $dado[0];
             
         }else{
-            return $idVagaDocente;
+            return $idVaga;
         }
     }
 
@@ -217,19 +217,19 @@ class VagaDocente{
      * Método get_status
      * fornece o status da vaga
      * 
-     * @param	string $idVagaDocente O id da vaga do servidor
+     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_status($idVagaDocente){
+    function get_status($idVaga){
         
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
             $select = 'SELECT idServidor
-                         FROM tbconcursovaga JOIN tbconcurso USING (idConcurso)
-                        WHERE idVagaDocente = '.$idVagaDocente.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
             
             $dado = $pessoal->select($select,FALSE);
             
@@ -257,19 +257,19 @@ class VagaDocente{
      * Método get_idCargoVaga
      * fornece o idCargo de uma vaga
      * 
-     * @param	string $idVagaDocente O id da vaga
+     * @param	string $idVaga O id da vaga
      */
 
-    function get_idCargoVaga($idVagaDocente)
+    function get_idCargoVaga($idVaga)
     {
-        if(is_numeric($idVagaDocente)){
+        if(is_numeric($idVaga)){
             
             # Conecta o banco
             $pessoal = new Pessoal();
             
             $select = 'SELECT idCargo
-                         FROM tbvagadocente
-                        WHERE idVagaDocente = '.$idVagaDocente;
+                         FROM tbvaga
+                        WHERE idVaga = '.$idVaga;
             
             $dado = $pessoal->select($select,FALSE);
             return $dado[0];
@@ -285,31 +285,31 @@ class VagaDocente{
      * Método exibeDadosVaga
      * fornece os dados de uma vaga em forma de tabela
      * 
-     * @param	string $idVagaDocente O id da vaga
+     * @param	string $idVaga O id da vaga
      */
 
-    function exibeDadosVaga($idVagaDocente){ 
+    function exibeDadosVaga($idVaga){ 
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
         $select ="SELECT centro,
                          tbcargo.nome,
-                         idVagaDocente
-                    FROM tbvagadocente LEFT JOIN tbcargo USING (idCargo)
-                   WHERE idVagaDocente = $idVagaDocente";
+                         idVaga
+                    FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
+                   WHERE idVaga = $idVaga";
         
         $conteudo = $servidor->select($select,TRUE);
         
         $label = array("Centro","Cargo","Status");        
-        $classe = array(NULL,NULL,"VagaDocente");
+        $classe = array(NULL,NULL,"Vaga");
         $metodo = array(NULL,NULL,"get_status");
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
         $tabela->set_label($label);
-        $tabela->set_titulo("Vaga de Docente");
+        $tabela->set_titulo("Vaga");
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
         $tabela->set_totalRegistro(FALSE);
@@ -330,8 +330,29 @@ class VagaDocente{
         $tabela->show();
 
         $grid->fechaColuna();
-        $grid->fechaGrid();      
-        br();
+        $grid->fechaGrid(); 
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numConcursoVaga
+     * fornece o status da vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_numConcursoVaga($idVaga){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        $select = 'SELECT idServidor
+                     FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                    WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc';
+
+        $dado = $pessoal->count($select);
+        return $dado;
     }
 
     ###########################################################

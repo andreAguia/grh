@@ -72,6 +72,7 @@ if($acesso)
     $objeto->set_selectLista ('SELECT idConcurso,
                                       anobase,
                                       dtPublicacaoEdital,
+                                      idConcurso,
                                       regime,
                                       CASE tipo
                                         WHEN 1 THEN "Adm & Tec"
@@ -113,7 +114,7 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Edital","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
@@ -122,8 +123,8 @@ if($acesso)
     
     $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal",NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,"exibeEdital",NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

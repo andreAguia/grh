@@ -5044,7 +5044,35 @@ class Pessoal extends Bd {
         return $dataFinal;
     }
 
-###########################################################
+ ###########################################################
+    
+    public function exibeEdital($idConcurso){
+    /**
+     * Exibe um link para o edital
+     * 
+     * @param $idConcurso integer NULL O id do Concurso
+     * 
+     * @syntax $plano->exibeEdital($idConcurso);
+     */
+        
+        # Monta o arquivo
+        $arquivo = "../../_editais/".$idConcurso.".pdf";
+        
+        # Verifica se ele existe
+        if(file_exists($arquivo)){
+            
+            # Monta o link
+            $link = new Link(NULL,$arquivo,"Exibe o Edital");
+            $link->set_imagem(PASTA_FIGURAS_GERAIS."ver.png",20,20);
+            $link->set_target("_blank");
+            $link->show();
+            
+        }else{
+            echo "-";
+        }
+    }
+    
+    ###########################################################
 
 
 }

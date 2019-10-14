@@ -354,7 +354,8 @@ class Vaga{
         $dado = $pessoal->count($select);
         return $dado;
     }
-
+    
     ###########################################################
+
 
 }

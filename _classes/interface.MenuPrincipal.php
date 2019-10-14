@@ -277,7 +277,14 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS.'concurso.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Concursos');
         $botao->set_accesskey('o');
-        $menu->add_item($botao);   
+        $menu->add_item($botao); 
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vagas de Docentes');
+        $botao->set_url('areaVagasDocentes.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'vaga.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de controle de Vagas de Professores');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Licenças e Afastamentos');
@@ -416,13 +423,6 @@ class MenuPrincipal{
         $botao->set_url('areaFotografia.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'fotografia.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de controle de fotos dos servidores');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vagas de Docentes');
-        $botao->set_url('areaVagasDocentes.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'vaga.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área de controle de Vagas de Professores');
         $menu->add_item($botao);
         
         if(Verifica::acesso($this->idUsuario,1)){

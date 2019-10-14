@@ -33,6 +33,14 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega os parâmetros
+    $parametroCentro = post('parametroCentro',get_session('parametroCentro'));
+    $parametroCargo = retiraAspas(post('parametroCargo',get_session('parametroCargo')));
+        
+    # Joga os parâmetros par as sessions    
+    set_session('parametroCentro',$parametroCentro);
+    set_session('parametroCargo',$parametroCargo);
 
     # Começa uma nova página
     $page = new Page();			
@@ -53,17 +61,32 @@ if($acesso){
     $objeto->set_voltarLista('grh.php');
     
     # select da lista
-    $objeto->set_selectLista ('SELECT centro,
-                                      tbcargo.nome,
-                                      idVaga,
-                                      idVaga,
-                                      idVaga,
-                                      idVaga,
-                                      idVaga,
-                                      idVaga,
-                                      idVaga
-                                 FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-                             ORDER BY centro');
+    $select = 'SELECT centro,
+                    tbcargo.nome,
+                    idVaga,
+                    idVaga,
+                    idVaga,
+                    idVaga,
+                    idVaga,
+                    idVaga,
+                    idVaga
+               FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
+               WHERE TRUE ';
+    
+    # parametroCentro
+    if(!vazio($parametroCentro)){
+        $select .= "AND centro = '$parametroCentro'";
+    }
+    
+    # parametroCentro
+    if($parametroCargo <> 0){
+        $select .= "AND idCargo = $parametroCargo";
+    }
+    
+    $select .= ' ORDER BY centro';
+    
+    # select da lista
+    $objeto->set_selectLista ($select);
 
     # select do edita
     $objeto->set_selectEdita('SELECT centro,
@@ -144,11 +167,76 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    $objeto->set_botaoVoltarLista(FALSE);
+    $objeto->set_botaoIncluir(FALSE);
 
     ################################################################
     switch ($fase){
         case "" :
         case "listar" :
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+            
+            # Incluir
+            $botaoInserir = new Button("Incluir","?fase=editar");
+            $botaoInserir->set_title("Incluir"); 
+            $menu1->add_link($botaoInserir,"right");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            #$menu1->add_link($botaoRel,"right");
+
+            $menu1->show();
+            
+            ###
+            
+            # Formulário de Pesquisa
+            $form = new Form('?'); 
+            
+            # Centro 
+            $controle = new Input('parametroCentro','combo','Centro:',1);
+            $controle->set_size(10);
+            $controle->set_col(2);
+            $controle->set_array(array(NULL,"CCT","CCTA","CCH","CBB"));
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($parametroCentro);
+            $controle->set_onChange('formPadrao.submit();');
+            $form->add_item($controle);
+            
+            # Cargo 
+            $controle = new Input('parametroCargo','combo','Cargo:',1);
+            $controle->set_size(10);
+            $controle->set_col(3);
+            $controle->set_array($cargo);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $form->add_item($controle);
+
+            $form->show();
+            
+            ###
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
             $objeto->listar();
             break;
 

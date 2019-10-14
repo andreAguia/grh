@@ -844,3 +844,35 @@ function get_nomeSimples($nome){
     }
 
 ##########################################################
+    
+    function linkExibeVaga($idConcurso){
+    /**
+     * Exibe um link para as vagas de um concurso
+     * 
+     * @param $idConcurso integer NULL O id do Concurso
+     * 
+     * @syntax $plano->linkExibeVaga($idConcurso);
+     */
+        
+        # Verifica o idConcurso
+        if(Vazio($idConcurso)){
+            alert("É necessario informar o id do Concurso");
+        }else{
+            # Pega os dados do concurso
+            $concurso = new Concurso($idConcurso);
+            $dados = $concurso->get_dados();
+            
+            # Varifica se o tipo do concurso (2 - Professores ou 1 - Adm & técnico)
+            $tipo = $dados["tipo"];
+            
+            if($tipo == 2){
+                # Monta o link
+                $link = new Link(NULL,"cadastroConcurso.php?fase=listaVagasConcurso&id=$idConcurso","Exibe as vagas");
+                $link->set_imagem(PASTA_FIGURAS_GERAIS."ver.png",20,20);
+                $link->show();
+            }else{
+                echo "-";
+            }
+        }
+    }
+    

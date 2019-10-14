@@ -78,7 +78,8 @@ if($acesso)
                                         WHEN 1 THEN "Adm & Tec"
                                         WHEN 2 THEN "Professor"
                                         ELSE "--"
-                                      END,
+                                      END,                                      
+                                      idConcurso,
                                       orgExecutor,
                                       tbplano.numDecreto,
                                       idConcurso,
@@ -114,17 +115,17 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Edital","Regime","Tipo","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Edital","Regime","Tipo","Vagas","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
     
-    $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
+    $objeto->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,NULL,'linkExibeVaga'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal",NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,"exibeEdital",NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal",NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,"exibeEdital",NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -290,7 +291,7 @@ if($acesso)
             $grid->fechaGrid();
             break;
         
-    ################################################################
+################################################################
             
             case "listaServidoresInativos" :            
             # Limita o tamanho da tela
@@ -332,7 +333,7 @@ if($acesso)
             $grid->fechaGrid();
             break;
         
-    ################################################################
+################################################################
 			
         case "relatorio" :
             if($subFase == 1){        
@@ -351,7 +352,7 @@ if($acesso)
             }
             break;
     
-    ################################################################
+################################################################
             
         case "grafico" :
             # Botão voltar
@@ -396,6 +397,75 @@ if($acesso)
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+################################################################
+            
+            case "listaVagasConcurso" :            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            $concurso = new Concurso($id);
+            $dados = $concurso->get_dados();
+            
+            $anoBase = $dados["anobase"];
+            $dtPublicacao = $dados["dtPublicacaoEdital"];
+            
+            if(!vazio($dtPublicacao)){
+                $dtPublicacao = date_to_php($dtPublicacao);
+            }
+            
+            $titulo = "Vagas do concurso de $anoBase<br>Edital Publicado em $dtPublicacao";
+						
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+
+            $menu->show();
+
+            # Conecta com o banco de dados
+            $servidor = new Pessoal();
+
+            $select ='SELECT concat(tbconcurso.anobase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
+                             concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
+                             area,
+                             idServidor,
+                             tbvagahistorico.obs,
+                             idVagaHistorico
+                        FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                                             JOIN tblotacao USING (idLotacao)
+                       WHERE idConcurso = '.$id.' ORDER BY tbconcurso.dtPublicacaoEdital desc';
+
+            $conteudo = $servidor->select($select);
+            $numConteudo = $servidor->count($select);
+            
+            if($numConteudo > 0){
+                # Monta a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($conteudo);
+                $tabela->set_align(array("left","left","left","left","left"));
+                $tabela->set_label(array("Concurso","Laboratório","Área","Servidor","Obs"));
+                $tabela->set_titulo($titulo);
+                $tabela->set_classe(array(NULL,NULL,NULL,"Vaga"));
+                $tabela->set_metodo(array(NULL,NULL,NULL,"get_Nome"));
+                $tabela->set_numeroOrdem(TRUE);
+                $tabela->show();
+            }else{
+                tituloTable($titulo);
+                callout("Nenhuma vaga cadastrada","secondary");
+            }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
     }
     $page->terminaPagina();
 }else{

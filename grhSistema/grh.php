@@ -51,6 +51,7 @@ if($acesso){
     set_session('parametroCargoComissao');
     set_session('parametroLotacao');
     set_session('parametroCurso');
+    set_session('parametroInstituicao');
     set_session('parametroNivel');
     set_session('parametroEscolaridade');
     set_session('parametroPerfil');

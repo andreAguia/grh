@@ -203,7 +203,7 @@ if($acesso){
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso","Instituição"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center","left","left","left","left","left","left"));
+            $tabela->set_align(array("center","left","left","left","center","left","left"));
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
             $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
             
@@ -288,7 +288,7 @@ if($acesso){
                 
                 $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso","Instituição"));
                 $relatorio->set_conteudo($result);
-                $relatorio->set_align(array("center","left","left","left","left","left","left"));
+                $relatorio->set_align(array("center","left","left","left","center","left","left"));
                 $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
                 $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
                 $relatorio->show();

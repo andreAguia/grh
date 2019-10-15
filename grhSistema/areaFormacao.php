@@ -38,11 +38,13 @@ if($acesso){
     $parametroNivel = post('parametroNivel',get_session('parametroNivel','Todos'));
     $parametroEscolaridade = post('parametroEscolaridade',get_session('parametroEscolaridade','*'));
     $parametroCurso = post('parametroCurso',get_session('parametroCurso'));
+    $parametroInstituicao = post('parametroInstituicao',get_session('parametroInstituicao'));
     
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel',$parametroNivel);
     set_session('parametroEscolaridade',$parametroEscolaridade);
     set_session('parametroCurso',$parametroCurso);
+    set_session('parametroInstituicao',$parametroInstituicao);
     
     # Começa uma nova página
     $page = new Page();
@@ -118,7 +120,7 @@ if($acesso){
             $controle->set_valor($parametroNivel);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $controle->set_array(array("Todos","Doutorado","Superior","Médio","Fundamental","Elementar"));
             $controle->set_autofocus(TRUE);
             $form->add_item($controle);
@@ -130,7 +132,7 @@ if($acesso){
             $controle->set_valor($parametroEscolaridade);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $controle->set_array($result);
             $form->add_item($controle);
             
@@ -141,7 +143,17 @@ if($acesso){
             $controle->set_valor($parametroCurso);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            
+            # Curso
+            $controle = new Input('parametroInstituicao','texto','Instituição:',1);
+            $controle->set_size(100);
+            $controle->set_title('Instituiçlão de Ensino');
+            $controle->set_valor($parametroInstituicao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
@@ -154,7 +166,8 @@ if($acesso){
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbescolaridade.escolaridade,
-                      idFormacao
+                      idFormacao,
+                      instEnsino
                  FROM tbformacao JOIN tbpessoa USING (idPessoa)
                                  JOIN tbservidor USING (idPessoa)
                                  JOIN tbescolaridade USING (idEscolaridade)
@@ -174,6 +187,10 @@ if($acesso){
             if(!vazio($parametroCurso)){
                 $select .= ' AND tbformacao.habilitacao LIKE "%'.$parametroCurso.'%"';
             }
+            
+            if(!vazio($parametroInstituicao)){
+                $select .= ' AND tbformacao.instEnsino LIKE "%'.$parametroInstituicao.'%"';
+            }
                   
             $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
             
@@ -184,9 +201,9 @@ if($acesso){
             $tabela = new Tabela();   
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
+            $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso","Instituição"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center","left","left","left","left","left"));
+            $tabela->set_align(array("center","left","left","left","left","left","left"));
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
             $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
             
@@ -227,7 +244,8 @@ if($acesso){
                           tbservidor.idServidor,
                           tbservidor.idServidor,
                           tbescolaridade.escolaridade,
-                          idFormacao
+                          idFormacao,
+                          instEnsino
                      FROM tbformacao JOIN tbpessoa USING (idPessoa)
                                      JOIN tbservidor USING (idPessoa)
                                      JOIN tbescolaridade USING (idEscolaridade)
@@ -248,7 +266,12 @@ if($acesso){
 
                 if(!vazio($parametroCurso)){
                     $select .= ' AND tbformacao.habilitacao like "%'.$parametroCurso.'%"';
-                    $subTitulo .= 'Filtro : '.$parametroCurso.'<br/>';
+                    $subTitulo .= 'Filtro Curso: '.$parametroCurso.'<br/>';
+                }
+                
+                if(!vazio($parametroInstituicao)){
+                    $select .= ' AND tbformacao.instEnsino LIKE "%'.$parametroInstituicao.'%"';
+                    $subTitulo .= 'Filtro Instituição: '.$parametroInstituicao.'<br/>';
                 }
 
                 $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
@@ -263,9 +286,9 @@ if($acesso){
                 
                 $result = $pessoal->select($select);
                 
-                $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso"));
+                $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Escolaridade","Curso","Instituição"));
                 $relatorio->set_conteudo($result);
-                $relatorio->set_align(array("center","left","left","left","left","left"));
+                $relatorio->set_align(array("center","left","left","left","left","left","left"));
                 $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
                 $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
                 $relatorio->show();

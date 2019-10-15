@@ -110,12 +110,23 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
 
     # Pega os dados da combo escolaridade
-    $escolaridade = new Pessoal();
-    $result = $escolaridade->select('SELECT idEscolaridade, 
+    $result = $pessoal->select('SELECT idEscolaridade, 
                                             escolaridade
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
     array_unshift($result, array(NULL,NULL)); # Adiciona o valor de nulo
+    
+    # Pega os dados da datalist curso
+    $cursos = $pessoal->select('SELECT distinct habilitacao
+                                       FROM tbformacao
+                                   ORDER BY habilitacao');
+    array_unshift($cursos, array(NULL)); # Adiciona o valor de nulo
+    
+    # Pega os dados da datalist instEnsino
+    $instEnsino = $pessoal->select('SELECT distinct instEnsino
+                                       FROM tbformacao
+                                   ORDER BY instEnsino');
+    array_unshift($instEnsino, array(NULL)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array( array ( 'nome' => 'idEscolaridade',
@@ -131,6 +142,7 @@ if($acesso){
                                array ( 'nome' => 'habilitacao',
                                        'label' => 'Curso:',
                                        'tipo' => 'texto',
+                                       'datalist' => $cursos,
                                        'plm' => TRUE,
                                        'size' => 80,
                                        'col' => 8,
@@ -140,6 +152,7 @@ if($acesso){
                                array ( 'nome' => 'instEnsino',
                                        'label' => 'Instituição de Ensino:',
                                        'tipo' => 'texto',
+                                       'datalist' => $instEnsino,
                                        'size' => 80,
                                        'plm' => TRUE,
                                        'col' => 7,

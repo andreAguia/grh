@@ -51,7 +51,7 @@ if($acesso)
     $relatorio->set_totalRegistro(FALSE);
     $relatorio->set_label(array("Nível","Curso","Instituição","Ano de Término"));
     #$relatorio->set_width(array(10,80));
-    $relatorio->set_align(array("center"));
+    $relatorio->set_align(array("center","left","left"));
     #$relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,'date_to_php'));
 
     $relatorio->set_conteudo($result);

@@ -36,6 +36,9 @@ if($acesso)
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # Pega os dados do concurso
+    $concurso = new Concurso($id);
+    
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
@@ -236,6 +239,215 @@ if($acesso)
     ################################################################
 			
         case "editar" :
+            
+            # Limita a Tela 
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            if(vazio($id)){
+                # Vai para a rotina de inclusão
+                $objeto->editar();
+            }else{
+                
+                # Rotina de edição
+                $menu1 = new MenuBar();
+
+                # Voltar
+                $botaoVoltar = new Link("Voltar","?");
+                $botaoVoltar->set_class('button');
+                $botaoVoltar->set_title('Voltar a página anterior');
+                $botaoVoltar->set_accessKey('V');
+                $menu1->add_link($botaoVoltar,"left");
+                
+                # Incluir Publicação
+                $botaoInserir = new Button("Incluir Publicação","#");
+                $botaoInserir->set_title("Incluir Publicação"); 
+                $menu1->add_link($botaoInserir,"right");
+
+                # Editar
+                $botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
+                $botaoEditar->set_title("Editar concurso"); 
+                $menu1->add_link($botaoEditar,"right");
+
+                $menu1->show();
+
+                # Exibe os dados do Concurso
+                $concurso->exibeDadosConcurso();
+                
+                $grid->fechaColuna();
+                
+                #######################################################
+                # Menu
+                
+                $grid->abreColuna(3);
+
+                $painel = new Callout();
+                $painel->abre();
+
+                # Inicia o Menu de Cargos
+                titulo("Menu");
+
+                $menu = new Menu("menuProcedimentos");
+                #$menu->add_item('titulo','Cargos em Comissão');
+                
+                $menu->add_item('link','<b>Publicações</b>','?fase=editar&id='.$id);
+                $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+                
+                $menu->show();
+
+                $painel->fecha();
+
+                $grid->fechaColuna();
+                
+                #######################################################3
+                
+                $grid->abreColuna(9);
+
+                $select ='SELECT data,
+                                 pag,
+                                 descricao,
+                                 idConcursoPublicacao
+                            FROM tbconcursopublicacao
+                           WHERE idConcurso = '.$id;
+
+                $conteudo = $pessoal->select($select);
+                $numConteudo = $pessoal->count($select);
+
+                if($numConteudo > 1){
+                    # Monta a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($conteudo);
+                    $tabela->set_label(array("Data","Pag","Descrição"));
+                    $tabela->set_titulo("Publicações");
+                    $tabela->set_funcao(array("date_to_php"));
+                    $tabela->show();
+                }else{
+                    tituloTable("Publicações");
+                    callout("Nenhum Registro Encontrado","secondary");
+                }
+            
+                $grid->fechaColuna();
+                
+                 #######################################################
+            }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
+			
+        case "concursoVagas" :
+            
+            # Limita a Tela 
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+                # Rotina de edição
+                $menu1 = new MenuBar();
+
+                # Voltar
+                $botaoVoltar = new Link("Voltar","?");
+                $botaoVoltar->set_class('button');
+                $botaoVoltar->set_title('Voltar a página anterior');
+                $botaoVoltar->set_accessKey('V');
+                $menu1->add_link($botaoVoltar,"left");
+
+                # Incluir Vaga
+                $botaoInserir = new Button("Incluir Vaga","#");
+                $botaoInserir->set_title("Incluir Vaga"); 
+                $menu1->add_link($botaoInserir,"right");
+
+                # Editar
+                $botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
+                $botaoEditar->set_title("Editar concurso"); 
+                $menu1->add_link($botaoEditar,"right");
+
+                $menu1->show();
+
+                # Exibe os dados do Concurso
+                $concurso->exibeDadosConcurso();
+                
+                $grid->fechaColuna();
+                
+                #######################################################
+                # Menu
+                
+                $grid->abreColuna(3);
+
+                $painel = new Callout();
+                $painel->abre();
+
+                # Inicia o Menu de Cargos
+                titulo("Menu");
+
+                $menu = new Menu("menuProcedimentos");
+                #$menu->add_item('titulo','Cargos em Comissão');
+                
+                $menu->add_item('link','Publicações','?fase=editar&id='.$id);
+                $menu->add_item('link','<b>Vagas</b>','?fase=concursoVagas&id='.$id);
+                
+                $menu->show();
+
+                $painel->fecha();
+
+                $grid->fechaColuna();
+                
+                #######################################################3
+                
+                $grid->abreColuna(9);
+                
+                # Pega o tipo do concurso
+                $dados = $concurso->get_dados();
+                $tipo = $dados["tipo"];
+                
+                if($tipo == 1){
+                    echo "adm";
+                }else{
+                    # Exibe as vagas de Docente
+                    $select ='SELECT concat(tbconcurso.anobase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
+                                     concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
+                                     area,
+                                     idServidor,
+                                     tbvagahistorico.obs,
+                                     idVagaHistorico
+                                FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                                                     JOIN tblotacao USING (idLotacao)
+                               WHERE idConcurso = '.$id.' ORDER BY tbconcurso.dtPublicacaoEdital desc';
+
+                    $conteudo = $pessoal->select($select);
+                    $numConteudo = $pessoal->count($select);
+
+                    if($numConteudo > 0){
+                        # Monta a tabela
+                        $tabela = new Tabela();
+                        $tabela->set_conteudo($conteudo);
+                        $tabela->set_align(array("left","left","left","left","left"));
+                        $tabela->set_label(array("Concurso","Laboratório","Área","Servidor","Obs"));
+                        $tabela->set_titulo("Vagas de Professores");
+                        $tabela->set_classe(array(NULL,NULL,NULL,"Vaga"));
+                        $tabela->set_metodo(array(NULL,NULL,NULL,"get_Nome"));
+                        $tabela->set_numeroOrdem(TRUE);
+                        $tabela->show();
+                    }else{
+                        tituloTable("Vagas de Professores");
+                        callout("Nenhuma vaga cadastrada","secondary");
+                    }
+                }
+            
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
+			
+        case "editardeFato" :
+            $objeto->editar($id);
+            break;
+        
+    ################################################################        
+        
         case "excluir" :	
         case "gravar" :
             $objeto->$fase($id);
@@ -442,8 +654,8 @@ if($acesso)
                                              JOIN tblotacao USING (idLotacao)
                        WHERE idConcurso = '.$id.' ORDER BY tbconcurso.dtPublicacaoEdital desc';
 
-            $conteudo = $servidor->select($select);
-            $numConteudo = $servidor->count($select);
+            $conteudo = $pessoal->select($select);
+            $numConteudo = $pessoal->count($select);
             
             if($numConteudo > 0){
                 # Monta a tabela

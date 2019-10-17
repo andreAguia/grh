@@ -39,6 +39,11 @@ if($acesso)
     # Pega os dados do concurso
     $concurso = new Concurso($id);
     
+    # Pega os dados do concurso
+    if(!vazio($id)){
+         $dados = $concurso->get_dados();
+    }
+    
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
@@ -75,18 +80,14 @@ if($acesso)
     $objeto->set_selectLista ('SELECT idConcurso,
                                       anobase,
                                       dtPublicacaoEdital,
-                                      idConcurso,
                                       regime,
                                       CASE tipo
                                         WHEN 1 THEN "Adm & Tec"
                                         WHEN 2 THEN "Professor"
                                         ELSE "--"
-                                      END,                                      
-                                      idConcurso,
+                                      END,
                                       orgExecutor,
                                       tbplano.numDecreto,
-                                      idConcurso,
-                                      idConcurso,
                                       idConcurso
                                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                                 WHERE anobase LIKE "%'.$parametro.'%"
@@ -110,7 +111,8 @@ if($acesso)
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?fase=listar');
+    $objeto->set_linkListar('cadastroConcurso.php?fase=editar&id='.$id);
+    $objeto->set_voltarForm('cadastroConcurso.php?fase=editar&id='.$id);
     
     # Exclusão somente para administradores
     if(Verifica::acesso($idUsuario,1)){
@@ -118,17 +120,17 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Edital","Regime","Tipo","Vagas","Executor","Plano de Cargos","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor"));
     #$objeto->set_width(array(5,10,20,20,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
     
-    $objeto->set_funcao(array(NULL,NULL,'date_to_php',NULL,NULL,NULL,'linkExibeVaga'));
+    $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal",NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,"exibeEdital",NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    #$objeto->set_classe(array(NULL,NULL,NULL,"Pessoal",NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    #$objeto->set_metodo(array(NULL,NULL,NULL,"exibeEdital",NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -146,8 +148,7 @@ if($acesso)
     $objeto->set_formFocus('anobase');
 
     # Pega os dados da combo de Plano e Cargos
-    $tabela = new Pessoal();
-    $result = $tabela->select('SELECT idPlano, 
+    $result = $pessoal->select('SELECT idPlano, 
                                       numDecreto
                                   FROM tbplano
                               ORDER BY numDecreto');
@@ -260,14 +261,14 @@ if($acesso)
                 $menu1->add_link($botaoVoltar,"left");
                 
                 # Incluir Publicação
-                $botaoInserir = new Button("Incluir Publicação","#");
-                $botaoInserir->set_title("Incluir Publicação"); 
+                $botaoInserir = new Button("Incluir Publicação","cadastroConcursoPublicacao.php?fase=editar&idConcurso=".$id);
+                $botaoInserir->set_title("Incluir Publicação");
                 $menu1->add_link($botaoInserir,"right");
 
                 # Editar
-                $botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
-                $botaoEditar->set_title("Editar concurso"); 
-                $menu1->add_link($botaoEditar,"right");
+                #$botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
+                #$botaoEditar->set_title("Editar concurso"); 
+                #$menu1->add_link($botaoEditar,"right");
 
                 $menu1->show();
 
@@ -286,12 +287,19 @@ if($acesso)
 
                 # Inicia o Menu de Cargos
                 titulo("Menu");
-
+                br();
+                
                 $menu = new Menu("menuProcedimentos");
                 #$menu->add_item('titulo','Cargos em Comissão');
                 
                 $menu->add_item('link','<b>Publicações</b>','?fase=editar&id='.$id);
-                $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+                
+                if($dados["tipo"] == 2){
+                    $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+                }else{
+                    $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
+                    $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
+                }
                 
                 $menu->show();
 
@@ -303,23 +311,38 @@ if($acesso)
                 
                 $grid->abreColuna(9);
 
-                $select ='SELECT data,
+                $select ="SELECT data,
                                  pag,
                                  descricao,
+                                 obs,
+                                 idConcursoPublicacao,
+                                 idConcursoPublicacao,
                                  idConcursoPublicacao
                             FROM tbconcursopublicacao
-                           WHERE idConcurso = '.$id;
-
+                           WHERE idConcurso = $id  
+                        ORDER BY data desc";
+                
                 $conteudo = $pessoal->select($select);
                 $numConteudo = $pessoal->count($select);
-
-                if($numConteudo > 1){
+                
+                if($numConteudo > 0){
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Data","Pag","Descrição"));
+                    $tabela->set_label(array("Data","Pag","Descrição","Obs","Publicação"));
                     $tabela->set_titulo("Publicações");
                     $tabela->set_funcao(array("date_to_php"));
+                    $tabela->set_align(array("center","center","left","left"));
+                    
+                    $tabela->set_classe(array(NULL,NULL,NULL,NULL,"ConcursoPublicacao"));
+                    $tabela->set_metodo(array(NULL,NULL,NULL,NULL,"exibePublicacao"));
+                    
+                    $tabela->set_editar('cadastroConcursoPublicacao.php?fase=editar&idConcurso='.$id);
+                    $tabela->set_idCampo('idConcursoPublicacao');
+                    
+                    $tabela->set_excluir('cadastroConcursoPublicacao.php?fase=excluir&idConcurso='.$id);
+                    $tabela->set_idCampo('idConcursoPublicacao');
+                    
                     $tabela->show();
                 }else{
                     tituloTable("Publicações");
@@ -355,13 +378,13 @@ if($acesso)
 
                 # Incluir Vaga
                 $botaoInserir = new Button("Incluir Vaga","#");
-                $botaoInserir->set_title("Incluir Vaga"); 
+                $botaoInserir->set_title("Incluir Vaga");
                 $menu1->add_link($botaoInserir,"right");
 
                 # Editar
-                $botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
-                $botaoEditar->set_title("Editar concurso"); 
-                $menu1->add_link($botaoEditar,"right");
+                #$botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
+                #$botaoEditar->set_title("Editar concurso"); 
+                #$menu1->add_link($botaoEditar,"right");
 
                 $menu1->show();
 
@@ -380,6 +403,7 @@ if($acesso)
 
                 # Inicia o Menu de Cargos
                 titulo("Menu");
+                br();
 
                 $menu = new Menu("menuProcedimentos");
                 #$menu->add_item('titulo','Cargos em Comissão');
@@ -476,7 +500,7 @@ if($acesso)
             $menu = new MenuBar();
 
             # Voltar
-            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar = new Link("Voltar","?fase=editar&id=".$id);
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
@@ -505,7 +529,7 @@ if($acesso)
         
 ################################################################
             
-            case "listaServidoresInativos" :            
+        case "listaServidoresInativos" :            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -517,7 +541,7 @@ if($acesso)
             $menu = new MenuBar();
 
             # Voltar
-            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar = new Link("Voltar","?fase=editar&id=".$id);
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
@@ -612,7 +636,7 @@ if($acesso)
         
 ################################################################
             
-            case "listaVagasConcurso" :            
+        case "listaVagasConcurso" :            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);

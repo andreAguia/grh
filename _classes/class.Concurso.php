@@ -95,7 +95,7 @@ class Concurso
                            ELSE "--"
                          END,
                          orgExecutor,
-                         tbplano.numDecreto
+                         tbplano.numDecreto,
                          idConcurso
                     FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                    WHERE idConcurso = '.$this->idConcurso;
@@ -119,6 +119,10 @@ class Concurso
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
         
+        $tabela->set_editar("?fase=editardeFato&id=".$this->idConcurso);
+        $tabela->set_nomeColunaEditar("Editar");
+        $tabela->set_idCampo('idConcurso');
+                    
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
@@ -130,5 +134,34 @@ class Concurso
     }
 
     ###########################################################
+    
+    public function exibeEdital($idConcurso){
+    /**
+     * Exibe um link para o edital
+     * 
+     * @param $idConcurso integer NULL O id do Concurso
+     * 
+     * @syntax $plano->exibeEdital($idConcurso);
+     */
+        
+        # Monta o arquivo
+        $arquivo = "../../_editais/".$idConcurso.".pdf";
+        
+        # Verifica se ele existe
+        if(file_exists($arquivo)){
+            
+            # Monta o link
+            $link = new Link(NULL,$arquivo,"Exibe o Edital");
+            $link->set_imagem(PASTA_FIGURAS_GERAIS."ver.png",20,20);
+            $link->set_target("_blank");
+            $link->show();
+            
+        }else{
+            echo "-";
+        }
+    }
+    
+    ###########################################################
+
 
 }

@@ -300,12 +300,11 @@ class PlanoCargos{
      */
     
         # Pega os projetos cadastrados
-        $select = 'SELECT faixa,
+        $select = "SELECT faixa,
                           valor,
                           tbplano.numdecreto
                      FROM tbclasse LEFT JOIN tbplano USING (idPlano)
-                     WHERE idClasse = "'.$idClasse.'"';
-        
+                     WHERE idClasse = $idClasse";
         
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,false);

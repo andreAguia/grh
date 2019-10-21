@@ -212,18 +212,19 @@ class Pessoal extends Bd {
      * Retorna um array com os setores e os ramais
      */
     public function get_ramais(){
-            $select =' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
-                          ramais
-                     FROM tblotacao
-                    WHERE ativo = "Sim"
-                      AND GER <> "CEDIDO"
-                      AND ramais <> ""
-                 ORDER BY lotacao asc';
+        
+        $select =' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
+                      ramais
+                 FROM tblotacao
+                WHERE ativo = "Sim"
+                  AND GER <> "CEDIDO"
+                  AND ramais <> ""
+             ORDER BY lotacao asc';
 
-            # conecta com o banco
-            $result = parent::select($select);
-            return $result;
+        # conecta com o banco
+        $result = parent::select($select);
 
+        return $result;
     }
 
 ###########################################################
@@ -236,16 +237,37 @@ class Pessoal extends Bd {
      */
 
     public function get_salarioBase($idServidor){
-            $select = 'SELECT tbclasse.valor
-                         FROM tbprogressao, tbclasse
-                         WHERE idServidor = '.$idServidor.'
-                           AND tbprogressao.idClasse = tbclasse.idClasse
-                  ORDER BY valor desc';
+        
+        $select = 'SELECT tbclasse.valor
+                     FROM tbprogressao, tbclasse
+                     WHERE idServidor = '.$idServidor.'
+                       AND tbprogressao.idClasse = tbclasse.idClasse
+              ORDER BY valor desc';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select,FALSE);
 
-            return $row[0];
+        return $row[0];
+    }
 
+###########################################################
+
+    /**
+     * Método get_idClasseServidor
+     * informa o idClasse do salário atual de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    public function get_idClasseServidor($idServidor){
+        
+        $select = "SELECT idClasse
+                     FROM tbprogressao
+                    WHERE idServidor = $idServidor
+                 ORDER BY dtInicial desc";
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
     }
 
 ###########################################################

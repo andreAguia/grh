@@ -876,3 +876,38 @@ function get_nomeSimples($nome){
         }
     }
     
+##########################################################
+
+    function exibeDadosSalarioAtual($idServidor){
+    /**
+     * Função exibe dados do salario atual do servidor
+     * 
+     * Usado no relatório financeiro de progressao
+     */
+        
+        # Conecta 
+        $pessoal = new Pessoal();
+        
+        # Pega o idClasse so salário atual
+        $idClasse = $pessoal->get_idClasseServidor($idServidor);
+        
+        if(vazio($idClasse)){
+            return NULL;
+        }else{
+        
+            # Pega os dados desse idClasse
+            $select = "SELECT faixa,
+                              valor,
+                              tbplano.numdecreto
+                         FROM tbclasse LEFT JOIN tbplano USING (idPlano)
+                         WHERE idClasse = $idClasse";
+
+            $row = $pessoal->select($select,FALSE);
+
+            $return = $row[0]." - ".$row[1]."<br/>".$row[2];
+            return $return;
+        }
+    }
+
+##########################################################
+    

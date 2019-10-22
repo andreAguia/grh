@@ -63,6 +63,30 @@ class Progressao{
     
     ###########################################################
     
+    function get_IdPlanoAtual($idServidor = NULL){
+        
+        /**
+         * Fornece o idPlano atual do servidor
+         */
+        
+        # Troca o valor informado para a variável da classe
+        if(!vazio($idServidor)){
+            $this->idServidor = $idServidor;
+        }
+        
+        $select = "SELECT tbclasse.idPlano
+                     FROM tbprogressao LEFT JOIN tbclasse USING (idCLasse)
+                    WHERE idServidor = $this->idServidor
+                 ORDER BY dtInicial desc";
+        
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+
+        return $row[0];
+    }
+    
+    ###########################################################
+    
     function get_dtInicialAtual($idServidor){
         
         /**
@@ -101,19 +125,30 @@ class Progressao{
         # Pega o idClasse do servidor
         $idClasse = $this->get_IdClasseAtual();
         
-        # Pega o nível do cargo desse servidor
+        # Pega o idPlano do servidor
+        $idPlano = $this->get_IdPlanoAtual();
+        
+        # Pega os dados do servidor
         $pessoal = new Pessoal();
-        $nivel = $pessoal->get_nivelCargo($this->idServidor);
+        $nivel = $pessoal->get_nivelCargo($this->idServidor);   // O nivel do cargo
         
         # Pega o idCLasse da última classe possível do plano de cargos vigente para esse servidor
         $plano = new PlanoCargos();
         $idClasseUltimo = $plano->ultimoIdClasse($nivel);
         
+        # Pega o plano de cargos atual
+        $idPlanoAtual = $plano->get_planoAtual();
+        
+        
         # Analisa se o servidor está na última classe possível
         if($idClasse == $idClasseUltimo){
             $analise = "Não Pode Progredir";
         }else{
-            $analise = "Pode Progredir";
+            if($idPlano <> $idPlanoAtual){
+                $analise = "Plano ERRADO";
+            }else{
+                $analise = "Pode Progredir";
+            }
         }
         
         return $analise;

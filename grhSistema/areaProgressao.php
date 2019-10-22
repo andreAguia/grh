@@ -162,11 +162,15 @@ if($acesso){
             $tabela->set_formatacaoCondicional(array( array('coluna' => 6,
                                                             'valor' => 'Pode Progredir',
                                                             'operador' => '=',
-                                                            'id' => 'emAberto'),
+                                                            'id' => 'podeProgredir'),
+                                                      array('coluna' => 6,
+                                                            'valor' => 'Plano ERRADO',
+                                                            'operador' => '=',
+                                                            'id' => 'planoErrado'),
                                                       array('coluna' => 6,
                                                             'valor' => 'Não Pode Progredir',
                                                             'operador' => '=',
-                                                            'id' => 'alerta')   
+                                                            'id' => 'tanofim')   
                                                             ));
             $tabela->show();
             

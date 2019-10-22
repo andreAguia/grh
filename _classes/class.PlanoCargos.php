@@ -204,7 +204,7 @@ class PlanoCargos{
     
     public function get_planoVigente($data = NULL,$idServidor = NULL){
     /**
-     * Retorna o id do cadastro de plano de cargos que estava vigente na data indicada para o servidor indicado
+     * Retorna o id do plano de cargos que estava vigente na data indicada para o servidor indicado
      * 
      * @param $data       date    NULL A data desejada
      * @param $idServidor integer NULL O id do servidor analizado
@@ -438,5 +438,26 @@ class PlanoCargos{
         return $idClasse;
     }
 
+    ###########################################################
+    
+    public function get_planoAtual(){
+    /**
+     * Retorna o id do plano de cargos Atualmente vigente
+     * 
+     * @syntax $plano->get_planoAtual();
+     */
+    
+        # Conecta
+        $pessoal = new Pessoal();
+        
+        # Pega os projetos cadastrados
+        $select = 'SELECT idPlano
+                     FROM tbplano
+                     WHERE planoAtual';
+        
+        $row = $pessoal->select($select,FALSE);
+        return $row[0];
+    }
+    
     ###########################################################
 }

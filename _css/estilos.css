@@ -168,6 +168,21 @@ p#pprogressao2{
     margin: 0px;
     font-size: 10px;
 }
+/*******************************************
+ * Área de Progressão e Enquadramento
+ *******************************************/
+
+tr#tanofim td{
+    background-color: #cccccc;
+}
+
+tr#podeProgredir td{
+    background-color: #8FBC8F;
+}
+
+tr#planoErrado td{
+    background-color: #e89f9f;
+}
 
 /*******************************************
  * Aniversariante do dia

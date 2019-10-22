@@ -18,9 +18,12 @@ if($acesso){
     
     # Conecta ao Banco de Dados
     $plano = new PlanoCargos();
+    
+    # Pega o idPlano atual
+    $idPlano = $plano->get_planoAtual();
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));
+    $id = soNumeros(get('id',$idPlano));
 
     # Começa uma nova página
     $page = new Page();			

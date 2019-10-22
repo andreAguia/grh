@@ -35,7 +35,7 @@ if($acesso)
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
-                     tbservidor.dtAdmissao,
+                     tbservidor.idServidor,
                      CONCAT("Nível ",tbtipocargo.nivel),
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -54,13 +54,13 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Administrativos e Técnicos Ativos');
     $relatorio->set_tituloLinha2('Com a Última Progressão / Enquadramento');
     $relatorio->set_subtitulo('Agrupados por Escolaridade do Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Salário Atual','Admissão',"Nível"));
+    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Salário Atual','Data Inicial',"Nível"));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"exibeDadosSalarioAtual","date_to_php"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"exibeDadosSalarioAtual"));
     
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Progressao"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_dtInicialAtual"));
     
     $relatorio->set_bordaInterna(TRUE);
     $relatorio->set_conteudo($result);

@@ -320,7 +320,6 @@ class PlanoCargos{
     * Exibe o menu de Planos de Cargo.
     * 
     * @syntax PlanoCargos::menuPlanos;
-    * 
     */    
    
         # Acessa o banco de dados
@@ -402,5 +401,42 @@ class PlanoCargos{
        
     }
     
+    ###########################################################
+    
+    public function ultimoIdClasse($nivel){
+    /**
+    * Exibe o último idClasse do plano vigente para o nível do cargo informado
+    * 
+    * @syntax PlanoCargos->ultimoIdClasse("Elementar");
+    */    
+   
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        
+        ########
+        
+        # Pega o plano atual
+        $select = 'SELECT idPlano
+                     FROM tbplano
+                    WHERE planoAtual';
+                
+        $row = $pessoal->select($select,false);
+        $idPlano = $row[0];
+        
+        ########
+        
+        # Pega o uĺtimo idClasse do idPlano atual e do nível informado
+        $select = 'SELECT idClasse
+                     FROM tbclasse
+                    WHERE idPlano = '.$idPlano.'
+                      AND nivel = "'.$nivel.'"    
+                  ORDER BY valor desc';
+        
+        $row = $pessoal->select($select,false);
+        $idClasse = $row[0];
+        
+        return $idClasse;
+    }
+
     ###########################################################
 }

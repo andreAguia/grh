@@ -129,7 +129,8 @@ if($acesso){
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
-                     tbservidor.dtAdmissao,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                 LEFT JOIN tbperfil USING (idPerfil)
@@ -145,18 +146,28 @@ if($acesso){
 
             $tabela = new Tabela();  
             $tabela->set_titulo('Servidores Administrativos e Técnicos Ativos Com a Última Progressão / Enquadramento');            
-            $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Salário Atual','Admissão'));
+            $tabela->set_label(array('IdFuncional','Nome','Cargo','Lotação','Salário Atual','Data Inicial','Análise'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center","left","left","left"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"exibeDadosSalarioAtual","date_to_php"));
+            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"exibeDadosSalarioAtual"));
 
-            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao"));
+            $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Progressao","Progressao"));
+            $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_dtInicialAtual","analisaServidor"));
 
             $tabela->set_conteudo($result);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
+            
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 6,
+                                                            'valor' => 'Pode Progredir',
+                                                            'operador' => '=',
+                                                            'id' => 'emAberto'),
+                                                      array('coluna' => 6,
+                                                            'valor' => 'Não Pode Progredir',
+                                                            'operador' => '=',
+                                                            'id' => 'alerta')   
+                                                            ));
             $tabela->show();
             
             $grid->fechaColuna();

@@ -19,6 +19,9 @@ if($acesso){
     
     # Verifica a fase do programa
     $fase = get('fase','listar');
+    
+    # Verifica de onde veio
+    $origem = get_session("origem");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -47,7 +50,11 @@ if($acesso){
     $objeto->set_nome('Cadastro de Progressões e Enquadramentos do Servidor');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
+    if($origem == "areaProgressao.php"){
+        $objeto->set_voltarLista($origem);
+    }else{
+        $objeto->set_voltarLista('servidorMenu.php');
+    }
 
     # ordenação
     if(is_null($orderCampo)){

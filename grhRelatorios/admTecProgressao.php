@@ -26,7 +26,7 @@ if($acesso)
     $page->iniciaPagina();
     
     # Pega os parâmetros dos relatórios
-    $nivel = get('nivel',post('nivel','Elementar'));
+    $parametroNivel = post('parametroNivel',get_session('parametroNivel','Elementar'));
 
     ######
     
@@ -45,7 +45,7 @@ if($acesso)
                WHERE tbservidor.situacao = 1
                  AND tbtipocargo.tipo = "Adm/Tec"
                  AND (idPerfil = 1 OR idPerfil = 4)
-                 AND tbtipocargo.nivel = "'.$nivel.'"
+                 AND tbtipocargo.nivel = "'.$parametroNivel.'"
             ORDER BY tbtipocargo.nivel, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -67,13 +67,13 @@ if($acesso)
     $relatorio->set_numGrupo(6);
 
     $relatorio->set_formCampos(array(
-                               array ('nome' => 'nivel',
+                               array ('nome' => 'parametroNivel',
                                       'label' => 'Nivel:',
                                       'tipo' => 'combo',
                                       'array' => array("Elementar","Fundamental","Médio","Superior"),
                                       'size' => 30,
                                       'col' => 4,
-                                      'padrao' => $nivel,
+                                      'padrao' => $parametroNivel,
                                       'title' => 'Nível de Escolaridade do Cargo',
                                       'onChange' => 'formPadrao.submit();',
                                       'linha' => 1)));

@@ -419,6 +419,13 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
+        $botao->set_label('Progressão & Enquadramento');
+        $botao->set_url('areaProgressao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'progressao.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área das rotinas de Progressão e enquadramento do serviodor');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Área de Fotografia');
         $botao->set_url('areaFotografia.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'fotografia.png',$tamanhoImage,$tamanhoImage);

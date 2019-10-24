@@ -35,10 +35,10 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Pega os parâmetros    
-    $parametroNivel = post('parametroNivel',get_session('parametroNivel','Elementar'));
+    $parametroCargo = post('parametroCargo',get_session('parametroCargo',6));
     
     # Joga os parâmetros par as sessions   
-    set_session('parametroNivel',$parametroNivel);
+    set_session('parametroCargo',$parametroCargo);
     
     # Começa uma nova página
     $page = new Page();
@@ -98,28 +98,27 @@ if($acesso){
         ##############
             
             # Pega os dados da combo escolaridade
-            $result = $pessoal->select('SELECT idEscolaridade, 
-                                               escolaridade
-                                          FROM tbescolaridade
-                                      ORDER BY idEscolaridade');
-            array_unshift($result, array("*","Todos")); # Adiciona o valor de nulo
+            $result = $pessoal->select('SELECT idTipoCargo, 
+                                               cargo
+                                          FROM tbtipocargo
+                                      ORDER BY idTipoCargo');
             
             # Formulário de Pesquisa
             $form = new Form('?');
             
             # Nivel do Cargo    
-            $controle = new Input('parametroNivel','combo','Nível do Cargo Efetivo:',1);
+            $controle = new Input('parametroCargo','combo','Cargo:',1);
             $controle->set_size(20);
-            $controle->set_title('Nível do Cargo');
-            $controle->set_valor($parametroNivel);
+            $controle->set_title('Cargo');
+            $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
-            $controle->set_array(array("Elementar","Fundamental","Médio","Superior"));
+            $controle->set_col(6);
+            $controle->set_array($result);
             $controle->set_autofocus(TRUE);
             $form->add_item($controle);
             
-            $form->show();
+            $form->show();            
 
         ##############
            
@@ -134,13 +133,12 @@ if($acesso){
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                 LEFT JOIN tbperfil USING (idPerfil)
-                                LEFT JOIN tbcargo USING (idCargo)
+                                LEFT JOIN tbcargo USING (idCargo)                     
                                      JOIN tbtipocargo USING (idTipoCargo) 
                WHERE tbservidor.situacao = 1
-                 AND tbtipocargo.tipo = "Adm/Tec"
                  AND (idPerfil = 1 OR idPerfil = 4)
-                 AND tbtipocargo.nivel = "'.$parametroNivel.'"
-            ORDER BY tbtipocargo.nivel, tbpessoa.nome';
+                 AND tbtipocargo.idTipoCargo = "'.$parametroCargo.'"
+            ORDER BY tbpessoa.nome';
 
             $result = $pessoal->select($select);
 

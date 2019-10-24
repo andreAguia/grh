@@ -130,11 +130,11 @@ class Progressao{
         
         # Pega os dados do servidor
         $pessoal = new Pessoal();
-        $nivel = $pessoal->get_nivelCargo($this->idServidor);   // O nivel do cargo
+        $idCargo = $pessoal->get_idCargo($this->idServidor);   // O id do cargo
         
         # Pega o idCLasse da última classe possível do plano de cargos vigente para esse servidor
         $plano = new PlanoCargos();
-        $idClasseUltimo = $plano->ultimoIdClasse($nivel);
+        $idClasseUltimo = $plano->get_ultimoIdClasse($idCargo);
         
         # Pega o plano de cargos atual
         $idPlanoAtual = $plano->get_planoAtual();

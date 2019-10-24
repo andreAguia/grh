@@ -403,11 +403,11 @@ class PlanoCargos{
     
     ###########################################################
     
-    public function ultimoIdClasse($nivel){
+    public function get_ultimoIdClasse($idCargo){
     /**
-    * Exibe o último idClasse do plano vigente para o nível do cargo informado
+    * Exibe o último idClasse do plano vigente para o idCargo informado
     * 
-    * @syntax PlanoCargos->ultimoIdClasse("Elementar");
+    * @syntax PlanoCargos->get_ultimoIdClasse("Elementar");
     */    
    
         # Acessa o banco de dados
@@ -425,12 +425,26 @@ class PlanoCargos{
         
         ########
         
+        # Pega o idTipoCargo desse idCargo
+        
+        # Pega o nível do idTipoCargo
+        $nivel = $pessoal->get_nivelCargoCargo($idTipoCargo);
+        
         # Pega o uĺtimo idClasse do idPlano atual e do nível informado
         $select = 'SELECT idClasse
                      FROM tbclasse
                     WHERE idPlano = '.$idPlano.'
-                      AND nivel = "'.$nivel.'"    
-                  ORDER BY valor desc';
+                      AND nivel = "'.$nivel.'" ';
+        
+        if($idCargo == 128){
+            $select .= ' AND (SUBSTRING(faixa, 1, 1) = "E" OR faixa = "Associado" OR SUBSTRING(faixa, 1, 1) = "I")';
+        }
+
+        if($idCargo == 129){
+            $select .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular" OR SUBSTRING(faixa, 1, 1) = "X")';
+        }     
+
+        $select .= ' ORDER BY valor desc';
         
         $row = $pessoal->select($select,false);
         $idClasse = $row[0];

@@ -2935,8 +2935,9 @@ class Pessoal extends Bd {
 
     public function get_nivelCargoCargo($idCargo)
     {
-        $select = 'SELECT idTipoCargo
-                     FROM tbcargo
+                
+        $select = 'SELECT tbtipocargo.nivel
+                     FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idCargo = '.$idCargo;
 
         $row = parent::select($select,FALSE);

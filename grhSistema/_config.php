@@ -99,7 +99,7 @@ setlocale(LC_ALL, 'pt_BR');
 function autoload($classe){
     # Array com as pastas existentes
     $pastasClasses = [PASTA_CLASSES_GERAIS,PASTA_CLASSES,PASTA_CLASSES_ADMIN];
-    $categoriasClasses = ["class","interface","container","html","outros","rel","bd","documento"];
+    $categoriasClasses = ["class","interface","container","html","outros","rel","bd","documento","w3"];
     
     # Percorre as pastas
     foreach($pastasClasses as $pasta){        

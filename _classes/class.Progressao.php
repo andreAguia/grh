@@ -8,7 +8,7 @@ class Progressao{
     
     private $idServidor = NULL;
 
-    ##############################################################
+    ###########################################################
     
     /**
     * Método Construtor
@@ -138,7 +138,6 @@ class Progressao{
         
         # Pega o plano de cargos atual
         $idPlanoAtual = $plano->get_planoAtual();
-        
         
         # Analisa se o servidor está na última classe possível
         if($idClasse == $idClasseUltimo){

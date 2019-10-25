@@ -27,6 +27,7 @@ class MenuPrincipal{
         
         # Módulos
         $this->moduloServidores();
+        $this->moduloSigrh();
         $this->moduloLegislacao();
         $this->moduloTabelasSecundarias();
         
@@ -89,6 +90,37 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS.'servidores.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Cadastro de Servidores');
         $botao->set_accesskey('S');
+        $menu->add_item($botao);
+
+        $menu->show();        
+        $painel->fecha();
+    }
+        
+######################################################################################################################
+    
+    /**
+     * Método moduloServidores
+     * 
+     * Exibe o menu do cadastro de Servidore
+     */
+    
+    private function moduloSigrh(){
+        
+        $painel = new Callout();
+        $painel->abre();
+        
+        # Servidores
+        titulo('Sigrh');
+        br();
+
+        $tamanhoImage = 180;
+        $menu = new MenuGrafico(1);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label();
+        $botao->set_url("https://sigrh.rj.gov.br/gerj/Ergon/Administracao/ERGadm_mnu001.tp");
+        $botao->set_imagem(PASTA_FIGURAS.'sigrh.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Sistema Integrado de Gestão de Recursos Humanos');
         $menu->add_item($botao);
 
         $menu->show();        
@@ -532,9 +564,9 @@ class MenuPrincipal{
 
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
-        $botao->set_title('Portal do Sistema Integrado de Gestao de Recursos Humanos do Estado do Rio de Janeiro');
-        $botao->set_imagem(PASTA_FIGURAS."sigrh.png",$largura,$altura);      
-        $botao->set_url("entradasigrh.fazenda.rj.gov.br/");
+        $botao->set_title('Escola Nacional de Administração Pública');
+        $botao->set_imagem(PASTA_FIGURAS."enap.png",$largura,$altura);      
+        $botao->set_url("https://www.enap.gov.br");
         $menu->add_item($botao);
         $menu->show();
 

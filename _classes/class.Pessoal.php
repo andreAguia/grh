@@ -2928,13 +2928,12 @@ class Pessoal extends Bd {
 
     /**
      * Método get_nivelCargoCargo
-     * Informa o n�vel de escolaridade do cargo de um idCargo
+     * Informa o nível de escolaridade do cargo de um idCargo
      * 
      * @param   string $idCargo
      */
 
-    public function get_nivelCargoCargo($idCargo)
-    {
+    public function get_nivelCargoCargo($idCargo){
                 
         $select = 'SELECT tbtipocargo.nivel
                      FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
@@ -5067,6 +5066,26 @@ class Pessoal extends Bd {
         return $dataFinal;
     }
 
- 
+ ###########################################################
+
+    /**
+     * Método get_idTipoCargo
+     * Informa o id do Tipo CArgo do servidor
+     * 
+     * @param   string $idCargo
+     */
+
+    public function get_idTipoCargo($idCargo){
+                
+        $select = 'SELECT idTipoCargo
+                     FROM tbcargo
+                    WHERE idCargo = '.$idCargo;
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+    }
+
+    ###########################################################
 
 }

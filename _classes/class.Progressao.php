@@ -122,22 +122,34 @@ class Progressao{
             $this->idServidor = $idServidor;
         }
         
-        # Pega o idClasse do servidor
-        $idClasse = $this->get_IdClasseAtual();
+        # Acessa os bancos
+        $pessoal = new Pessoal();
+        $plano = new PlanoCargos();
         
-        # Pega o idPlano do servidor
-        $idPlano = $this->get_IdPlanoAtual();
+        ########################
         
         # Pega os dados do servidor
-        $pessoal = new Pessoal();
-        $idCargo = $pessoal->get_idCargo($this->idServidor);   // O id do cargo
         
-        # Pega o idCLasse da última classe possível do plano de cargos vigente para esse servidor
-        $plano = new PlanoCargos();
+        # Pega o salário (idClasse) atual do servidor
+        $idClasse = $this->get_IdClasseAtual($idServidor);
+        
+        # Pega o plano de cargos (idPlano) atual do servidor
+        $idPlano = $this->get_IdPlanoAtual($idServidor);
+                
+        # Pega o cargo (idCargo) do servidor        
+        $idCargo = $pessoal->get_idCargo($this->idServidor);
+        
+        ########################
+        
+        # Pega os dados da tabela
+        
+        # Pega o idCLasse da última classe possível do plano de cargos vigente para esse cargo        
         $idClasseUltimo = $plano->get_ultimoIdClasse($idCargo);
         
         # Pega o plano de cargos atual
         $idPlanoAtual = $plano->get_planoAtual();
+        
+        ########################
         
         # Analisa se o servidor está na última classe possível
         if($idClasse == $idClasseUltimo){

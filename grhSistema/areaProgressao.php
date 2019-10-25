@@ -84,6 +84,12 @@ if($acesso){
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar,"left");
             
+            # tabela
+            $botao = new Button("Tabela","tabelaSalarial.php");
+            $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
+            $botao->set_target("_blank");
+            $menu1->add_link($botao,"right");
+            
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();

@@ -211,7 +211,7 @@ class PlanoCargos{
      * 
      * @syntax $plano->get_planoVigente($data);
      *
-     * @Obs O id Servidor é necessário pois existem planos que só é válido para determinados cargos
+     * @Obs O id Servidor é necessário pois existem planos que só são válidos para determinados cargos. Se não for fornecido isso será ignorado.
      * @Obs Se a data estiver nulla será considerada a data atual
      * @Obs Utilizada na rotina de enquadramento e progressão para saber em qual plano o servidor foi enquadrado ou progredido
      */
@@ -224,18 +224,24 @@ class PlanoCargos{
             $data = date("d/m/Y");
         }
         
-        # Verifica se servidor é professor ou adm e Tec
-        $tipo = $pessoal->get_cargoTipo($idServidor);
+        # Verifica se o idServidor foi fornecido
+        if(!is_null($idServidor)){
+            # Verifica se servidor é professor ou adm e Tec
+            $tipo = $pessoal->get_cargoTipo($idServidor);
+        }
         
         # Pega os projetos cadastrados
         $select = 'SELECT idPlano
                      FROM tbplano
                      WHERE dtVigencia <= "'.date_to_bd($data).'"
-                     AND idPlano <> 6
-                     AND (servidores = "Todos" OR servidores = "'.$tipo.'")
-                     ORDER BY dtVigencia desc limit 1';
+                     AND idPlano <> 6';
         
+        if(!is_null($idServidor)){
+            $select .= ' AND (servidores = "Todos" OR servidores = "'.$tipo.'")';
+        }
         
+        $select .= ' ORDER BY dtVigencia desc limit 1';
+                
         $row = $pessoal->select($select,false);
         return $row[0];
     }
@@ -415,20 +421,18 @@ class PlanoCargos{
         
         ########
         
-        # Pega o plano atual
-        $select = 'SELECT idPlano
-                     FROM tbplano
-                    WHERE planoAtual';
+        # Pega o plano atual        
+        $idPlano = $this->get_planoAtual();
                 
-        $row = $pessoal->select($select,false);
-        $idPlano = $row[0];
-        
         ########
         
         # Pega o idTipoCargo desse idCargo
+        #$idTipoCargo = $pessoal->get_idTipoCargo($idCargo);
         
+        ########
+                
         # Pega o nível do idTipoCargo
-        $nivel = $pessoal->get_nivelCargoCargo($idTipoCargo);
+        $nivel = $pessoal->get_nivelCargoCargo($idCargo);
         
         # Pega o uĺtimo idClasse do idPlano atual e do nível informado
         $select = 'SELECT idClasse

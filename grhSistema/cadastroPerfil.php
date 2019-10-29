@@ -42,11 +42,7 @@ if($acesso){
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
+    
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -70,32 +66,17 @@ if($acesso){
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
-
-    # ordenação
-    if(is_null($orderCampo)){
-            $orderCampo = "1";
-    }
-
-    if(is_null($orderTipo)){
-            $orderTipo = 'asc';
-    }
-
+    
     # select da lista
     $objeto->set_selectLista ('SELECT idPerfil,
-                                      nome,
                                       tipo,
-                                      progressao,
-                                      trienio,
-                                      comissao,
-                                      gratificacao,
-                                      ferias,
-                                      licenca,
+                                      nome,
                                       idPerfil,
                                       idPerfil
                                  FROM tbperfil
                                 WHERE nome LIKE "%'.$parametro.'%"
                                    OR idPerfil LIKE "%'.$parametro.'%" 
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY tipo,nome');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nome,
@@ -113,11 +94,6 @@ if($acesso){
                                 FROM tbperfil
                                WHERE idPerfil = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
         
@@ -129,13 +105,16 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Perfil","Tipo","Progressão","Triênio","Cargo<br/>em Comissão","Gratificação","Férias","Licença","Servidores<br/>Ativos","Servidores<br/>Inativos"));
+    $objeto->set_label(array("id","Perfil","Tipo","Servidores<br/>Ativos","Servidores<br/>Inativos"));
     #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
-    $objeto->set_align(array("center","left","left"));
+    $objeto->set_align(array("center","center","left"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosPerfil","get_numServidoresInativosPerfil"));
+    $objeto->set_classe(array(NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,"get_numServidoresAtivosPerfil","get_numServidoresInativosPerfil"));
+    
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

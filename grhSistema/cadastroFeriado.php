@@ -90,8 +90,8 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("Tipo","Data","Descrição"));
-    $objeto->set_width(array(10,60,20));
-    $objeto->set_align(array("center","left","center"));
+    $objeto->set_width(array(10,20,60));
+    $objeto->set_align(array("center","center","left"));
     $objeto->set_funcao(array(NULL,"date_to_php"));
     
     $objeto->set_rowspan(0);
@@ -139,8 +139,8 @@ if($acesso)
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase){
+        
         case "" :
         case "listar" :
             $objeto->listar();

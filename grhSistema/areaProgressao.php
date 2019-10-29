@@ -164,7 +164,7 @@ if($acesso){
             $tabela->set_editar('?fase=editaServidor');
             
             $tabela->set_formatacaoCondicional(array( array('coluna' => 6,
-                                                            'valor' => 'Já tem direito a progressão por antiguidade',
+                                                            'valor' => 'Tem Direito a Progressão por Antiguidade',
                                                             'operador' => '=',
                                                             'id' => 'podeProgredir'),
                                                       array('coluna' => 6,

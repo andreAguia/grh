@@ -169,7 +169,7 @@ class Progressao{
                 
                 # Verifica se já tem 4 anos ou mais
                 if($intervalo->y >= 4){
-                    $analise = "Já tem direito a progressão por antiguidade";
+                    $analise = "Tem Direito a Progressão por Antiguidade";
                 }else{
                     $analise = "Aparentemente Tudo Certo";
                 }

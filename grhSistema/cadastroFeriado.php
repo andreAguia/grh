@@ -44,10 +44,6 @@ if($acesso)
         set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
@@ -70,23 +66,14 @@ if($acesso)
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
-    if (is_null($orderCampo)) {
-        $orderCampo = "1";
-    }
-
-    if (is_null($orderTipo)) {
-        $orderTipo = 'desc';
-    }
-
     # select da lista
-    $objeto->set_selectLista ('SELECT data,
+    $objeto->set_selectLista ('SELECT tipo,
+                                      data,
                                       descricao,
-                                      tipo,
                                       idferiado
                                  FROM tbferiado
                                 WHERE descricao LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                             ORDER BY tipo, month(data), day(data)');
 
     # select do edita
     $objeto->set_selectEdita('SELECT data,
@@ -95,11 +82,6 @@ if($acesso)
                                 FROM tbferiado
                                WHERE idferiado = '.$id);
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -107,10 +89,13 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data","Descrição","Tipo"));
+    $objeto->set_label(array("Tipo","Data","Descrição"));
     $objeto->set_width(array(10,60,20));
     $objeto->set_align(array("center","left","center"));
-    $objeto->set_funcao(array("date_to_php"));
+    $objeto->set_funcao(array(NULL,"date_to_php"));
+    
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

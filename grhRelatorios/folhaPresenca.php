@@ -171,9 +171,7 @@ if($acesso){
                 $emFolgaTre = $pessoal->emFolgaTre($idServidorPesquisado, $data);
                 
                 # Verifica se nesta data existe um feriado
-                $feriado = $pessoal->get_feriado($data); 
-                
-                
+                $feriado = $pessoal->get_feriado($data);                 
 
                 # informa as ocorrências                
                 if($emFolgaTre){ // verifica se está folgando pelo no TRE

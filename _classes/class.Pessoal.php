@@ -3531,7 +3531,7 @@ class Pessoal extends Bd {
      * Retorna uma string com o nome do feriado
      * ou NULLo se não tiver feriado nessa data
      * 
-     * @param date $data a data (no formato dia/m�s/ano) a ser pesquisada, se nulo pega a data atual
+     * @param date $data a data (no formato dia/mês/ano) a ser pesquisada, se nulo pega a data atual
      * 
      */
     

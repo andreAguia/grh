@@ -30,10 +30,6 @@ class MenuPrincipal{
         $this->moduloSigrh();
         $this->moduloLegislacao();
         $this->moduloTabelasSecundarias();
-        
-        # Calendário
-        $cal = new Calendario();
-        $cal->show();
                 
         $grid->fechaColuna();
         
@@ -55,10 +51,14 @@ class MenuPrincipal{
         # Terceira Coluna
         $grid->abreColuna(12,6,4);
         
-        # Módulos        
+        # Módulos
         $this->moduloBalcao();
         $this->moduloAniversariantes();
         $this->moduloAlertas();
+        
+        # Calendário
+        $cal = new Calendario();
+        $cal->show();
         
         $grid->fechaColuna();
         $grid->fechaGrid();        

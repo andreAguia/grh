@@ -1,6 +1,6 @@
 <?php
 /**
- * Área de Licença Prêmio
+ * Área de Progressão
  *  
  * By Alat
  */
@@ -164,9 +164,13 @@ if($acesso){
             $tabela->set_editar('?fase=editaServidor');
             
             $tabela->set_formatacaoCondicional(array( array('coluna' => 6,
-                                                            'valor' => 'Pode Progredir',
+                                                            'valor' => 'Já tem direito a progressão por antiguidade',
                                                             'operador' => '=',
                                                             'id' => 'podeProgredir'),
+                                                      array('coluna' => 6,
+                                                            'valor' => 'Aparentemente Tudo Certo',
+                                                            'operador' => '=',
+                                                            'id' => 'naoEstaUltimo'),      
                                                       array('coluna' => 6,
                                                             'valor' => 'Plano ERRADO',
                                                             'operador' => '=',

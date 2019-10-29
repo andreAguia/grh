@@ -180,6 +180,10 @@ tr#podeProgredir td{
     background-color: #8FBC8F;
 }
 
+tr#naoEstaUltimo td{
+    background-color: #99ccff;
+}
+
 tr#planoErrado td{
     background-color: #e89f9f;
 }

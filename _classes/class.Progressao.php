@@ -23,7 +23,7 @@ class Progressao{
     function get_dados($idProgressao){
         
     /**
-     * fornece a próxima tarefa a ser realizada
+     * Fornece os todos os dados de um idProgressao
      */
         
         # Pega os dados
@@ -38,7 +38,7 @@ class Progressao{
     }
     
     ###########################################################
-    
+            
     function get_IdClasseAtual($idServidor = NULL){
         
         /**
@@ -158,11 +158,46 @@ class Progressao{
             if($idPlano <> $idPlanoAtual){
                 $analise = "Plano ERRADO";
             }else{
-                $analise = "Pode Progredir";
+                # Pega a última progressão válida
+                $ultimaProgressao = new DateTime($this->get_ultimaProgressaoServidorVálida($idServidor));
+                
+                # Pega a data de hoje
+                $hoje = new DateTime();
+                
+                # Calcula o intervalo
+                $intervalo = $ultimaProgressao->diff($hoje);
+                
+                # Verifica se já tem 4 anos ou mais
+                if($intervalo->y >= 4){
+                    $analise = "Já tem direito a progressão por antiguidade";
+                }else{
+                    $analise = "Aparentemente Tudo Certo";
+                }
             }
         }
         
         return $analise;
+    }
+    
+    ###########################################################
+    
+    function get_ultimaProgressaoServidorVálida($idServidor){
+        
+    /**
+     * Fornece a última progressão válida de um servidor para efeito de contagem de tempo para progressão por antiguidade
+     */
+        
+        # Pega os dados
+        $select="SELECT dtInicial
+                   FROM tbprogressao
+                  WHERE idServidor = $idServidor 
+                    AND (idTpProgressao  = 1 OR idTpProgressao  = 2 OR idTpProgressao  = 3 OR idTpProgressao  = 4 OR idTpProgressao  = 6)
+                  ORDER BY dtInicial DESC";
+        
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, FALSE);
+        
+        return $dados[0];
     }
     
     ###########################################################

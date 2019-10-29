@@ -106,7 +106,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("id","Perfil","Tipo","Servidores<br/>Ativos","Servidores<br/>Inativos"));
-    #$objeto->set_width(array(3,10,16,8,8,10,8,8,8,8,8));
+    $objeto->set_width(array(5,20,45,10,10));
     $objeto->set_align(array("center","center","left"));
     #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
 

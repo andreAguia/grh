@@ -305,18 +305,23 @@ class PlanoCargos{
      * @syntax $plano->evibeValor($idclasse);
      */
     
-        # Pega os projetos cadastrados
-        $select = "SELECT faixa,
-                          valor,
-                          tbplano.numdecreto
-                     FROM tbclasse LEFT JOIN tbplano USING (idPlano)
-                     WHERE idClasse = $idClasse";
-        
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select,false);
-        
-        p($row[0]." - ".$row[1],"pprogressao1");
-        p($row[2],"pprogressao2");
+        if(is_null($idClasse)){
+            return NULL;
+        }else{
+            # Pega os projetos cadastrados
+            $select = "SELECT faixa,
+                              valor,
+                              tbplano.numdecreto
+                         FROM tbclasse LEFT JOIN tbplano USING (idPlano)
+                         WHERE idClasse = $idClasse";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select,false);
+
+
+            p($row[0]." - ".$row[1],"pprogressao1");
+            p($row[2],"pprogressao2");
+        }
     }
     
     ###########################################################

@@ -2980,6 +2980,81 @@ class Checkup {
         }
     }
 
+     ##########################################################
+
+    /**
+     * Método get_progressaoImportada
+     * 
+     * Servidores com progressão e/ou 
+     */
+    
+    public function get_progressaoImportadaInativos($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 1;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+       
+        $select = 'SELECT distinct tbservidor.idFuncional,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbprogressao USING (idServidor)
+                     WHERE situacao <> 1 
+                       AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                       AND idTpProgressao = 9'; 
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidor(es) INATIVOS com progressão importada';
+        $label = ['IdFuncional','Nome','Perfil','Lotação','Situação'];
+        $funcao = [NULL];
+        $classe = [NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,"get_lotacao","get_situacao"];
+        $align = ['center','left'];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_funcao($funcao);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+        
+        if ($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                $tabela->show();
+                set_session('alerta',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
     ##########################################################
     
      /**

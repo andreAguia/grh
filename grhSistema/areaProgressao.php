@@ -94,7 +94,7 @@ if($acesso){
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/admTecProgressao.php");
+            $botaoRel->set_url("../grhRelatorios/progressaoporcargo.php");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
@@ -103,7 +103,7 @@ if($acesso){
             
         ##############
             
-            # Pega os dados da combo escolaridade
+            # Pega os dados da combo cargo
             $result = $pessoal->select('SELECT idTipoCargo, 
                                                cargo
                                           FROM tbtipocargo
@@ -173,6 +173,10 @@ if($acesso){
                                                             'id' => 'naoEstaUltimo'),      
                                                       array('coluna' => 6,
                                                             'valor' => 'Plano ERRADO',
+                                                            'operador' => '=',
+                                                            'id' => 'planoErrado'),
+                                                      array('coluna' => 6,
+                                                            'valor' => 'Não Tem Salário Cadastrado',
                                                             'operador' => '=',
                                                             'id' => 'planoErrado'),
                                                       array('coluna' => 6,

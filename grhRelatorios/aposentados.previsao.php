@@ -25,6 +25,7 @@ if($acesso)
     
     # Pega os parâmetros dos relatórios
     $parametroSexo = get_session('parametroSexo',"Feminino");
+    $parametroNome = get_session('parametroNome');
 
     ######
 
@@ -38,14 +39,23 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                WHERE tbservidor.situacao = 1
                  AND idPerfil = 1
-                 AND tbpessoa.sexo = "'.$parametroSexo.'"
-            ORDER BY tbpessoa.nome';
+                 AND tbpessoa.sexo = "'.$parametroSexo.'"';
+        
+    if(!is_null($parametroNome)){
+        $select .= ' AND tbpessoa.nome LIKE "%'.$parametroNome.'%"';
+    }
+
+    $select .= ' ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Estatutários Ativos com Previsão para Aposentadoria - Sexo: '.$parametroSexo);
-    $relatorio->set_subtitulo('Servidores do Sexo '.$parametroSexo);
+    
+    if(!is_null($parametroNome)){
+        $relatorio->set_subtitulo('Filtro nome: '.$parametroNome);
+    }
+    
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Integral','Proporcional','Compulsória'));
     #$tabela->set_width(array(30,15,15,15,15));
     $relatorio->set_align(array("center","left","left"));
@@ -59,4 +69,3 @@ if($acesso)
 
     $page->terminaPagina();
 }
-?>

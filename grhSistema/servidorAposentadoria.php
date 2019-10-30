@@ -98,16 +98,26 @@ if($acesso){
 #   Regras
 ##############################################################################################################################################
     
-    echo '<div id="divRegrasAposentadoria">';   
-    $aposentadoria->exibeRegras();
+    echo '<div id="divRegrasAposentadoria">';
+        $painel = new Callout("secondary");
+        $painel->abre();
+    
+        $aposentadoria->exibeRegras();
+    
+        $painel->fecha();
     echo '</div>';
     
 ##############################################################################################################################################
 #   Tempo de Serviço
 ##############################################################################################################################################
     
-    echo '<div id="divTempoServicoAposentadoria">';   
-    $aposentadoria->exibeTempo($idServidorPesquisado);
+    echo '<div id="divTempoServicoAposentadoria">'; 
+        $painel = new Callout("secondary");
+        $painel->abre();
+    
+        $aposentadoria->exibeTempo($idServidorPesquisado);
+        
+        $painel->fecha();
     echo '</div>';
     
 ##############################################################################################################################################

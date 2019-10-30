@@ -279,7 +279,7 @@ class Aposentadoria{
 
 ##############################################################################################################################################
 
-    function exibeAtivosPrevisao($parametroSexo = NULL){
+    function exibeAtivosPrevisao($parametroSexo = NULL,$parametroNome = NULL){
 
     /**
      * Exibe tabela com a previsão de aposentadoria de servidores ativos
@@ -300,8 +300,13 @@ class Aposentadoria{
                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                    WHERE tbservidor.situacao = 1
                      AND idPerfil = 1
-                     AND tbpessoa.sexo = "'.$parametroSexo.'"
-                ORDER BY tbpessoa.nome';
+                     AND tbpessoa.sexo = "'.$parametroSexo.'"';
+        
+        if(!is_null($parametroNome)){
+            $select .= ' AND tbpessoa.nome LIKE "%'.$parametroNome.'%"';
+        }
+        
+        $select .= ' ORDER BY tbpessoa.nome';
 
         $result = $pessoal->select($select);
 
@@ -317,6 +322,10 @@ class Aposentadoria{
         $tabela->set_metodo(array(NULL,NULL,"get_CargoSimples","get_dataAposentadoriaIntegral","get_dataAposentadoriaProporcional","get_dataAposentadoriaCompulsoria"));
 
         $tabela->set_conteudo($result);
+        
+        if(!IS_NULL($parametroNome)){
+            $tabela->set_textoRessaltado($parametroNome);
+        }
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editarPrevisao');
@@ -560,8 +569,8 @@ class Aposentadoria{
      * Exibe uma tabela com as regras da aposentadoria
      */
         
-        $painel = new Callout("secondary");
-        $painel->abre();
+        #$painel = new Callout("secondary");
+        #$painel->abre();
 
         titulo("Regras");
         br();
@@ -640,7 +649,7 @@ class Aposentadoria{
         $grid->fechaColuna();
         $grid->fechaGrid();
         
-        $painel->fecha();
+        #$painel->fecha();
     }
     
 ##############################################################################################################################################
@@ -853,8 +862,8 @@ class Aposentadoria{
         
         ###
         
-        $painel = new Callout();
-        $painel->abre();
+        #$painel = new Callout();
+        #$painel->abre();
 
         titulo("Tempo de Serviço");
         br();
@@ -1022,7 +1031,7 @@ class Aposentadoria{
         $grid->fechaColuna();
         $grid->fechaGrid();
 
-        $painel->fecha();
+        #$painel->fecha();
     }
     
 ##############################################################################################################################################
@@ -1326,4 +1335,35 @@ class Aposentadoria{
 
         $painel->fecha();
     }
+    ##############################################################################################################################################
+    
+    /**
+     * Método exibeMenu
+     * Exibe menu da área de aposentadoria
+     * 
+     * @param string $itemBold o item do menu para colocar o bold no menu
+     */
+
+    public function exibeMenu($itemBold = NULL){
+        
+        $bold = array (FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE);
+        
+        $bold[$itemBold] = TRUE;
+        
+        $menu = new Menu("menuProcedimentos");
+
+        $menu->add_item("titulo","Servidores Aposentados");
+        $menu->add_item("link","Aposentados por Ano","?fase=porAno","Servidores Aposentados por Ano de Aposentadoria",NULL,NULL,$bold[1]);
+        $menu->add_item("link","Aposentados por Tipo","?fase=motivo","Servidores Aposentados por Tipo de Aposentadoria",NULL,NULL,$bold[2]);
+        $menu->add_item("link","Estatística","?fase=anoEstatistica","Estatística dos Servidores Aposentados",NULL,NULL,$bold[3]);
+
+        $menu->add_item("titulo","Servidores Ativos");
+        $menu->add_item("link","Previsão Masculino","?fase=previsaoM","Previsão de Aposentadoria de Servidores Ativos do Sexo Masculino",NULL,NULL,$bold[4]);
+        $menu->add_item("link","Previsão Feminino","?fase=previsaoF","Previsão de Aposentadoria de Servidores Ativos do Sexo Feminino",NULL,NULL,$bold[5]);
+        $menu->add_item("link","Somatório","?fase=somatorio","Somatório de Servidores Ativos que Podem se Aposentar",NULL,NULL,$bold[6]);
+        $menu->add_item("link","Regras","?fase=regras","Regras de Aposentadoria",NULL,NULL,$bold[7]);
+
+        $menu->show();
+    }
+    
 }

@@ -151,31 +151,35 @@ class Progressao{
         
         ########################
         
-        # Analisa se o servidor está na última classe possível
-        if($idClasse == $idClasseUltimo){
-            $analise = "Não Pode Progredir";
-        }else{
-            if($idPlano <> $idPlanoAtual){
-                $analise = "Plano ERRADO";
+        # Verifica se tem algum salário cadastrado
+        if(is_null($idClasse)){
+            $analise = "Não Tem Salário Cadastrado";
+        }else{        
+            # Analisa se o servidor está na última classe possível
+            if($idClasse == $idClasseUltimo){
+                $analise = "Não Pode Progredir";
             }else{
-                # Pega a última progressão válida
-                $ultimaProgressao = new DateTime($this->get_ultimaProgressaoServidorVálida($idServidor));
-                
-                # Pega a data de hoje
-                $hoje = new DateTime();
-                
-                # Calcula o intervalo
-                $intervalo = $ultimaProgressao->diff($hoje);
-                
-                # Verifica se já tem 4 anos ou mais
-                if($intervalo->y >= 4){
-                    $analise = "Tem Direito a Progressão por Antiguidade";
+                if($idPlano <> $idPlanoAtual){
+                    $analise = "Plano ERRADO";
                 }else{
-                    $analise = "Aparentemente Tudo Certo";
+                    # Pega a última progressão válida
+                    $ultimaProgressao = new DateTime($this->get_ultimaProgressaoServidorVálida($idServidor));
+
+                    # Pega a data de hoje
+                    $hoje = new DateTime();
+
+                    # Calcula o intervalo
+                    $intervalo = $ultimaProgressao->diff($hoje);
+
+                    # Verifica se já tem 4 anos ou mais
+                    if($intervalo->y >= 4){
+                        $analise = "Tem Direito a Progressão por Antiguidade";
+                    }else{
+                        $analise = "Aparentemente Tudo Certo";
+                    }
                 }
             }
-        }
-        
+        }        
         return $analise;
     }
     

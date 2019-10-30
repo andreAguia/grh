@@ -78,7 +78,7 @@ if($acesso){
                 $caminhoVolta = $origem;
             }
         }
-
+        
         $linkBotao1 = new Link("Voltar",$caminhoVolta);
         $linkBotao1->set_class('button');
         $linkBotao1->set_title('Volta para a página anterior');

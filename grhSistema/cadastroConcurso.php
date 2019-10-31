@@ -285,13 +285,9 @@ if($acesso)
                 $painel = new Callout();
                 $painel->abre();
 
-                # Inicia o Menu de Cargos
-                titulo("Menu");
-                br();
-                
+                # Inicia o Menu de Cargos                
                 $menu = new Menu("menuProcedimentos");
-                #$menu->add_item('titulo','Cargos em Comissão');
-                
+                $menu->add_item('titulo','Menu');                
                 $menu->add_item('link','<b>Publicações</b>','?fase=editar&id='.$id);
                 
                 if($dados["tipo"] == 2){
@@ -311,10 +307,9 @@ if($acesso)
                 
                 $grid->abreColuna(9);
 
-                $select ="SELECT data,
+                $select ="SELECT descricao,
+                                 data,
                                  pag,
-                                 descricao,
-                                 obs,
                                  idConcursoPublicacao,
                                  idConcursoPublicacao,
                                  idConcursoPublicacao
@@ -329,13 +324,14 @@ if($acesso)
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Data","Pag","Descrição","Obs","Publicação"));
+                    $tabela->set_label(array("Descrição","Data","Pag","Publicação"));
                     $tabela->set_titulo("Publicações");
-                    $tabela->set_funcao(array("date_to_php"));
-                    $tabela->set_align(array("center","center","left","left"));
+                    $tabela->set_funcao(array(NULL,"date_to_php"));
+                    $tabela->set_align(array("left"));
+                    $tabela->set_width(array(50,10,10,10));
                     
-                    $tabela->set_classe(array(NULL,NULL,NULL,NULL,"ConcursoPublicacao"));
-                    $tabela->set_metodo(array(NULL,NULL,NULL,NULL,"exibePublicacao"));
+                    $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao"));
+                    $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao"));
                     
                     $tabela->set_editar('cadastroConcursoPublicacao.php?fase=editar&idConcurso='.$id);
                     $tabela->set_idCampo('idConcursoPublicacao');
@@ -402,11 +398,8 @@ if($acesso)
                 $painel->abre();
 
                 # Inicia o Menu de Cargos
-                titulo("Menu");
-                br();
-
                 $menu = new Menu("menuProcedimentos");
-                #$menu->add_item('titulo','Cargos em Comissão');
+                $menu->add_item('titulo','Menu');
                 
                 $menu->add_item('link','Publicações','?fase=editar&id='.$id);
                 $menu->add_item('link','<b>Vagas</b>','?fase=concursoVagas&id='.$id);
@@ -429,15 +422,18 @@ if($acesso)
                     echo "adm";
                 }else{
                     # Exibe as vagas de Docente
-                    $select ='SELECT concat(tbconcurso.anobase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
-                                     concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
+                    $select ='SELECT tblotacao.DIR,
+                                     tblotacao.GER,
+                                     tbcargo.nome,
                                      area,
                                      idServidor,
                                      tbvagahistorico.obs,
                                      idVagaHistorico
                                 FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                                                      JOIN tblotacao USING (idLotacao)
-                               WHERE idConcurso = '.$id.' ORDER BY tbconcurso.dtPublicacaoEdital desc';
+                                                     JOIN tbvaga USING (idVaga)
+                                                     JOIN tbcargo USING (idCargo)
+                               WHERE idConcurso = '.$id.' ORDER BY tblotacao.DIR, tblotacao.GER desc';
 
                     $conteudo = $pessoal->select($select);
                     $numConteudo = $pessoal->count($select);
@@ -446,12 +442,16 @@ if($acesso)
                         # Monta a tabela
                         $tabela = new Tabela();
                         $tabela->set_conteudo($conteudo);
-                        $tabela->set_align(array("left","left","left","left","left"));
-                        $tabela->set_label(array("Concurso","Laboratório","Área","Servidor","Obs"));
+                        $tabela->set_align(array("center","center","center","left","left"));
+                        $tabela->set_label(array("Centro","Laboratório","Cargo","Área","Servidor","Obs"));
                         $tabela->set_titulo("Vagas de Professores");
-                        $tabela->set_classe(array(NULL,NULL,NULL,"Vaga"));
-                        $tabela->set_metodo(array(NULL,NULL,NULL,"get_Nome"));
+                        $tabela->set_classe(array(NULL,NULL,NULL,NULL,"Vaga"));
+                        $tabela->set_metodo(array(NULL,NULL,NULL,NULL,"get_Nome"));
                         $tabela->set_numeroOrdem(TRUE);
+                        
+                        $tabela->set_rowspan(0);
+                        $tabela->set_grupoCorColuna(0);
+                        
                         $tabela->show();
                     }else{
                         tituloTable("Vagas de Professores");

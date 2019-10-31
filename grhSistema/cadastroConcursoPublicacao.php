@@ -65,9 +65,9 @@ if($acesso){
 
     # select do edita
     $objeto->set_selectEdita('SELECT idConcurso,
+                                     descricao,
                                      data,
                                      pag,
-                                     descricao,
                                      obs
                                 FROM tbconcursopublicacao
                                WHERE idConcursoPublicacao = '.$id);
@@ -112,6 +112,12 @@ if($acesso){
                'padrao' => $idConcurso,
                'col' => 3,
                'size' => 30),
+        array ('linha' => 1,
+               'nome' => 'descricao',
+               'label' => 'Descrição:',
+               'tipo' => 'texto',
+                'col' => 12,
+               'size' => 250),
         array ('linha' => 2,
                'nome' => 'data',
                'label' => 'Data:',
@@ -124,14 +130,8 @@ if($acesso){
                'label' => 'Página:',
                'tipo' => 'texto',
                 'col' => 2,
-               'size' => 10),
+               'size' => 10),        
         array ('linha' => 3,
-               'nome' => 'descricao',
-               'label' => 'Descrição:',
-               'tipo' => 'texto',
-                'col' => 12,
-               'size' => 250),
-        array ('linha' => 4,
                'nome' => 'obs',
                'label' => 'Observação:',
                'tipo' => 'textarea',

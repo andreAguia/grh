@@ -55,23 +55,19 @@ if($acesso){
     ################################################################
 
     # Nome do Modelo
-    $objeto->set_nome('Controle de Vagas de Docentes');
+    $objeto->set_nome('Vagas');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
     
     # select da lista
     $select = 'SELECT centro,
-                    tbcargo.nome,
-                    idVaga,
-                    idVaga,
-                    idVaga,
-                    idVaga,
-                    idVaga,
-                    idVaga,
-                    idVaga
-               FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-               WHERE TRUE ';
+                      tbcargo.nome,
+                      idVaga,
+                      idVaga,
+                      idVaga
+                 FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
+                WHERE TRUE ';
     
     # parametroCentro
     if(!vazio($parametroCentro)){
@@ -112,14 +108,17 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Concurso","Laboratório","Área","Último Ocupante","Obs","Núm<br/>Concursos"));
+    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante"));
     #$objeto->set_width(array(15,30,45));
-    $objeto->set_align(array("center","center","center","center","left","center"));
+    $objeto->set_align(array("center"));
     
-    $objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
+    #$objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
     
-    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
-    $objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+    #$objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
+    #$objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+    
+    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga"));
+    $objeto->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante"));
     
     #$objeto->set_rowspan(0);
     #$objeto->set_grupoCorColuna(0);
@@ -208,6 +207,10 @@ if($acesso){
             
             ###
             
+            tituloTable("Controle de Vagas de Docentes");
+            
+            ###
+                        
             # Formulário de Pesquisa
             $form = new Form('?'); 
             
@@ -235,9 +238,18 @@ if($acesso){
             ###
             
             $grid->fechaColuna();
-            $grid->fechaGrid();
+            $grid->abreColuna(3);
             
+            $vaga = new Vaga();
+            $vaga->exibeTotalVagas();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
+                        
             $objeto->listar();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
 
         case "editar" :	

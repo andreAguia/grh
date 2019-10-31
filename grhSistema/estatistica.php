@@ -1203,7 +1203,11 @@ if($acesso){
             $tabela->set_conteudo($resultado);
             $tabela->set_label($label);
             $tabela->set_totalRegistro(FALSE);
-            $tabela->set_align(array("left","center"));            
+            $tabela->set_align(array("left","center"));       
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                'valor' => "Total",
+                                                'operador' => '=',
+                                                'id' => 'estatisticaTotal')));
             $tabela->show();
             
             ###

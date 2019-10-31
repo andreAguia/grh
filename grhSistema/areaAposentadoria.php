@@ -540,7 +540,7 @@ if($acesso){
 
     ################################################################
 
-        case "editarPrevisao" :
+        case "editarPrevisaoF" :
             br(8);
             aguarde();
 
@@ -548,11 +548,23 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
 
             # Informa a origem
-            if($parametroSexo = "Masculino"){
-                set_session('origem','areaAposentadoria.php?fase=previsaoM');
-            }else{
-                set_session('origem','areaAposentadoria.php?fase=previsaoF');
-            }
+            set_session('origem','areaAposentadoria.php?fase=previsaoF');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+    ################################################################
+
+        case "editarPrevisaoM" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado',$id);
+
+            # Informa a origem
+            set_session('origem','areaAposentadoria.php?fase=previsaoM');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');

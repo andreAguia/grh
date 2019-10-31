@@ -328,7 +328,12 @@ class Aposentadoria{
         }
 
         $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editarPrevisao');
+        
+        if($parametroSexo == "Masculino"){
+            $tabela->set_editar('?fase=editarPrevisaoM');
+        }else{
+            $tabela->set_editar('?fase=editarPrevisaoF');
+        }
         $tabela->show();
     } 
     

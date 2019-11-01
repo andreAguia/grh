@@ -238,13 +238,13 @@ if($acesso){
             ###
             
             $grid->fechaColuna();
-            $grid->abreColuna(3);
+            $grid->abreColuna(4);
             
             $vaga = new Vaga();
             $vaga->exibeTotalVagas();
             
             $grid->fechaColuna();
-            $grid->abreColuna(9);
+            $grid->abreColuna(8);
                         
             $objeto->listar();
             

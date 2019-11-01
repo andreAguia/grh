@@ -108,6 +108,34 @@ class Vaga{
     ###########################################################
 
     /**
+     * Método get_servidorOcupante
+     * fornece o nome do servidor ocupante da último edital para esta vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_idServidorOcupante($idVaga){
+            
+        # Pega os dados
+        $pessoal = new Pessoal();
+
+        $select = 'SELECT idServidor,
+                          idConcurso,
+                          idLotacao,
+                          area,
+                          tbvagahistorico.obs
+                     FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                    WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+
+        $dados = $pessoal->select($select,FALSE);
+
+        $idServidor = $dados["idServidor"];
+        return $idServidor;
+    }
+
+    ###########################################################
+
+    /**
      * Método get_laboratorioOcupante
      * fornece o nome do laboratório de servidor ocupante da último edital para esta vaga
      * 
@@ -387,6 +415,91 @@ class Vaga{
     ###########################################################
 
     /**
+     * Método get_numVagasCargoDiretoria
+     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_numVagasCargoDiretoriaDisponiveis($idCargo,$dir){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+        
+        # Inicia o contador
+        $disponivel = 0;
+
+        # Pega as vagas desse cargo e desse centro
+        $select = 'SELECT idVaga
+                     FROM tbvaga
+                    WHERE idCargo = '.$idCargo.'
+                      AND centro = "'.$dir.'"';
+
+        $dado = $pessoal->select($select);
+        
+        # Percorre os resultados
+        foreach($dado as $dd){
+            $idServidor = $this->get_idServidorOcupante($dd[0]);
+            
+            # Se não tiver nenhum candidato
+            if(is_null($idServidor)){
+                $disponivel++;
+            }else{
+                $situacao = $pessoal->get_situacao($idServidor);                
+                
+                # Compara de é inativo
+                if($situacao <> "Ativo"){
+                    $disponivel++;
+                }
+            }
+        }
+        return $disponivel;
+    }
+    
+    ###########################################################
+
+    /**
+     * Método get_numVagasCargoDiretoria
+     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_numVagasCargoDiretoriaOcupados($idCargo,$dir){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+        
+        # Inicia o contador
+        $ocupado = 0;
+
+        # Pega as vagas desse cargo e desse centro
+        $select = 'SELECT idVaga
+                     FROM tbvaga
+                    WHERE idCargo = '.$idCargo.'
+                      AND centro = "'.$dir.'"';
+
+        $dado = $pessoal->select($select);
+        
+        # Percorre os resultados
+        foreach($dado as $dd){
+            $idServidor = $this->get_idServidorOcupante($dd[0]);
+            
+            # Se não tiver nenhum candidato
+            if(!is_null($idServidor)){
+                $situacao = $pessoal->get_situacao($idServidor);
+                
+                # Compara se está ocupado
+                if($situacao == "Ativo"){
+                    $ocupado++;
+                }
+            }
+        }
+        return $ocupado;
+    }
+    
+    ###########################################################
+    /**
      * Método exibeTotalVagas
      * fornece o status da vaga
      * 
@@ -398,73 +511,111 @@ class Vaga{
         # Conecta o banco
         $pessoal = new Pessoal();
 
-        # Pega as diretorias    
+        # Pega as diretorias
         $diretorias = array("CCT","CCTA","CCH","CBB");
         
-        # Pega os Cargos
-        $cargos = array(128,129);
-        $numeroCargos = count($cargos);
-            
-        # Cria um array onde terá os resultados
-        $resultado = array();
-
-        # Cria e preenche o array do total da coluna
-        $totalColuna = array();
-        $totalColuna = array_fill(0, $numeroCargos+2, 0);
-            
-        # Cria e preenche o array do label
-        $label = array("Centro");
-        foreach($cargos as $cc){
-            $label[] = $pessoal->get_nomeCargo($cc);
-        }
-        $label[] = "Total";
-            
-        # Zera o contador de linha
-        $linha = 0;
-
-        # Percorre as diretorias
+         # Percorre as diretorias
         foreach($diretorias as $dd){
-            $resultado[$linha][0] = $dd;     // Sigoa da Diretoria 
-            $coluna = 1;                        // Inicia a coluna
-            $totalLinha = 0;                    // Zera totalizador de cada linha
-                
-            # Percorre as colunas / Cargos
-            foreach($cargos as $cc){
-                $quantidade = $this->get_numVagasCargoDiretoria($cc, $dd);    // Pega a quantidade de servidores
-                $resultado[$linha][$coluna] = $quantidade;                                                  // Joga para o array de exibição
-                $totalLinha = $totalLinha + $quantidade;                                                    // Soma o total da linha a quantidade da coluna
-                $totalColuna[$coluna] += $quantidade;                                                       // Soma o total da coluna a quantidade da linha
-                $coluna++;                                                                                  // Incrementa a coluna
-            }
-            # Faz a última coluna com o total da linha
-            $resultado[$linha][$coluna] = $totalLinha;
-            $totalColuna[$coluna] += $totalLinha;
-            $linha++;
-        }
-        # Faz a última lina com os totais das colunas
-        $resultado[$linha][0] = "Total";
-        $coluna = 1;
-        foreach($cargos as $cc){
-            $resultado[$linha][$coluna] = $totalColuna[$coluna];
-            $coluna++;
-        }
-        $resultado[$linha][$coluna] = $totalColuna[$coluna];
-
-        $tabela = new Tabela();
-        $tabela->set_titulo("Vagas por Centro / Cargo");
-        $tabela->set_conteudo($resultado);
-        $tabela->set_label($label);
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array("left","center"));       
-        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                            'valor' => "Total",
-                                            'operador' => '=',
-                                            'id' => 'estatisticaTotal')));
-        $tabela->show();
         
+            # Pega os Cargos
+            $cargos = array(128,129);
+            $numeroCargos = count($cargos);
+
+            # Cria um array onde terá os resultados
+            $resultado = array();
+
+            # Cria e preenche o array do total da coluna
+            $totalColuna = array();
+            $totalColuna = array_fill(0, $numeroCargos+2, 0);
+
+            $totalColunaDisponivel = array();
+            $totalColunaDisponivel = array_fill(0, $numeroCargos+2, 0);
+
+            $totalColunaOcupado = array();
+            $totalColunaOcupado = array_fill(0, $numeroCargos+2, 0);
+
+            # Cria e preenche o array do label
+            $label = array("Centro");
+            foreach($cargos as $cc){
+                $label[] = $pessoal->get_nomeCargo($cc);
+            }
+            $label[] = "Total";
+
+            # Zera o contador de linha
+            $linha = 0;
+
+
+                $resultado[$linha][0] = $dd;    // Sigla da Diretoria 
+                $coluna = 1;                    // Inicia a coluna
+
+                # Zera os totais de linha
+                $totalLinha = 0;                // Zera totalizador de cada linha
+                $totalLinhaDisponivel = 0;                // Zera totalizador de cada linha
+                $totalLinhaOcupado = 0;                // Zera totalizador de cada linha
+
+                # Percorre as colunas / Cargos
+                foreach($cargos as $cc){
+                    # Faz os cálculos
+                    $quantidade = $this->get_numVagasCargoDiretoria($cc, $dd);
+                    $disponivel = $this->get_numVagasCargoDiretoriaDisponiveis($cc, $dd);
+                    $ocupado = $this->get_numVagasCargoDiretoriaOcupados($cc, $dd);
+
+                    # Joga os Valores no array
+                    $resultado[$linha][$coluna] = "$quantidade ( <span id='verde'>$disponivel</span> / <span id='vermelho'>$ocupado</span> )";
+
+                    # Somatorio da linha
+                    $totalLinha += $quantidade;
+                    $totalLinhaDisponivel += $disponivel;
+                    $totalLinhaOcupado += $ocupado;
+
+                    # Somatório da coluna
+                    $totalColuna[$coluna] += $quantidade;
+                    $totalColunaDisponivel[$coluna] += $disponivel;
+                    $totalColunaOcupado[$coluna] += $ocupado;
+
+                    # Incrementa a coluna
+                    $coluna++;
+                }
+
+                # Faz a última coluna com o total da linha
+                $resultado[$linha][$coluna] = "$totalLinha ( <span id='verde'>$totalLinhaDisponivel</span> / <span id='vermelho'>$totalLinhaOcupado</span> )";
+
+                # Somatório da coluna
+                $totalColuna[$coluna] += $totalLinha;
+                $totalColunaDisponivel[$coluna] += $totalLinhaDisponivel;
+                $totalColunaOcupado[$coluna] += $totalLinhaOcupado;
+
+                # Incrementa a linha
+                $linha++;
+
+
+            # Faz a última lina com os totais das colunas
+            $resultado[$linha][0] = "Total";
+            $coluna = 1;
+
+            # Percorre as colunas
+            foreach($cargos as $cc){
+                $resultado[$linha][$coluna] = "$totalColuna[$coluna] ( <span id='verde'>$totalColunaDisponivel[$coluna]</span> / <span id='vermelho'>$totalColunaOcupado[$coluna]</span> )";
+                $coluna++;
+            }
+
+            $resultado[$linha][$coluna] = "$totalColuna[$coluna] ( <span id='verde'>$totalColunaDisponivel[$coluna]</span> / <span id='vermelho'>$totalColunaOcupado[$coluna]</span> )";
+
+            $tabela = new Tabela();
+            $tabela->set_titulo("Vagas do $dd");
+            $tabela->set_conteudo($resultado);
+            $tabela->set_label($label);
+            $tabela->set_width(array(25,25,25,25));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array("left","center"));       
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                'valor' => "Total",
+                                                'operador' => '=',
+                                                'id' => 'totalVagas')));
+            $tabela->show();
+        
+        }
     }
     
     ###########################################################
-
-
 }

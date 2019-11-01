@@ -65,6 +65,7 @@ if($acesso){
                       tbcargo.nome,
                       idVaga,
                       idVaga,
+                      idVaga,
                       idVaga
                  FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
                 WHERE TRUE ';
@@ -108,8 +109,8 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante"));
-    #$objeto->set_width(array(15,30,45));
+    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs"));
+    $objeto->set_width(array(10,20,10,30,25));
     $objeto->set_align(array("center"));
     
     #$objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
@@ -117,8 +118,8 @@ if($acesso){
     #$objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
     #$objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
     
-    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga"));
-    $objeto->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante"));
+    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga"));
+    $objeto->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante"));
     
     #$objeto->set_rowspan(0);
     #$objeto->set_grupoCorColuna(0);
@@ -238,14 +239,15 @@ if($acesso){
             ###
             
             $grid->fechaColuna();
-            $grid->abreColuna(4);
+            $grid->abreColuna(3);
             
-            $vaga = new Vaga();
+            $vaga = new Vaga();            
             $vaga->exibeTotalVagas();
             
             $grid->fechaColuna();
-            $grid->abreColuna(8);
+            $grid->abreColuna(9);
                         
+            
             $objeto->listar();
             
             $grid->fechaColuna();

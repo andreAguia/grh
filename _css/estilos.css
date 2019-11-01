@@ -531,6 +531,19 @@ p#vagasInativo {
     color: red;
 }
 
+span#verde{
+    color: green;
+    font-weight:bold;
+}
+
+span#vermelho{
+    color: red;
+    font-weight:bold;
+}
+
+tr#totalVagas{
+    background-color: #a1b1ae;
+}
 /*******************************************
  * procedimentos
  ******************************************/

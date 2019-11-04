@@ -36,20 +36,20 @@ if($acesso)
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # Pega os parâmetros
+    $parametroAno = post('parametroAno',get_session('parametroAno'));
+    $parametroTipo = post('parametroTipo',get_session('parametroTipo'));
+        
+    # Joga os parâmetros par as sessions    
+    set_session('parametroAno',$parametroAno);
+    set_session('parametroTipo',$parametroTipo);
+    
     # Pega os dados do concurso
     $concurso = new Concurso($id);
     
     # Pega os dados do concurso
     if(!vazio($id)){
          $dados = $concurso->get_dados();
-    }
-    
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    }else{ 
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
     }
     
     # Começa uma nova página
@@ -69,32 +69,36 @@ if($acesso)
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Concursos');
 
-    # bot?o de voltar da lista
+    # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
-    # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
-    $objeto->set_parametroValue($parametro);
-
     # select da lista
-    $objeto->set_selectLista ('SELECT idConcurso,
-                                      anobase,
-                                      dtPublicacaoEdital,
-                                      regime,
-                                      CASE tipo
-                                        WHEN 1 THEN "Adm & Tec"
-                                        WHEN 2 THEN "Professor"
-                                        ELSE "--"
-                                      END,
-                                      orgExecutor,
-                                      tbplano.numDecreto,
-                                      idConcurso
-                                 FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
-                                WHERE anobase LIKE "%'.$parametro.'%"
-                                   OR regime LIKE "%'.$parametro.'%"
-                                   OR orgExecutor LIKE "%'.$parametro.'%"
-                                   OR idConcurso LIKE "%'.$parametro.'%" 
-                             ORDER BY anobase desc, dtPublicacaoEdital desc');
+    $select = 'SELECT idConcurso,
+                      anobase,
+                      dtPublicacaoEdital,
+                      regime,
+                      CASE tipo
+                        WHEN 1 THEN "Adm & Tec"
+                        WHEN 2 THEN "Professor"
+                        ELSE "--"
+                      END,
+                      orgExecutor,
+                      tbplano.numDecreto,
+                      idConcurso
+                 FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
+                WHERE TRUE';
+    
+    if(!vazio($parametroAno)){
+        $select .= ' AND anoBase = '.$parametroAno;
+    }
+    
+    if(!vazio($parametroTipo)){
+        $select .= ' AND tipo = '.$parametroTipo;
+    }
+    
+    $select .= ' ORDER BY anobase desc, dtPublicacaoEdital desc';
+    
+    $objeto->set_selectLista ($select);
 
     # select do edita
     $objeto->set_selectEdita('SELECT anobase,
@@ -121,7 +125,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor"));
-    #$objeto->set_width(array(5,10,20,20,20,10,10));
+    $objeto->set_width(array(5,10,10,10,10,40));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
@@ -225,15 +229,86 @@ if($acesso)
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem1);
     #$botaoGra->set_accessKey('G');
-
-    $objeto->set_botaoListarExtra(array($botaoGra));
+    #$objeto->set_botaoListarExtra(array($botaoGra));
+    
+    $objeto->set_botaoVoltarLista(FALSE);
+    $objeto->set_botaoIncluir(FALSE);
 
     ################################################################
     
-    switch ($fase)
-    {
+    switch ($fase){
+        
         case "" :            
         case "listar" :            
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+            
+            # Incluir
+            $botaoInserir = new Button("Incluir","?fase=editar");
+            $botaoInserir->set_title("Incluir"); 
+            $menu1->add_link($botaoInserir,"right");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            #$menu1->add_link($botaoRel,"right");
+
+            $menu1->show();
+            
+            # Pega os dados da combo ano
+            $result = $pessoal->select('SELECT distinct anoBase, anoBase
+                                          FROM tbconcurso
+                                      ORDER BY anoBase');
+            
+            array_unshift($result, array(NULL,"Todos")); 
+            
+            # Formulário de Pesquisa
+            $form = new Form('?');
+            
+            # Ano    
+            $controle = new Input('parametroAno','combo','Ano:',1);
+            $controle->set_size(20);
+            $controle->set_title('Ano base');
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $controle->set_array($result);
+            $controle->set_autofocus(TRUE);
+            $form->add_item($controle);
+            
+            # Tipo    
+            $controle = new Input('parametroTipo','combo','Tipo:',1);
+            $controle->set_size(20);
+            $controle->set_title('Tipo do concurso');
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_array(array(array(NULL,"Todos"),array(1,"Adm & Tec"),array(2,"Professor")));            
+            $form->add_item($controle);
+            
+            $form->show();            
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
             $objeto->listar();
             break;
         
@@ -306,6 +381,45 @@ if($acesso)
                 #######################################################3
                 
                 $grid->abreColuna(9);
+                
+                # Exibe o Edital
+                
+                $select ="SELECT 'Edital Oficial do Concurso',
+                                 dtPublicacaoEdital,
+                                 idConcurso
+                            FROM tbconcurso
+                           WHERE idConcurso = $id";
+                
+                $conteudo = $pessoal->select($select);
+                $numConteudo = $pessoal->count($select);
+                
+                if($numConteudo > 0){
+                    # Monta a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($conteudo);
+                    $tabela->set_label(array("Descrição","Data","Publicação"));
+                    $tabela->set_titulo("Edital");
+                    $tabela->set_funcao(array(NULL,"date_to_php"));
+                    $tabela->set_align(array("left"));
+                    $tabela->set_width(array(70,10,10));
+                    $tabela->set_totalRegistro(FALSE);
+                    
+                    $formatacaoCondicional = array( array('coluna' => 0,
+                                                          'valor' => 'Edital Oficial do Concurso',
+                                                          'operador' => '=',
+                                                          'id' => 'listaDados'));
+                    $tabela->set_formatacaoCondicional($formatacaoCondicional);
+                    
+                    $tabela->set_classe(array(NULL,NULL,"Concurso"));
+                    $tabela->set_metodo(array(NULL,NULL,"exibeEdital"));
+                    
+                    $tabela->show();
+                }else{
+                    tituloTable("Publicações");
+                    callout("Nenhum Registro Encontrado","secondary");
+                }
+                
+                # Exibe as Publicações
 
                 $select ="SELECT descricao,
                                  data,

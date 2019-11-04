@@ -86,7 +86,8 @@ class Concurso
         $dados = $this->get_dados();
         $anobase = $dados["anobase"];
 
-        $select ='SELECT anobase,
+        $select ='SELECT idConcurso,
+                         anobase,
                          dtPublicacaoEdital,
                          regime,
                          CASE tipo
@@ -102,9 +103,9 @@ class Concurso
         
         $conteudo = $servidor->select($select,TRUE);
         
-        $label = array("Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Plano de Cargos");
+        $label = array("Id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Plano de Cargos");
         
-        $formatacaoCondicional = array( array('coluna' => 0,
+        $formatacaoCondicional = array( array('coluna' => 1,
                                               'valor' => $anobase,
                                               'operador' => '=',
                                               'id' => 'listaDados'));
@@ -114,7 +115,7 @@ class Concurso
         $tabela->set_conteudo($conteudo);
         $tabela->set_label($label);
         $tabela->set_titulo("Concurso");
-        $tabela->set_funcao(array(NULL,"date_to_php"));
+        $tabela->set_funcao(array(NULL,NULL,"date_to_php"));
         #$tabela->set_metodo($metodo);
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);

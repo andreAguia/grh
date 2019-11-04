@@ -39,7 +39,7 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Pega os parâmetros
-    $parametroCentro = get('parametroCentro',get_session('parametroCentro'));
+    $parametroCentro = post('parametroCentro',get_session('parametroCentro'));
     
     if($parametroCentro == "Todos"){
         $parametroCentro = NULL;
@@ -72,6 +72,7 @@ if($acesso){
                       idVaga,
                       idVaga,
                       idVaga,
+                      idVaga,
                       idVaga
                  FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
                 WHERE TRUE ';
@@ -81,7 +82,7 @@ if($acesso){
         $select .= "AND centro = '$parametroCentro'";
     }
     
-    $select .= ' ORDER BY centro';
+    $select .= ' ORDER BY centro,idCargo';
     
     # select da lista
     $objeto->set_selectLista ($select);
@@ -96,6 +97,7 @@ if($acesso){
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    #$objeto->set_linkExcluir('?fase=excluir');
     
     
     
@@ -110,17 +112,17 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs"));
+    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Concursos"));
     $objeto->set_width(array(10,20,10,30,25));
     $objeto->set_align(array("center"));
     
-    #$objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
+    $objeto->set_excluirCondicional('?fase=excluir',0,5,"==");
     
     #$objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
     #$objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
     
-    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga"));
-    $objeto->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante"));
+    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga"));
+    $objeto->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
     
     #$objeto->set_rowspan(0);
     #$objeto->set_grupoCorColuna(0);
@@ -192,7 +194,7 @@ if($acesso){
             $menu1->add_link($botaoVoltar,"left");
             
             # Incluir
-            $botaoInserir = new Button("Incluir","?fase=editar");
+            $botaoInserir = new Button("Incluir","?fase=incluir");
             $botaoInserir->set_title("Incluir"); 
             $menu1->add_link($botaoInserir,"right");
             
@@ -209,70 +211,49 @@ if($acesso){
             
             ###
             
+            # Formulário de Pesquisa
+            $form = new Form('?');
+            
+            # Centro    
+            $controle = new Input('parametroCentro','combo','Centro:',1);
+            $controle->set_size(20);
+            $controle->set_title('Centro');
+            $controle->set_valor($parametroCentro);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_autofocus(TRUE);
+            $controle->set_array($centros);            
+            $form->add_item($controle);
+            
+            $form->show();            
+            
+            ###
+            
             tituloTable("Controle de Vagas de Docentes");
+            br();
             
             ###
             
             $grid->fechaColuna();
-            $grid->abreColuna(3);
-            br();
-            
-            $painel = new Callout();
-            $painel->abre();
-            
-                # Inicia o Menu de Cargos
-                titulo("Menu");
-
-                $menu = new Menu("menuProcedimentos");
-                $menu->add_item('titulo','Centros');
-
-                # Preenche com os cargos
-                foreach($centros as $item){
-                    if($parametroCentro == $item){
-                        $menu->add_item('link','<b>'.$item.'</b>','?parametroCentro='.$item);
-                    }else{
-                        $menu->add_item('link',$item,'?parametroCentro='.$item);
-                    }
-                }
-
-                $menu->add_item("titulo","Movimentação Mensal");
-                $menu->add_item("link","Por Nomeação/Exoneração","?fase=movimentacaoPorNomExo","Movimentação Mensal por Data de Nomeações & Exonerações");
-                $menu->add_item("link","Por Data da Publicação","?fase=movimentacaoPorPublicacao","Movimentação Mensal por Data da Publicação");
-                $menu->add_item("link","Por Data do Ato do Reitor","?fase=movimentacaoPorAto","Movimentação Mensal por Data do Ato do Reitor");
-
-                $menu->add_item('titulo','Relatórios');
-                $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
-                $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
-                $menu->show();
-
-                $painel->fecha();
-                        
-            $grid->fechaColuna();
-            $grid->abreColuna(9);
-            br();
-            
-                $grid2 = new Grid();
-                $grid2->abreColuna(4);
+            $grid->abreColuna(4);
                 
-                    $vaga->exibeTotalVagas($parametroCentro,"o");
+                $vaga->exibeTotalVagas($parametroCentro,"o");
 
-                $grid2->fechaColuna();
-                $grid2->abreColuna(4);
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
 
-                    $vaga->exibeTotalVagas($parametroCentro,"d");
+                $vaga->exibeTotalVagas($parametroCentro,"d");
 
-                $grid2->fechaColuna();
-                $grid2->abreColuna(4);
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
 
-                    $vaga->exibeTotalVagas($parametroCentro);
+                $vaga->exibeTotalVagas($parametroCentro);
 
-                $grid2->fechaColuna();
-                $grid2->abreColuna(12);
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
             
-                    $objeto->listar();
-            
-                $grid2->fechaColuna();
-                $grid2->fechaGrid();
+                $objeto->listar();
                 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -286,7 +267,16 @@ if($acesso){
                 $objeto->editar();
             }
             break;
-        case "excluir" :	
+            
+        case "editarMesmo" :
+            $objeto->editar($id);
+            break;    
+            
+        case "incluir" :	    
+            $objeto->editar();
+            break;
+        
+        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;

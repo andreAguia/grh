@@ -327,7 +327,8 @@ class Vaga{
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select ="SELECT centro,
+        $select ="SELECT idVaga,
+                         centro,
                          tbcargo.nome,
                          idVaga
                     FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
@@ -335,9 +336,10 @@ class Vaga{
         
         $conteudo = $servidor->select($select,TRUE);
         
-        $label = array("Centro","Cargo","Status");        
-        $classe = array(NULL,NULL,"Vaga");
-        $metodo = array(NULL,NULL,"get_status");
+        $label = array("Id","Centro","Cargo","Status");        
+        $classe = array(NULL,NULL,NULL,"Vaga");
+        $metodo = array(NULL,NULL,NULL,"get_status");
+        $width = array(5,30,30,30);
 
         # Monta a tabela
         $tabela = new Tabela();
@@ -345,17 +347,21 @@ class Vaga{
         $tabela->set_label($label);
         $tabela->set_titulo("Vaga");
         $tabela->set_classe($classe);
+        $tabela->set_width($width);
         $tabela->set_metodo($metodo);
         $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
-                                                    'valor' => 'em Aberto',
-                                                    'operador' => '=',
-                                                    'id' => 'emAberto'),
-                                              array('coluna' => 2,
-                                                    'valor' => 'Ocupado',
-                                                    'operador' => '=',
-                                                    'id' => 'alerta')
-                                                    ));
+        $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
+                                                        'valor' => 'Disponível',
+                                                        'operador' => '=',
+                                                        'id' => 'emAberto'),
+                                                  array('coluna' => 3,
+                                                        'valor' => 'Ocupado',
+                                                        'operador' => '=',
+                                                        'id' => 'alerta')
+                                                        ));
+        
+        $tabela->set_editar('areaVagasDocentes.php?fase=editarMesmo&id=');
+        $tabela->set_idCampo('idVaga');
         
         # Limita o tamanho da tela
         $grid = new Grid();

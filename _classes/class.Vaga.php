@@ -274,14 +274,14 @@ class Vaga{
                 if($idSituacao == 1){
                     return 'Ocupado';
                 }else{
-                    return 'em Aberto';
+                    return 'Disponível';
                 }
             }else{
-                return 'em Aberto';
+                return 'Disponível';
             }
             
         }else{
-            return 'em Aberto';
+            return 'Disponível';
         }
     }
 
@@ -506,16 +506,19 @@ class Vaga{
      * @param	string $idVaga O id da vaga do servidor
      */
 
-    function exibeTotalVagas(){
+    function exibeTotalVagas($centro = NULL,$tipo = NULL){
         
         # Conecta o banco
         $pessoal = new Pessoal();
 
         # Pega as diretorias
-        $diretorias = array("CCT","CCTA","CCH","CBB");
+        if(vazio($centro)){
+            $diretorias = array("CCT","CCTA","CCH","CBB");
+        }else{
+            $diretorias[] = $centro;
+        }
         
-         # Percorre as diretorias
-        foreach($diretorias as $dd){
+       
         
             # Pega os Cargos
             $cargos = array(128,129);
@@ -543,7 +546,9 @@ class Vaga{
 
             # Zera o contador de linha
             $linha = 0;
-
+            
+            # Percorre as diretorias
+            foreach($diretorias as $dd){
 
                 $resultado[$linha][0] = $dd;    // Sigla da Diretoria 
                 $coluna = 1;                    // Inicia a coluna
@@ -561,7 +566,19 @@ class Vaga{
                     $ocupado = $this->get_numVagasCargoDiretoriaOcupados($cc, $dd);
 
                     # Joga os Valores no array
-                    $resultado[$linha][$coluna] = "$quantidade ( <span id='verde'>$disponivel</span> / <span id='vermelho'>$ocupado</span> )";
+                    #$resultado[$linha][$coluna] = "$quantidade ( <span id='verde'>$disponivel</span> / <span id='vermelho'>$ocupado</span> )";
+                    
+                    switch ($tipo){                        
+                        case "o":
+                            $resultado[$linha][$coluna] = $ocupado;
+                            break;
+                        case "d" :
+                            $resultado[$linha][$coluna] = $disponivel;
+                            break;
+                        default :
+                            $resultado[$linha][$coluna] = $quantidade;
+                            break;
+                    }
 
                     # Somatorio da linha
                     $totalLinha += $quantidade;
@@ -578,7 +595,20 @@ class Vaga{
                 }
 
                 # Faz a última coluna com o total da linha
-                $resultado[$linha][$coluna] = "$totalLinha ( <span id='verde'>$totalLinhaDisponivel</span> / <span id='vermelho'>$totalLinhaOcupado</span> )";
+                #$resultado[$linha][$coluna] = "$totalLinha ( <span id='verde'>$totalLinhaDisponivel</span> / <span id='vermelho'>$totalLinhaOcupado</span> )";
+                
+                switch ($tipo){                        
+                    case "o":
+                        $resultado[$linha][$coluna] = $totalLinhaOcupado;
+                        break;
+                    case "d" :
+                        $resultado[$linha][$coluna] = $totalLinhaDisponivel;
+                        break;
+                    default :
+                        $resultado[$linha][$coluna] = $totalLinha;
+                        break;
+                }
+
 
                 # Somatório da coluna
                 $totalColuna[$coluna] += $totalLinha;
@@ -595,26 +625,51 @@ class Vaga{
 
             # Percorre as colunas
             foreach($cargos as $cc){
-                $resultado[$linha][$coluna] = "$totalColuna[$coluna] ( <span id='verde'>$totalColunaDisponivel[$coluna]</span> / <span id='vermelho'>$totalColunaOcupado[$coluna]</span> )";
+                #$resultado[$linha][$coluna] = "$totalColuna[$coluna] ( <span id='verde'>$totalColunaDisponivel[$coluna]</span> / <span id='vermelho'>$totalColunaOcupado[$coluna]</span> )";
+                
+                switch ($tipo){                        
+                    case "o":
+                        $resultado[$linha][$coluna] = $totalColunaOcupado[$coluna];
+                        break;
+                    case "d" :
+                        $resultado[$linha][$coluna] = $totalColunaDisponivel[$coluna];
+                        break;
+                    default :
+                        $resultado[$linha][$coluna] = $totalColuna[$coluna];
+                        break;
+                }
                 $coluna++;
             }
-
-            $resultado[$linha][$coluna] = "$totalColuna[$coluna] ( <span id='verde'>$totalColunaDisponivel[$coluna]</span> / <span id='vermelho'>$totalColunaOcupado[$coluna]</span> )";
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("Vagas do $dd");
-            $tabela->set_conteudo($resultado);
-            $tabela->set_label($label);
-            $tabela->set_width(array(25,25,25,25));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->set_align(array("left","center"));       
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                                'valor' => "Total",
-                                                'operador' => '=',
-                                                'id' => 'totalVagas')));
-            $tabela->show();
-        
         }
+        #$resultado[$linha][$coluna] = "$totalColuna[$coluna] ( <span id='verde'>$totalColunaDisponivel[$coluna]</span> / <span id='vermelho'>$totalColunaOcupado[$coluna]</span> )";
+
+        switch ($tipo){                        
+            case "o":
+                $resultado[$linha][$coluna] = $totalColunaOcupado[$coluna];
+                $titulo = "Vagas Ocupadas";
+                break;
+            case "d" :
+                $resultado[$linha][$coluna] = $totalColunaDisponivel[$coluna];
+                $titulo = "Vagas Disponíveis";
+                break;
+            default :
+                $resultado[$linha][$coluna] = $totalColuna[$coluna];
+                $titulo = "Vagas Totais";
+                break;
+        }
+            
+        $tabela = new Tabela();
+        $tabela->set_titulo($titulo);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_label($label);
+        $tabela->set_width(array(25,25,25,25));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array("left","center"));       
+        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'totalVagas')));
+        $tabela->show();
     }
     
     ###########################################################

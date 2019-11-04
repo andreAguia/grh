@@ -18,6 +18,10 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $vaga = new Vaga();
+    
+    # Centros Possíveis
+    $centros = array("Todos","CCT","CCTA","CCH","CBB");
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -35,12 +39,14 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Pega os parâmetros
-    $parametroCentro = post('parametroCentro',get_session('parametroCentro'));
-    $parametroCargo = retiraAspas(post('parametroCargo',get_session('parametroCargo')));
+    $parametroCentro = get('parametroCentro',get_session('parametroCentro'));
+    
+    if($parametroCentro == "Todos"){
+        $parametroCentro = NULL;
+    }
         
     # Joga os parâmetros par as sessions    
     set_session('parametroCentro',$parametroCentro);
-    set_session('parametroCargo',$parametroCargo);
 
     # Começa uma nova página
     $page = new Page();			
@@ -75,11 +81,6 @@ if($acesso){
         $select .= "AND centro = '$parametroCentro'";
     }
     
-    # parametroCentro
-    if($parametroCargo <> 0){
-        $select .= "AND idCargo = $parametroCargo";
-    }
-    
     $select .= ' ORDER BY centro';
     
     # select da lista
@@ -99,7 +100,7 @@ if($acesso){
     
     
     $objeto->set_formatacaoCondicional(array( array('coluna' => 2,
-                                                    'valor' => 'em Aberto',
+                                                    'valor' => 'Disponível',
                                                     'operador' => '=',
                                                     'id' => 'emAberto'),
                                               array('coluna' => 2,
@@ -211,45 +212,68 @@ if($acesso){
             tituloTable("Controle de Vagas de Docentes");
             
             ###
-                        
-            # Formulário de Pesquisa
-            $form = new Form('?'); 
-            
-            # Centro 
-            $controle = new Input('parametroCentro','combo','Centro:',1);
-            $controle->set_size(10);
-            $controle->set_col(2);
-            $controle->set_array(array(NULL,"CCT","CCTA","CCH","CBB"));
-            $controle->set_autofocus(TRUE);
-            $controle->set_valor($parametroCentro);
-            $controle->set_onChange('formPadrao.submit();');
-            $form->add_item($controle);
-            
-            # Cargo 
-            $controle = new Input('parametroCargo','combo','Cargo:',1);
-            $controle->set_size(10);
-            $controle->set_col(3);
-            $controle->set_array($cargo);
-            $controle->set_valor($parametroCargo);
-            $controle->set_onChange('formPadrao.submit();');
-            $form->add_item($controle);
-
-            $form->show();
-            
-            ###
             
             $grid->fechaColuna();
             $grid->abreColuna(3);
+            br();
             
-            $vaga = new Vaga();            
-            $vaga->exibeTotalVagas();
+            $painel = new Callout();
+            $painel->abre();
             
+                # Inicia o Menu de Cargos
+                titulo("Menu");
+
+                $menu = new Menu("menuProcedimentos");
+                $menu->add_item('titulo','Centros');
+
+                # Preenche com os cargos
+                foreach($centros as $item){
+                    if($parametroCentro == $item){
+                        $menu->add_item('link','<b>'.$item.'</b>','?parametroCentro='.$item);
+                    }else{
+                        $menu->add_item('link',$item,'?parametroCentro='.$item);
+                    }
+                }
+
+                $menu->add_item("titulo","Movimentação Mensal");
+                $menu->add_item("link","Por Nomeação/Exoneração","?fase=movimentacaoPorNomExo","Movimentação Mensal por Data de Nomeações & Exonerações");
+                $menu->add_item("link","Por Data da Publicação","?fase=movimentacaoPorPublicacao","Movimentação Mensal por Data da Publicação");
+                $menu->add_item("link","Por Data do Ato do Reitor","?fase=movimentacaoPorAto","Movimentação Mensal por Data do Ato do Reitor");
+
+                $menu->add_item('titulo','Relatórios');
+                $menu->add_item('linkWindow','Planilhão Histórico','../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
+                $menu->add_item('linkWindow','Planilhão Vigente','../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
+                $menu->show();
+
+                $painel->fecha();
+                        
             $grid->fechaColuna();
             $grid->abreColuna(9);
-                        
+            br();
             
-            $objeto->listar();
+                $grid2 = new Grid();
+                $grid2->abreColuna(4);
+                
+                    $vaga->exibeTotalVagas($parametroCentro,"o");
+
+                $grid2->fechaColuna();
+                $grid2->abreColuna(4);
+
+                    $vaga->exibeTotalVagas($parametroCentro,"d");
+
+                $grid2->fechaColuna();
+                $grid2->abreColuna(4);
+
+                    $vaga->exibeTotalVagas($parametroCentro);
+
+                $grid2->fechaColuna();
+                $grid2->abreColuna(12);
             
+                    $objeto->listar();
+            
+                $grid2->fechaColuna();
+                $grid2->fechaGrid();
+                
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;

@@ -83,7 +83,8 @@ if($acesso)
                         ELSE "--"
                       END,
                       orgExecutor,
-                      tbplano.numDecreto,
+                      idConcurso,
+                      idConcurso,
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                 WHERE TRUE';
@@ -124,8 +125,8 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor"));
-    $objeto->set_width(array(5,10,10,10,10,40));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos"));
+    $objeto->set_width(array(5,10,10,10,10,20,10,10));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
@@ -133,8 +134,8 @@ if($acesso)
     
     $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    #$objeto->set_classe(array(NULL,NULL,NULL,"Pessoal",NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    #$objeto->set_metodo(array(NULL,NULL,NULL,"exibeEdital",NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -614,7 +615,7 @@ if($acesso)
             $menu = new MenuBar();
 
             # Voltar
-            $linkVoltar = new Link("Voltar","?fase=editar&id=".$id);
+            $linkVoltar = new Link("Voltar","?");
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');
@@ -655,7 +656,7 @@ if($acesso)
             $menu = new MenuBar();
 
             # Voltar
-            $linkVoltar = new Link("Voltar","?fase=editar&id=".$id);
+            $linkVoltar = new Link("Voltar","?");
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Volta para a página anterior');
             $linkVoltar->set_accessKey('V');

@@ -240,9 +240,12 @@ if($acesso){
             break;
 
         case "editar" :	
-        case "excluir" :	
-        case "gravar" :
+        case "excluir" :
             $objeto->$fase($id);
+            break;
+        
+        case "gravar" :
+            $objeto->gravar($id);              
             break;
     }									 	 		
 

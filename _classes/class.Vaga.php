@@ -679,4 +679,27 @@ class Vaga{
     }
     
     ###########################################################
+
+    /**
+     * Método get_idConcursoProfessor
+     * fornece o idConcurso de um professor
+     * 
+     * @param	string $idServidor O $idServidor do servidor Professor
+     */
+
+    function get_idConcursoProfessor($idServidor){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        $select = 'SELECT idConcurso
+                     FROM tbvagahistorico
+                    WHERE idServidor = '.$idServidor;
+
+        $dado = $pessoal->select($select,FALSE);
+        return $dado[0];
+    }
+
+    ###########################################################
+
 }

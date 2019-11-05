@@ -105,14 +105,46 @@ if($acesso){
 
     array_unshift($perfil, array(NULL,NULL)); 
     
-    # Pega os dados da combo concurso
-    $concurso = $pessoal->select('SELECT idconcurso,
-                                         concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y")) as concurso
-                                    FROM tbconcurso
-                                ORDER BY dtPublicacaoEdital desc');
+    # Pega o tipo do cargo (Adm & Tec ou Professor)
+    $tipoCargo = $pessoal->get_cargoTipo($idServidorPesquisado);
+    
+    # Trata o tipo
+    if($tipoCargo == "Adm/Tec"){
+        $select = "SELECT idconcurso,
+                          concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
+                     FROM tbconcurso
+               WHERE tipo = 1     
+            ORDER BY dtPublicacaoEdital desc";
+        
+        # Pega os dados da combo concurso
+        $concurso = $pessoal->select($select);
+        $idConcurso = NULL;
 
-    array_unshift($concurso, array(NULL,NULL)); 
+        array_unshift($concurso, array(NULL,NULL)); 
 
+    }else{
+        # Professor
+        
+        $vaga = new Vaga();
+        $idConcurso = $vaga->get_idConcursoProfessor($idServidorPesquisado);
+        
+        if(!vazio($idConcurso)){
+        
+            $select = "SELECT idconcurso,
+                              concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
+                         FROM tbconcurso
+                   WHERE idConcurso = $idConcurso";
+
+            # Pega os dados da combo concurso
+            $concurso = $pessoal->select($select);
+        }else{
+            $concurso = NULL;
+            $idConcurso = NULL;
+        }
+    }
+    
+    
+    
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
                                       concat(tbtipocargo.cargo," - ",tbarea.area," - ",nome)
@@ -166,14 +198,15 @@ if($acesso){
                            'col' => 3,
                            'size' => 15));
 
-    # Somente se for estatutário
-    if ($perfilServidor == 1){
+    # Somente se for estatutário ou celetista
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)){
         array_push($campos, array ('linha' => 1,
                                    'nome' => 'idConcurso',
                                    'label' => 'Concurso:',
                                    'tipo' => 'combo',
                                    'array' => $concurso,
                                    'title' => 'Concurso',
+                                   'padrao' => $idConcurso,
                                    'col' => 3,
                                    'size' => 15));
     }

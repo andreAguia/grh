@@ -175,9 +175,34 @@ if($acesso){
     $objeto->set_botaoIncluir(FALSE);
 
     ################################################################
+    
     switch ($fase){
         case "" :
         case "listar" :
+            
+            # Limita o tamanho da tela
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+            br(6);
+            
+            tituloTable("Controle de Vagas de Docentes");
+            br(2);
+            
+            aguarde();
+            br();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(5);
+                p("Aguarde...","center");
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+        
+################################################################
+        
+        case "exibeLista" :
             
             # Limita o tamanho da tela
             $grid = new Grid();

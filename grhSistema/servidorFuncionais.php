@@ -53,7 +53,7 @@ if($acesso){
                            idPerfil,';
 
     # Somente se for estatutário
-    if ($perfilServidor == 1){
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)){
         $selectEdita .= 'idConcurso,';
     }
 

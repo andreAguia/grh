@@ -55,7 +55,7 @@ if($acesso)
     
     # Começa uma nova página
     $page = new Page();
-    if($fase == "uploadEdital"){
+    if(($fase == "uploadEdital") OR ($fase == "uploadPublicacao")){
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");

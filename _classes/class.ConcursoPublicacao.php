@@ -54,7 +54,7 @@ class ConcursoPublicacao
         # Pega os dados
         $select = 'SELECT * 
                      FROM tbconcursopublicacao
-                    WHERE idConcursoPublicacao = '.$this->idConcurso;
+                    WHERE idConcursoPublicacao = '.$this->idConcursoPublicacao;
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select,FALSE);
@@ -82,7 +82,7 @@ class ConcursoPublicacao
             
             # Monta o link
             $link = new Link(NULL,$arquivo,"Exibe a Publicação");
-            $link->set_imagem(PASTA_FIGURAS."publicacao.png",20,20);
+            $link->set_imagem(PASTA_FIGURAS."ver.png",20,20);
             $link->set_target("_blank");
             $link->show();
             
@@ -92,6 +92,26 @@ class ConcursoPublicacao
     }
     
 ###########################################################
-
-
+    
+    public function exibeBotaoUpload($idConcursoPublicacao){
+    /**
+     * Exibe um link para exibir o edital
+     * 
+     * @param $idconcurso integer NULL O id do plano
+     * 
+     * @syntax $plano->exibeLei($idPlano);
+     */
+        
+        # Pega o idConcurso
+        $dados = $this->get_dados($idConcursoPublicacao);
+        $idConcurso = $dados["idConcurso"];
+        
+        $link = new Link(NULL,"?fase=uploadPublicacao&id=$idConcurso&idConcursoPublicacao=$idConcursoPublicacao","Upload a Publicação");
+        $link->set_imagem(PASTA_FIGURAS."upload.png",20,20);
+        #$link->set_target("_blank");
+        $link->show();     
+       
+    }
+    
+    ###########################################################
 }

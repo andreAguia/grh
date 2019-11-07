@@ -51,6 +51,13 @@ if($acesso){
     
     # Começa uma nova página
     $page = new Page();
+    if($fase == "uploadFoto"){
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
     $page->iniciaPagina();
     
     # Cabeçalho da Página
@@ -227,8 +234,8 @@ if($acesso){
                 
                 echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>
-                        <p>Click aqui ou arraste o arquivo para escolher a foto.</p>
-                        <button type='submit' name='submit'>Upload</button>
+                        <p>Click aqui ou arraste o arquivo. Somente arquivos jpg ou img.</p>
+                        <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
                 $pasta = "../../_fotos/";
@@ -247,8 +254,8 @@ if($acesso){
                     loadPage("?fase=exibeFoto&idPessoa=$idPessoa");
                 }
                 
-                br(4);                
-                callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
+                #br(4);                
+                #callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

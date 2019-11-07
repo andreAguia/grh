@@ -545,17 +545,9 @@ if($acesso){
                 
                 echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>
-                        <p>Click aqui ou arraste o arquivo para escolher a foto.</p>
+                        <p>Click aqui ou arraste o arquivo. Somente arquivos jpg ou img.</p>
                         <button type='submit' name='submit'>Upload</button>
                     </form>";
-                
-                /*
-                echo '<form class="upload" action="?fase=uploadFoto" method="POST" enctype="multipart/form-data">
-                        <input name="foto" type="file">
-                        <p>Drag your files here or click in this area.</p>
-                        <button type="submit">Upload</button>
-                      </form>';
-                */
                                 
                 $pasta = "../../_fotos/";
                 
@@ -575,8 +567,8 @@ if($acesso){
                     loadPage("?");
                 }
                 
-                br();                
-                callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
+                #br();                
+                #callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

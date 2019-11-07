@@ -35,6 +35,7 @@ if($acesso)
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    $idConcursoPublicacao = soNumeros(get('idConcursoPublicacao'));
     
     # Pega os parâmetros
     $parametroAno = post('parametroAno',get_session('parametroAno'));
@@ -54,6 +55,13 @@ if($acesso)
     
     # Começa uma nova página
     $page = new Page();
+    if($fase == "uploadEdital"){
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -451,6 +459,7 @@ if($acesso)
                                  pag,
                                  idConcursoPublicacao,
                                  idConcursoPublicacao,
+                                 idConcursoPublicacao,
                                  idConcursoPublicacao
                             FROM tbconcursopublicacao
                            WHERE idConcurso = $id  
@@ -463,14 +472,14 @@ if($acesso)
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Descrição","Data","Pag","Publicação"));
+                    $tabela->set_label(array("Descrição","Data","Pag","Publicação","Upload"));
                     $tabela->set_titulo("Publicações");
                     $tabela->set_funcao(array(NULL,"date_to_php"));
                     $tabela->set_align(array("left"));
-                    $tabela->set_width(array(50,10,10,10));
+                    $tabela->set_width(array(50,10,10,10,10));
                     
-                    $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao"));
-                    $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao"));
+                    $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao","ConcursoPublicacao"));
+                    $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao","exibeBotaoUpload"));
                     
                     $tabela->set_editar('cadastroConcursoPublicacao.php?fase=editar&idConcurso='.$id);
                     $tabela->set_idCampo('idConcursoPublicacao');
@@ -600,7 +609,6 @@ if($acesso)
                         callout("Nenhuma vaga cadastrada","secondary");
                     }
                 }
-            
             
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -915,8 +923,88 @@ if($acesso)
             $grid->fechaGrid();
             break;
         
-    ################################################################
+    ##################################################################
             
+            case "uploadEdital" :
+                $grid = new Grid("center");
+                $grid->abreColuna(12);
+                                
+                # Botão voltar
+                botaoVoltar('?fase=editar&id='.$id);
+                
+                tituloTable("Upload de Edital"); 
+                
+                $grid->fechaColuna();
+                $grid->abreColuna(6);
+                
+                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+                                
+                $pasta = "../../_editais/";
+                     
+                if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
+                    $upload = new UploadDoc($_FILES['doc'], $pasta,$id);
+                    echo $upload->salvar();
+                    
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Fez o upload do edital do concurso ".$concurso->get_nomeConcurso($id);
+                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$id);
+                    
+                    # Volta para o menu
+                    loadPage("?fase=editar&id=.$id");
+                }
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
+                
+    ##################################################################
+            
+            case "uploadPublicacao" :
+                $grid = new Grid("center");
+                $grid->abreColuna(12);
+                                
+                # Botão voltar
+                botaoVoltar('?fase=editar&id='.$id);
+                
+                tituloTable("Upload de Edital"); 
+                
+                $grid->fechaColuna();
+                $grid->abreColuna(6);
+                
+                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+                                
+                $pasta = "../../_concursoPublicacoes/";
+                     
+                if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
+                    $upload = new UploadDoc($_FILES['doc'], $pasta,$idConcursoPublicacao);
+                    echo $upload->salvar();
+                    
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Fez o upload de publicação do concurso ".$concurso->get_nomeConcurso($id);
+                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$id);
+                    
+                    # Volta para o menu
+                    loadPage("?fase=editar&id=.$id");
+                }
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
+                
+    ##################################################################
+                
     }
     $page->terminaPagina();
 }else{

@@ -126,7 +126,7 @@ if($acesso)
 
     # Parametros da tabela
     $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos"));
-    $objeto->set_width(array(5,10,10,10,10,20,10,10));
+    $objeto->set_width(array(5,12,12,12,12,27,5,5));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
@@ -134,8 +134,8 @@ if($acesso)
     
     $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Grh","Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosConcurso","get_numServidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosConcurso","get_servidoresInativosConcurso"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -372,7 +372,7 @@ if($acesso)
                 $menu1->show();
 
                 # Exibe os dados do Concurso
-                $concurso->exibeDadosConcurso();
+                $concurso->exibeDadosConcurso($id,TRUE);
                 
                 $grid->fechaColuna();
                 
@@ -391,11 +391,11 @@ if($acesso)
                 
                 if($dados["tipo"] == 2){
                     $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
-                }else{
-                    $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
-                    $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
                 }
                 
+                $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
+                $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
+                                
                 $menu->show();
 
                 $painel->fecha();
@@ -541,6 +541,9 @@ if($acesso)
                 
                 $menu->add_item('link','Publicações','?fase=editar&id='.$id);
                 $menu->add_item('link','<b>Vagas</b>','?fase=concursoVagas&id='.$id);
+
+                $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
+                $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
                 
                 $menu->show();
 
@@ -626,7 +629,8 @@ if($acesso)
     
     ################################################################
 
-        case "listaServidoresAtivos" :            
+        case "listaServidoresAtivos" :
+            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -654,9 +658,44 @@ if($acesso)
             $menu->add_link($botaoRel,"right");
 
             $menu->show();
+            
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso();
+            
+            $grid->fechaColuna();
+                
+            #######################################################
+            # Menu
+
+            $grid->abreColuna(3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            # Inicia o Menu de Cargos                
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo','Menu');                
+            $menu->add_item('link','Publicações','?fase=editar&id='.$id);
+
+            if($dados["tipo"] == 2){
+                $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+            }
+
+            $menu->add_item('link','<b>Servidores Ativos</b>','?fase=listaServidoresAtivos&id='.$id);
+            $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
+
+            $menu->show();
+
+            $painel->fecha();
+
+            $grid->fechaColuna();
+
+            #######################################################3
+
+            $grid->abreColuna(9);
 
             # Lista de Servidores Ativos
-            $lista = new ListaServidores('Servidores Estatutários Ativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+            $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);				
             $lista->set_concurso($id);            
             $lista->showTabela();
@@ -667,7 +706,8 @@ if($acesso)
         
 ################################################################
             
-        case "listaServidoresInativos" :            
+        case "listaServidoresInativos" :
+            
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -695,9 +735,44 @@ if($acesso)
             $menu->add_link($botaoRel,"right");
 
             $menu->show();
+            
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso();
+            
+            $grid->fechaColuna();
+                
+            #######################################################
+            # Menu
+
+            $grid->abreColuna(3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            # Inicia o Menu de Cargos                
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo','Menu');                
+            $menu->add_item('link','Publicações','?fase=editar&id='.$id);
+
+            if($dados["tipo"] == 2){
+                $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+            }
+
+            $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
+            $menu->add_item('link','<b>Servidores Inativos</b>','?fase=listaServidoresInativos&id='.$id);
+
+            $menu->show();
+
+            $painel->fecha();
+
+            $grid->fechaColuna();
+
+            #######################################################3
+
+            $grid->abreColuna(9);
 
             # Lista de Servidores Inativos
-            $lista = new ListaServidores('Servidores Inativos do Concurso de '.$pessoal->get_nomeConcurso($id));
+            $lista = new ListaServidores('Servidores Inativos');
             $lista->set_situacao(1);				
             $lista->set_situacaoSinal("<>");
             $lista->set_concurso($id);            

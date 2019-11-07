@@ -77,7 +77,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Cargo Efetivo','?fase=cargoEfetivo','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cargo em Comissão','?fase=cargoEmComissao','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Cedidos','?fase=cedidos','','','divMenuRelatorioGrh'); 
-                $menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
+                #$menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Contatos','?fase=contatos','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Dependentes & Auxílio Creche','?fase=dependentes','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Diárias','?fase=diarias','','','divMenuRelatorioGrh');

@@ -122,6 +122,17 @@ class ListaServidores{
         # Pega o time inicial
         #$this->time_start = microtime(TRUE);
         
+        # Inicia variáveis
+        $tipo = NULL;
+        
+        # Pega o tipo do concurso quando se solicita servidores de um concurso específico
+        if(!is_null($this->concurso)){
+            # Verifica se o concurso é de Adm & Tec ou se é de Professor
+            $concurso = new Concurso();
+            $dados = $concurso->get_dados($this->concurso);
+            $tipo = $dados['tipo'];
+        }
+        
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -147,9 +158,15 @@ class ListaServidores{
                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)';
                             
+        # CArgo em comissão
         if(!is_null($this->cargoComissao)){
             $select .= ' LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                          LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)';
+        }
+        
+        # Concurso tipo 2 (professor)
+        if($tipo == 2){
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
         }
         
         $select .= ' WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
@@ -175,10 +192,15 @@ class ListaServidores{
         if(!is_null($this->situacao)){
             $select .= ' AND (tbsituacao.idsituacao '.$this->situacaoSinal.' "'.$this->situacao.'")';
             
-            if($this->situacao == 6){
-                $this->titulo .= " em ".$servidor->get_nomeSituacao($this->situacao);
+            if(($this->situacaoSinal == "<>") AND ($this->situacao == 1)){
+                $this->titulo .= "Inativos";
             }else{
-                $this->titulo .= $servidor->get_nomeSituacao($this->situacao)."s";
+            
+                if($this->situacao == 6){
+                    $this->titulo .= " em ".$servidor->get_nomeSituacao($this->situacao);
+                }else{
+                    $this->titulo .= $servidor->get_nomeSituacao($this->situacao)."s";
+                }
             }
         }        
         
@@ -213,9 +235,13 @@ class ListaServidores{
         }
         
         # concurso
-        if(!is_null($this->concurso)){
-            $select .= ' AND (tbservidor.idConcurso = "'.$this->concurso.'")'; 
-            $this->subTitulo .= "Concurso: ".$servidor->get_nomeConcurso($this->concurso)."<br/>";
+        if(!is_null($this->concurso)){            
+            if($tipo == 1){
+                $select .= ' AND (tbservidor.idConcurso = '.$this->concurso.')'; 
+            }else{
+                $select .= ' AND (tbvagahistorico.idConcurso = '.$this->concurso.')'; 
+            }
+            $this->subTitulo .= "Concurso: ".$concurso->get_nomeConcurso($this->concurso)."<br/>";
         }
         
         # lotacao
@@ -416,7 +442,6 @@ class ListaServidores{
             $tabela->set_label($label);
             #$tabela->set_width($width);
             $tabela->set_align($align);
-            #$tabela->set_titulo($this->nomeLista);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_funcao($function);

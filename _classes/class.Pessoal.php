@@ -2371,15 +2371,31 @@ class Pessoal extends Bd {
     /**
      * Método get_servidoresAtivosConcurso
      * 
-     * Exibe o n�mero de servidores ativos em um determinado concurso
+     * Exibe o número de servidores ativos em um determinado concurso
      */
 
-    public function get_servidoresAtivosConcurso($idConcurso)
-    {
-        $select = 'SELECT idServidor                             
-                     FROM tbservidor
-                    WHERE situacao = 1 AND 
-                          idConcurso = '.$idConcurso;
+    public function get_servidoresAtivosConcurso($idConcurso){
+        
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $concurso = new Concurso();
+        $dados = $concurso->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+        
+        $select = 'SELECT tbservidor.idServidor                             
+                     FROM tbservidor';
+        
+        # Se for concurso de professor
+        if($tipo == 2){
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
+        }
+                
+        $select .= ' WHERE situacao = 1';
+        
+        if($tipo == 1){
+            $select .= ' AND (tbservidor.idConcurso = '.$idConcurso.')'; 
+        }else{
+            $select .= ' AND (tbvagahistorico.idConcurso = '.$idConcurso.')'; 
+        }
 
         $numero = parent::count($select);
         return $numero;
@@ -2393,12 +2409,28 @@ class Pessoal extends Bd {
      * Exibe o n�mero de servidores inativos em um determinado concurso
      */
 
-    public function get_servidoresInativosConcurso($idConcurso)
-    {
-        $select = 'SELECT idServidor                             
-                     FROM tbservidor
-                    WHERE situacao <> 1 AND 
-                          idConcurso = '.$idConcurso;
+    public function get_servidoresInativosConcurso($idConcurso){
+            
+    # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $concurso = new Concurso();
+        $dados = $concurso->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+        
+        $select = 'SELECT tbservidor.idServidor                             
+                     FROM tbservidor';
+        
+        # Se for concurso de professor
+        if($tipo == 2){
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
+        }
+                
+        $select .= ' WHERE situacao <> 1';
+        
+        if($tipo == 1){
+            $select .= ' AND (tbservidor.idConcurso = '.$idConcurso.')'; 
+        }else{
+            $select .= ' AND (tbvagahistorico.idConcurso = '.$idConcurso.')'; 
+        }
 
         $numero = parent::count($select);
         return $numero;
@@ -3890,23 +3922,6 @@ class Pessoal extends Bd {
 		return $numIdservidor;
 	}
 	
-	#####################################################################################
-	
-	/**
-	 * Método get_nomeConcurso
-	 * 
-	 * Informa o nome de um idconcurso	 */
-	
-	public function get_nomeConcurso($idconcurso)
-	{
-            $select = 'SELECT CONCAT(anobase," - ",regime)                          
-                         FROM tbconcurso
-                        WHERE idconcurso = '.$idconcurso;
-           
-             $row = parent::select($select,FALSE);
-             return $row[0];
-	}
-
 	#####################################################################################
 	
 	/**

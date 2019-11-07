@@ -72,7 +72,7 @@ class Concurso
      * @param	string $idVaga O id da vaga
      */
 
-    function exibeDadosConcurso($idConcurso = NULL){ 
+    function exibeDadosConcurso($idConcurso = NULL,$editar = FALSE){ 
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -120,9 +120,11 @@ class Concurso
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
         
-        $tabela->set_editar("?fase=editardeFato&id=".$this->idConcurso);
-        $tabela->set_nomeColunaEditar("Editar");
-        $tabela->set_idCampo('idConcurso');
+        if($editar){
+            $tabela->set_editar("?fase=editardeFato&id=".$this->idConcurso);
+            $tabela->set_nomeColunaEditar("Editar");
+            $tabela->set_idCampo('idConcurso');
+        }
                     
         # Limita o tamanho da tela
         $grid = new Grid();
@@ -162,7 +164,25 @@ class Concurso
         }
     }
     
-    ###########################################################
+    #####################################################################################
+	
+	/**
+	 * Método get_nomeConcurso
+	 * 
+	 * Informa o nome de um idconcurso	 */
+	
+	public function get_nomeConcurso($idconcurso){
+            
+            # Monta o select            
+            $select = 'SELECT CONCAT(tbconcurso.anoBase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as cc                
+                         FROM tbconcurso
+                        WHERE idconcurso = '.$idconcurso;
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select,FALSE);
+             return $row[0];
+	}
 
-
+    #####################################################################################
 }

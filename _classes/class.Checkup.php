@@ -1195,12 +1195,12 @@ class Checkup {
     ##########################################################
     
      /**
-     * Método get_servidorProfessorEstatutarioSemConcurso
+     * Método get_servidorProfessorAtivoSemConcurso
      * 
      * Servidor Concursado sem concurso cadastrado
      */
     
-    public function get_servidorProfessorEstatutarioSemConcurso($idServidor = NULL){
+    public function get_servidorProfessorAtivoSemConcurso($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
         $prioridade = 2;
         
@@ -1212,19 +1212,20 @@ class Checkup {
                           dtAdmissao,
                           tbpessoa.nome,
                           tbperfil.nome,                          
-                          idServidor,
-                          idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
                           tbsituacao.situacao,
-                          idServidor
+                          tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                    WHERE idConcurso is NULL
+                                     LEFT JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)
+                    WHERE tbvagahistorico.idConcurso is NULL
                       AND tbservidor.situacao = 1
-                      AND idPerfil = 1
+                      AND (idPerfil = 1 OR idPerfil = 4)
                       AND (idCargo = 128 OR idCargo = 129)';
                 if(!is_null($idServidor)){
-                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                    $select .= ' AND tbservidor.idServidor = "'.$idServidor.'"';
                 }                
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
 
@@ -1234,7 +1235,89 @@ class Checkup {
         # Cabeçalho da tabela
         $label = ['IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação'];
         $align = ['center','center','center','left','center','left','left','center'];
-        $titulo = 'Professor(es) estatutário(s) sem concurso cadastrado';
+        $titulo = 'Professores ativos sem concurso cadastrado';
+        $classe = [NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo"];
+        $funcao = [NULL,"dv","date_to_php"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if ($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
+                $tabela->show();
+                set_session('alerta',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }
+        }elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorProfessorAtivoSemConcurso
+     * 
+     * Servidor Concursado sem concurso cadastrado
+     */
+    
+    public function get_servidorProfessorInativoSemConcurso($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          dtAdmissao,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbsituacao.situacao,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                     LEFT JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)
+                    WHERE tbvagahistorico.idConcurso is NULL
+                      AND tbservidor.situacao <> 1
+                      AND (idPerfil = 1 OR idPerfil = 4)
+                      AND (idCargo = 128 OR idCargo = 129)';
+                if(!is_null($idServidor)){
+                    $select .= ' AND tbservidor.idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = ['IdFuncional','Matrícula','Admissão','Nome','Perfil','Lotação','Cargo','Situação'];
+        $align = ['center','center','center','left','center','left','left','center'];
+        $titulo = 'Professores inativos sem concurso cadastrado';
         $classe = [NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
         $rotina = [NULL,NULL,NULL,NULL,NULL,"get_lotacao","get_cargo"];
         $funcao = [NULL,"dv","date_to_php"];

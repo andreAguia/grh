@@ -184,5 +184,22 @@ class Concurso
              return $row[0];
 	}
 
-    #####################################################################################
+    ###########################################################
+    
+    public function exibeBotaoUpload($idConcurso){
+    /**
+     * Exibe um link para exibir o edital
+     * 
+     * @param $idconcurso integer NULL O id do plano
+     * 
+     * @syntax $plano->exibeLei($idPlano);
+     */
+        $link = new Link(NULL,"?fase=uploadEdital&id=".$idConcurso,"Upload o Edital");
+        $link->set_imagem(PASTA_FIGURAS."upload.png",20,20);
+        #$link->set_target("_blank");
+        $link->show();     
+       
+    }
+    
+    ###########################################################
 }

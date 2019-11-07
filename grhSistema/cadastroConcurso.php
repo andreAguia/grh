@@ -410,6 +410,7 @@ if($acesso)
                 
                 $select ="SELECT 'Edital Oficial do Concurso',
                                  dtPublicacaoEdital,
+                                 idConcurso,
                                  idConcurso
                             FROM tbconcurso
                            WHERE idConcurso = $id";
@@ -421,7 +422,7 @@ if($acesso)
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Descrição","Data","Publicação"));
+                    $tabela->set_label(array("Descrição","Data","Publicação","Upload"));
                     $tabela->set_titulo("Edital");
                     $tabela->set_funcao(array(NULL,"date_to_php"));
                     $tabela->set_align(array("left"));
@@ -434,8 +435,8 @@ if($acesso)
                                                           'id' => 'listaDados'));
                     $tabela->set_formatacaoCondicional($formatacaoCondicional);
                     
-                    $tabela->set_classe(array(NULL,NULL,"Concurso"));
-                    $tabela->set_metodo(array(NULL,NULL,"exibeEdital"));
+                    $tabela->set_classe(array(NULL,NULL,"Concurso","Concurso"));
+                    $tabela->set_metodo(array(NULL,NULL,"exibeEdital","exibeBotaoUpload"));
                     
                     $tabela->show();
                 }else{
@@ -915,6 +916,7 @@ if($acesso)
             break;
         
     ################################################################
+            
     }
     $page->terminaPagina();
 }else{

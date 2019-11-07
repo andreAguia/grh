@@ -66,6 +66,7 @@ if($acesso){
     $relatorio->set_label(array("Conclusão","Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
     $relatorio->set_align(array("center","center","center","left","center","left","left","left"));
     $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+    $relatorio->set_width(array(5,5,5,20,5,20,15,15,5));
 
     $relatorio->set_classe(array(NULL,"Acumulacao"));
     $relatorio->set_metodo(array(NULL,"get_resultado"));

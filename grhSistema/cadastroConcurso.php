@@ -129,12 +129,12 @@ if($acesso)
     
     # Exclusão somente para administradores
     if(Verifica::acesso($idUsuario,1)){
-        $objeto->set_linkExcluir('?fase=excluir');
+       # $objeto->set_linkExcluir('?fase=excluir');
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos"));
-    $objeto->set_width(array(5,12,12,12,12,27,5,5));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos","Total"));
+    $objeto->set_width(array(5,12,12,12,12,22,5,5,5));
     $objeto->set_align(array("center"));
     
     $objeto->set_rowspan(1);
@@ -142,9 +142,11 @@ if($acesso)
     
     $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosConcurso","get_servidoresInativosConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal","Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosConcurso","get_servidoresInativosConcurso","get_servidoresConcurso"));
 
+    $objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
+    
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 

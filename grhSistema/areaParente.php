@@ -88,10 +88,10 @@ if($acesso){
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_url('../grhRelatorios/parentes.geral.php');
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
+            $menu1->add_link($botaoRel,"right");
             
             $menu1->show();
             
@@ -117,6 +117,7 @@ if($acesso){
            
             # Pega os dados
             $select ='SELECT tbdependente.nome,
+                             TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
                              tbparentesco.Parentesco,
                              tbpessoa.nome,
                              tbservidor.idServidor,
@@ -139,11 +140,11 @@ if($acesso){
             $tabela = new Tabela();   
             $tabela->set_titulo('Cadastro de Parentes de Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("Parente","Parentesco","Servidor","Cargo","Lotação"));
+            $tabela->set_label(array("Parente","Idade","Parentesco","Servidor","Cargo","Lotação"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("left","center","left","left","left"));
-            $tabela->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,NULL,"get_Cargo","get_Lotacao"));
+            $tabela->set_align(array("left","center","center","left","left","left"));
+            $tabela->set_classe(array(NULL,NULL,NULL,NULL,"pessoal","pessoal"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,NULL,"get_Cargo","get_Lotacao"));
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

@@ -92,6 +92,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
+                $menu->add_item('linkAjax','Parentes','?fase=parentes','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Professores','?fase=professores','','','divMenuRelatorioGrh'); 
                 $menu->add_item('linkAjax','Processo Eleitoral','?fase=eleitoral','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Recadastramento 2018','?fase=recad2018','','','divMenuRelatorioGrh');
@@ -498,6 +499,16 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Servidores com Endereço, Emails e Telefones Agrupado por Lotaçao','../grhRelatorios/enderecoEmailLotacao.php');
             $menu->add_item('linkWindow','Relatório de Servidores com Endereço, CPF, Emails e Telefones Agrupado por Lotaçao','../grhRelatorios/enderecoEmailLotacaoCpf.php');
             $menu->add_item('linkWindow','Relatório de Ativos e Aposentados Com Endereço','../grhRelatorios/enderecoAtivoAposentado.php');
+            $menu->show();
+            break;
+
+        ######################################
+
+         case "parentes";
+            $menu = new Menu();
+            $menu->add_item('titulo','Parentes');
+            $menu->add_item('linkWindow','Relatório de Parentes de Servidores ','../grhRelatorios/parentes.geral.php');
+            $menu->add_item('linkWindow','Relatório de Parentes de Servidores Com até 24 Anos','../grhRelatorios/parentes.ate24.php');
             $menu->show();
             break;
 

@@ -126,11 +126,6 @@ if($acesso)
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('cadastroConcurso.php?fase=editar&id='.$id);
     $objeto->set_voltarForm('cadastroConcurso.php?fase=editar&id='.$id);
-    
-    # Exclusão somente para administradores
-    if(Verifica::acesso($idUsuario,1)){
-       # $objeto->set_linkExcluir('?fase=excluir');
-    }
 
     # Parametros da tabela
     $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos","Total"));

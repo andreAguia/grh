@@ -57,6 +57,7 @@ class Vaga{
             $idSiituacao = $pessoal->get_idSituacao($idServidor);
             $dtSaida = $pessoal->get_dtSaida($idServidor);
             $lotacao = $pessoal->get_lotacaoSimples($idServidor);
+            $comissao = $pessoal->get_cargoComissao($idServidor);
             
             if($idSiituacao == 1){
                 $css = 'vagasAtivo';
@@ -67,6 +68,9 @@ class Vaga{
             p($nome,$css);
             p($dtAdmissao."  -  ".$dtSaida,$css);
             p($lotacao,$css);
+            if(!vazio($comissao)){
+                p("[$comissao]",$css);
+            }
             
         }else{
             return $idServidor;

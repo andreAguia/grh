@@ -186,7 +186,6 @@ if($acesso){
                 $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
             }
                     
-                    
             $select .= " ORDER BY status, dtTermino, dtInicio";
             
             $resumo = $pessoal->select($select);

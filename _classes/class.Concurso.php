@@ -202,4 +202,134 @@ class Concurso
     }
     
     ###########################################################
+    
+    public function exibeQuadroDocentesSemConcurso(){
+    /**
+     * Exibe um quadro com os docentes sem concurso
+     * 
+     * @syntax $plano->exibeQuadroDocentesSemConcurso();
+     */
+        
+        $ativosS = $this->get_numDocentesAtivosSemConcurso();
+        $inativosS = $this->get_numDocentesInativosSemConcurso();
+        $totals = $ativosS+$inativosS;
+        
+        $ativosC = $this->get_numDocentesAtivosComConcurso();
+        $inativosC = $this->get_numDocentesInativosComConcurso();
+        $totalc = $ativosC+$inativosC;
+        
+        # conteúdo
+        $array = array(array("Ativos",$ativosS,$ativosC,$totals),
+                       array("Inativos",$inativosS,$inativosC,$totalc),
+                       array("Total",$ativosS+$inativosS,$ativosC+$inativosC,$totals+$totalc));
+
+       
+        # Exemplo de tabela simples
+        $tabela = new Tabela();
+        $tabela->set_titulo("Professores");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(array("Tipo","Sem Concurso","Com Concurso","Total"));
+        $tabela->set_width(array(80,20));
+        $tabela->set_align(array("left","center"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'totalVagas')));
+        $tabela->show();
+    }
+    
+    #####################################################################################
+	
+	/**
+	 * Método get_numDocentesAtivosSemConcurso
+	 * 
+	 * Informa o nome de um idconcurso	 */
+	
+	public function get_numDocentesAtivosSemConcurso(){
+            
+            # Monta o select            
+            $select = 'SELECT tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
+                        WHERE tbvagahistorico.idConcurso is NULL
+                          AND tbservidor.situacao = 1
+                          AND (idPerfil = 1 OR idPerfil = 4)
+                          AND (idCargo = 128 OR idCargo = 129)';
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+	}
+
+    #####################################################################################
+	
+	/**
+	 * Método get_numDocentesInativosSemConcurso
+	 * 
+	 * Informa o nome de um idconcurso	 */
+	
+	public function get_numDocentesInativosSemConcurso(){
+            
+            # Monta o select            
+            $select = 'SELECT tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
+                        WHERE tbvagahistorico.idConcurso is NULL
+                          AND tbservidor.situacao <> 1
+                          AND (idPerfil = 1 OR idPerfil = 4)
+                          AND (idCargo = 128 OR idCargo = 129)';
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+	}
+
+    #####################################################################################
+	
+	/**
+	 * Método get_numDocentesAtivosSemConcurso
+	 * 
+	 * Informa o nome de um idconcurso	 */
+	
+	public function get_numDocentesAtivosComConcurso(){
+            
+            # Monta o select            
+            $select = 'SELECT tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
+                        WHERE tbvagahistorico.idConcurso is NOT NULL
+                          AND tbservidor.situacao = 1
+                          AND (idPerfil = 1 OR idPerfil = 4)
+                          AND (idCargo = 128 OR idCargo = 129)';
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+	}
+
+    #####################################################################################
+	
+	/**
+	 * Método get_numDocentesAtivosSemConcurso
+	 * 
+	 * Informa o nome de um idconcurso	 */
+	
+	public function get_numDocentesInativosComConcurso(){
+            
+            # Monta o select            
+            $select = 'SELECT tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
+                        WHERE tbvagahistorico.idConcurso is NOT NULL
+                          AND tbservidor.situacao <> 1
+                          AND (idPerfil = 1 OR idPerfil = 4)
+                          AND (idCargo = 128 OR idCargo = 129)';
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+	}
+
+    #####################################################################################
 }

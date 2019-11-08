@@ -19,6 +19,7 @@ if($acesso){
     $intra = new Intra();
     $pessoal = new Pessoal();
     $vaga = new Vaga();
+    $concurso = new Concurso();
     
     # Centros Possíveis
     $centros = array("Todos","CCT","CCTA","CCH","CBB");
@@ -261,17 +262,22 @@ if($acesso){
             ###
             
             $grid->fechaColuna();
-            $grid->abreColuna(4);
+            $grid->abreColuna(3);
+            
+                $concurso->exibeQuadroDocentesSemConcurso();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
                 
                 $vaga->exibeTotalVagas($parametroCentro,"o");
 
             $grid->fechaColuna();
-            $grid->abreColuna(4);
+            $grid->abreColuna(3);
 
                 $vaga->exibeTotalVagas($parametroCentro,"d");
 
             $grid->fechaColuna();
-            $grid->abreColuna(4);
+            $grid->abreColuna(3);
 
                 $vaga->exibeTotalVagas($parametroCentro);
 

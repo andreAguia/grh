@@ -93,7 +93,7 @@ if($acesso){
             # Redução da Carga Horária
             $botaoRel = new Button('Redução da Carga Horária');
             $botaoRel->set_url("?fase=listaReducao");
-            $menu1->add_link($botaoRel,"right");
+            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
@@ -259,7 +259,7 @@ if($acesso){
             # Redução da Carga Horária
             $botaoRel = new Button('Readaptação');
             $botaoRel->set_url("?fase=listaReadaptacao");
-            $menu1->add_link($botaoRel,"right");
+            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             

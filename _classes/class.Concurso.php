@@ -219,9 +219,9 @@ class Concurso
         $totalc = $ativosC+$inativosC;
         
         # conteúdo
-        $array = array(array("Ativos",$ativosS,$ativosC,$totals),
-                       array("Inativos",$inativosS,$inativosC,$totalc),
-                       array("Total",$ativosS+$inativosS,$ativosC+$inativosC,$totals+$totalc));
+        $array = array(array("Ativos",$ativosS,$ativosC,$ativosS+$ativosC),
+                       array("Inativos",$inativosS,$inativosC,$inativosS+$inativosC),
+                       array("Total",$totals,$totalc,$totals+$totalc));
 
        
         # Exemplo de tabela simples

@@ -380,9 +380,30 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Benefícios');
-        $botao->set_url('areaBeneficios.php');
-        $botao->set_imagem(PASTA_FIGURAS.'beneficios.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_label('Aposentadoria');
+        $botao->set_url('areaAposentadoria.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área das rotinas de aposentadoria do serviodor');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Progressão & Enquadramento');
+        $botao->set_url('areaProgressao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'progressao.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área das rotinas de Progressão e enquadramento do serviodor');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Readaptação');
+        $botao->set_url('areaBeneficios.php?fase=listaReadaptacao');
+        $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Benefícios dos Servidores');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Redução da CH');
+        $botao->set_url('areaBeneficios.php?fase=listaReducao');
+        $botao->set_imagem(PASTA_FIGURAS.'reducao.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);
         
@@ -394,13 +415,6 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Afastamentos');
-        $botao->set_url('areaFrequencia.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
         $botao->set_label('Formação');
         $botao->set_url('areaFormacao.php');
         $botao->set_imagem(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
@@ -408,10 +422,24 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Telefones e Ramais');
-        $botao->set_url('areaTelefones.php');
-        $botao->set_imagem(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Exibe os telefones e ramais da UENF');
+        $botao->set_label('Área de Fotografia');
+        $botao->set_url('areaFotografia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'fotografia.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Área de controle de fotos dos servidores');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Estatística');
+        $botao->set_url('estatistica.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Análise estatísticas');
+        $menu->add_item($botao); 
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Afastamentos');
+        $botao->set_url('areaFrequencia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
@@ -429,39 +457,18 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
+        $botao->set_label('Telefones e Ramais');
+        $botao->set_url('areaTelefones.php');
+        $botao->set_imagem(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Exibe os telefones e ramais da UENF');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Sispatri');
         $botao->set_url("areaSispatri.php");
         $botao->set_imagem(PASTA_FIGURAS.'sispatri.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de Sispatri');
         #$botao->set_accesskey('S');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Estatística');
-        $botao->set_url('estatistica.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'pie.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Análise estatísticas');
-        $menu->add_item($botao); 
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Aposentadoria');
-        $botao->set_url('areaAposentadoria.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'aposentadoria.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área das rotinas de aposentadoria do serviodor');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Progressão & Enquadramento');
-        $botao->set_url('areaProgressao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'progressao.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área das rotinas de Progressão e enquadramento do serviodor');
-        $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Área de Fotografia');
-        $botao->set_url('areaFotografia.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS.'fotografia.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área de controle de fotos dos servidores');
         $menu->add_item($botao);
         
         if(Verifica::acesso($this->idUsuario,1)){

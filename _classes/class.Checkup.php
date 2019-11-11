@@ -87,7 +87,7 @@ class Checkup {
     
     public function get_licencaVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+        $prioridade = 4;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -163,7 +163,7 @@ class Checkup {
     
     public function get_licencaPremioVencendo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+        $prioridade = 4;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -427,7 +427,7 @@ class Checkup {
     
     public function get_auxilioCrecheVencido($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+        $prioridade = 4;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -500,7 +500,7 @@ class Checkup {
     
     public function get_motoristaCarteiraVencida($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -579,7 +579,7 @@ class Checkup {
     
     public function get_motoristaSemDataCarteira($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -656,7 +656,7 @@ class Checkup {
     
     public function get_motoristaSemCarteira($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -732,7 +732,7 @@ class Checkup {
     
     public function get_servidorCom74($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1120,7 +1120,7 @@ class Checkup {
     
     public function get_servidorTecnicoEstatutarioSemConcurso($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1202,7 +1202,7 @@ class Checkup {
     
     public function get_servidorProfessorAtivoSemConcurso($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1284,7 +1284,7 @@ class Checkup {
     
     public function get_servidorProfessorInativoSemConcurso($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1445,7 +1445,7 @@ class Checkup {
     
     public function get_servidorCom10MesesLicencaSemVencimento($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1525,7 +1525,7 @@ class Checkup {
     
     public function get_servidorComMaisde1AnoLicencaSemVencimento($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1604,7 +1604,7 @@ class Checkup {
     
     public function get_servidorSemIdFuncional($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1684,7 +1684,7 @@ class Checkup {
     
     public function get_servidorSemDtNasc($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1757,7 +1757,7 @@ class Checkup {
     
     public function get_servidorCedidoLotacaoErrada($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1838,7 +1838,7 @@ class Checkup {
     
     public function get_servidorCedidoDataExpirada($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -1997,7 +1997,7 @@ class Checkup {
     
     public function get_servidorSemCargo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -2152,7 +2152,7 @@ class Checkup {
     
     public function get_servidorInativoComPerfilOutros($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -2230,7 +2230,7 @@ class Checkup {
     
     public function get_servidorInativoSemMotivoSaida($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -2308,7 +2308,7 @@ class Checkup {
     
     public function get_servidorInativoSemdataSaida($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
                 
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -2617,7 +2617,7 @@ class Checkup {
     
     public function get_servidorSemProcessoPremio($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+        $prioridade = 4;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -2843,7 +2843,7 @@ class Checkup {
     
     public function get_estatutarioComLicencaMedicaClt($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -2924,7 +2924,7 @@ class Checkup {
     
     public function get_folgaFruidaTreMaiorConcedida($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -3148,7 +3148,7 @@ class Checkup {
     
     public function get_celetistaInativoFimCessao($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -3223,7 +3223,7 @@ class Checkup {
     
     public function get_servidorSemSexo($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -3298,7 +3298,7 @@ class Checkup {
     
     public function get_servidorSemEstCiv($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -3608,7 +3608,7 @@ class Checkup {
     
     public function get_servidorComDependentesSemParentesco($idServidor = NULL){
         # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+        $prioridade = 3;
         
         $servidor = new Pessoal();
         $metodo = explode(":",__METHOD__);
@@ -3651,6 +3651,85 @@ class Checkup {
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                $tabela->show();
+                set_session('alerta',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }}elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+    
+     /**
+     * Método get_servidorComTerminoReadaptacaoMenos90Dias
+     * 
+     * Servidor Com Readaptação terminando em menos de 90 dias
+     */
+    
+    public function get_servidorComTerminoReadaptacaoMenos90Dias($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor,
+                          idServidor,
+                          DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY),
+                          TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY))
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbreadaptacao USING (idServidor)
+                    WHERE tbreadaptacao.dtInicio IS NOT NULL
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) <=90';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY 7 desc';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Servidor(es) com Readaptação terminando em menos de 90 dias.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Lotação','Data Final','Dias Faltantes'];
+        $align = ['center','center','left','center','left'];
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_lotacao"];
+        $funcao = [NULL,"dv",NULL,NULL,NULL,NULL,"date_to_php"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+        
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
         $tabela->set_editar($linkEditar);
         $tabela->set_idCampo('idServidor');
        

@@ -66,17 +66,24 @@ p#palertaServidor{
  * Check up
  *******************************************/
 
-a#checkupResumo3{
+a#checkupResumo4{
     font-size: 11px;
     text-align: left;
     color: #02548b;
     margin: 0px;
 }
 
-a#checkupResumo2{
+a#checkupResumo3{
     font-size: 11px;
     text-align: left;
     color: #cc3300;
+    margin: 0px;
+}
+
+a#checkupResumo2{
+    font-size: 11px;
+    text-align: left;
+    color: #000000;
     margin: 0px;
 }
 

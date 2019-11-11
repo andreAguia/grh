@@ -395,14 +395,14 @@ class MenuPrincipal{
         
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');
-        $botao->set_url('areaBeneficios.php?fase=listaReadaptacao');
+        $botao->set_url('areaReadaptacao.php');
         $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Redução da CH');
-        $botao->set_url('areaBeneficios.php?fase=listaReducao');
+        $botao->set_url('areaReducao.php');
         $botao->set_imagem(PASTA_FIGURAS.'reducao.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);

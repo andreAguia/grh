@@ -199,10 +199,10 @@ if($acesso){
         $grid->abreColuna(12);
         
         # botão de voltar da lista
-        if($origem == "areaBeneficios"){
-            $voltar = 'areaBeneficios.php?fase=listaReadaptacao';
-        }else{
+        if(vazio($origem)){
             $voltar = 'servidorMenu.php';
+        }else{
+            $voltar = 'areaReadaptacao.php';
         }
         
         # Cria um menu

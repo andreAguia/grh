@@ -18,7 +18,7 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
+    
     # Verifica a fase do programa
     $fase = get('fase');
     
@@ -27,20 +27,25 @@ if($acesso){
     
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Acumulação";
+        $atividade = "Visualizou a área de Readaptação";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }
     
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    set_session('areaPremio',FALSE);
     
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
-    $parametroNome = retiraAspas(post('parametroNome',get_session('parametroNome')));
+    $parametroStatus = post('parametroStatus',get_session('parametroStatus',0));
+    $parametroOrigem = post('parametroOrigem',get_session('parametroOrigem',0));
+    $parametroNome = retiraAspas(post('parametroNome',get_session('parametroNome')));    
         
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat',$parametroNomeMat);
+    set_session('parametroStatus',$parametroStatus);
+    set_session('parametroOrigem',$parametroOrigem);
     set_session('parametroNome',$parametroNome);
     
     # Começa uma nova página
@@ -48,20 +53,24 @@ if($acesso){
     $page->iniciaPagina();
     
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "relatorio"){
+        AreaServidor::cabecalho();
+    }
     
-    # Limita a Tela 
-    $grid = new Grid();
-    $grid->abreColuna(12);
-    br();
-    
+    # Variáveis
+    $statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
+    $origemsPossiveis = array(array(0,"-- Todos --"),array(1,"Ex-Ofício"),array(2,"Solicitada"));
+            
 ################################################################
     
     switch ($fase){
         
         case "" :
-        case "listaAcumulacao" :
-            
+        case "listaReadaptacao" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
             # Cria um menu
             $menu1 = new MenuBar();
 
@@ -81,24 +90,22 @@ if($acesso){
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
+            $botaoRel->set_url("../grhRelatorios/readaptacao.geral.php");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
-            
-            # Normas
-            $botao2 = new Button("Regras","servidorAcumulacao.php?fase=regras");
-            $botao2->set_title("Exibe as regras da acumulação");    
-            #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
-            $botao2->set_target("_blank");
-            $menu1->add_link($botao2,"right");
+
+            # Redução da Carga Horária
+            $botaoRel = new Button('Redução da Carga Horária');
+            $botaoRel->set_url("?fase=listaReducao");
+            #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
             
             ###
             
             # Formulário de Pesquisa
-            $form = new Form('?'); 
+            $form = new Form('?fase=listaReadaptacao'); 
 
             # Nome    
             $controle = new Input('parametroNomeMat','texto','Servidor:',1);
@@ -110,6 +117,28 @@ if($acesso){
             $controle->set_col(6);
             $controle->set_autofocus(TRUE);
             $form->add_item($controle);
+            
+            # Origem    
+            $controle = new Input('parametroOrigem','combo','Origem:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Origem');
+            $controle->set_array($origemsPossiveis);
+            $controle->set_valor($parametroOrigem);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            # Status    
+            $controle = new Input('parametroStatus','combo','Status:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Status');
+            $controle->set_array($statusPossiveis);
+            $controle->set_valor($parametroStatus);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
 
             $form->show();
             
@@ -119,64 +148,91 @@ if($acesso){
             $time_start = microtime(TRUE);
             
             # Pega os dados
-            $select = "SELECT CASE conclusao
-                                WHEN 1 THEN 'Pendente'
-                                WHEN 2 THEN 'Resolvido'
+            $select = "SELECT idFuncional,
+                              tbpessoa.nome,
+                              CASE origem
+                                WHEN 1 THEN 'Ex-Ofício'
+                                WHEN 2 THEN 'Solicitada'
                                 ELSE '--'
                               END,
-                              idAcumulacao,
-                              idFuncional,
-                              tbpessoa.nome,
-                              dtProcesso,
+                              CASE tipo
+                                WHEN 1 THEN 'Inicial'
+                                WHEN 2 THEN 'Renovação'
+                                ELSE '--'
+                              END,
+                              idReadaptacao,
                               processo,
-                              instituicao,
-                              cargo,
-                              tbacumulacao.matricula,                              
-                              tbservidor.idServidor
-                         FROM tbacumulacao JOIN tbservidor USING (idServidor)
-                                           JOIN tbpessoa USING (idPessoa)
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,
+                              idReadaptacao,                                   
+                              idReadaptacao,
+                              ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino,
+                              idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbreadaptacao USING (idServidor)
                         WHERE tbservidor.idPerfil <> 10";
+            
+            # status
+            if($parametroStatus <> 0){
+                $select .= " AND status = ".$parametroStatus;
+            }
+            
+            # origem
+            if($parametroOrigem <> 0){
+                $select .= " AND origem = ".$parametroOrigem;
+            }
             
             # nome
             if(!is_null($parametroNomeMat)){
                 $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
             }
                     
-            $select .= " ORDER BY conclusao, tbpessoa.nome";
+            $select .= " ORDER BY status, dtTermino, dtInicio";
             
             $resumo = $pessoal->select($select);
             
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Conclusão","Resultado","idFuncional","Nome","Data","Processo","Instituição","Cargo","Matrícula"));
-            $tabela->set_align(array("center","center","center","left","center","center","left","left"));
-            $tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
-            $tabela->set_width(array(5,5,5,20,5,20,15,15,5));
+            $tabela->set_label(array("idFuncional","Nome","Origem","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
+            $tabela->set_align(array("center","left","center","center","center","center","center","left","center","center","left"));
+            #$tabela->set_funcao(array("idMatricula"));
             
-            $tabela->set_classe(array(NULL,"Acumulacao"));
-            $tabela->set_metodo(array(NULL,"get_resultado"));
-    
-            $tabela->set_titulo("Área de Acumulação");
+            $tabela->set_classe(array(NULL,NULL,NULL,NULL,"Readaptacao",NULL,"Readaptacao","Readaptacao","Readaptacao","Readaptacao","Readaptacao"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,NULL,"exibeStatus",NULL,"exibeSolicitacao","exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
             
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                                    'valor' => 'Resolvido',
-                                                    'operador' => '=',
-                                                    'id' => 'emAberto'),
-                                              array('coluna' => 0,
-                                                    'valor' => 'Pendente',
-                                                    'operador' => '=',
-                                                    'id' => 'alerta')   
-                                                    ));
+            $tabela->set_titulo("Readaptação");
             
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor');            
+            $tabela->set_editar('?fase=editaServidor');
+            
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 4,
+                                                            'valor' => 'Em Aberto',
+                                                            'operador' => '=',
+                                                            'id' => 'emAberto'),  
+                                                      array('coluna' => 4,
+                                                            'valor' => 'Arquivado',
+                                                            'operador' => '=',
+                                                            'id' => 'arquivado'),
+                                                      array('coluna' => 4,
+                                                            'valor' => 'Vigente',
+                                                            'operador' => '=',
+                                                            'id' => 'vigenteReducao')   
+                                                            ));
+            
             $tabela->show();
             
             # Pega o time final
             $time_end = microtime(TRUE);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',')." segundos","right","f10");
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
         
     ################################################################
@@ -189,13 +245,13 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaAcumulacao.php');
+            set_session('origem','areaReadaptacao.php');
             
             # Carrega a página específica
-            loadPage('servidorAcumulacao.php');
+            loadPage('servidorReadaptacao.php');
             break; 
         
-    ################################################################
+   ################################################################
         
         case "incluir" :
             
@@ -298,17 +354,14 @@ if($acesso){
             set_session('idServidorPesquisado',$id);
             
             # Informa a origem
-            set_session('origem','areaAcumulacao.php');
+            set_session('origem','areaReadaptacao.php');
             
             # Carrega a página específica
-            loadPage('servidorAcumulacao.php');
+            loadPage('servidorReadaptacao.php');
             break; 
         
     ################################################################
     }
-            
-    $grid->fechaColuna();
-    $grid->fechaGrid();
     
     $page->terminaPagina();
 }else{

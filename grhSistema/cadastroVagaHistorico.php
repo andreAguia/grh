@@ -160,7 +160,7 @@ if($acesso){
     
     # Pega os dados da combo idServidor
     $select = 'SELECT idServidor,
-                      tbpessoa.nome
+                      CONCAT("(",date_format(dtAdmissao,"%d/%m/%Y"),") - ",tbpessoa.nome)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa) 
                 WHERE idCargo = '.$idCargo.' 
                   AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';

@@ -60,6 +60,8 @@ class MenuPrincipal{
         $cal = new Calendario();
         $cal->show();
         
+        $this->moduloRamais();
+        
         $grid->fechaColuna();
         $grid->fechaGrid();        
     }
@@ -653,6 +655,32 @@ class MenuPrincipal{
         
         $menu->show();            
         $painel->fecha();
+    }
+        
+######################################################################################################################
+    
+    /**
+     * Método moduloRamais
+     * 
+     * Exibe os Ramais da GRH
+     */
+    
+    private function moduloRamais(){
+        
+        # tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo("Ramais da GRH");
+        $tabela->set_conteudo(array(array("86006","Ana Terezinha, Chris e Rafaela"),
+                                    array("86007","Francisco, Rose e Cláudia"),
+                                    array("86008","Sandra e Simone"),
+                                    array("86009","Ana Paula e Rosângela"),
+                                    array("97064","Débora e Edilene")));
+        $tabela->set_label(array("Ramal","Servidor"));
+        $tabela->set_width(array(30,70));
+        $tabela->set_align(array("center","left"));
+        $tabela->set_rodape("Para Transferir clica em OK e no ramal desejado");
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->show();
     }
         
 ######################################################################################################################

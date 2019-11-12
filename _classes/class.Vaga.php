@@ -114,7 +114,7 @@ class Vaga{
     ###########################################################
 
     /**
-     * Método get_servidorOcupante
+     * Método get_idServidorOcupante
      * fornece o nome do servidor ocupante da último edital para esta vaga
      * 
      * @param	string $idVaga O id da vaga do servidor
@@ -137,6 +137,28 @@ class Vaga{
 
         $idServidor = $dados["idServidor"];
         return $idServidor;
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_idServidoresOcupantes
+     * fornece oum array com todos os servidores que ocuparam essa vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_idServidoresOcupantes($idVaga){
+            
+        # Pega os dados
+        $pessoal = new Pessoal();
+
+        $select = 'SELECT idServidor
+                     FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                    WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital';
+
+        $dados = $pessoal->select($select);
+        return $dados;
     }
 
     ###########################################################
@@ -707,5 +729,50 @@ class Vaga{
     }
 
     ###########################################################
+
+    /**
+     * Método get_idConcursoProfessor
+     * fornece o idConcurso de um professor
+     * 
+     * @param	string $idServidor O $idServidor do servidor Professor
+     */
+
+    function get_exibeGrafico($idvaga){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+        
+        # Pega todos os concursos dessa vaga
+        $select = 'SELECT *
+                     FROM tbvagahistorico
+                    WHERE idVaga = '.$idServidor;
+
+        $dado = $pessoal->select($select);
+        
+        # Classes
+        $concurso = new Concurso();
+        
+        # Inicia os arrays da tabela
+        $label = array();
+        
+        
+        
+        # Percorre a tabela
+        foreach($dados as $dd){
+            
+            $label[] = $concurso->$dd[""];
+            # Parei aqui
+        }
+        
+        $tabela = new Tabela();
+        $tabela->set_titulo("Tabela Simples");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(array("Time","Jogos","Pontos"));
+        $tabela->set_width(array(80,10,10));
+        $tabela->set_align(array("left","center","center"));
+    }
+
+    ###########################################################
+
 
 }

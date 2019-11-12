@@ -93,6 +93,8 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     
+    $objeto->set_botaoIncluirNome("Incluir concurso nessa vaga");
+    
     if($vaga->get_status($idVaga) == "Ocupado"){
         $objeto->set_botaoIncluir(FALSE);
     }
@@ -165,10 +167,57 @@ if($acesso){
                 WHERE idCargo = '.$idCargo.' 
                   AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';
     
+    # Se for inclusão
     if(vazio($id)){
         $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT NULL) ';
-    }else{
+        
+        # Pega o último ocupante
+        $idUltimo = $vaga->get_idServidorOcupante($idVaga);
+        
+        # Pega a data de demissão desse servidor
+        $dtSaida = $pessoal->get_dtSaida($idUltimo);
+        
+        # Se não for vazio coloca no select
+        if(!vazio($dtSaida)){
+            $select .= 'AND (dtAdmissao > "'.date_to_bd($dtSaida).'") ';
+        }
+        
+    }else{ # Se for edição
+        
         $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT NULL AND idVagaHistorico <> '.$id.') ';
+        
+        # Pega os servidores que já ocuparam essa vaga
+        $ocupantes = $vaga->get_idServidoresOcupantes($idVaga);
+        
+        # Pega o servidor desse concurso nessa vaga
+        $ss = "SELECT idServidor
+                 FROM tbvagahistorico
+                WHERE idVagaHistorico = $id";
+        
+        $essaVaga = $pessoal->select($ss,FALSE);
+                 
+        if(!vazio($essaVaga)){
+            
+            # Pega a posição no array desse servidor
+            $idArray = array_search($essaVaga, $ocupantes);
+            
+            # Verifica se é o primeiro: 0
+            if($idArray > 0){
+                # Pega o idServidor anterior
+                $idAnterior = $ocupantes[$idArray-1]["idServidor"];
+                
+                # Verifica se não está em branco
+                if(!vazio($idAnterior)){
+                    # Pega a data de demissão do servidor anterior
+                    $dtSaida = $pessoal->get_dtSaida($idAnterior);
+
+                    # Joga no select
+                    if(!vazio($dtSaida)){
+                        $select .= 'AND (dtAdmissao > "'.date_to_bd($dtSaida).'") ';
+                    }
+                }
+            }
+        }
     }
                   
     $select .= ' ORDER BY tbpessoa.nome';
@@ -231,6 +280,14 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Gráfico da vaga
+    $botao = new Button("Gráfico","?fase=grafico");
+    $botao->set_title("Exibe os Cargos Inativos");
+    $arrayBotoes = array($botao);
+    
+    # Informa o array
+    $objeto->set_botaoListarExtra($arrayBotoes);
 
     ################################################################
     switch ($fase){
@@ -246,6 +303,10 @@ if($acesso){
         
         case "gravar" :
             $objeto->gravar($id);              
+            break;
+        
+        case "grafico" :
+            $vaga->exibeGrafico($id);              
             break;
     }									 	 		
 

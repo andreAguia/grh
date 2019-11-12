@@ -3713,7 +3713,7 @@ class Checkup {
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidor(es) com Readaptação terminando em menos de 90 dias.';
+        $titulo = 'Readaptação terminando em menos de 90 dias.';
         $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Lotação','Data Final','Dias Faltantes'];
         $align = ['center','center','left','center','left'];
         $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
@@ -3792,7 +3792,7 @@ class Checkup {
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $titulo = 'Servidor(es) com Redução da CH terminando em menos de 90 dias.';
+        $titulo = 'Redução da CH terminando em menos de 90 dias.';
         $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Lotação','Data Final','Dias Faltantes'];
         $align = ['center','center','left','center','left'];
         $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];

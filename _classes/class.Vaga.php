@@ -369,12 +369,29 @@ class Vaga{
         
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = $this->get_status($idVaga);
-        
+                
         p($centro,"vagaCentro");
         p($cargo,"vagaCargo");
-        p($status,"center","f14");
+        
         
         $painel->fecha();
+               
+        
+        $painel = new Callout();
+        $painel->abre();
+        
+        if($status == "Disponível"){
+            tituloTable("Ocupante Atual");
+            br();
+            p("Vaga Disponível","center","f14");
+        }else{
+            tituloTable("Ocupante Atual");
+            br();
+            $ocupante = $this->get_servidorOcupante($idVaga);
+        }
+        
+        $painel->fecha();
+        
     }
 
     ###########################################################

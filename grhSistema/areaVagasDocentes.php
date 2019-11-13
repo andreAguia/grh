@@ -62,7 +62,7 @@ if($acesso){
     ################################################################
 
     # Nome do Modelo
-    $objeto->set_nome('Vagas');
+    $objeto->set_nome('Vagas de Docentes');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -100,6 +100,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
     #$objeto->set_linkExcluir('?fase=excluir');
     
+    #$objeto->set_botaoIncluirNome("Incluir Nova Vaga");
     
     
     $objeto->set_formatacaoCondicional(array( array('coluna' => 2,
@@ -186,9 +187,6 @@ if($acesso){
             $grid->abreColuna(12);
             br(6);
             
-            tituloTable("Controle de Vagas de Docentes");
-            br(2);
-            
             aguarde();
             br();
             
@@ -220,7 +218,12 @@ if($acesso){
             $menu1->add_link($botaoVoltar,"left");
             
             # Incluir
-            $botaoInserir = new Button("Incluir","?fase=incluir");
+            $botaoInserir = new Button("Incluir Nova Vaga","?fase=incluir");
+            $botaoInserir->set_title("Incluir"); 
+            $menu1->add_link($botaoInserir,"right");
+            
+            # Totsal de Vagas
+            $botaoInserir = new Button("Exibe Total de Vagas","?fase=exibeTotal");
             $botaoInserir->set_title("Incluir"); 
             $menu1->add_link($botaoInserir,"right");
             
@@ -252,39 +255,9 @@ if($acesso){
             $controle->set_array($centros);            
             $form->add_item($controle);
             
-            $form->show();            
+            $form->show();
             
-            ###
-            
-            tituloTable("Controle de Vagas de Docentes");
-            br();
-            
-            ###
-            
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
-            
-                $concurso->exibeQuadroDocentesSemConcurso();
-            
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
-                
-                $vaga->exibeTotalVagas($parametroCentro,"o");
-
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
-
-                $vaga->exibeTotalVagas($parametroCentro,"d");
-
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
-
-                $vaga->exibeTotalVagas($parametroCentro);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12);
-            
-                $objeto->listar();
+            $objeto->listar();
                 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -310,6 +283,60 @@ if($acesso){
         case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
+            break;
+        
+        case "exibeTotal" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","?");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+
+            $menu1->show();
+            
+            ###
+            
+            tituloTable("Total de Vagas");
+            br();
+            
+            ###
+            
+            $grid->fechaColuna();           
+            $grid->abreColuna(4);
+                
+                $vaga->exibeTotalVagas($parametroCentro,"o");
+
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+
+                $vaga->exibeTotalVagas($parametroCentro,"d");
+
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+
+                $vaga->exibeTotalVagas($parametroCentro);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            br();
+            
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+            
+                $concurso->exibeQuadroDocentesSemConcurso();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            hr();
             break;
     }									 	 		
 

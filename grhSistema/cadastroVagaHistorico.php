@@ -55,13 +55,9 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-    
-    # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("exibeDadosVaga");
-    $objeto->set_rotinaExtraParametro($idVaga); 
 
     # Nome do Modelo
-    $objeto->set_nome("Histórico de Concursos");
+    $objeto->set_nome("Concursos");
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('areaVagasDocentes.php');
@@ -95,9 +91,9 @@ if($acesso){
     
     $objeto->set_botaoIncluirNome("Incluir concurso nessa vaga");
     
-    if($vaga->get_status($idVaga) == "Ocupado"){
-        $objeto->set_botaoIncluir(FALSE);
-    }
+    # Esconde o botão iniciar para usar um diferente na rotina de listar
+    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoVoltarLista(FALSE);
     
     $objeto->set_numeroOrdem(TRUE);
     $objeto->set_numeroOrdemTipo('d');
@@ -280,20 +276,54 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
-    
-    # Gráfico da vaga
-    $botao = new Button("Gráfico","?fase=grafico");
-    $botao->set_title("Exibe os Cargos Inativos");
-    $arrayBotoes = array($botao);
-    
-    # Informa o array
-    $objeto->set_botaoListarExtra($arrayBotoes);
 
     ################################################################
     switch ($fase){
         case "" :
-        case "listar" :            
-            $objeto->listar();
+        case "listar" :   
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+             # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","areaVagasDocentes.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+            
+            if($vaga->get_status($idVaga) == "Disponível"){
+                # Incluir
+                $botaoVoltar = new Link("Incluir Concurso","?");
+                $botaoVoltar->set_class('button');
+                $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
+                $menu1->add_link($botaoVoltar,"right");
+            }
+
+            $menu1->show();
+            
+            $grid->fechaColuna();
+            
+            # Área Lateral
+            
+            $grid->abreColuna(3);
+            
+                # Exibe dados da vaga
+                $vaga = new Vaga();
+                $vaga->exibeDadosVaga($idVaga);
+            
+            $grid->fechaColuna();
+            
+            # Área Principal
+            
+            $grid->abreColuna(9);
+            
+                $objeto->listar();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
 
         case "editar" :	
@@ -303,10 +333,6 @@ if($acesso){
         
         case "gravar" :
             $objeto->gravar($id);              
-            break;
-        
-        case "grafico" :
-            $vaga->exibeGrafico($id);              
             break;
     }									 	 		
 

@@ -354,51 +354,27 @@ class Vaga{
         
         # Conecta com o banco de dados
         $servidor = new Pessoal();
-
-        $select ="SELECT idVaga,
-                         centro,
-                         tbcargo.nome,
-                         idVaga
-                    FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-                   WHERE idVaga = $idVaga";
         
-        $conteudo = $servidor->select($select,TRUE);
+        $conteudo = $this->get_dados($idVaga);
         
-        $label = array("Id","Centro","Cargo","Status");        
-        $classe = array(NULL,NULL,NULL,"Vaga");
-        $metodo = array(NULL,NULL,NULL,"get_status");
-        $width = array(5,30,30,30);
-
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($conteudo);
-        $tabela->set_label($label);
-        $tabela->set_titulo("Vaga");
-        $tabela->set_classe($classe);
-        $tabela->set_width($width);
-        $tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
-                                                        'valor' => 'Disponível',
-                                                        'operador' => '=',
-                                                        'id' => 'emAberto'),
-                                                  array('coluna' => 3,
-                                                        'valor' => 'Ocupado',
-                                                        'operador' => '=',
-                                                        'id' => 'alerta')
-                                                        ));
+        $painel = new Callout("primary");
+        $painel->abre();
         
-        $tabela->set_editar('areaVagasDocentes.php?fase=editarMesmo&id=');
-        $tabela->set_idCampo('idVaga');
+        #tituloTable("Vaga");
+        #br();
         
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(12);
+        $centro = $conteudo["centro"];
+        $idCargo = $conteudo["idCargo"];
+        $idVaga = $conteudo["idVaga"];
         
-        $tabela->show();
-
-        $grid->fechaColuna();
-        $grid->fechaGrid(); 
+        $cargo = $servidor->get_nomeCargo($idCargo);
+        $status = $this->get_status($idVaga);
+        
+        p($centro,"vagaCentro");
+        p($cargo,"vagaCargo");
+        p($status,"center","f14");
+        
+        $painel->fecha();
     }
 
     ###########################################################
@@ -737,7 +713,7 @@ class Vaga{
      * @param	string $idServidor O $idServidor do servidor Professor
      */
 
-    function get_exibeGrafico($idvaga){
+    function exibeGrafico($idvaga){
             
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -745,7 +721,7 @@ class Vaga{
         # Pega todos os concursos dessa vaga
         $select = 'SELECT *
                      FROM tbvagahistorico
-                    WHERE idVaga = '.$idServidor;
+                    WHERE idVaga = '.$idvaga;
 
         $dado = $pessoal->select($select);
         
@@ -754,22 +730,25 @@ class Vaga{
         
         # Inicia os arrays da tabela
         $label = array();
-        
+        $conteudo = array();
         
         
         # Percorre a tabela
         foreach($dados as $dd){
             
-            $label[] = $concurso->$dd[""];
+            $label[] = $concurso->get_nomeConcurso($dd["idConcurso"]);
+            $laboratorio[] = $pessoal->get_nomeLotacao($dd["idiLotacao"]);
+            $area[] = $dd["area"];
+            
             # Parei aqui
         }
         
         $tabela = new Tabela();
         $tabela->set_titulo("Tabela Simples");
-        $tabela->set_conteudo($array);
-        $tabela->set_label(array("Time","Jogos","Pontos"));
-        $tabela->set_width(array(80,10,10));
-        $tabela->set_align(array("left","center","center"));
+        $tabela->set_conteudo($laboratorio);
+        $tabela->set_label($label);
+        $tabela->set_align(array("center"));
+        $tabela->show();
     }
 
     ###########################################################

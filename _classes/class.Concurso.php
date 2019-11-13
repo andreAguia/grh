@@ -229,7 +229,7 @@ class Concurso
         $tabela->set_titulo("Professores");
         $tabela->set_conteudo($array);
         $tabela->set_label(array("Tipo","Sem Concurso","Com Concurso","Total"));
-        $tabela->set_width(array(80,20));
+        #$tabela->set_width(array(80,20));
         $tabela->set_align(array("left","center"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_formatacaoCondicional(array( array('coluna' => 0,

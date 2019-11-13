@@ -830,20 +830,6 @@ function get_nomeSimples($nome){
     }
 
 ##########################################################
-
-    function exibeDadosVaga($idVaga){
-    /**
-     * Função exibe dados de uma vaga
-     * 
-     * Usado na rotina da área vagas de docentes
-     */
-        
-        # Exibe dados da vaga
-        $vaga = new Vaga();
-        $vaga->exibeDadosVaga($idVaga);
-    }
-
-##########################################################
     
     function linkExibeVaga($idConcurso){
     /**

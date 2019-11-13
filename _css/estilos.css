@@ -258,6 +258,19 @@ tr#comissaoVagasNegativas{
     background-color:#cea4a8;
 }
 
+p#vagaCentro{
+    font-size: 30px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#vagaCargo{
+    font-size: 12px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
 /*******************************************
  * Cadastro de Tempo de Servico
  *******************************************/

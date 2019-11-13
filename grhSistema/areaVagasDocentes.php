@@ -74,6 +74,7 @@ if($acesso){
                       idVaga,
                       idVaga,
                       idVaga,
+                      idVaga,
                       idVaga
                  FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
                 WHERE TRUE ';
@@ -114,11 +115,22 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Concursos"));
+    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Incluir Concurso"));
     $objeto->set_width(array(10,20,10,30,25));
     $objeto->set_align(array("center"));
     
     $objeto->set_excluirCondicional('?fase=excluir',0,5,"==");
+    
+    # Botão de Editar concursos
+    $botao1 = new BotaoGrafico();
+    $botao1->set_label('');
+    $botao1->set_title('Editar o Concurso');
+    $botao1->set_url("?fase=editarConcurso&id=");
+    $botao1->set_imagem(PASTA_FIGURAS.'incluir.png',20,20);
+
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
     
     #$objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
     #$objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
@@ -263,18 +275,14 @@ if($acesso){
             $grid->fechaGrid();
             break;
 
-        case "editar" :	
-            if(!vazio($id)){
-                set_session('idVaga',$id);
-                loadPage("cadastroVagaHistorico.php");
-            }else{
-                $objeto->editar();
-            }
+        case "editarConcurso" :
+            set_session('idVaga',$id);
+            loadPage("cadastroVagaHistorico.php");
             break;
             
-        case "editarMesmo" :
+        case "editar" :
             $objeto->editar($id);
-            break;    
+            break;  
             
         case "incluir" :	    
             $objeto->editar();

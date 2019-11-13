@@ -170,11 +170,12 @@ if($acesso){
         # Pega o último ocupante
         $idUltimo = $vaga->get_idServidorOcupante($idVaga);
         
-        # Pega a data de demissão desse servidor
-        $dtSaida = $pessoal->get_dtSaida($idUltimo);
-        
         # Se não for vazio coloca no select
-        if(!vazio($dtSaida)){
+        if(!vazio($idUltimo)){
+        
+            # Pega a data de demissão desse servidor
+            $dtSaida = $pessoal->get_dtSaida($idUltimo);
+        
             $select .= 'AND (dtAdmissao > "'.date_to_bd($dtSaida).'") ';
         }
         
@@ -217,7 +218,7 @@ if($acesso){
     }
                   
     $select .= ' ORDER BY tbpessoa.nome';
-
+    
     $docente = $pessoal->select($select);
     array_unshift($docente, array(NULL,NULL)); # Adiciona o valor de nulo
     
@@ -284,7 +285,7 @@ if($acesso){
             $grid = new Grid();
             $grid->abreColuna(12);
             
-             # Cria um menu
+            # Cria um menu
             $menu1 = new MenuBar();
 
             # Voltar

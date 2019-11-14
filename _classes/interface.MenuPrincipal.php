@@ -123,6 +123,7 @@ class MenuPrincipal{
         $botao->set_url("https://sigrh.rj.gov.br/gerj/Ergon/Administracao/ERGadm_mnu001.tp");
         $botao->set_imagem(PASTA_FIGURAS.'sigrh.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Sistema Integrado de Gestão de Recursos Humanos');
+        $botao->set_target("_blank");
         $menu->add_item($botao);
 
         $menu->show();        

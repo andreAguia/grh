@@ -93,6 +93,7 @@ if($acesso)
                       orgExecutor,
                       idConcurso,
                       idConcurso,
+                      idConcurso,
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                 WHERE TRUE';
@@ -133,7 +134,7 @@ if($acesso)
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos","Total"));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Edital","Ativos","Inativos","Total"));
     $objeto->set_width(array(5,12,12,12,12,22,5,5,5));
     $objeto->set_align(array("center"));
     
@@ -142,10 +143,10 @@ if($acesso)
     
     $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal","Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosConcurso","get_servidoresInativosConcurso","get_servidoresConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Concurso","Pessoal","Pessoal","Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"exibeEdital","get_servidoresAtivosConcurso","get_servidoresInativosConcurso","get_servidoresConcurso"));
 
-    $objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
+    $objeto->set_excluirCondicional('?fase=excluir',0,9,"==");
     
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -297,7 +297,7 @@ if($acesso){
             
             if($vaga->get_status($idVaga) == "Disponível"){
                 # Incluir
-                $botaoVoltar = new Link("Incluir Concurso","?");
+                $botaoVoltar = new Link("Incluir Concurso","?fase=editar");
                 $botaoVoltar->set_class('button');
                 $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
                 $menu1->add_link($botaoVoltar,"right");

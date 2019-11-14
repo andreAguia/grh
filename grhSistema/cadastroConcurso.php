@@ -125,7 +125,12 @@ if($acesso)
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('cadastroConcurso.php?fase=editar&id='.$id);
-    $objeto->set_voltarForm('cadastroConcurso.php?fase=editar&id='.$id);
+    
+    if(vazio($id)){
+        $objeto->set_voltarForm('?');
+    }else{
+        $objeto->set_voltarForm('cadastroConcurso.php?fase=editar&id='.$id);
+    }
 
     # Parametros da tabela
     $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos","Total"));
@@ -226,16 +231,12 @@ if($acesso)
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
     
-    # Imagem
-    $imagem1 = new Imagem(PASTA_FIGURAS.'pie.png',NULL,15,15);
-    
-    # Grafico
-    $botaoGra = new Button();
-    $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
-    $botaoGra->set_url("?fase=grafico");
-    $botaoGra->set_imagem($imagem1);
-    #$botaoGra->set_accessKey('G');
-    #$objeto->set_botaoListarExtra(array($botaoGra));
+    # Botão de upload (somente no editar)
+    if(!vazio($id)){
+        $botaoGra = new Button("Upload","?fase=uploadEdital&id=".$id);
+        $botaoGra->set_title("Upload o Edital");
+        $objeto->set_botaoEditarExtra(array($botaoGra));
+    }
     
     $objeto->set_botaoVoltarLista(FALSE);
     $objeto->set_botaoIncluir(FALSE);
@@ -427,11 +428,11 @@ if($acesso)
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Descrição","Data","Publicação","Upload"));
+                    $tabela->set_label(array("Descrição","Data","Publicação"));
                     $tabela->set_titulo("Edital");
                     $tabela->set_funcao(array(NULL,"date_to_php"));
                     $tabela->set_align(array("left"));
-                    $tabela->set_width(array(70,10,10));
+                    $tabela->set_width(array(80,10));
                     $tabela->set_totalRegistro(FALSE);
                     
                     $formatacaoCondicional = array( array('coluna' => 0,
@@ -440,8 +441,8 @@ if($acesso)
                                                           'id' => 'listaDados'));
                     $tabela->set_formatacaoCondicional($formatacaoCondicional);
                     
-                    $tabela->set_classe(array(NULL,NULL,"Concurso","Concurso"));
-                    $tabela->set_metodo(array(NULL,NULL,"exibeEdital","exibeBotaoUpload"));
+                    $tabela->set_classe(array(NULL,NULL,"Concurso"));
+                    $tabela->set_metodo(array(NULL,NULL,"exibeEdital"));
                     
                     $tabela->show();
                 }else{
@@ -456,7 +457,6 @@ if($acesso)
                                  pag,
                                  idConcursoPublicacao,
                                  idConcursoPublicacao,
-                                 idConcursoPublicacao,
                                  idConcursoPublicacao
                             FROM tbconcursopublicacao
                            WHERE idConcurso = $id  
@@ -469,14 +469,14 @@ if($acesso)
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Descrição","Data","Pag","Publicação","Upload"));
+                    $tabela->set_label(array("Descrição","Data","Pag","Publicação"));
                     $tabela->set_titulo("Publicações");
                     $tabela->set_funcao(array(NULL,"date_to_php"));
                     $tabela->set_align(array("left"));
-                    $tabela->set_width(array(50,10,10,10,10));
+                    $tabela->set_width(array(60,10,10,10,10));
                     
-                    $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao","ConcursoPublicacao"));
-                    $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao","exibeBotaoUpload"));
+                    $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao"));
+                    $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao"));
                     
                     $tabela->set_editar('cadastroConcursoPublicacao.php?fase=editar&idConcurso='.$id);
                     $tabela->set_idCampo('idConcursoPublicacao');

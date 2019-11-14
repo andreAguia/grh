@@ -139,6 +139,13 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Botão de upload (somente no editar)
+    if(!vazio($id)){
+        $botaoGra = new Button("Upload","cadastroConcurso.php?fase=uploadPublicacao&id=$idConcurso&idConcursoPublicacao=$id");
+        $botaoGra->set_title("Upload a Publicação");
+        $objeto->set_botaoEditarExtra(array($botaoGra));
+    }
 
     ################################################################
     switch ($fase){

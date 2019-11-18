@@ -38,7 +38,7 @@ class Pessoal extends Bd {
     /**
      * Método set_tabela
      * 
-     * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que ser� utilizada
+     * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que será utilizada
      */
     public function set_tabela($nomeTabela){
         $this->tabela = $nomeTabela;
@@ -1902,35 +1902,50 @@ class Pessoal extends Bd {
                        OR (dtExo is NULL))
                     AND idServidor = '.$idServidor;
 
-        $row = parent::select($select,FALSE);
-        $idCargo = $row[0];
+        $row = parent::select($select);
+        $num = parent::count($select);
+        
         $tipo = NULL;
-        
-        # Verifica se é designado ou protempore
-        if($row[1] == 1){
-            $tipo = " - Pro Tempore";
-        }
-        
-        if($row[1] == 2){
-            $tipo = " - Designado";
-        }
-        
         $retorno = NULL;
-
-        # Pega a descrição do cargo em comissão
-        if (!is_null($idCargo)){
-            $select ='SELECT tbtipocomissao.descricao 
-                        FROM tbcomissao 
-                        JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                       WHERE idcomissao = '.$idCargo;
-
-            $row = parent::select($select,FALSE);
-            $retorno = $row[0];
-        }
+        $contador = 1;
         
-        # Verifica se tem tipo
-        if(!vazio($tipo)){
-            $retorno .= $tipo;
+        # Percorre os cargos
+        foreach ($row as $rr){
+        
+            $idCargo = $rr[0];
+            
+
+            # Verifica se é designado ou protempore
+            if($rr[1] == 1){
+                $tipo = " - Pro Tempore";
+            }
+
+            if($rr[1] == 2){
+                $tipo = " - Designado";
+            }
+
+            
+
+            # Pega a descrição do cargo em comissão
+            if (!is_null($idCargo)){
+                $select ='SELECT tbtipocomissao.descricao 
+                            FROM tbcomissao 
+                            JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                           WHERE idcomissao = '.$idCargo;
+
+                $row2 = parent::select($select,FALSE);
+                $retorno .= $row2[0];
+            }
+
+            # Verifica se tem tipo
+            if(!vazio($tipo)){
+                $retorno .= $tipo;
+            }
+            
+            if($contador < $num){
+                $contador++;
+                $retorno .= "]<br/>[";
+            }
         }
 
         return $retorno;

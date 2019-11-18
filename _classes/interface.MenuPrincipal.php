@@ -566,12 +566,13 @@ class MenuPrincipal{
 
         $menu = new MenuGrafico(2);
         $botao = new BotaoGrafico();
-        $botao->set_label("Sistema do Almoxarifado");
-        $botao->set_title('Sistema do Almoxarifado da Uenf');
-        $botao->set_imagem(PASTA_FIGURAS."almoxarifado.png",50,50);      
-        $botao->set_url("https://almoxarifado.uenf.br/usuarios/sign_in/");
+        #$botao->set_label(SISTEMA_GRH);
+        $botao->set_title('Perícia Médica');
+        $botao->set_imagem(PASTA_FIGURAS."pericia.png",$largura,$altura);       
+        $botao->set_url("http://sistemas.saude.rj.gov.br/periciamedica/ControleAcesso/login.aspx");
+        $botao->set_target("_blank");
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
         $botao->set_title('Escola Nacional de Administração Pública');
@@ -620,11 +621,10 @@ class MenuPrincipal{
         
         $menu = new MenuGrafico(2);            
         $botao = new BotaoGrafico();
-        #$botao->set_label(SISTEMA_GRH);
-        $botao->set_title('Perícia Médica');
-        $botao->set_imagem(PASTA_FIGURAS."pericia.png",$largura,$altura);       
-        $botao->set_url("http://sistemas.saude.rj.gov.br/periciamedica/ControleAcesso/login.aspx");
-        $botao->set_target("_blank");
+        $botao->set_label("Sistema do Almoxarifado");
+        $botao->set_title('Sistema do Almoxarifado da Uenf');
+        $botao->set_imagem(PASTA_FIGURAS."almoxarifado.png",50,50);      
+        $botao->set_url("https://almoxarifado.uenf.br/usuarios/sign_in/");
         $menu->add_item($botao);
         
         $menu->show();

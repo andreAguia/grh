@@ -615,6 +615,19 @@ class MenuPrincipal{
         $botao->set_url("http://uenf.br/dga/grh/");
         $menu->add_item($botao);
         $menu->show();
+        
+        br();
+        
+        $menu = new MenuGrafico(2);            
+        $botao = new BotaoGrafico();
+        #$botao->set_label(SISTEMA_GRH);
+        $botao->set_title('Perícia Médica');
+        $botao->set_imagem(PASTA_FIGURAS."pericia.png",$largura,$altura);       
+        $botao->set_url("http://sistemas.saude.rj.gov.br/periciamedica/ControleAcesso/login.aspx");
+        $botao->set_target("_blank");
+        $menu->add_item($botao);
+        
+        $menu->show();
 
         $painel->fecha(); 
     }

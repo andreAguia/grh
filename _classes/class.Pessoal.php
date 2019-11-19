@@ -642,7 +642,7 @@ class Pessoal extends Bd {
         $retorno = NULL;
         
         $comissao = $this->get_cargoComissao($idServidor);
-        $descricao = $this->get_cargoComissaoDescricao($idServidor);
+        #$descricao = $this->get_cargoComissaoDescricao($idServidor);
 
         if(!empty($tipoCargo)){
             $retorno = $tipoCargo;             
@@ -657,7 +657,7 @@ class Pessoal extends Bd {
         }
 
         if((!empty($comissao)) AND ($exibeComissao)){
-             $retorno .= '<br/><span title="'.$descricao.'" id="orgaoCedido">['.$comissao.']</span>';
+             $retorno .= '<br/>'.$comissao;
         }
         
         return $retorno;
@@ -1895,6 +1895,9 @@ class Pessoal extends Bd {
 
     function get_cargoComissao($idServidor){
         
+        # Classe CargoComissão
+        $cargoComissao = new CargoComissao();
+        
         # Pega o id do cargo em comissão (se houver)		 
         $select = 'SELECT idComissao, tipo
                      FROM tbcomissao
@@ -1912,8 +1915,8 @@ class Pessoal extends Bd {
         # Percorre os cargos
         foreach ($row as $rr){
         
-            $idCargo = $rr[0];
-            
+            # Pega o $idComissao
+            $idComissao = $rr[0];            
 
             # Verifica se é designado ou protempore
             if($rr[1] == 1){
@@ -1922,34 +1925,39 @@ class Pessoal extends Bd {
 
             if($rr[1] == 2){
                 $tipo = " - Designado";
-            }
+            }            
 
-            
-
-            # Pega a descrição do cargo em comissão
-            if (!is_null($idCargo)){
+            # Verifica se tem cargo
+            if (!is_null($idComissao)){
+                
+                # Pega o nome do cargo em comissão
                 $select ='SELECT tbtipocomissao.descricao 
                             FROM tbcomissao 
                             JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                           WHERE idcomissao = '.$idCargo;
+                           WHERE idcomissao = '.$idComissao;
 
                 $row2 = parent::select($select,FALSE);
-                $retorno .= $row2[0];
-            }
-
-            # Verifica se tem tipo
-            if(!vazio($tipo)){
-                $retorno .= $tipo;
+                $tipoCargo = $row2[0];
+                
+                # Pega a descrição do cargo
+                $descricao = $cargoComissao->get_descricaoCargo($idComissao);
+                
+                 # Verifica se tem tipo
+                if(!vazio($tipo)){
+                    $tipoCargo .= $tipo;
+                }
+                
+                # Coloca na variável retorno
+                $retorno .= '<span title="'.$descricao.'" id="orgaoCedido">['.$tipoCargo.']</span>';
             }
             
             if($contador < $num){
                 $contador++;
-                $retorno .= "]<br/>[";
+                $retorno .= "<br/>";
             }
         }
 
         return $retorno;
-
     }
 
     ###########################################################

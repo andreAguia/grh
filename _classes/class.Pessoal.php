@@ -1971,6 +1971,9 @@ class Pessoal extends Bd {
 
     function get_cargoComissaoDescricao($idServidor){
         
+        # Inicia a classe de Cargo em comissão
+        $comissao = new CargoComissao();
+        
         # Pega o id do cargo em comissão (se houver)		 
         $select = 'SELECT idComissao
                      FROM tbcomissao
@@ -1978,15 +1981,27 @@ class Pessoal extends Bd {
                        OR (dtExo is NULL))
                     AND idServidor = '.$idServidor;
 
-        $row = parent::select($select,FALSE);
-        $idComissao = $row[0];
+        $row = parent::select($select);
+        $count = parent::count($select);
+        $contador = 1;
         
+        # Inicia a variável de retorno
         $retorno = NULL;
+        
+        foreach($row as $rr){
+            
+            # Pega o id
+            $idComissao = $rr[0];
 
-        # Pega a descrição 
-        if (!is_null($idComissao)){
-            $comissao = new CargoComissao();
-            $retorno = $comissao->get_descricaoCargo($idComissao);
+            # Pega a descrição 
+            if (!is_null($idComissao)){
+                $retorno .= $comissao->get_descricaoCargo($idComissao);
+            }
+            
+            if($contador < $count){
+                $contador++;
+                $retorno .= '<br/>';
+            }
         }
 
         return $retorno;

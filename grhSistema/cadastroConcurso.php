@@ -241,6 +241,12 @@ if($acesso){
     
     $objeto->set_botaoVoltarLista(FALSE);
     $objeto->set_botaoIncluir(FALSE);
+    
+    
+    if(!vazio($id)){            
+        $ativos = $pessoal->get_servidoresAtivosConcurso($id);
+        $inativos = $pessoal->get_servidoresInativosConcurso($id);
+    }
 
     ################################################################
     
@@ -400,8 +406,8 @@ if($acesso){
                     $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
                 }
                 
-                $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
-                $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
+                $menu->add_item('link',"Servidores Ativos ($ativos)",'?fase=listaServidoresAtivos&id='.$id);
+                $menu->add_item('link',"Servidores Inativos ($inativos)",'?fase=listaServidoresInativos&id='.$id);
                                 
                 $menu->show();
 
@@ -549,9 +555,9 @@ if($acesso){
                 
                 $menu->add_item('link','Publicações','?fase=editar&id='.$id);
                 $menu->add_item('link','<b>Vagas</b>','?fase=concursoVagas&id='.$id);
-
-                $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
-                $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
+                
+                $menu->add_item('link',"Servidores Ativos ($ativos)",'?fase=listaServidoresAtivos&id='.$id);
+                $menu->add_item('link',"Servidores Inativos ($inativos)",'?fase=listaServidoresInativos&id='.$id);
                 
                 $menu->show();
 
@@ -687,9 +693,9 @@ if($acesso){
             if($dados["tipo"] == 2){
                 $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
             }
-
-            $menu->add_item('link','<b>Servidores Ativos</b>','?fase=listaServidoresAtivos&id='.$id);
-            $menu->add_item('link','Servidores Inativos','?fase=listaServidoresInativos&id='.$id);
+            
+            $menu->add_item('link',"<b>Servidores Ativos ($ativos)</b>",'?fase=listaServidoresAtivos&id='.$id);
+            $menu->add_item('link',"Servidores Inativos ($inativos)",'?fase=listaServidoresInativos&id='.$id);
 
             $menu->show();
 
@@ -764,9 +770,9 @@ if($acesso){
             if($dados["tipo"] == 2){
                 $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
             }
-
-            $menu->add_item('link','Servidores Ativos','?fase=listaServidoresAtivos&id='.$id);
-            $menu->add_item('link','<b>Servidores Inativos</b>','?fase=listaServidoresInativos&id='.$id);
+            
+            $menu->add_item('link',"Servidores Ativos ($ativos)",'?fase=listaServidoresAtivos&id='.$id);
+            $menu->add_item('link',"<b>Servidores Inativos ($inativos)</b>",'?fase=listaServidoresInativos&id='.$id);
 
             $menu->show();
 

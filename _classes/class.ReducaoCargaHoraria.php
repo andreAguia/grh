@@ -748,8 +748,10 @@ class ReducaoCargaHoraria{
                 # Resultado: 2 - Indeferido
                 # Status:    3 - Arquivado
                 case 2:
+                case 3:
                     $statusCerto = 3;
                     break;
+                
             }
             
             # Verifica se o status está correto, senão grava o correto

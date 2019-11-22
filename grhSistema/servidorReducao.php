@@ -222,11 +222,12 @@ if($acesso){
                                      idReducao,
                                      idReducao,
                                      idReducao,
-                                     idReducao,                                   
+                                     idReducao,
+                                     ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino,
                                      idReducao
                                 FROM tbreducao
                                WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY status, dtInicio desc');
+                            ORDER BY status, dtTermino, dtInicio');
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtSolicitacao,

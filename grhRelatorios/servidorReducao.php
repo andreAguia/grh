@@ -47,6 +47,7 @@ if($acesso)
                       CASE resultado
                         WHEN 1 THEN 'Deferido'
                         WHEN 2 THEN 'Indeferido'
+                        WHEN 3 THEN 'Interrompido'
                       ELSE '---'
                       END,
                       idReducao,

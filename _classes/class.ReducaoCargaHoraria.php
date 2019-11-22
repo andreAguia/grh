@@ -626,6 +626,10 @@ class ReducaoCargaHoraria{
             case 2:
                 $retorno = "Indeferido";
                 break;
+            
+            case 3:
+                $retorno = "Interrompido";
+                break;
         }
         
         # Verifica se há pendências

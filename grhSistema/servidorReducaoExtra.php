@@ -20,7 +20,8 @@ switch ($resultado){
         break;
     
     # Resultado: 1 - Deferido
-    # Status:    2 - Vigente até o término do benefício, após essa data passa para 3 - Arquivado
+    # Status:    2 - Vigente até o término do benefício, após essa data passa para 
+    #            3 - Arquivado
     case 1:
         
         # Verifica se já está cadastrada a data de início e o período
@@ -41,6 +42,7 @@ switch ($resultado){
     # Resultado: 2 - Indeferido
     # Status:    3 - Arquivado
     case 2:
+    case 3:    
         $campoValor[2] = 3;
         break;
 }

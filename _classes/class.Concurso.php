@@ -332,4 +332,56 @@ class Concurso
 	}
 
     #####################################################################################
+	
+	/**
+	 * Método get_numVagasConcurso
+	 * 
+	 * Informa o numero de vagas por concurso
+         */
+	
+	public function get_numVagasConcurso($idConcurso){
+            
+            # Joga o valor informado para a variável da classe
+            if(!vazio($idConcurso)){
+                $this->idConcurso = $idConcurso;
+            }
+            
+            # Monta o select            
+            $select = "SELECT idVagaHistorico
+                         FROM tbvagahistorico
+                        WHERE idConcurso = $this->idConcurso";
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+	}
+
+    #####################################################################################
+	
+	/**
+	 * Método get_numPublicacaoConcurso
+	 * 
+	 * Informa o numero de publicação por concurso
+         */
+	
+	public function get_numPublicacaoConcurso($idConcurso){
+            
+            # Joga o valor informado para a variável da classe
+            if(!vazio($idConcurso)){
+                $this->idConcurso = $idConcurso;
+            }
+            
+            # Monta o select            
+            $select = "SELECT idConcursoPublicacao
+                         FROM tbconcursopublicacao
+                        WHERE idConcurso = $this->idConcurso";
+           
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+	}
+
+    #####################################################################################
 }

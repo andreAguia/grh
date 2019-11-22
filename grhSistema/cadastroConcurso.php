@@ -246,6 +246,9 @@ if($acesso){
     if(!vazio($id)){            
         $ativos = $pessoal->get_servidoresAtivosConcurso($id);
         $inativos = $pessoal->get_servidoresInativosConcurso($id);
+        $vagas = $concurso->get_numVagasConcurso($id);
+        $publicacao = $concurso->get_numPublicacaoConcurso($id);
+        
     }
 
     ################################################################
@@ -400,10 +403,10 @@ if($acesso){
                 # Inicia o Menu de Cargos                
                 $menu = new Menu("menuProcedimentos");
                 $menu->add_item('titulo','Menu');                
-                $menu->add_item('link','<b>Publicações</b>','?fase=editar&id='.$id);
+                $menu->add_item('link',"<b>Publicações ($publicacao)</b>",'?fase=editar&id='.$id);
                 
                 if($dados["tipo"] == 2){
-                    $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+                    $menu->add_item('link',"Vagas ($vagas)",'?fase=concursoVagas&id='.$id);
                 }
                 
                 $menu->add_item('link',"Servidores Ativos ($ativos)",'?fase=listaServidoresAtivos&id='.$id);
@@ -553,8 +556,8 @@ if($acesso){
                 $menu = new Menu("menuProcedimentos");
                 $menu->add_item('titulo','Menu');
                 
-                $menu->add_item('link','Publicações','?fase=editar&id='.$id);
-                $menu->add_item('link','<b>Vagas</b>','?fase=concursoVagas&id='.$id);
+                $menu->add_item('link',"Publicações ($publicacao)",'?fase=editar&id='.$id);
+                $menu->add_item('link',"<b>Vagas ($vagas)</b>",'?fase=concursoVagas&id='.$id);
                 
                 $menu->add_item('link',"Servidores Ativos ($ativos)",'?fase=listaServidoresAtivos&id='.$id);
                 $menu->add_item('link',"Servidores Inativos ($inativos)",'?fase=listaServidoresInativos&id='.$id);
@@ -688,10 +691,10 @@ if($acesso){
             # Inicia o Menu de Cargos                
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo','Menu');                
-            $menu->add_item('link','Publicações','?fase=editar&id='.$id);
+            $menu->add_item('link',"Publicações ($publicacao)",'?fase=editar&id='.$id);
 
             if($dados["tipo"] == 2){
-                $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+                $menu->add_item('link',"Vagas ($vagas)",'?fase=concursoVagas&id='.$id);
             }
             
             $menu->add_item('link',"<b>Servidores Ativos ($ativos)</b>",'?fase=listaServidoresAtivos&id='.$id);
@@ -765,10 +768,10 @@ if($acesso){
             # Inicia o Menu de Cargos                
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo','Menu');                
-            $menu->add_item('link','Publicações','?fase=editar&id='.$id);
+            $menu->add_item('link',"Publicações ($publicacao)",'?fase=editar&id='.$id);
 
             if($dados["tipo"] == 2){
-                $menu->add_item('link','Vagas','?fase=concursoVagas&id='.$id);
+                $menu->add_item('link',"Vagas ($vagas)",'?fase=concursoVagas&id='.$id);
             }
             
             $menu->add_item('link',"Servidores Ativos ($ativos)",'?fase=listaServidoresAtivos&id='.$id);

@@ -371,7 +371,7 @@ if($acesso){
                     }
 
 
-                    $select .= " ORDER BY dtInicial";
+                    $select .= " ORDER BY dtInicial, tbpessoa.nome";
 
                 $result = $servidor->select($select);
 

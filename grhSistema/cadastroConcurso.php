@@ -532,6 +532,15 @@ if($acesso){
                 $botaoInserir->set_title("Incluir Vaga");
                 $menu1->add_link($botaoInserir,"right");
 
+                # Relatórios
+                $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+                $botaoRel = new Button();
+                $botaoRel->set_title("Relatório de vagas desse concurao");
+                $botaoRel->set_url("../grhRelatorios/concurso.vagas.docentes.php?id=".$id);
+                $botaoRel->set_target("_blank");
+                $botaoRel->set_imagem($imagem);
+                $menu1->add_link($botaoRel,"right");
+
                 # Editar
                 #$botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
                 #$botaoEditar->set_title("Editar concurso"); 
@@ -805,14 +814,14 @@ if($acesso){
                 # Lista de Servidores Ativos
                 $lista = new ListaServidores('Servidores Ativos');
                 $lista->set_situacao(1);				
-	        $lista->set_concurso($id);   
+	            $lista->set_concurso($id);   
                 $lista->showRelatorio();
             }else{            
                 # Lista de Servidores Inativos
                 $lista = new ListaServidores('Servidores Inativos');
                	$lista->set_situacao(1);				
-	        $lista->set_situacaoSinal("<>");
-	        $lista->set_concurso($id);         
+	            $lista->set_situacaoSinal("<>");
+	            $lista->set_concurso($id);         
                 $lista->showRelatorio();
             }
             break;

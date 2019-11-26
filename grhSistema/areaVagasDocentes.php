@@ -120,7 +120,7 @@ if($acesso){
                                                     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Incluir Concurso"));
+    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
     $objeto->set_width(array(10,20,10,30,25));
     $objeto->set_align(array("center"));
     

@@ -69,7 +69,7 @@ class Vaga{
             p($dtAdmissao."  -  ".$dtSaida,$css);
             p($lotacao,$css);
             if(!vazio($comissao)){
-                p("[$comissao]",$css);
+                p("$comissao",$css);
             }
             
         }else{
@@ -113,7 +113,7 @@ class Vaga{
             br();
             
             if(!vazio($comissao)){
-                echo "[$comissao]";
+                echo "$comissao";
             }
         }
     }
@@ -401,8 +401,11 @@ class Vaga{
         $painel = new Callout("primary");
         $painel->abre();
         
-        #tituloTable("Vaga");
-        #br();
+        $btnEditar = new Link("Editar","procedimentoNota.php?fase=editar&id=$idVaga");
+        $btnEditar->set_class('button tiny secondary');
+        $btnEditar->set_id('editarVaga');
+        $btnEditar->set_title('Editar o Procedimento');
+        $btnEditar->show();
         
         $centro = $conteudo["centro"];
         $idCargo = $conteudo["idCargo"];
@@ -414,9 +417,7 @@ class Vaga{
         p($centro,"vagaCentro");
         p($cargo,"vagaCargo");
         
-        
         $painel->fecha();
-               
         
         $painel = new Callout();
         $painel->abre();
@@ -466,16 +467,18 @@ class Vaga{
      * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_numVagasCargoDiretoria($idCargo,$dir){
+    function get_numVagasDiretoria($dir = NULL){
             
         # Conecta o banco
         $pessoal = new Pessoal();
 
-        $select = 'SELECT idVaga
-                     FROM tbvaga
-                    WHERE idCargo = '.$idCargo.'
-                      AND centro = "'.$dir.'"';
-
+        $select = "SELECT idVaga
+                     FROM tbvaga";
+        
+        if(!vazio($dir)){
+            $select .= " WHERE centro = '$dir'";
+        }
+        
         $dado = $pessoal->count($select);
         return $dado;
     }
@@ -489,7 +492,34 @@ class Vaga{
      * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_numVagasCargoDiretoriaDisponiveis($idCargo,$dir){
+    function get_numVagasCargoDiretoria($idCargo,$dir = NULL){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        $select = "SELECT idVaga
+                     FROM tbvaga
+                   WHERE idCargo = $idCargo";
+        
+        if(!vazio($dir)){
+            $select .= " AND centro = '$dir'";
+        }
+
+        $dado = $pessoal->count($select);
+        return $dado;
+    }
+    
+    ###########################################################
+
+
+    /**
+     * Método get_numVagasCargoDiretoria
+     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_numVagasCargoDiretoriaDisponiveis($idCargo,$dir = NULL){
             
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -498,10 +528,14 @@ class Vaga{
         $disponivel = 0;
 
         # Pega as vagas desse cargo e desse centro
-        $select = 'SELECT idVaga
+        $select = "SELECT idVaga
                      FROM tbvaga
-                    WHERE idCargo = '.$idCargo.'
-                      AND centro = "'.$dir.'"';
+                    WHERE idCargo = $idCargo";
+        
+        if(!vazio($dir)){
+            $select .= " AND centro = '$dir'";
+        }
+                      
 
         $dado = $pessoal->select($select);
         
@@ -533,7 +567,7 @@ class Vaga{
      * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_numVagasCargoDiretoriaOcupados($idCargo,$dir){
+    function get_numVagasCargoDiretoriaOcupados($idCargo,$dir = NULL){
             
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -542,10 +576,13 @@ class Vaga{
         $ocupado = 0;
 
         # Pega as vagas desse cargo e desse centro
-        $select = 'SELECT idVaga
+        $select = "SELECT idVaga
                      FROM tbvaga
-                    WHERE idCargo = '.$idCargo.'
-                      AND centro = "'.$dir.'"';
+                    WHERE idCargo = $idCargo";
+        
+        if(!vazio($dir)){
+            $select .= " AND centro = '$dir'";
+        }
 
         $dado = $pessoal->select($select);
         
@@ -585,8 +622,6 @@ class Vaga{
         }else{
             $diretorias[] = $centro;
         }
-        
-       
         
             # Pega os Cargos
             $cargos = array(128,129);
@@ -809,6 +844,94 @@ class Vaga{
         $tabela->show();
     }
 
+    ###########################################################
+    /**
+     * Método exibeVagasOcupadas
+     * fornece o status da vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function exibeVagasOcupadas($centro = NULL){
+        
+        # Conecta o banco
+        $pessoal = new Pessoal();
+        
+        # Inicia as variáveis
+        $resultado = array();
+        
+        # Faz os cálculos
+        $ocupadoTitular = $this->get_numVagasCargoDiretoriaOcupados(128, $centro);
+        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaOcupados(129, $centro);
+        
+        $resultado[] = array("Professor Titular",$ocupadoTitular);
+        $resultado[] = array("Professor Associado",$ocupadoAssociado);
+        $resultado[] = array("Total",$ocupadoAssociado + $ocupadoTitular);
+            
+        $titulo = "Vagas Ocupadas";
+        
+        if(!vazio($centro)){
+            $titulo .= " do $centro";
+        }
+            
+        $tabela = new Tabela();
+        $tabela->set_titulo($titulo);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_label(array("Cargo","Quantidade"));
+        #$tabela->set_width(array());
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array("left","center"));       
+        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'totalVagas')));
+        $tabela->show();
+    }
+    
+    ###########################################################
+    /**
+     * Método exibeVagasOcupadas
+     * fornece o status da vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function exibeVagasDisponiveis($centro = NULL){
+        
+        # Conecta o banco
+        $pessoal = new Pessoal();
+        
+        # Inicia as variáveis
+        $resultado = array();
+        
+        # Faz os cálculos
+        $ocupadoTitular = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
+        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
+        
+        $resultado[] = array("Professor Titular",$ocupadoTitular);
+        $resultado[] = array("Professor Associado",$ocupadoAssociado);
+        $resultado[] = array("Total",$ocupadoAssociado + $ocupadoTitular);
+        
+        $titulo = "Vagas Disponíveis";
+        
+        if(!vazio($centro)){
+            $titulo .= " do $centro";
+        }
+            
+        $tabela = new Tabela();
+        $tabela->set_titulo($titulo);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_label(array("Cargo","Quantidade"));
+        #$tabela->set_width(array());
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array("left","center"));       
+        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'totalVagas')));
+        $tabela->show();
+    }
+    
     ###########################################################
 
 

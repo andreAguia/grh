@@ -57,7 +57,7 @@ if($acesso){
     ################################################################
 
     # Nome do Modelo
-    $objeto->set_nome("Concursos");
+    $objeto->set_nome("Concursos Desta Vaga");
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('areaVagasDocentes.php');
@@ -310,10 +310,10 @@ if($acesso){
             # Área Lateral
             
             $grid->abreColuna(3);
-            
-                # Exibe dados da vaga
-                $vaga = new Vaga();
-                $vaga->exibeDadosVaga($idVaga);
+
+            # Exibe dados da vaga
+            $vaga = new Vaga();
+            $vaga->exibeDadosVaga($idVaga);
             
             $grid->fechaColuna();
             

@@ -84,7 +84,6 @@ if($acesso){
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     
-
     # Parametros da tabela
     $objeto->set_label(array("Exercicio","Status","Data Inicial","Dias","Data Final","Período","Obs"));
     $objeto->set_align(array("center"));

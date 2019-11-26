@@ -40,7 +40,7 @@ if($acesso){
     $id = soNumeros(get('id'));
     
     # Pega os parâmetros
-    $parametroCentro = post('parametroCentro',get_session('parametroCentro'));
+    $parametroCentro = get('parametroCentro',get_session('parametroCentro'));
     
     if($parametroCentro == "Todos"){
         $parametroCentro = NULL;
@@ -62,7 +62,12 @@ if($acesso){
     ################################################################
 
     # Nome do Modelo
-    $objeto->set_nome('Vagas de Docentes');
+    
+    if(!vazio($parametroCentro)){
+        $objeto->set_nome("Vagas de Docentes do $parametroCentro");
+    }else{
+        $objeto->set_nome("Vagas de Docentes");
+    }    
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -96,7 +101,7 @@ if($acesso){
                                WHERE idVaga = '.$id);
 
     # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
+    #$objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     #$objeto->set_linkExcluir('?fase=excluir');
@@ -126,7 +131,7 @@ if($acesso){
     $botao1->set_label('');
     $botao1->set_title('Editar o Concurso');
     $botao1->set_url("?fase=editarConcurso&id=");
-    $botao1->set_imagem(PASTA_FIGURAS.'incluir.png',20,20);
+    $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
 
 
     # Coloca o objeto link na tabela			
@@ -195,16 +200,81 @@ if($acesso){
         case "listar" :
             
             # Limita o tamanho da tela
-            $grid = new Grid("center");
+            $grid = new Grid();
             $grid->abreColuna(12);
-            br(6);
             
-            aguarde();
-            br();
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar,"left");
+            
+            # Incluir
+            $botaoInserir = new Button("Incluir Nova Vaga","?fase=incluir");
+            $botaoInserir->set_title("Incluir"); 
+            $menu1->add_link($botaoInserir,"right");
+            
+            # Total de Vagas
+            $botaoInserir = new Button("Exibe Total de Vagas","?fase=exibeTotal");
+            $botaoInserir->set_title("Incluir"); 
+            #$menu1->add_link($botaoInserir,"right");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            #$menu1->add_link($botaoRel,"right");
+
+            $menu1->show();
+            
+            ###
             
             $grid->fechaColuna();
-            $grid->abreColuna(5);
-                p("Aguarde...","center");
+            $grid->abreColuna(3);
+            
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Inicia o Menu de Cargos                
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo','Lotação (Centro)');  
+            
+            foreach($centros as $cc){
+                
+                if($cc == "Todos"){
+                    $numVagas = $vaga->get_numVagasDiretoria();
+                }else{
+                    $numVagas = $vaga->get_numVagasDiretoria($cc);
+                }
+                
+                if($parametroCentro == $cc){
+                    $menu->add_item('link',"<b>$cc ($numVagas)</b>",'?parametroCentro='.$cc);
+                }elseif((vazio($parametroCentro)) AND ($cc == "Todos")){
+                    $menu->add_item('link','<b>Todos</b>','?parametroCentro='.$cc);
+                }else{
+                    $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
+                }
+            }
+
+            $menu->show();
+            
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
+            
+            br(5);
+            aguarde();
+            br();
+            p("Aguarde...","center");
+                
             $grid->fechaColuna();
             $grid->fechaGrid();
 
@@ -234,10 +304,10 @@ if($acesso){
             $botaoInserir->set_title("Incluir"); 
             $menu1->add_link($botaoInserir,"right");
             
-            # Totsal de Vagas
+            # Total de Vagas
             $botaoInserir = new Button("Exibe Total de Vagas","?fase=exibeTotal");
             $botaoInserir->set_title("Incluir"); 
-            $menu1->add_link($botaoInserir,"right");
+            #$menu1->add_link($botaoInserir,"right");
             
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -252,22 +322,41 @@ if($acesso){
             
             ###
             
-            # Formulário de Pesquisa
-            $form = new Form('?');
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
             
-            # Centro    
-            $controle = new Input('parametroCentro','combo','Centro:',1);
-            $controle->set_size(20);
-            $controle->set_title('Centro');
-            $controle->set_valor($parametroCentro);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_autofocus(TRUE);
-            $controle->set_array($centros);            
-            $form->add_item($controle);
+            $painel = new Callout();
+            $painel->abre();
             
-            $form->show();
+            # Inicia o Menu de Cargos                
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo','Lotação (Centro)');  
+            
+            foreach($centros as $cc){
+                if($cc == "Todos"){
+                    $numVagas = $vaga->get_numVagasDiretoria();
+                }else{
+                    $numVagas = $vaga->get_numVagasDiretoria($cc);
+                }
+                
+                if($parametroCentro == $cc){
+                    $menu->add_item('link',"<b>$cc ($numVagas)</b>",'?parametroCentro='.$cc);
+                }elseif((vazio($parametroCentro)) AND ($cc == "Todos")){
+                    $menu->add_item('link',"<b>Todos ($numVagas)</b>",'?parametroCentro='.$cc);
+                }else{
+                    $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
+                }
+            }
+
+            $menu->show();
+            
+            $painel->fecha();
+            
+            $vaga->exibeVagasOcupadas($parametroCentro);
+            $vaga->exibeVagasDisponiveis($parametroCentro);
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
             
             $objeto->listar();
                 

@@ -80,6 +80,47 @@ class Vaga{
     ###########################################################
 
     /**
+     * Método get_nomeRel
+     * fornece o nome do servidor e outros dados de uma idServidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+
+    function get_nomeRel($idServidor)
+    {
+        if(is_numeric($idServidor)){
+            
+            # Conecta o banco
+            $pessoal = new Pessoal();
+            
+            # Pega os dados
+            $nome = $pessoal->get_nome($idServidor);
+            $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+            $idSiituacao = $pessoal->get_idSituacao($idServidor);
+            $dtSaida = $pessoal->get_dtSaida($idServidor);
+            $lotacao = $pessoal->get_lotacaoSimples($idServidor);
+            $comissao = $pessoal->get_cargoComissao($idServidor);
+
+            if($idSiituacao == 1){
+                $nome = "<b>$nome</b>";
+            }
+            
+            echo  $nome;
+            br();
+            echo $dtAdmissao."  -  ".$dtSaida;
+            br();
+            echo $lotacao;
+            br();
+            
+            if(!vazio($comissao)){
+                echo "[$comissao]";
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_servidorOcupante
      * fornece o nome do servidor ocupante da último edital para esta vaga
      * 

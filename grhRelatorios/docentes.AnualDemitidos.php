@@ -49,8 +49,8 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Docentes Admitidos em '.$relatorioAno);
-    $relatorio->set_subtitulo('Ordenado pela Data de Admissão');
+    $relatorio->set_titulo('Relatório Anual de Docentes Demitidos e Exonerados em '.$relatorioAno);
+    $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
     $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Demissão','Motivo','Mês'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));

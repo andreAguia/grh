@@ -861,8 +861,8 @@ class Vaga{
         $resultado = array();
         
         # Faz os cálculos
-        $ocupadoTitular = $this->get_numVagasCargoDiretoriaOcupados(128, $centro);
-        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaOcupados(129, $centro);
+        $ocupadoTitular = $this->get_numVagasCargoDiretoriaOcupados(129, $centro);
+        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaOcupados(128, $centro);
         
         $resultado[] = array("Professor Titular",$ocupadoTitular);
         $resultado[] = array("Professor Associado",$ocupadoAssociado);
@@ -905,8 +905,8 @@ class Vaga{
         $resultado = array();
         
         # Faz os cálculos
-        $ocupadoTitular = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
-        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
+        $ocupadoTitular = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
+        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
         
         $resultado[] = array("Professor Titular",$ocupadoTitular);
         $resultado[] = array("Professor Associado",$ocupadoAssociado);

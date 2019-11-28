@@ -403,7 +403,15 @@ if($acesso){
 
             # Vagas Disponíveis
             $tabela = new Tabela();
-            $tabela->set_titulo("Vagas Disponíveis");
+            
+            # Titulo
+            if(!vazio($parametroCentro)){
+                $titulo = "Vagas de Docentes do $parametroCentro";
+            }else{
+                $titulo = "Vagas de Docentes";
+            }    
+    
+            $tabela->set_titulo($titulo." - Disponíveis");
             $tabela->set_conteudo($arrayDisponível);
             
             $tabela->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
@@ -444,7 +452,15 @@ if($acesso){
             
             # Vagas Ocupadas
             $tabela = new Tabela();
-            $tabela->set_titulo("Vagas Ocupadas");
+            
+            # Titulo
+            if(!vazio($parametroCentro)){
+                $titulo = "Vagas de Docentes do $parametroCentro";
+            }else{
+                $titulo = "Vagas de Docentes";
+            }    
+    
+            $tabela->set_titulo($titulo." - Ocupadas");
             $tabela->set_conteudo($arrayOcupado);
             
             $tabela->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
@@ -493,6 +509,8 @@ if($acesso){
             break;
             
         case "editar" :
+            #$objeto->set_linkListar("?fase=editarConcurso&id=".$id);
+            $objeto->set_voltarForm("?fase=editarConcurso&id=".$id);
             $objeto->editar($id);
             break;  
             
@@ -504,6 +522,10 @@ if($acesso){
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+        #############################################################
+        ## DEPRECATED
+        ############################################333333333333
         
         case "exibeTotal" :
             # Limita o tamanho da tela

@@ -88,7 +88,7 @@ if($acesso){
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoInicial,$anoAtual+2);
+    $anoExercicio = arrayPreenche($anoAtual+2,$anoInicial,"d");
     
     $controle = new Input('parametroAno','combo','Ano Exercício:',1);
     $controle->set_size(8);

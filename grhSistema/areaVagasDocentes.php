@@ -41,6 +41,7 @@ if($acesso){
     
     # Pega os parâmetros
     $parametroCentro = get('parametroCentro',get_session('parametroCentro'));
+    $parametroStatus = get('parametroStatus',get_session('parametroStatus'));
     
     if($parametroCentro == "Todos"){
         $parametroCentro = NULL;
@@ -48,6 +49,7 @@ if($acesso){
         
     # Joga os parâmetros par as sessions    
     set_session('parametroCentro',$parametroCentro);
+    set_session('parametroStatus',$parametroStatus);
 
     # Começa uma nova página
     $page = new Page();			
@@ -351,14 +353,135 @@ if($acesso){
             $menu->show();
             
             $painel->fecha();
-            
-            $vaga->exibeVagasOcupadas($parametroCentro);
+                        
             $vaga->exibeVagasDisponiveis($parametroCentro);
+            $vaga->exibeVagasOcupadas($parametroCentro);
             
             $grid->fechaColuna();
             $grid->abreColuna(9);
             
-            $objeto->listar();
+            #$objeto->listar();
+            
+            $select = 'SELECT centro,
+                              tbcargo.nome,
+                              idVaga,
+                              idVaga,
+                              idVaga,
+                              idVaga,
+                              idVaga,
+                              idVaga
+                         FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
+                        WHERE TRUE ';
+
+            # parametroCentro
+            if(!vazio($parametroCentro)){
+                $select .= "AND centro = '$parametroCentro'";
+            }
+
+            $select .= ' ORDER BY centro,idCargo';
+            
+            $result = $pessoal->select($select);
+            
+            # Inicia o array para a tabela
+            $arrayDisponível = array();
+            $arrayOcupado = array();
+            
+            # Percorre o array retirando as vagas ocupadas
+            foreach($result as $rr){
+                
+                # Pega o status da vaga
+                $status = $vaga->get_status($rr[2]);
+                
+                if($status == "Disponível"){
+                    $arrayDisponível[] = $rr;
+                }else{
+                    $arrayOcupado[] = $rr;
+                }
+            }
+            
+            #####
+
+            # Vagas Disponíveis
+            $tabela = new Tabela();
+            $tabela->set_titulo("Vagas Disponíveis");
+            $tabela->set_conteudo($arrayDisponível);
+            
+            $tabela->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
+            $tabela->set_width(array(10,20,10,30,25));
+            $tabela->set_align(array("center"));
+            
+            $tabela->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga"));
+            $tabela->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+            
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
+                                                    'valor' => 'Disponível',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),
+                                              array('coluna' => 2,
+                                                    'valor' => 'Ocupado',
+                                                    'operador' => '=',
+                                                    'id' => 'alerta')
+                                                    ));
+            
+            $tabela->set_excluirCondicional('?fase=excluir',0,5,"==");
+    
+            # Botão de Editar concursos
+            $botao1 = new BotaoGrafico();
+            $botao1->set_label('');
+            $botao1->set_title('Editar o Concurso');
+            $botao1->set_url("?fase=editarConcurso&id=");
+            $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
+
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
+            
+            $tabela->set_numeroOrdem(TRUE);
+            $tabela->set_idCampo('idVaga');
+            $tabela->show();
+            
+            #####
+            
+            # Vagas Ocupadas
+            $tabela = new Tabela();
+            $tabela->set_titulo("Vagas Ocupadas");
+            $tabela->set_conteudo($arrayOcupado);
+            
+            $tabela->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
+            $tabela->set_width(array(10,20,10,30,25));
+            $tabela->set_align(array("center"));
+            
+            $tabela->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga"));
+            $tabela->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+            
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
+                                                    'valor' => 'Disponível',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),
+                                              array('coluna' => 2,
+                                                    'valor' => 'Ocupado',
+                                                    'operador' => '=',
+                                                    'id' => 'alerta')
+                                                    ));
+            
+            $tabela->set_excluirCondicional('?fase=excluir',0,5,"==");
+    
+            # Botão de Editar concursos
+            $botao1 = new BotaoGrafico();
+            $botao1->set_label('');
+            $botao1->set_title('Editar o Concurso');
+            $botao1->set_url("?fase=editarConcurso&id=");
+            $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
+
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
+            
+            $tabela->set_numeroOrdem(TRUE);            
+            $tabela->set_idCampo('idVaga');
+            $tabela->show();
+            
+            #####
                 
             $grid->fechaColuna();
             $grid->fechaGrid();

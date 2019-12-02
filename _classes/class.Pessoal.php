@@ -872,7 +872,7 @@ class Pessoal extends Bd {
         }
 
         if(!empty($comissao)){
-             $retorno .= '<span id="orgaoCedido"> ['.$comissao.']</span)';
+             $retorno .= '<span id="orgaoCedido"> '.$comissao.'</span)';
         }
         return $retorno;
     }

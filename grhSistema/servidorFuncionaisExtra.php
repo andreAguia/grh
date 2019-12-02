@@ -120,7 +120,29 @@ if(!is_null($motivo)){
         case 5 :    // Contrato Nulo
         case 6 :    // Contrato Administrativo
         case 7 :    // Professor Visitante    
-            if(($motivo <> 2) AND ($motivo <> 7) AND ($motivo <> 8) AND ($motivo <> 11) AND ($motivo <> 13)){
+            
+            #####
+            #
+            # Motivos:
+            #
+            # 01 - Exonerado à pedido
+            # 02 - Falecimento
+            # 03 - Aposentadoria voluntária
+            # 04 - Aposentadoria compulsória
+            # 05 - Aposentadoria por invalidez por acidente
+            # 06 - Aposentadoria por invalidez por doença
+            # 07 - Rescisão de contrato à pedido
+            # 08 - Término de contrato
+            # 09 - Demissão com justa causa
+            # 10 - Demissã
+            # 11 - Abandono de emprego
+            # 12 - Fim da cessão
+            # 13 - Outros
+            # 14 - Exonerado
+            #
+            #####
+            
+            if(($motivo <> 2) AND ($motivo <> 7) AND ($motivo <> 8) AND ($motivo <> 10) AND ($motivo <> 11) AND ($motivo <> 13)){
                 $erro = 1;   
                 $msgErro.='Um servidor contratado não pode sair da instituição por esse motivo!\n';
             }

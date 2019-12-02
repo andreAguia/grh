@@ -93,7 +93,6 @@ if($acesso){
                       orgExecutor,
                       idConcurso,
                       idConcurso,
-                      idConcurso,
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                 WHERE TRUE';
@@ -134,7 +133,7 @@ if($acesso){
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Edital","Ativos","Inativos","Total"));
+    $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos","Total"));
     $objeto->set_width(array(5,12,12,12,12,22,5,5,5));
     $objeto->set_align(array("center"));
     
@@ -143,10 +142,10 @@ if($acesso){
     
     $objeto->set_funcao(array(NULL,NULL,'date_to_php'));
 
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Concurso","Pessoal","Pessoal","Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"exibeEdital","get_servidoresAtivosConcurso","get_servidoresInativosConcurso","get_servidoresConcurso"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal","Pessoal","Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_servidoresAtivosConcurso","get_servidoresInativosConcurso","get_servidoresConcurso"));
 
-    $objeto->set_excluirCondicional('?fase=excluir',0,9,"==");
+    $objeto->set_excluirCondicional('?fase=excluir',0,8,"==");
     
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -231,13 +230,6 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
-    
-    # Botão de upload (somente no editar)
-    if(!vazio($id)){
-        $botaoGra = new Button("Upload","?fase=uploadEdital&id=".$id);
-        $botaoGra->set_title("Upload o Edital");
-        $objeto->set_botaoEditarExtra(array($botaoGra));
-    }
     
     $objeto->set_botaoVoltarLista(FALSE);
     $objeto->set_botaoIncluir(FALSE);
@@ -386,9 +378,6 @@ if($acesso){
                 #$menu1->add_link($botaoEditar,"right");
 
                 $menu1->show();
-
-                # Exibe os dados do Concurso
-                $concurso->exibeDadosConcurso($id,TRUE);
                 
                 $grid->fechaColuna();
                 
@@ -396,6 +385,9 @@ if($acesso){
                 # Menu
                 
                 $grid->abreColuna(3);
+                
+                # Exibe os dados do Concurso
+                $concurso->exibeDadosConcurso($id,TRUE);
 
                 $painel = new Callout();
                 $painel->abre();
@@ -421,44 +413,6 @@ if($acesso){
                 #######################################################3
                 
                 $grid->abreColuna(9);
-                
-                # Exibe o Edital
-                
-                $select ="SELECT 'Edital Oficial do Concurso',
-                                 dtPublicacaoEdital,
-                                 idConcurso,
-                                 idConcurso
-                            FROM tbconcurso
-                           WHERE idConcurso = $id";
-                
-                $conteudo = $pessoal->select($select);
-                $numConteudo = $pessoal->count($select);
-                
-                if($numConteudo > 0){
-                    # Monta a tabela
-                    $tabela = new Tabela();
-                    $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Descrição","Data","Publicação"));
-                    $tabela->set_titulo("Edital");
-                    $tabela->set_funcao(array(NULL,"date_to_php"));
-                    $tabela->set_align(array("left"));
-                    $tabela->set_width(array(80,10));
-                    $tabela->set_totalRegistro(FALSE);
-                    
-                    $formatacaoCondicional = array( array('coluna' => 0,
-                                                          'valor' => 'Edital Oficial do Concurso',
-                                                          'operador' => '=',
-                                                          'id' => 'listaDados'));
-                    $tabela->set_formatacaoCondicional($formatacaoCondicional);
-                    
-                    $tabela->set_classe(array(NULL,NULL,"Concurso"));
-                    $tabela->set_metodo(array(NULL,NULL,"exibeEdital"));
-                    
-                    $tabela->show();
-                }else{
-                    tituloTable("Publicações");
-                    callout("Nenhum Registro Encontrado","secondary");
-                }
                 
                 # Exibe as Publicações
 
@@ -547,9 +501,6 @@ if($acesso){
                 #$menu1->add_link($botaoEditar,"right");
 
                 $menu1->show();
-
-                # Exibe os dados do Concurso
-                $concurso->exibeDadosConcurso();
                 
                 $grid->fechaColuna();
                 
@@ -557,6 +508,9 @@ if($acesso){
                 # Menu
                 
                 $grid->abreColuna(3);
+                
+                # Exibe os dados do Concurso
+                $concurso->exibeDadosConcurso($id,TRUE);
 
                 $painel = new Callout();
                 $painel->abre();
@@ -684,15 +638,15 @@ if($acesso){
 
             $menu->show();
             
-            # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso();
-            
             $grid->fechaColuna();
                 
             #######################################################
             # Menu
 
             $grid->abreColuna(3);
+            
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($id,TRUE);
 
             $painel = new Callout();
             $painel->abre();
@@ -761,15 +715,15 @@ if($acesso){
 
             $menu->show();
             
-            # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso();
-            
             $grid->fechaColuna();
                 
             #######################################################
             # Menu
 
             $grid->abreColuna(3);
+            
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($id,TRUE);
 
             $painel = new Callout();
             $painel->abre();
@@ -939,46 +893,6 @@ if($acesso){
             $grid->fechaGrid();
             break;
         
-    ##################################################################
-            
-            case "uploadEdital" :
-                $grid = new Grid("center");
-                $grid->abreColuna(12);
-                                
-                # Botão voltar
-                botaoVoltar('?fase=editar&id='.$id);
-                
-                tituloTable("Upload de Edital"); 
-                
-                $grid->fechaColuna();
-                $grid->abreColuna(6);
-                
-                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
-                        <input type='file' name='doc'>
-                        <p>Click aqui ou arraste o arquivo.</p>
-                        <button type='submit' name='submit'>Enviar</button>
-                    </form>";
-                                
-                $pasta = "../../_editais/";
-                     
-                if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
-                    $upload = new UploadDoc($_FILES['doc'], $pasta,$id);
-                    echo $upload->salvar();
-                    
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload do edital do concurso ".$concurso->get_nomeConcurso($id);
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$id);
-                    
-                    # Volta para o menu
-                    loadPage("?fase=editar&id=.$id");
-                }
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;
-                
     ##################################################################
             
             case "uploadPublicacao" :

@@ -82,89 +82,38 @@ class Concurso
             $this->idConcurso = $idConcurso;
         }
         
-        # Pega o ano base para colorir a tabela
-        $dados = $this->get_dados();
-        $anobase = $dados["anobase"];
-
-        $select ='SELECT idConcurso,
-                         anobase,
-                         dtPublicacaoEdital,
-                         regime,
-                         CASE tipo
-                           WHEN 1 THEN "Adm & Tec"
-                           WHEN 2 THEN "Professor"
-                           ELSE "--"
-                         END,
-                         orgExecutor,
-                         tbplano.numDecreto,
-                         idConcurso
-                    FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
-                   WHERE idConcurso = '.$this->idConcurso;
+        $conteudo = $this->get_dados($idConcurso);
         
-        $conteudo = $servidor->select($select,TRUE);
+        $painel = new Callout("primary");
+        $painel->abre();
         
-        $label = array("Id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Plano de Cargos");
+        $btnEditar = new Link("Editar","?fase=editardeFato&id=".$this->idConcurso);
+        $btnEditar->set_class('button tiny secondary');
+        $btnEditar->set_id('editarVaga');
+        $btnEditar->set_title('Editar o Concurso');
+        $btnEditar->show();
         
-        $formatacaoCondicional = array( array('coluna' => 1,
-                                              'valor' => $anobase,
-                                              'operador' => '=',
-                                              'id' => 'listaDados'));
+        $anobase = $conteudo["anobase"];
+        $dtPublicacaoEdital = date_to_php($conteudo["dtPublicacaoEdital"]);
+        $regime = $conteudo["regime"];
+        $tipo = $conteudo["tipo"];
         
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($conteudo);
-        $tabela->set_label($label);
-        $tabela->set_titulo("Concurso");
-        $tabela->set_funcao(array(NULL,NULL,"date_to_php"));
-        #$tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional($formatacaoCondicional);
-        
-        if($editar){
-            $tabela->set_editar("?fase=editardeFato&id=".$this->idConcurso);
-            $tabela->set_nomeColunaEditar("Editar");
-            $tabela->set_idCampo('idConcurso');
+        # trata o tipo
+        if($tipo == 1){
+            $tipo = "Adm & Tec";
+        }elseif($tipo == 2){
+            $tipo = "Professor";
         }
-                    
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(12);
+                
+        p(" Concurso de","vagaCargo");
+        p($anobase,"vagaCentro");
+        p($tipo." - ".$regime,"vagaCargo");
+        p($dtPublicacaoEdital,"vagaCargo");
         
-        $tabela->show();
-
-        $grid->fechaColuna();
-        $grid->fechaGrid(); 
+        $painel->fecha();
     }
 
     ###########################################################
-    
-    public function exibeEdital($idConcurso){
-    /**
-     * Exibe um link para o edital
-     * 
-     * @param $idConcurso integer NULL O id do Concurso
-     * 
-     * @syntax $plano->exibeEdital($idConcurso);
-     */
-        
-        # Monta o arquivo
-        $arquivo = "../../_editais/".$idConcurso.".pdf";
-        
-        # Verifica se ele existe
-        if(file_exists($arquivo)){
-            
-            # Monta o link
-            $link = new Link(NULL,$arquivo,"Exibe o Edital");
-            $link->set_imagem(PASTA_FIGURAS_GERAIS."ver.png",20,20);
-            $link->set_target("_blank");
-            $link->show();
-            
-        }else{
-            echo "-";
-        }
-    }
-    
-    #####################################################################################
 	
 	/**
 	 * Método get_nomeConcurso
@@ -184,23 +133,6 @@ class Concurso
              return $row[0];
 	}
 
-    ###########################################################
-    
-    public function exibeBotaoUpload($idConcurso){
-    /**
-     * Exibe um link para exibir o edital
-     * 
-     * @param $idconcurso integer NULL O id do plano
-     * 
-     * @syntax $plano->exibeLei($idPlano);
-     */
-        $link = new Link(NULL,"?fase=uploadEdital&id=".$idConcurso,"Upload o Edital");
-        $link->set_imagem(PASTA_FIGURAS."upload.png",20,20);
-        #$link->set_target("_blank");
-        $link->show();     
-       
-    }
-    
     ###########################################################
     
     public function exibeQuadroDocentesSemConcurso(){

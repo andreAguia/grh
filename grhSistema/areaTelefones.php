@@ -69,6 +69,7 @@ if($acesso){
                                       GER,
                                       nome,
                                       ramais,
+                                      idLotacao,
                                       email,
                                       idLotacao
                                  FROM tblotacao
@@ -94,9 +95,13 @@ if($acesso){
     $objeto->set_botaoIncluir(FALSE);
 
     # Parametros da tabela
-    $objeto->set_label(array("Diretoria","Gerência","Nome","Telefones","Email"));
-    $objeto->set_align(array("center","center","left","left","left"));
+    $objeto->set_label(array("Diretoria","Gerência","Nome","Telefones","Servidores","Email"));
+    $objeto->set_align(array("center","center","left","left","center","left"));
+    #$objeto->set_width(array(10,10,15,20,20,15));
     $objeto->set_funcao(array(NULL,NULL,NULL,"nl2br"));
+    
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao"));
     
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -148,6 +153,68 @@ if($acesso){
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################
+
+        case "listaServidoresAtivos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+             # Informa a origem
+            set_session('origem','cadastroLotacao.php?fase=listaServidoresAtivos&id='.$id);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar","?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar,"left");
+             
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&id=$id");            
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel,"right");
+
+            $menu->show();
+            
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Titulo
+            titulo('Servidores da Lotação: '.$pessoal->get_nomeLotacao($id));
+            br();
+            
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos');
+            $lista->set_situacao(1);
+            $lista->set_lotacao($id);            
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+    ################################################################
+			
+        case "relatorio" :    
+                # Lista de Servidores Ativos
+                $lista = new ListaServidores('Servidores Ativos');
+                $lista->set_situacao(1);				
+	        $lista->set_lotacao($id);   
+                $lista->showRelatorio();
+            break;
+    
+    ################################################################
+        
     }
         
     ################################################################

@@ -1,12 +1,13 @@
 <?php
 /**
- * Cadastro de MCF
+ * Pastas e Processos do Servidor
  *  
  * By Alat
  */
 
-# Reservado para o servidor logado
-$idUsuario = NULL;
+# Inicia as variáveis que receberão as sessions
+$idUsuario = NULL;              # Servidor logado
+$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -14,42 +15,19 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso){    
-    # Conecta ao Banco de Dados
-    $intra = new Intra();
-    $pessoal = new Pessoal();
-	
+if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
-    # Cria um array com os anos possíveis
-    $anoInicial = 1999;
-    $anoAtual = date('Y');
-    $ano = arrayPreenche($anoAtual,$anoInicial,"d");
-    
-    # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
-        # Grava no log a atividade
-        $atividade = "Visualizou o cadastro de MCF";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
-    }
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))){					# Se o parametro não vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    }else{ 
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
-    }
 
     # Começa uma nova página
     $page = new Page();
-    if($fase == "uploadMcf"){
+    if($fase == "upload"){
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -66,34 +44,35 @@ if($acesso){
 
     ################################################################
 
+    # Exibe os dados do Servidor
+    $objeto->set_rotinaExtra("get_DadosServidor");
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+
     # Nome do Modelo
-    $objeto->set_nome('Mapa de Controle de Frequência - MCF');
+    $objeto->set_nome('Cadastro de documentos na Pasta Funcional');
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('grh.php');
-    
-    # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
-    $objeto->set_parametroValue($parametro);
+    $objeto->set_voltarLista('servidorMenu.php?fase=pasta');
     
     # select da lista
-    $objeto->set_selectLista ('SELECT idMcf,
-                                      ano,
-                                      mes,
-                                      obs,
-                                      idMcf,
-                                      idMcf
-                                 FROM tbmcf
-                                WHERE ano LIKE "%'.$parametro.'%"
-                                   OR obs LIKE "%'.$parametro.'%" 
-                             ORDER BY ano desc,mes');
+    $objeto->set_selectLista('SELECT idPasta,
+                                     CASE tipo
+                                        WHEN 1 THEN "Pasta Funcional"
+                                        WHEN 2 THEN "Processo"
+                                        ELSE "--"
+                                      END,
+                                     descricao,
+                                     idPasta
+                                FROM tbpasta
+                          WHERE idServidor='.$idServidorPesquisado.'
+                       ORDER BY tipo, descricao');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT ano,
-                                     mes,
-                                     obs
-                                FROM tbmcf
-                               WHERE idMcf = '.$id);
+    $objeto->set_selectEdita('SELECT tipo,
+                                     descricao,
+                                     idServidor
+                                FROM tbpasta
+                               WHERE idPasta = '.$id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -102,22 +81,21 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Ano","Mês","Obs"," Ver"));
-    $objeto->set_width(array(5,10,10,50.15));
-    $objeto->set_align(array("center","center","center","left"));
-    $objeto->set_funcao(array(null,null,"get_nomeMes"));
-    
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"exibeMcf"));
+    $objeto->set_label(array("Id","Tipo","Descrição","Ver"));
+    $objeto->set_width(array(5,15,60.15));
+    $objeto->set_align(array("center","center","left","center"));
+        
+    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,"exibePasta"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbmcf');
+    $objeto->set_tabela('tbpasta');
 
     # Nome do campo id
-    $objeto->set_idCampo('idMcf');
+    $objeto->set_idCampo('idPasta');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -125,38 +103,38 @@ if($acesso){
     # Campos para o formulario
     $objeto->set_campos(array(
         array ('linha' => 1,
-               'nome' => 'ano',
-               'label' => 'Ano:',
+               'nome' => 'tipo',
+               'label' => 'Tipo:',
                'tipo' => 'combo',
-               'array' => $ano,
+               'array' => array(array(NULL,NULL),array(1,"Pasta Funcional"),array(2,"Processo")),
                'required' => TRUE,
                'autofocus' => TRUE,
                'col' => 3,
                'size' => 30),
-        array ('linha' => 1,
-               'nome' => 'mes',
-               'label' => 'Mes:',
-               'tipo' => 'combo',
-               'array' => $mes,
-               'required' => TRUE,
-               'col' => 3,
-               'size' => 30),
-        array ('linha' => 1,
-               'nome' => 'obs',
-               'label' => 'Obs:',
+        array ('linha' => 2,
+               'nome' => 'descricao',
+               'label' => 'Descrição:',
                'tipo' => 'texto',
+               'required' => TRUE,
+               'col' => 12,
+               'size' => 250),
+        array ('linha' => 3,
+               'nome' => 'idServidor',
+               'label' => 'Servidor:',
+               'tipo' => 'hidden',
+               'padrao' => $idServidorPesquisado,
                'col' => 6,
-               'size' => 80)));
+               'size' => 10)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
     
     # MCF
     if(!vazio($id)){
-        $botaoMcf = new Button("Upload MCF","?fase=uploadMcf&id=".$id);
-        $botaoMcf->set_title("Upload do MCF");
+        $botaoUpload = new Button("Upload","?fase=upload&id=".$id);
+        $botaoUpload->set_title("Upload do Documento");
 
-        $objeto->set_botaoEditarExtra(array($botaoMcf));
+        $objeto->set_botaoEditarExtra(array($botaoUpload));
     }
 
     ################################################################
@@ -174,14 +152,14 @@ if($acesso){
         
     ##################################################################
             
-            case "uploadMcf" :
+            case "upload" :
                 $grid = new Grid("center");
                 $grid->abreColuna(12);
                                 
                 # Botão voltar
                 botaoVoltar('?fase=editar&id='.$id);
                 
-                tituloTable("Upload de MCf"); 
+                tituloTable("Upload de Documento para Pasta Funcional"); 
                 
                 $grid->fechaColuna();
                 $grid->abreColuna(6);
@@ -192,7 +170,7 @@ if($acesso){
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
-                $pasta = "../../_mcf/";
+                $pasta = "../../_funcional/";
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
                     $upload = new UploadDoc($_FILES['doc'], $pasta,$id);
@@ -201,8 +179,8 @@ if($acesso){
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload do mcf";
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4);
+                    $atividade = "Fez o upload de documento para pasta funcional";
+                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4,$idServidorPesquisado);
                     
                     # Volta para o menu
                     loadPage("?fase=editar&id=.$id");

@@ -115,14 +115,35 @@ if($acesso){
         }
 
         $menu->show();
-        $grid->fechaColuna();
-        $grid->fechaGrid();
+        
+    }elseif($fase == "pasta"){  
+        
+        # Cria um menu
+        $menu = new MenuBar();
+        
+        $linkBotao1 = new Link("Voltar","?");
+        $linkBotao1->set_class('button');
+        $linkBotao1->set_title('Volta para a página anterior');
+        $linkBotao1->set_accessKey('V');
+        $menu->add_link($linkBotao1,"left");
+
+        # Pasta Funcional
+        $linkBotao3 = new Link("Editar","servidorPasta.php");
+        $linkBotao3->set_class('button'); 
+        $linkBotao3->set_title('Edita os documentod da pasta funcional desse servidor');
+        $menu->add_link($linkBotao3,"right");
+        
+        $menu->show();
+        
     }else{
         botaoVoltar("?");
     }
     
     # Exibe os dados do Servidor
     Grh::listaDadosServidor($idServidorPesquisado);
+    
+    $grid->fechaColuna();
+    $grid->fechaGrid();
     
     switch ($fase){	
         # Exibe o Menu Inicial
@@ -272,13 +293,85 @@ if($acesso){
                     p("Nenhum arquivo encontrado.","center");
                 }
                 
-                 #$callout->fecha();
-            $grid->fechaColuna();
-            $grid->abreColuna(8);
+                $grid->fechaColuna();
+                $grid->fechaGrid();    
+               
             }
             
             break;
             
+        ##################################################################	
+        
+        case "pasta2" :
+            # Pasta Funcional
+            
+                $grid = new Grid();
+                $grid->abreColuna(4);
+
+                # Título
+                tituloTable('Pasta Funcional');
+
+                br();
+            
+                # Define a pasta
+                $pasta = "../../_funcional/";
+                
+                # Pega os documentos
+                $select = "SELECT idPasta, descricao
+                             FROM tbpasta
+                            WHERE idServidor = $idServidorPesquisado
+                              AND tipo = 1";
+                
+                $dados = $pessoal->select($select);
+                $count = $pessoal->count($select);
+                
+                if($count > 0){
+                    
+                    # Inicia o menu
+                    $menu = new MenuGrafico(1);
+                    
+                    foreach($dados as $dd){
+                        
+                        # Monta o arquivo
+                        $arquivo = $pasta.$dd[0].".pdf";
+                        
+                        # Procura o arquivo
+                        if(file_exists($arquivo)){
+                            
+                            # Monta o botão
+                            $botao = new BotaoGrafico();
+                            $botao->set_label($dd[1]);
+                            $botao->set_url($arquivo);
+                            $botao->set_target('_blank');
+                            $botao->set_imagem(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
+                            $menu->add_item($botao);
+                        }
+                        
+                    }
+                    
+                    $menu->show();
+                    
+                }else{
+                    p("Nenhum arquivo encontrado.","center");
+                }
+                
+                
+                $grid->fechaColuna();
+                $grid->abreColuna(8);
+
+                #############################################################
+
+                tituloTable('Processos');
+                br();
+                
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();    
+                
+            
+            
+            break;
+
         ##################################################################
             
             case "timeline" :

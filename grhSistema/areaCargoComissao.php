@@ -109,9 +109,9 @@ if($acesso){
                                   descricao,
                                   simbolo,
                                   valSal
-                                  FROM tbtipocomissao
-                                 WHERE ativo = TRUE
-                              ORDER BY simbolo, descricao";
+                             FROM tbtipocomissao
+                            WHERE ativo = TRUE
+                         ORDER BY simbolo, descricao";
                 $row = $pessoal->select($select);
 
                 # Inicia o Menu de Cargos
@@ -207,15 +207,15 @@ if($acesso){
 
             if($parametroDescricao <> "Todos"){
                     $select .= " AND tbcomissao.idDescricaoComissao = $parametroDescricao";
+                            
             }
 
             if($parametroStatus == "Vigente"){
-                $select .= " AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)";
+                $select .= " AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                        ORDER BY tbpessoa.nome, tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
+            }else{
+                $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
             }
-
-            $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
-
-            #echo $select;
 
             $result = $pessoal->select($select);
             $label = array('Id / Matrícula','Nome','Nomeação','Exoneração','Descrição','Perfil');

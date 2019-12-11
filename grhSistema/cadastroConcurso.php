@@ -592,7 +592,8 @@ if($acesso){
         
     ################################################################        
         
-        case "excluir" :	
+        case "excluir" :
+            $objeto->set_linkListar('?');
         case "gravar" :
             $objeto->$fase($id);
             break;

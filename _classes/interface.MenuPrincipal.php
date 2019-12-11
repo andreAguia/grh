@@ -474,6 +474,13 @@ class MenuPrincipal{
         #$botao->set_accesskey('S');
         $menu->add_item($botao);
         
+        $botao = new BotaoGrafico();
+        $botao->set_label('MCF');
+        $botao->set_url("cadastroMcf.php");
+        $botao->set_imagem(PASTA_FIGURAS.'mcf.jpg',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de MCF');
+        $menu->add_item($botao);
+        
         if(Verifica::acesso($this->idUsuario,1)){
             $botao = new BotaoGrafico();
             $botao->set_label('Recadastramento');

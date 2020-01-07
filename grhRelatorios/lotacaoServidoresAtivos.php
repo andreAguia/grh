@@ -43,9 +43,19 @@ if($acesso)
                                    LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                WHERE tbservidor.situacao = 1
                  AND tbservidor.idPerfil <> 10
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                 AND idlotacao="'.$lotacao.'"
-            ORDER BY lotacao, tbpessoa.nome';
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    
+    # lotacao
+    if(!is_null($lotacao)){
+        # Verifica se o que veio é numérico
+        if(is_numeric($lotacao)){
+            $select .= ' AND (tblotacao.idlotacao =  "'.$lotacao.'")'; 
+        }else{ # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "'.$lotacao.'")'; 
+        }
+    }
+    
+    $select .= ' ORDER BY lotacao, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
@@ -63,10 +73,12 @@ if($acesso)
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);
     
-    $listaLotacao = $servidor->select('SELECT idlotacao, concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
-                                          FROM tblotacao
-                                       WHERE tblotacao.ativo  
-                                      ORDER BY ativo desc,lotacao');
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
     array_unshift($listaLotacao,array('*','-- Selecione a Lotação --'));
     
     $relatorio->set_formCampos(array(

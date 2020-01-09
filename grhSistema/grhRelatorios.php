@@ -430,7 +430,7 @@ if($acesso){
             $menu = new Menu();
             $menu->add_item('titulo','Outros');    
             $menu->add_item('linkWindow','Relatório de Servidores Com Nacionalidade, Documentos e Telefone','../grhRelatorios/relatorioOutro1.php');
-
+            
             $menu->show();
             break;
         
@@ -452,6 +452,8 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Com Data de Nascimento e Sexo','../grhRelatorios/professorIdadeSexo.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Lotaçao','../grhRelatorios/professorporLotacao.php'); 
+            $menu->add_item('linkWindow','Relatório da PROPPG','../grhRelatorios/professoresPROPPG.php');
+            
             $menu->show();
             break;
         

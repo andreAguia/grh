@@ -418,6 +418,13 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
+        $botao->set_label('Licença Sem Vencimentos');
+        $botao->set_url('areaLicencaSemVencimentos.php');
+        $botao->set_imagem(PASTA_FIGURAS.'semVencimento.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Formação');
         $botao->set_url('areaFormacao.php');
         $botao->set_imagem(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);

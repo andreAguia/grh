@@ -26,7 +26,8 @@ class ListaServidores{
     private $permiteEditar = TRUE;          # Indica se terá botão para acessar informções dos servidores
     
     # Outros
-    private $totReg = 0;     # total de registros encontrados
+    private $totReg = 0;        # Total de registros encontrados
+    private $detalhado = TRUE;  # Exibe detalhes 
     
     # Parâmetros da paginação da listagem
     private $paginacao = FALSE;			# Flag que indica se terá ou não paginação na lista
@@ -407,6 +408,13 @@ class ListaServidores{
         # Conecta com o banco de dados
         $servidor = new Pessoal();
         
+        # Verifica se é detalhado
+        if($this->detalhado){
+            $situacao = "get_situacao";
+        }else{
+            $situacao = "get_situacaoRel";
+        }
+        
         # Dados da Tabela
         if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
             $label = array("IDFuncional","Matrícula","Servidor","Cargo - Função (Comissão)","Lotação","Perfil","Admissão","Situação");
@@ -416,9 +424,9 @@ class ListaServidores{
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center","center","left","left","left");
         if(($this->situacao == 1) AND ($this->situacaoSinal == "=")){
-            $function = array ("trataNulo","dv",NULL,NULL,NULL,NULL,"date_to_php","get_situacao");
+            $function = array ("trataNulo","dv",NULL,NULL,NULL,NULL,"date_to_php",$situacao);
         }else{
-            $function = array ("trataNulo","dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php","get_situacao");
+            $function = array ("trataNulo","dv",NULL,NULL,NULL,NULL,"date_to_php","date_to_php",$situacao);
         }            
         $classe = array(NULL,NULL,NULL,"pessoal","pessoal","pessoal");
         $metodo = array(NULL,NULL,NULL,"get_cargo","get_lotacao","get_perfil");

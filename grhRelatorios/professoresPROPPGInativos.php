@@ -37,7 +37,7 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                    
                                      JOIN tbdocumentacao USING (idPessoa)
                                      JOIN tbpais ON (tbpessoa.paisOrigem = tbpais.idPais)
-               WHERE tbservidor.situacao = 1
+               WHERE tbservidor.situacao <> 1
                  AND tbservidor.idPerfil <> 10
                  AND (idCargo = 128 OR idCargo = 129)
             ORDER BY tbpessoa.nome';
@@ -45,7 +45,7 @@ if($acesso)
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Professores Ativos');
+    $relatorio->set_titulo('Relatório de Professores Inativos (Não Ativos)');
     $relatorio->set_subtitulo('Ordenados por Nome');
     $relatorio->set_label(array('CPF','Nome','Emails','Nascimento','Pais de Origem','Admissão','Situação'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));

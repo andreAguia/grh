@@ -452,7 +452,8 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Nacionalidade','../grhRelatorios/professorNacionalidade.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Com Data de Nascimento e Sexo','../grhRelatorios/professorIdadeSexo.php'); 
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Lotaçao','../grhRelatorios/professorporLotacao.php'); 
-            $menu->add_item('linkWindow','Relatório da PROPPG','../grhRelatorios/professoresPROPPG.php');
+            $menu->add_item('linkWindow','Relatório da Professores Ativos - A pedido da PROPPG','../grhRelatorios/professoresPROPPG.php');
+            $menu->add_item('linkWindow','Relatório da Professores Não-Ativos - A pedido da PROPPG','../grhRelatorios/professoresPROPPGInativos.php');
             
             $menu->show();
             break;

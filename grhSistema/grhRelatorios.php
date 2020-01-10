@@ -338,6 +338,7 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Aniversariantes - Por Lotação','../grhRelatorios/lotacaoAniversariantes.php');
             $menu->add_item('linkWindow','Relatório de Servidores Ativos - Por Lotação','../grhRelatorios/lotacaoServidoresAtivos.php');
             $menu->add_item('linkWindow','Relatório de Servidores Ativos - Pro-Reitorias','../grhRelatorios/lotacaoServidoresAtivosProReitorias.php');
+            $menu->add_item('linkWindow','Relatório de Estatutários Inativos - Por Lotação','../grhRelatorios/lotacaoEstatutariosInativos.php');
             #$menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
             $menu->show();
             break;    
@@ -398,7 +399,8 @@ if($acesso){
             $menu->add_item('linkWindow','Estatutários Ativos com Assinatura','../grhRelatorios/estatutariosAtivosAssinatura.php');
             $menu->add_item('linkWindow','Estatutários Agrupados pela Lotação','../grhRelatorios/estatutariosLotacao.php'); 
             $menu->add_item('linkWindow','Estatutários Agrupados pelo Cargo','../grhRelatorios/estatutariosCargo.php'); 
-            $menu->add_item('linkWindow','Estatutários Com CPF e Data de Nascimento','../grhRelatorios/estatutariosCpfNascimento.php'); 
+            $menu->add_item('linkWindow','Estatutários Com CPF e Data de Nascimento','../grhRelatorios/estatutariosCpfNascimento.php');
+            $menu->add_item('linkWindow','Estatutários Inativos Por Lotação','../grhRelatorios/lotacaoEstatutariosInativos.php');
             
             $menu->show();
             break;  

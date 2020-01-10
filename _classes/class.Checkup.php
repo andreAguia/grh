@@ -3674,4 +3674,86 @@ class Checkup {
     }
 
     ##########################################################
+    
+     /**
+     * Método get_servidorComTerminoLicencaSemVencimentosMenos90Dias
+     * 
+     * Servidor Com Licença Sem Vencimentos terminando em menos de 90 dias
+     */
+    
+    public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = NULL){
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 2;
+        
+        $servidor = new Pessoal();
+        $metodo = explode(":",__METHOD__);
+        
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor,
+                          idServidor,
+                          CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                          DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY),
+                          TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY))
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tblicenca USING (idServidor)
+                                     LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                    WHERE tblicenca.dtInicial IS NOT NULL
+                      AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY)) >= 0 
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY)) <=90';
+                if(!is_null($idServidor)){
+                    $select .= ' AND idServidor = "'.$idServidor.'"';
+                }                
+        $select .= ' ORDER BY 7 desc';                 
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $titulo = 'Licença Sem Vencimentos terminando em menos de 90 dias.';
+        $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Lotação','Licença','Data Final','Dias Faltantes'];
+        $align = ['center','center','left','center','left','left','left'];
+        $classe = [NULL,NULL,NULL,NULL,"Pessoal","Pessoal"];
+        $rotina = [NULL,NULL,NULL,NULL,"get_cargo","get_lotacao"];
+        $funcao = [NULL,"dv",NULL,NULL,NULL,NULL,NULL,"date_to_php"];
+        $linkEditar = 'servidor.php?fase=editar&id=';
+        
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($linkEditar);
+        $tabela->set_idCampo('idServidor');
+       
+        if($count > 0){
+            if(!is_null($idServidor)){
+                return $titulo;
+            }elseif($this->lista){
+                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                $tabela->show();
+                set_session('alerta',$metodo[2]);
+            }else{
+                $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
+                return $retorna;
+            }}elseif($this->lista){
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+                p('Nenhum item encontrado !!','center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
 }

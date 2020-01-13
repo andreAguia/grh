@@ -895,5 +895,85 @@ function get_nomeSimples($nome){
         }
     }
 
-##########################################################
+###########################################################
+
+function exibeDocumentacaoLicenca($idTipoLicenca){
+/**
+ * Exibe um quadro com a documentação e a observação desse tipo de licença
+ * 
+ * @note Usado na rotina de licença 
+ * 
+ * @syntax exibeDocumentacaoLicenca($idTpLicenca);
+ * 
+ * @param $idTipoLicenca integer NULL o id do tipo de licença
+ */
+    
+    # Conecta 
+    $pessoal = new Pessoal();
+    
+    # Pega os dados desse idClasse
+    $select = "SELECT documentacao,
+                      obs,
+                      nome
+                 FROM tbtipolicenca
+                 WHERE idTpLicenca = $idTipoLicenca";
+
+    $row = $pessoal->select($select,FALSE);
+    
+    
+    tituloTable($row[2]);
+    $painel = new Callout();
+    $painel->abre();
+    
+        p("Documentação Necessária",'f14',"left");    
+        p(trataNulo($row[0]),'f13',"left");
+            
+        if(!vazio($row[1])){
+            p("Obs",'f14',"left");
+            p(trataNulo($row[1]),'f13',"left");
+        }
+    
+    $painel->fecha();
+    return;
+}
+
+###########################################################
+
+function exibeBotaoDocumentacaoLicenca($idTipoLicenca){
+/**
+ * Exibe um quadro com a documentação e a observação desse tipo de licença
+ * 
+ * @note Usado na rotina de licença 
+ * 
+ * @syntax exibeDocumentacaoLicenca($idTpLicenca);
+ * 
+ * @param $idTipoLicenca integer NULL o id do tipo de licença
+ */
+    
+    # Conecta 
+    $pessoal = new Pessoal();
+    
+    # Pega os dados desse idClasse
+    $select = "SELECT documentacao,
+                      obs
+                 FROM tbtipolicenca
+                 WHERE idTpLicenca = $idTipoLicenca";
+
+    $row = $pessoal->select($select,FALSE);    
+    
+    if(vazio($row[0]) AND (vazio($row[1]))){
+        echo "---";
+    }else{
+        # Botão
+        $botao = new BotaoGrafico();
+        $botao->set_label('');
+        $botao->set_title("Documentação Necessária:&#013;".$row[0]);
+        $botao->set_url("?fase=documentacao&idTpLicenca=".$idTipoLicenca);       
+        $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',20,20);
+        $botao->show();
+    }
+    return;
+}
+
+##################################################################
     

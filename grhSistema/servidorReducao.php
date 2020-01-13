@@ -439,7 +439,7 @@ if($acesso){
     switch ($fase){
         case "" :
         case "listar" :
-            # Divide a página em 2 colunas
+            # Divide a página em 3 colunas
             $grid = new Grid();
             
         #########################################################################################################

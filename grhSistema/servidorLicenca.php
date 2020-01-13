@@ -25,6 +25,9 @@ if($acesso){
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    # pega o idTpLicenca (se tiver)
+    $idTpLicenca = soNumeros(get('idTpLicenca'));
+    
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))){					# Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
@@ -223,8 +226,8 @@ if($acesso){
 
         # Exibe os dados do Servidor
         $objeto->set_rotinaExtra("get_DadosServidor");
-        $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
-
+        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+        
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome('Afastamentos e Licenças');
 
@@ -255,6 +258,7 @@ if($acesso){
 
         # select da lista
         $selectLicença = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                                  tblicenca.idTpLicenca,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
@@ -273,7 +277,7 @@ if($acesso){
             $selectLicença .= ')
                                UNION
                                (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                                       "",
+                                       6,"",
                                        dtInicial,
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -328,10 +332,10 @@ if($acesso){
         $objeto->set_excluirCondicional('?fase=excluir',$stringComparacao,0,"<>");
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença ou Afastamento","Alta","Inicio","Dias","Término","Processo","Publicação"));
-        #$objeto->set_width(array(15,5,5,8,5,8,14,10,10,10));	
+        $objeto->set_label(array("Licença ou Afastamento","Doc.","Alta","Inicio","Dias","Término","Processo","Publicação"));
+        $objeto->set_width(array(30,5,5,10,5,10,15,5));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+        $objeto->set_funcao(array(NULL,"exibeBotaoDocumentacaoLicenca",NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
 
@@ -479,6 +483,17 @@ if($acesso){
             
             case "gravar" :		
                 $objeto->gravar($id,"servidorLicencaExtra.php"); 			
+                break;
+            
+            case "documentacao" :
+                $grid = new Grid();
+                $grid->abreColuna(12);
+    
+                botaoVoltar("?");                
+                exibeDocumentacaoLicenca($idTpLicenca);
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
                 break;
         }
     }

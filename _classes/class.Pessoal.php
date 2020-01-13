@@ -5175,6 +5175,27 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_idTipoLicenca
+     * Informa o id do Tipo de uma licenca
+     * 
+     * @param   string $idLicenca
+     */
+
+    public function get_idTipoLicenca($idLicenca){
+                
+        $select = 'SELECT idTpLicenca
+                     FROM tblicenca
+                    WHERE idLicenca = '.$idLicenca;
+
+        $row = parent::select($select,FALSE);
+
+        return $row[0];
+    }
+
+    ###########################################################
+    
     
     public function exibeMcf($id){
     /**

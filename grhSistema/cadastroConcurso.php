@@ -228,7 +228,7 @@ if($acesso){
                'tipo' => 'textarea',
                'size' => array(80,5))));
 
-    # idUsuário para o Log
+    # idUsuário para o LogLicença sem vencimentosLicença sem vencimentos
     $objeto->set_idUsuario($idUsuario);
     
     $objeto->set_botaoVoltarLista(FALSE);

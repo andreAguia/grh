@@ -173,8 +173,7 @@ class Ci{
         
         # Prezado
         p("Prezado(a) Senhor(a)",'pCiNum');
-        br();
-
+        
         # Texto
         foreach($this->texto as $textoCi){
             p($textoCi,'pCi');
@@ -183,7 +182,7 @@ class Ci{
 
         # Atenciosamente
         p('Atenciosamente,','pCiNum');
-        br(3);
+        br(2);
 
         # Assinatura
         #p('____________________________________________________','pCiAssinatura');

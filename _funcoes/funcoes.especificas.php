@@ -913,7 +913,6 @@ function exibeDocumentacaoLicenca($idTipoLicenca){
     
     # Pega os dados desse idClasse
     $select = "SELECT documentacao,
-                      obs,
                       nome
                  FROM tbtipolicenca
                  WHERE idTpLicenca = $idTipoLicenca";
@@ -921,17 +920,12 @@ function exibeDocumentacaoLicenca($idTipoLicenca){
     $row = $pessoal->select($select,FALSE);
     
     
-    tituloTable($row[2]);
+    tituloTable($row[1]);
     $painel = new Callout();
     $painel->abre();
     
         p("Documentação Necessária",'f14',"left");    
         p(trataNulo($row[0]),'f13',"left");
-            
-        if(!vazio($row[1])){
-            p("Obs",'f14',"left");
-            p(trataNulo($row[1]),'f13',"left");
-        }
     
     $painel->fecha();
     return;
@@ -954,14 +948,13 @@ function exibeBotaoDocumentacaoLicenca($idTipoLicenca){
     $pessoal = new Pessoal();
     
     # Pega os dados desse idClasse
-    $select = "SELECT documentacao,
-                      obs
+    $select = "SELECT documentacao
                  FROM tbtipolicenca
                  WHERE idTpLicenca = $idTipoLicenca";
 
     $row = $pessoal->select($select,FALSE);    
     
-    if(vazio($row[0]) AND (vazio($row[1]))){
+    if(vazio($row[0])){
         echo "---";
     }else{
         # Botão

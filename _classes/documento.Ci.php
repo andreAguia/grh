@@ -172,7 +172,7 @@ class Ci{
         br();
         
         # Prezado
-        p("Prezado Servidor(a)",'pCiNum');
+        p("Prezado(a) Senhor(a)",'pCiNum');
         br();
 
         # Texto
@@ -182,7 +182,7 @@ class Ci{
         br();
 
         # Atenciosamente
-        p('Atenciosamente','pCiNum');
+        p('Atenciosamente,','pCiNum');
         br(3);
 
         # Assinatura

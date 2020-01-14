@@ -913,6 +913,7 @@ function exibeDocumentacaoLicenca($idTipoLicenca){
     
     # Pega os dados desse idClasse
     $select = "SELECT documentacao,
+                      obs,
                       nome
                  FROM tbtipolicenca
                  WHERE idTpLicenca = $idTipoLicenca";
@@ -920,14 +921,28 @@ function exibeDocumentacaoLicenca($idTipoLicenca){
     $row = $pessoal->select($select,FALSE);
     
     
-    tituloTable($row[1]);
+    p($row[2],"f22","center");
+    
+    # Div onde vai exibir o procedimento
+    $div = new Div("divNota");
+    $div->abre();
+    
+    tituloTable("Documentação Necessária");
     $painel = new Callout();
     $painel->abre();
     
-        p("Documentação Necessária",'f14',"left");    
-        p(trataNulo($row[0]),'f13',"left");
+        echo "<pre>".trataNulo($row[0])."</pre>";
     
     $painel->fecha();
+    
+    tituloTable("Observação");
+    $painel = new Callout();
+    $painel->abre();
+    
+        echo "<pre>".trataNulo($row[1])."</pre>";
+    
+    $painel->fecha();
+    $div->fecha();
     return;
 }
 
@@ -960,7 +975,7 @@ function exibeBotaoDocumentacaoLicenca($idTipoLicenca){
         # Botão
         $botao = new BotaoGrafico();
         $botao->set_label('');
-        $botao->set_title("Documentação Necessária:&#013;".$row[0]);
+        $botao->set_title($row[0]);
         $botao->set_url("?fase=documentacao&idTpLicenca=".$idTipoLicenca);       
         $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',20,20);
         $botao->show();

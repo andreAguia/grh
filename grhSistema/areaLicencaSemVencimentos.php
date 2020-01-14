@@ -33,6 +33,9 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # pega o idTpLicenca (se tiver)
+    $idTpLicenca = soNumeros(get('idTpLicenca'));
 
     # Pega os parâmetros
     #$parametroAno = post('parametroAno',get_session('parametroAno',date('Y')));
@@ -101,7 +104,7 @@ if($acesso){
 
         ################################################################
 
-            # Exibe a tabela de Servidores afastados
+            # Exibe a tabela de Servidores
             $afast = new LicencaSemVencimentos();
             $afast->set_linkEditar('?fase=editaServidor');
             $afast->exibeTabela();
@@ -133,6 +136,19 @@ if($acesso){
             $afast = new LicencaSemVencimentos();
             $afast->exibeRelatorio();
             break;
+        
+    ################################################################  
+        
+        case "documentacao" :
+                $grid = new Grid();
+                $grid->abreColuna(12);
+    
+                botaoVoltar("?");                
+                exibeDocumentacaoLicenca($idTpLicenca);
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
     }
 
     $page->terminaPagina();

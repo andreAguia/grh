@@ -54,6 +54,7 @@ class LicencaSemVencimentos{
                          tblicenca.numDias,
                          ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1) as df,
                          CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                         tblicenca.idTpLicenca,
                          tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                     LEFT JOIN tblicenca USING (idServidor)
@@ -73,9 +74,9 @@ class LicencaSemVencimentos{
        $tabela = new Tabela();
        $tabela->set_titulo($titulo);
        $tabela->set_conteudo($result);
-       $tabela->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Descrição'));
+       $tabela->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Descrição','Doc.'));
        $tabela->set_align(array('center','left','center','center','center','left'));
-       $tabela->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php"));
+       $tabela->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php",NULL,"exibeBotaoDocumentacaoLicenca"));
        $tabela->set_idCampo('idServidor');
        $tabela->set_editar($this->linkEditar);
 

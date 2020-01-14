@@ -286,7 +286,7 @@ if($acesso){
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
-                              ORDER BY 3 desc';
+                              ORDER BY 4 desc';
         }
         
                 

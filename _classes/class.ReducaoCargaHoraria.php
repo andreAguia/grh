@@ -480,29 +480,39 @@ class ReducaoCargaHoraria{
         # Nome do botão de início
         $nomeBotaoInicio = "CI Início";
         if(!is_null($ciInicio)){
-            $nomeBotaoInicio = "CI Início<br/>n° ".$ciInicio;
+            $nomeBotaoInicio = "CI Início n° ".$ciInicio;
         }
         
         # Nome do botão de 90 Dias
         $nomeBotao90 = "CI 90 Dias";
         if(!is_null($ci90)){
-            $nomeBotao90 = "CI 90 Dias<br/>n° ".$ci90;
+            $nomeBotao90 = "CI 90 Dias n° ".$ci90;
         }
         
         # Nome do botão de Término
         $nomeBotaotermino = "CI Término";
         if(!is_null($ciTermino)){
-            $nomeBotaotermino = "CI Término<br/>n° ".$ciTermino;
+            $nomeBotaotermino = "CI Término n° ".$ciTermino;
         }
         
         # Nome do botão do Ato
         $nomeBotaoAto = "Ato do Reitor";
         if(!is_null($atoReitor)){
-            $nomeBotaoAto = "Ato do Reitor<br/>".date_to_php($atoReitor);
+            $nomeBotaoAto = "Ato do Reitor".date_to_php($atoReitor);
         }
         
         # Retorno
         if($resultado == 1){
+            
+            $menu = new Menu("menuDocumentos");
+            
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReducao);
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReducao);  
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReducao);
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoAto,'?fase=atoReitorForm&id='.$idReducao);
+
+            $menu->show();
+            /*
             
             $tamanhoImage = 20;
             if(($dias >= 0) AND($dias <= 90)){
@@ -546,6 +556,8 @@ class ReducaoCargaHoraria{
             $menu->add_item($botao);
             
             $menu->show();
+             * 
+             */
             
         }
     }

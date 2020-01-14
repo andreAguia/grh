@@ -126,7 +126,7 @@ if($acesso){
             set_session('origem','areaLicencaSemVencimentos.php');
 
             # Carrega a página específica
-            loadPage('servidorMenu.php');
+            loadPage('servidorLicenca.php');
             break;
 
     ################################################################

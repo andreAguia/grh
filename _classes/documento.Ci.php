@@ -168,7 +168,11 @@ class Ci{
         br();
 
         # Assunto
-        p("Assunto: ".$this->assunto,'pCi');
+        p("Assunto: ".$this->assunto,'pCiNum');
+        br();
+        
+        # Prezado
+        p("Prezado Servidor(a)",'pCiNum');
         br();
 
         # Texto
@@ -178,7 +182,7 @@ class Ci{
         br();
 
         # Atenciosamente
-        p('Atenciosamente','pCi');
+        p('Atenciosamente','pCiNum');
         br(3);
 
         # Assinatura

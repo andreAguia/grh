@@ -133,7 +133,7 @@ if($acesso){
         if(vazio($origem)){
             $voltar = 'servidorMenu.php';
         }else{
-            $voltar = 'areaReducao.php';
+            $voltar = $origem;
         }
         
         # Cria um menu

@@ -56,9 +56,9 @@ if($acesso){
                 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o despacho para o procololo de abertura de processo de $assunto";
+    $atividades = "Visualizou o despacho para o procololo de abertura de processo de $postAssunto";
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);                
+    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",NULL,$tipoLog,$idServidorPesquisado);                
     
     $page->terminaPagina();
 }

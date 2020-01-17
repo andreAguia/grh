@@ -1295,39 +1295,50 @@ if($acesso){
             # Dados do Servidor
             get_DadosServidor($idServidorPesquisado);
             
-            # Limita a tela
-            $grid = new Grid("center");
-            $grid->abreColuna(10);
-            br(3);
+            # Pega os dados da redução
+            $dados = $reducao->get_dados($id);
+            $tipo = $dados["tipo"];
             
-            # Título
-            titulo("Despacho Inicial");
-            $painel = new Callout();
-            $painel->abre();
+            # Formulário somente para tipo 2
+            if($tipo == 2){
             
-            # Monta o formulário
-            $form = new Form('?fase=despachoPericiaFormValida&id='.$id);
+                # Limita a tela
+                $grid = new Grid("center");
+                $grid->abreColuna(10);
+                br(3);
 
-            # folha da publicação no processo 
-            $controle = new Input('folha','texto','Pág. do Processo da Cópia da Publicação:',1);
-            $controle->set_size(10);
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_autofocus(TRUE);
-            $controle->set_title('A página do processo da cópia da publicação.');
-            $form->add_item($controle);
-            
-            # submit
-            $controle = new Input('imprimir','submit');
-            $controle->set_valor('Imprimir');
-            $controle->set_linha(5);
-            $controle->set_col(2);
-            $form->add_item($controle);
+                # Título
+                titulo("Despacho Para Perícia Médica");
+                $painel = new Callout();
+                $painel->abre();
 
-            $form->show();
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+                # Monta o formulário
+                $form = new Form('?fase=despachoPericiaFormValida&id='.$id);
+
+                # folha da publicação no processo 
+                $controle = new Input('folha','texto','Pág. do Processo da Cópia da Publicação:',1);
+                $controle->set_size(10);
+                $controle->set_linha(1);
+                $controle->set_col(3);
+                $controle->set_autofocus(TRUE);
+                $controle->set_title('A página do processo da cópia da publicação.');
+                $form->add_item($controle);
+
+                # submit
+                $controle = new Input('imprimir','submit');
+                $controle->set_valor('Imprimir');
+                $controle->set_linha(5);
+                $controle->set_col(2);
+                $form->add_item($controle);
+
+                $form->show();
+
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+            }else{
+                loadPage("../grhRelatorios/reducaoDespachoPericia.php?id=$id","_blank");
+                loadPage("?");
+            }
             break;
         
         case "despachoPericiaFormValida" :

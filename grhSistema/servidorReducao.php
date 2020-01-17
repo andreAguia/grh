@@ -1283,6 +1283,77 @@ if($acesso){
                 loadPage("?");
             }
             break;
+            
+    ################################################################################################################
+    
+        # Despacho para Perícia
+        case "despachoPerícia" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+            
+            # Título
+            titulo("Despacho Inicial");
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Monta o formulário
+            $form = new Form('?fase=despachoPericiaFormValida&id='.$id);
+
+            # folha da publicação no processo 
+            $controle = new Input('folha','texto','Pág. do Processo da Cópia da Publicação:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_autofocus(TRUE);
+            $controle->set_title('A página do processo da cópia da publicação.');
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "despachoPericiaFormValida" :
+                        
+            # Pega os dados Digitados
+            $folha = vazioPraNulo(post("folha"));
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da folha
+            if(vazio($folha)){
+                $msgErro.='Deve digitar o número da folha!\n';
+                $erro = 1;
+            } 
+            
+            if($erro == 0){
+                loadPage("../grhRelatorios/reducaoDespachoPericia.php?folha=$folha&id=$id","_blank");
+                loadPage("?");
+            }else{
+                alert($msgErro);
+                back(1);
+            }    
+            break;
+                
         
 ################################################################################################################
             

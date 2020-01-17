@@ -506,6 +506,10 @@ class ReducaoCargaHoraria{
             
             $menu = new Menu("menuDocumentos");
             
+            $menu->add_item('linkWindow',"\u{1F5A8} Despacho Inicial","../grhRelatorios/reducaoDespachoInicial.php?id=$idReducao");
+            $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
+            $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Reitoria","../grhRelatorios/reducaoDespachoReitoria.php");
+            $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Publicação","../grhRelatorios/reducaoDespachoPublicacao.php");
             $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReducao);
             $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReducao);  
             $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReducao);

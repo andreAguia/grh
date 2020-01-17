@@ -628,12 +628,15 @@ tr#totalVagas{
  }
 
  div#divNota {
-     font-size: 12px;
+     font-size: 14px;
+     white-space: pre-wrap;
+     padding: 10px;
  }
 
  div#editarProcedimento{
      position: relative;
      float: right;
+     white-space:normal;
  }
   
 /*******************************************

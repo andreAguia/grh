@@ -931,7 +931,7 @@ function exibeDocumentacaoLicenca($idTipoLicenca){
     $painel = new Callout();
     $painel->abre();
     
-        echo "<pre>".trataNulo($row[0])."</pre>";
+        p(trataNulo($row[0]));
     
     $painel->fecha();
     
@@ -939,7 +939,7 @@ function exibeDocumentacaoLicenca($idTipoLicenca){
     $painel = new Callout();
     $painel->abre();
     
-        echo "<pre>".trataNulo($row[1])."</pre>";
+        p(trataNulo($row[1]));
     
     $painel->fecha();
     $div->fecha();

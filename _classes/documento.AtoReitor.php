@@ -75,10 +75,15 @@ class AtoReitor{
       * Exibe o rodapé
       */
     
-    private function rodape(){
-        br($this->saltoRodape);
-        hr();
-        p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+    private function rodape(){        
+    
+        $div = new Div('rodape');
+        $div->abre();
+
+            hr();
+            p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+            
+        $div ->fecha();
     }
     
     ###########################################################
@@ -128,9 +133,9 @@ class AtoReitor{
         #p('____________________________________________________','pCiAssinatura');
         p('<b>'.strtoupper($this->reitor).'<br/>REITOR</b>','pCiAssinatura');
 
-        $this->rodape();
-        
         $grid->fechaColuna();
         $grid->fechaGrid();
+        
+        $this->rodape();
     }
 }

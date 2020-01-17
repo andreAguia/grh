@@ -31,7 +31,7 @@ if($acesso){
     $page->iniciaPagina();
     
     $destino = "À Reitoria,";        
-    $texto[] = "Com vistasao Magnífico Reitor para assinatura do Ato.";
+    $texto[] = "Com vistas ao Magnífico Reitor para assinatura do Ato.";
     
     # despacho
     $despacho = new Despacho();

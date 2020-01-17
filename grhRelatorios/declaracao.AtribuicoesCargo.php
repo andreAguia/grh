@@ -65,7 +65,7 @@ if($acesso)
     
     $dec->set_texto("Sendo expressão da verdade, subscrevemo-nos.");
     
-    #$dec->set_saltoRodape(10);
+    $dec->set_rodapeSoUntimaPag(TRUE);
     $dec->show();
     
     # Grava o log da visualização do relatório

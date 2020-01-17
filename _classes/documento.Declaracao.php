@@ -25,6 +25,8 @@ class Declaracao{
     private $aviso = NULL;
     private $carimboCnpj = FALSE;
     
+    private $rodapeSoUntimaPag = FALSE;
+    
     ###########################################################
     
     public function __construct(){
@@ -103,10 +105,23 @@ class Declaracao{
       */
     
     private function rodape(){
-        br($this->saltoRodape);
-        hr();
-        p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+    
+        if($this->rodapeSoUntimaPag){
+            br($this->saltoRodape);
+            hr();
+            p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+        }else{
+            $div = new Div('rodape');
+            $div->abre();
+
+                hr();
+                p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+
+            $div ->fecha();
+        }
     }
+    
+    
     
     ###########################################################
     
@@ -172,9 +187,9 @@ class Declaracao{
         #p('____________________________________________________','pCiAssinatura');
         p($this->origemNome.'<br/>'.$this->origemDescricao.'<br/>Id Funcional n° '.$this->origemIdFuncional,'pCiAssinatura');
 
-        $this->rodape();
-        
         $grid->fechaColuna();
         $grid->fechaGrid();
+        
+        $this->rodape();
     }
 }

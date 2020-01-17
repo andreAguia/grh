@@ -49,11 +49,25 @@ if($acesso){
     $destino = "À SE/SPM,";
     $data = date("d/m/Y");
     
+    # Sexo
+    $sexo = $pessoal->get_sexo($idServidorPesquisado);
+    if($sexo == "Masculino"){
+        $detalhe = "do servidor";
+    }else{
+        $detalhe = "da servidora";
+    }
+    
     # Tipo
     if($tipo == 2){
-        $tipo = " de Renovação";
+        $texto[] = "Encaminhamos a solicitação de Renovação da Redução de Carga Horária $detalhe <b>".strtoupper($nomeServidor)."</b>,"
+                 . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
+    
+        $texto[] = "Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em $dtTermino, conforme publicação no DOERJ de $dtPublicacao, anexada às fls. $folha do p.p.";
+
+        $texto[] = "Desta forma, encaminhamos o presente para providências cabíveis.";
     }else{
-        $tipo = NULL;
+        $texto[] = "Encaminhamos a solicitação da Redução de Carga Horária $detalhe <b>".strtoupper($nomeServidor)."</b>,"
+                 . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
     }
     
     # Sexo
@@ -64,12 +78,7 @@ if($acesso){
         $detalhe = "da servidora";
     }
         
-    $texto[] = "Encaminhamos a solicitação$tipo da Redução de Carga Horária $detalhe <b>".strtoupper($nomeServidor)."</b>,"
-                 . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
     
-    $texto[] = "Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em $dtTermino, conforme publicação no DOERJ de $dtPublicacao, anexada às fls. $folha do p.p.";
-    
-    $texto[] = "Desta forma, encaminhamos o presente para providências cabíveis.";
     
     # despacho
     $despacho = new Despacho();

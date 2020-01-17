@@ -111,9 +111,13 @@ class Ci{
       */
     
     private function rodape(){
-        br($this->saltoRodape);
-        hr();
-        p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+        $div = new Div('rodape');
+        $div->abre();
+
+            hr();
+            p('<b>'.$this->rodapeNome.'</b><br/>'.$this->rodapeEndereco.'<br/>Telefone: '.$this->rodapeTelefone,'pCiRodape');
+            
+        $div ->fecha();
     }
     
     ###########################################################
@@ -187,10 +191,10 @@ class Ci{
         # Assinatura
         #p('____________________________________________________','pCiAssinatura');
         p($this->origemNome.'<br/>'.$this->origemDescricao.'<br/>Id Funcional n° '.$this->origemIdFuncional,'pCiAssinatura');
-
-        $this->rodape();
         
         $grid->fechaColuna();
         $grid->fechaGrid();
+        
+        $this->rodape();
     }
 }

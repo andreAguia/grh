@@ -52,7 +52,7 @@ if($acesso){
     $data = date("Y-m-d H:i:s");
     $atividades = 'Visualizou O Despacho para a publicação de redução da carga horária: ';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);                
+    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",NULL,$tipoLog,$idServidorPesquisado);                
     
     $page->terminaPagina();
 }

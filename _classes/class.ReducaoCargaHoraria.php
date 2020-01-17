@@ -504,7 +504,7 @@ class ReducaoCargaHoraria{
         $menu = new Menu("menuDocumentos");
         
         # Despachos
-        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Protocolo","../grhRelatorios/reducaoDespachoProtocolo.php?id=$idReducao");
+        #$menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Protocolo","../grhRelatorios/reducaoDespachoProtocolo.php?id=$idReducao");
         $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
         $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Reitoria","../grhRelatorios/reducaoDespachoReitoria.php");
         $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Publicação","../grhRelatorios/reducaoDespachoPublicacao.php");

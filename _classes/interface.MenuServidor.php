@@ -470,15 +470,15 @@ class MenuServidor{
             # Conecta ao Banco de Dados
             $pessoal = new Pessoal();
                 
-            titulo('Relatórios & Declarações');
+            titulo('Documentos');
             br();
             
             $menu = new Menu("menuServidor");
-            $menu->add_item('titulo','Gerais');
+            $menu->add_item("linkWindow","Despacho para Abertura de Processo","?fase=despacho");
             $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
             $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
             #$menu->add_item("linkWindow","Mapa do Cargo","../grhRelatorios/mapaCargo.php?cargo=$cargo");
-            $menu->add_item('titulo','Declarações');
+            
             $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');
             $menu->add_item('linkWindow','Declaração de Atribuições do Cargo','../grhRelatorios/declaracao.AtribuicoesCargo.php');
             #$menu->add_item('link','Declaração para o INSS','#');

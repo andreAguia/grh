@@ -56,8 +56,10 @@ if($acesso){
     }
     $page->iniciaPagina();
     
-    # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if($fase <> "despacho"){
+        # Cabeçalho da Página
+        AreaServidor::cabecalho();
+    }
     
     # Limita o tamanho da tela
     $grid = new Grid();
@@ -136,11 +138,15 @@ if($acesso){
         $menu->show();
         
     }else{
-        botaoVoltar("?");
+        if($fase <> "despacho"){
+            botaoVoltar("?");
+        }
     }
     
-    # Exibe os dados do Servidor
-    Grh::listaDadosServidor($idServidorPesquisado);
+    if($fase <> "despacho"){
+        # Exibe os dados do Servidor
+        Grh::listaDadosServidor($idServidorPesquisado);
+    }
     
     $grid->fechaColuna();
     $grid->fechaGrid();
@@ -665,6 +671,41 @@ if($acesso){
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;
+                
+        ##################################################################
+            
+            case "despacho" :
+                # Limita a tela
+                $grid = new Grid("center");
+                $grid->abreColuna(10);
+                br(3);
+
+                # Título
+                titulo("Despacho Para Abertura de Processo no Protocolo");
+                $painel = new Callout();
+                $painel->abre();
+
+                # Monta o formulário
+                $form = new Form('../grhRelatorios/despacho.Protocolo.php');
+
+                # folha da publicação no processo 
+                $controle = new Input('assunto','texto','Assunto:',1);
+                $controle->set_size(200);
+                $controle->set_linha(1);
+                $controle->set_col(12);
+                $controle->set_autofocus(TRUE);
+                $controle->set_title('O assunto do processo.');
+                $form->add_item($controle);
+
+                # submit
+                $controle = new Input('imprimir','submit');
+                $controle->set_valor('Imprimir');
+                $controle->set_linha(5);
+                $controle->set_col(2);
+                $form->add_item($controle);
+
+                $form->show();
+                break;        
     }
 
     $grid->fechaColuna();

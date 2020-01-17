@@ -501,21 +501,30 @@ class ReducaoCargaHoraria{
             $nomeBotaoAto = "Ato do Reitor".date_to_php($atoReitor);
         }
         
+        $menu = new Menu("menuDocumentos");
+        
+        # Despachos
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Protocolo","../grhRelatorios/reducaoDespachoProtocolo.php?id=$idReducao");
+        $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Reitoria","../grhRelatorios/reducaoDespachoReitoria.php");
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Publicação","../grhRelatorios/reducaoDespachoPublicacao.php");
+            
         # Retorno
         if($resultado == 1){
             
-            $menu = new Menu("menuDocumentos");
-            
-            $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Protocolo","../grhRelatorios/reducaoDespachoProtocolo.php?id=$idReducao");
-            $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
-            $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Reitoria","../grhRelatorios/reducaoDespachoReitoria.php");
-            $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Publicação","../grhRelatorios/reducaoDespachoPublicacao.php");
+            # Ci Início
             $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReducao);
-            $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReducao);  
+            
+            # Ci 90 dias
+            if(($dias >= 0) AND($dias <= 90)){
+                $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReducao);
+            }
+                
+            # Ci Término    
             $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReducao);
+            
+            # Ato do Reitor
             $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoAto,'?fase=atoReitorForm&id='.$idReducao);
-
-            $menu->show();
             /*
             
             $tamanhoImage = 20;
@@ -564,6 +573,8 @@ class ReducaoCargaHoraria{
              */
             
         }
+        
+        $menu->show();
     }
     
     ###########################################################

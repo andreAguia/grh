@@ -225,6 +225,7 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório Servidores Ativos com Dependente (Filhos)','../grhRelatorios/servidoresAtivoComFilhos.php');
             $menu->add_item('linkWindow','Relatório Mensal de Vencimento de Auxilio Creche','../grhRelatorios/vencimentoMensalAuxilioCreche.php');
             $menu->add_item('linkWindow','Relatório Anual de Vencimento de Auxilio Creche','../grhRelatorios/vencimentoAnualAuxilioCreche.php');
+            $menu->add_item('linkWindow','Relatório de Dependentes Filhos de Servidores Ativos','../grhRelatorios/dependentes.filhos.ativos.php');
 
             $menu->show();
             break;

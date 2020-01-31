@@ -272,6 +272,13 @@ p#vagaCargo{
     margin: 0px;
 }
 
+p#vagaOrigem{
+    font-size: 10px;
+    text-align: center;
+    padding: 15px 0px 0px;
+    margin: 0px;
+}
+
 a#editarVaga{
     position: absolute;
 }

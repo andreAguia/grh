@@ -70,7 +70,7 @@ if($acesso){
                                       tbvagahistorico.obs,
                                       idVagaHistorico
                                  FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                                                     JOIN tblotacao USING (idLotacao)
+                                                      JOIN tblotacao USING (idLotacao)
                                 WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc');
 
     # select do edita
@@ -294,6 +294,15 @@ if($acesso){
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar,"left");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("../grhRelatorios/vagas.historico.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel,"right");
             
             if($vaga->get_status($idVaga) == "Disponível"){
                 # Incluir

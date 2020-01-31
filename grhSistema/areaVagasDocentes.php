@@ -264,6 +264,9 @@ if($acesso){
                     $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
                 }
             }
+            
+            $menu->add_item('titulo','Relatórios');
+            $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
 
             $menu->show();
             
@@ -349,6 +352,9 @@ if($acesso){
                     $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
                 }
             }
+            
+            $menu->add_item('titulo','Relatórios');
+            $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
 
             $menu->show();
             

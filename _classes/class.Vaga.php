@@ -409,13 +409,19 @@ class Vaga{
         
         $centro = $conteudo["centro"];
         $idCargo = $conteudo["idCargo"];
-        $idVaga = $conteudo["idVaga"];
         
+        $labOrigem = $servidor->get_nomeLotacao3($this->get_laboratorioOrigem($idVaga));
+                
         $cargo = $servidor->get_nomeCargo($idCargo);
-        $status = $this->get_status($idVaga);
+        $status = $this->get_status($idVaga);        
                 
         p($centro,"vagaCentro");
         p($cargo,"vagaCargo");
+        
+        $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
+        
+        p("Laboratório de Origem:","vagaOrigem",NULL,$title);
+        p($labOrigem,"vagaCargo",NULL,$title);
         
         $painel->fecha();
         
@@ -934,5 +940,27 @@ class Vaga{
     
     ###########################################################
 
+    /**
+     * Método get_laboratorioOrigem
+     * fornece o primeiro laboratório de uma vaga. o laborató ao qual a vaga foi criada,
+     * 
+     * @param	integer $idVaga O id da vaga
+     */
 
+    function get_laboratorioOrigem($idVaga){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        $select = "SELECT idLotacao
+                     FROM tbvagahistorico JOIN tbconcurso USING (idConcurso) 
+                    WHERE idVaga = $idVaga
+                 ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
+
+        $dado = $pessoal->select($select,FALSE);
+        return $dado[0];
+    }
+
+    ###########################################################
+    
 }

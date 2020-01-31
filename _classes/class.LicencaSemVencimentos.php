@@ -8,6 +8,7 @@ class LicencaSemVencimentos{
 
     
     private $linkEditar = NULL;
+    private $atual = TRUE;
     
     ###########################################################
 
@@ -21,6 +22,20 @@ class LicencaSemVencimentos{
      */
 
         $this->linkEditar = $linkEditar;
+    }
+
+    ###########################################################
+
+    public function set_atual($atual){
+    /**
+     * Informa se é somente os que estão atualmente em licença ou se são todos
+     *
+     * @param $atual BOOL TRUE TRUE para somente os que estão atualmente em licença
+     *
+     * @syntax $input->set_atual($atual);
+     */
+
+        $this->atual = $atual;
     }
 
     ###########################################################
@@ -60,11 +75,15 @@ class LicencaSemVencimentos{
                                     LEFT JOIN tblicenca USING (idServidor)
                                     LEFT JOIN tbtipolicenca USING (idTpLicenca)
                   WHERE tbservidor.situacao = 1
-                    AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)
-                    AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                      OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))
-               ORDER BY df desc';
+                    AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)';
+       
+       if($this->atual){
+           $select .= 'AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
+                        OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
+                        OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
+       }
+       
+       $select .= ' ORDER BY df desc';
        
        $result = $pessoal->select($select);
        $count = $pessoal->count($select);

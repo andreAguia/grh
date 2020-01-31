@@ -54,7 +54,7 @@ class ReducaoCargaHoraria{
 
         # Pega os dados
         $select = 'SELECT * ,
-                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY) as dtTermino
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY) dtTermino
                      FROM tbreducao
                     WHERE idReducao = '.$idReducao;
 
@@ -445,29 +445,20 @@ class ReducaoCargaHoraria{
      * 
      * @obs Usada na tabela inicial do cadastro de redução
      */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        
-        # Pega os dias publicados
-        $select = 'SELECT resultado,
-                          numCiInicio,
-                          numCiTermino,
-                          dtAtoReitor,
-                          numCi90,
-                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY)
-                     FROM tbreducao
-                    WHERE idReducao = '.$idReducao;
-        
-        
-        $row = $pessoal->select($select,FALSE);
         
         # Pega os dados
-        $resultado = $row[0];
-        $ciInicio = $row[1];
-        $ciTermino = $row[2];
-        $atoReitor = $row[3];
-        $ci90 = $row[4];
-        $dtTermino = date_to_php($row[5]);
+        $dados = $this->get_dados($idReducao);
+        
+        # Pega os dados
+        $resultado = $dados["resultado"];
+        $ciInicio = $dados["numCiInicio"];
+        $ciTermino = $dados["numCiTermino"];
+        $atoReitor = date_to_php($dados["dtAtoReitor"]);
+        $ci90 = $dados["numCi90"];
+        $dtTermino = date_to_php("dtTermino");
+        $tipo = $dados["tipo"];
+        
+        echo "->>>> ".$atoReitor." -> ".$dtTermino;br();
         
         $dias = NULL;
         
@@ -498,14 +489,15 @@ class ReducaoCargaHoraria{
         # Nome do botão do Ato
         $nomeBotaoAto = "Ato do Reitor";
         if(!is_null($atoReitor)){
-            $nomeBotaoAto = "Ato do Reitor".date_to_php($atoReitor);
+            $nomeBotaoAto = "Ato do Reitor ".$atoReitor;
         }
         
         $menu = new Menu("menuDocumentos");
         
         # Despachos
-        #$menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Protocolo","../grhRelatorios/reducaoDespachoProtocolo.php?id=$idReducao");
-        $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
+        if($tipo == 2){ // Somente Renovação
+            $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
+        }
             
         # Retorno
         if($resultado == 1){

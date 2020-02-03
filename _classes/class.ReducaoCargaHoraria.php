@@ -504,7 +504,7 @@ class ReducaoCargaHoraria{
         $ciTermino = $dados["numCiTermino"];
         $atoReitor = date_to_php($dados["dtAtoReitor"]);
         $ci90 = $dados["numCi90"];
-        $dtTermino = date_to_php("dtTermino");
+        $dtTermino = date_to_php($dados["dtTermino"]);
         $tipo = $dados["tipo"];
         
         $dias = NULL;

@@ -67,9 +67,9 @@ if($acesso){
     $ci = new Ci($numCiInicio,$dtCiInicio,$assunto);
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
-    $ci->set_texto("Vimos informar a concessão da renovação da <b>Readaptação</b> do(a) servidor(a) <b>".strtoupper($nomeServidor)."</b>,"
-    . " ID $idFuncional, por um período de $periodo meses, a contar de $dtInicio, '<i>$textoCi</i>', conforme publicação no DOERJ em $publicacao"
-    . " em anexo.");
+    $ci->set_texto('Vimos informar a concessão da renovação da <b>Readaptação</b> do(a) servidor(a) <b>'.strtoupper($nomeServidor).'</b>,'
+    . ' ID '.$idFuncional.', por um período de $periodo meses, a contar de $dtInicio, "<i>'.$textoCi.'</i>", conforme publicação no DOERJ em $publicacao'
+    . ' em anexo.');
     $ci->set_saltoRodape(3);
     $ci->show();
     

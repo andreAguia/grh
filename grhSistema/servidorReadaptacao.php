@@ -602,7 +602,7 @@ if($acesso){
             $processo = $dados['processo'];
             $tipo = $dados['tipo'];
             $parecer = $dados['parecer'];
-            $textoCi = $dados['textoCi'];
+            $textoCi = mb_strtolower($dados['textoCi']);
             
             # Servidor
             $nomeServidor = $pessoal->get_nome($idServidorPesquisado);

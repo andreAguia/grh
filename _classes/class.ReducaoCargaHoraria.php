@@ -66,6 +66,55 @@ class ReducaoCargaHoraria{
     }
 
     ###########################################################
+
+    function get_dadosAnterior($idReducao){
+
+    /**
+     * Informe os dados de uma redução imediatamente anterior cronológicamente
+     * 
+     * @note Usado para para pegar os dados da solicitação anterior quando for renovação
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Verifica se foi informado
+        if(vazio($idReducao)){
+            alert("É necessário informar o id da Redução.");
+            return;
+        }
+        
+        $dados = $this->get_dados($idReducao);
+        $idServidor = $dados["idServidor"];
+        
+        # Cria um array para encontrar o anterior
+        $select = "SELECT idReducao
+                     FROM tbreducao
+                    WHERE idServidor = $idServidor
+                    ORDER BY dtInicio DESC";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+        
+        # Percorre o array para encontrar o anterior
+        foreach($row as $redux){
+            
+        }
+        
+
+        # Pega os dados
+        $select = 'SELECT * ,
+                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY) dtTermino
+                     FROM tbreducao
+                    WHERE idReducao = '.$idReducao;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select,FALSE);
+
+        # Retorno
+        return $row;
+    }
+
+    ###########################################################
     
     function get_numProcesso($idServidor = NULL){
 
@@ -457,8 +506,6 @@ class ReducaoCargaHoraria{
         $ci90 = $dados["numCi90"];
         $dtTermino = date_to_php("dtTermino");
         $tipo = $dados["tipo"];
-        
-        echo "->>>> ".$atoReitor." -> ".$dtTermino;br();
         
         $dias = NULL;
         

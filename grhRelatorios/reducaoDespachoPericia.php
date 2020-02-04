@@ -35,11 +35,12 @@ if($acesso){
 
     # Pega os dados
     $dados = $reducao->get_dados($id);
+    $dAnterior = $reducao->get_dadosAnterior($id);
     
     # da Redução
     $tipo = $dados["tipo"];
-    $dtTermino = date_to_php($dados["dtTermino"]);
-    $dtPublicacao = date_to_php($dados["dtPublicacao"]);
+    $dtTermino = date_to_php($dAnterior["dtTermino"]);
+    $dtPublicacao = date_to_php($dAnterior["dtPublicacao"]);
     
     # do Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);

@@ -76,6 +76,10 @@ class ReducaoCargaHoraria{
      */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
+        
+        # Inicia as variáveis
+        $idReducaoAnterior = NULL;      // Guarda o idRedução imediatamente anterior
+        $dadosAnterior = NULL;          // Guarda os dados da redução referentes a essa id anterior
 
         # Verifica se foi informado
         if(vazio($idReducao)){
@@ -83,35 +87,32 @@ class ReducaoCargaHoraria{
             return;
         }
         
+        # Pega o idServidor
         $dados = $this->get_dados($idReducao);
         $idServidor = $dados["idServidor"];
         
-        # Cria um array para encontrar o anterior
+        # Com o IdServidor pega todas as reduções dele
         $select = "SELECT idReducao
                      FROM tbreducao
                     WHERE idServidor = $idServidor
-                    ORDER BY dtInicio DESC";
+                    ORDER BY dtInicio";
 
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select,FALSE);
+        $row = $pessoal->select($select);
         
         # Percorre o array para encontrar o anterior
         foreach($row as $redux){
-            
+            if($idReducao == $redux[0]){    // Verifica se é a atual
+                break;                      // Se for sai do loop 
+            }else{
+                $idReducaoAnterior = $redux[0]; // Atualiza a variável da id anterior
+            }
         }
         
-
-        # Pega os dados
-        $select = 'SELECT * ,
-                          DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY) dtTermino
-                     FROM tbreducao
-                    WHERE idReducao = '.$idReducao;
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select,FALSE);
+        # Pega os dados da redução anteior com o id encontrado
+        $dadosAnterior = $this->get_dados($idReducaoAnterior);
 
         # Retorno
-        return $row;
+        return $dadosAnterior;
     }
 
     ###########################################################

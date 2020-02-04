@@ -33,14 +33,16 @@ if($acesso){
     $page = new Page();			
     $page->iniciaPagina();
 
-    # Pega os dados
+    # Pega o tipo
     $dados = $reducao->get_dados($id);
-    $dAnterior = $reducao->get_dadosAnterior($id);
-    
-    # da Redução
     $tipo = $dados["tipo"];
-    $dtTermino = date_to_php($dAnterior["dtTermino"]);
-    $dtPublicacao = date_to_php($dAnterior["dtPublicacao"]);
+    
+    # Pega os dados da redução anterior quando for renovação
+    if($tipo == 2){
+        $dAnterior = $reducao->get_dadosAnterior($id);
+        $dtTermino = date_to_php($dAnterior["dtTermino"]);
+        $dtPublicacao = date_to_php($dAnterior["dtPublicacao"]);
+    }
     
     # do Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -71,16 +73,6 @@ if($acesso){
                  . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
     }
     
-    # Sexo
-    $sexo = $pessoal->get_sexo($idServidorPesquisado);
-    if($sexo == "Masculino"){
-        $detalhe = "do servidor";
-    }else{
-        $detalhe = "da servidora";
-    }
-        
-    
-    
     # despacho
     $despacho = new Despacho();
     $despacho->set_destino($destino);
@@ -91,20 +83,20 @@ if($acesso){
     $idGerente = $pessoal->get_gerente(66);
     $gerente = $pessoal->get_nome($idGerente);
     $cargo = $pessoal->get_cargoComissaoDescricao($idGerente);
-    $idFuncional = $pessoal->get_idFuncional($idGerente);
+    $idFuncionalGerente = $pessoal->get_idFuncional($idGerente);
     
     $despacho->set_origemNome($gerente);
     $despacho->set_origemDescricao($cargo);
-    $despacho->set_origemIdFuncional($idFuncional);
+    $despacho->set_origemIdFuncional($idFuncionalGerente);
     
     $despacho->set_saltoRodape(1);
     $despacho->show();
                 
     # Grava o log da visualização do relatório
-    $data = date("Y-m-d H:i:s");
+    $dataLog = date("Y-m-d H:i:s");
     $atividades = 'Visualizou O Despacho para a Perícia de redução da carga horária: ';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);                
+    $intra->registraLog($idUsuario,$dataLog,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);                
     
     $page->terminaPagina();
 }

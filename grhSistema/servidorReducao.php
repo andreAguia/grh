@@ -1343,7 +1343,7 @@ if($acesso){
                 $grid->fechaColuna();
                 $grid->fechaGrid();
             }else{
-                loadPage("../grhRelatorios/reducaoDespachoPericia.php?id=$id","_blank");
+                loadPage("../grhRelatorios/reducao.DespachoPericia.php?id=$id","_blank");
                 loadPage("?");
             }
             break;
@@ -1364,7 +1364,7 @@ if($acesso){
             } 
             
             if($erro == 0){
-                loadPage("../grhRelatorios/reducaoDespachoPericia.php?folha=$folha&id=$id","_blank");
+                loadPage("../grhRelatorios/reducao.DespachoPericia.php?folha=$folha&id=$id","_blank");
                 loadPage("?");
             }else{
                 alert($msgErro);

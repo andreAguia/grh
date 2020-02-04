@@ -546,7 +546,7 @@ class ReducaoCargaHoraria{
         if($tipo == 2){ // Somente Renovação
             $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
         }
-            
+        
         # Retorno
         if($resultado == 1){
             

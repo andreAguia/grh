@@ -461,37 +461,28 @@ class MenuServidor{
     
     private function moduloRelatorios(){
                 
-        # Relatórios
-        if($this->perfil <> 10){          // Se não for bolsista
-        
-            #$painel = new Callout("success");
-            #$painel->abre();
-            
-            # Conecta ao Banco de Dados
-            $pessoal = new Pessoal();
-                
-            titulo('Documentos');
-            br();
-            
-            $menu = new Menu("menuServidor");
-            $menu->add_item("linkWindow","Despacho para Abertura de Processo","?fase=despacho");
-            $menu->add_item("linkWindow","Despacho para Reitoria","../grhRelatorios/despacho.Reitoria.php");
-            $menu->add_item("linkWindow","Despacho para Publicação de Ato do Reitor","../grhRelatorios/despacho.Publicacao.php");
-            
-            $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
-            $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
-            #$menu->add_item("linkWindow","Mapa do Cargo","../grhRelatorios/mapaCargo.php?cargo=$cargo");
-            
-            $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');
-            $menu->add_item('linkWindow','Declaração de Atribuições do Cargo','../grhRelatorios/declaracao.AtribuicoesCargo.php');
-            #$menu->add_item('link','Declaração para o INSS','#');
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
 
-            #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
-            #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
-            $menu->show();
-            
-            #$painel->fecha();
-        }
+        titulo('Documentos');
+        br();
+
+        $menu = new Menu("menuServidor");
+        $menu->add_item("linkWindow","Despacho para Abertura de Processo","?fase=despacho");
+        $menu->add_item("linkWindow","Despacho para Reitoria","../grhRelatorios/despacho.Reitoria.php");
+        $menu->add_item("linkWindow","Despacho para Publicação de Ato do Reitor","../grhRelatorios/despacho.Publicacao.php");
+
+        $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
+        $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
+        #$menu->add_item("linkWindow","Mapa do Cargo","../grhRelatorios/mapaCargo.php?cargo=$cargo");
+
+        $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');
+        $menu->add_item('linkWindow','Declaração de Atribuições do Cargo','../grhRelatorios/declaracao.AtribuicoesCargo.php');
+        #$menu->add_item('link','Declaração para o INSS','#');
+
+        #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
+        #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
+        $menu->show();
     }
         
 ######################################################################################################################

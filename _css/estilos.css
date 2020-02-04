@@ -272,6 +272,14 @@ p#vagaCargo{
     margin: 0px;
 }
 
+p#vagaId{
+    font-size: 10px;    
+    padding: 0px;
+    margin: 0px;
+    color:#8a8a8a;
+    float: right;
+}
+
 p#vagaOrigem{
     font-size: 10px;
     text-align: center;

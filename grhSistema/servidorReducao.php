@@ -536,9 +536,9 @@ if($acesso){
                 $menu = new Menu();
                 #$menu->add_item('titulo','Documentos');
                 
-                $menu->add_item("linkWindow","Despacho para Abertura de Processo","servidorMenu.php?fase=despacho");
-                $menu->add_item("linkWindow","Despacho para Reitoria","../grhRelatorios/despacho.Reitoria.php");
-                $menu->add_item("linkWindow","Despacho para Publicação de Ato do Reitor","../grhRelatorios/despacho.Publicacao.php");
+                $menu->add_item("linkWindow","Despacho ao Protocolo para Abertura de Processo","servidorMenu.php?fase=despacho");
+                $menu->add_item("linkWindow","Despacho à Reitoria para Assinatura de Ato","../grhRelatorios/despacho.Reitoria.php");
+                $menu->add_item("linkWindow","Despacho à SEPOF para Publicação de Ato","../grhRelatorios/despacho.Publicacao.php");
                 
                 $menu->add_item('linkWindow','Declaração de Atribuições','../grhRelatorios/declaracao.AtribuicoesCargo.php');
                 $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');

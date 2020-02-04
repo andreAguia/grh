@@ -69,33 +69,8 @@ if($acesso){
         $objeto->set_nome("Vagas de Docentes do $parametroCentro");
     }else{
         $objeto->set_nome("Vagas de Docentes");
-    }    
-
-    # Botão de voltar da lista
-    $objeto->set_voltarLista('grh.php');
+    } 
     
-    # select da lista
-    $select = 'SELECT centro,
-                      tbcargo.nome,
-                      idVaga,
-                      idVaga,
-                      idVaga,
-                      idVaga,
-                      idVaga,
-                      idVaga
-                 FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-                WHERE TRUE ';
-    
-    # parametroCentro
-    if(!vazio($parametroCentro)){
-        $select .= "AND centro = '$parametroCentro'";
-    }
-    
-    $select .= ' ORDER BY centro,idCargo';
-    
-    # select da lista
-    $objeto->set_selectLista ($select);
-
     # select do edita
     $objeto->set_selectEdita('SELECT centro,
                                      idCargo
@@ -107,46 +82,6 @@ if($acesso){
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
     #$objeto->set_linkExcluir('?fase=excluir');
-    
-    #$objeto->set_botaoIncluirNome("Incluir Nova Vaga");
-    
-    
-    $objeto->set_formatacaoCondicional(array( array('coluna' => 2,
-                                                    'valor' => 'Disponível',
-                                                    'operador' => '=',
-                                                    'id' => 'emAberto'),
-                                              array('coluna' => 2,
-                                                    'valor' => 'Ocupado',
-                                                    'operador' => '=',
-                                                    'id' => 'alerta')
-                                                    ));
-
-    # Parametros da tabela
-    $objeto->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
-    $objeto->set_width(array(10,20,10,30,25));
-    $objeto->set_align(array("center"));
-    
-    $objeto->set_excluirCondicional('?fase=excluir',0,5,"==");
-    
-    # Botão de Editar concursos
-    $botao1 = new BotaoGrafico();
-    $botao1->set_label('');
-    $botao1->set_title('Editar o Concurso');
-    $botao1->set_url("?fase=editarConcurso&id=");
-    $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
-
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
-    
-    #$objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
-    #$objeto->set_metodo(array(NULL,NULL,"get_status","get_concursoOcupante","get_laboratorioOcupante","get_areaOcupante","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
-    
-    $objeto->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga"));
-    $objeto->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
-    
-    #$objeto->set_rowspan(0);
-    #$objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -368,8 +303,10 @@ if($acesso){
             
             #$objeto->listar();
             
-            $select = 'SELECT centro,
+            $select = 'SELECT idVaga,
+                              centro,
                               tbcargo.nome,
+                              idVaga,
                               idVaga,
                               idVaga,
                               idVaga,
@@ -384,7 +321,7 @@ if($acesso){
                 $select .= "AND centro = '$parametroCentro'";
             }
 
-            $select .= ' ORDER BY centro,idCargo';
+            $select .= ' ORDER BY centro,idCargo desc';
             
             $result = $pessoal->select($select);
             
@@ -396,7 +333,7 @@ if($acesso){
             foreach($result as $rr){
                 
                 # Pega o status da vaga
-                $status = $vaga->get_status($rr[2]);
+                $status = $vaga->get_status($rr[3]);
                 
                 if($status == "Disponível"){
                     $arrayDisponível[] = $rr;
@@ -420,24 +357,24 @@ if($acesso){
             $tabela->set_titulo($titulo." - Disponíveis");
             $tabela->set_conteudo($arrayDisponível);
             
-            $tabela->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
-            $tabela->set_width(array(10,20,10,30,25));
+            $tabela->set_label(array("Id","Centro","Cargo","Status","Lab.Origem","Último Ocupante","Obs","Num. de Concursos","Editar"));
+            #$tabela->set_width(array(5,10,20,10,30,25));
             $tabela->set_align(array("center"));
             
-            $tabela->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga"));
-            $tabela->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"get_status","get_nomeLaboratorioOrigem","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
             
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
                                                     'valor' => 'Disponível',
                                                     'operador' => '=',
                                                     'id' => 'emAberto'),
-                                              array('coluna' => 2,
+                                              array('coluna' => 3,
                                                     'valor' => 'Ocupado',
                                                     'operador' => '=',
                                                     'id' => 'alerta')
                                                     ));
             
-            $tabela->set_excluirCondicional('?fase=excluir',0,5,"==");
+            $tabela->set_excluirCondicional('?fase=excluir',0,7,"==");
     
             # Botão de Editar concursos
             $botao1 = new BotaoGrafico();
@@ -446,11 +383,10 @@ if($acesso){
             $botao1->set_url("?fase=editarConcurso&id=");
             $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
 
-
             # Coloca o objeto link na tabela			
-            $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
+            $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
             
-            $tabela->set_numeroOrdem(TRUE);
+            #$tabela->set_numeroOrdem(TRUE);
             $tabela->set_idCampo('idVaga');
             $tabela->show();
             
@@ -469,24 +405,24 @@ if($acesso){
             $tabela->set_titulo($titulo." - Ocupadas");
             $tabela->set_conteudo($arrayOcupado);
             
-            $tabela->set_label(array("Centro","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Editar"));
-            $tabela->set_width(array(10,20,10,30,25));
+            $tabela->set_label(array("Id","Centro","Cargo","Status","Lab.Origem","Último Ocupante","Obs","Num. de Concursos","Editar"));
+            #$tabela->set_width(array(5,10,20,10,30,25));
             $tabela->set_align(array("center"));
             
-            $tabela->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga"));
-            $tabela->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+            $tabela->set_classe(array(NULL,NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga"));
+            $tabela->set_metodo(array(NULL,NULL,NULL,"get_status","get_nomeLaboratorioOrigem","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
             
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 2,
+            $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
                                                     'valor' => 'Disponível',
                                                     'operador' => '=',
                                                     'id' => 'emAberto'),
-                                              array('coluna' => 2,
+                                              array('coluna' => 3,
                                                     'valor' => 'Ocupado',
                                                     'operador' => '=',
                                                     'id' => 'alerta')
                                                     ));
             
-            $tabela->set_excluirCondicional('?fase=excluir',0,5,"==");
+            $tabela->set_excluirCondicional('?fase=excluir',0,7,"==");
     
             # Botão de Editar concursos
             $botao1 = new BotaoGrafico();
@@ -497,9 +433,9 @@ if($acesso){
 
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
+            $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
             
-            $tabela->set_numeroOrdem(TRUE);            
+            #$tabela->set_numeroOrdem(TRUE);            
             $tabela->set_idCampo('idVaga');
             $tabela->show();
             

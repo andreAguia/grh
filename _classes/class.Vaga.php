@@ -414,14 +414,17 @@ class Vaga{
                 
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = $this->get_status($idVaga);        
-                
+        
+        p($idVaga,"vagaId");
         p($centro,"vagaCentro");
-        p($cargo,"vagaCargo");
+        p($cargo,"vagaCargo");        
         
         $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
         
         p("Laboratório de Origem:","vagaOrigem",NULL,$title);
         p($labOrigem,"vagaCargo",NULL,$title);
+        
+        
         
         $painel->fecha();
         
@@ -959,6 +962,30 @@ class Vaga{
 
         $dado = $pessoal->select($select,FALSE);
         return $dado[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeLaboratorioOrigem
+     * fornece o primeiro laboratório de uma vaga. o laborató ao qual a vaga foi criada,
+     * 
+     * @param	integer $idVaga O id da vaga
+     */
+
+    function get_nomeLaboratorioOrigem($idVaga){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Pega o idLotação
+        $idLotacao = $this->get_laboratorioOrigem($idVaga);
+        
+        # Pega o nome dessa lotação
+        $nome = $pessoal->get_lotacaoGerencia($idLotacao);
+        
+        # Retorna o nome
+        return $nome;
     }
 
     ###########################################################

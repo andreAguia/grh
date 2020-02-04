@@ -523,6 +523,25 @@ class Pessoal extends Bd {
 ######################################################################################
 
     /**
+     * Método get_lotacaoGerencia
+     * Informa a gerência / laboratório de uma lotaçao
+     * 
+     * @param	string $idLotacao  o id da lotaçao
+     */
+
+    public function get_lotacaoGerencia($idLotacao){
+        $select = 'SELECT GER
+                     FROM tblotacao
+                    WHERE idLotacao = '.$idLotacao;
+
+        $row = parent::select($select,FALSE);
+        
+        return $row[0];
+    }
+
+######################################################################################
+
+    /**
      * Método get_lotacao
      * Informa a lotação atual do servidor sem o UADM e sem informação de cessão
      * 

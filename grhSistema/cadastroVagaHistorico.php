@@ -121,10 +121,10 @@ if($acesso){
     ###############
     
     # Pega os dados da combo de vagas
-    $vagas = $pessoal->select('SELECT idVaga,
-                                      concat(centro," / ",tbcargo.nome)
+    $vagas = $pessoal->select("SELECT idVaga,
+                                      concat(idVaga,' - ',centro,' / ',tbcargo.nome)
                                  FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-                                 WHERE idVaga = '.$idVaga);
+                                 WHERE idCargo = $idCargo AND centro = '$centro'");
 
     array_unshift($vagas, array(0,NULL));
     
@@ -228,7 +228,7 @@ if($acesso){
     $objeto->set_campos(array(
         array ('linha' => 1,
                'nome' => 'idVaga',
-               'label' => 'Centro / Cargo',
+               'label' => 'Vaga',
                'tipo' => 'combo',
                'array' => $vagas,
                'col' => 3,

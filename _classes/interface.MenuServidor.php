@@ -471,6 +471,7 @@ class MenuServidor{
         $menu->add_item("linkWindow","Despacho para Abertura de Processo","?fase=despacho");
         $menu->add_item("linkWindow","Despacho para Reitoria","../grhRelatorios/despacho.Reitoria.php");
         $menu->add_item("linkWindow","Despacho para Publicação de Ato do Reitor","../grhRelatorios/despacho.Publicacao.php");
+        $menu->add_item("linkWindow","Despacho à Chefia/Servidor para Retirada do Ato","?fase=despachoChefia");
 
         $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");

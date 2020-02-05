@@ -56,7 +56,9 @@ if($acesso){
     }
     $page->iniciaPagina();
     
-    if($fase <> "despacho"){
+    if(($fase <> "despacho") AND
+       ($fase <> "despachoChefia")){
+        
         # Cabeçalho da Página
         AreaServidor::cabecalho();
     }
@@ -138,12 +140,15 @@ if($acesso){
         $menu->show();
         
     }else{
-        if($fase <> "despacho"){
+        if(($fase <> "despacho") AND
+           ($fase <> "despachoChefia")){
             botaoVoltar("?");
         }
     }
     
-    if($fase <> "despacho"){
+    if(($fase <> "despacho") AND
+       ($fase <> "despachoChefia")){
+        
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
     }
@@ -706,6 +711,64 @@ if($acesso){
 
                 $form->show();
                 break;        
+        ##################################################################
+            
+            case "despachoChefia" :
+                # Limita a tela
+                $grid = new Grid("center");
+                $grid->abreColuna(10);
+                br(3);
+                
+                # Pega os valores
+                $idServidorChefia = $pessoal->get_chefiaImediata($idServidorPesquisado);
+                $nomeChefia = $pessoal->get_nome($idServidorChefia);
+                $chefiaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
+                # Título
+                titulo("Despacho para Chefia - Resultado Setor - Ato Servidor");
+                $painel = new Callout();
+                $painel->abre();
+
+                # Monta o formulário
+                $form = new Form('../grhRelatorios/despacho.AtoReitor.php');
+
+                # Chefia
+                $controle = new Input('chefia','texto','Chefia:',1);
+                $controle->set_size(200);
+                $controle->set_linha(1);
+                $controle->set_col(12);
+                $controle->set_valor($nomeChefia);
+                $controle->set_autofocus(TRUE);
+                $controle->set_title('A chefia imediata.');
+                $form->add_item($controle);
+                
+                # Cargo da Chefia
+                $controle = new Input('cargo','texto','Cargo da Chefia:',1);
+                $controle->set_size(200);
+                $controle->set_linha(1);
+                $controle->set_col(12);
+                $controle->set_valor($chefiaImediataDescricao);
+                $controle->set_title('O cargo da chefia imediata.');
+                $form->add_item($controle);
+                
+                # Cargo da Chefia
+                $controle = new Input('ato','texto','Ato de:',1);
+                $controle->set_size(200);
+                $controle->set_linha(1);
+                $controle->set_col(12);
+                $controle->set_title('O Ato ao qual o despacho se refere.');
+                $form->add_item($controle);
+
+                # submit
+                $controle = new Input('imprimir','submit');
+                $controle->set_valor('Imprimir');
+                $controle->set_linha(5);
+                $controle->set_col(2);
+                $form->add_item($controle);
+
+                $form->show();
+                break;        
+            
     }
 
     $grid->fechaColuna();

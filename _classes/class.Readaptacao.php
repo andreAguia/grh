@@ -385,23 +385,42 @@ class Readaptacao{
         # Nome do botão de início
         $nomeBotaoInicio = "CI Início";
         if(!is_null($ciInicio)){
-            $nomeBotaoInicio = "CI Início<br/>n° ".$ciInicio;
+            $nomeBotaoInicio = "CI Início n° ".$ciInicio;
         }
         
         # Nome do botão de 90 Dias
         $nomeBotao90 = "CI 90 Dias";
         if(!is_null($ci90)){
-            $nomeBotao90 = "CI 90 Dias<br/>n° ".$ci90;
+            $nomeBotao90 = "CI 90 Dias n° ".$ci90;
         }
 
         # Nome do botão de Término
         $nomeBotaotermino = "CI Término";
         if(!is_null($ciTermino)){
-            $nomeBotaotermino = "CI Término<br/>n° ".$ciTermino;
+            $nomeBotaotermino = "CI Término >n° ".$ciTermino;
         }
+        
+        $menu = new Menu("menuBeneficios");
+        
+        # Despachos
+        $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReadaptacao);
+        
 
         # Retorno
         if(!vazio($dtInicio)){
+            
+            # Ci Início
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReadaptacao);
+            
+            # Ci 90 dias
+            if(($dias >= 0) AND($dias <= 90)){
+                $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReadaptacao);
+            }
+                
+            # Ci Término    
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReadaptacao);
+            
+            /*
 
             $tamanhoImage = 20;
             if(($dias >= 0) AND($dias <= 90)){
@@ -434,6 +453,9 @@ class Readaptacao{
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');
             $menu->add_item($botao);
+             * 
+             * 
+             */
 
             $menu->show();
 

@@ -540,7 +540,7 @@ class ReducaoCargaHoraria{
             $nomeBotaoAto = "Ato do Reitor ".$atoReitor;
         }
         
-        $menu = new Menu("menuDocumentos");
+        $menu = new Menu("menuBeneficios");
         
         # Despachos
         $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);

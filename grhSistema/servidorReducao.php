@@ -1313,7 +1313,9 @@ if($acesso){
                 # Limita a tela
                 $grid = new Grid("center");
                 $grid->abreColuna(10);
-                br(3);
+                br();
+                
+                callout("Quando a solicitação é de renovação, faz-se necessário informar a página do processo, onde se encontra a cópia da publicação do benefício anterior.");
 
                 # Título
                 titulo("Despacho Para Perícia Médica");

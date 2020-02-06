@@ -602,6 +602,13 @@ class MenuServidor{
                 $botao->set_title('Cadastro de Licenças Prêmio do Servidor');
                 #$botao->set_accessKey('L');
                 $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Licença Sem Vencimentos');
+                $botao->set_url('servidorLicencaSemVencimentos.php');
+                $botao->set_imagem(PASTA_FIGURAS.'semVencimento.png',$$this->tamanhoImagem,$this->tamanhoImagem);
+                $botao->set_title('Cadastro de Licenças Sem Vencimentos do Servidor');
+                $menu->add_item($botao);
             }
 
             $botao = new BotaoGrafico();

@@ -1298,10 +1298,10 @@ if($acesso){
         case "despachoPerícia" :
             
             # Voltar
-            botaoVoltar("?");
+            #botaoVoltar("?");
             
             # Dados do Servidor
-            get_DadosServidor($idServidorPesquisado);
+            #get_DadosServidor($idServidorPesquisado);
             
             # Pega os dados da redução
             $dados = $reducao->get_dados($id);
@@ -1315,10 +1315,10 @@ if($acesso){
                 $grid->abreColuna(10);
                 br();
                 
-                callout("Quando a solicitação é de renovação, faz-se necessário informar a página do processo, onde se encontra a cópia da publicação do benefício anterior.");
+                callout("ATENÇÃO:<br/>Quando a solicitação é de renovação, faz-se necessário informar a página do processo, onde se encontra a cópia da publicação do benefício anterior.");
 
                 # Título
-                titulo("Despacho Para Perícia Médica");
+                titulo("Redução de Carga Horária - Despacho Para Perícia Médica");
                 $painel = new Callout();
                 $painel->abre();
 
@@ -1326,7 +1326,7 @@ if($acesso){
                 $form = new Form('?fase=despachoPericiaFormValida&id='.$id);
 
                 # folha da publicação no processo 
-                $controle = new Input('folha','texto','Pág. do Processo da Cópia da Publicação:',1);
+                $controle = new Input('folha','texto','Página:',1);
                 $controle->set_size(10);
                 $controle->set_linha(1);
                 $controle->set_col(3);
@@ -1346,8 +1346,7 @@ if($acesso){
                 $grid->fechaColuna();
                 $grid->fechaGrid();
             }else{
-                loadPage("../grhRelatorios/reducao.DespachoPericia.php?id=$id","_blank");
-                loadPage("?");
+                loadPage("../grhRelatorios/reducao.DespachoPericia.php?id=$id");                
             }
             break;
         
@@ -1367,8 +1366,7 @@ if($acesso){
             } 
             
             if($erro == 0){
-                loadPage("../grhRelatorios/reducao.DespachoPericia.php?folha=$folha&id=$id","_blank");
-                loadPage("?");
+                loadPage("../grhRelatorios/reducao.DespachoPericia.php?folha=$folha&id=$id");
             }else{
                 alert($msgErro);
                 back(1);

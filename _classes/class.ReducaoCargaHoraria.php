@@ -543,7 +543,7 @@ class ReducaoCargaHoraria{
         $menu = new Menu("menuBeneficios");
         
         # Despachos
-        $menu->add_item('link',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
         
         # Retorno
         if($resultado == 1){

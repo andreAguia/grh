@@ -273,9 +273,9 @@ p#vagaCargo{
 }
 
 p#vagaId{
-    font-size: 10px;    
+    font-size: 12px;    
     padding: 0px;
-    margin: 0px;
+    margin: -10px;
     color:#8a8a8a;
     float: right;
 }

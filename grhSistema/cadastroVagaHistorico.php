@@ -18,6 +18,7 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $vaga = new Vaga();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -35,10 +36,13 @@ if($acesso){
     $id = soNumeros(get('id'));
     $idVaga = get_session('idVaga');
     
-    # Pega os dados dessa vaga
-    $vaga = new Vaga();
+    
+    # Pega os dados dessa vaga    
     $vagaDados = $vaga->get_dados($idVaga);
     $numConcursos = $vaga->get_numConcursoVaga($idVaga);
+    
+    $laboratorioOrigem = $vaga->get_nomeLaboratorioOrigem($idVaga);
+    $laboratorioOcupante = $vaga->get_nomeLaboratorioOcupante($idVaga);
     
     $centro = $vagaDados['centro'];
     $idCargo = $vagaDados['idCargo'];
@@ -329,6 +333,11 @@ if($acesso){
             # Área Principal
             
             $grid->abreColuna(9);
+            
+                # Alerta de laboratório
+                if($laboratorioOrigem <> $laboratorioOcupante){
+                    callout("Último concurso não foi para o Laboratório de Origem!!");
+                }
             
                 $objeto->listar();
             

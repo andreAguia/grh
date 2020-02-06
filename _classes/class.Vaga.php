@@ -1,38 +1,49 @@
 <?php
-class Vaga{
+class Vaga
+{
  /**
-  * Abriga as várias rotina do Controle de Vagas de Docentes
+  * Classe que abriga as várias rotina do Controle de Vagas de Docentes
   * 
   * @author André Águia (Alat) - alataguia@gmail.com  
   */
     
     
     ###########################################################
-    
-    /**
-    * Método Construtor
-    */
-    public function __construct(){
+        
+    public function __construct(){       
+   /**
+     * Inicia a classe somente
+     * 
+     * @note Se o mês não for informado, é exibido o mês atual.
+     * @note Se o ano não for informado, é exibido o ano atual.
+     * 
+     * @syntax $calendario = new Calendario([$mes], [$ano]);
+     */
         
     }
 
     ###########################################################
     
-    function get_dados($idVaga){
-        
+    public function get_dados($idVaga = NULL){ // integer o id da vaga
     /**
-     * fornece a próxima tarefa a ser realizada
+     * Retorna todos os dados arquivados na tabela tbvaga
+     * 
+     * @syntax $vaga->get_dados($idVaga);
      */
         
-        # Pega os dados
-        $select="SELECT *
-                   FROM tbvaga
-                  WHERE idVaga = $idVaga";
-        
-        $pessoal = new Pessoal();
-        $dados = $pessoal->select($select,FALSE);
-        
-        return $dados;
+        if(vazio($idVaga)){
+            alert("Deve-se informar o idVaga!");
+        }else{
+            # Pega os dados
+            $select="SELECT *
+                       FROM tbvaga
+                      WHERE idVaga = $idVaga";
+
+            $pessoal = new Pessoal();
+            $dados = $pessoal->select($select,FALSE);
+
+            return $dados;
+        }
     }
     
     ###########################################################
@@ -44,8 +55,8 @@ class Vaga{
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_nome($idServidor)
-    {
+    function get_nome($idServidor){
+        
         if(is_numeric($idServidor)){
             
             # Conecta o banco
@@ -201,35 +212,7 @@ class Vaga{
         $dados = $pessoal->select($select);
         return $dados;
     }
-
-    ###########################################################
-
-    /**
-     * Método get_laboratorioOcupante
-     * fornece o nome do laboratório de servidor ocupante da último edital para esta vaga
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-
-    function get_laboratorioOcupante($idVaga)
-    {
-        if(is_numeric($idVaga)){
-            
-            # Conecta o banco
-            $pessoal = new Pessoal();
-            
-            $select = 'SELECT idLotacao
-                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
-            
-            $dado = $pessoal->select($select,FALSE);
-            return $pessoal->get_nomeLotacao2($dado[0]);
-            
-        }else{
-            return $idVaga;
-        }
-    }
-
+   
     ###########################################################
 
     /**
@@ -989,5 +972,91 @@ class Vaga{
     }
 
     ###########################################################
-    
+
+    /**
+     * Método get_nomeLaboratorioOcupante
+     * fornece a sigla do laboratório do ocupante atual da vaga,
+     * 
+     * @param	integer $idVaga O id da vaga
+     */
+
+    function get_nomeLaboratorioOcupante($idVaga){
+            
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Pega o idLotação
+        $idLotacao = $this->get_laboratorioOcupante($idVaga);
+        
+        # Pega o nome dessa lotação
+        $nome = $pessoal->get_lotacaoGerencia($idLotacao);
+        
+        # Retorna o nome
+        return $nome;
+    }
+
+    ###########################################################
+     
+    /**
+     * Método get_laboratorioOcupante
+     * fornece o nome do laboratório de servidor ocupante da último edital para esta vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function get_laboratorioOcupante($idVaga){
+        if(is_numeric($idVaga)){
+            
+            # Conecta o banco
+            $pessoal = new Pessoal();
+            
+            $select = 'SELECT idLotacao
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+            
+            $dado = $pessoal->select($select,FALSE);
+            return $dado[0];
+            
+        }else{
+            return NULL;
+        }
+    }
+
+    ###########################################################
+     
+    /**
+     * Método verificaLaboratorioDiferente
+     * Verifica se tem algum concurso com laboratório difewrente do de origem
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function verificaLaboratorioDiferente($idVaga){
+        
+        if(vazio($idVaga)){
+            alert("Tem que informar o idVaga");
+        }else{
+            # Conecta o banco
+            $pessoal = new Pessoal();
+            
+            # Pega o id da lotação de origem
+            $idOrigem = $this->get_laboratorioOrigem($idVaga);
+            
+            $select = "SELECT idLotacao
+                         FROM tbvagahistorico
+                        WHERE idVaga = $idVaga
+                          AND idLotacao <> $idOrigem";
+            
+            $num = $pessoal->count($select);
+            
+            if($num <> 0){
+                $botao = new BotaoGrafico();
+                $botao->set_imagem(PASTA_FIGURAS.'exclamation.png',20,20);
+                $botao->set_title('Existem lotações diferentes da lotação de origem');
+                $botao->show();
+            }
+        }
+    }
+
+    ###########################################################
 }

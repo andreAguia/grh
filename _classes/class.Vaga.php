@@ -972,6 +972,98 @@ class Vaga
     }
 
     ###########################################################
+    ###########################################################
+    
+    ###########################################################
+     
+    /**
+     * Método verificaProblemaVaga
+     * Verifica se tem algum problema na vaga
+     * 
+     * @note Problemas procurados: laboratório de origem diferente do concurso ou do ocupante do cargo e 2 lançamento do mesmo concurso
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function verificaProblemaVaga($idVaga){
+        
+        # Inicia as variáveis
+        $erro = NULL;
+        
+        if(vazio($idVaga)){
+            alert("Tem que informar o idVaga");
+        }else{
+            # Conecta o banco
+            $pessoal = new Pessoal();
+            
+            # Pega o id da lotação de origem
+            $idOrigem = $this->get_laboratorioOrigem($idVaga);
+            
+        ############################
+        
+            # 1° Problema: Verifica se tem algum concurso para laboratório diferente do laboratório de origem
+            
+            # Percorre o registros dessa vaga
+            $select = "SELECT idLotacao
+                         FROM tbvagahistorico
+                        WHERE idVaga = $idVaga
+                          AND idLotacao <> $idOrigem";
+            
+            $num = $pessoal->count($select);
+            
+            if($num <> 0){
+                $erro[] = 'Existem lotações diferentes da lotação de origem';
+            }
+            
+        ############################
+        
+            # 2° Problema: Verifica se tem algum ocupante para laboratório diferente do laboratório de origem
+            #              Esse problema é relativo, pois a lotação do servidor pode variar e dar um falso problema
+            
+            # Pega os servidores dessa vaga
+            $select = "SELECT idServidor
+                         FROM tbvagahistorico
+                        WHERE idVaga = $idVaga";
+            
+            $relacao = $pessoal->select($select);
+            
+            # Percorre comparando a lotacção de cada um com a lotação de origem
+            foreach($relacao as $rr){
+                
+                # Pega o idLotação desse servidor
+                if(!vazio($rr[0])){
+                    $idlotacao = $pessoal->get_idLotacao($rr[0]);
+                }
+                
+                if((!vazio($rr[0])) AND ($idlotacao <> $idOrigem)){
+                    $erro[] = 'Existem servidores que ocupam ou ocuparam essa vaga que não estão lotados na lotação de origem';
+                    break;
+                }
+            }
+            
+           ############################
+        
+            # 3° Problema: Verifica se o mesmo concurso aparece mais de uma vez
+            
+            # Percorre o registros dessa vaga
+            $select = "SELECT idConcurso, COUNT(idConcurso) 
+                         FROM tbvagahistorico
+                        WHERE idVaga = $idVaga
+                     GROUP BY idConcurso
+                       HAVING COUNT(*) > 1";
+            
+            $num = $pessoal->count($select);
+            
+            if($num <> 0){
+                $erro[] = 'O mesmo concurso aparece mais de uma vez nessa vaga';
+            }            
+        }
+        
+        return $erro;
+    }
+
+    ###########################################################
+    
 
     /**
      * Método get_nomeLaboratorioOcupante

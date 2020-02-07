@@ -41,9 +41,6 @@ if($acesso){
     $vagaDados = $vaga->get_dados($idVaga);
     $numConcursos = $vaga->get_numConcursoVaga($idVaga);
     
-    $laboratorioOrigem = $vaga->get_nomeLaboratorioOrigem($idVaga);
-    $laboratorioOcupante = $vaga->get_nomeLaboratorioOcupante($idVaga);
-    
     $centro = $vagaDados['centro'];
     $idCargo = $vagaDados['idCargo'];
     $nomeCargo = $pessoal->get_nomeCargo($idCargo);
@@ -335,9 +332,9 @@ if($acesso){
             $grid->abreColuna(9);
             
                 # Alerta de laboratório
-                if($laboratorioOrigem <> $laboratorioOcupante){
-                    callout("Último concurso não foi para o Laboratório de Origem!!");
-                }
+                $msn = $vaga->verificaProblemaVaga($idVaga);
+                
+                callout($msn);
             
                 $objeto->listar();
             

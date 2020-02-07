@@ -234,6 +234,7 @@ if($acesso){
                'array' => $vagas,
                'col' => 3,
                'padrao' => $idVaga,
+               'required' => TRUE,
                'size' => 30),
         array ('linha' => 1,
                'nome' => 'idConcurso',
@@ -305,13 +306,11 @@ if($acesso){
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel,"right");
             
-            if($vaga->get_status($idVaga) == "Disponível"){
-                # Incluir
-                $botaoVoltar = new Link("Incluir Concurso","?fase=editar");
-                $botaoVoltar->set_class('button');
-                $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
-                $menu1->add_link($botaoVoltar,"right");
-            }
+            # Incluir
+            $botaoVoltar = new Link("Incluir Concurso","?fase=editar");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
+            $menu1->add_link($botaoVoltar,"right");
 
             $menu1->show();
             

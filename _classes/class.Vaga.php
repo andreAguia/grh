@@ -970,9 +970,6 @@ class Vaga
         # Retorna o nome
         return $nome;
     }
-
-    ###########################################################
-    ###########################################################
     
     ###########################################################
      
@@ -1012,7 +1009,7 @@ class Vaga
             $num = $pessoal->count($select);
             
             if($num <> 0){
-                $erro[] = 'Existem lotações diferentes da lotação de origem';
+                $erro[] = 'Existem concursos para essa vaga com laboratório diferente do laboratório de origem';
             }
             
         ############################
@@ -1036,7 +1033,7 @@ class Vaga
                 }
                 
                 if((!vazio($rr[0])) AND ($idlotacao <> $idOrigem)){
-                    $erro[] = 'Existem servidores que ocupam ou ocuparam essa vaga que não estão lotados na lotação de origem';
+                    $erro[] = 'Existem servidores que ocupam ou ocuparam essa vaga que não estão lotados no laboratório de origem';
                     break;
                 }
             }
@@ -1063,92 +1060,30 @@ class Vaga
     }
 
     ###########################################################
+     
+    /**
+     * Método temProblema
+     * Verifica se tem algum problema na vaga e exibe um sinal quando tem
+     * 
+     * @note Problemas procurados: laboratório de origem diferente do concurso ou do ocupante do cargo e 2 lançamento do mesmo concurso
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function temProblema($idVaga){
+        
+        # Verifica se tem problema
+        $temProblema = $this->verificaProblemaVaga($idVaga);
+        
+        # Exibe ou não o aviso
+        if(is_array($temProblema)){
+            $botao = new BotaoGrafico();
+            $botao->set_imagem(PASTA_FIGURAS.'aviso.png',25,25);
+            $botao->set_title('Problemas Encontrados !!');
+            $botao->show();
+        }
+    }
     
-
-    /**
-     * Método get_nomeLaboratorioOcupante
-     * fornece a sigla do laboratório do ocupante atual da vaga,
-     * 
-     * @param	integer $idVaga O id da vaga
-     */
-
-    function get_nomeLaboratorioOcupante($idVaga){
-            
-        # Conecta o banco
-        $pessoal = new Pessoal();
-
-        # Pega o idLotação
-        $idLotacao = $this->get_laboratorioOcupante($idVaga);
-        
-        # Pega o nome dessa lotação
-        $nome = $pessoal->get_lotacaoGerencia($idLotacao);
-        
-        # Retorna o nome
-        return $nome;
-    }
-
     ###########################################################
-     
-    /**
-     * Método get_laboratorioOcupante
-     * fornece o nome do laboratório de servidor ocupante da último edital para esta vaga
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-
-    function get_laboratorioOcupante($idVaga){
-        if(is_numeric($idVaga)){
-            
-            # Conecta o banco
-            $pessoal = new Pessoal();
-            
-            $select = 'SELECT idLotacao
-                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                        WHERE idVaga = '.$idVaga.' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
-            
-            $dado = $pessoal->select($select,FALSE);
-            return $dado[0];
-            
-        }else{
-            return NULL;
-        }
-    }
-
-    ###########################################################
-     
-    /**
-     * Método verificaLaboratorioDiferente
-     * Verifica se tem algum concurso com laboratório difewrente do de origem
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-
-    function verificaLaboratorioDiferente($idVaga){
         
-        if(vazio($idVaga)){
-            alert("Tem que informar o idVaga");
-        }else{
-            # Conecta o banco
-            $pessoal = new Pessoal();
-            
-            # Pega o id da lotação de origem
-            $idOrigem = $this->get_laboratorioOrigem($idVaga);
-            
-            $select = "SELECT idLotacao
-                         FROM tbvagahistorico
-                        WHERE idVaga = $idVaga
-                          AND idLotacao <> $idOrigem";
-            
-            $num = $pessoal->count($select);
-            
-            if($num <> 0){
-                $botao = new BotaoGrafico();
-                $botao->set_imagem(PASTA_FIGURAS.'exclamation.png',20,20);
-                $botao->set_title('Existem lotações diferentes da lotação de origem');
-                $botao->show();
-            }
-        }
-    }
-
-    ###########################################################
 }

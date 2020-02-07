@@ -305,6 +305,13 @@ if($acesso){
             
             # Só exibe se tiver sido escolhido um centro
             if(!vazio($parametroCentro)){
+                
+                # Exibe as tabs
+                echo '<ul class="tabs" data-tabs id="example-tabs">';
+                echo '<li class="tabs-title is-active"><a href="#disponiveis" aria-selected="true">Disponíveis</a></li>';
+                echo '<li class="tabs-title"><a data-tabs-target="ocupadas" href="#ocupadas">Ocupadas</a></li>';
+                
+                echo '</ul>';
             
                 $select = "SELECT idVaga,
                                   centro,
@@ -342,101 +349,114 @@ if($acesso){
                 }
 
                 #####
-
+                
+                echo '<div class="tabs-content" data-tabs-content="example-tabs">';
+                
                 # Vagas Disponíveis
-                $tabela = new Tabela();
+                $div1 = new Div('disponiveis','tabs-panel is-active');
+                $div1->abre();
+                
+                    $tabela = new Tabela();
 
-                # Titulo
-                if(!vazio($parametroCentro)){
-                    $titulo = "Vagas de Docentes do $parametroCentro";
-                }else{
-                    $titulo = "Vagas de Docentes";
-                }    
+                    # Titulo
+                    if(!vazio($parametroCentro)){
+                        $titulo = "Vagas de Docentes do $parametroCentro";
+                    }else{
+                        $titulo = "Vagas de Docentes";
+                    }    
 
-                $tabela->set_titulo($titulo." - Disponíveis");
-                $tabela->set_conteudo($arrayDisponível);
+                    $tabela->set_titulo($titulo." - Disponíveis");
+                    $tabela->set_conteudo($arrayDisponível);
 
-                $tabela->set_label(array("Id","Centro","Cargo","Status","Lab.Origem","Lab. Difer.","Último Ocupante","Obs","Num. de Concursos","Editar"));
-                #$tabela->set_width(array(5,10,20,10,30,25));
-                $tabela->set_align(array("center"));
+                    $tabela->set_label(array("Id","Centro","Cargo","Status","Lab.Origem","Problemas","Último Ocupante","Obs","Num. de Concursos","Editar"));
+                    #$tabela->set_width(array(5,10,20,10,30,25));
+                    $tabela->set_align(array("center"));
 
-                $tabela->set_classe(array(NULL,NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
-                $tabela->set_metodo(array(NULL,NULL,NULL,"get_status","get_nomeLaboratorioOrigem","verificaLaboratorioDiferente","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+                    $tabela->set_classe(array(NULL,NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
+                    $tabela->set_metodo(array(NULL,NULL,NULL,"get_status","get_nomeLaboratorioOrigem","temProblema","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
 
-                $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
-                                                        'valor' => 'Disponível',
-                                                        'operador' => '=',
-                                                        'id' => 'emAberto'),
-                                                  array('coluna' => 3,
-                                                        'valor' => 'Ocupado',
-                                                        'operador' => '=',
-                                                        'id' => 'alerta')
-                                                        ));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
+                                                            'valor' => 'Disponível',
+                                                            'operador' => '=',
+                                                            'id' => 'emAberto'),
+                                                      array('coluna' => 3,
+                                                            'valor' => 'Ocupado',
+                                                            'operador' => '=',
+                                                            'id' => 'alerta')
+                                                            ));
 
-                $tabela->set_excluirCondicional('?fase=excluir',0,8,"==");
+                    $tabela->set_excluirCondicional('?fase=excluir',0,8,"==");
 
-                # Botão de Editar concursos
-                $botao1 = new BotaoGrafico();
-                $botao1->set_label('');
-                $botao1->set_title('Editar o Concurso');
-                $botao1->set_url("?fase=editarConcurso&id=");
-                $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
+                    # Botão de Editar concursos
+                    $botao1 = new BotaoGrafico();
+                    $botao1->set_label('');
+                    $botao1->set_title('Editar o Concurso');
+                    $botao1->set_url("?fase=editarConcurso&id=");
+                    $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
 
-                # Coloca o objeto link na tabela			
-                $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
+                    # Coloca o objeto link na tabela			
+                    $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
 
-                #$tabela->set_numeroOrdem(TRUE);
-                $tabela->set_idCampo('idVaga');
-                $tabela->show();
+                    #$tabela->set_numeroOrdem(TRUE);
+                    $tabela->set_idCampo('idVaga');
+                    $tabela->show();
+                
+                $div1->fecha();
 
                 #####
 
                 # Vagas Ocupadas
-                $tabela = new Tabela();
+                $div2 = new Div('ocupadas','tabs-panel');
+                $div2->abre();
+                
+                    $tabela = new Tabela();
 
-                # Titulo
-                if(!vazio($parametroCentro)){
-                    $titulo = "Vagas de Docentes do $parametroCentro";
-                }else{
-                    $titulo = "Vagas de Docentes";
-                }    
+                    # Titulo
+                    if(!vazio($parametroCentro)){
+                        $titulo = "Vagas de Docentes do $parametroCentro";
+                    }else{
+                        $titulo = "Vagas de Docentes";
+                    }    
 
-                $tabela->set_titulo($titulo." - Ocupadas");
-                $tabela->set_conteudo($arrayOcupado);
+                    $tabela->set_titulo($titulo." - Ocupadas");
+                    $tabela->set_conteudo($arrayOcupado);
 
-                $tabela->set_label(array("Id","Centro","Cargo","Status","Lab.Origem","Último Ocupante","Obs","Num. de Concursos","Editar"));
-                #$tabela->set_width(array(5,10,20,10,30,25));
-                $tabela->set_align(array("center"));
+                    $tabela->set_label(array("Id","Centro","Cargo","Status","Lab.Origem","Problemas","Último Ocupante","Obs","Num. de Concursos","Editar"));
+                    #$tabela->set_width(array(5,10,20,10,30,25));
+                    $tabela->set_align(array("center"));
 
-                $tabela->set_classe(array(NULL,NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga"));
-                $tabela->set_metodo(array(NULL,NULL,NULL,"get_status","get_nomeLaboratorioOrigem","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
+                    $tabela->set_classe(array(NULL,NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Vaga","Vaga"));
+                    $tabela->set_metodo(array(NULL,NULL,NULL,"get_status","get_nomeLaboratorioOrigem","temProblema","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga"));
 
-                $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
-                                                        'valor' => 'Disponível',
-                                                        'operador' => '=',
-                                                        'id' => 'emAberto'),
-                                                  array('coluna' => 3,
-                                                        'valor' => 'Ocupado',
-                                                        'operador' => '=',
-                                                        'id' => 'alerta')
-                                                        ));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 3,
+                                                            'valor' => 'Disponível',
+                                                            'operador' => '=',
+                                                            'id' => 'emAberto'),
+                                                      array('coluna' => 3,
+                                                            'valor' => 'Ocupado',
+                                                            'operador' => '=',
+                                                            'id' => 'alerta')
+                                                            ));
 
-                $tabela->set_excluirCondicional('?fase=excluir',0,7,"==");
+                    $tabela->set_excluirCondicional('?fase=excluir',0,8,"==");
 
-                # Botão de Editar concursos
-                $botao1 = new BotaoGrafico();
-                $botao1->set_label('');
-                $botao1->set_title('Editar o Concurso');
-                $botao1->set_url("?fase=editarConcurso&id=");
-                $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
+                    # Botão de Editar concursos
+                    $botao1 = new BotaoGrafico();
+                    $botao1->set_label('');
+                    $botao1->set_title('Editar o Concurso');
+                    $botao1->set_url("?fase=editarConcurso&id=");
+                    $botao1->set_imagem(PASTA_FIGURAS.'ver.png',20,20);
 
+                    # Coloca o objeto link na tabela			
+                    $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
 
-                # Coloca o objeto link na tabela			
-                $tabela->set_link(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,$botao1));
-
-                #$tabela->set_numeroOrdem(TRUE);            
-                $tabela->set_idCampo('idVaga');
-                $tabela->show();
+                    #$tabela->set_numeroOrdem(TRUE);            
+                    $tabela->set_idCampo('idVaga');
+                    $tabela->show();
+                
+                $div2->fecha();
+                
+                echo '</div>';
             }
             
             #####

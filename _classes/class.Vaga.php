@@ -942,7 +942,7 @@ class Vaga
                      FROM tbvagahistorico JOIN tbconcurso USING (idConcurso) 
                     WHERE idVaga = $idVaga
                  ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
-
+        echo "oi";
         $dado = $pessoal->select($select,FALSE);
         return $dado[0];
     }

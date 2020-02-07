@@ -471,6 +471,7 @@ class MenuServidor{
         $menu->add_item("linkWindow","Despacho para Abertura de Processo","?fase=despacho");
         $menu->add_item("linkWindow","Despacho para Reitoria","../grhRelatorios/despacho.Reitoria.php");
         $menu->add_item("linkWindow","Despacho para Publicação de Ato do Reitor","../grhRelatorios/despacho.Publicacao.php");
+        $menu->add_item("linkWindow","Despacho à Chefia/Servidor para Retirada do Ato","?fase=despachoChefia");
 
         $menu->add_item("linkWindow","Ficha Cadastral","../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow","Folha de Presença","../grhRelatorios/folhaPresenca.php");
@@ -600,6 +601,13 @@ class MenuServidor{
                 $botao->set_imagem(PASTA_FIGURAS.'premio.png',$this->tamanhoImagem,$this->tamanhoImagem);
                 $botao->set_title('Cadastro de Licenças Prêmio do Servidor');
                 #$botao->set_accessKey('L');
+                $menu->add_item($botao);
+                
+                $botao = new BotaoGrafico();
+                $botao->set_label('Licença Sem Vencimentos');
+                $botao->set_url('servidorLicencaSemVencimentos.php');
+                $botao->set_imagem(PASTA_FIGURAS.'semVencimento.png',$$this->tamanhoImagem,$this->tamanhoImagem);
+                $botao->set_title('Cadastro de Licenças Sem Vencimentos do Servidor');
                 $menu->add_item($botao);
             }
 

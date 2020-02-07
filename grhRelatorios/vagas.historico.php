@@ -42,7 +42,7 @@ if($acesso){
     ######
     
     # Título & Subtitulo
-    $subTitulo = "$centro - $cargo<br/>Origem: $labOrigem<br/>Vaga $status";
+    $subTitulo = "$idVaga - $centro - $cargo<br/>Origem: $labOrigem<br/>Vaga $status";
     $titulo = "Histórico de Concursos Desta Vaga";
 
     # Pega os dados

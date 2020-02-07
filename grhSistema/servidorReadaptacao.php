@@ -322,7 +322,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("Origem","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período","Documentos"));
-    #$objeto->set_width(array(10,10,10,20,20,10,10));	
+    $objeto->set_width(array(7,7,7,12,7,12,7,7,12,12));	
     $objeto->set_align(array("center","center","center","center","center","left","center","center","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,"date_to_php"));
     
@@ -511,7 +511,7 @@ if($acesso){
         #########################################################################################################
             
             # Contatos
-            $grid->abreColuna(12,4);
+            $grid->abreColuna(12,6);
             
                 # Pega os telefones
                 $telefones = $pessoal->get_telefones($idServidorPesquisado);
@@ -554,6 +554,33 @@ if($acesso){
                 
             $grid->fechaColuna();
             
+            #########################################################################################################
+            
+            # Documentos
+            $grid->abreColuna(12,6);
+                
+                $painel = new Callout();
+                $painel->abre();
+                
+                tituloTable("Documentos:");
+                br();
+                
+                $menu = new Menu();
+                #$menu->add_item('titulo','Documentos');
+                
+                $menu->add_item("linkWindow","Despacho ao Protocolo para Abertura de Processo","servidorMenu.php?fase=despacho");
+                $menu->add_item("linkWindow","Despacho à Chefia/Servidor para Retirada do Ato","servidorMenu.php?fase=despachoChefia");
+                $menu->add_item("linkWindow","Despacho à Perícia para Arquivamento","../grhRelatorios/despacho.Pericia.Arquivamento.php");
+                
+                
+                $menu->add_item('linkWindow','Declaração de Atribuições','../grhRelatorios/declaracao.AtribuicoesCargo.php');
+                $menu->add_item('linkWindow','Declaração de Inquérito Administrativo','../grhRelatorios/declaracao.InqueritoAdministrativo.php');
+            
+                $menu->show();
+                
+                $painel->fecha();
+                
+            $grid->fechaColuna();            
             $grid->fechaGrid();        
             $objeto->listar(); 
             break;
@@ -1204,7 +1231,91 @@ if($acesso){
             }
             break;
 
-        ########################################################33
+        ################################################################################################################
+    
+        # Despacho para Perícia
+        case "despachoPerícia" :
+            
+            # Voltar
+            #botaoVoltar("?");
+            
+            # Dados do Servidor
+            #get_DadosServidor($idServidorPesquisado);
+            
+            # Pega os dados da redução
+            $dados = $readaptacao->get_dados($id);
+            $tipo = $dados["tipo"];
+            
+            # Formulário somente para tipo 2
+            if($tipo == 2){
+            
+                # Limita a tela
+                $grid = new Grid("center");
+                $grid->abreColuna(10);
+                br();
+                
+                callout("ATENÇÃO:<br/>Quando a solicitação é de renovação, faz-se necessário informar a página do processo, onde se encontra a cópia da publicação do benefício anterior.");
+
+                # Título
+                titulo("Readaptação - Despacho Para Perícia Médica");
+                
+                $painel = new Callout();
+                $painel->abre();
+
+                # Monta o formulário
+                $form = new Form('?fase=despachoPericiaFormValida&id='.$id);
+
+                # folha da publicação no processo 
+                $controle = new Input('folha','texto','Página:',1);
+                $controle->set_size(10);
+                $controle->set_linha(1);
+                $controle->set_col(3);
+                $controle->set_autofocus(TRUE);
+                $controle->set_title('A página do processo da cópia da publicação.');
+                $form->add_item($controle);
+
+                # submit
+                $controle = new Input('imprimir','submit');
+                $controle->set_valor('Imprimir');
+                $controle->set_linha(5);
+                $controle->set_col(2);
+                $form->add_item($controle);
+
+                $form->show();
+
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+            }else{
+                loadPage("../grhRelatorios/readaptacao.DespachoPericia.php?id=$id");
+            }
+            break;
+        
+        case "despachoPericiaFormValida" :
+                        
+            # Pega os dados Digitados
+            $folha = vazioPraNulo(post("folha"));
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da folha
+            if(vazio($folha)){
+                $msgErro.='Deve digitar o número da folha!\n';
+                $erro = 1;
+            } 
+            
+            if($erro == 0){
+                loadPage("../grhRelatorios/readaptacao.DespachoPericia.php?folha=$folha&id=$id");
+            }else{
+                alert($msgErro);
+                back(1);
+            }    
+            break;
+                
+        
+    ################################################################################################################
+            
     }									 	 		
 
     $page->terminaPagina();

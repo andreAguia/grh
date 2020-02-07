@@ -33,7 +33,8 @@ if($acesso){
     $titulo = "Vagas por Laboratório";
 
     # Pega os dados
-    $select = 'SELECT tbcargo.nome,
+    $select = 'SELECT idVaga,
+                      tbcargo.nome,
                       idVaga,
                       idVaga,
                       idVaga,
@@ -50,7 +51,7 @@ if($acesso){
         $select .= "AND centro = '$parametroCentro'";
     }
 
-    $select .= ' ORDER BY centro, 6, idCargo desc';
+    $select .= ' ORDER BY centro, 7, idCargo desc';
 
     $resumo = $pessoal->select($select);
 
@@ -58,15 +59,15 @@ if($acesso){
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
     
-    $relatorio->set_label(array("Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Origem"));
-    $relatorio->set_width(array(20,10,30,25));
+    $relatorio->set_label(array("Id","Cargo","Status","Último Ocupante","Obs","Num. de Concursos","Origem"));
+    $relatorio->set_width(array(5,20,10,30,25));
     $relatorio->set_align(array("center"));
     
     #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
     #$relatorio->set_width(array(5,5,5,20,5,20,15,15,5));
 
-    $relatorio->set_classe(array(NULL,"Vaga","Vaga","Vaga","Vaga","Pessoal"));
-    $relatorio->set_metodo(array(NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga","get_nomelotacao2"));
+    $relatorio->set_classe(array(NULL,NULL,"Vaga","Vaga","Vaga","Vaga","Pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_status","get_servidorOcupante","get_obsOcupante","get_numConcursoVaga","get_nomelotacao2"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
@@ -74,7 +75,7 @@ if($acesso){
     #$relatorio->set_numeroOrdem(TRUE);
     #$relatorio->set_numeroOrdemTipo('d');
     $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_numGrupo(5);
+    $relatorio->set_numGrupo(6);
     
     $relatorio->show();
 

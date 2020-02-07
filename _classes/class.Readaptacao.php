@@ -385,23 +385,41 @@ class Readaptacao{
         # Nome do botão de início
         $nomeBotaoInicio = "CI Início";
         if(!is_null($ciInicio)){
-            $nomeBotaoInicio = "CI Início<br/>n° ".$ciInicio;
+            $nomeBotaoInicio = "CI Início n° ".$ciInicio;
         }
         
         # Nome do botão de 90 Dias
         $nomeBotao90 = "CI 90 Dias";
         if(!is_null($ci90)){
-            $nomeBotao90 = "CI 90 Dias<br/>n° ".$ci90;
+            $nomeBotao90 = "CI 90 Dias n° ".$ci90;
         }
 
         # Nome do botão de Término
         $nomeBotaotermino = "CI Término";
         if(!is_null($ciTermino)){
-            $nomeBotaotermino = "CI Término<br/>n° ".$ciTermino;
+            $nomeBotaotermino = "CI Término >n° ".$ciTermino;
         }
+        
+        $menu = new Menu("menuBeneficios");
+        
+        # Despachos
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReadaptacao);
 
         # Retorno
         if(!vazio($dtInicio)){
+            
+            # Ci Início
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReadaptacao);
+            
+            # Ci 90 dias
+            if(($dias >= 0) AND($dias <= 90)){
+                $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReadaptacao);
+            }
+                
+            # Ci Término    
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReadaptacao);
+            
+            /*
 
             $tamanhoImage = 20;
             if(($dias >= 0) AND($dias <= 90)){
@@ -434,10 +452,62 @@ class Readaptacao{
             $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Imprime a Ci de término');
             $menu->add_item($botao);
-
-            $menu->show();
-
+             * 
+             * 
+             */
         }
+        
+        $menu->show();
+    }
+
+    ###########################################################
+
+    function get_dadosAnterior($idReadaptacao){
+
+    /**
+     * Informe os dados de uma Readaptacao imediatamente anterior cronológicamente
+     * 
+     * @note Usado para para pegar os dados da solicitação anterior quando for renovação
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Inicia as variáveis
+        $idReadaptacaoAnterior = NULL;  // Guarda o idRedução imediatamente anterior
+        $dadosAnterior = NULL;          // Guarda os dados da redução referentes a essa id anterior
+
+        # Verifica se foi informado
+        if(vazio($idReadaptacao)){
+            alert("É necessário informar o id da readaptacao.");
+            return;
+        }
+        
+        # Pega o idServidor
+        $dados = $this->get_dados($idReadaptacao);
+        $idServidor = $dados["idServidor"];
+        
+        # Com o IdServidor pega todas as reduções dele
+        $select = "SELECT idReadaptacao
+                     FROM tbreadaptacao
+                    WHERE idServidor = $idServidor
+                    ORDER BY dtInicio";
+
+        $row = $pessoal->select($select);
+        
+        # Percorre o array para encontrar o anterior
+        foreach($row as $redux){
+            if($idReadaptacao == $redux[0]){    // Verifica se é a atual
+                break;                          // Se for sai do loop 
+            }else{
+                $idReadaptacaoAnterior = $redux[0]; // Atualiza a variável da id anterior
+            }
+        }
+        
+        # Pega os dados da redução anteior com o id encontrado
+        $dadosAnterior = $this->get_dados($idReadaptacaoAnterior);
+
+        # Retorno
+        return $dadosAnterior;
     }
 
     ###########################################################

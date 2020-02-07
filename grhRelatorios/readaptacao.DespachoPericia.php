@@ -21,7 +21,7 @@ if($acesso){
     
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-    $reducao = new ReducaoCargaHoraria();
+    $readaptacao = new Readaptacao();
 	
     # Pega o id
     $id = get('id');
@@ -34,12 +34,12 @@ if($acesso){
     $page->iniciaPagina();
 
     # Pega o tipo
-    $dados = $reducao->get_dados($id);
+    $dados = $readaptacao->get_dados($id);
     $tipo = $dados["tipo"];
     
-    # Pega os dados da redução anterior quando for renovação
+    # Pega os dados da readaptacao anterior quando for renovação
     if($tipo == 2){
-        $dAnterior = $reducao->get_dadosAnterior($id);
+        $dAnterior = $readaptacao->get_dadosAnterior($id);
         $dtTermino = date_to_php($dAnterior["dtTermino"]);
         $dtPublicacao = date_to_php($dAnterior["dtPublicacao"]);
     }
@@ -62,16 +62,13 @@ if($acesso){
     
     # Tipo
     if($tipo == 2){
-        
-        $texto[] = "Encaminhamos a solicitação de Renovação da Redução de Carga Horária $detalhe <b>".strtoupper($nomeServidor)."</b>,"
-                 . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
+        $texto[] = "Encaminhamos a solicitação de Renovação da Readaptação $detalhe <b>".strtoupper($nomeServidor)."</b>,"
+                 . " ID nº $idFuncional, $cargoEfetivo, por motivo de saúde.";
         $texto[] = "Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em $dtTermino, conforme publicação no DOERJ de $dtPublicacao, anexada às fls. $folha do p.p.";
         $texto[] = "Desta forma, encaminhamos o presente para providências cabíveis.";
-        
     }else{
-        
-        $texto[] = "Encaminhamos a solicitação da Redução de Carga Horária $detalhe <b>".strtoupper($nomeServidor)."</b>,"
-                 . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
+        $texto[] = "Encaminhamos a solicitação de Readaptação $detalhe <b>".strtoupper($nomeServidor)."</b>,"
+                 . " ID nº $idFuncional, $cargoEfetivo, por motivo de saúde.";
     }
     
     # despacho
@@ -95,7 +92,7 @@ if($acesso){
                 
     # Grava o log da visualização do relatório
     $dataLog = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou O Despacho para a Perícia de redução da carga horária.';
+    $atividades = 'Visualizou O Despacho para a Perícia de readaptação.';
     $tipoLog = 4;
     $intra->registraLog($idUsuario,$dataLog,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);                
     

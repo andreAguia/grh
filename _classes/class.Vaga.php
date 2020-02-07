@@ -944,6 +944,7 @@ class Vaga
                  ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
         
         $dado = $pessoal->select($select,FALSE);
+        
         return $dado[0];
     }
 
@@ -964,8 +965,13 @@ class Vaga
         # Pega o idLotação
         $idLotacao = $this->get_laboratorioOrigem($idVaga);
         
+        
         # Pega o nome dessa lotação
-        $nome = $pessoal->get_lotacaoGerencia($idLotacao);
+        if(vazio($idLotacao)){
+            $nome = NULL;
+        }else{
+            $nome = $pessoal->get_lotacaoGerencia($idLotacao);
+        }
         
         # Retorna o nome
         return $nome;
@@ -1000,16 +1006,20 @@ class Vaga
         
             # 1° Problema: Verifica se tem algum concurso para laboratório diferente do laboratório de origem
             
-            # Percorre o registros dessa vaga
-            $select = "SELECT idLotacao
-                         FROM tbvagahistorico
-                        WHERE idVaga = $idVaga
-                          AND idLotacao <> $idOrigem";
-            
-            $num = $pessoal->count($select);
-            
-            if($num <> 0){
-                $erro[] = 'Existem concursos para essa vaga com laboratório diferente do laboratório de origem';
+            if(!vazio($idOrigem)){
+                # Percorre o registros dessa vaga
+                $select = "SELECT idLotacao
+                             FROM tbvagahistorico
+                            WHERE idVaga = $idVaga
+                              AND idLotacao <> $idOrigem";
+
+                $num = $pessoal->count($select);
+
+                if($num <> 0){
+                    $erro[] = 'Existem concursos para essa vaga com laboratório diferente do laboratório de origem';
+                }
+            }else{
+                $erro[] = 'Não foi possível descobrir o laboratório de origem';
             }
             
         ############################

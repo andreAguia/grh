@@ -143,8 +143,6 @@ if($acesso){
         }
     }
     
-    
-    
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
                                       concat(tbtipocargo.cargo," - ",tbarea.area," - ",nome)

@@ -608,7 +608,7 @@ class MenuServidor{
                 $botao->set_url('servidorLicencaSemVencimentos.php');
                 $botao->set_imagem(PASTA_FIGURAS.'semVencimento.png',$this->tamanhoImagem,$this->tamanhoImagem);
                 $botao->set_title('Cadastro de Licenças Sem Vencimentos do Servidor');
-                $menu->add_item($botao);
+                #$menu->add_item($botao);
             }
 
             $botao = new BotaoGrafico();

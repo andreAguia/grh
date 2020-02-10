@@ -507,11 +507,9 @@ class Vaga
     /**
      * Método get_numVagasCargoDiretoria
      * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
-     * 
-     * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_numVagasCargoDiretoriaDisponiveis($idCargo,$dir = NULL){
+    function get_numVagasCargoDiretoriaDisponiveis($idCargo = NULL,$dir = NULL){
             
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -522,7 +520,11 @@ class Vaga
         # Pega as vagas desse cargo e desse centro
         $select = "SELECT idVaga
                      FROM tbvaga
-                    WHERE idCargo = $idCargo";
+                    WHERE TRUE";
+        
+        if(!vazio($idCargo)){
+            $select .= " AND idCargo = $idCargo";
+        }
         
         if(!vazio($dir)){
             $select .= " AND centro = '$dir'";
@@ -559,7 +561,7 @@ class Vaga
      * @param	string $idVaga O id da vaga do servidor
      */
 
-    function get_numVagasCargoDiretoriaOcupados($idCargo,$dir = NULL){
+    function get_numVagasCargoDiretoriaOcupados($idCargo = NULL,$dir = NULL){
             
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -570,7 +572,11 @@ class Vaga
         # Pega as vagas desse cargo e desse centro
         $select = "SELECT idVaga
                      FROM tbvaga
-                    WHERE idCargo = $idCargo";
+                     WHERE TRUE";
+        
+        if(!vazio($idCargo)){
+            $select .= " AND idCargo = $idCargo";
+        }
         
         if(!vazio($dir)){
             $select .= " AND centro = '$dir'";

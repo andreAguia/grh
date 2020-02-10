@@ -457,6 +457,121 @@ if($acesso){
                 $div2->fecha();
                 
                 echo '</div>';
+            }else{
+                
+                tituloTable("Vagas de Docentes");
+                br();
+                
+                $grid2 = new Grid();
+                $grid2->abreColuna(4);
+                
+                    $painel = new Callout();
+                    $painel->abre();
+                    
+                        $numVagas = $vaga->get_numVagasDiretoria();
+                        $numVagasDisponiveis = $vaga->get_numVagasCargoDiretoriaDisponiveis();
+                        $numVagasOcupadas = $vaga->get_numVagasCargoDiretoriaOcupados();
+                        $arr = array(array("Disponíveis",$numVagasDisponiveis),
+                                     array("Ocupadas",$numVagasOcupadas));
+                        
+                        p($numVagas,"estatisticaNumero");
+                        p("Vagas","estatisticaTexto");
+                        p("$numVagasDisponiveis Disponíveis | $numVagasOcupadas Ocupadas","estatisticaTexto");
+                    
+                    $painel->fecha();     
+                
+                    $painel = new Callout();
+                    $painel->abre();    
+
+                        # Chart
+                        #tituloTable($item[0]);
+                        $chart = new Chart("Pie",$arr);
+                        $chart->set_idDiv('porLotacao');
+                        $chart->set_legend(FALSE);
+                        $chart->set_tamanho($largura = "70%",$altura = "70%");
+                        $chart->show();
+                    
+                    $painel->fecha(); 
+                
+                $grid2->fechaColuna();
+                $grid2->abreColuna(8);
+                    
+                    $painel = new Callout();
+                    $painel->abre();
+                    
+                    # Vagas Disponíveis                    
+                    $arrayResult = array(array("Professor Titular",$vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCT"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCTA"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCH"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CBB"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129)),
+                                       array("Professor Associado",$vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CCT"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CCTA"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CCH"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CBB"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128)),
+                                                     array("Total",$vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CCT"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CCTA"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CCH"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CBB"),
+                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis()));
+                    
+                    
+                    
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($arrayResult);
+                    $tabela->set_titulo("Vagas Disponíveis");
+                    $tabela->set_label(array("Cargo","CCT","CCTA","CCH","CBB","Total"));
+                    #$tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'estatisticaTotal')));
+                    $tabela->set_totalRegistro(FALSE);
+                    $tabela->show();
+                    
+                    # Vagas Ocupadas                    
+                    $arrayResult = array(array("Professor Titular",$vaga->get_numVagasCargoDiretoriaOcupados(129,"CCT"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129,"CCTA"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129,"CCH"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129,"CBB"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129)),
+                                       array("Professor Associado",$vaga->get_numVagasCargoDiretoriaOcupados(128,"CCT"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128,"CCTA"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128,"CCH"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128,"CBB"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128)),                                           
+                                                     array("Total",$vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CCT"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CCTA"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CCH"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CBB"),
+                                                                   $vaga->get_numVagasCargoDiretoriaOcupados()));
+                    
+                    
+                    
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($arrayResult);
+                    $tabela->set_titulo("Vagas Ocupadas");
+                    $tabela->set_label(array("Cargo","CCT","CCTA","CCH","CBB","Total"));
+                    #$tabela->set_width(array(80,20));
+                    $tabela->set_align(array("left","center"));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'estatisticaTotal')));
+                    $tabela->set_totalRegistro(FALSE);
+                    $tabela->show();
+                                        
+                    $painel->fecha(); 
+                
+            
+                $grid2->fechaColuna();
+                $grid2->fechaGrid();
+                
+                
             }
             
             #####

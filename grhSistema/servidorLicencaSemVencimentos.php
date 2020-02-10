@@ -53,7 +53,7 @@ if($acesso){
     $objeto->set_nome('Hstórico de Licença Sem Vencimentos');
 
     # botão de voltar da lista
-    if(vazio($origem))
+    if(vazio($origem)){
         $objeto->set_voltarLista('servidorMenu.php');
     }else{
         $objeto->set_voltarLista($origem);
@@ -61,18 +61,22 @@ if($acesso){
 
     # select da lista
     $objeto->set_selectLista('SELECT idLicencaSemVencimentos,
-                                     tipo,
-                                     idTpLicenca,
+                                     CASE tipo
+                                         WHEN 1 THEN "Inicial"
+                                         WHEN 2 THEN "Renovação"
+                                         ELSE "--"
+                                     END,
+                                     CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
                                      dtSolicitacao,
-                                     processo,
+                                     tblicencasemvencimentos.processo,
                                      dtPublicacao,
                                      dtInicial,
                                      numDias, 
                                      crp,
                                      dtRetorno
                                 FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
-                          WHERE idServidor='.$idServidor.'
-                       ORDER BY anoTerm desc');
+                          WHERE idServidor='.$idServidorPesquisado.'
+                       ORDER BY dtSolicitacao desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTpLicenca,
@@ -84,7 +88,7 @@ if($acesso){
                                      numDias,
                                      crp,
                                      dtRetorno,
-                                     idLicencaSemVencimentos
+                                     idServidorS
                                 FROM tblicencasemvencimentos
                                WHERE idLicencaSemVencimentos = '.$id);
     
@@ -97,8 +101,8 @@ if($acesso){
     # Parametros da tabela
     $objeto->set_label(array("Status","Tipo","Licença","Solicitado Em:","Processo","Publicação","Inicio","Dias","CRP","Retorno"));
     #$objeto->set_width(array(15,30,35,10));	
-    $objeto->set_align(array("center","left","left"));
-    #$objeto->set_function(array (NULL,"date_to_php"));
+    $objeto->set_align(array("center","center","left"));
+    $objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -113,9 +117,9 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
     
     # Pega os dados da combo licenca
-    $result = $pessoal->select('SELECT idTpLicenca, CONCAT(IFNULL(tbtipolicenca.lei,"")," ",tbtipolicenca.nome)
+    $result = $pessoal->select('SELECT idTpLicenca, tbtipolicenca.nome
                                   FROM tbtipolicenca
-                                 WHERE idTpLicenca <> 6
+                                 WHERE (idTpLicenca = 5) OR (idTpLicenca = 8) OR (idTpLicenca = 16)
                               ORDER BY 2');
     array_unshift($result, array('Inicial',' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
 
@@ -141,61 +145,58 @@ if($acesso){
                                     'valor' => 0,
                                     'col' => 2,
                                    'title' => 'Se é inicial ou renovação.',
-                                   'linha' => 1),
+                                   'linha' => 2),
                            array ( 'nome' => 'dtSolicitacao',
-                                       'label' => 'Solicitado em:',
-                                       'tipo' => 'data',
-                                       'size' => 30,                                  
-                                       'title' => 'A data da Solicitação.',
-                                       'col' => 3,                                    
-                                       'linha' => 1),
-        array ( 'nome' => 'processo',
-                                         'label' => 'Processo:',
-                                         'tipo' => 'processo',
-                                         'size' => 30,
-                                         'col' => 5,
-                                         'title' => 'Número do Processo',
-                                         'linha' => 5),
-        array ( 'nome' => 'dtPublicacao',
-                                       'label' => 'Data da Publicação:',
-                                       'tipo' => 'data',
-                                       'size' => 10,
-                                       'col' => 3,
-                                       'title' => 'A Data da Publicação.',
-                                       'fieldset' => 'Publicação:',
-                                       'linha' => 6),
-        array ( 'nome' => 'dtInicial',
-                                         'label' => 'Data Inicial:',
-                                         'tipo' => 'data',
-                                         'required' => TRUE,
-                                         'size' => 20,
-                                         'col' => 3,
-                                         'title' => 'Data do início.',
-                                         'linha' => 4),
-                                 array ( 'nome' => 'numDias',
-                                         'label' => 'Dias:',
-                                         'tipo' => 'numero',
-                                         'size' => 5,
-                                         'required' => TRUE,
-                                         'title' => 'Número de dias.',
-                                         'col' => 2,
-                                         'linha' => 4),
-         array ('linha' => 4,
-               'nome' => 'crp',
-               'title' => 'informa se entregou CRP',
-               'label' => 'entregou CRP',
-               'tipo' => 'combo',
-               'array' => array("Sim","Não"),
-               'size' => 10),
-        array ( 'nome' => 'dtInicial',
-                                         'label' => 'Data de Retorno:',
-                                         'tipo' => 'dtRetorno',
-                                         'required' => TRUE,
-                                         'size' => 20,
-                                         'col' => 3,
-                                         'title' => 'Data do início.',
-                                         'linha' => 4),
-        
+                                   'label' => 'Solicitado em:',
+                                   'tipo' => 'data',
+                                   'size' => 30,                                  
+                                   'title' => 'A data da Solicitação.',
+                                   'col' => 3,                                    
+                                  'linha' => 2),
+                          array ( 'nome' => 'processo',
+                                  'label' => 'Processo:',
+                                  'tipo' => 'processo',
+                                  'size' => 30,
+                                  'col' => 5,
+                                  'title' => 'Número do Processo',
+                                  'linha' => 2),
+                          array ( 'nome' => 'dtPublicacao',
+                                  'label' => 'Data da Publicação:',
+                                  'tipo' => 'data',
+                                  'size' => 10,
+                                  'col' => 3,
+                                  'title' => 'A Data da Publicação.',
+                                  'linha' => 6),
+                          array ( 'nome' => 'dtInicial',
+                                  'label' => 'Data Inicial:',
+                                  'tipo' => 'data',
+                                  'size' => 20,
+                                  'col' => 3,
+                                  'title' => 'Data do início.',
+                                  'linha' => 7),
+                          array ( 'nome' => 'numDias',
+                                  'label' => 'Dias:',
+                                  'tipo' => 'numero',
+                                  'size' => 5,
+                                  'title' => 'Número de dias.',
+                                  'col' => 2,
+                                  'linha' => 7),
+                           array ('linha' => 8,
+                                  'col' => 2,
+                                  'nome' => 'crp',
+                                  'title' => 'informa se entregou CRP',
+                                  'label' => 'entregou CRP',
+                                  'tipo' => 'combo',
+                                  'array' => array(array(FALSE,"Não"),
+                                                   array(TRUE,"Sim")),
+                                  'size' => 10),
+                          array ( 'nome' => 'dtRetorno',
+                                  'label' => 'Data de Retorno:',
+                                  'tipo' => 'data',
+                                  'size' => 10,
+                                  'col' => 3,
+                                  'title' => 'Data do início.',
+                                  'linha' => 8),
                            array ( 'nome' => 'idServidor',
                                    'label' => 'idServidor',
                                    'tipo' => 'hidden',

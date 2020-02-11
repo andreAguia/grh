@@ -948,8 +948,9 @@ class Vaga
                      FROM tbvagahistorico JOIN tbconcurso USING (idConcurso) 
                     WHERE idVaga = $idVaga
                  ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
-
+        
         $dado = $pessoal->select($select,FALSE);
+        
         return $dado[0];
     }
 
@@ -970,8 +971,13 @@ class Vaga
         # Pega o idLotação
         $idLotacao = $this->get_laboratorioOrigem($idVaga);
         
+        
         # Pega o nome dessa lotação
-        $nome = $pessoal->get_lotacaoGerencia($idLotacao);
+        if(vazio($idLotacao)){
+            $nome = NULL;
+        }else{
+            $nome = $pessoal->get_lotacaoGerencia($idLotacao);
+        }
         
         # Retorna o nome
         return $nome;
@@ -982,8 +988,6 @@ class Vaga
     /**
      * Método verificaProblemaVaga
      * Verifica se tem algum problema na vaga
-     * 
-     * @note Problemas procurados: laboratório de origem diferente do concurso ou do ocupante do cargo e 2 lançamento do mesmo concurso
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
@@ -998,29 +1002,36 @@ class Vaga
         }else{
             # Conecta o banco
             $pessoal = new Pessoal();
+            $concurso = new Concurso();
             
             # Pega o id da lotação de origem
             $idOrigem = $this->get_laboratorioOrigem($idVaga);
             
         ############################
         
-            # 1° Problema: Verifica se tem algum concurso para laboratório diferente do laboratório de origem
+            # Problema: Verifica se tem algum concurso para laboratório diferente do laboratório de origem
             
-            # Percorre o registros dessa vaga
-            $select = "SELECT idLotacao
-                         FROM tbvagahistorico
-                        WHERE idVaga = $idVaga
-                          AND idLotacao <> $idOrigem";
-            
-            $num = $pessoal->count($select);
-            
-            if($num <> 0){
-                $erro[] = 'Existem concursos para essa vaga com laboratório diferente do laboratório de origem';
+            if(!vazio($idOrigem)){
+                # Percorre o registros dessa vaga
+                $select = "SELECT idLotacao
+                             FROM tbvagahistorico
+                            WHERE idVaga = $idVaga
+                              AND idLotacao <> $idOrigem";
+
+                $num = $pessoal->count($select);
+
+                if($num <> 0){
+                    $erro[] = 'Existem concursos para essa vaga com laboratório diferente do laboratório de origem';
+                }
+            }else{
+                # Problema: quando não tem laboratório de origem
+                
+                $erro[] = 'Não existe concurso cadastrado para essa vaga e assim sendo não é possível descobrir o laboratório de origem.';
             }
             
         ############################
         
-            # 2° Problema: Verifica se tem algum ocupante para laboratório diferente do laboratório de origem
+            # Problema: Verifica se tem algum ocupante para laboratório diferente do laboratório de origem
             #              Esse problema é relativo, pois a lotação do servidor pode variar e dar um falso problema
             
             # Pega os servidores dessa vaga
@@ -1046,7 +1057,7 @@ class Vaga
             
            ############################
         
-            # 3° Problema: Verifica se o mesmo concurso aparece mais de uma vez
+            # Problema: Verifica se o mesmo concurso aparece mais de uma vez
             
             # Percorre o registros dessa vaga
             $select = "SELECT idConcurso, COUNT(idConcurso) 
@@ -1060,6 +1071,38 @@ class Vaga
             if($num <> 0){
                 $erro[] = 'O mesmo concurso aparece mais de uma vez nessa vaga';
             }            
+            
+            ############################
+        
+            # Problema: Verifica se tem algum ocupante do cargo com data de admissão anterior ao concurso
+            
+            # Percorre o registros dessa vaga
+            $select = "SELECT idConcurso, idServidor 
+                         FROM tbvagahistorico
+                        WHERE idVaga = $idVaga";
+            
+            $dados = $pessoal->select($select);
+            
+            foreach($dados as $rr){
+                
+                $dataAdmissao = NULL;
+                $dataPublicacao = NULL;
+                
+                # Pega a data do concurso
+                if(!vazio($rr[0])){
+                    $dadosConcurso = $concurso->get_dados($rr[0]);
+                    $dataPublicacao = date_to_php($dadosConcurso["dtPublicacaoEdital"]);
+                    
+                    # Pega a data de admissão do servidor
+                    if(!vazio($rr[1])){
+                        $dataAdmissao = $pessoal->get_dtAdmissao($rr[1]);
+                        
+                        if(dataMaior($dataAdmissao,$dataPublicacao) == $dataPublicacao){
+                            $erro[] = 'O Ocupante do cargo foi admitido antes do concurso';
+                        }
+                    }
+                }
+            }           
         }
         
         return $erro;

@@ -111,7 +111,7 @@ if(!is_null($motivo)){
             break; 
             
         case 4 :    // Celetista
-            if(($motivo == 1) OR ($motivo == 4) OR ($motivo == 7) OR ($motivo == 8) OR ($motivo == 12)){
+            if(($motivo == 1) OR ($motivo == 4) OR ($motivo == 8) OR ($motivo == 12)){
                 $erro = 1;   
                 $msgErro.='Um servidor celetista não pode sair da instituição por esse motivo!\n';
             }

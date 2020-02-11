@@ -463,10 +463,12 @@ if($acesso){
                 br();
                 
                 $grid2 = new Grid();
-                $grid2->abreColuna(4);
+                $grid2->abreColuna(5);
                 
                     $painel = new Callout();
                     $painel->abre();
+                    
+                        tituloTable("Vagas");
                     
                         $numVagas = $vaga->get_numVagasDiretoria();
                         $numVagasDisponiveis = $vaga->get_numVagasCargoDiretoriaDisponiveis();
@@ -475,29 +477,53 @@ if($acesso){
                                      array("Ocupadas",$numVagasOcupadas));
                         
                         p($numVagas,"estatisticaNumero");
-                        p("Vagas","estatisticaTexto");
-                        p("$numVagasDisponiveis Disponíveis | $numVagasOcupadas Ocupadas","estatisticaTexto");
+                        
+                        $grid3 = new Grid();
+                        $grid3->abreColuna(6);
+                        
+                            $painel = new Callout("primary");
+                            $painel->abre();
+                        
+                            p("$numVagasDisponiveis Disponíveis","estatisticaTexto");
+                            
+                            $painel->fecha();  
+                        
+                        $grid3->fechaColuna();
+                        $grid3->abreColuna(6);
+                        
+                            $painel = new Callout("warning");
+                            $painel->abre();
+                        
+                            p("$numVagasOcupadas Ocupadas","estatisticaTexto");
+                            
+                            $painel->fecha();  
+                        
+                        $grid3->fechaColuna();
+                        $grid3->fechaGrid();
                     
-                    $painel->fecha();     
+                    $painel->fecha();
+                    
+                $grid2->fechaColuna();
+                $grid2->abreColuna(7);
                 
-                    $painel = new Callout();
-                    $painel->abre();    
+                    #$painel = new Callout();
+                    #$painel->abre();    
 
                         # Chart
                         #tituloTable($item[0]);
                         $chart = new Chart("Pie",$arr);
-                        $chart->set_idDiv('porLotacao');
-                        $chart->set_legend(FALSE);
-                        $chart->set_tamanho($largura = "70%",$altura = "70%");
+                        $chart->set_idDiv('vagas');
+                        #$chart->set_legend(FALSE);
+                        $chart->set_tamanho($largura = "90%",$altura = "90%");
                         $chart->show();
                     
-                    $painel->fecha(); 
+                    #$painel->fecha(); 
                 
                 $grid2->fechaColuna();
-                $grid2->abreColuna(8);
+                $grid2->abreColuna(6);
                     
-                    $painel = new Callout();
-                    $painel->abre();
+                    #$painel = new Callout();
+                    #$painel->abre();
                     
                     # Vagas Disponíveis                    
                     $arrayResult = array(array("Professor Titular",$vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCT"),
@@ -532,6 +558,9 @@ if($acesso){
                     $tabela->set_totalRegistro(FALSE);
                     $tabela->show();
                     
+                $grid2->fechaColuna();
+                $grid2->abreColuna(6);
+                    
                     # Vagas Ocupadas                    
                     $arrayResult = array(array("Professor Titular",$vaga->get_numVagasCargoDiretoriaOcupados(129,"CCT"),
                                                                    $vaga->get_numVagasCargoDiretoriaOcupados(129,"CCTA"),
@@ -565,7 +594,7 @@ if($acesso){
                     $tabela->set_totalRegistro(FALSE);
                     $tabela->show();
                                         
-                    $painel->fecha(); 
+                   #$painel->fecha(); 
                 
             
                 $grid2->fechaColuna();

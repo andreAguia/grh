@@ -653,6 +653,17 @@ tr#totalVagas{
      float: right;
      white-space:normal;
  }
+ 
+/*******************************************
+ * Cadastro de Licença Sem Vencimentos
+ *******************************************/
+
+p#plsvPassou{
+    padding: 0px;
+    margin: 10px 0px 10px 0px;
+    font-size: 11px;
+    color: #cc3300;
+}
   
 /*******************************************
  * Relatórios

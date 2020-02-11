@@ -12,6 +12,226 @@ class LicencaSemVencimentos{
     
     ###########################################################
 
+    /**
+    * Método Construtor
+    */
+    public function __construct(){
+
+    }
+
+    ###########################################################
+
+    function get_dados($idLicencaSemVencimentos){
+
+    /**
+     * Informe o número do processo de solicitação de redução de carga horária de um servidor
+     */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Verifica se foi informado
+        if(vazio($idLicencaSemVencimentos)){
+            alert("É necessário informar o id da Licença Sem Vencimentos.");
+        }else{
+            # Pega os dados
+            $select = 'SELECT * ,
+                              DATE_SUB((ADDDATE(dtInicial, INTERVAL periodo DAY)),INTERVAL 1 DAY) as dtTermino
+                         FROM tblicencasemvencimentos
+                        WHERE idLicencaSemVencimentos = '.$idLicencaSemVencimentos;
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select,FALSE);
+
+            # Retorno
+            return $row;
+        }
+    }
+
+    ###########################################################
+
+    function exibeStatus($idLicencaSemVencimentos){
+
+    /**
+     * Informe o status de uma solicitação de redução de carga horária específica
+     *
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Pega os dados
+        $dados = $this->get_dados($idLicencaSemVencimentos);
+        
+        # Pega os campos necessários
+        $dtPublicacao = $dados["dtPublicacao"];
+        $crp = $dados["crp"];
+        $dtRetorno = $dados["dtRetorno"];
+        
+        $retorno = NULL;
+        
+        if(vazio($dtPublicacao)){
+            $retorno = "Em Aberto";
+        }else{
+            if(vazio($dtRetorno)){
+                $retorno = "Vigente";
+            }else{
+                if(vazio($crp)){
+                    $retorno = "Aguardando CRP";
+                }else{
+                    $retorno = "Arquivado";
+                }
+            }
+        }
+        
+        return $retorno;
+    }
+
+    ###########################################################
+
+    function exibePeriodo($idLicencaSemVencimentos){
+
+    /**
+     * Informe os dados da período de uma solicitação de redução de carga horária específica
+     *
+     * @obs Usada na tabela inicial do cadastro de redução
+     */
+        # Pega os dados
+        $dados = $this->get_dados($idLicencaSemVencimentos);
+        
+        # Pega os campos necessários
+        $dtInicial = $dados["dtInicial"];
+        $periodo = $dados["periodo"];
+        $dtTermino = $dados["dtTermino"];
+        $dtRetorno = $dados["dtRetorno"];
+
+        # Retorno
+        # Trata a data de Início
+        if(!vazio($dtInicial)){
+            $dtInicial = date_to_php($dtInicial);
+        }
+
+        # Trata o período
+        if(!vazio($periodo)){
+            $periodo = $periodo." dias";
+        }
+
+        # Trata a data de término
+        if(!vazio($dtTermino)){
+            $dtTermino = date_to_php($dtTermino);
+        }
+        
+        # Trata a data de retorno
+        if(!vazio($dtRetorno)){
+            $dtRetorno = date_to_php($dtRetorno);
+        }
+
+        $retorno = "Início : ".trataNulo($dtInicial)."<br/>"
+                 . "Período: ".trataNulo($periodo)."<br/>"
+                 . "Término: ".trataNulo($dtTermino)."<br/>"
+                 . "Retornou: ".trataNulo($dtRetorno);
+
+        # Verifica se estamos a 90 dias da data Termino
+        if((!vazio($dtTermino)) AND (vazio($dtRetorno))){
+            $hoje = date("d/m/Y");
+            $dias = dataDif($hoje, $dtTermino);
+
+            if(($dias > 0) AND ($dias < 90)){
+                if($dias == 1){
+                    $retorno.= "<br/><span title='Falta Apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                }else{
+                    $retorno.= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                }
+            }elseif($dias == 0){
+                $retorno.= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+            }
+        }
+        
+        return $retorno;
+    }
+
+     ###########################################################
+
+    function exibeProcessoPublicacao($idLicencaSemVencimentos){
+
+    /**
+     * Informe o número do processo e a data da publicação de uma licença sem vencimentos
+     *
+     * @obs Usada na tabela inicial do cadastro de LSV
+     */
+        # Pega os dados
+        $dados = $this->get_dados($idLicencaSemVencimentos);
+        
+        # Pega os campos necessários
+        $processo = $dados["processo"];
+        $dtPublicacao = $dados["dtPublicacao"];
+        
+        # Trata a data de retorno
+        if(!vazio($dtPublicacao)){
+            $dtPublicacao = date_to_php($dtPublicacao);
+        }
+
+        $retorno = "Processo : ".trataNulo($processo)."<br/>"
+                 . "Publicação: ".trataNulo($dtPublicacao);
+        
+        return $retorno;
+    }
+
+     ###########################################################
+
+    function exibeCrp($idLicencaSemVencimentos){
+
+    /**
+     * Informe se o servidor entregou o CRp e o prazo de entrega
+     *
+     * @obs Usada na tabela inicial do cadastro de LSV
+     */
+        # Pega os dados
+        $dados = $this->get_dados($idLicencaSemVencimentos);
+        
+        # Pega os campos necessários
+        $crp = $dados["crp"];
+        $dtRetorno = $dados["dtRetorno"];
+        
+        # Verifica p CRP
+        if($crp){
+            echo "Sim";
+        }else{
+            echo "Não";
+            
+            # Trata a data de retorno
+            if(!vazio($dtRetorno)){
+                $dtRetorno = date_to_php($dtRetorno);
+            }
+            
+            # Verifica se estamos a 90 dias da data Termino
+            if(!vazio($dtRetorno)){
+                
+                # Calcula a data limite da entrega
+                $dtLimite = addDias($dtRetorno,90);
+                
+                if(jaPassou($dtLimite)){
+                    echo "<br/><br/><span title='Já passou a data da entrega do CRP' class='warning label'>Data já Passou!</span>";
+                }else{
+                    p("Entregar até: $dtLimite","plsvPassou");
+                }
+                
+                # Calcula quantos dias faltam para essa data
+                $hoje = date("d/m/Y");
+                $dias = dataDif($hoje, $dtLimite);
+
+                if(($dias > 0) AND ($dias < 90)){
+                    if($dias == 1){
+                        echo "<span title='Falta Apenas $dias dia para o término do prazo para entregar o CRP.' class='warning label'>Falta $dias dia</span>";
+                    }else{
+                        echo "<span title='Faltam $dias dias para o término do prazo para entregar o CRP!' class='warning label'>Faltam $dias dias</span>";
+                    }
+                }elseif($dias == 0){
+                    echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                }
+            }
+        }
+    }
+
+     ###########################################################
+
+
     public function set_linkEditar($linkEditar){
     /**
      * Informa a rotina de edição (se houver)
@@ -38,16 +258,7 @@ class LicencaSemVencimentos{
         $this->atual = $atual;
     }
 
-    ###########################################################
-
-    /**
-    * Método Construtor
-    */
-    public function __construct(){
-
-    }
-
-    ###########################################################
+    
 
     public function exibeTabela(){
 

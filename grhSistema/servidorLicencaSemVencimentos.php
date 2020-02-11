@@ -66,14 +66,11 @@ if($acesso){
                                          WHEN 2 THEN "Renovação"
                                          ELSE "--"
                                      END,
-                                     CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                                     tbtipolicenca.nome,
                                      dtSolicitacao,
-                                     tblicencasemvencimentos.processo,
-                                     dtPublicacao,
-                                     dtInicial,
-                                     numDias, 
-                                     crp,
-                                     dtRetorno
+                                     idLicencaSemVencimentos,
+                                     idLicencaSemVencimentos, 
+                                     idLicencaSemVencimentos
                                 FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
                           WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY dtSolicitacao desc');
@@ -85,10 +82,11 @@ if($acesso){
                                      processo,
                                      dtPublicacao,
                                      dtInicial,
-                                     numDias,
+                                     periodo,
                                      crp,
                                      dtRetorno,
-                                     idServidorS
+                                     obs,
+                                     idServidor
                                 FROM tblicencasemvencimentos
                                WHERE idLicencaSemVencimentos = '.$id);
     
@@ -99,10 +97,28 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Status","Tipo","Licença","Solicitado Em:","Processo","Publicação","Inicio","Dias","CRP","Retorno"));
-    #$objeto->set_width(array(15,30,35,10));	
-    $objeto->set_align(array("center","center","left"));
+    $objeto->set_label(array("Status","Tipo","Licença","Solicitado Em:","Processo & Publicação","Período","Entregou CRP?"));
+    $objeto->set_width(array(10,10,30,10,20,15));	
+    $objeto->set_align(array("center","center","left","center","left","left"));
     $objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+    
+    $objeto->set_classe(array("LicencaSemVencimentos",NULL,NULL,NULL,"LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
+    $objeto->set_metodo(array("exibeStatus",NULL,NULL,NULL,"exibeProcessoPublicacao","exibePeriodo","exibeCrp"));
+    
+    $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                    'valor' => 'Em Aberto',
+                                                    'operador' => '=',
+                                                    'id' => 'emAberto'),  
+                                              array('coluna' => 0,
+                                                    'valor' => 'Arquivado',
+                                                    'operador' => '=',
+                                                    'id' => 'arquivado'),
+                                              array('coluna' => 0,
+                                                    'valor' => 'Vigente',
+                                                    'operador' => '=',
+                                                    'id' => 'vigenteReducao')   
+                                                    ));
+
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -157,7 +173,7 @@ if($acesso){
                                   'label' => 'Processo:',
                                   'tipo' => 'processo',
                                   'size' => 30,
-                                  'col' => 5,
+                                  'col' => 3,
                                   'title' => 'Número do Processo',
                                   'linha' => 2),
                           array ( 'nome' => 'dtPublicacao',
@@ -166,22 +182,22 @@ if($acesso){
                                   'size' => 10,
                                   'col' => 3,
                                   'title' => 'A Data da Publicação.',
-                                  'linha' => 6),
+                                  'linha' => 2),
                           array ( 'nome' => 'dtInicial',
                                   'label' => 'Data Inicial:',
                                   'tipo' => 'data',
                                   'size' => 20,
                                   'col' => 3,
                                   'title' => 'Data do início.',
-                                  'linha' => 7),
-                          array ( 'nome' => 'numDias',
+                                  'linha' => 3),
+                          array ( 'nome' => 'periodo',
                                   'label' => 'Dias:',
                                   'tipo' => 'numero',
                                   'size' => 5,
                                   'title' => 'Número de dias.',
                                   'col' => 2,
-                                  'linha' => 7),
-                           array ('linha' => 8,
+                                  'linha' => 6),
+                           array ('linha' => 7,
                                   'col' => 2,
                                   'nome' => 'crp',
                                   'title' => 'informa se entregou CRP',
@@ -196,13 +212,18 @@ if($acesso){
                                   'size' => 10,
                                   'col' => 3,
                                   'title' => 'Data do início.',
-                                  'linha' => 8),
-                           array ( 'nome' => 'idServidor',
-                                   'label' => 'idServidor',
-                                   'tipo' => 'hidden',
-                                   'padrao' => $idServidorPesquisado,
-                                   'size' => 5,
-                                   'linha' => 11)));
+                                  'linha' => 7),
+                          array ( 'linha' => 8,
+                                  'nome' => 'obs',
+                                  'label' => 'Observação:',
+                                  'tipo' => 'textarea',
+                                  'size' => array(80,3)),
+                          array ( 'nome' => 'idServidor',
+                                  'label' => 'idServidor',
+                                  'tipo' => 'hidden',
+                                  'padrao' => $idServidorPesquisado,
+                                  'size' => 5,
+                                  'linha' => 11)));
     
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);

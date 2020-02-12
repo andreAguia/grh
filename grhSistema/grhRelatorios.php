@@ -337,7 +337,7 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório Anual de Término de Licença (Sem Prêmio)','../grhRelatorios/licencaVencimentoAnualSemPremio.php');
             $menu->add_item('linkWindow','Relatório Anual de Licença Prêmio','../grhRelatorios/licencaPremioAnual.php');
             
-            #$menu->add_item('linkWindow','Relatório Geral Por Tipo***','../grhRelatorios/licencaGeralporTipo.php');
+            $menu->add_item('linkWindow','Relatório Geral Por Tipo***','../grhRelatorios/licencaGeralporTipo.php');
             $menu->show();
             break;    
 

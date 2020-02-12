@@ -44,10 +44,10 @@ class Readaptacao{
      */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-
+        
         # Verifica se foi informado
         if(vazio($idReadaptacao)){
-            alert("É necessário informar o id da Redução.");
+            alert("É necessário informar o id da Readaptação.ttt");
             return;
         }
 
@@ -490,7 +490,7 @@ class Readaptacao{
         $select = "SELECT idReadaptacao
                      FROM tbreadaptacao
                     WHERE idServidor = $idServidor
-                    ORDER BY dtInicio";
+                    ORDER BY dtSolicitacao";
 
         $row = $pessoal->select($select);
         

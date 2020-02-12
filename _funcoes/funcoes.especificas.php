@@ -983,5 +983,39 @@ function exibeBotaoDocumentacaoLicenca($idTipoLicenca){
     return;
 }
 
+###########################################################
+
+function exibeRegraStatusLSV(){
+/**
+ * Exibe um quadro com a regras da mudança de status de uma lSV
+ * 
+ * @note Usado na rotina de licença Sem Vencimentos
+ * 
+ * @syntax exibeRegraStatusLSV();
+ */
+    
+    # Abre a div para a invisibilidade
+    $div = new Div("divRegrasLsv");
+    $div->abre();
+    
+    $conteudo = array(array("Em Aberto","Quando a data de publicação estiver vazia"),
+                      array("Vigente","Quando a data de publicação estiver preenchida"),
+                      array("Aguardando CRP","Quando a data de retorno do servidor já passou e ainda não entregou o CRP"),
+                      array("Arquivado","Quando a data de retorno do servidor já passou e o campo crp estiver TRUE"));
+    
+    # Exibe em forma de tabela
+    $tabela = new Tabela();
+    #$tabela->set_titulo("Regras de mudança do Status");
+    $tabela->set_conteudo($conteudo);
+    $tabela->set_label(array("",""));
+    $tabela->set_width(array(20,80));
+    $tabela->set_align(array("left","left"));
+    $tabela->set_totalRegistro(FALSE);
+    $tabela->show();
+    $div->fecha();
+    
+    return;
+}
+
 ##################################################################
     

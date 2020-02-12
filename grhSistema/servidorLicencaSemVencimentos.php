@@ -47,7 +47,9 @@ if($acesso){
 
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    
+    $objeto->set_rotinaExtraListar("exibeRegraStatusLSV");
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Hstórico de Licença Sem Vencimentos');
@@ -66,12 +68,11 @@ if($acesso){
                                          WHEN 2 THEN "Renovação"
                                          ELSE "--"
                                      END,
-                                     tbtipolicenca.nome,
-                                     dtSolicitacao,
+                                     idTpLicenca,
                                      idLicencaSemVencimentos,
                                      idLicencaSemVencimentos, 
                                      idLicencaSemVencimentos
-                                FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
+                                FROM tblicencasemvencimentos
                           WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY dtSolicitacao desc');
 
@@ -97,13 +98,13 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Status","Tipo","Licença","Solicitado Em:","Processo & Publicação","Período","Entregou CRP?"));
-    $objeto->set_width(array(10,10,30,10,20,15));	
-    $objeto->set_align(array("center","center","left","center","left","left"));
-    $objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+    $objeto->set_label(array("Status","Tipo","Licença Sem Vencimentos","Dados","Período","Entregou CRP?"));
+    #$objeto->set_width(array(10,10,30,10,20,15));	
+    $objeto->set_align(array("center","center","left","left","left"));
+    #$objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array("LicencaSemVencimentos",NULL,NULL,NULL,"LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
-    $objeto->set_metodo(array("exibeStatus",NULL,NULL,NULL,"exibeProcessoPublicacao","exibePeriodo","exibeCrp"));
+    $objeto->set_classe(array("LicencaSemVencimentos",NULL,"LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"get_nomeLicenca","exibeProcessoPublicacao","exibePeriodo","exibeCrp"));
     
     $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
                                                     'valor' => 'Em Aberto',
@@ -118,7 +119,6 @@ if($acesso){
                                                     'operador' => '=',
                                                     'id' => 'vigenteReducao')   
                                                     ));
-
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -231,7 +231,12 @@ if($acesso){
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Formação");
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFormacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $objeto->set_botaoListarExtra(array($botaoRel));
+        
+    # Status
+    $botao2 = new Button("Status");
+    $botao2->set_title("Exibe as regras de mudança automática do status");
+    $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
+    $objeto->set_botaoListarExtra(array($botaoRel,$botao2));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

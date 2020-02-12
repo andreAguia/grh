@@ -664,6 +664,15 @@ p#plsvPassou{
     font-size: 11px;
     color: #cc3300;
 }
+
+div#divRegrasLsv{
+    display: none;
+    width: 400px;
+    position: absolute;
+    top: 130px;
+    right: 10%;
+    background-color: #D7D7D7;
+}
   
 /*******************************************
  * Relatórios

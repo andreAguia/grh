@@ -100,6 +100,7 @@ class LicencaSemVencimentos{
         $periodo = $dados["periodo"];
         $dtTermino = $dados["dtTermino"];
         $dtRetorno = $dados["dtRetorno"];
+        $crp = $dados["crp"];
 
         # Retorno
         # Trata a data de Início
@@ -131,6 +132,15 @@ class LicencaSemVencimentos{
         if((!vazio($dtTermino)) AND (vazio($dtRetorno))){
             $hoje = date("d/m/Y");
             $dias = dataDif($hoje, $dtTermino);
+            
+            # Verifica se a data já passou
+            if(jaPassou($dtTermino)){
+                
+                # Verifica se não entregou o CRP
+                if(!$crp){
+                    $retorno.= "<br/><br/><span title='Já passou a data da entrega do CRP' class='warning label'>Data já Passou!</span>";
+                }
+            }
 
             if(($dias > 0) AND ($dias < 90)){
                 if($dias == 1){
@@ -161,13 +171,20 @@ class LicencaSemVencimentos{
         # Pega os campos necessários
         $processo = $dados["processo"];
         $dtPublicacao = $dados["dtPublicacao"];
+        $dtSolicitacao = $dados["dtSolicitacao"];
         
         # Trata a data de retorno
         if(!vazio($dtPublicacao)){
             $dtPublicacao = date_to_php($dtPublicacao);
         }
+        
+        # Trata a data de $dtSolicitacao
+        if(!vazio($dtSolicitacao)){
+            $dtSolicitacao = date_to_php($dtSolicitacao);
+        }
 
-        $retorno = "Processo : ".trataNulo($processo)."<br/>"
+        $retorno = "Solicitado em : ".trataNulo($dtSolicitacao)."<br/>"
+                 . "Processo : ".trataNulo($processo)."<br/>"
                  . "Publicação: ".trataNulo($dtPublicacao);
         
         return $retorno;
@@ -246,21 +263,33 @@ class LicencaSemVencimentos{
 
     ###########################################################
 
-    public function set_atual($atual){
+    public function get_nomeLicenca($idTpLicenca){
     /**
-     * Informa se é somente os que estão atualmente em licença ou se são todos
+     * Informa o nome da licença de forma compacta para ser exibida na tabela
      *
-     * @param $atual BOOL TRUE TRUE para somente os que estão atualmente em licença
+     * @param $idTpLicenca integer NULL O id do tipo de licença
      *
-     * @syntax $input->set_atual($atual);
+     * @syntax $input->get_nomeLicenca($idTpLicenca);
      */
-
-        $this->atual = $atual;
+        
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega o nome da Licença
+        $tipo = $pessoal->get_nomeTipoLicenca($idTpLicenca);
+        
+        # Acha a posição do -
+        $trac = stripos($tipo, "-");
+        
+        # Retira a primeira parte da string
+        $pedaco = substr($tipo, $trac+1);
+        
+        return plm($pedaco);
     }
 
-    
+    ###########################################################
 
-    public function exibeTabela(){
+    public function exibeLista(){
 
     /**
      * Exibe uma tabela com a relação dos servidores comafastamento
@@ -274,27 +303,20 @@ class LicencaSemVencimentos{
        $data = date("Y-m-d");
 
        # Licença
-       $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome,
-                         tblicenca.dtInicial,
-                         tblicenca.numDias,
-                         ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1) as df,
-                         CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
-                         tblicenca.idTpLicenca,
-                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                    LEFT JOIN tblicenca USING (idServidor)
-                                    LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                  WHERE tbservidor.situacao = 1
-                    AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)';
-       
-       if($this->atual){
-           $select .= 'AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                        OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                        OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
-       }
-       
-       $select .= ' ORDER BY df desc';
+       $select = 'SELECT idLicencaSemVencimentos,
+                         CASE tipo
+                             WHEN 1 THEN "Inicial"
+                             WHEN 2 THEN "Renovação"
+                             ELSE "--"
+                         END,
+                         idServidor,
+                         idTpLicenca,
+                         idLicencaSemVencimentos,
+                         idLicencaSemVencimentos, 
+                         idLicencaSemVencimentos,
+                         idServidor
+                    FROM tblicencasemvencimentos
+           ORDER BY dtSolicitacao desc';
        
        $result = $pessoal->select($select);
        $count = $pessoal->count($select);
@@ -304,9 +326,29 @@ class LicencaSemVencimentos{
        $tabela = new Tabela();
        $tabela->set_titulo($titulo);
        $tabela->set_conteudo($result);
-       $tabela->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Descrição','Doc.'));
-       $tabela->set_align(array('center','left','center','center','center','left'));
-       $tabela->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php",NULL,"exibeBotaoDocumentacaoLicenca"));
+       
+       $tabela->set_label(array("Status","Tipo","Nome","Licença Sem Vencimentos","Dados","Período","Entregou CRP?"));
+       #$tabela->set_width(array(10,10,30,10,20,15));	
+       $tabela->set_align(array("center","center","left","left","left","left"));
+       #$tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+
+       $tabela->set_classe(array("LicencaSemVencimentos",NULL,"Pessoal","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
+       $tabela->set_metodo(array("exibeStatus",NULL,"get_nome","get_nomeLicenca","exibeProcessoPublicacao","exibePeriodo","exibeCrp"));
+       
+       $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                       'valor' => 'Em Aberto',
+                                                       'operador' => '=',
+                                                       'id' => 'emAberto'),  
+                                                 array('coluna' => 0,
+                                                       'valor' => 'Arquivado',
+                                                       'operador' => '=',
+                                                       'id' => 'arquivado'),
+                                                 array('coluna' => 0,
+                                                       'valor' => 'Vigente',
+                                                       'operador' => '=',
+                                                       'id' => 'vigenteReducao')   
+                                                       ));
+        
        $tabela->set_idCampo('idServidor');
        $tabela->set_editar($this->linkEditar);
 

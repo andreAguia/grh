@@ -39,9 +39,9 @@ if($acesso){
     
     # Pega os dados da readaptacao anterior quando for renovação
     if($tipo == 2){
-        $dAnterior = $readaptacao->get_dadosAnterior($id);
-        $dtTermino = date_to_php($dAnterior["dtTermino"]);
-        $dtPublicacao = date_to_php($dAnterior["dtPublicacao"]);
+        $idAnterior = $readaptacao->get_dadosAnterior($id);
+        $dtTermino = date_to_php($idAnterior["dtTermino"]);
+        $dtPublicacao = date_to_php($idAnterior["dtPublicacao"]);
     }
     
     # do Servidor

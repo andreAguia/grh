@@ -108,7 +108,7 @@ if($acesso){
             $afast = new LicencaSemVencimentos();
             $afast->set_linkEditar('?fase=editaServidor');
             #$afast->set_atual(FALSE);
-            $afast->exibeTabela();
+            $afast->exibeLista();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

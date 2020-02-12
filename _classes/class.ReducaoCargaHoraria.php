@@ -95,7 +95,7 @@ class ReducaoCargaHoraria{
         $select = "SELECT idReducao
                      FROM tbreducao
                     WHERE idServidor = $idServidor
-                    ORDER BY dtInicio";
+                    ORDER BY dtSolicitacao";
 
         $row = $pessoal->select($select);
         

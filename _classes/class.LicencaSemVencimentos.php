@@ -321,7 +321,7 @@ class LicencaSemVencimentos{
        $result = $pessoal->select($select);
        $count = $pessoal->count($select);
        
-       $titulo = 'Servidores Em Licença Sem vencimentos';
+       $titulo = 'Licença Sem Vencimentos';
 
        $tabela = new Tabela();
        $tabela->set_titulo($titulo);

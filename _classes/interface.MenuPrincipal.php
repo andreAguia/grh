@@ -575,12 +575,12 @@ class MenuPrincipal{
         titulo('Links Externos');
         br();
 
-        $largura = 120;
-        $altura = 50;
+        $largura = 130;
+        $altura = 60;
 
         $menu = new MenuGrafico(2);
+        
         $botao = new BotaoGrafico();
-        #$botao->set_label(SISTEMA_GRH);
         $botao->set_title('Perícia Médica');
         $botao->set_imagem(PASTA_FIGURAS."pericia.png",$largura,$altura);       
         $botao->set_url("http://sistemas.saude.rj.gov.br/periciamedica/ControleAcesso/login.aspx");
@@ -588,40 +588,55 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        #$botao->set_label(SISTEMA_GRH);
+        $botao->set_title('Sistema Eletrônico de informações');
+        $botao->set_imagem(PASTA_FIGURAS."sei.png",200,60);       
+        $botao->set_url("https://sei.fazenda.rj.gov.br/sip/login.php?sigla_orgao_sistema=ERJ&sigla_sistema=SEI&infra_url=L3NlaS8=");
+        $botao->set_target("_blank");
+        $menu->add_item($botao);
+        
+        $menu->show();
+        
+        br();
+        
+        $menu = new MenuGrafico(2);
+        
+        $botao = new BotaoGrafico();
         $botao->set_title('Escola Nacional de Administração Pública');
         $botao->set_imagem(PASTA_FIGURAS."enap.png",$largura,$altura);      
         $botao->set_url("https://www.enap.gov.br");
         $menu->add_item($botao);
-        $menu->show();
-
-        br();
-
-        $menu = new MenuGrafico(2);
+        
         $botao = new BotaoGrafico();
         $botao->set_label("");
-        $botao->set_imagem(PASTA_FIGURAS."do.png",$largura,$altura);  
+        $botao->set_imagem(PASTA_FIGURAS."do.png",200,70);  
         $botao->set_url("http://www.imprensaoficial.rj.gov.br/portal/modules/profile/user.php?xoops_redirect=/portal/modules/content/index.php?id=21");
         $botao->set_title("Imprensa Oficial do Estado do Rio de Janeiro");
         $menu->add_item($botao);
+        
+        $menu->show();
+        
+        br();
+        
+        $menu = new MenuGrafico(2);
 
-        $botao = new BotaoGrafico();
-        #$botao->set_label(SISTEMA_GRH);
+        $botao = new BotaoGrafico();        
         $botao->set_title('Portal do Processo Digital');
         $botao->set_imagem(PASTA_FIGURAS."processoDigital.png",$largura,$altura);     
         $botao->set_url("https://www.processodigital.rj.gov.br/");
         $menu->add_item($botao);
-        $menu->show();
-
-        br();
-
-        $menu = new MenuGrafico(2);            
+        
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
         $botao->set_title('Site da UENF');
-        $botao->set_imagem(PASTA_FIGURAS."uenf.png",$largura,$altura);       
+        $botao->set_imagem(PASTA_FIGURAS."uenf.png",190,50);       
         $botao->set_url("http://www.uenf.br/portal/index.php/br/");
         $menu->add_item($botao);
+        
+        $menu->show();
+        
+        br();
+        
+        $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
@@ -629,11 +644,7 @@ class MenuPrincipal{
         $botao->set_imagem(PASTA_FIGURAS."GRH.png",$largura,$altura);  
         $botao->set_url("http://uenf.br/dga/grh/");
         $menu->add_item($botao);
-        $menu->show();
         
-        br();
-        
-        $menu = new MenuGrafico(2);            
         $botao = new BotaoGrafico();
         $botao->set_label("Sistema do Almoxarifado");
         $botao->set_title('Sistema do Almoxarifado da Uenf');

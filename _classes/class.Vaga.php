@@ -1146,47 +1146,47 @@ class Vaga
         
         tituloTable("Vagas de Docentes");
         br();
+        
+        $painel = new Callout();
+        $painel->abre();
+           
+        tituloTable("Vagas Totais");
 
         $grid2 = new Grid();
         $grid2->abreColuna(5);
+        br(2);
 
-            $painel = new Callout();
-            $painel->abre();
+            $numVagas = $this->get_numVagasDiretoria();
+            $numVagasDisponiveis = $this->get_numVagasCargoDiretoriaDisponiveis();
+            $numVagasOcupadas = $this->get_numVagasCargoDiretoriaOcupados();
+            $arr = array(array("Disponíveis",$numVagasDisponiveis),
+                         array("Ocupadas",$numVagasOcupadas));
 
-                tituloTable("Vagas");
+            p($numVagas,"estatisticaNumero");
+            br(2);
 
-                $numVagas = $this->get_numVagasDiretoria();
-                $numVagasDisponiveis = $this->get_numVagasCargoDiretoriaDisponiveis();
-                $numVagasOcupadas = $this->get_numVagasCargoDiretoriaOcupados();
-                $arr = array(array("Disponíveis",$numVagasDisponiveis),
-                             array("Ocupadas",$numVagasOcupadas));
+            $grid3 = new Grid();
+            $grid3->abreColuna(6);
 
-                p($numVagas,"estatisticaNumero");
+                $painel = new Callout("primary");
+                $painel->abre();
 
-                $grid3 = new Grid();
-                $grid3->abreColuna(6);
+                p("$numVagasDisponiveis Disponíveis","estatisticaTexto");
 
-                    $painel = new Callout("primary");
-                    $painel->abre();
+                $painel->fecha();  
 
-                    p("$numVagasDisponiveis Disponíveis","estatisticaTexto");
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
 
-                    $painel->fecha();  
+                $painel = new Callout("warning");
+                $painel->abre();
 
-                $grid3->fechaColuna();
-                $grid3->abreColuna(6);
+                p("$numVagasOcupadas Ocupadas","estatisticaTexto");
 
-                    $painel = new Callout("warning");
-                    $painel->abre();
+                $painel->fecha();  
 
-                    p("$numVagasOcupadas Ocupadas","estatisticaTexto");
-
-                    $painel->fecha();  
-
-                $grid3->fechaColuna();
-                $grid3->fechaGrid();
-
-            $painel->fecha();
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
 
         $grid2->fechaColuna();
         $grid2->abreColuna(7);
@@ -1194,17 +1194,29 @@ class Vaga
             #$painel = new Callout();
             #$painel->abre();    
 
-                # Chart
-                #tituloTable($item[0]);
-                $chart = new Chart("Pie",$arr);
-                $chart->set_idDiv('vagas');
-                #$chart->set_legend(FALSE);
-                $chart->set_tamanho($largura = "90%",$altura = "90%");
-                $chart->show();
+            # Chart
+            #tituloTable($item[0]);
+            $chart = new Chart("Pie",$arr);
+            $chart->set_idDiv('vagas');
+            #$chart->set_legend(FALSE);
+            $chart->set_pieHole(TRUE);
+            $chart->set_tamanho($largura = 500,$altura = 300);
+            $chart->show();
 
             #$painel->fecha(); 
 
         $grid2->fechaColuna();
+        $grid2->fechaGrid();
+        
+    $painel->fecha();
+    
+    $painel = new Callout();
+    $painel->abre();
+           
+        tituloTable("Vagas Por Centro");
+        br();
+
+        $grid2 = new Grid();
         $grid2->abreColuna(12);
         
             # Centros Possíveis
@@ -1228,7 +1240,7 @@ class Vaga
             echo '<div class="tabs-content" data-tabs-content="porCentro">';
             
             foreach($centros as $cc){
-                
+               
                 # Vagas Disponíveis
                 if($cc == "CCT"){
                     $div1 = new Div($cc,'tabs-panel is-active');
@@ -1236,9 +1248,6 @@ class Vaga
                     $div1 = new Div($cc,'tabs-panel');
                 }
                 $div1->abre();
-
-                    #$grid3 = new Grid();
-                    #$grid3->abreColuna(7);
                     
                     $titularDisp = $this->get_numVagasCargoDiretoriaDisponiveis(129,$cc);
                     $titularOcup = $this->get_numVagasCargoDiretoriaOcupados(129,$cc);
@@ -1255,26 +1264,43 @@ class Vaga
                                          array("Professor Associado",$associaDisp,$associaOcup,$associaTotal),
                                          array("Total",$diponiTotal,$ocupadoTotal,$ocupadoTotal + $diponiTotal));
                     
-                    # Tabela
-                    $tabela = new Tabela();
-                    $tabela->set_conteudo($arrayResult);
-                    $tabela->set_titulo($cc);
-                    $tabela->set_label(array("Cargo","Disponíveis","Ocupadas","Total"));
-                    $tabela->set_width(array(40,20,20,20));
-                    $tabela->set_align(array("left"));
-                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                            'valor' => "Total",
-                                            'operador' => '=',
-                                            'id' => 'estatisticaTotal')));
-                    $tabela->set_totalRegistro(FALSE);
-                    $tabela->show();
+                    $grid3 = new Grid();
+                    $grid3->abreColuna(5);
+                    
+                        $arrayChart = array(array("Professor","Disponíveis","Ocupados"),
+                                      array("Professor Titular",$titularDisp,$titularOcup),
+                                      array("Professor Associado",$associaDisp,$associaOcup),
+                                      array("Total",$diponiTotal,$ocupadoTotal));
+                    
+                        # Chart
+                        #tituloTable($item[0]);
+                        $chart = new Chart("Bar",$arrayChart);
+                        $chart->set_idDiv("vagas$cc");
+                        $chart->set_isStacked(TRUE);
+                        $chart->set_legend(array("Vagas","tt"));
+                        #$chart->set_pieHole(TRUE);
+                        $chart->set_tamanho($largura = 400,$altura = 300);
+                        $chart->show();
 
+                    $grid3->fechaColuna();
+                    $grid3->abreColuna(7);
 
-                    #$grid3->fechaColuna();
-                    #$grid3->abreColuna(5);
-
-                    #$grid3->fechaColuna();
-                    #$grid3->fechaGrid();
+                        # Tabela
+                        $tabela = new Tabela();
+                        $tabela->set_conteudo($arrayResult);
+                        #$tabela->set_titulo($cc);
+                        $tabela->set_label(array("Cargo","Disponíveis","Ocupadas","Total"));
+                        $tabela->set_width(array(40,20,20,20));
+                        $tabela->set_align(array("left"));
+                        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                                'valor' => "Total",
+                                                'operador' => '=',
+                                                'id' => 'estatisticaTotal')));
+                        $tabela->set_totalRegistro(FALSE);
+                        $tabela->show();
+                    
+                    $grid3->fechaColuna();
+                    $grid3->fechaGrid();
                     
                 $div1->fecha();    
             }
@@ -1283,6 +1309,9 @@ class Vaga
             
         $grid2->fechaColuna();
         $grid2->fechaGrid();
+            
+    $painel->fecha();
+        
     }
     
     ###########################################################

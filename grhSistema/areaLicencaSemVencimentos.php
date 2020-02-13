@@ -90,7 +90,13 @@ if($acesso){
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar,"left");
-
+            
+            # Status
+            $botao2 = new Button("Status");
+            $botao2->set_title("Exibe as regras de mudança automática do status");
+            $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
+            $menu1->add_link($botao2,"right");
+            
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
@@ -101,6 +107,8 @@ if($acesso){
             $menu1->add_link($botaoRel,"right");
 
             $menu1->show();
+            
+            exibeRegraStatusLSV();
 
         ################################################################
 
@@ -127,7 +135,7 @@ if($acesso){
             set_session('origem','areaLicencaSemVencimentos.php');
 
             # Carrega a página específica
-            loadPage('servidorLicenca.php');
+            loadPage('servidorLicencaSemVencimentos.php');
             break;
 
     ################################################################

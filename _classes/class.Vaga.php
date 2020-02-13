@@ -1200,7 +1200,7 @@ class Vaga
             $chart->set_idDiv('vagas');
             #$chart->set_legend(FALSE);
             $chart->set_pieHole(TRUE);
-            $chart->set_tamanho($largura = 500,$altura = 300);
+            $chart->set_tamanho(500,300);
             $chart->show();
 
             #$painel->fecha(); 
@@ -1210,6 +1210,7 @@ class Vaga
         
     $painel->fecha();
     
+    /*
     $painel = new Callout();
     $painel->abre();
            
@@ -1265,25 +1266,25 @@ class Vaga
                                          array("Total",$diponiTotal,$ocupadoTotal,$ocupadoTotal + $diponiTotal));
                     
                     $grid3 = new Grid();
-                    $grid3->abreColuna(5);
+                    $grid3->abreColuna(6);
                     
-                        $arrayChart = array(array("Professor","Disponíveis","Ocupados"),
-                                      array("Professor Titular",$titularDisp,$titularOcup),
-                                      array("Professor Associado",$associaDisp,$associaOcup),
-                                      array("Total",$diponiTotal,$ocupadoTotal));
-                    
+                        $arrayChart = array(array("Titular Disponivel",$titularDisp),
+                                            array("Titular Ocupado",$titularOcup),
+                                            array("Associado Disponivel",$associaDisp),
+                                            array("Associado Ocupado",$associaOcup));
                         # Chart
-                        #tituloTable($item[0]);
-                        $chart = new Chart("Bar",$arrayChart);
+                        #tituloTable("Professor Titular");
+                        $chart = new Chart("Pie",$arrayChart);
                         $chart->set_idDiv("vagas$cc");
-                        $chart->set_isStacked(TRUE);
-                        $chart->set_legend(array("Vagas","tt"));
+                        $chart->set_title("Professor Titular");
+                        $chart->set_tresd(TRUE);
+                        #$chart->set_legend(array("VagasT","tt"));
                         #$chart->set_pieHole(TRUE);
-                        $chart->set_tamanho($largura = 400,$altura = 300);
+                        $chart->set_tamanho(500,300);
                         $chart->show();
-
-                    $grid3->fechaColuna();
-                    $grid3->abreColuna(7);
+                        
+                        $grid3->fechaColuna();
+                        $grid3->abreColuna(6);
 
                         # Tabela
                         $tabela = new Tabela();
@@ -1311,6 +1312,8 @@ class Vaga
         $grid2->fechaGrid();
             
     $painel->fecha();
+     * 
+     */
         
     }
     

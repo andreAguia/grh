@@ -32,9 +32,30 @@ if($acesso){
 
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+    
+    # Rotina em Jscript
+    $script = '<script type="text/javascript" language="javascript">
+        
+            $(document).ready(function(){
+            
+                 $("#dtTermino").change(function(){
+                    var dt1 = $("#dtInicial").val();
+                    var dt2 = $("#dtTermino").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(dt2);
+                    
+                    dias = (data2 - data1)/(1000*3600*24);
 
+                     $("#periodo").val(dias);
+                  });
+                });
+             </script>';
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
+    if($fase == "editar"){
+        $page->set_jscript($script);
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -84,6 +105,7 @@ if($acesso){
                                      dtPublicacao,
                                      dtInicial,
                                      periodo,
+                                     dtTermino,
                                      crp,
                                      dtRetorno,
                                      obs,
@@ -196,8 +218,15 @@ if($acesso){
                                   'size' => 5,
                                   'title' => 'Número de dias.',
                                   'col' => 2,
-                                  'linha' => 6),
-                           array ('linha' => 7,
+                                  'linha' => 3),
+                          array ( 'nome' => 'dtTermino',
+                                  'label' => 'Data de Termino:',
+                                  'tipo' => 'data',
+                                  'size' => 20,
+                                  'col' => 3,
+                                  'title' => 'Data de Termino.',
+                                  'linha' => 3),
+                           array ('linha' => 4,
                                   'col' => 2,
                                   'nome' => 'crp',
                                   'title' => 'informa se entregou CRP',
@@ -212,8 +241,8 @@ if($acesso){
                                   'size' => 10,
                                   'col' => 3,
                                   'title' => 'Data do início.',
-                                  'linha' => 7),
-                          array ( 'linha' => 8,
+                                  'linha' => 4),
+                          array ( 'linha' => 5,
                                   'nome' => 'obs',
                                   'label' => 'Observação:',
                                   'tipo' => 'textarea',
@@ -237,6 +266,20 @@ if($acesso){
     $botao2->set_title("Exibe as regras de mudança automática do status");
     $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
     $objeto->set_botaoListarExtra(array($botaoRel,$botao2));
+    
+    # calculadora
+    if(vazio($id)){
+        $data1 = NULL;
+    }else{
+        $lsv = new LicencaSemVencimentos();
+        $dados = $lsv->get_dados($id);
+        $data1 = $dados["dtInicial"];
+    }
+    
+    $botaoCal= new Button("Calculadora");
+    $botaoCal->set_title("Calculadora de datas");
+    $botaoCal->set_onClick("window.open('calculadora.php?data1=$data1','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=500,height=500');");
+    $objeto->set_botaoEditarExtra(array($botaoCal));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

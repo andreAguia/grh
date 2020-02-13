@@ -22,7 +22,7 @@ if($acesso){
     $concurso = new Concurso();
     
     # Centros Possíveis
-    $centros = array("Todos","CCT","CCTA","CCH","CBB");
+    #$centros = array("Todos","CCT","CCTA","CCH","CBB");
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -176,36 +176,7 @@ if($acesso){
             $grid->fechaColuna();
             $grid->abreColuna(3);
             
-            $painel = new Callout();
-            $painel->abre();
-            
-            # Inicia o Menu de Cargos                
-            $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo','Lotação (Centro)');  
-            
-            foreach($centros as $cc){
-                
-                if($cc == "Todos"){
-                    $numVagas = $vaga->get_numVagasDiretoria();
-                }else{
-                    $numVagas = $vaga->get_numVagasDiretoria($cc);
-                }
-                
-                if($parametroCentro == $cc){
-                    $menu->add_item('link',"<b>$cc ($numVagas)</b>",'?parametroCentro='.$cc);
-                }elseif((vazio($parametroCentro)) AND ($cc == "Todos")){
-                    $menu->add_item('link','<b>Todos</b>','?parametroCentro='.$cc);
-                }else{
-                    $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
-                }
-            }
-            
-            $menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
-
-            $menu->show();
-            
-            $painel->fecha();
+            $vaga->menu($parametroCentro);
             
             $grid->fechaColuna();
             $grid->abreColuna(9);
@@ -265,35 +236,7 @@ if($acesso){
             $grid->fechaColuna();
             $grid->abreColuna(3);
             
-            $painel = new Callout();
-            $painel->abre();
-            
-            # Inicia o Menu de Cargos                
-            $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo','Lotação (Centro)');  
-            
-            foreach($centros as $cc){
-                if($cc == "Todos"){
-                    $numVagas = $vaga->get_numVagasDiretoria();
-                }else{
-                    $numVagas = $vaga->get_numVagasDiretoria($cc);
-                }
-                
-                if($parametroCentro == $cc){
-                    $menu->add_item('link',"<b>$cc ($numVagas)</b>",'?parametroCentro='.$cc);
-                }elseif((vazio($parametroCentro)) AND ($cc == "Todos")){
-                    $menu->add_item('link',"<b>Todos ($numVagas)</b>",'?parametroCentro='.$cc);
-                }else{
-                    $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
-                }
-            }
-            
-            $menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
-
-            $menu->show();
-            
-            $painel->fecha();
+            $vaga->menu($parametroCentro);
                         
             $vaga->exibeVagasDisponiveis($parametroCentro);
             $vaga->exibeVagasOcupadas($parametroCentro);
@@ -457,150 +400,8 @@ if($acesso){
                 $div2->fecha();
                 
                 echo '</div>';
-            }else{
-                
-                tituloTable("Vagas de Docentes");
-                br();
-                
-                $grid2 = new Grid();
-                $grid2->abreColuna(5);
-                
-                    $painel = new Callout();
-                    $painel->abre();
-                    
-                        tituloTable("Vagas");
-                    
-                        $numVagas = $vaga->get_numVagasDiretoria();
-                        $numVagasDisponiveis = $vaga->get_numVagasCargoDiretoriaDisponiveis();
-                        $numVagasOcupadas = $vaga->get_numVagasCargoDiretoriaOcupados();
-                        $arr = array(array("Disponíveis",$numVagasDisponiveis),
-                                     array("Ocupadas",$numVagasOcupadas));
-                        
-                        p($numVagas,"estatisticaNumero");
-                        
-                        $grid3 = new Grid();
-                        $grid3->abreColuna(6);
-                        
-                            $painel = new Callout("primary");
-                            $painel->abre();
-                        
-                            p("$numVagasDisponiveis Disponíveis","estatisticaTexto");
-                            
-                            $painel->fecha();  
-                        
-                        $grid3->fechaColuna();
-                        $grid3->abreColuna(6);
-                        
-                            $painel = new Callout("warning");
-                            $painel->abre();
-                        
-                            p("$numVagasOcupadas Ocupadas","estatisticaTexto");
-                            
-                            $painel->fecha();  
-                        
-                        $grid3->fechaColuna();
-                        $grid3->fechaGrid();
-                    
-                    $painel->fecha();
-                    
-                $grid2->fechaColuna();
-                $grid2->abreColuna(7);
-                
-                    #$painel = new Callout();
-                    #$painel->abre();    
-
-                        # Chart
-                        #tituloTable($item[0]);
-                        $chart = new Chart("Pie",$arr);
-                        $chart->set_idDiv('vagas');
-                        #$chart->set_legend(FALSE);
-                        $chart->set_tamanho($largura = "90%",$altura = "90%");
-                        $chart->show();
-                    
-                    #$painel->fecha(); 
-                
-                $grid2->fechaColuna();
-                $grid2->abreColuna(6);
-                    
-                    #$painel = new Callout();
-                    #$painel->abre();
-                    
-                    # Vagas Disponíveis                    
-                    $arrayResult = array(array("Professor Titular",$vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCT"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCTA"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CCH"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129,"CBB"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(129)),
-                                       array("Professor Associado",$vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CCT"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CCTA"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CCH"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128,"CBB"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(128)),
-                                                     array("Total",$vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CCT"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CCTA"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CCH"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis(NULL,"CBB"),
-                                                                   $vaga->get_numVagasCargoDiretoriaDisponiveis()));
-                    
-                    
-                    
-                    # Tabela
-                    $tabela = new Tabela();
-                    $tabela->set_conteudo($arrayResult);
-                    $tabela->set_titulo("Vagas Disponíveis");
-                    $tabela->set_label(array("Cargo","CCT","CCTA","CCH","CBB","Total"));
-                    #$tabela->set_width(array(80,20));
-                    $tabela->set_align(array("left","center"));
-                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                            'valor' => "Total",
-                                            'operador' => '=',
-                                            'id' => 'estatisticaTotal')));
-                    $tabela->set_totalRegistro(FALSE);
-                    $tabela->show();
-                    
-                $grid2->fechaColuna();
-                $grid2->abreColuna(6);
-                    
-                    # Vagas Ocupadas                    
-                    $arrayResult = array(array("Professor Titular",$vaga->get_numVagasCargoDiretoriaOcupados(129,"CCT"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129,"CCTA"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129,"CCH"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129,"CBB"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(129)),
-                                       array("Professor Associado",$vaga->get_numVagasCargoDiretoriaOcupados(128,"CCT"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128,"CCTA"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128,"CCH"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128,"CBB"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(128)),                                           
-                                                     array("Total",$vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CCT"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CCTA"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CCH"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados(NULL,"CBB"),
-                                                                   $vaga->get_numVagasCargoDiretoriaOcupados()));
-                    
-                    
-                    
-                    # Tabela
-                    $tabela = new Tabela();
-                    $tabela->set_conteudo($arrayResult);
-                    $tabela->set_titulo("Vagas Ocupadas");
-                    $tabela->set_label(array("Cargo","CCT","CCTA","CCH","CBB","Total"));
-                    #$tabela->set_width(array(80,20));
-                    $tabela->set_align(array("left","center"));
-                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                            'valor' => "Total",
-                                            'operador' => '=',
-                                            'id' => 'estatisticaTotal')));
-                    $tabela->set_totalRegistro(FALSE);
-                    $tabela->show();
-                                        
-                   #$painel->fecha(); 
-                
-            
-                $grid2->fechaColuna();
-                $grid2->fechaGrid();
-                
-                
+            }else{                
+                $vaga->exibeDashboard();
             }
             
             #####

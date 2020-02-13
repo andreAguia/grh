@@ -28,7 +28,7 @@ class Vaga
     /**
      * Retorna todos os dados arquivados na tabela tbvaga
      * 
-     * @syntax $vaga->get_dados($idVaga);
+     * @syntax $this->get_dados($idVaga);
      */
         
         if(vazio($idVaga)){
@@ -1131,6 +1131,206 @@ class Vaga
             $botao->set_title('Problemas Encontrados !!');
             $botao->show();
         }
+    }
+    
+    ###########################################################
+     
+    /**
+     * Método exibeDashboard
+     * Exibe uma tela de resumo geral das vagas
+     * 
+     * @note Usado na área de Vagas quando não se informa o centro
+     */
+
+    function exibeDashboard(){
+        
+        tituloTable("Vagas de Docentes");
+        br();
+
+        $grid2 = new Grid();
+        $grid2->abreColuna(5);
+
+            $painel = new Callout();
+            $painel->abre();
+
+                tituloTable("Vagas");
+
+                $numVagas = $this->get_numVagasDiretoria();
+                $numVagasDisponiveis = $this->get_numVagasCargoDiretoriaDisponiveis();
+                $numVagasOcupadas = $this->get_numVagasCargoDiretoriaOcupados();
+                $arr = array(array("Disponíveis",$numVagasDisponiveis),
+                             array("Ocupadas",$numVagasOcupadas));
+
+                p($numVagas,"estatisticaNumero");
+
+                $grid3 = new Grid();
+                $grid3->abreColuna(6);
+
+                    $painel = new Callout("primary");
+                    $painel->abre();
+
+                    p("$numVagasDisponiveis Disponíveis","estatisticaTexto");
+
+                    $painel->fecha();  
+
+                $grid3->fechaColuna();
+                $grid3->abreColuna(6);
+
+                    $painel = new Callout("warning");
+                    $painel->abre();
+
+                    p("$numVagasOcupadas Ocupadas","estatisticaTexto");
+
+                    $painel->fecha();  
+
+                $grid3->fechaColuna();
+                $grid3->fechaGrid();
+
+            $painel->fecha();
+
+        $grid2->fechaColuna();
+        $grid2->abreColuna(7);
+
+            #$painel = new Callout();
+            #$painel->abre();    
+
+                # Chart
+                #tituloTable($item[0]);
+                $chart = new Chart("Pie",$arr);
+                $chart->set_idDiv('vagas');
+                #$chart->set_legend(FALSE);
+                $chart->set_tamanho($largura = "90%",$altura = "90%");
+                $chart->show();
+
+            #$painel->fecha(); 
+
+        $grid2->fechaColuna();
+        $grid2->abreColuna(12);
+        
+            # Centros Possíveis
+            $centros = array("CCT","CCTA","CCH","CBB");
+        
+            # Exibe as tabs
+            echo '<ul class="tabs" data-tabs id="porCentro">';
+            
+            foreach($centros as $cc){
+            
+                if($cc == "CCT"){
+                    echo "<li class='tabs-title is-active'><a href='#$cc' aria-selected='true'>$cc</a></li>";
+                }else{
+                    echo "<li class='tabs-title'><a data-tabs-target='$cc' href='#$cc'>$cc</a></li>";
+                }
+            
+            }
+
+            echo '</ul>';
+            
+            echo '<div class="tabs-content" data-tabs-content="porCentro">';
+            
+            foreach($centros as $cc){
+                
+                # Vagas Disponíveis
+                if($cc == "CCT"){
+                    $div1 = new Div($cc,'tabs-panel is-active');
+                }else{
+                    $div1 = new Div($cc,'tabs-panel');
+                }
+                $div1->abre();
+
+                    #$grid3 = new Grid();
+                    #$grid3->abreColuna(7);
+                    
+                    $titularDisp = $this->get_numVagasCargoDiretoriaDisponiveis(129,$cc);
+                    $titularOcup = $this->get_numVagasCargoDiretoriaOcupados(129,$cc);
+                    $titularTotal = $titularDisp + $titularOcup;
+                    
+                    $associaDisp = $this->get_numVagasCargoDiretoriaDisponiveis(128,$cc);
+                    $associaOcup = $this->get_numVagasCargoDiretoriaOcupados(128,$cc);
+                    $associaTotal = $associaDisp + $associaOcup;
+                    
+                    $diponiTotal = $associaDisp + $titularDisp;
+                    $ocupadoTotal = $associaOcup + $titularOcup;
+                    
+                    $arrayResult = array(array("Professor Titular",$titularDisp,$titularOcup,$titularTotal),
+                                         array("Professor Associado",$associaDisp,$associaOcup,$associaTotal),
+                                         array("Total",$diponiTotal,$ocupadoTotal,$ocupadoTotal + $diponiTotal));
+                    
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($arrayResult);
+                    $tabela->set_titulo($cc);
+                    $tabela->set_label(array("Cargo","Disponíveis","Ocupadas","Total"));
+                    $tabela->set_width(array(40,20,20,20));
+                    $tabela->set_align(array("left"));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'estatisticaTotal')));
+                    $tabela->set_totalRegistro(FALSE);
+                    $tabela->show();
+
+
+                    #$grid3->fechaColuna();
+                    #$grid3->abreColuna(5);
+
+                    #$grid3->fechaColuna();
+                    #$grid3->fechaGrid();
+                    
+                $div1->fecha();    
+            }
+            
+            echo '</div>';
+            
+        $grid2->fechaColuna();
+        $grid2->fechaGrid();
+    }
+    
+    ###########################################################
+     
+    /**
+     * Método temProblema
+     * Verifica se tem algum problema na vaga e exibe um sinal quando tem
+     * 
+     * @note Problemas procurados: laboratório de origem diferente do concurso ou do ocupante do cargo e 2 lançamento do mesmo concurso
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+
+    function menu($parametroCentro){
+        
+        $painel = new Callout();
+        $painel->abre();
+        
+        # Centros Possíveis
+        $centros = array("Todos","CCT","CCTA","CCH","CBB");
+
+        # Inicia o Menu de Cargos                
+        $menu = new Menu("menuProcedimentos");
+        $menu->add_item('titulo','Lotação (Centro)');  
+
+        foreach($centros as $cc){
+
+            if($cc == "Todos"){
+                $numVagas = $this->get_numVagasDiretoria();
+            }else{
+                $numVagas = $this->get_numVagasDiretoria($cc);
+            }
+
+            if($parametroCentro == $cc){
+                $menu->add_item('link',"<b>$cc ($numVagas)</b>",'?parametroCentro='.$cc);
+            }elseif((vazio($parametroCentro)) AND ($cc == "Todos")){
+                $menu->add_item('link','<b>Todos</b>','?parametroCentro='.$cc);
+            }else{
+                $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
+            }
+        }
+
+        $menu->add_item('titulo','Relatórios');
+        $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
+
+        $menu->show();
+
+        $painel->fecha();
     }
     
     ###########################################################

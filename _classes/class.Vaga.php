@@ -1144,13 +1144,13 @@ class Vaga
 
     function exibeDashboard(){
         
-        tituloTable("Vagas de Docentes");
-        br();
-        
         $painel = new Callout();
         $painel->abre();
+        
+        tituloTable("Vagas de Docentes");
+        br();
            
-        tituloTable("Vagas Totais");
+        #tituloTable("Vagas Totais");
 
         $grid2 = new Grid();
         $grid2->abreColuna(5);
@@ -1209,8 +1209,7 @@ class Vaga
         $grid2->fechaGrid();
         
     $painel->fecha();
-    
-    /*
+        
     $painel = new Callout();
     $painel->abre();
            
@@ -1218,37 +1217,16 @@ class Vaga
         br();
 
         $grid2 = new Grid();
-        $grid2->abreColuna(12);
+        
         
             # Centros Possíveis
             $centros = array("CCT","CCTA","CCH","CBB");
-        
-            # Exibe as tabs
-            echo '<ul class="tabs" data-tabs id="porCentro">';
             
             foreach($centros as $cc){
-            
-                if($cc == "CCT"){
-                    echo "<li class='tabs-title is-active'><a href='#$cc' aria-selected='true'>$cc</a></li>";
-                }else{
-                    echo "<li class='tabs-title'><a data-tabs-target='$cc' href='#$cc'>$cc</a></li>";
-                }
-            
-            }
-
-            echo '</ul>';
-            
-            echo '<div class="tabs-content" data-tabs-content="porCentro">';
-            
-            foreach($centros as $cc){
-               
-                # Vagas Disponíveis
-                if($cc == "CCT"){
-                    $div1 = new Div($cc,'tabs-panel is-active');
-                }else{
-                    $div1 = new Div($cc,'tabs-panel');
-                }
-                $div1->abre();
+                
+                $grid2->abreColuna(6);
+                
+                tituloTable($cc);
                     
                     $titularDisp = $this->get_numVagasCargoDiretoriaDisponiveis(129,$cc);
                     $titularOcup = $this->get_numVagasCargoDiretoriaOcupados(129,$cc);
@@ -1265,55 +1243,53 @@ class Vaga
                                          array("Professor Associado",$associaDisp,$associaOcup,$associaTotal),
                                          array("Total",$diponiTotal,$ocupadoTotal,$ocupadoTotal + $diponiTotal));
                     
-                    $grid3 = new Grid();
-                    $grid3->abreColuna(6);
+                    $arrayTitular = array(array("Ocupado",$titularOcup),
+                                          array("Disponível",$titularDisp));
                     
-                        $arrayChart = array(array("Titular Disponivel",$titularDisp),
-                                            array("Titular Ocupado",$titularOcup),
-                                            array("Associado Disponivel",$associaDisp),
-                                            array("Associado Ocupado",$associaOcup));
-                        # Chart
-                        #tituloTable("Professor Titular");
-                        $chart = new Chart("Pie",$arrayChart);
-                        $chart->set_idDiv("vagas$cc");
-                        $chart->set_title("Professor Titular");
-                        $chart->set_tresd(TRUE);
-                        #$chart->set_legend(array("VagasT","tt"));
-                        #$chart->set_pieHole(TRUE);
-                        $chart->set_tamanho(500,300);
-                        $chart->show();
-                        
-                        $grid3->fechaColuna();
-                        $grid3->abreColuna(6);
+                    $arrayAssociado = array(array("Ocupado",$associaOcup),
+                                            array("Disponível",$associaDisp));
+                    
+                    # Chart
+                    $chart = new Chart("Pie",$arrayTitular);
+                    $chart->set_idDiv("vagasO$cc");
+                    $chart->set_title("Titular");
+                    $chart->set_tresd(TRUE);
+                    $chart->set_cores(array('#1B4F72', '#2980B9'));
+                    #$chart->set_legend(array("VagasT","tt"));
+                    #$chart->set_pieHole(TRUE);
+                    $chart->set_tamanho(400,300);
+                    $chart->show();
+                    
+                    # Chart
+                    $chart = new Chart("Pie",$arrayAssociado);
+                    $chart->set_idDiv("vagasD$cc");
+                    $chart->set_title("Associado");
+                    $chart->set_tresd(TRUE);
+                    $chart->set_cores(array('#e0440e', '#e6693e'));
+                    #$chart->set_pieHole(TRUE);
+                    $chart->set_tamanho(400,300);
+                    $chart->show();
 
-                        # Tabela
-                        $tabela = new Tabela();
-                        $tabela->set_conteudo($arrayResult);
-                        #$tabela->set_titulo($cc);
-                        $tabela->set_label(array("Cargo","Disponíveis","Ocupadas","Total"));
-                        $tabela->set_width(array(40,20,20,20));
-                        $tabela->set_align(array("left"));
-                        $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                                'valor' => "Total",
-                                                'operador' => '=',
-                                                'id' => 'estatisticaTotal')));
-                        $tabela->set_totalRegistro(FALSE);
-                        $tabela->show();
+                    # Tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($arrayResult);
+                    #$tabela->set_titulo($cc);
+                    $tabela->set_label(array("Cargo","Disponíveis","Ocupadas","Total"));
+                    $tabela->set_width(array(40,20,20,20));
+                    $tabela->set_align(array("left"));
+                    $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
+                                            'valor' => "Total",
+                                            'operador' => '=',
+                                            'id' => 'estatisticaTotal')));
+                    $tabela->set_totalRegistro(FALSE);
+                    $tabela->show();
                     
-                    $grid3->fechaColuna();
-                    $grid3->fechaGrid();
-                    
-                $div1->fecha();    
+                $grid2->fechaColuna();
             }
             
-            echo '</div>';
-            
-        $grid2->fechaColuna();
         $grid2->fechaGrid();
             
     $painel->fecha();
-     * 
-     */
         
     }
     

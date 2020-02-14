@@ -34,8 +34,7 @@ class LicencaSemVencimentos{
             alert("É necessário informar o id da Licença Sem Vencimentos.");
         }else{
             # Pega os dados
-            $select = 'SELECT * ,
-                              DATE_SUB((ADDDATE(dtInicial, INTERVAL periodo DAY)),INTERVAL 1 DAY) as dtTermino
+            $select = 'SELECT *
                          FROM tblicencasemvencimentos
                         WHERE idLicencaSemVencimentos = '.$idLicencaSemVencimentos;
 
@@ -63,22 +62,63 @@ class LicencaSemVencimentos{
         $dtPublicacao = $dados["dtPublicacao"];
         $crp = $dados["crp"];
         $dtRetorno = $dados["dtRetorno"];
+        $dtTermino = $dados["dtTermino"];
+        $dtSolicitacao = $dados["dtSolicitacao"];
         
         $retorno = NULL;
-        
+       
+        # Se estiver vazio a data de publicação -> Em aberto
         if(vazio($dtPublicacao)){
             $retorno = "Em Aberto";
-        }else{
+        }else{ 
+            $retorno = "Vigente";
+            
+            # Se não tiver retorno 
             if(vazio($dtRetorno)){
-                $retorno = "Vigente";
-            }else{
-                if(vazio($crp)){
-                    $retorno = "Aguardando CRP";
-                }else{
-                    $retorno = "Arquivado";
+                
+                # Verifica se tem data de termino
+                if(!vazio($dtTermino)) {
+                    
+                    $dtTermino = date_to_php($dtTermino);
+                    
+                    # Verifica se já passou
+                    if(jaPassou($dtTermino)){
+                        
+                        # Se já passou, verifica se já enteogou o crp
+                        if(vazio($crp)){
+                            $retorno = "Aguardando CRP";
+                        }else{
+                            # Se entregou então fica arquivado
+                            $retorno = "Arquivado";
+                        }
+                    }else{
+                        # Se a data de término não acabou, é vigente
+                        $retorno = "Vigente";
+                    }   
                 }
-            }
+            }else{
+                # Se já passou a data de retorno
+                $dtRetorno = date_to_php($dtRetorno);
+                if(jaPassou($dtRetorno)){
+                    
+                    # E não entregou o crp o status é aguardando o crp
+                    if(vazio($crp)){
+                        $retorno = "Aguardando CRP";
+                    }else{
+                        # Se entregou é arquivado
+                        $retorno = "Arquivado";
+                    }
+                }else{
+                    # Se não passou é vigente
+                    $retorno = "Vigente";
+                }
+            }    
         }
+        
+        if(vazio($dtSolicitacao)){
+            $retorno = "INCOMPLETO";
+        }
+        
         
         return $retorno;
     }

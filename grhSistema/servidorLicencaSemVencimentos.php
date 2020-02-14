@@ -45,10 +45,26 @@ if($acesso){
                     data1 = new Date(dt1);
                     data2 = new Date(dt2);
                     
-                    dias = (data2 - data1)/(1000*3600*24);
+                    dias = (data2 - data1)/(1000*3600*24)+1;
 
-                     $("#periodo").val(dias);
+                    $("#periodo").val(dias);
                   });
+                  
+
+                  
+                   $("#periodo").change(function(){
+                   
+                    var dt1 = $("#dtInicial").val();
+                    var periodo = $("#periodo").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(data1.getTime() + (periodo * 24 * 60 * 60 * 1000));
+                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
+            
+                    $("#dtTermino").val(formatado);
+                  });
+                  
                 });
              </script>';
     # Começa uma nova página
@@ -106,8 +122,8 @@ if($acesso){
                                      dtInicial,
                                      periodo,
                                      dtTermino,
-                                     crp,
                                      dtRetorno,
+                                     crp,
                                      obs,
                                      idServidor
                                 FROM tblicencasemvencimentos
@@ -136,6 +152,14 @@ if($acesso){
                                                     'valor' => 'Arquivado',
                                                     'operador' => '=',
                                                     'id' => 'arquivado'),
+                                              array('coluna' => 0,
+                                                    'valor' => 'Aguardando CRP',
+                                                    'operador' => '=',
+                                                    'id' => 'agurdando'),
+                                              array('coluna' => 0,
+                                                    'valor' => 'INCOMPLETO',
+                                                    'operador' => '=',
+                                                    'id' => 'incompleto'),
                                               array('coluna' => 0,
                                                     'valor' => 'Vigente',
                                                     'operador' => '=',
@@ -220,11 +244,18 @@ if($acesso){
                                   'col' => 2,
                                   'linha' => 3),
                           array ( 'nome' => 'dtTermino',
-                                  'label' => 'Data de Termino:',
+                                  'label' => 'Data de Termino (previsto):',
                                   'tipo' => 'data',
                                   'size' => 20,
                                   'col' => 3,
                                   'title' => 'Data de Termino.',
+                                  'linha' => 3),
+                           array ( 'nome' => 'dtRetorno',
+                                  'label' => 'Data de Retorno (de fato):',
+                                  'tipo' => 'data',
+                                  'size' => 10,
+                                  'col' => 3,
+                                  'title' => 'Data do início.',
                                   'linha' => 3),
                            array ('linha' => 4,
                                   'col' => 2,
@@ -235,13 +266,6 @@ if($acesso){
                                   'array' => array(array(FALSE,"Não"),
                                                    array(TRUE,"Sim")),
                                   'size' => 10),
-                          array ( 'nome' => 'dtRetorno',
-                                  'label' => 'Data de Retorno:',
-                                  'tipo' => 'data',
-                                  'size' => 10,
-                                  'col' => 3,
-                                  'title' => 'Data do início.',
-                                  'linha' => 4),
                           array ( 'linha' => 5,
                                   'nome' => 'obs',
                                   'label' => 'Observação:',
@@ -287,8 +311,8 @@ if($acesso){
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase){
+        
         case "" :
         case "listar" :
         case "editar" :			

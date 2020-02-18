@@ -1364,6 +1364,37 @@ class Pessoal extends Bd {
     }
     
     ##########################################################################################
+
+    function emLicencaSemVencimentos($idServidor, $data = NULL){
+
+
+    # Função que informa se a idServidor está em licanca Sem Vencimentos na data atual
+    #
+    # Parâmetro: a idServidor a ser pesquisada
+    
+        # Verifica a data
+        if(is_null($data)){
+            $data = date("Y-m-d");
+        }else{
+            $data = date_to_bd($data);
+        }
+
+        # Monta o select
+        $select = "SELECT idLicencasemVencimentos 
+                     FROM tblicencasemvencimentos
+                    WHERE idServidor = '$idServidor'
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,periodo-1)";
+
+        $row = parent::select($select,FALSE);
+
+        if (is_null($row[0]))
+            return 0;
+        else 
+            return 1;
+    }
+    
+    ##########################################################################################
     
     function emCessao($idServidor)
 

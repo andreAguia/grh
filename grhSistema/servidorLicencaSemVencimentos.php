@@ -38,6 +38,7 @@ if($acesso){
         
             $(document).ready(function(){
             
+                // Quando muda a data de término
                  $("#dtTermino").change(function(){
                     var dt1 = $("#dtInicial").val();
                     var dt2 = $("#dtTermino").val();
@@ -51,8 +52,22 @@ if($acesso){
                   });
                   
 
+                 // Quando muda o período 
+                 $("#periodo").change(function(){
+                   
+                    var dt1 = $("#dtInicial").val();
+                    var periodo = $("#periodo").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(data1.getTime() + (periodo * 24 * 60 * 60 * 1000));
+                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
+            
+                    $("#dtTermino").val(formatado);
+                  });
                   
-                   $("#periodo").change(function(){
+                // Quando muda a data Inicial
+                $("#dtInicial").change(function(){
                    
                     var dt1 = $("#dtInicial").val();
                     var periodo = $("#periodo").val();
@@ -183,7 +198,7 @@ if($acesso){
                                   FROM tbtipolicenca
                                  WHERE (idTpLicenca = 5) OR (idTpLicenca = 8) OR (idTpLicenca = 16)
                               ORDER BY 2');
-    array_unshift($result, array('Inicial',' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
+    array_unshift($result, array(NULL,' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'idTpLicenca',
@@ -239,6 +254,7 @@ if($acesso){
                           array ( 'nome' => 'periodo',
                                   'label' => 'Dias:',
                                   'tipo' => 'numero',
+                                  'min' => 1,
                                   'size' => 5,
                                   'title' => 'Número de dias.',
                                   'col' => 2,
@@ -290,20 +306,6 @@ if($acesso){
     $botao2->set_title("Exibe as regras de mudança automática do status");
     $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
     $objeto->set_botaoListarExtra(array($botaoRel,$botao2));
-    
-    # calculadora
-    if(vazio($id)){
-        $data1 = NULL;
-    }else{
-        $lsv = new LicencaSemVencimentos();
-        $dados = $lsv->get_dados($id);
-        $data1 = $dados["dtInicial"];
-    }
-    
-    $botaoCal= new Button("Calculadora");
-    $botaoCal->set_title("Calculadora de datas");
-    $botaoCal->set_onClick("window.open('calculadora.php?data1=$data1','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=500,height=500');");
-    $objeto->set_botaoEditarExtra(array($botaoCal));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

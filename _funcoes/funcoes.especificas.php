@@ -217,9 +217,9 @@ function textoEscalaFerias(){
 
 ##########################################################
 
-function exibeProcessoPremio($texto){
+function exibeProcesso($texto){
 /**
- * Função que exibe o processo de licença Premio
+ * Função que exibe os processo das licença de diversas tabelas
  * 
  * A tabela de licença de um servidor recebe informação de 2
  * tabelas unidas. Dessa forma foi criado uma codificação para
@@ -231,23 +231,49 @@ function exibeProcessoPremio($texto){
     # Divide o texto TIPO&ID
     $pedaco = explode("&", $texto);
     
-    if($pedaco[0] == 6){ 
-        ## Licença Prêmio
+    # Pega os pedaços
+    $tipo = $pedaco[0];
+    $id = $pedaco[1];
+    
+    # Inicia a variável de retorno
+    $processo = NULL;
+    
+    # Execute uma rotina específica para cada tipo de licença
+    switch ($tipo){
         
-        # Inicia a classe
-        $licenca = new LicencaPremio();
+        # Licença Prêmio
+        case 6 :
+            # Inicia a classe
+            $licenca = new LicencaPremio();
+
+            # Pega o processo 
+            $processo = $licenca->get_numProcesso($id);
+            break;
         
-        # Pega o processo 
-        $processo = $licenca->get_numProcesso($pedaco[1]);        
-    }else{
-        ## Outras Licenças
+        # Licença Sem Vencimentos
+        case 5 :
+        case 8 :
+        case 16 :
+            # Inicia a classe
+            $licenca = new LicencaSemVencimentos();
+            
+            # Pega os dados
+            $dados = $licenca->get_dados($id);
+
+            # Pega o processo 
+            $processo = $dados["processo"];
+            break;
         
-        # Inicia a classe
-        $pessoal = new Pessoal();
+        # Outras Licenças
+        default:
         
-        # Pega o processo 
-        $processo = $pessoal->get_licencaNumeroProcesso($pedaco[1]);
+            # Inicia a classe
+            $pessoal = new Pessoal();
+
+            # Pega o processo 
+            $processo = $pessoal->get_licencaNumeroProcesso($pedaco[1]);
     }
+    
     return $processo;
 }
 
@@ -1017,5 +1043,4 @@ function exibeRegraStatusLSV(){
     return;
 }
 
-##################################################################
-    
+###########################################################

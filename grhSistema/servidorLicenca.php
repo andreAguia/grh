@@ -292,10 +292,21 @@ if($acesso){
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
                                        CONCAT("6&",tblicencapremio.idServidor),
-                                       tbpublicacaopremio.dtPublicacao,
-                                       idLicencaPremio
+                                       tbpublicacaopremio.dtPublicacao,                                       
+                                       "-"
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
+                                     UNION
+                               (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                                       tblicencasemvencimentos.idTpLicenca,"",
+                                       tblicencasemvencimentos.dtInicial,
+                                       tblicencasemvencimentos.periodo,
+                                       ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1),
+                                       CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
+                                       tblicencasemvencimentos.dtPublicacao,
+                                       "-"
+                                  FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                                 WHERE tblicencasemvencimentos.idServidor = '.$idServidorPesquisado.')
                               ORDER BY 4 desc';
         }
         
@@ -337,15 +348,14 @@ if($acesso){
         $stringComparacao = $nome."<br/>".$lei;
         
         # Editar e excluir condicional
-        $licenca = new LicencaPremio();
-        $objeto->set_editarCondicional('?fase=editar',$stringComparacao,0,"<>");
-        $objeto->set_excluirCondicional('?fase=excluir',$stringComparacao,0,"<>");
+        $objeto->set_editarCondicional('?fase=editar','-',8,"<>");
+        $objeto->set_excluirCondicional('?fase=excluir','-',8,"<>");
 
         # Parametros da tabela
         $objeto->set_label(array("Licença ou Afastamento","Doc.","Alta","Inicio","Dias","Término","Processo","Publicação"));
         $objeto->set_width(array(30,5,5,10,5,10,15,5));	
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL,"exibeBotaoDocumentacaoLicenca",NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+        $objeto->set_funcao(array(NULL,"exibeBotaoDocumentacaoLicenca",NULL,'date_to_php',NULL,'date_to_php','exibeProcesso','date_to_php'));
         $objeto->set_numeroOrdem(TRUE);
         $objeto->set_numeroOrdemTipo("d");
 
@@ -365,6 +375,9 @@ if($acesso){
         $result = $pessoal->select('SELECT idTpLicenca, CONCAT(IFNULL(tbtipolicenca.lei,"")," ",tbtipolicenca.nome)
                                       FROM tbtipolicenca
                                      WHERE idTpLicenca <> 6
+                                       AND idTpLicenca <> 5
+                                       AND idTpLicenca <> 8
+                                       AND idTpLicenca <> 16
                                   ORDER BY 2');
         array_unshift($result, array('Inicial',' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
         
@@ -467,7 +480,7 @@ if($acesso){
 
         # Publicação de Licença Prêmio
         $botaoPremio = new Button($pessoal->get_licencaNome(6));
-        $botaoPremio->set_title("Acessa o Cadastro de Publicação para Licença Prêmio");
+        $botaoPremio->set_title("Acessa o Cadastro de Licença Prêmio");
         $botaoPremio->set_url('servidorLicencaPremio.php');  
         $botaoPremio->set_accessKey('L');
         
@@ -478,7 +491,7 @@ if($acesso){
         $botaoRel->set_url("../grhRelatorios/servidorLicenca.php?parametro=".$parametro);
         $botaoRel->set_target("_blank");
         
-        $objeto->set_botaoListarExtra(array($botaoRel,$botaoPremio));
+        $objeto->set_botaoListarExtra(array($botaoRel));
 
 
         ################################################################

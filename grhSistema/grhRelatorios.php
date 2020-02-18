@@ -328,16 +328,21 @@ if($acesso){
         case "licenca";
             $menu = new Menu();
             $menu->add_item('titulo','Licença e Afastamentos');
-            $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Por Lotação','../grhRelatorios/licencaMensal.php');
-            $menu->add_item('linkWindow','Relatório Anual de Servidores em Licença Por Lotação','../grhRelatorios/licencaAnualLotacao.php');
-            $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Agrupados','../grhRelatorios/licencaMensalAgrupado.php');
-            $menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Sem Duplicidade','../grhRelatorios/licencaMensalAgrupadoSemDuplicidade.php');
-            $menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');
-            $menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');
-            $menu->add_item('linkWindow','Relatório Anual de Término de Licença (Sem Prêmio)','../grhRelatorios/licencaVencimentoAnualSemPremio.php');
-            $menu->add_item('linkWindow','Relatório Anual de Licença Prêmio','../grhRelatorios/licencaPremioAnual.php');
+            $menu->add_item('linkWindow','Relatório Mensal de Servidores com Afastamento Por Lotação','../grhRelatorios/afastamento.Mensal.php');
+            $menu->add_item('linkWindow','Relatório Anual de Servidores com Afastamento Por Lotação','../grhRelatorios/afastamento.Anual.php');
             
-            $menu->add_item('linkWindow','Relatório Geral Por Tipo***','../grhRelatorios/licencaGeralporTipo.php');
+            #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Por Lotação','../grhRelatorios/licencaMensal.php');
+            #$menu->add_item('linkWindow','Relatório Anual de Servidores em Licença Por Lotação','../grhRelatorios/licencaAnualLotacao.php');
+            #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Agrupados','../grhRelatorios/licencaMensalAgrupado.php');
+            #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Sem Duplicidade','../grhRelatorios/licencaMensalAgrupadoSemDuplicidade.php');
+            #$menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');
+            #$menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');
+            #$menu->add_item('linkWindow','Relatório Anual de Término de Licença (Sem Prêmio)','../grhRelatorios/licencaVencimentoAnualSemPremio.php');
+            #$menu->add_item('linkWindow','Relatório Anual de Licença Prêmio','../grhRelatorios/licencaPremioAnual.php');
+            
+            if(Verifica::acesso($idUsuario,1)){
+                $menu->add_item('linkWindow','Relatório Geral Por Tipo','../grhRelatorios/licencaGeralporTipo.php');
+            }
             $menu->show();
             break;    
 

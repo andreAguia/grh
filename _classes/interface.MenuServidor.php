@@ -291,6 +291,7 @@ class MenuServidor{
         $ferias = $pessoal->emFerias($this->idServidor);
         $licenca = $pessoal->emLicenca($this->idServidor);
         $licencaPremio = $pessoal->emLicencaPremio($this->idServidor);
+        $licencaSemVencimentos = $pessoal->emLicencaSemVencimentos($this->idServidor);
         $situacao = $pessoal->get_idSituacao($this->idServidor);
         $folgaTre = $pessoal->emFolgaTre($this->idServidor);
         $afastadoTre = $pessoal->emAfastamentoTre($this->idServidor);
@@ -311,6 +312,11 @@ class MenuServidor{
         # Licenca Prêmio
         if($licencaPremio){
             $mensagem[] = 'Servidor em '.$pessoal->get_licencaNome(6);
+        }
+        
+        # Licenca Sem Vencimentos
+        if($licencaSemVencimentos){
+            $mensagem[] = 'Servidor em Licença Sem Vencimentos';
         }
 
         # Motivo de Saída

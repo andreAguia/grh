@@ -172,15 +172,6 @@ class LicencaSemVencimentos{
         if((!vazio($dtTermino)) AND (vazio($dtRetorno))){
             $hoje = date("d/m/Y");
             $dias = dataDif($hoje, $dtTermino);
-            
-            # Verifica se a data já passou
-            if(jaPassou($dtTermino)){
-                
-                # Verifica se não entregou o CRP
-                if(!$crp){
-                    $retorno.= "<br/><br/><span title='Já passou a data da entrega do CRP' class='warning label'>Data já Passou!</span>";
-                }
-            }
 
             if(($dias > 0) AND ($dias < 90)){
                 if($dias == 1){
@@ -245,6 +236,7 @@ class LicencaSemVencimentos{
         # Pega os campos necessários
         $crp = $dados["crp"];
         $dtRetorno = $dados["dtRetorno"];
+        $dttermino = $dados["dtTermino"];
         
         # Verifica p CRP
         if($crp){
@@ -252,13 +244,10 @@ class LicencaSemVencimentos{
         }else{
             echo "Não";
             
-            # Trata a data de retorno
-            if(!vazio($dtRetorno)){
-                $dtRetorno = date_to_php($dtRetorno);
-            }
-            
             # Verifica se estamos a 90 dias da data Termino
             if(!vazio($dtRetorno)){
+                # Passa para o formato brasileiro
+                $dtRetorno = date_to_php($dtRetorno);
                 
                 # Calcula a data limite da entrega
                 $dtLimite = addDias($dtRetorno,90);
@@ -281,6 +270,38 @@ class LicencaSemVencimentos{
                     }
                 }elseif($dias == 0){
                     echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                }
+            }else{
+                if(!vazio($dttermino)){
+                    # Passa para o formato brasileiro
+                    $dttermino = date_to_php($dttermino);
+                    
+                    # Verifica se já passou 
+                    if(jaPassou($dttermino)){
+                        
+                        # Calcula a data limite da entrega
+                        $dtLimite = addDias($dttermino,90);
+                        
+                        if(jaPassou($dtLimite)){
+                            echo "<br/><br/><span title='Já passou a data da entrega do CRP' class='warning label'>Data já Passou!</span>";
+                        }else{
+                            p("Entregar até: $dtLimite","plsvPassou");
+                        }
+                        
+                        # Calcula quantos dias faltam para essa data
+                        $hoje = date("d/m/Y");
+                        $dias = dataDif($hoje, $dtLimite);
+
+                        if(($dias > 0) AND ($dias < 90)){
+                            if($dias == 1){
+                                echo "<span title='Falta Apenas $dias dia para o término do prazo para entregar o CRP.' class='warning label'>Falta $dias dia</span>";
+                            }else{
+                                echo "<span title='Faltam $dias dias para o término do prazo para entregar o CRP!' class='warning label'>Faltam $dias dias</span>";
+                            }
+                        }elseif($dias == 0){
+                            echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                        }
+                    }
                 }
             }
         }

@@ -51,8 +51,8 @@ if($acesso)
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND (((YEAR(tblicenca.dtInicial) =  '.$relatorioAno.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioAno.')) 
-                      OR ((YEAR(tblicenca.dtInicial) <  '.$relatorioAno.') AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > '.$relatorioAno.')))';
+                  AND (((YEAR(tblicenca.dtInicial) = '.$relatorioAno.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$relatorioAno.')) 
+                   OR ((YEAR(tblicenca.dtInicial) < '.$relatorioAno.') AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > '.$relatorioAno.')))';
     # lotacao
     if(!is_null($relatorioLotacao)){
         # Verifica se o que veio é numérico

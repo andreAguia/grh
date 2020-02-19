@@ -473,6 +473,70 @@ class LicencaSemVencimentos{
   }
 
   ###########################################################
+    
+    function exibeBotaoDocumentos($idLicencaSemVencimentos){
+
+    /**
+     * Exibe o botão de imprimir os documentos
+     * 
+     * @obs Usada na tabela inicial do cadastro de LSV
+     */
+        
+        # Pega os dados
+        $dados = $this->get_dados($idLicencaSemVencimentos);
+        
+        # Pega os dados
+        $ciInicio = $dados["numCiInicio"];
+        $ciTermino = $dados["numCiTermino"];
+        $ci90 = $dados["numCi90"];
+        $dtTermino = date_to_php($dados["dtTermino"]);
+        
+        $dias = NULL;
+        
+        # Calcula os dias
+        if(!is_null($dtTermino)){
+            $hoje = date("d/m/Y");
+            $dias = dataDif($hoje, $dtTermino);
+        }        
+        
+        # Nome do botão de início
+        $nomeBotaoInicio = "CI Início";
+        if(!is_null($ciInicio)){
+            $nomeBotaoInicio = "CI Início n° ".$ciInicio;
+        }
+        
+        # Nome do botão de 90 Dias
+        $nomeBotao90 = "CI 90 Dias";
+        if(!is_null($ci90)){
+            $nomeBotao90 = "CI 90 Dias n° ".$ci90;
+        }
+        
+        # Nome do botão de Término
+        $nomeBotaotermino = "CI Término";
+        if(!is_null($ciTermino)){
+            $nomeBotaotermino = "CI Término n° ".$ciTermino;
+        }
+        
+        $menu = new Menu("menuBeneficios");
+        
+        # Despachos
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
+        
+        # Ci Início
+        $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReducao);
+
+        # Ci 90 dias
+        if(($dias >= 0) AND($dias <= 90)){
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReducao);
+        }
+
+        # Ci Término    
+        $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReducao);
+        
+        $menu->show();
+    }
+    
+    ###########################################################
 
 
 }

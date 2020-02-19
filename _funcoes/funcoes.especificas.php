@@ -1027,7 +1027,8 @@ function exibeRegraStatusLSV(){
     $conteudo = array(array("Em Aberto","Quando a data de publicação estiver vazia"),
                       array("Vigente","Quando a data de publicação estiver preenchida e o servidor ainda não retornou."),
                       array("Aguardando CRP","Quando a data de retorno do servidor já passou e ainda não entregou o CRP"),
-                      array("Arquivado","Quando a data de retorno do servidor já passou e o campo crp estiver TRUE"));
+                      array("Arquivado","Quando a data de retorno do servidor já passou e o campo crp estiver TRUE"),
+                      array("INCOMPLETO","Auando a data de solicitação não foi preenchida"));
     
     # Exibe em forma de tabela
     $tabela = new Tabela();

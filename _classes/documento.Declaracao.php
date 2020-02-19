@@ -148,11 +148,11 @@ class Declaracao{
         # Limita o tamanho da tela
         $grid = new Grid("center");
         $grid->abreColuna(11);
-        br(2);
+        br();
     
         # Declaração
         p('DECLARAÇÃO','pDeclaracaoTitulo');
-        br(2);
+        br();
 
         # Texto
         foreach($this->texto as $textoCi){
@@ -181,7 +181,7 @@ class Declaracao{
             p('Campos dos Goytacazes, '.dataExtenso($this->data),'pDeclaracaoData');
             
         }
-        br(3);
+        br(2);
 
         # Assinatura
         #p('____________________________________________________','pCiAssinatura');

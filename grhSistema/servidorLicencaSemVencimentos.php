@@ -123,6 +123,7 @@ if($acesso){
                                      idTpLicenca,
                                      idLicencaSemVencimentos,
                                      idLicencaSemVencimentos, 
+                                     idLicencaSemVencimentos,
                                      idLicencaSemVencimentos
                                 FROM tblicencasemvencimentos
                           WHERE idServidor='.$idServidorPesquisado.'
@@ -151,13 +152,13 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Status","Tipo","Licença Sem Vencimentos","Dados","Período","Entregou CRP?"));
+    $objeto->set_label(array("Status","Tipo","Licença Sem Vencimentos","Dados","Período","Entregou CRP?","Documentos"));
     #$objeto->set_width(array(10,10,30,10,20,15));	
     $objeto->set_align(array("center","center","left","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
     
-    $objeto->set_classe(array("LicencaSemVencimentos",NULL,"LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
-    $objeto->set_metodo(array("exibeStatus",NULL,"get_nomeLicenca","exibeProcessoPublicacao","exibePeriodo","exibeCrp"));
+    $objeto->set_classe(array("LicencaSemVencimentos",NULL,"LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
+    $objeto->set_metodo(array("exibeStatus",NULL,"get_nomeLicenca","exibeProcessoPublicacao","exibePeriodo","exibeCrp","exibeBotaoDocumentos"));
     
     $objeto->set_formatacaoCondicional(array( array('coluna' => 0,
                                                     'valor' => 'Em Aberto',

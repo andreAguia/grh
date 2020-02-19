@@ -14,8 +14,8 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
-if($acesso)
-{    
+if($acesso){
+    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
@@ -29,41 +29,26 @@ if($acesso)
     ######
     
     $relatorio = new Relatorio();
-    
-    if($relatorioLicenca <> 6){
 
         $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
                       idServidor,
-                      CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
+                      CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                      dtPublicacao,
+                      tblicenca.processo,
+                      tblicenca.obs,
                       idServidor
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tblicenca USING (idServidor)
                                  LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbtipolicenca.idTpLicenca = '.$relatorioLicenca.' 
-             ORDER BY tblicenca.dtInicial';
-    }else{
-        $select = 'SELECT tbservidor.idfuncional,
-                     tbpessoa.nome,
-                     tbperfil.nome,
-                     idServidor,
-                     (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                     tblicencapremio.dtInicial,
-                     tblicencapremio.numDias,
-                     ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-                     idServidor
-                FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                              LEFT JOIN tblicencapremio USING (idServidor)
-                                              LEFT JOIN tbperfil USING (idPerfil)
-                WHERE tbtipolicenca.idTpLicenca = 6
-                 ORDER BY tblicencapremio.dtInicial';
-    }
-
+             ORDER BY tblicenca.dtInicial desc';
+        
     $result = $pessoal->select($select);
     
     #$nomeLicenca = $pessoal->get_licencaNome($relatorioLicenca);
@@ -73,13 +58,13 @@ if($acesso)
     #$relatorio->set_tituloLinha2($nomeLicenca);
     
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Licença');
-    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Lotaçao','Licença','Data Inicial','Dias','Data Final',"Situação"));
+    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Lotaçao','Licença','Data Inicial','Dias','Data Final',"Publicação","Processo","Obs","Situação"));
     
-    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_LotacaoRel",NULL,NULL,NULL,NULL,"get_situacao"));    
+    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal",NULL,NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
+    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_LotacaoRel",NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_situacao"));    
     
-    $relatorio->set_align(array('center','left','center','left','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
+    $relatorio->set_align(array('center','left','center','left','left','center','center','center','center','left','left'));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(4);
@@ -89,6 +74,9 @@ if($acesso)
     $licenca = $pessoal->select('SELECT idTpLicenca,
                                          CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) as licenca
                                     FROM tbtipolicenca
+                                    WHERE tbtipolicenca.idTpLicenca = 5
+                                       OR tbtipolicenca.idTpLicenca = 8
+                                       OR tbtipolicenca.idTpLicenca = 16
                                 ORDER BY 2');
     array_unshift($licenca,array('800','Escolha um tipo de Licença ou Afastamento'));
     

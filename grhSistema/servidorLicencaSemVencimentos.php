@@ -299,7 +299,7 @@ if($acesso){
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Formação");
-    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFormacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $botaoRel->set_onClick("window.open('../grhRelatorios/servidorLicencaSemVencimentos.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         
     # Status
     $botao2 = new Button("Status");

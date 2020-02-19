@@ -57,13 +57,24 @@ if($acesso){
                                    tblicencapremio.numdias,
                                    ADDDATE(dtInicial,tblicencapremio.numDias-1),
                                    CONCAT("6&",tblicencapremio.idServidor),
-                                   tbpublicacaopremio.dtPublicacao,
-                                   idLicencaPremio
+                                   tbpublicacaopremio.dtPublicacao,                                       
+                                   "-"
                               FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                              WHERE tblicencapremio.idServidor = '.$idServidorPesquisado.')
-                          ORDER BY 3 desc';
+                                 UNION
+                           (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                                   "",
+                                   tblicencasemvencimentos.dtInicial,
+                                   tblicencasemvencimentos.periodo,
+                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1),
+                                   CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
+                                   tblicencasemvencimentos.dtPublicacao,
+                                   "-"
+                              FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                             WHERE tblicencasemvencimentos.idServidor = '.$idServidorPesquisado.')
+                          ORDER BY 4 desc';
     }
-
+        
     $result = $pessoal->select($selectLicença);
 
     $relatorio = new Relatorio();   
@@ -83,7 +94,7 @@ if($acesso){
     $relatorio->set_label(array("Licença","Alta","Inicio","Dias","Término","Processo","Publicação"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('left'));
-    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+    $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcesso','date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

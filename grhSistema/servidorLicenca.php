@@ -309,7 +309,6 @@ if($acesso){
                                  WHERE tblicencasemvencimentos.idServidor = '.$idServidorPesquisado.')
                               ORDER BY 4 desc';
         }
-        
                 
         $objeto->set_selectLista($selectLicença);
 

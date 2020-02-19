@@ -436,23 +436,21 @@ class LicencaSemVencimentos{
        
         $data = date("Y-m-d");
 
-        # Licença
-        $select = 'SELECT tbservidor.idfuncional,
-                          tbpessoa.nome,
-                          tblicenca.dtInicial,
-                          tblicenca.numDias,
-                          ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1) as df,
-                          CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
-                          tbservidor.idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tblicenca USING (idServidor)
-                                     LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                   WHERE tbservidor.situacao = 1
-                     AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)
-                     AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                       OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                       OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))
-                ORDER BY df desc';
+       # Licença
+       $select = 'SELECT idLicencaSemVencimentos,
+                         CASE tipo
+                             WHEN 1 THEN "Inicial"
+                             WHEN 2 THEN "Renovação"
+                             ELSE "--"
+                         END,
+                         idServidor,
+                         idTpLicenca,
+                         idLicencaSemVencimentos,
+                         idLicencaSemVencimentos, 
+                         idLicencaSemVencimentos,
+                         idServidor
+                    FROM tblicencasemvencimentos
+           ORDER BY dtSolicitacao desc';
 
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
@@ -462,11 +460,15 @@ class LicencaSemVencimentos{
         # Monta o Relatório
         $relatorio = new Relatorio();
         $relatorio->set_titulo($titulo);
+        
+        $relatorio->set_label(array("Status","Tipo","Nome","Licença Sem Vencimentos","Dados","Período","Entregou CRP?"));
+        $relatorio->set_align(array("center","center","left","left","left","left"));
 
-        $relatorio->set_label(array('IdFuncional','Nome','Data Inicial','Dias','Data Final','Descrição'));
+        $relatorio->set_classe(array("LicencaSemVencimentos",NULL,"Pessoal","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos","LicencaSemVencimentos"));
+        $relatorio->set_metodo(array("exibeStatus",NULL,"get_nome","get_nomeLicenca","exibeProcessoPublicacao","exibePeriodo","exibeCrp"));
+        
         $relatorio->set_conteudo($result);
-        $relatorio->set_align(array('center','left','center','center','center','left'));
-        $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php"));
+        
         $relatorio->show();
   }
 

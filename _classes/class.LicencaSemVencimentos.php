@@ -519,19 +519,16 @@ class LicencaSemVencimentos{
         
         $menu = new Menu("menuBeneficios");
         
-        # Despachos
-        $menu->add_item('linkWindow',"\u{1F5A8} Despacho Para Perícia",'?fase=despachoPerícia&id='.$idReducao);
-        
         # Ci Início
-        $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idReducao);
+        $menu->add_item('link',"\u{1F5A8} ".$nomeBotaoInicio,'?fase=ciInicioForm&id='.$idLicencaSemVencimentos);
 
         # Ci 90 dias
         if(($dias >= 0) AND($dias <= 90)){
-            $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idReducao);
+            $menu->add_item('link',"\u{1F5A8} ".$nomeBotao90,'?fase=ci90Form&id='.$idLicencaSemVencimentos);
         }
 
         # Ci Término    
-        $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idReducao);
+        $menu->add_item('link',"\u{1F5A8} ".$nomeBotaotermino,'?fase=ciTerminoForm&id='.$idLicencaSemVencimentos);
         
         $menu->show();
     }

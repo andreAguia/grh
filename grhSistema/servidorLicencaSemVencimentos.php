@@ -20,6 +20,7 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $lsv = new LicencaSemVencimentos();
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -323,6 +324,593 @@ if($acesso){
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ################################################################################################################
+        
+        # Ci Início
+        case "ciInicioForm" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            # Pega os Dados
+            $dados = $lsv->get_dados($id);
+            
+            $numCiInicio = $dados["numCiInicio"];
+            $dtCiInicio = $dados["dtCiInicio"];
+            $dtInicio = $dados["dtInicial"];
+            $dtPublicacao = $dados["dtPublicacao"];
+            #$pgPublicacao = $dados["pgPublicacao"];
+            $tipo = $dados["tipo"];
+            $periodo = $dados["periodo"];
+            $processo = $dados["processo"];
+            
+            # Chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+                                    
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+            
+            # Título
+            tituloTable("Controle de Licença Sem Vencimentos<br/>Ci de início");
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=ciInicioFormValida&id='.$id);        
+
+            # numCiInicio
+            $controle = new Input('numCiInicio','texto','Ci n°:',1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            #$controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($numCiInicio);
+            $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
+            $form->add_item($controle);
+
+            # dtCiInicio
+            $controle = new Input('dtCiInicio','data','Data da Ci:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_valor($dtCiInicio);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A data da CI de inicio.');
+            $form->add_item($controle);
+            
+            # tipo
+            $controle = new Input('tipo','combo','Tipo:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_array(array(array(NULL,NULL),
+                                       array(1,"Inicial"),
+                                       array(2,"Renovação")));
+            $controle->set_valor($tipo);
+            $controle->set_title('Se é Inicial ou Renovação.');
+            $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Cargo
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+
+           # submit
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            $form->show();
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();            
+            break;
+        
+        case "ciInicioFormValida" :
+            
+            # Pega os Dados
+            $dados = $lsv->get_dados($id);
+            
+            $numCiInicio = $dados["numCiInicio"];
+            $dtCiInicio = $dados["dtCiInicio"];
+            $dtInicio = date_to_php($dados['dtInicial']);
+            $dtPublicacao = date_to_php($dados['dtPublicacao']);
+            $pgPublicacao = $dados["pgPublicacao"];
+            $tipo = $dados["tipo"];
+            $periodo = $dados["periodo"];
+            $processo = $dados["processo"];
+            
+            # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCiInicioDigitados = vazioPraNulo(post("numCiInicio"));
+            $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
+            $tipo = vazioPraNulo(post("tipo"));
+            
+            $chefeDigitado = post("chefia");
+            $cargoDigitado = post("cargo");
+            
+            # Prepara para enviar por get
+            $array = array($chefeDigitado,$cargoDigitado);
+            $array = serialize($array);
+            
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($numCiInicio <> $numCiInicioDigitados){
+                $alteracoes .= '[numCiInicio] '.$numCiInicio.'->'.$numCiInicioDigitados.'; ';
+            }
+            if($dtCiInicio <> $dtCiInicioDigitado){
+                $alteracoes .= '[dtCiInicio] '.date_to_php($dtCiInicio).'->'.date_to_php($dtCiInicioDigitado).'; ';
+            }
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da Ci
+            if(vazio($numCiInicioDigitados)){
+                $msgErro.='Não tem número de Ci de Início cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da CI
+            if(vazio($dtCiInicioDigitado)){
+                $msgErro.='Não tem data da Ci de Início cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da Publicação
+            if(vazio($dtPublicacao)){
+                $msgErro.='Não tem data da Publicação cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data de Início
+            if(vazio($dtInicio)){
+                $msgErro.='Não tem data de início do benefício cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica o período
+            if(vazio($periodo)){
+                $msgErro.='O período não foi cadastrado!\n';
+                $erro = 1;
+            }              
+            
+            # Salva as alterações
+            $pessoal->set_tabela("tblicencasemvencimentos");
+            $pessoal->set_idCampo("idLicencaSemVencimentos");
+            $campoNome = array('numCiInicio','dtCiInicio','tipo');
+            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$tipo);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
+
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tblicencasemvencimentos",$id,$tipoLog,$idServidorPesquisado);
+            }                
+                
+                
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    # Exibe o relatório
+                    if($tipo == 1){                        
+                        loadPage("../grhRelatorios/lsv.CiInicio.php?id=$id&array=$array","_blank");
+                    }else{
+                        loadPage("../grhRelatorios/lsv.CiRenovacao.php?id=$id&array=$array","_blank");
+                    }
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
+            }else{
+                loadPage("?");
+            }
+            break;
+            
+################################################################################################################
+        
+        # Ci 90 Dias
+        case "ci90Form" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+
+            # Pega os Dados do Banco
+            $dados = $reducao->get_dadosCi90($id);
+            
+            # Da redução
+            $numCi90 = $dados[0];
+            $dtCi90= $dados[1];
+            $dtPublicacao = $dados[2];
+            $pgPublicacao = $dados[3];
+            
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+            
+            # Título
+            tituloTable("Controle de Redução da Carga Horária<br/>Ci de 90 Dias (ou menos)");
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=ci90FormValida&id='.$id);        
+
+            # numCiInicio
+            $controle = new Input('numCi90','texto','Ci n°:',1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            #$controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($numCi90);
+            $controle->set_title('Número da Ci informando que em 90 dias o benefício irá terminar.');
+            $form->add_item($controle);
+
+            # dtCiInicio
+            $controle = new Input('dtCi90','data','Data da Ci:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_valor($dtCi90);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A data da CI de 90 dias.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "ci90FormValida" :
+            
+            # Pega os Dados do Banco
+            $dados = $reducao->get_dadosCi90($id);
+            $numCi90 = $dados[0];
+            $dtCi90 = $dados[1];
+            $dtPublicacao = $dados[2];
+            $pgPublicacao = $dados[3];
+            
+            # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCi90Digitados = vazioPraNulo(post("numCi90"));
+            $dtCi90Digitado = vazioPraNulo(post("dtCi90"));
+             
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($numCi90 <> $numCi90Digitados){
+                $alteracoes .= '[numCi90] '.$numCi90.'->'.$numCi90Digitados.'; ';
+            }
+            if($dtCi90 <> $dtCi90Digitado){
+                if(vazio($dtCi90Digitado)){
+                    $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->  ; ';
+                }else{
+                    $alteracoes .= '[dtCi90] '.date_to_php($dtCi90).'->'.date_to_php($dtCi90Digitado).'; ';
+                }
+            }
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica se apertou o imprimir
+            if($botaoEscolhido == "imprimir"){
+            
+                # Verifica o número da Ci
+                if(vazio($numCi90Digitados)){
+                    $msgErro.='Não tem número de Ci de 90 dias cadastrada!\n';
+                    $erro = 1;
+                }
+
+                # Verifica a data da CI
+                if(vazio($dtCi90Digitado)){
+                    $msgErro.='Não tem data da Ci de 90 dias cadastrada!\n';
+                    $erro = 1;
+                }
+
+                # Verifica a data da Publicação
+                if(vazio($dtPublicacao)){
+                    $msgErro.='Não tem data da Publicação cadastrada!\n';
+                    $erro = 1;
+                }
+            }
+            
+            # Salva as alterações
+            $pessoal->set_tabela("tbreducao");
+            $pessoal->set_idCampo("idReducao");
+            $campoNome = array('numCi90','dtCi90');
+            $campoValor = array($numCi90Digitados,$dtCi90Digitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
+
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+            }                
+               
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage('../grhRelatorios/reducaoCi90.php?id='.$id,"_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
+            }else{
+                loadPage("?");
+            }
+            break;
+            
+################################################################################################################
+        
+        # Ci Término
+        case "ciTerminoForm" :
+            
+            # Voltar
+            botaoVoltar("?");
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            # Pega os Dados
+            $dados = $reducao->get_dados($id);
+            
+            $numCitermino = $dados["numCiTermino"];
+            $dtCitermino = $dados["dtCiTermino"];
+            $dtTermino = date_to_php($dados["dtTermino"]);
+            $dtPublicacao = date_to_php($dados["dtPublicacao"]);
+            $pgPublicacao = $dados["pgPublicacao"];
+            $periodo = $dados["periodo"];
+            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Chefia imediata desse servidor
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+            
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+            
+            # Título
+            titulo("Ci de Término");
+            $painel = new Callout();
+            $painel->abre();
+            
+            # Monta o formulário para confirmação dos dados necessários a emissão da CI
+            $form = new Form('?fase=ciTerminoFormValida&id='.$id);        
+
+            # numCiInicio
+            $controle = new Input('numCiTermino','texto','Ci n°:',1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            #$controle->set_required(TRUE);
+            $controle->set_autofocus(TRUE);
+            $controle->set_valor($numCitermino);
+            $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de Término do benefício.');
+            $form->add_item($controle);
+
+            # dtCiInicio
+            $controle = new Input('dtCiTermino','data','Data da Ci:',1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor($dtCitermino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A data da CI de término.');
+            $form->add_item($controle);
+            
+            # Chefia
+            $controle = new Input('chefia','texto','Chefia:',1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+            
+            # Cargo
+            $controle = new Input('cargo','texto','Cargo:',1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar','submit');
+            $controle->set_valor('Salvar');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+            
+            # submit
+            $controle = new Input('imprimir','submit');
+            $controle->set_valor('Salvar & Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        
+        case "ciTerminoFormValida" :
+            
+            # Pega os Dados
+            $dados = $reducao->get_dados($id);
+            
+            $numCitermino = $dados["numCiTermino"];
+            $dtCitermino = $dados["dtCiTermino"];
+            $dtPublicacao = $dados["dtPublicacao"];
+            $pgPublicacao = $dados["pgPublicacao"];
+            $periodo = $dados["periodo"];
+            $dtInicio = $dados["dtInicio"];
+            $processo = $reducao->get_numProcesso($idServidorPesquisado);
+            
+            # Pega os dados Digitados
+            $botaoEscolhido = get_post_action("salvar","imprimir");
+            $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
+            $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
+            
+            $chefeDigitado = post("chefia");
+            $cargoDigitado = post("cargo");
+            
+            # Prepara para enviar por get
+            $array = array($chefeDigitado,$cargoDigitado);
+            $array = serialize($array);
+                        
+            # Verifica se houve alterações
+            $alteracoes = NULL;
+            $atividades = NULL;
+            
+            # Verifica as alterações para o log
+            if($numCiTermino <> $numCiTerminoDigitados){
+                $alteracoes .= '[numCiTermino] '.$numCiTermino.'->'.$numCiTerminoDigitados.'; ';
+            }
+            if($dtCiTermino <> $dtCiTerminoDigitado){
+                $alteracoes .= '[dtCiTermino] '.date_to_php($dtCiTermino).'->'.date_to_php($dtCiTerminoDigitado).'; ';
+            }
+            
+            # Erro
+            $msgErro = NULL;
+            $erro = 0;
+            
+            # Verifica o número da Ci
+            if(vazio($numCiTerminoDigitados)){
+                $msgErro.='Não tem número de Ci de Término cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da CI
+            if(vazio($dtCiTerminoDigitado)){
+                $msgErro.='Não tem data da Ci de Término cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data da Publicação
+            if(vazio($dtPublicacao)){
+                $msgErro.='Não tem data da Publicação cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica a data de Início
+            if(vazio($dtInicio)){
+                $msgErro.='Não tem data de início do benefício cadastrada!\n';
+                $erro = 1;
+            }
+            
+            # Verifica o período
+            if(vazio($periodo)){
+                $msgErro.='O período não foi cadastrado!\n';
+                $erro = 1;
+            } 
+            
+            # Salva as alterações
+            $pessoal->set_tabela("tbreducao");
+            $pessoal->set_idCampo("idReducao");
+            $campoNome = array('numCiTermino','dtCiTermino');
+            $campoValor = array($numCiTerminoDigitados,$dtCiTerminoDigitado);
+            $pessoal->gravar($campoNome,$campoValor,$id);
+            $data = date("Y-m-d H:i:s");
+                
+            # Grava o log das alterações caso tenha
+            if(!is_null($alteracoes)){
+                $atividades .= 'Alterou: '.$alteracoes;
+                $tipoLog = 2;
+                $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",$id,$tipoLog,$idServidorPesquisado);
+            }
+            
+            # Exibe o relatório ou salva de acordo com o botão pressionado
+            if($botaoEscolhido == "imprimir"){
+                if($erro == 0){
+                    loadPage("../grhRelatorios/reducaoCiTermino.php?id=$id&array=$array","_blank");
+                    loadPage("?");
+                }else{
+                    alert($msgErro);
+                    back(1);
+                }            
+            }else{
+                loadPage("?");
+            }
+            break;
+            
+    ################################################################################################################
+    
     }
     $page->terminaPagina();
 }else{

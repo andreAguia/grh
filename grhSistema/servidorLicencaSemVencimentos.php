@@ -327,8 +327,8 @@ if($acesso){
         
     ################################################################################################################
         
-        # Ci Início
-        case "despacho" :
+        # Carta Reassunção
+        case "cartaReassuncao" :
             
             # Voltar
             botaoVoltar("?");
@@ -339,14 +339,8 @@ if($acesso){
             # Pega os Dados
             $dados = $lsv->get_dados($id);
             
-            $numCiInicio = $dados["numCiInicio"];
-            $dtCiInicio = $dados["dtCiInicio"];
-            $dtInicio = $dados["dtInicial"];
-            $dtPublicacao = $dados["dtPublicacao"];
-            #$pgPublicacao = $dados["pgPublicacao"];
-            $tipo = $dados["tipo"];
-            $periodo = $dados["periodo"];
-            $processo = $dados["processo"];
+            $dtRetorno = $dados["dtRetorno"];
+            $dtPublicacao = $dados['dtPublicacao'];
             
             # Chefia imediata desse servidor
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
@@ -359,44 +353,31 @@ if($acesso){
             br(3);
             
             # Título
-            tituloTable("Controle de Licença Sem Vencimentos<br/>Ci de início");
+            tituloTable("Controle de Licença Sem Vencimentos<br/>Carta de Rerassunção de Servidor");
             $painel = new Callout();
             $painel->abre();
             
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
-            $form = new Form('?fase=ciInicioFormValida&id='.$id);        
+            $form = new Form('?fase=cartaReassuncaoFormValida&id='.$id); 
 
-            # numCiInicio
-            $controle = new Input('numCiInicio','texto','Ci n°:',1);
-            $controle->set_size(20);
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            #$controle->set_required(TRUE);
-            $controle->set_autofocus(TRUE);
-            $controle->set_valor($numCiInicio);
-            $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
-            $form->add_item($controle);
-
-            # dtCiInicio
-            $controle = new Input('dtCiInicio','data','Data da Ci:',1);
+            # dtRetorno
+            $controle = new Input('dtRetorno','data','Data do Retorno:',1);
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(3);
-            $controle->set_valor($dtCiInicio);
+            $controle->set_valor($dtRetorno);
             #$controle->set_required(TRUE);
-            $controle->set_title('A data da CI de inicio.');
+            $controle->set_title('A data do retorno do servidor.');
             $form->add_item($controle);
             
-            # tipo
-            $controle = new Input('tipo','combo','Tipo:',1);
+            # dtPublicacao
+            $controle = new Input('dtPublicacao','data','Data da Publicação:',1);
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_array(array(array(NULL,NULL),
-                                       array(1,"Inicial"),
-                                       array(2,"Renovação")));
-            $controle->set_valor($tipo);
-            $controle->set_title('Se é Inicial ou Renovação.');
+            $controle->set_valor($dtPublicacao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A data da publicação no DOERJ.');
             $form->add_item($controle);
             
             # Chefia
@@ -440,28 +421,22 @@ if($acesso){
             $grid->fechaGrid();            
             break;
         
-        case "ciInicioFormValida" :
+        case "cartaReassuncaoFormValida" :
             
             # Pega os Dados
             $dados = $lsv->get_dados($id);
             
-            $numCiInicio = $dados["numCiInicio"];
-            $dtCiInicio = $dados["dtCiInicio"];
-            $dtInicio = date_to_php($dados['dtInicial']);
-            $dtPublicacao = date_to_php($dados['dtPublicacao']);
-            $pgPublicacao = $dados["pgPublicacao"];
-            $tipo = $dados["tipo"];
-            $periodo = $dados["periodo"];
-            $processo = $dados["processo"];
+            $dtRetorno = $dados["dtRetorno"];
+            $dtPublicacao = $dados['dtPublicacao'];
             
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
-            $numCiInicioDigitados = vazioPraNulo(post("numCiInicio"));
-            $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
-            $tipo = vazioPraNulo(post("tipo"));
+            $dtRetornoDigitado = vazioPraNulo(post("dtRetorno"));
+            $dtPublicacaoDigitado = vazioPraNulo(post("dtPublicacao"));
             
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
+            $dtRetorno = post("dtRetorno");
             
             # Prepara para enviar por get
             $array = array($chefeDigitado,$cargoDigitado);
@@ -472,26 +447,21 @@ if($acesso){
             $atividades = NULL;
             
             # Verifica as alterações para o log
-            if($numCiInicio <> $numCiInicioDigitados){
-                $alteracoes .= '[numCiInicio] '.$numCiInicio.'->'.$numCiInicioDigitados.'; ';
+            if($dtRetorno <> $dtRetornoDigitado){
+                $alteracoes .= '[dtRetorno] '.date_to_php($dtRetorno).'->'.date_to_php($dtRetornoDigitado).'; ';
             }
-            if($dtCiInicio <> $dtCiInicioDigitado){
-                $alteracoes .= '[dtCiInicio] '.date_to_php($dtCiInicio).'->'.date_to_php($dtCiInicioDigitado).'; ';
+            
+            if($dtPublicacao <> $dtPublicacaoDigitado){
+                $alteracoes .= '[dtPublicacao] '.date_to_php($dtPublicacao).'->'.date_to_php($dtPublicacaoDigitado).'; ';
             }
             
             # Erro
             $msgErro = NULL;
             $erro = 0;
             
-            # Verifica o número da Ci
-            if(vazio($numCiInicioDigitados)){
-                $msgErro.='Não tem número de Ci de Início cadastrada!\n';
-                $erro = 1;
-            }
-            
-            # Verifica a data da CI
-            if(vazio($dtCiInicioDigitado)){
-                $msgErro.='Não tem data da Ci de Início cadastrada!\n';
+            # Verifica a data de retorno
+            if(vazio($dtRetornoDigitado)){
+                $msgErro.='Não tem data de retorno cadastrada!\n';
                 $erro = 1;
             }
             
@@ -499,25 +469,13 @@ if($acesso){
             if(vazio($dtPublicacao)){
                 $msgErro.='Não tem data da Publicação cadastrada!\n';
                 $erro = 1;
-            }
-            
-            # Verifica a data de Início
-            if(vazio($dtInicio)){
-                $msgErro.='Não tem data de início do benefício cadastrada!\n';
-                $erro = 1;
-            }
-            
-            # Verifica o período
-            if(vazio($periodo)){
-                $msgErro.='O período não foi cadastrado!\n';
-                $erro = 1;
-            }              
+            }     
             
             # Salva as alterações
             $pessoal->set_tabela("tblicencasemvencimentos");
             $pessoal->set_idCampo("idLicencaSemVencimentos");
-            $campoNome = array('numCiInicio','dtCiInicio','tipo');
-            $campoValor = array($numCiInicioDigitados,$dtCiInicioDigitado,$tipo);
+            $campoNome = array('dtRetorno','dtPublicacao');
+            $campoValor = array($dtRetorno,$dtPublicacao);
             $pessoal->gravar($campoNome,$campoValor,$id);
             $data = date("Y-m-d H:i:s");
 
@@ -532,12 +490,7 @@ if($acesso){
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if($botaoEscolhido == "imprimir"){
                 if($erro == 0){
-                    # Exibe o relatório
-                    if($tipo == 1){                        
-                        loadPage("../grhRelatorios/lsv.CiInicio.php?id=$id&array=$array","_blank");
-                    }else{
-                        loadPage("../grhRelatorios/lsv.CiRenovacao.php?id=$id&array=$array","_blank");
-                    }
+                    loadPage("../grhRelatorios/lsv.cartaReassuncao.php?id=$id&array=$array","_blank");
                     loadPage("?");
                 }else{
                     alert($msgErro);

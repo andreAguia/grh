@@ -482,19 +482,11 @@ class LicencaSemVencimentos{
      * @obs Usada na tabela inicial do cadastro de LSV
      */
         
-        # Pega os dados
-        $dados = $this->get_dados($idLicencaSemVencimentos);
-        
-        # Pega os dados
-        $ciInicio = $dados["numCiInicio"];
-        $ciTermino = $dados["numCiTermino"];
-        $ci90 = $dados["numCi90"];
-        $dtTermino = date_to_php($dados["dtTermino"]);
-        
         $menu = new Menu("menuBeneficios");
         
         # Despacho
         $menu->add_item('linkWindow',"\u{1F5A8} Despacho - Nada Opor",'../grhRelatorios/lsv.despacho.php?id='.$idLicencaSemVencimentos);
+        $menu->add_item('link',"\u{1F5A8} Carta de Reassunção",'?fase=cartaReassuncao&id='.$idLicencaSemVencimentos);
         
         $menu->show();
     }

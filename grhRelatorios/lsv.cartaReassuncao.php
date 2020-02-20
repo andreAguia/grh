@@ -25,6 +25,11 @@ if($acesso){
 	
     # Pega o id
     $id = get('id');
+    
+    # Pega o nome e cargo do chefe
+    $array = unserialize(get('array'));
+    $chefe = $array[0];
+    $cargo = $array[1];
    
     # Começa uma nova página
     $page = new Page();			
@@ -34,8 +39,8 @@ if($acesso){
     $dados = $lsv->get_dados($id);
 
     # Da Licença
-    $idTpLicenca = $dados['idTpLicenca'];
-    $nomeLicenca = $pessoal->get_nomeTipoLicenca($idTpLicenca);
+    $dtRetorno = dataExtenso(date_to_php($dados['dtRetorno']));
+    $dtPublicacao = dataExtenso(date_to_php($dados['dtPublicacao']));
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -44,30 +49,27 @@ if($acesso){
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao($idLotacao);
     
-    # Pega o idServidor do gerente GRH
-    $idGerente = $pessoal->get_gerente(66);
-    $gerente = $pessoal->get_nome($idGerente);
-    $cargo = $pessoal->get_cargoComissaoDescricao($idGerente);
-    $idFuncional = $pessoal->get_idFuncional($idGerente);
+    # Monta a Carta
+    $carta = new Carta();
     
-    # Monta a CI
-    $despacho = new Despacho();
+    $carta->set_nomeCarta("CARTA DE REASSUNÇÃO NO CARGO PÚBLICO");
     
-    $despacho->set_origemNome($gerente);
-    $despacho->set_origemDescricao($cargo);
-    $despacho->set_origemIdFuncional($idFuncional);
     
-    $despacho->set_destino("À Reitoria");
-    $despacho->set_texto('Trata o presente processo de solicitação de '.strtoupper($nomeLicenca).', do(a) servidor(a) <b>'.strtoupper($nomeServidor).'</b>, '
-                    .$cargoServidor.', ID '.$idFuncional.', lotado na '.$lotacao.', para o qual solicitamos o "NADA A OPOR" dessa Reitoria');
-    $despacho->set_saltoRodape(3);
-    $despacho->show();
+    $carta->set_destinoNome($chefe);
+    $carta->set_destinoSetor($cargo);
+    
+    $carta->set_texto('Apresentamos a Vª. o(a) Sr.(a) <b>'.strtoupper($nomeServidor).'</b>, cargo '
+                    .$cargoServidor.', para reassumir o exercício de suas atividades na '.$lotacao
+                    .', a contar de '.$dtRetorno.', antecipando o término do prazo da Licença Sem Vencimentos publicada no DOERJ de '.$dtPublicacao);
+    
+    $carta->set_saltoRodape(3);
+    $carta->show();
     
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Ci de início de readaptacao.';
+    $atividades = 'Visualizou a Carta de reassunção.';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
+    $intra->registraLog($idUsuario,$data,$atividades,"tblicencasemvencimentos",$id,$tipoLog,$idServidorPesquisado);
     
     $page->terminaPagina();
 }

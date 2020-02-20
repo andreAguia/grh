@@ -65,6 +65,21 @@ class Despacho{
     }
     
     ###########################################################
+	    
+    public function set_texto($texto){
+    /**
+     * Inclui um objeto Input ao formulário
+     * 
+     * @syntax $form->add_item($objeto);
+     * 
+     * @param $controle object NULL Objeto Input a ser inserido no Formulário
+     * 
+     */
+    
+       $this->texto[] = $texto; 
+    }
+    
+    ###########################################################
     
      /**
       * Método rodape
@@ -118,8 +133,12 @@ class Despacho{
         br();
         
         # Data
+        if(vazio($this->data)){
+            $this->data = date("d/m/Y");
+        }
+        
         p('Campos dos Goytacazes, '.dataExtenso($this->data),'pCiNum');
-        br(4);
+        br($this->saltoRodape);
 
         # Assinatura
         #p('____________________________________________________','pCiAssinatura');

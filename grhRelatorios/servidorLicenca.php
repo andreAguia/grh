@@ -72,7 +72,7 @@ if($acesso){
                                    "-"
                               FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
                              WHERE tblicencasemvencimentos.idServidor = '.$idServidorPesquisado.')
-                          ORDER BY 4 desc';
+                          ORDER BY 3 desc';
     }
         
     $result = $pessoal->select($selectLicença);

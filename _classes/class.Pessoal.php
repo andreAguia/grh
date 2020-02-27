@@ -1384,7 +1384,7 @@ class Pessoal extends Bd {
                      FROM tblicencasemvencimentos
                     WHERE idServidor = '$idServidor'
                       AND '$data' >= dtInicial 
-                      AND '$data' <= ADDDATE(dtInicial,periodo-1)";
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
         $row = parent::select($select,FALSE);
 

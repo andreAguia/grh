@@ -49,18 +49,18 @@ if($acesso){
                     
                     dias = (data2 - data1)/(1000*3600*24)+1;
 
-                    $("#periodo").val(dias);
+                    $("#numDias").val(dias);
                   });
                   
 
                  // Quando muda o período 
-                 $("#periodo").change(function(){
+                 $("#numDias").change(function(){
                    
                     var dt1 = $("#dtInicial").val();
-                    var periodo = $("#periodo").val();
+                    var numDias = $("#numDias").val();
                     
                     data1 = new Date(dt1);
-                    data2 = new Date(data1.getTime() + (periodo * 24 * 60 * 60 * 1000));
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
                     
                     formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
             
@@ -71,10 +71,10 @@ if($acesso){
                 $("#dtInicial").change(function(){
                    
                     var dt1 = $("#dtInicial").val();
-                    var periodo = $("#periodo").val();
+                    var numDias = $("#numDias").val();
                     
                     data1 = new Date(dt1);
-                    data2 = new Date(data1.getTime() + (periodo * 24 * 60 * 60 * 1000));
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
                     
                     formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
             
@@ -103,6 +103,7 @@ if($acesso){
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
     
     $objeto->set_rotinaExtraListar("exibeRegraStatusLSV");
+    $objeto->set_rotinaExtraEditar("exibeRegraStatusLSV");
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Hstórico de Licença Sem Vencimentos');
@@ -128,7 +129,7 @@ if($acesso){
                                      idLicencaSemVencimentos
                                 FROM tblicencasemvencimentos
                           WHERE idServidor='.$idServidorPesquisado.'
-                       ORDER BY dtSolicitacao desc');
+                       ORDER BY dtSolicitacao desc, dtInicial desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTpLicenca,
@@ -137,7 +138,7 @@ if($acesso){
                                      processo,
                                      dtPublicacao,
                                      dtInicial,
-                                     periodo,
+                                     numDias,
                                      dtTermino,
                                      dtRetorno,
                                      crp,
@@ -253,7 +254,7 @@ if($acesso){
                                   'col' => 3,
                                   'title' => 'Data do início.',
                                   'linha' => 3),
-                          array ( 'nome' => 'periodo',
+                          array ( 'nome' => 'numDias',
                                   'label' => 'Dias:',
                                   'tipo' => 'numero',
                                   'min' => 1,
@@ -308,6 +309,7 @@ if($acesso){
     $botao2->set_title("Exibe as regras de mudança automática do status");
     $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
     $objeto->set_botaoListarExtra(array($botaoRel,$botao2));
+    $objeto->set_botaoEditarExtra(array($botao2));
     
     # Log
     $objeto->set_idUsuario($idUsuario);

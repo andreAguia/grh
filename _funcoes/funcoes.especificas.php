@@ -1024,21 +1024,22 @@ function exibeRegraStatusLSV(){
     $div = new Div("divRegrasLsv");
     $div->abre();
     
-    $conteudo = array(array("Em Aberto","Quando a data de publicação estiver vazia"),
-                      array("Vigente","Quando a data de publicação estiver preenchida e o servidor ainda não retornou."),
-                      array("Aguardando CRP","Quando a data de retorno do servidor já passou e ainda não entregou o CRP"),
-                      array("Arquivado","Quando a data de retorno do servidor já passou e o campo crp estiver TRUE"),
-                      array("INCOMPLETO","Auando a data de solicitação não foi preenchida"));
+        $conteudo = array(array("Em Aberto","Quando a data de publicação estiver vazia"),
+                          array("Vigente","Quando a data de publicação estiver preenchida e o servidor ainda não retornou."),
+                          array("Aguardando CRP","Quando a data de retorno do servidor já passou e ainda não entregou o CRP"),
+                          array("Arquivado","Quando a data de retorno do servidor já passou e o campo crp estiver TRUE"),
+                          array("INCOMPLETO","Quando a data de solicitação não foi preenchida"));
+
+        # Exibe em forma de tabela
+        $tabela = new Tabela();
+        #$tabela->set_titulo("Regras de mudança do Status");
+        $tabela->set_conteudo($conteudo);
+        $tabela->set_label(array("",""));
+        $tabela->set_width(array(20,80));
+        $tabela->set_align(array("left","left"));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->show();
     
-    # Exibe em forma de tabela
-    $tabela = new Tabela();
-    #$tabela->set_titulo("Regras de mudança do Status");
-    $tabela->set_conteudo($conteudo);
-    $tabela->set_label(array("",""));
-    $tabela->set_width(array(20,80));
-    $tabela->set_align(array("left","left"));
-    $tabela->set_totalRegistro(FALSE);
-    $tabela->show();
     $div->fecha();
     
     return;

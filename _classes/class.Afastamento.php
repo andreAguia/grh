@@ -421,8 +421,8 @@ class Afastamento{
       $select .= '               tbpessoa.nome,
                                  tbservidor.idServidor,
                                   tblicencasemvencimentos.dtInicial,
-                                  tblicencasemvencimentos.periodo,
-                                  ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1),
+                                  tblicencasemvencimentos.numDias,
+                                  ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                                   tbtipolicenca.nome,
                                   tbservidor.idServidor
                              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -437,12 +437,12 @@ class Afastamento{
        
        if($this->campoMes){
             $select .= '       
-                              AND (("'.$data.'" BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1))
-                               OR  (LAST_DAY("'.$data.'") BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1))
-                               OR  ("'.$data.'" < tblicencasemvencimentos.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1)))';
+                              AND (("'.$data.'" BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
+                               OR  (LAST_DAY("'.$data.'") BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
+                               OR  ("'.$data.'" < tblicencasemvencimentos.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)))';
         }else{
-            $select .= ' AND (((YEAR(tblicencasemvencimentos.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tblicencasemvencimentos.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1)) > '.$this->ano.')))';
+            $select .= ' AND (((YEAR(tblicencasemvencimentos.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = '.$this->ano.')) 
+                        OR ((YEAR(tblicencasemvencimentos.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) > '.$this->ano.')))';
        }
        
         # lotacao

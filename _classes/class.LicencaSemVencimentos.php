@@ -137,7 +137,7 @@ class LicencaSemVencimentos{
         
         # Pega os campos necessários
         $dtInicial = $dados["dtInicial"];
-        $periodo = $dados["periodo"];
+        $numDias = $dados["numDias"];
         $dtTermino = $dados["dtTermino"];
         $dtRetorno = $dados["dtRetorno"];
         $crp = $dados["crp"];
@@ -149,8 +149,8 @@ class LicencaSemVencimentos{
         }
 
         # Trata o período
-        if(!vazio($periodo)){
-            $periodo = $periodo." dias";
+        if(!vazio($numDias)){
+            $numDias = $numDias." dias";
         }
 
         # Trata a data de término
@@ -164,7 +164,7 @@ class LicencaSemVencimentos{
         }
 
         $retorno = "Início : ".trataNulo($dtInicial)."<br/>"
-                 . "Período: ".trataNulo($periodo)."<br/>"
+                 . "Período: ".trataNulo($numDias)."<br/>"
                  . "Término: ".trataNulo($dtTermino)."<br/>"
                  . "Retornou: ".trataNulo($dtRetorno);
 

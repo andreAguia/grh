@@ -57,15 +57,14 @@ if($acesso){
     $despacho->set_origemDescricao($cargo);
     $despacho->set_origemIdFuncional($idFuncional);
     
-    $despacho->set_destino("À Reitoria");
-    $despacho->set_texto('Trata o presente processo de solicitação de '.strtoupper($nomeLicenca).', do(a) servidor(a) <b>'.strtoupper($nomeServidor).'</b>, '
-                    .$cargoServidor.', ID '.$idFuncional.', lotado na '.$lotacao.', para o qual solicitamos o "NADA A OPOR" dessa Reitoria');
+    $despacho->set_destino("Ao RIOPREVIDÊNCIA,");
+    $despacho->set_texto('Para as devidas providências administrativas.');
     $despacho->set_saltoRodape(3);
     $despacho->show();
     
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Ci de início de readaptacao.';
+    $atividades = 'Visualizou despacho ao RIOPREVIDÊNCIA (padrão) da licença sem vencimentos.';
     $tipoLog = 4;
     $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
     

@@ -308,8 +308,13 @@ if($acesso){
     $botao2 = new Button("Status");
     $botao2->set_title("Exibe as regras de mudança automática do status");
     $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
-    $objeto->set_botaoListarExtra(array($botaoRel,$botao2));
-    $objeto->set_botaoEditarExtra(array($botao2));
+    
+    # Rotina
+    $botao3 = new Button("Rotina");
+    $botao3->set_title("Exibe as rotina");
+    $botao3->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRtF8IcxuFFwZqhdfYVBENWVVa6CbhLzO9rXjZbIhZcsAa4bqlnYyDROChUIpXwXGD_zDxF0QPYpMXq/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
+    $objeto->set_botaoListarExtra(array($botaoRel,$botao2,$botao3));
+    $objeto->set_botaoEditarExtra(array($botao2,$botao3));
     
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -355,7 +360,7 @@ if($acesso){
             br(3);
             
             # Título
-            tituloTable("Controle de Licença Sem Vencimentos<br/>Carta de Rerassunção de Servidor");
+            tituloTable("Controle de Licença Sem Vencimentos<br/>Carta de Reassunção de Servidor");
             $painel = new Callout();
             $painel->abre();
             

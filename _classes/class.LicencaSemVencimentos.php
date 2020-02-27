@@ -485,7 +485,9 @@ class LicencaSemVencimentos{
         $menu = new Menu("menuBeneficios");
         
         # Despacho
-        $menu->add_item('linkWindow',"\u{1F5A8} Despacho - Nada Opor",'../grhRelatorios/lsv.despacho.php?id='.$idLicencaSemVencimentos);
+        $menu->add_item('linkWindow',"\u{1F5A8} Reitoria - Nada Opor",'../grhRelatorios/lsv.despacho.reitoria.php?id='.$idLicencaSemVencimentos);
+        $menu->add_item('linkWindow',"\u{1F5A8} Despacho - SEPOF",'../grhRelatorios/lsv.despacho.sepof.php?id='.$idLicencaSemVencimentos);
+        $menu->add_item('linkWindow',"\u{1F5A8} Rioprev - Padrão",'../grhRelatorios/lsv.despacho.rioprev.padrao.php?id='.$idLicencaSemVencimentos);
         $menu->add_item('link',"\u{1F5A8} Carta de Reassunção",'?fase=cartaReassuncao&id='.$idLicencaSemVencimentos);
         
         $menu->show();

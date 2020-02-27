@@ -377,7 +377,7 @@ class LicencaSemVencimentos{
                          idLicencaSemVencimentos,
                          idServidor
                     FROM tblicencasemvencimentos
-           ORDER BY dtSolicitacao desc';
+           ORDER BY dtSolicitacao desc, dtInicial desc';
        
        $result = $pessoal->select($select);
        $count = $pessoal->count($select);

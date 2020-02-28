@@ -170,7 +170,7 @@ class Carta{
         br();
         
         # Prezado
-        p("Prezado(a) Senhor(a)",'pCiNum');
+        p("Prezado(a) Senhor(a),",'pCiNum');
         
         # Texto
         foreach($this->texto as $textoCi){

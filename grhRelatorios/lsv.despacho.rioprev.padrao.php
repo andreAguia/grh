@@ -66,7 +66,7 @@ if($acesso){
     $data = date("Y-m-d H:i:s");
     $atividades = 'Visualizou despacho ao RIOPREVIDÊNCIA (padrão) da licença sem vencimentos.';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
+    $intra->registraLog($idUsuario,$data,$atividades,"tblicencasemvencimentos",$id,$tipoLog,$idServidorPesquisado);
     
     $page->terminaPagina();
 }

@@ -35,11 +35,14 @@ if($acesso){
 
     # Da Licença
     $idTpLicenca = $dados['idTpLicenca'];
+    $dtRetorno = $dados['dtRetorno'];
+    $dtInicial = date_to_php($dados['dtInicial']);
+    $dtPublicacao = date_to_php($dados['dtPublicacao']);
     $nomeLicenca = $pessoal->get_nomeTipoLicenca($idTpLicenca);
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
-    $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
+    $idFuncionalServidor = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoServidor = $pessoal->get_cargoCompleto($idServidorPesquisado);
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao($idLotacao);
@@ -57,18 +60,31 @@ if($acesso){
     $despacho->set_origemDescricao($cargo);
     $despacho->set_origemIdFuncional($idFuncional);
     
-    $texto = "Informamos que o(a) servidor(a) $nomeServidor, ";
+    # Trata parte do texto
+    if(vazio($dtRetorno)){
+        $retorno = "conforme previsto";
+    }else{
+        $retorno = "antecipando";
+    }
+    
+    
+    
+    $texto1 = "Informamos que o(a) servidor(a) $nomeServidor, $cargoServidor, ID $idFuncionalServidor, <b>reassumiu</b> o exercício de suas atividades em $lotacao "
+           . ", $retorno na licença sem vencimentos que vinha fruindo desde $dtInicial, publicada no DOERJ de $dtPublicacao.";
+    
+    $texto2 = "Sendo assim, emcaminhamos o p.p. para fins de emissão de Certidão de Situação Previdenciária (CSP) / Certidão de Regularidade Previdenciária (CRP)";
     
     $despacho->set_destino("Ao RIOPREVIDÊNCIA,");
-    $despacho->set_texto('Para as devidas providências administrativas.');
+    $despacho->set_texto($texto1);
+    $despacho->set_texto($texto2);
     $despacho->set_saltoRodape(3);
     $despacho->show();
     
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou despacho ao RIOPREVIDÊNCIA (padrão) da licença sem vencimentos.';
+    $atividades = 'Visualizou despacho ao RIOPREVIDÊNCIA (CSP/CRP) da licença sem vencimentos.';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario,$data,$atividades,"tbreadaptacao",$id,$tipoLog,$idServidorPesquisado);
+    $intra->registraLog($idUsuario,$data,$atividades,"tblicencasemvencimentos",$id,$tipoLog,$idServidorPesquisado);
     
     $page->terminaPagina();
 }

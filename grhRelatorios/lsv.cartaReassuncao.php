@@ -58,7 +58,7 @@ if($acesso){
     $carta->set_destinoNome($chefe);
     $carta->set_destinoSetor($cargo);
     
-    $carta->set_texto('Apresentamos a Vª. o(a) Sr.(a) <b>'.strtoupper($nomeServidor).'</b>, cargo '
+    $carta->set_texto('Apresentamos a V.Sª. o(a) Sr(a) <b>'.strtoupper($nomeServidor).'</b>, cargo '
                     .$cargoServidor.', para reassumir o exercício de suas atividades na '.$lotacao
                     .', a contar de '.$dtRetorno.', antecipando o término do prazo da Licença Sem Vencimentos publicada no DOERJ de '.$dtPublicacao);
     

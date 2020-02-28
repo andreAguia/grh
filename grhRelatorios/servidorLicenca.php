@@ -65,8 +65,8 @@ if($acesso){
                            (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
                                    "",
                                    tblicencasemvencimentos.dtInicial,
-                                   tblicencasemvencimentos.periodo,
-                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.periodo-1),
+                                   tblicencasemvencimentos.numdias,
+                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numdias-1),
                                    CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
                                    tblicencasemvencimentos.dtPublicacao,
                                    "-"

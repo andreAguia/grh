@@ -155,7 +155,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("Status","Tipo","Licença Sem Vencimentos","Dados","Período","Entregou CRP?","Documentos"));
-    #$objeto->set_width(array(10,10,30,10,20,15));	
+    $objeto->set_width(array(10,5,15,20,20,5,20));	
     $objeto->set_align(array("center","center","left","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
     

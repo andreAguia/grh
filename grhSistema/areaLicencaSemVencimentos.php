@@ -113,10 +113,9 @@ if($acesso){
         ################################################################
 
             # Exibe a tabela de Servidores
-            $afast = new LicencaSemVencimentos();
-            $afast->set_linkEditar('?fase=editaServidor');
-            #$afast->set_atual(FALSE);
-            $afast->exibeLista();
+            $lsv = new LicencaSemVencimentos();
+            $lsv->set_linkEditar('?fase=editaServidor');
+            $lsv->exibeLista();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

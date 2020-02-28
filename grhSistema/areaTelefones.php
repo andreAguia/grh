@@ -69,8 +69,8 @@ if($acesso){
                                       GER,
                                       nome,
                                       ramais,
-                                      idLotacao,
                                       email,
+                                      idLotacao,
                                       idLotacao
                                  FROM tblotacao
                                 WHERE ativo
@@ -95,13 +95,13 @@ if($acesso){
     $objeto->set_botaoIncluir(FALSE);
 
     # Parametros da tabela
-    $objeto->set_label(array("Diretoria","Gerência","Nome","Telefones","Servidores","Email"));
-    $objeto->set_align(array("center","center","left","left","center","left"));
+    $objeto->set_label(array("Diretoria","Gerência","Nome","Telefones","Email","Servidores"));
+    $objeto->set_align(array("center","center","left","left","left","center"));
     #$objeto->set_width(array(10,10,15,20,20,15));
     $objeto->set_funcao(array(NULL,NULL,NULL,"nl2br"));
     
-    $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Grh"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao"));
+    $objeto->set_classe(array(NULL,NULL,NULL,NULL,NULL,"Grh"));
+    $objeto->set_metodo(array(NULL,NULL,NULL,NULL,NULL,"get_numServidoresAtivosLotacao"));
     
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);

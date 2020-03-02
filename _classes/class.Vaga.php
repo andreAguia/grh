@@ -97,8 +97,8 @@ class Vaga
      * @param	string $idServidor idServidor do servidor
      */
 
-    function get_nomeRel($idServidor)
-    {
+    function get_nomeRel($idServidor){
+        
         if(is_numeric($idServidor)){
             
             # Conecta o banco
@@ -1206,6 +1206,16 @@ class Vaga
             #$painel->fecha(); 
 
         $grid2->fechaColuna();
+        $grid2->abreColuna(6);
+        
+            $this->exibeVagasDisponiveis();
+        
+        $grid2->fechaColuna();
+        $grid2->abreColuna(6);
+        
+            $this->exibeVagasOcupadas();
+        
+        $grid2->fechaColuna();
         $grid2->fechaGrid();
         
     $painel->fecha();
@@ -1258,7 +1268,7 @@ class Vaga
                     #$chart->set_legend(array("VagasT","tt"));
                     #$chart->set_pieHole(TRUE);
                     $chart->set_tamanho(400,300);
-                    $chart->show();
+                    #$chart->show();
                     
                     # Chart
                     $chart = new Chart("Pie",$arrayAssociado);
@@ -1268,7 +1278,7 @@ class Vaga
                     $chart->set_cores(array('#e0440e', '#e6693e'));
                     #$chart->set_pieHole(TRUE);
                     $chart->set_tamanho(400,300);
-                    $chart->show();
+                    #$chart->show();
 
                     # Tabela
                     $tabela = new Tabela();
@@ -1332,9 +1342,11 @@ class Vaga
                 $menu->add_item('link',"$cc ($numVagas)",'?parametroCentro='.$cc);
             }
         }
-
-        $menu->add_item('titulo','Relatórios');
-        $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
+        
+        if(!vazio($parametroCentro)){
+            $menu->add_item('titulo','Relatórios');
+            $menu->add_item('linkWindow',"Vagas por Laboratório ($parametroCentro)","../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=".$parametroCentro);
+        }
 
         $menu->show();
 

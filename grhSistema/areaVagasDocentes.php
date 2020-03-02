@@ -155,11 +155,6 @@ if($acesso){
             $botaoInserir->set_title("Incluir"); 
             $menu1->add_link($botaoInserir,"right");
             
-            # Total de Vagas
-            $botaoInserir = new Button("Exibe Total de Vagas","?fase=exibeTotal");
-            $botaoInserir->set_title("Incluir"); 
-            #$menu1->add_link($botaoInserir,"right");
-            
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button();
@@ -238,8 +233,10 @@ if($acesso){
             
             $vaga->menu($parametroCentro);
                         
-            $vaga->exibeVagasDisponiveis($parametroCentro);
-            $vaga->exibeVagasOcupadas($parametroCentro);
+            if(!vazio($parametroCentro)){
+                $vaga->exibeVagasDisponiveis($parametroCentro);
+                $vaga->exibeVagasOcupadas($parametroCentro);
+            }
             
             $grid->fechaColuna();
             $grid->abreColuna(9);

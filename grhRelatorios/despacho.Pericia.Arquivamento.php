@@ -27,7 +27,7 @@ if($acesso){
     $page->iniciaPagina();
     
     $destino = "À SE/SPM,";        
-    $texto[] = "Em devolução para arquivamento no AIMAQ, conforme solicitado.";
+    $texto = "Em devolução para arquivamento no AIMAQ, conforme solicitado.";
     
     # despacho
     $despacho = new Despacho();

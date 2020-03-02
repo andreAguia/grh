@@ -33,7 +33,7 @@ if($acesso){
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     
     $destino = "Ao Protocolo/DGA,";        
-    $texto[] = "Para abertura do processo de '$postAssunto', em nome de <b>".strtoupper($nomeServidor)."</b>.";
+    $texto = "Para abertura do processo de '$postAssunto', em nome de <b>".strtoupper($nomeServidor)."</b>.";
     
     # despacho
     $despacho = new Despacho();

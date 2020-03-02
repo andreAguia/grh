@@ -27,7 +27,7 @@ if($acesso){
     $page->iniciaPagina();
     
     $destino = "Ao Setor de Publicações Oficiais da UENF-SEPOF,";        
-    $texto[] = "Para publicação do Ato do Reitor no DOERJ.";
+    $texto = "Para publicação do Ato do Reitor no DOERJ.";
     
     # despacho
     $despacho = new Despacho();

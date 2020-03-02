@@ -582,6 +582,15 @@ class MenuServidor{
             br();
 
             $menu = new MenuGrafico(3);
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Afastamento Geral');
+            $botao->set_url('?fase=afastamentoGeral');
+            $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$this->tamanhoImagem,$this->tamanhoImagem);
+            $botao->set_title('Todos os afastamentos do servidor');                
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+            
             if($pessoal->get_perfilFerias($this->perfil) == "Sim"){
                 $botao = new BotaoGrafico();
                 $botao->set_label('Férias');

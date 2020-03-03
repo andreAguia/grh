@@ -40,7 +40,9 @@ if($acesso){
 
     # Da Licença
     $dtRetorno = dataExtenso(date_to_php($dados['dtRetorno']));
+    $dtTermino = dataExtenso(date_to_php($dados['dtTermino']));
     $dtPublicacao = dataExtenso(date_to_php($dados['dtPublicacao']));
+    $pgPublicacao = $dados['pgPublicacao'];
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -53,14 +55,20 @@ if($acesso){
     $carta = new Carta();
     
     $carta->set_nomeCarta("CARTA DE REASSUNÇÃO NO CARGO PÚBLICO");
-    
-    
     $carta->set_destinoNome($chefe);
     $carta->set_destinoSetor($cargo);
     
-    $carta->set_texto('Apresentamos a V.Sª. o(a) Sr(a) <b>'.strtoupper($nomeServidor).'</b>, cargo '
-                    .$cargoServidor.', para reassumir o exercício de suas atividades na '.$lotacao
-                    .', a contar de '.$dtRetorno.', antecipando o término do prazo da Licença Sem Vencimentos publicada no DOERJ de '.$dtPublicacao);
+    $texto = 'Apresentamos a V.Sª. o(a) Sr(a) <b>'.strtoupper($nomeServidor).'</b>, cargo '
+            .$cargoServidor.', para reassumir o exercício de suas atividades na '.$lotacao
+            .', a contar de '.$dtRetorno.', antecipando o término do prazo da Licença Sem Vencimentos publicada no DOERJ de '.$dtPublicacao.'.';
+    
+    if (!vazio($pgPublicacao)){
+        $texto .= ', página '.$pgPublicacao.'.';
+    }else{
+        $texto .= '.';
+    }
+    
+    $carta->set_texto($texto);
     
     $carta->set_saltoRodape(3);
     $carta->show();

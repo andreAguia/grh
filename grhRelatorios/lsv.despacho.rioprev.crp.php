@@ -39,6 +39,7 @@ if($acesso){
     $dtInicial = date_to_php($dados['dtInicial']);
     $dtPublicacao = date_to_php($dados['dtPublicacao']);
     $nomeLicenca = $pessoal->get_nomeTipoLicenca($idTpLicenca);
+    $pgPublicacao = $dados['pgPublicacao'];
     
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -67,10 +68,14 @@ if($acesso){
         $retorno = "antecipando";
     }
     
-    
-    
     $texto1 = "Informamos que o(a) servidor(a) $nomeServidor, $cargoServidor, ID $idFuncionalServidor, <b>reassumiu</b> o exercício de suas atividades em $lotacao "
-           . ", $retorno na licença sem vencimentos que vinha fruindo desde $dtInicial, publicada no DOERJ de $dtPublicacao.";
+           . ", $retorno na licença sem vencimentos que vinha fruindo desde $dtInicial, publicada no DOERJ de $dtPublicacao";
+    
+    if (!vazio($pgPublicacao)){
+        $texto1 .= ', página '.$pgPublicacao.'.';
+    }else{
+        $texto1 .= '.';
+    }
     
     $texto2 = "Sendo assim, emcaminhamos o p.p. para fins de emissão de Certidão de Situação Previdenciária (CSP) / Certidão de Regularidade Previdenciária (CRP)";
     

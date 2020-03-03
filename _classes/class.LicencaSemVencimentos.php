@@ -202,6 +202,7 @@ class LicencaSemVencimentos{
         # Pega os campos necessários
         $processo = $dados["processo"];
         $dtPublicacao = $dados["dtPublicacao"];
+        $pgPublicacao = $dados["pgPublicacao"];
         $dtSolicitacao = $dados["dtSolicitacao"];
         
         # Trata a data de retorno
@@ -217,6 +218,10 @@ class LicencaSemVencimentos{
         $retorno = "Solicitado em : ".trataNulo($dtSolicitacao)."<br/>"
                  . "Processo : ".trataNulo($processo)."<br/>"
                  . "Publicação: ".trataNulo($dtPublicacao);
+        
+        if(!vazio($pgPublicacao)){
+            $retorno .= " Pag. ".$pgPublicacao;
+        }        
         
         return $retorno;
     }

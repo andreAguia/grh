@@ -164,7 +164,7 @@ class Carta{
         br();
         
         # Origem
-        p('Ilmo Sr(a)','pCiDePara1');
+        p('Ilmo(a) Sr(a)','pCiDePara1');
         p($this->destinoNome,'pCiDePara1');
         p($this->destinoSetor,'pCiDePara1');
         br();

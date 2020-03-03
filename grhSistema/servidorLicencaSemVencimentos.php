@@ -50,8 +50,7 @@ if($acesso){
                     dias = (data2 - data1)/(1000*3600*24)+1;
 
                     $("#numDias").val(dias);
-                  });
-                  
+                  });                  
 
                  // Quando muda o período 
                  $("#numDias").change(function(){
@@ -137,6 +136,7 @@ if($acesso){
                                      dtSolicitacao,
                                      processo,
                                      dtPublicacao,
+                                     pgPublicacao,
                                      dtInicial,
                                      numDias,
                                      dtTermino,
@@ -239,21 +239,28 @@ if($acesso){
                                   'size' => 30,
                                   'col' => 3,
                                   'title' => 'Número do Processo',
-                                  'linha' => 2),
+                                  'linha' => 3),
                           array ( 'nome' => 'dtPublicacao',
                                   'label' => 'Data da Publicação:',
                                   'tipo' => 'data',
                                   'size' => 10,
                                   'col' => 3,
                                   'title' => 'A Data da Publicação.',
-                                  'linha' => 2),
+                                  'linha' => 3),
+                          array ( 'nome' => 'pgPublicacao',
+                                  'label' => 'Página:',
+                                  'tipo' => 'texto',
+                                  'size' => 5,
+                                  'col' => 2,
+                                  'title' => 'A página da Publicação no DOERJ.',
+                                  'linha' => 3),
                           array ( 'nome' => 'dtInicial',
                                   'label' => 'Data Inicial:',
                                   'tipo' => 'data',
                                   'size' => 20,
                                   'col' => 3,
                                   'title' => 'Data do início.',
-                                  'linha' => 3),
+                                  'linha' => 4),
                           array ( 'nome' => 'numDias',
                                   'label' => 'Dias:',
                                   'tipo' => 'numero',
@@ -261,22 +268,22 @@ if($acesso){
                                   'size' => 5,
                                   'title' => 'Número de dias.',
                                   'col' => 2,
-                                  'linha' => 3),
+                                  'linha' => 4),
                           array ( 'nome' => 'dtTermino',
                                   'label' => 'Data de Termino (previsto):',
                                   'tipo' => 'data',
                                   'size' => 20,
                                   'col' => 3,
                                   'title' => 'Data de Termino.',
-                                  'linha' => 3),
+                                  'linha' => 4),
                            array ( 'nome' => 'dtRetorno',
-                                  'label' => 'Data de Retorno (de fato):',
+                                  'label' => 'Data de Retorno (antecipado):',
                                   'tipo' => 'data',
                                   'size' => 10,
                                   'col' => 3,
                                   'title' => 'Data do início.',
-                                  'linha' => 3),
-                           array ('linha' => 4,
+                                  'linha' => 4),
+                           array ('linha' => 5,
                                   'col' => 2,
                                   'nome' => 'crp',
                                   'title' => 'informa se entregou CRP',
@@ -285,7 +292,7 @@ if($acesso){
                                   'array' => array(array(FALSE,"Não"),
                                                    array(TRUE,"Sim")),
                                   'size' => 10),
-                          array ( 'linha' => 5,
+                          array ( 'linha' => 6,
                                   'nome' => 'obs',
                                   'label' => 'Observação:',
                                   'tipo' => 'textarea',
@@ -327,10 +334,13 @@ if($acesso){
         case "" :
         case "listar" :
         case "editar" :			
-        case "excluir" :	
-        case "gravar" :
+        case "excluir" :
             $objeto->$fase($id);
             break;
+        
+        case "gravar" :
+                $objeto->gravar($id,"servidorLicencaSemVencimentosExtra.php"); 
+                break;	
         
     ################################################################################################################
         
@@ -348,6 +358,7 @@ if($acesso){
             
             $dtRetorno = $dados["dtRetorno"];
             $dtPublicacao = $dados['dtPublicacao'];
+            $pgPublicacao = $dados['pgPublicacao'];
             
             # Chefia imediata desse servidor
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
@@ -360,7 +371,7 @@ if($acesso){
             br(3);
             
             # Título
-            tituloTable("Controle de Licença Sem Vencimentos<br/>Carta de Reassunção de Servidor");
+            tituloTable("Controle de Licença Sem Vencimentos<br/>Carta de Reassunção de Servidor<br/>(Usado quando o servidor retorna ANTES da data prevista)");
             $painel = new Callout();
             $painel->abre();
             
@@ -368,7 +379,7 @@ if($acesso){
             $form = new Form('?fase=cartaReassuncaoFormValida&id='.$id); 
 
             # dtRetorno
-            $controle = new Input('dtRetorno','data','Data do Retorno:',1);
+            $controle = new Input('dtRetorno','data','Data do Retorno (antecipado):',1);
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(3);
@@ -385,6 +396,16 @@ if($acesso){
             $controle->set_valor($dtPublicacao);
             #$controle->set_required(TRUE);
             $controle->set_title('A data da publicação no DOERJ.');
+            $form->add_item($controle);
+            
+            # pgPublicacao
+            $controle = new Input('pgPublicacao','texto','Página:',1);
+            $controle->set_size(5);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_valor($pgPublicacao);
+            #$controle->set_required(TRUE);
+            $controle->set_title('A pag da publicação no DOERJ.');
             $form->add_item($controle);
             
             # Chefia
@@ -433,34 +454,23 @@ if($acesso){
             # Pega os Dados
             $dados = $lsv->get_dados($id);
             
-            $dtRetorno = $dados["dtRetorno"];
+            $dtRetorno = vazioPraNulo($dados["dtRetorno"]);
+            $dttermino = vazioPraNulo($dados["dtTermino"]);
             $dtPublicacao = $dados['dtPublicacao'];
+            $pgPublicacao = $dados['pgPublicacao'];
             
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar","imprimir");
             $dtRetornoDigitado = vazioPraNulo(post("dtRetorno"));
             $dtPublicacaoDigitado = vazioPraNulo(post("dtPublicacao"));
+            $pgPublicacaoDigitado = vazioPraNulo(post("pgPublicacao"));
             
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
-            $dtRetorno = post("dtRetorno");
             
             # Prepara para enviar por get
             $array = array($chefeDigitado,$cargoDigitado);
             $array = serialize($array);
-            
-            # Verifica se houve alterações
-            $alteracoes = NULL;
-            $atividades = NULL;
-            
-            # Verifica as alterações para o log
-            if($dtRetorno <> $dtRetornoDigitado){
-                $alteracoes .= '[dtRetorno] '.date_to_php($dtRetorno).'->'.date_to_php($dtRetornoDigitado).'; ';
-            }
-            
-            if($dtPublicacao <> $dtPublicacaoDigitado){
-                $alteracoes .= '[dtPublicacao] '.date_to_php($dtPublicacao).'->'.date_to_php($dtPublicacaoDigitado).'; ';
-            }
             
             # Erro
             $msgErro = NULL;
@@ -470,29 +480,58 @@ if($acesso){
             if(vazio($dtRetornoDigitado)){
                 $msgErro.='Não tem data de retorno cadastrada!\n';
                 $erro = 1;
+            }else{
+                # Verifica qual é q data maior
+                $dtRetornoDigitado = date_to_php($dtRetornoDigitado);
+                $dttermino = date_to_php($dttermino);           
+                $dm = dataMaior($dtRetornoDigitado, $dttermino);
+                echo $dm;
+                # Verifica a data de retorno é anterior a data de termino
+                if($dm == $dtRetornoDigitado){
+                    $msgErro.='A data de retorno não pode ser posterior a data prevista de termino!\n';
+                    $erro = 1;
+                }
             }
             
-            # Verifica a data da Publicação
-            if(vazio($dtPublicacao)){
+            # Verifica a data da Publicação 
+            if(vazio($dtPublicacaoDigitado)){
                 $msgErro.='Não tem data da Publicação cadastrada!\n';
                 $erro = 1;
             }     
             
-            # Salva as alterações
-            $pessoal->set_tabela("tblicencasemvencimentos");
-            $pessoal->set_idCampo("idLicencaSemVencimentos");
-            $campoNome = array('dtRetorno','dtPublicacao');
-            $campoValor = array($dtRetorno,$dtPublicacao);
-            $pessoal->gravar($campoNome,$campoValor,$id);
-            $data = date("Y-m-d H:i:s");
+            if($erro == 0){
+                # Verifica se houve alterações
+                $alteracoes = NULL;
+                $atividades = NULL;
 
-            # Grava o log das alterações caso tenha
-            if(!is_null($alteracoes)){
-                $atividades .= 'Alterou: '.$alteracoes;
-                $tipoLog = 2;
-                $intra->registraLog($idUsuario,$data,$atividades,"tblicencasemvencimentos",$id,$tipoLog,$idServidorPesquisado);
-            }                
+                # Verifica as alterações para o log
+                if($dtRetorno <> $dtRetornoDigitado){
+                    $alteracoes .= '[dtRetorno] '.date_to_php($dtRetorno).'->'.date_to_php($dtRetornoDigitado).'; ';
+                }
+
+                if($dtPublicacao <> $dtPublicacaoDigitado){
+                    $alteracoes .= '[dtPublicacao] '.date_to_php($dtPublicacao).'->'.date_to_php($dtPublicacaoDigitado).'; ';
+                }
+
+                if($pgPublicacao <> $pgPublicacaoDigitado){
+                    $alteracoes .= '[pgPublicacao] '.$pgPublicacao.'->'.$pgPublicacaoDigitado.'; ';
+                }
                 
+                # Salva as alterações
+                $pessoal->set_tabela("tblicencasemvencimentos");
+                $pessoal->set_idCampo("idLicencaSemVencimentos");
+                $campoNome = array('dtRetorno','dtPublicacao','pgPublicacao');
+                $campoValor = array($dtRetornoDigitado,$dtPublicacaoDigitado,$pgPublicacaoDigitado);
+                $pessoal->gravar($campoNome,$campoValor,$id);
+                $data = date("Y-m-d H:i:s");
+
+                # Grava o log das alterações caso tenha
+                if(!is_null($alteracoes)){
+                    $atividades .= 'Alterou: '.$alteracoes;
+                    $tipoLog = 2;
+                    $intra->registraLog($idUsuario,$data,$atividades,"tblicencasemvencimentos",$id,$tipoLog,$idServidorPesquisado);
+                }         
+            }   
                 
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if($botaoEscolhido == "imprimir"){

@@ -710,7 +710,10 @@ if($acesso){
                 $form->add_item($controle);
 
                 $form->show();
-                break;        
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;     
         ##################################################################
             
             case "despachoChefia" :
@@ -767,8 +770,30 @@ if($acesso){
                 $form->add_item($controle);
 
                 $form->show();
-                break;        
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
             
+            ##################################################################
+            
+            case "afastamentoGeral" :
+                
+                $grid = new Grid("center");
+                $grid->abreColuna(12);
+            
+                $afast = new Afastamento();
+                $afast->set_idServidor($idServidorPesquisado);
+                $afast->set_campoMes(FALSE);
+                $afast->set_campoAno(FALSE);
+                $afast->exibeTabela();
+               
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
+            
+            ##################################################################
+
     }
 
     $grid->fechaColuna();

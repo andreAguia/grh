@@ -6,6 +6,8 @@ class Afastamento{
   * @author André Águia (Alat) - alataguia@gmail.com
   */
 
+    private $idServidor = NULL;
+    
     private $ano = NULL;
     private $mes = NULL;
     private $lotacao = NULL;
@@ -15,6 +17,7 @@ class Afastamento{
     
     private $formulario = FALSE;
     private $campoMes = TRUE;
+    private $campoAno = TRUE;
 
     ###########################################################
 
@@ -138,6 +141,32 @@ class Afastamento{
     }
 
     ###########################################################
+
+    public function set_campoAno($campoAno){
+    /**
+     * Informa se terá ou não campo mês no formulário no relatório
+     *
+     * @param $campoAno bool FALSE Se terá ou não
+     *
+     * @syntax $input->set_campoAno($campoAno);
+     */
+
+        $this->campoAno = $campoAno;
+    }
+
+    ###########################################################
+
+    public function set_idServidor($idServidor){
+    /**
+     * Informa se será de um servidor ou de todos
+     *
+     * @param $idServidor string NULL A id do servidor
+     *
+     * @syntax $input->set_idServidor($idServidor);
+     */
+
+        $this->idServidor = $idServidor;
+    }
     
     ###########################################################
 
@@ -149,8 +178,8 @@ class Afastamento{
      * @syntax $input->exibeTabela();
      */
 
-       # Inicia o banco de Dados
-       $pessoal = new Pessoal();
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
 
        # Constroi a data
        if($this->campoMes){
@@ -164,10 +193,13 @@ class Afastamento{
          $select .= 'tbservidor.idfuncional,';
        }
        
+       if(vazio($this->idServidor)){
+           $select .= ' tbpessoa.nome,
+                        tbservidor.idServidor,';
+       }
+       
        # Licença
-       $select .= '       tbpessoa.nome,
-                          tbservidor.idServidor,
-                          tblicenca.dtInicial,
+       $select .= '       tblicenca.dtInicial,
                           tblicenca.numDias,
                           ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                           CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
@@ -178,6 +210,9 @@ class Afastamento{
                                      LEFT JOIN tblicenca USING (idServidor)
                                      LEFT JOIN tbtipolicenca USING (idTpLicenca)
                    WHERE tbservidor.situacao = 1';
+       if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+       }
        
        if($this->campoMes){
            $select .= '       
@@ -185,7 +220,7 @@ class Afastamento{
                      AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                       OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                       OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
-       }else{
+       }elseif($this->campoAno){
            $select .= ' AND (((YEAR(tblicenca.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tblicenca.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > '.$this->ano.')))';
        }
@@ -207,10 +242,13 @@ class Afastamento{
                  if($this->idFuncional){
                    $select .= 'tbservidor.idfuncional,';
                  }
-
-     $select .= '       tbpessoa.nome,
-                        tbservidor.idServidor,
-                        tblicencapremio.dtInicial,
+                 
+        if(vazio($this->idServidor)){
+            $select .= ' tbpessoa.nome,
+                         tbservidor.idServidor,';
+        }
+       
+       $select .= '     tblicencapremio.dtInicial,
                         tblicencapremio.numDias,
                         ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
                         (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
@@ -221,13 +259,17 @@ class Afastamento{
                                                  LEFT JOIN tblicencapremio USING (idServidor)
                    WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+     
+     if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+     }
        
         if($this->campoMes){
            $select .= '       
                      AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                       OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                       OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))';
-        }else{
+         }elseif($this->campoAno){
             $select .= ' AND (((YEAR(tblicencapremio.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tblicencapremio.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > '.$this->ano.')))';
         }
@@ -250,9 +292,12 @@ class Afastamento{
           $select .= 'tbservidor.idfuncional,';
         }
 
-        $select .= '     tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbferias.dtInicial,
+        if(vazio($this->idServidor)){
+            $select .= ' tbpessoa.nome,
+                         tbservidor.idServidor,';
+        }
+       
+       $select .= '      tbferias.dtInicial,
                          tbferias.numDias,
                          ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
                          CONCAT("Férias ",tbferias.anoExercicio),
@@ -263,13 +308,17 @@ class Afastamento{
                                     LEFT JOIN tbferias USING (idServidor)
                    WHERE tbservidor.situacao = 1
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-       
+        
+        if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+       }
+        
         if($this->campoMes){
            $select .= '       
                      AND (("'.$data.'" BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                       OR  (LAST_DAY("'.$data.'") BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                       OR  ("'.$data.'" < tbferias.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))';
-        }else{
+         }elseif($this->campoAno){
            $select .= ' AND (((YEAR(tbferias.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tbferias.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > '.$this->ano.')))';
         }
@@ -292,9 +341,12 @@ class Afastamento{
           $select .= 'tbservidor.idfuncional,';
         }
 
-        $select .= '     tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbatestado.dtInicio,
+        if(vazio($this->idServidor)){
+            $select .= ' tbpessoa.nome,
+                         tbservidor.idServidor,';
+        }
+       
+       $select .= '     tbatestado.dtInicio,
                          tbatestado.numDias,
                          ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
                          "Falta Abonada",
@@ -306,12 +358,16 @@ class Afastamento{
                    WHERE tbservidor.situacao = 1
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
        
+        if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+       }
+       
         if($this->campoMes){
             $select .= '       
                      AND (("'.$data.'" BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
                       OR  (LAST_DAY("'.$data.'") BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
                       OR  ("'.$data.'" < tbatestado.dtInicio AND LAST_DAY("'.$data.'") > ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)))';
-        }else{
+         }elseif($this->campoAno){
             $select .= ' AND (((YEAR(tbatestado.dtInicio) = '.$this->ano.') OR (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tbatestado.dtInicio) < '.$this->ano.') AND (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) > '.$this->ano.')))';
         }
@@ -334,9 +390,12 @@ class Afastamento{
                     $select .= 'tbservidor.idfuncional,';
                   }
 
-        $select .= '     tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbtrabalhotre.data,
+        if(vazio($this->idServidor)){
+            $select .= ' tbpessoa.nome,
+                         tbservidor.idServidor,';
+        }
+       
+       $select .= '     tbtrabalhotre.data,
                          tbtrabalhotre.dias,
                          ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
                          "Trabalhando no TRE",
@@ -348,12 +407,16 @@ class Afastamento{
                    WHERE tbservidor.situacao = 1
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
        
+        if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+       }
+       
         if($this->campoMes){
             $select .= '       
                      AND (("'.$data.'" BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
                       OR  (LAST_DAY("'.$data.'") BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
                       OR  ("'.$data.'" < tbtrabalhotre.data AND LAST_DAY("'.$data.'") > ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)))';
-        }else{
+         }elseif($this->campoAno){
             $select .= ' AND (((YEAR(tbtrabalhotre.data) = '.$this->ano.') OR (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tbtrabalhotre.data) < '.$this->ano.') AND (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) > '.$this->ano.')))';
         }
@@ -376,9 +439,12 @@ class Afastamento{
                     $select .= 'tbservidor.idfuncional,';
                   }
 
-      $select .= '       tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbfolga.data,
+      if(vazio($this->idServidor)){
+            $select .= ' tbpessoa.nome,
+                         tbservidor.idServidor,';
+        }
+       
+       $select .= '     tbfolga.data,
                          tbfolga.dias,
                          ADDDATE(tbfolga.data,tbfolga.dias-1),
                          "Folga TRE",
@@ -390,12 +456,16 @@ class Afastamento{
                    WHERE tbservidor.situacao = 1
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
        
+      if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+       }
+       
        if($this->campoMes){
             $select .= '       
                      AND (("'.$data.'" BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
                       OR  (LAST_DAY("'.$data.'") BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
                       OR  ("'.$data.'" < tbfolga.data AND LAST_DAY("'.$data.'") > ADDDATE(tbfolga.data,tbfolga.dias-1)))';
-       }else{
+        }elseif($this->campoAno){
             $select .= ' AND (((YEAR(tbfolga.data) = '.$this->ano.') OR (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tbfolga.data) < '.$this->ano.') AND (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) > '.$this->ano.')))';
        }
@@ -418,9 +488,12 @@ class Afastamento{
                     $select .= 'tbservidor.idfuncional,';
                   }
 
-      $select .= '               tbpessoa.nome,
-                                 tbservidor.idServidor,
-                                  tblicencasemvencimentos.dtInicial,
+      if(vazio($this->idServidor)){
+            $select .= ' tbpessoa.nome,
+                         tbservidor.idServidor,';
+        }
+       
+       $select .= '     tblicencasemvencimentos.dtInicial,
                                   tblicencasemvencimentos.numDias,
                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                                   tbtipolicenca.nome,
@@ -434,13 +507,17 @@ class Afastamento{
                             WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)           
                               AND tbservidor.situacao = 1
                               AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-       
+      
+      if(!vazio($this->idServidor)){
+           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+       } 
+      
        if($this->campoMes){
             $select .= '       
                               AND (("'.$data.'" BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
                                OR  (LAST_DAY("'.$data.'") BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
                                OR  ("'.$data.'" < tblicencasemvencimentos.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)))';
-        }else{
+         }elseif($this->campoAno){
             $select .= ' AND (((YEAR(tblicencasemvencimentos.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = '.$this->ano.')) 
                         OR ((YEAR(tblicencasemvencimentos.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) > '.$this->ano.')))';
        }
@@ -483,42 +560,52 @@ class Afastamento{
        $cont = $pessoal->count($select);
 
        $tabela = new Tabela();
-       $tabela->set_titulo('Servidores com Afastamentos');
-
-       if($this->idFuncional){
-
-         $tabela->set_label(array('IdFuncional','Nome','Lotação','Data Inicial','Dias','Data Final','Descrição'));
-         $tabela->set_align(array('center','left','left','center','center','center','left'));
-         
-         $tabela->set_classe(array(NULL,NULL,"pessoal"));
-         $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples"));
-
-
-         if($this->nomeSimples){
-           $tabela->set_funcao(array(NULL,"get_nomeSimples",NULL,"date_to_php",NULL,"date_to_php"));
-         }else{
-           $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
-         }
-
-         $tabela->set_rowspan(1);
-         $tabela->set_grupoCorColuna(1);
-
+       if(vazio($this->idServidor)){
+            $tabela->set_titulo('Servidores com Afastamentos');
        }else{
+           $tabela->set_titulo('Afastamentos');
+       }
+       
+       if(vazio($this->idServidor)){
+                  
 
-         $tabela->set_label(array('Nome',NULL,'Data Inicial','Dias','Data Final','Descrição'));
-         $tabela->set_align(array('left','left','center','center','center','left'));
-         
-         $tabela->set_classe(array(NULL,"pessoal"));
-         $tabela->set_metodo(array(NULL,"get_lotacaoSimples"));
+        if($this->idFuncional){
 
-         if($this->nomeSimples){
-           $tabela->set_funcao(array("get_nomeSimples",NULL,"date_to_php",NULL,"date_to_php"));
-         }else{
-           $tabela->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php"));
-         }
+          $tabela->set_label(array('IdFuncional','Nome','Lotação','Data Inicial','Dias','Data Final','Descrição'));
+          $tabela->set_align(array('center','left','left','center','center','center','left'));
 
-         $tabela->set_rowspan(0);
-         $tabela->set_grupoCorColuna(0);
+          $tabela->set_classe(array(NULL,NULL,"pessoal"));
+          $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples"));
+
+
+          if($this->nomeSimples){
+            $tabela->set_funcao(array(NULL,"get_nomeSimples",NULL,"date_to_php",NULL,"date_to_php"));
+          }else{
+            $tabela->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
+          }
+
+          $tabela->set_rowspan(1);
+          $tabela->set_grupoCorColuna(1);
+
+        }else{
+
+          $tabela->set_label(array('Nome',NULL,'Data Inicial','Dias','Data Final','Descrição'));
+          $tabela->set_align(array('left','left','center','center','center','left'));
+
+          $tabela->set_classe(array(NULL,"pessoal"));
+          $tabela->set_metodo(array(NULL,"get_lotacaoSimples"));
+
+          if($this->nomeSimples){
+            $tabela->set_funcao(array("get_nomeSimples",NULL,"date_to_php",NULL,"date_to_php"));
+          }else{
+            $tabela->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php"));
+          }
+
+          $tabela->set_rowspan(0);
+          $tabela->set_grupoCorColuna(0);
+        }
+       }else{
+           ############## Parei aqui
        }
 
        if(!vazio($this->linkEditar)){

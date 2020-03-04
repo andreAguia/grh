@@ -375,11 +375,8 @@ if($acesso){
                 tituloTable('Processos');
                 br();
                 
-                
                 $grid->fechaColuna();
-                $grid->fechaGrid();    
-                
-            
+                $grid->fechaGrid();
             
             break;
 
@@ -781,13 +778,33 @@ if($acesso){
                 
                 $grid = new Grid("center");
                 $grid->abreColuna(12);
+                
+                # Formulário de Pesquisa
+                $form = new Form('?fase=afastamentoGeral');
+
+                # Cria um array com os anos possíveis
+                $anoInicial = 1999;
+                $anoAtual = date('Y');
+                $anos = arrayPreenche($anoInicial,$anoAtual+2);
+
+                $controle = new Input('parametroAno','combo','Ano:',1);
+                $controle->set_size(8);
+                $controle->set_title('Filtra por Ano');
+                $controle->set_array($anos);
+                $controle->set_valor($parametroAno);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(1);
+                $controle->set_col(3);
+                $form->add_item($controle);
+
+                $form->show();
             
                 $afast = new Afastamento();
                 $afast->set_idServidor($idServidorPesquisado);
-                $afast->set_campoMes(FALSE);
-                $afast->set_campoAno(FALSE);
+                $afast->set_ano($parametroAno);
                 $afast->exibeTabela();
-               
+                #$afast->exibeTimeline();
+                
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

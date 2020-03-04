@@ -114,7 +114,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Diretoria<br/>Centro","Campus<br/>Universitário","Gerência<br>Laboratório","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
+    $objeto->set_label(array("id","Diretoria<br/>Centro","Campus<br/>Universitário","Sigla","Nome","Servidores<br/>Ativos","Servidores<br/>Inativos","Ativa"));
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center","center","center","center","left"));
 

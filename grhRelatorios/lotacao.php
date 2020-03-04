@@ -32,9 +32,10 @@ if($acesso)
     
     $select ='SELECT codigo,
                      DIR,
+                     campus,
                      GER,
                      nome
-                FROM tblotacao
+                FROM tblotacao LEFT JOIN tbcampus USING (idCampus)
                WHERE ativo
             ORDER BY DIR, nome';
 
@@ -43,9 +44,9 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Lotações Ativas');
     $relatorio->set_subtitulo('Agrupados por Diretoria - Ordenados pelo Nome');
-    $relatorio->set_label(array('Código','Diretoria','Gerencia','Nome'));
-    $relatorio->set_width(array(10,10,10,50));
-    $relatorio->set_align(array("center","center","center","left"));
+    $relatorio->set_label(array('Código','Diretoria','Campus','Sigla','Nome'));
+    #$relatorio->set_width(array(10,10,10,50));
+    $relatorio->set_align(array("center","center","center","center","left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(1);
     $relatorio->show();

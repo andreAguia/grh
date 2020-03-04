@@ -1,23 +1,22 @@
 <?php
 class Afastamento{
- /**
-  * Abriga as várias rotina referentes ao afastamento do servidor
-  *
-  * @author André Águia (Alat) - alataguia@gmail.com
-  */
+    
+    /**
+     * Abriga as várias rotina referentes ao afastamento do servidor
+     *
+     * @author André Águia (Alat) - alataguia@gmail.com
+     */
 
     private $idServidor = NULL;
-    
+
     private $ano = NULL;
     private $mes = NULL;
     private $lotacao = NULL;
     private $linkEditar = NULL;
     private $idFuncional = TRUE;
     private $nomeSimples = FALSE;
-    
+
     private $formulario = FALSE;
-    private $campoMes = TRUE;
-    private $campoAno = TRUE;
 
     ###########################################################
 
@@ -38,8 +37,13 @@ class Afastamento{
      *
      * @syntax $input->set_mes($mes);
      */
-
-        $this->mes = $mes;
+        
+        # Se vier vazio coloca o mês atual
+        if(vazio($mes)){
+            $this->mes = date('m');
+        }else{
+            $this->mes = $mes;
+        }
     }
 
     ###########################################################
@@ -52,8 +56,13 @@ class Afastamento{
      *
      * @syntax $input->set_ano($ano);
      */
-
-        $this->ano = $ano;
+        
+        # Se vier vazio coloca o ano atual
+        if(vazio($ano)){
+            $this->ano = date('Y');
+        }else{
+            $this->ano = $ano;
+        }
     }
 
     ###########################################################
@@ -167,7 +176,7 @@ class Afastamento{
 
         $this->idServidor = $idServidor;
     }
-    
+
     ###########################################################
 
     public function montaSelect(){
@@ -181,97 +190,58 @@ class Afastamento{
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
 
-       # Constroi a data
-       if($this->campoMes){
+        # Constroi a data
+        if(!vazio($this->mes)){
             $data = $this->ano.'-'.$this->mes.'-01';
-       }
-
-       # Licença
-       $select = '(SELECT ';
-
-       if($this->idFuncional){
-         $select .= 'tbservidor.idfuncional,';
-       }
+        }
        
-       if(vazio($this->idServidor)){
-           $select .= ' tbpessoa.nome,
-                        tbservidor.idServidor,';
-       }
-       
-       # Licença
-       $select .= '       tblicenca.dtInicial,
-                          tblicenca.numDias,
-                          ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                          CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
-                         tbservidor.idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                          JOIN tbhistlot USING (idServidor)
-                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                     LEFT JOIN tblicenca USING (idServidor)
-                                     LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                   WHERE tbservidor.situacao = 1';
-       if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-       }
-       
-       if($this->campoMes){
-           $select .= '       
-                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
-                      OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
-       }elseif($this->campoAno){
-           $select .= ' AND (((YEAR(tblicenca.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tblicenca.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > '.$this->ano.')))';
-       }
-       
-       # lotacao
-       if(!is_null($this->lotacao)){
-           # Verifica se o que veio é numérico
-           if(is_numeric($this->lotacao)){
-               $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-           }else{ # senão é uma diretoria genérica
-               $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
-           }
-       }
+        # Se for de um só servidor não exibe o idFuncional
+        if(!vazio($this->idServidor)){
+            $this->idFuncional = FALSE;
+        }
+        
+        ###############################################################33
+        # Licença Geral
+        
+        $select = '(SELECT ';
 
-       # Licença Prêmio
-       $select .= ') UNION (
-                 SELECT ';
+        if($this->idFuncional){
+          $select .= 'tbservidor.idfuncional,';
+        }
 
-                 if($this->idFuncional){
-                   $select .= 'tbservidor.idfuncional,';
-                 }
-                 
         if(vazio($this->idServidor)){
             $select .= ' tbpessoa.nome,
                          tbservidor.idServidor,';
         }
-       
-       $select .= '     tblicencapremio.dtInicial,
-                        tblicencapremio.numDias,
-                        ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-                        (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                         tbservidor.idServidor
-                   FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                                      JOIN tbhistlot USING (idServidor)
-                                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                                 LEFT JOIN tblicencapremio USING (idServidor)
-                   WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
-                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-     
-     if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-     }
-       
-        if($this->campoMes){
-           $select .= '       
-                     AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
-                      OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))';
-         }elseif($this->campoAno){
-            $select .= ' AND (((YEAR(tblicencapremio.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tblicencapremio.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > '.$this->ano.')))';
+
+        # Licença
+        $select .= '       tblicenca.dtInicial,
+                           tblicenca.numDias,
+                           ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                           CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                          tbservidor.idServidor
+                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                           JOIN tbhistlot USING (idServidor)
+                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                      LEFT JOIN tblicenca USING (idServidor)
+                                      LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
+        if(vazio($this->idServidor)){
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tblicenca.dtInicial IS NOT NULL';
+        }
+
+        if(!vazio($this->mes)){
+            $select .= ' AND (("'.$data.'" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
+                          OR  (LAST_DAY("'.$data.'") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
+                          OR  ("'.$data.'" < tblicenca.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
+        }elseif($this->ano){
+            $select .= ' AND (((YEAR(tblicenca.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = '.$this->ano.')) 
+                          OR ((YEAR(tblicenca.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > '.$this->ano.')))';
         }
 
         # lotacao
@@ -283,245 +253,102 @@ class Afastamento{
                 $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
             }
         }
-       
-        # Férias
+
+        # Licença Prêmio
         $select .= ') UNION (
                   SELECT ';
 
-        if($this->idFuncional){
-          $select .= 'tbservidor.idfuncional,';
-        }
-
-        if(vazio($this->idServidor)){
-            $select .= ' tbpessoa.nome,
-                         tbservidor.idServidor,';
-        }
-       
-       $select .= '      tbferias.dtInicial,
-                         tbferias.numDias,
-                         ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
-                         CONCAT("Férias ",tbferias.anoExercicio),
-                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                    LEFT JOIN tbferias USING (idServidor)
-                   WHERE tbservidor.situacao = 1
-                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-        
-        if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-       }
-        
-        if($this->campoMes){
-           $select .= '       
-                     AND (("'.$data.'" BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
-                      OR  ("'.$data.'" < tbferias.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))';
-         }elseif($this->campoAno){
-           $select .= ' AND (((YEAR(tbferias.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tbferias.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > '.$this->ano.')))';
-        }
-       
-       # lotacao
-       if(!is_null($this->lotacao)){
-           # Verifica se o que veio é numérico
-           if(is_numeric($this->lotacao)){
-               $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-           }else{ # senão é uma diretoria genérica
-               $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
-           }
-       }
-       
-       # faltas abonadas
-       $select .= ') UNION (
-                  SELECT ';
-
-        if($this->idFuncional){
-          $select .= 'tbservidor.idfuncional,';
-        }
-
-        if(vazio($this->idServidor)){
-            $select .= ' tbpessoa.nome,
-                         tbservidor.idServidor,';
-        }
-       
-       $select .= '     tbatestado.dtInicio,
-                         tbatestado.numDias,
-                         ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
-                         "Falta Abonada",
-                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                    LEFT JOIN tbatestado USING (idServidor)
-                   WHERE tbservidor.situacao = 1
-                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-       
-        if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-       }
-       
-        if($this->campoMes){
-            $select .= '       
-                     AND (("'.$data.'" BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
-                      OR  ("'.$data.'" < tbatestado.dtInicio AND LAST_DAY("'.$data.'") > ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)))';
-         }elseif($this->campoAno){
-            $select .= ' AND (((YEAR(tbatestado.dtInicio) = '.$this->ano.') OR (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tbatestado.dtInicio) < '.$this->ano.') AND (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) > '.$this->ano.')))';
-        }
-        
-       # lotacao
-       if(!is_null($this->lotacao)){
-           # Verifica se o que veio é numérico
-           if(is_numeric($this->lotacao)){
-               $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-           }else{ # senão é uma diretoria genérica
-               $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
-           }
-       }
-       
-       # Trabalhando TRE
-       $select .= ') UNION (
-                  SELECT ';
-
                   if($this->idFuncional){
                     $select .= 'tbservidor.idfuncional,';
                   }
 
+         if(vazio($this->idServidor)){
+             $select .= ' tbpessoa.nome,
+                          tbservidor.idServidor,';
+         }
+
+        $select .= '     tblicencapremio.dtInicial,
+                         tblicencapremio.numDias,
+                         ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
+                         (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                          tbservidor.idServidor
+                    FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                       JOIN tbhistlot USING (idServidor)
+                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                  LEFT JOIN tblicencapremio USING (idServidor)
+                    WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
         if(vazio($this->idServidor)){
-            $select .= ' tbpessoa.nome,
-                         tbservidor.idServidor,';
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tblicencapremio.dtInicial IS NOT NULL';
         }
-       
-       $select .= '     tbtrabalhotre.data,
-                         tbtrabalhotre.dias,
-                         ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
-                         "Trabalhando no TRE",
-                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                    LEFT JOIN tbtrabalhotre USING (idServidor)
-                   WHERE tbservidor.situacao = 1
-                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-       
-        if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-       }
-       
-        if($this->campoMes){
+
+         if(!vazio($this->mes)){
             $select .= '       
-                     AND (("'.$data.'" BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
-                      OR  ("'.$data.'" < tbtrabalhotre.data AND LAST_DAY("'.$data.'") > ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)))';
-         }elseif($this->campoAno){
-            $select .= ' AND (((YEAR(tbtrabalhotre.data) = '.$this->ano.') OR (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tbtrabalhotre.data) < '.$this->ano.') AND (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) > '.$this->ano.')))';
+                      AND (("'.$data.'" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                       OR  (LAST_DAY("'.$data.'") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
+                       OR  ("'.$data.'" < tblicencapremio.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))';
+          }elseif($this->ano){
+             $select .= ' AND (((YEAR(tblicencapremio.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = '.$this->ano.')) 
+                         OR ((YEAR(tblicencapremio.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > '.$this->ano.')))';
+         }
+
+         # lotacao
+         if(!is_null($this->lotacao)){
+             # Verifica se o que veio é numérico
+             if(is_numeric($this->lotacao)){
+                 $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+             }else{ # senão é uma diretoria genérica
+                 $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
+             }
+         }
+
+         # Férias
+         $select .= ') UNION (
+                   SELECT ';
+
+         if($this->idFuncional){
+           $select .= 'tbservidor.idfuncional,';
+         }
+
+         if(vazio($this->idServidor)){
+             $select .= ' tbpessoa.nome,
+                          tbservidor.idServidor,';
+         }
+
+        $select .= '      tbferias.dtInicial,
+                          tbferias.numDias,
+                          ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
+                          CONCAT("Férias ",tbferias.anoExercicio),
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                          JOIN tbhistlot USING (idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbferias USING (idServidor)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
+        if(vazio($this->idServidor)){
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tbferias.dtInicial IS NOT NULL';
         }
-            
-       # lotacao
-       if(!is_null($this->lotacao)){
-           # Verifica se o que veio é numérico
-           if(is_numeric($this->lotacao)){
-               $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-           }else{ # senão é uma diretoria genérica
-               $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
-           }
-       }
 
-       # Folga TRE
-       $select .= ') UNION (
-                  SELECT ';
-
-                  if($this->idFuncional){
-                    $select .= 'tbservidor.idfuncional,';
-                  }
-
-      if(vazio($this->idServidor)){
-            $select .= ' tbpessoa.nome,
-                         tbservidor.idServidor,';
-        }
-       
-       $select .= '     tbfolga.data,
-                         tbfolga.dias,
-                         ADDDATE(tbfolga.data,tbfolga.dias-1),
-                         "Folga TRE",
-                         tbservidor.idServidor
-                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                    LEFT JOIN tbfolga USING (idServidor)
-                   WHERE tbservidor.situacao = 1
-                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-       
-      if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-       }
-       
-       if($this->campoMes){
+         if(!vazio($this->mes)){
             $select .= '       
-                     AND (("'.$data.'" BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
-                      OR  (LAST_DAY("'.$data.'") BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
-                      OR  ("'.$data.'" < tbfolga.data AND LAST_DAY("'.$data.'") > ADDDATE(tbfolga.data,tbfolga.dias-1)))';
-        }elseif($this->campoAno){
-            $select .= ' AND (((YEAR(tbfolga.data) = '.$this->ano.') OR (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tbfolga.data) < '.$this->ano.') AND (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) > '.$this->ano.')))';
-       }
-        
-       # lotacao
-       if(!is_null($this->lotacao)){
-           # Verifica se o que veio é numérico
-           if(is_numeric($this->lotacao)){
-               $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
-           }else{ # senão é uma diretoria genérica
-               $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
-           }
-       }
-       
-       # Licença sem vencimentos
-       $select .= ') UNION (
-                  SELECT ';
+                      AND (("'.$data.'" BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
+                       OR  (LAST_DAY("'.$data.'") BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
+                       OR  ("'.$data.'" < tbferias.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))';
+          }elseif($this->ano){
+            $select .= ' AND (((YEAR(tbferias.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = '.$this->ano.')) 
+                         OR ((YEAR(tbferias.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > '.$this->ano.')))';
+         }
 
-                  if($this->idFuncional){
-                    $select .= 'tbservidor.idfuncional,';
-                  }
-
-      if(vazio($this->idServidor)){
-            $select .= ' tbpessoa.nome,
-                         tbservidor.idServidor,';
-        }
-       
-       $select .= '     tblicencasemvencimentos.dtInicial,
-                                  tblicencasemvencimentos.numDias,
-                                  ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
-                                  tbtipolicenca.nome,
-                                  tbservidor.idServidor
-                             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                                  JOIN tbhistlot USING (idServidor)
-                                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                             LEFT JOIN tblicencasemvencimentos USING (idServidor)
-                                             LEFT JOIN tbperfil USING (idPerfil)
-                                                  JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
-                            WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)           
-                              AND tbservidor.situacao = 1
-                              AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
-      
-      if(!vazio($this->idServidor)){
-           $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
-       } 
-      
-       if($this->campoMes){
-            $select .= '       
-                              AND (("'.$data.'" BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
-                               OR  (LAST_DAY("'.$data.'") BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
-                               OR  ("'.$data.'" < tblicencasemvencimentos.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)))';
-         }elseif($this->campoAno){
-            $select .= ' AND (((YEAR(tblicencasemvencimentos.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = '.$this->ano.')) 
-                        OR ((YEAR(tblicencasemvencimentos.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) > '.$this->ano.')))';
-       }
-       
         # lotacao
         if(!is_null($this->lotacao)){
             # Verifica se o que veio é numérico
@@ -532,13 +359,224 @@ class Afastamento{
             }
         }
 
-       if($this->idFuncional){
-         $select .= ') ORDER BY 2, 3';
-       }else{
-         $select .= ') ORDER BY 1, 2';
-       }
-       #echo $select;
-       return $select;
+        # faltas abonadas
+        $select .= ') UNION (
+                   SELECT ';
+
+         if($this->idFuncional){
+           $select .= 'tbservidor.idfuncional,';
+         }
+
+         if(vazio($this->idServidor)){
+             $select .= ' tbpessoa.nome,
+                          tbservidor.idServidor,';
+         }
+
+        $select .= '     tbatestado.dtInicio,
+                          tbatestado.numDias,
+                          ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
+                          "Falta Abonada",
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                          JOIN tbhistlot USING (idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbatestado USING (idServidor)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
+        if(vazio($this->idServidor)){
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tbatestado.dtInicio IS NOT NULL';
+        }
+
+         if(!vazio($this->mes)){
+             $select .= '       
+                      AND (("'.$data.'" BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
+                       OR  (LAST_DAY("'.$data.'") BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
+                       OR  ("'.$data.'" < tbatestado.dtInicio AND LAST_DAY("'.$data.'") > ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)))';
+          }elseif($this->ano){
+             $select .= ' AND (((YEAR(tbatestado.dtInicio) = '.$this->ano.') OR (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) = '.$this->ano.')) 
+                         OR ((YEAR(tbatestado.dtInicio) < '.$this->ano.') AND (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) > '.$this->ano.')))';
+         }
+
+        # lotacao
+        if(!is_null($this->lotacao)){
+            # Verifica se o que veio é numérico
+            if(is_numeric($this->lotacao)){
+                $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            }else{ # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
+            }
+        }
+
+        # Trabalhando TRE
+        $select .= ') UNION (
+                   SELECT ';
+
+                   if($this->idFuncional){
+                     $select .= 'tbservidor.idfuncional,';
+                   }
+
+         if(vazio($this->idServidor)){
+             $select .= ' tbpessoa.nome,
+                          tbservidor.idServidor,';
+         }
+
+        $select .= '     tbtrabalhotre.data,
+                          tbtrabalhotre.dias,
+                          ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
+                          "Trabalhando no TRE",
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                          JOIN tbhistlot USING (idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbtrabalhotre USING (idServidor)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
+        if(vazio($this->idServidor)){
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tbtrabalhotre.data IS NOT NULL';
+        }
+
+         if(!vazio($this->mes)){
+             $select .= '       
+                      AND (("'.$data.'" BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
+                       OR  (LAST_DAY("'.$data.'") BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
+                       OR  ("'.$data.'" < tbtrabalhotre.data AND LAST_DAY("'.$data.'") > ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)))';
+          }elseif($this->ano){
+             $select .= ' AND (((YEAR(tbtrabalhotre.data) = '.$this->ano.') OR (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) = '.$this->ano.')) 
+                         OR ((YEAR(tbtrabalhotre.data) < '.$this->ano.') AND (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) > '.$this->ano.')))';
+         }
+
+        # lotacao
+        if(!is_null($this->lotacao)){
+            # Verifica se o que veio é numérico
+            if(is_numeric($this->lotacao)){
+                $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            }else{ # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
+            }
+        }
+
+        # Folga TRE
+        $select .= ') UNION (
+                   SELECT ';
+
+                   if($this->idFuncional){
+                     $select .= 'tbservidor.idfuncional,';
+                   }
+
+       if(vazio($this->idServidor)){
+             $select .= ' tbpessoa.nome,
+                          tbservidor.idServidor,';
+         }
+
+        $select .= '     tbfolga.data,
+                          tbfolga.dias,
+                          ADDDATE(tbfolga.data,tbfolga.dias-1),
+                          "Folga TRE",
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                          JOIN tbhistlot USING (idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbfolga USING (idServidor)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
+        if(vazio($this->idServidor)){
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tbfolga.data IS NOT NULL';
+        }
+
+        if(!vazio($this->mes)){
+             $select .= '       
+                      AND (("'.$data.'" BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
+                       OR  (LAST_DAY("'.$data.'") BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
+                       OR  ("'.$data.'" < tbfolga.data AND LAST_DAY("'.$data.'") > ADDDATE(tbfolga.data,tbfolga.dias-1)))';
+         }elseif($this->ano){
+             $select .= ' AND (((YEAR(tbfolga.data) = '.$this->ano.') OR (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) = '.$this->ano.')) 
+                         OR ((YEAR(tbfolga.data) < '.$this->ano.') AND (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) > '.$this->ano.')))';
+        }
+
+        # lotacao
+        if(!is_null($this->lotacao)){
+            # Verifica se o que veio é numérico
+            if(is_numeric($this->lotacao)){
+                $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+            }else{ # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
+            }
+        }
+
+        # Licença sem vencimentos
+        $select .= ') UNION (
+                   SELECT ';
+
+                   if($this->idFuncional){
+                     $select .= 'tbservidor.idfuncional,';
+                   }
+
+       if(vazio($this->idServidor)){
+             $select .= ' tbpessoa.nome,
+                          tbservidor.idServidor,';
+         }
+
+        $select .= '     tblicencasemvencimentos.dtInicial,
+                                   tblicencasemvencimentos.numDias,
+                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                                   tbtipolicenca.nome,
+                                   tbservidor.idServidor
+                              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbhistlot USING (idServidor)
+                                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                              LEFT JOIN tblicencasemvencimentos USING (idServidor)
+                                              LEFT JOIN tbperfil USING (idPerfil)
+                                                   JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
+                             WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)           
+                               AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Verifica se é somente de um servidor
+        if(vazio($this->idServidor)){
+            $select .= ' AND tbservidor.situacao = 1';
+        }else{
+            $select .= ' AND tbservidor.idServidor = '.$this->idServidor;
+            $select .= ' AND tblicencasemvencimentos.dtInicial IS NOT NULL';
+        }
+
+        if(!vazio($this->mes)){
+             $select .= '       
+                               AND (("'.$data.'" BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
+                                OR  (LAST_DAY("'.$data.'") BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
+                                OR  ("'.$data.'" < tblicencasemvencimentos.dtInicial AND LAST_DAY("'.$data.'") > ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)))';
+          }elseif($this->ano){
+             $select .= ' AND (((YEAR(tblicencasemvencimentos.dtInicial) = '.$this->ano.') OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = '.$this->ano.')) 
+                         OR ((YEAR(tblicencasemvencimentos.dtInicial) < '.$this->ano.') AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) > '.$this->ano.')))';
+        }
+
+         # lotacao
+         if(!is_null($this->lotacao)){
+             # Verifica se o que veio é numérico
+             if(is_numeric($this->lotacao)){
+                 $select .= ' AND (tblotacao.idlotacao = "'.$this->lotacao.'")';
+             }else{ # senão é uma diretoria genérica
+                 $select .= ' AND (tblotacao.DIR = "'.$this->lotacao.'")';
+             }
+         }
+
+        if($this->idFuncional){
+          $select .= ') ORDER BY 2, 3';
+        }else{
+          $select .= ') ORDER BY 1, 2';
+        }
+        #echo $select;
+        return $select;
   }
 
   ###########################################################
@@ -553,7 +591,7 @@ class Afastamento{
 
        # Inicia o banco de Dados
        $pessoal = new Pessoal();
-       
+
        $select = $this->montaSelect();
 
        $result = $pessoal->select($select);
@@ -561,13 +599,20 @@ class Afastamento{
 
        $tabela = new Tabela();
        if(vazio($this->idServidor)){
-            $tabela->set_titulo('Servidores com Afastamentos');
+            $titulo = 'Servidores com Afastamentos';
        }else{
-           $tabela->set_titulo('Afastamentos');
+            $titulo = 'Afastamentos';
        }
        
+       if(!vazio($this->mes)){
+           $titulo .= " ".get_nomeMes($this->mes)."/".$this->ano;
+       }elseif($this->ano){
+           $titulo .= " ".$this->ano;
+       }
+       
+       $tabela->set_titulo($titulo);
+
        if(vazio($this->idServidor)){
-                  
 
         if($this->idFuncional){
 
@@ -576,7 +621,6 @@ class Afastamento{
 
           $tabela->set_classe(array(NULL,NULL,"pessoal"));
           $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples"));
-
 
           if($this->nomeSimples){
             $tabela->set_funcao(array(NULL,"get_nomeSimples",NULL,"date_to_php",NULL,"date_to_php"));
@@ -605,7 +649,11 @@ class Afastamento{
           $tabela->set_grupoCorColuna(0);
         }
        }else{
-           ############## Parei aqui
+           
+            $tabela->set_label(array('Data Inicial','Dias','Data Final','Descrição'));
+            $tabela->set_align(array('center','center','center','left'));
+            $tabela->set_funcao(array("date_to_php",NULL,"date_to_php"));
+            $tabela->set_width(array(15,5,15,65));
        }
 
        if(!vazio($this->linkEditar)){
@@ -637,29 +685,29 @@ class Afastamento{
        $pessoal = new Pessoal();
 
        $select = $this->montaSelect();
-       
+
         $relatorio = new Relatorio();
         $relatorio->set_titulo('Servidores com Afastamentos');
-        
+
         if(is_numeric($this->lotacao)){
             $tt = $pessoal->get_nomeLotacao($this->lotacao);
         }else{
             $tt = $this->lotacao;
         }
         $relatorio->set_subtitulo($tt);
-        
+
         $nomeMes = get_nomeMes($this->mes);
-        
+
         if($this->campoMes){
             $relatorio->set_tituloLinha2($nomeMes.' / '.$this->ano);
         }else{
             $relatorio->set_tituloLinha2($this->ano);
         }
-        
+
         if($this->idFuncional){
             $relatorio->set_label(array('IdFuncional','Nome','Lotação','Data Inicial','Dias','Data Final','Descrição'));
             $relatorio->set_align(array('center','left','left','center','center','center','left'));
-            
+
             $relatorio->set_classe(array(NULL,NULL,"pessoal"));
             $relatorio->set_metodo(array(NULL,NULL,"get_lotacaoSimples"));
 
@@ -676,7 +724,7 @@ class Afastamento{
 
             $relatorio->set_label(array('Nome','Lotação','Data Inicial','Dias','Data Final','Descrição'));
             $relatorio->set_align(array('left','left','center','center','center','left'));
-            
+
             $relatorio->set_classe(array(NULL,"pessoal"));
             $relatorio->set_metodo(array(NULL,"get_lotacaoSimples"));
 
@@ -685,16 +733,16 @@ class Afastamento{
             }else{
                 $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php"));
             }
-            
+
             #$relatorio->set_rowspan(0);
             #$relatorio->set_grupoCorColuna(0);
         }
-        
+
         $result = $pessoal->select($select);
         $cont = $pessoal->count($select);
-        
+
         $relatorio->set_conteudo($result);
-        
+
         if($this->formulario){
             # Dados da combo lotacao
             $lotacao = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
@@ -704,7 +752,7 @@ class Afastamento{
                                            WHERE ativo)
                                         ORDER BY 2');
             array_unshift($lotacao,array('*','-- Todos --'));
-            
+
             # Cria array dos meses
             $mes = array(array("1","Janeiro"),
                          array("2","Fevereiro"),
@@ -721,7 +769,7 @@ class Afastamento{
 
             #$relatorio->set_bordaInterna(TRUE);
             #$relatorio->set_cabecalho(FALSE);
-            
+
             if($this->campoMes){
                 $relatorio->set_formCampos(array(
                               array ('nome' => 'ano',
@@ -779,7 +827,7 @@ class Afastamento{
             $relatorio->set_formFocus('ano');		
             $relatorio->set_formLink('?');
         }
-        
+
         if($cont>0){
             $relatorio->show();
         }else{
@@ -790,5 +838,152 @@ class Afastamento{
 
   ###########################################################
 
+    public function exibeTimeline(){
+
+    /**
+     * Exibe um relatório com a relação dos servidores com afastamento
+     *
+     * @syntax $afast->exibeRelatorio();
+     */
+
+        $grid = new Grid();
+        $grid->abreColuna(12);
+            
+            #tituloTable("Afastamentos Anuais");
+
+            # Gráfico
+            $select1 = "(SELECT CONCAT('Férias',' - ',anoExercicio) as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tbferias
+                        WHERE idServidor = $this->idServidor
+                          AND (((YEAR(tbferias.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $this->ano)) 
+                           OR ((YEAR(tbferias.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $this->ano)))  
+                     ORDER BY dtInicial) UNION 
+                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFNULL(tbtipolicenca.lei,'')) as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicenca LEFT JOIN tbtipolicenca USING(idTpLicenca) 
+                        WHERE idServidor = $this->idServidor
+                           AND (((YEAR(tblicenca.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = $this->ano)) 
+                           OR ((YEAR(tblicenca.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > $this->ano)))   
+                     ORDER BY dtInicial) UNION 
+                       (SELECT 'Licença Prêmio' as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicencapremio
+                        WHERE idServidor = $this->idServidor
+                          AND (((YEAR(tblicencapremio.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = $this->ano)) 
+                           OR ((YEAR(tblicencapremio.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > $this->ano)))  
+                     ORDER BY dtInicial) UNION 
+                       (SELECT 'Trabalho TRE' as descricao,
+                              data,
+                              dias,
+                              ADDDATE(data,dias-1) as dtFinal
+                         FROM tbtrabalhotre
+                        WHERE idServidor = $this->idServidor
+                          AND (((YEAR(tbtrabalhotre.data) = $this->ano) OR (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) = $this->ano)) 
+                           OR ((YEAR(tbtrabalhotre.data) < $this->ano) AND (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) > $this->ano)))   
+                     ORDER BY data) UNION 
+                       (SELECT 'Folga TRE' as descricao,
+                              data,
+                              dias,
+                              ADDDATE(data,dias-1) as dtFinal
+                         FROM tbfolga
+                        WHERE idServidor = $this->idServidor
+                          AND (((YEAR(tbfolga.data) = $this->ano) OR (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) = $this->ano)) 
+                           OR ((YEAR(tbfolga.data) < $this->ano) AND (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) > $this->ano)))      
+                     ORDER BY data) UNION 
+                       (SELECT 'Folga Abonadas' as descricao,
+                              dtInicio,
+                              numDias,
+                              ADDDATE(dtInicio,numDias-1) as dtFinal
+                         FROM tbatestado
+                        WHERE idServidor = $this->idServidor
+                          AND (((YEAR(tbatestado.dtInicio) = $this->ano) OR (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) = $this->ano)) 
+                           OR ((YEAR(tbatestado.dtInicio) < $this->ano) AND (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) > $this->ano)))    
+                     ORDER BY dtInicio)  UNION 
+                       (SELECT 'Licença Sem Vencimentos' as descricao,
+                              dtInicial,
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
+                         FROM tblicencasemvencimentos
+                        WHERE idServidor = $this->idServidor
+                          AND (((YEAR(tblicencasemvencimentos.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = $this->ano)) 
+                           OR ((YEAR(tblicencasemvencimentos.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) > $this->ano)))  
+                     ORDER BY dtInicial)
+                        order by 2";
+
+            # Acessa o banco
+            $pessoal = new Pessoal();
+            $atividades1 = $pessoal->select($select1);
+            $numAtividades = $pessoal->count($select1);
+            $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
+
+            #tituloTable("Afastamentos de $parametroAno");
+
+            if($numAtividades > 0){
+
+                # Carrega a rotina do Google
+                echo '<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>';
+
+                # Inicia o script
+                echo "<script type='text/javascript'>";
+                echo "google.charts.load('current', {'packages':['timeline'], 'language': 'pt-br'});
+                      google.charts.setOnLoadCallback(drawChart);
+                      function drawChart() {
+                            var container = document.getElementById('timeline');
+                            var chart = new google.visualization.Timeline(container);
+                            var dataTable = new google.visualization.DataTable();";
+
+                echo "dataTable.addColumn({ type: 'string' });
+                      dataTable.addColumn({ type: 'string', role: 'tooltip' });
+                      dataTable.addColumn({ type: 'date' });
+                      dataTable.addColumn({ type: 'date' });";
+
+                echo "dataTable.addRows([";
+
+                $separador = '-';
+                
+                foreach ($atividades1 as $row){
+
+                    # Trata a data inicial
+                    $dt1 = explode($separador,$row['dtInicial']);
+                    $dt2 = explode($separador,$row['dtFinal']);
+                    
+                    echo "['".$row['descricao']."','Teste', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+                    
+                    $contador--;
+                    
+                    if($contador > 0){
+                        echo ",";
+                    }
+                }
+                echo "]);";
+                
+                echo "chart.draw(dataTable);";
+                echo "}";
+                echo "</script>";
+
+                #[ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+                #[ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+                #[ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+                
+                $altura = ($numAtividades * 45) + 50;
+                echo '<div id="timeline" style="height: '.$altura.'px; width: 100%;"></div>';
+                
+            }else{
+                br();
+                p("Não há dados para serem exibidos.","f14","center");
+            }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();    
+    }   
+       
+    ###########################################################
 
 }

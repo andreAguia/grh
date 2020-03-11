@@ -474,6 +474,7 @@ if($acesso){
             $menu->add_item('linkWindow','Relatório de Professores Agrupados por Lotaçao','../grhRelatorios/professorporLotacao.php'); 
             $menu->add_item('linkWindow','Relatório da Professores Ativos - A pedido da PROPPG','../grhRelatorios/professoresPROPPG.php');
             $menu->add_item('linkWindow','Relatório da Professores Não-Ativos - A pedido da PROPPG','../grhRelatorios/professoresPROPPGInativos.php');
+            $menu->add_item('linkWindow','Relatório da Professores - Censo Anual','../grhRelatorios/professoresCensoAnual.php');
             
             $menu->show();
             break;

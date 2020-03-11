@@ -25,18 +25,16 @@ if($acesso)
     $page = new Page();			
     $page->iniciaPagina();
     
-    # Pega o parâmetro do relatório
-    $cargo = post('cargo',"Adm/Tec");
-    
     # Pega o parâmetro do ano
     $parametroAno = post('parametroAno',date('Y'));
 
     ######
     
-    $select ='SELECT tbservidor.idfuncional,
-                     tbpessoa.nome,
+    $select ='SELECT tbpessoa.nome,
+                     tbdocumentacao.CPF,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
+                     tbpessoa.nomeMae,
                      dtAdmissao,
                      dtDemissao
                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -45,22 +43,23 @@ if($acesso)
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE year(dtAdmissao) <= "'.$parametroAno.'"
                  AND (dtDemissao IS NULL OR year(dtDemissao) >= "'.$parametroAno.'")
-                 AND tbtipocargo.tipo = "'.$cargo.'"  
+                 AND tbtipocargo.tipo = "Professor"
+                 AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Histórico de Servidores');
-    $relatorio->set_tituloLinha2($cargo." Ativos em  ".$parametroAno);
+    $relatorio->set_titulo('Censo de Docentes');
+    $relatorio->set_tituloLinha2("Docentes Ativos em  ".$parametroAno);
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Perfil','Admissão','Saída'));
-    #$relatorio->set_width(array(10,30,16,22,22));
-    $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
+    $relatorio->set_label(array('Nome','CPF','Lotação','Email','Nome da Mãe','Admissão','Saída'));
+    $relatorio->set_width(array(20,10,20,10,20,10,10));
+    $relatorio->set_align(array("left","left","left","left","left"));
+    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
     
     $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_cargoSimples","get_perfil"));
+    $relatorio->set_metodo(array(NULL,NULL,"get_lotacao","get_emails"));
     
     $relatorio->set_conteudo($result);
     
@@ -68,16 +67,6 @@ if($acesso)
     $listaCargo = $servidor->select('SELECT distinct tipo,tipo from tbtipocargo');
 
     $relatorio->set_formCampos(array(
-                               array ('nome' => 'cargo',
-                                      'label' => 'Tipo de Cargo:',
-                                      'tipo' => 'combo',
-                                      'array' => $listaCargo,
-                                      'size' => 20,
-                                      'col' => 3,
-                                      'padrao' => $cargo,
-                                      'title' => 'Mês',
-                                      'onChange' => 'formPadrao.submit();',
-                                      'linha' => 1),
                                 array ('nome' => 'parametroAno',
                                       'label' => 'Ano:',
                                       'tipo' => 'texto',
@@ -88,7 +77,7 @@ if($acesso)
                                       'col' => 3,
                                       'linha' => 1)));
 
-    $relatorio->set_formFocus('cargo');
+    $relatorio->set_formFocus('parametroAno');
     $relatorio->set_formLink('?');
         
     $relatorio->show();

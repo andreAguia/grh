@@ -75,7 +75,7 @@ if($acesso){
     $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
     $botaoRel->set_url("../grhRelatorios/servidorAposentadoria.php");
     $botaoRel->set_target("_blank");
-    #$menu->add_link($botaoRel,"right");
+    $menu->add_link($botaoRel,"right");
     
     $linkBotaoHistorico = new Button("Tempo de Serviço");
     $linkBotaoHistorico->set_title('Exibe o tempo de Serviço desse Servidor');    
@@ -114,35 +114,7 @@ if($acesso){
     $painel = new Callout("secondary");
     $painel->abre();
     
-    titulo("Previsão de Aposentadoria");
-    br();
-    
-    $grid1 = new Grid();
-    $grid1->abreColuna(4);
-    
-    # Aposentadoria Integral
-    $aposentadoria->exibePrevisaoIntegral($idServidorPesquisado);
-    
-    $grid1->fechaColuna();
-    
-    #############################################
-       
-    $grid1->abreColuna(4);
-    
-    # Aposentadoria Proporcional
-    $aposentadoria->exibePrevisaoProporcional($idServidorPesquisado);
-        
-    $grid1->fechaColuna();
-    
-    #############################################
-    
-    $grid1->abreColuna(4);
-    
-    # Aposentadoria Compulsória
-    $aposentadoria->exibePrevisaoCompulsoria($idServidorPesquisado);
-    
-    $grid1->fechaColuna();
-    $grid1->fechaGrid();
+    $aposentadoria->exibePrevisao($idServidorPesquisado);
     
     $painel->fecha();
     

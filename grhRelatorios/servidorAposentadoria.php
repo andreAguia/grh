@@ -23,13 +23,50 @@ if($acesso){
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();
+    
     ######
+    
+    # Abre o Grid
+    $grid = new Grid();
+    $grid->abreColuna(12);
     
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Previsão de Aposentadoria');
     br();
     
-    # Tempo de Serviço
+##############################################################################################################################################
+#   Regras
+##############################################################################################################################################
+    
+    # Regras da Aposentadoria
+    $painel = new Callout("secondary");
+    $painel->abre();
+    
+    $aposentadoria->exibeRegras(TRUE);
+    
+    $painel->fecha();
+    
+##############################################################################################################################################
+#   Previsão de Aposentadoria
+##############################################################################################################################################
+    
+    $painel = new Callout("secondary");
+    $painel->abre();
+    
+    $aposentadoria->exibePrevisao($idServidorPesquisado, TRUE);
+    
+    $painel->fecha();
+    
+##############################################################################################################################################
+#   Tempo de Serviço
+##############################################################################################################################################
+    
+    $painel = new Callout("secondary");
+    $painel->abre();
+    
+    $aposentadoria->exibeTempo($idServidorPesquisado, TRUE);
+    
+    
     $select = "SELECT dtInicial,
                       dtFinal,
                       dias,
@@ -55,7 +92,7 @@ if($acesso){
     #array_push($result,array(NULL,NULL,$publica + $privada,NULL,NULL,NULL,NULL,NULL,NULL));
 
     $relatorio = new Relatorio();
-    #$relatorio->set_subtitulo('Tempo de Serviço Averbado');
+    $relatorio->set_subtitulo('Tempo de Serviço Averbado');
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
@@ -74,7 +111,9 @@ if($acesso){
     $relatorio->set_logDetalhe("Visualizou o Relatório de Tempo de Serviço Averbado");
     $relatorio->show();
     
-    #p('Total de Dias Averbados:'.$totalAverbado,'pRelatorioDataImpressao');
+    $painel->fecha();
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
     $page->terminaPagina();
 }

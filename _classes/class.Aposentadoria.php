@@ -568,17 +568,20 @@ class Aposentadoria{
 
 ##############################################################################################################################################
 
-    function exibeRegras(){
+    function exibeRegras($relatorio = FALSE){
 
     /**
      * Exibe uma tabela com as regras da aposentadoria
      */
         
-        #$painel = new Callout("secondary");
-        #$painel->abre();
-
-        titulo("Regras");
-        br();
+        # Título
+        if($relatorio){
+            p("Regra Geral","f16","center");
+            hr();
+        }else{
+            titulo("Regra Geral");
+            br();
+        }
     
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -586,9 +589,13 @@ class Aposentadoria{
         
         # Abre o Grid
         $grid = new Grid();
+        
+        ###
+        
+        # Aposentadoria Integral        
         $grid->abreColuna(4);
         
-        # Aposentadoria Integral
+        # Calculos
         $diasAposentMasculino = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
         $diasAposentFeminino = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
         $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
@@ -598,20 +605,39 @@ class Aposentadoria{
         $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
                          array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
 
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_titulo("Aposentadoria Integral");
-        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Aposentadoria Integral");
+            $relatorio->set_label(array('Sexo','Idade','Tempo de Serviço'));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($valores);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo("Aposentadoria Integral");
+            $tabela->set_label(array('Sexo','Idade','Tempo de Serviço'));
+            #$tabela->set_width(array(12,14,14,18,15,22));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array('left'));
+            $tabela->set_conteudo($valores);
+            $tabela->show();
+        }
         
         $grid->fechaColuna();
-        $grid->abreColuna(4);
+        
+        ###
         
         # Aposentadoria Proporcional
+        
+        $grid->abreColuna(4);
+        
+        # Cálculos
         $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
         $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
         $idadeAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
@@ -620,152 +646,69 @@ class Aposentadoria{
         # Monta o array
         $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
                          array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
-
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_titulo("Aposentadoria Proporcional");
-        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço Público'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
+        
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Aposentadoria Proporcional");
+            $relatorio->set_label(array('Sexo','Idade','Tempo de Serviço Público'));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($valores);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo("Aposentadoria Proporcional");
+            $tabela->set_label(array('Sexo','Idade','Tempo de Serviço Público'));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array('left'));
+            $tabela->set_conteudo($valores);
+            $tabela->show();
+        }
         
         $grid->fechaColuna();
-        $grid->abreColuna(4);
+        
+        ###
         
         # Aposentadoria Compulsória
+        $grid->abreColuna(4);
+        
+        # Cálculos
         $idadeAposentCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
         
         # Monta o array
         $valores = array(array("Feminino",$idadeAposentCompulsoria),
                          array("Masculino",$idadeAposentCompulsoria));
 
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_titulo("Aposentadoria Compulsória");
-        $tabela->set_label(array('Sexo','Idade'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Aposentadoria Compulsória");
+            $relatorio->set_label(array('Sexo','Idade'));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($valores);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo("Aposentadoria Compulsória");
+            $tabela->set_label(array('Sexo','Idade'));        
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_align(array('left'));
+            $tabela->set_conteudo($valores);
+            $tabela->show();
+        }
         
         $grid->fechaColuna();
         $grid->fechaGrid();
-        
-        #$painel->fecha();
-    }
-    
-##############################################################################################################################################
-
-        function exibeRegrasRel(){
-
-    /**
-     * Exibe uma tabela com as regras da aposentadoria para o Relatório
-     */
-        
-        #$painel = new Callout("secondary");
-        #$painel->abre();
-
-        titulo("Regras");
-        br();
-    
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        $intra = new Intra();
-        
-        # Abre o Grid
-        $grid = new Grid();
-        $grid->abreColuna(4);
-        
-        # Aposentadoria Integral
-        $diasAposentMasculino = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
-        $diasAposentFeminino = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
-        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
-        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
-        
-        # Monta o array
-        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
-                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
-
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_titulo("Aposentadoria Integral");
-        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
-        
-        $relatorio = new Relatorio();
-        $relatorio->set_subtitulo("Aposentadoria Integral");
-        $relatorio->set_cabecalhoRelatorio(FALSE);
-        $relatorio->set_menuRelatorio(FALSE);
-        $relatorio->set_subTotal(TRUE);
-        $relatorio->set_totalRegistro(FALSE);
-        $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
-        $relatorio->set_colunaSomatorio(2);
-        $relatorio->set_textoSomatorio("Total de Dias Averbados:");
-        $relatorio->set_exibeSomatorioGeral(FALSE);
-        $relatorio->set_align(array('center','center','center','left'));
-        $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
-
-        $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(2);
-        $relatorio->set_botaoVoltar(FALSE);
-        $relatorio->set_logServidor($idServidorPesquisado);
-        $relatorio->set_logDetalhe("Visualizou o Relatório de Tempo de Serviço Averbado");
-        $relatorio->show();
-        
-        $grid->fechaColuna();
-        $grid->abreColuna(4);
-        
-        # Aposentadoria Proporcional
-        $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
-        $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
-        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
-        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.idade.feminino");
-        
-        # Monta o array
-        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
-                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
-
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_titulo("Aposentadoria Proporcional");
-        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço Público'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
-        
-        $grid->fechaColuna();
-        $grid->abreColuna(4);
-        
-        # Aposentadoria Compulsória
-        $idadeAposentCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
-        
-        # Monta o array
-        $valores = array(array("Feminino",$idadeAposentCompulsoria),
-                         array("Masculino",$idadeAposentCompulsoria));
-
-        # Tabela com os valores de aposentadoria
-        $tabela = new Tabela();
-        $tabela->set_titulo("Aposentadoria Compulsória");
-        $tabela->set_label(array('Sexo','Idade'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_align(array('left'));
-        $tabela->set_conteudo($valores);
-        $tabela->show();
-        
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-        
-        #$painel->fecha();
     }
     
 ##############################################################################################################################################
@@ -950,7 +893,7 @@ class Aposentadoria{
      * @param string $idServidor idServidor do servidor
      */
 
-    public function exibeTempo($idServidorPesquisado){
+    public function exibeTempo($idServidorPesquisado, $relatorio = FALSE){
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -976,15 +919,14 @@ class Aposentadoria{
         $privada = $pessoal->get_totalAverbadoPrivado($idServidorPesquisado);
         $totalTempo = $uenf + $publica + $privada;
         
-        ###
-        
-        #$painel = new Callout();
-        #$painel->abre();
-
-        titulo("Tempo de Serviço");
-        br();
-        
-        ###
+        # Título
+        if($relatorio){
+            p("Tempo de Serviço","f16","center");
+            hr();
+        }else{
+            titulo("Tempo de Serviço");
+            br();
+        }
         
         # Verifica se tem sobreposição
         $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
@@ -1153,13 +1095,62 @@ class Aposentadoria{
 ##############################################################################################################################################
     
     /**
+     * Método exibePrevisao
+     * Exibe análise da aposentadoria geral
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+
+    public function exibePrevisao($idServidorPesquisado, $relatorio = FALSE){
+        
+        # Título
+        if($relatorio){
+            p("Previsão de Aposentadoria","f16","center");
+            hr();
+        }else{
+            titulo("Previsão de Aposentadoria");
+            br();
+        }
+
+        $grid1 = new Grid();
+        $grid1->abreColuna(4);
+
+        # Aposentadoria Integral
+        $this->exibePrevisaoIntegral($idServidorPesquisado, $relatorio);
+
+        $grid1->fechaColuna();
+
+        #############################################
+
+        $grid1->abreColuna(4);
+
+        # Aposentadoria Proporcional
+        $this->exibePrevisaoProporcional($idServidorPesquisado, $relatorio);
+
+        $grid1->fechaColuna();
+
+        #############################################
+
+        $grid1->abreColuna(4);
+
+        # Aposentadoria Compulsória
+        $this->exibePrevisaoCompulsoria($idServidorPesquisado, $relatorio);
+
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
+        
+    }
+    
+##############################################################################################################################################    
+    
+    /**
      * Método exibePrevisaoIntegral
      * Exibe análise da aposentadoria integral do servidor
      * 
      * @param string $idServidor idServidor do servidor
      */
 
-    public function exibePrevisaoIntegral($idServidorPesquisado){
+    public function exibePrevisaoIntegral($idServidorPesquisado, $relatorio = FALSE){
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -1223,14 +1214,28 @@ class Aposentadoria{
                   array("Idade",$anosAposentadoria,$idade),
                   array("Tempo de Serviço",$diasAposentadoriaIntegral,$totalTempo));
 
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo('Aposentadoria Integral');
-        $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Regra","Servidor"));
-        $tabela->set_align(array("left"));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->show();
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Aposentadoria Integral");
+            $relatorio->set_label(array("Descrição","Regra","Servidor"));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($dados1);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo('Aposentadoria Integral');
+            $tabela->set_conteudo($dados1);
+            $tabela->set_label(array("Descrição","Regra","Servidor"));
+            $tabela->set_align(array("left"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->show();
+        }
         
         hr("procedimento");
 
@@ -1311,7 +1316,7 @@ class Aposentadoria{
      * @param string $idServidor idServidor do servidor
      */
 
-    public function exibePrevisaoProporcional($idServidorPesquisado){
+    public function exibePrevisaoProporcional($idServidorPesquisado, $relatorio = FALSE){
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -1361,14 +1366,28 @@ class Aposentadoria{
                   array("Idade",$regraIdadeProporcional,$idade),
                   array("Tempo de Serviço Público",$regraTempoProporcional,$totalPublico));
 
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo('Aposentadoria Proporcional');
-        $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Regra","Servidor"));
-        $tabela->set_align(array("left"));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->show();
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Aposentadoria Proporcional");
+            $relatorio->set_label(array("Descrição","Regra","Servidor"));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($dados1);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo('Aposentadoria Proporcional');
+            $tabela->set_conteudo($dados1);
+            $tabela->set_label(array("Descrição","Regra","Servidor"));
+            $tabela->set_align(array("left"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->show();
+        }
         
         hr("procedimento");
         
@@ -1403,7 +1422,7 @@ class Aposentadoria{
      * @param string $idServidor idServidor do servidor
      */
 
-    public function exibePrevisaoCompulsoria($idServidorPesquisado){
+    public function exibePrevisaoCompulsoria($idServidorPesquisado, $relatorio = FALSE){
         
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -1430,14 +1449,28 @@ class Aposentadoria{
         $dados1 = array(
                   array("Idade",$idadeAposentadoriaCompulsoria,$idade));
 
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo('Aposentadoria Compulsória');
-        $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Regra","Servidor"));
-        $tabela->set_align(array("left"));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->show();
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Aposentadoria Compulsória");
+            $relatorio->set_label(array("Descrição","Regra","Servidor"));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($dados1);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo('Aposentadoria Compulsória');
+            $tabela->set_conteudo($dados1);
+            $tabela->set_label(array("Descrição","Regra","Servidor"));
+            $tabela->set_align(array("left"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->show();
+        }
         
         br();
         hr("procedimento");

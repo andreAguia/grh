@@ -111,6 +111,12 @@ if($acesso){
         $linkArea->set_class('button');
         $linkArea->set_title('Área de Procedimentos da GRH');
 	$menu->add_link($linkArea,"right");
+        
+        # Alterações
+        $linkArea = new Link("Alterações",'../../areaServidor/sistema/areaServidor.php?fase=atualizacoes');
+        $linkArea->set_class('button success');
+        $linkArea->set_title('Área de Procedimentos da GRH');
+	$menu->add_link($linkArea,"right");
 
         $menu->show();
 

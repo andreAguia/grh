@@ -123,8 +123,15 @@ if($acesso){
     
     # Pega os dados da combo de vagas
     $vagas = $pessoal->select("SELECT idVaga,
-                                      concat(idVaga,' - ',centro,' / ',tbcargo.nome)
-                                 FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
+                                      concat(idVaga,' - ',
+                                      (SELECT CONCAT('(Origem: ',tblotacao.DIR,'-',tblotacao.GER,')') 
+                                         FROM tbvagahistorico AS B 
+                                         JOIN tbconcurso USING (idConcurso)
+                                         JOIN tblotacao USING (idLotacao)
+                                        WHERE A.idVaga = B.idVaga 
+                                     ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1),
+                                     ' - ',centro,' / ',tbcargo.nome)
+                                 FROM tbvaga AS A LEFT JOIN tbcargo USING (idCargo)
                                  WHERE idCargo = $idCargo AND centro = '$centro'");
 
     array_unshift($vagas, array(0,NULL));
@@ -232,10 +239,10 @@ if($acesso){
                'label' => 'Vaga',
                'tipo' => 'combo',
                'array' => $vagas,
-               'col' => 3,
+               'col' => 9,
                'padrao' => $idVaga,
                'required' => TRUE,
-               'size' => 30),
+               'size' => 50),
         array ('linha' => 1,
                'nome' => 'idConcurso',
                'label' => 'Concurso:',
@@ -250,17 +257,17 @@ if($acesso){
                'tipo' => 'combo',
                'required' => TRUE,
                'array' => $result,
-               'size' => 20,
+               'size' => 50,
                'col' => 6,
                'title' => 'Em qual setor o servidor está lotado',
-               'linha' => 1),
+               'linha' => 2),
         array ('nome' => 'area',
                'label' => 'Área:',
                'tipo' => 'texto',
                'size' => 255,
-               'col' => 12,                                   
+               'col' => 6,                                   
                'title' => 'Área de atuação.',
-               'linha' => 3),
+               'linha' => 2),
         array ('nome' => 'idServidor',
                'label' => 'Docente Empossado:',
                'tipo' => 'combo',

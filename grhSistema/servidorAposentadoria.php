@@ -60,20 +60,20 @@ if($acesso){
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar,"left");
 
-    $imagem = new Imagem(PASTA_FIGURAS.'ajuda.png',NULL,15,15);
+    $imagem1 = new Imagem(PASTA_FIGURAS.'ajuda.png',NULL,15,15);
     $botaoHelp = new Button();
-    $botaoHelp->set_imagem($imagem);
+    $botaoHelp->set_imagem($imagem1);
     $botaoHelp->set_title("Ajuda");
     $botaoHelp->set_url("https://docs.google.com/document/d/e/2PACX-1vSH4_OkFekLul3KY6AlTHP0WjDblvsQXdX1uA319UV4REs3d9YklhQJqSFoL_yrHfYEaSmX94RtQ47Q/pub");
     $botaoHelp->set_target("_blank");            
     #$menu->add_link($botaoHelp,"right");
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
     $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
+    $botaoRel->set_imagem($imagem2);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
-    $botaoRel->set_url("../grhRelatorios/servidorAverbacao.php?data=$parametro");
+    $botaoRel->set_url("../grhRelatorios/servidorAposentadoria.php");
     $botaoRel->set_target("_blank");
     #$menu->add_link($botaoRel,"right");
     
@@ -93,7 +93,7 @@ if($acesso){
 
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
-    
+
 ##############################################################################################################################################
 #   Regras
 ##############################################################################################################################################
@@ -108,21 +108,14 @@ if($acesso){
     echo '</div>';
     
 ##############################################################################################################################################
-#   Tempo de Serviço
-##############################################################################################################################################
-    
-    echo '<div id="divTempoServicoAposentadoria">'; 
-        $painel = new Callout("secondary");
-        $painel->abre();
-    
-        $aposentadoria->exibeTempo($idServidorPesquisado);
-        
-        $painel->fecha();
-    echo '</div>';
-    
-##############################################################################################################################################
 #   Previsão de Aposentadoria
 ##############################################################################################################################################
+    
+    $painel = new Callout("secondary");
+    $painel->abre();
+    
+    titulo("Previsão de Aposentadoria");
+    br();
     
     $grid1 = new Grid();
     $grid1->abreColuna(4);
@@ -151,7 +144,56 @@ if($acesso){
     $grid1->fechaColuna();
     $grid1->fechaGrid();
     
-    #############################################
+    $painel->fecha();
+    
+##############################################################################################################################################
+#   Tempo de Serviço
+##############################################################################################################################################
+    
+    echo '<div id="divTempoServicoAposentadoria">'; 
+        $painel = new Callout("secondary");
+        $painel->abre();
+    
+        $aposentadoria->exibeTempo($idServidorPesquisado);
+        
+        $select = 'SELECT dtInicial,
+                      dtFinal,
+                      dias,
+                      empresa,
+                      CASE empresaTipo
+                         WHEN 1 THEN "Pública"
+                         WHEN 2 THEN "Privada"
+                      END,
+                      CASE regime
+                         WHEN 1 THEN "Celetista"
+                         WHEN 2 THEN "Estatutário"
+                         WHEN 3 THEN "Próprio"
+                      END,
+                      cargo,
+                      dtPublicacao,
+                      processo,
+                      idAverbacao
+                 FROM tbaverbacao
+                WHERE idServidor = '.$idServidorPesquisado.'
+             ORDER BY dtInicial desc';
+        
+        $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
+        $align = array("center","center","center","left");
+        $funcao = array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+        
+        $array = $pessoal->select($select);
+        
+        $tabela = new Tabela();
+        $tabela->set_titulo("Tempo Averbado Detalhado");
+        $tabela->set_conteudo($array);
+        $tabela->set_label($label);
+        $tabela->set_funcao($funcao);
+        $tabela->set_align($align);
+        $tabela->show();
+        
+        $painel->fecha();
+    echo '</div>';
+    
 
     $page->terminaPagina();
 }else{

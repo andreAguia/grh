@@ -659,6 +659,117 @@ class Aposentadoria{
     
 ##############################################################################################################################################
 
+        function exibeRegrasRel(){
+
+    /**
+     * Exibe uma tabela com as regras da aposentadoria para o Relatório
+     */
+        
+        #$painel = new Callout("secondary");
+        #$painel->abre();
+
+        titulo("Regras");
+        br();
+    
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Abre o Grid
+        $grid = new Grid();
+        $grid->abreColuna(4);
+        
+        # Aposentadoria Integral
+        $diasAposentMasculino = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
+        $diasAposentFeminino = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
+        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
+        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
+        
+        # Monta o array
+        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
+                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Aposentadoria Integral");
+        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+        
+        $relatorio = new Relatorio();
+        $relatorio->set_subtitulo("Aposentadoria Integral");
+        $relatorio->set_cabecalhoRelatorio(FALSE);
+        $relatorio->set_menuRelatorio(FALSE);
+        $relatorio->set_subTotal(TRUE);
+        $relatorio->set_totalRegistro(FALSE);
+        $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
+        $relatorio->set_colunaSomatorio(2);
+        $relatorio->set_textoSomatorio("Total de Dias Averbados:");
+        $relatorio->set_exibeSomatorioGeral(FALSE);
+        $relatorio->set_align(array('center','center','center','left'));
+        $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
+
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(2);
+        $relatorio->set_botaoVoltar(FALSE);
+        $relatorio->set_logServidor($idServidorPesquisado);
+        $relatorio->set_logDetalhe("Visualizou o Relatório de Tempo de Serviço Averbado");
+        $relatorio->show();
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+        
+        # Aposentadoria Proporcional
+        $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+        $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
+        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
+        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.idade.feminino");
+        
+        # Monta o array
+        $valores = array(array("Feminino",$idadeAposentFeminino,dias_to_diasMesAno($diasAposentFeminino)."<br/>($diasAposentFeminino dias)"),
+                         array("Masculino",$idadeAposentMasculino,dias_to_diasMesAno($diasAposentMasculino)."<br/>($diasAposentMasculino dias)"));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Aposentadoria Proporcional");
+        $tabela->set_label(array('Sexo','Idade','Tempo de Serviço Público'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
+        
+        # Aposentadoria Compulsória
+        $idadeAposentCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
+        
+        # Monta o array
+        $valores = array(array("Feminino",$idadeAposentCompulsoria),
+                         array("Masculino",$idadeAposentCompulsoria));
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Aposentadoria Compulsória");
+        $tabela->set_label(array('Sexo','Idade'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+        
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+        
+        #$painel->fecha();
+    }
+    
+##############################################################################################################################################
+    
     function exibeSomatorio(){
 
     /**
@@ -940,7 +1051,7 @@ class Aposentadoria{
 
         # Monta a tabela
         $tabela = new Tabela();
-        $tabela->set_titulo('Tempo de Serviço');
+        $tabela->set_titulo('Tempo Averbado');
         $tabela->set_conteudo($dados1);
         $tabela->set_label(array("Descrição","Dias"));
         $tabela->set_align(array("left","center"));
@@ -1097,8 +1208,8 @@ class Aposentadoria{
         $dtAposentadoriaIntegral = $this->get_dataAposentadoriaIntegral($idServidorPesquisado);
         $faltam = $diasAposentadoriaIntegral - $totalTempo;
         
-        $painel = new Callout();
-        $painel->abre();
+        #$painel = new Callout();
+        #$painel->abre();
 
         # Aposentadoria Integral
         if(jaPassou($dtAposentadoriaIntegral)){
@@ -1116,7 +1227,7 @@ class Aposentadoria{
         $tabela = new Tabela();
         $tabela->set_titulo('Aposentadoria Integral');
         $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Regra","Valor"));
+        $tabela->set_label(array("Descrição","Regra","Servidor"));
         $tabela->set_align(array("left"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->show();
@@ -1188,7 +1299,7 @@ class Aposentadoria{
             $painel->fecha();
         }
 
-        $painel->fecha();
+        #$painel->fecha();
     }
     
     ##############################################################################################################################################
@@ -1235,8 +1346,8 @@ class Aposentadoria{
         $ocorrencia = $this->get_tempoOcorrencias($idServidorPesquisado);
         $totalPublico = ($uenf + $publica) - $ocorrencia;
         
-        $painel = new Callout();
-        $painel->abre();
+        #$painel = new Callout();
+        #$painel->abre();
         
         # Aposentadoria Proporcional
         if(jaPassou($dtAposentadoriaProporcional)){
@@ -1254,7 +1365,7 @@ class Aposentadoria{
         $tabela = new Tabela();
         $tabela->set_titulo('Aposentadoria Proporcional');
         $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Regra","Valor"));
+        $tabela->set_label(array("Descrição","Regra","Servidor"));
         $tabela->set_align(array("left"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->show();
@@ -1280,7 +1391,7 @@ class Aposentadoria{
             p("O servidor já alcançou os <b>$regraTempoProporcional</b> dias de tempo serviço público para solicitar aposentadoria proporcional.","f14");
         }
 
-        $painel->fecha();
+        #$painel->fecha();
     }
     
     ##############################################################################################################################################
@@ -1305,8 +1416,8 @@ class Aposentadoria{
         $dtAposentadoriaCompulsoria = $this->get_dataAposentadoriaCompulsoria($idServidorPesquisado);
         $idadeAposentadoriaCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
     
-        $painel = new Callout();
-        $painel->abre();
+        #$painel = new Callout();
+        #$painel->abre();
         
         # Aposentadoria Compulsória
         if(jaPassou($dtAposentadoriaCompulsoria)){
@@ -1323,7 +1434,7 @@ class Aposentadoria{
         $tabela = new Tabela();
         $tabela->set_titulo('Aposentadoria Compulsória');
         $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Regra","Valor"));
+        $tabela->set_label(array("Descrição","Regra","Servidor"));
         $tabela->set_align(array("left"));
         $tabela->set_totalRegistro(FALSE);
         $tabela->show();
@@ -1338,7 +1449,7 @@ class Aposentadoria{
             p("O servidor já alcançou a idade para a aposentadoria compulsória.","f14");
         }
 
-        $painel->fecha();
+        #$painel->fecha();
     }
     ##############################################################################################################################################
     

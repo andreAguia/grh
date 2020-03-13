@@ -55,21 +55,14 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php?fase=pasta');
     
     # select da lista
-    $objeto->set_selectLista('SELECT idPasta,
-                                     CASE tipo
-                                        WHEN 1 THEN "Pasta Funcional"
-                                        WHEN 2 THEN "Processo"
-                                        ELSE "--"
-                                      END,
-                                     descricao,
+    $objeto->set_selectLista('SELECT descricao,
                                      idPasta
                                 FROM tbpasta
                           WHERE idServidor='.$idServidorPesquisado.'
-                       ORDER BY tipo, descricao');
+                       ORDER BY descricao');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT tipo,
-                                     descricao,
+    $objeto->set_selectEdita('SELECT descricao,
                                      idServidor
                                 FROM tbpasta
                                WHERE idPasta = '.$id);
@@ -81,12 +74,12 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Tipo","Descrição","Ver"));
-    $objeto->set_width(array(5,15,60.15));
-    $objeto->set_align(array("center","center","left","center"));
+    $objeto->set_label(array("Descrição","Ver"));
+    $objeto->set_width(array(80,5));
+    $objeto->set_align(array("left"));
         
-    $objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
-    $objeto->set_metodo(array(NULL,NULL,NULL,"exibePasta"));
+    #$objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
+    #$objeto->set_metodo(array(NULL,NULL,NULL,"exibePasta"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -102,20 +95,12 @@ if($acesso){
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array ('linha' => 1,
-               'nome' => 'tipo',
-               'label' => 'Tipo:',
-               'tipo' => 'combo',
-               'array' => array(array(NULL,NULL),array(1,"Pasta Funcional"),array(2,"Processo")),
-               'required' => TRUE,
-               'autofocus' => TRUE,
-               'col' => 3,
-               'size' => 30),
         array ('linha' => 2,
                'nome' => 'descricao',
                'label' => 'Descrição:',
                'tipo' => 'texto',
                'required' => TRUE,
+               'autofocus' => TRUE,
                'col' => 12,
                'size' => 250),
         array ('linha' => 3,
@@ -129,7 +114,7 @@ if($acesso){
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
     
-    # MCF
+    # Upload
     if(!vazio($id)){
         $botaoUpload = new Button("Upload","?fase=upload&id=".$id);
         $botaoUpload->set_title("Upload do Documento");

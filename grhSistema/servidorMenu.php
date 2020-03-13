@@ -130,12 +130,6 @@ if($acesso){
         $linkBotao1->set_title('Volta para a página anterior');
         $linkBotao1->set_accessKey('V');
         $menu->add_link($linkBotao1,"left");
-
-        # Pasta Funcional
-        $linkBotao3 = new Link("Editar","servidorPasta.php");
-        $linkBotao3->set_class('button'); 
-        $linkBotao3->set_title('Edita os documentod da pasta funcional desse servidor');
-        $menu->add_link($linkBotao3,"right");
         
         $menu->show();
         

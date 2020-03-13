@@ -682,7 +682,7 @@ pre, code{
     display: block;
     unicode-bidi: embed;
     font-family: monospace;
-    white-space: pre;
+    white-space: pre-wrap;
 
     padding: 1em;
     margin: 0px;

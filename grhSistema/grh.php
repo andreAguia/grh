@@ -30,15 +30,17 @@ if($acesso){
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_bodyOnLoad("ajaxLoadPage('grh.php?fase=resumoAlertas','divAlertas',null);");
-    #$page->set_bodyOnLoad("ajaxLoadPage('alerta.php','divAlertas',null);");
+    
+    if($fase == 'menu'){
+        $page->set_bodyOnLoad("ajaxLoadPage('grh.php?fase=resumoAlertas','divAlertas',null);");
+    }   
     $page->iniciaPagina();
     
     # Cabeçalho da Página
     if($fase <> 'resumoAlertas'){  
         AreaServidor::cabecalho();
     }
-    
+   
     # Zera sessions
     set_session('origem');                  // Informa a rotina de origem
     set_session('origemId');                // Informa o id para a origem (se precisar)
@@ -71,9 +73,15 @@ if($acesso){
     set_session('sessionPaginacao');	# Zera a session de paginação da classe modelo
     set_session('sessionLicenca');      # Zera a session do tipo de licença
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
-     
+    
     # Menu
-    if(($fase <> 'alerta') AND ($fase <> 'resumoAlertas') AND ($fase <> 'sobre') AND ($fase <> 'atualizacoes') AND ($fase <> 'aniversariantes') AND ($fase <> 'ferias')){       
+    if(($fase <> 'alerta') 
+            AND ($fase <> 'resumoAlertas') 
+            AND ($fase <> 'sobre') 
+            AND ($fase <> 'atualizacoes') 
+            AND ($fase <> 'aniversariantes') 
+            AND ($fase <> 'ferias')){
+        
         p(SISTEMA,'grhTitulo');
         p("Versão: ".VERSAO,"versao");
     
@@ -91,6 +99,12 @@ if($acesso){
         $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
         $linkVoltar->set_accessKey('i');
         $menu->add_link($linkVoltar,"left");
+        
+        # Alterações
+        $linkArea = new Link("Alterações",'?fase=atualizacoes');
+        $linkArea->set_class('button success');
+        $linkArea->set_title('Área de Procedimentos da GRH');
+	$menu->add_link($linkArea,"left");
 
         # Relatórios
         $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -112,12 +126,6 @@ if($acesso){
         $linkArea->set_title('Área de Procedimentos da GRH');
 	$menu->add_link($linkArea,"right");
         
-        # Alterações
-        $linkArea = new Link("Alterações",'../../areaServidor/sistema/areaServidor.php?fase=atualizacoes');
-        $linkArea->set_class('button success');
-        $linkArea->set_title('Área de Procedimentos da GRH');
-	$menu->add_link($linkArea,"right");
-
         $menu->show();
 
         $grid->fechaColuna();
@@ -417,6 +425,50 @@ if($acesso){
                     p('Nenhum item encontrado !!','center');
                 $callout->fecha();
             }
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+            
+##################################################################
+        
+        case "atualizacoes" :
+            
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # botão voltar
+            botaoVoltar("../../grh/grhSistema/grh.php","Voltar","Volta ao Menu principal");
+            
+            # Título
+            titulo("Detalhes das Atualizações");
+            #p("Detalhes das Atualizações","center","f16");
+            br();
+            
+            # Limita ainda mais a tela paara o painel
+            $grid = new Grid("center");
+            $grid->abreColuna(11);
+            
+            # Pega os dados 
+            $atualizacoes = $intra->get_atualizacoes();
+            
+            # Percorre os dados
+            foreach ($atualizacoes as $valor) {
+                $grid2 = new Grid("center");
+                $grid2->abreColuna(6);
+                    p("Versão: ".$valor[0],"patualizacaoL");
+                $grid2->fechaColuna();
+                $grid2->abreColuna(6);
+                    p(date_to_php($valor[1]),"patualizacaoR");
+                $grid2->fechaColuna();
+                $grid2->fechaGrid();
+                
+                p("<pre>".$valor[2]."</pre>");
+             }
+           
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

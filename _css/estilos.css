@@ -668,6 +668,42 @@ p#plsvPassou{
 div#divRegrasLsv{
     display: none;
 }
+
+/*******************************************
+ * Atualização
+ *******************************************/
+
+pre, code{
+    max-height: 750px;
+    color: #000;
+    background: #fff;
+    font-size: 14px;
+
+    display: block;
+    unicode-bidi: embed;
+    font-family: monospace;
+    white-space: pre;
+
+    padding: 1em;
+    margin: 0px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+p#patualizacaoR{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    text-align: right;
+}
+
+p#patualizacaoL{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    text-align: left;
+}
   
 /*******************************************
  * Relatórios

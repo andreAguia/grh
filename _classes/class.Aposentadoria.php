@@ -577,7 +577,7 @@ class Aposentadoria{
         # Título
         if($relatorio){
             p("Regra Geral","f16","center");
-            hr();
+            #hr();
         }else{
             titulo("Regra Geral");
             br();
@@ -922,7 +922,6 @@ class Aposentadoria{
         # Título
         if($relatorio){
             p("Tempo de Serviço","f16","center");
-            hr();
         }else{
             titulo("Tempo de Serviço");
             br();
@@ -991,19 +990,33 @@ class Aposentadoria{
                 array("Total",$totalTempo." dias<br/>(".dias_to_diasMesAno($totalTempo).")")
         );    
 
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo('Tempo Averbado');
-        $tabela->set_conteudo($dados1);
-        $tabela->set_label(array("Descrição","Dias"));
-        $tabela->set_align(array("left","center"));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                'valor' => "Total",
-                                                'operador' => '=',
-                                                'id' => 'totalTempo')));
-
-        $tabela->show();            
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Tempo Averbado");
+            $relatorio->set_label(array("Descrição","Dias"));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($dados1);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo('Tempo Averbado');
+            $tabela->set_conteudo($dados1);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                    'valor' => "Total",
+                                                    'operador' => '=',
+                                                    'id' => 'totalTempo')));
+            $tabela->show();       
+        }
+             
         $grid->fechaColuna();
 
     #############################3
@@ -1031,20 +1044,33 @@ class Aposentadoria{
             array_push($dados2,array("Total",$totalOcorrencias));
         }
 
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo('Ocorrências');
-        $tabela->set_conteudo($dados2);
-        $tabela->set_label(array("Descrição","Dias"));
-        $tabela->set_align(array("left","center"));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                       'valor' => "Total",
-                                                       'operador' => '=',
-                                                       'id' => 'totalTempo')
-        ));
-
-        $tabela->show();            
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo("Ocorrências");
+            $relatorio->set_label(array("Descrição","Dias"));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($dados1);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo('Ocorrências');
+            $tabela->set_conteudo($dados2);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                           'valor' => "Total",
+                                                           'operador' => '=',
+                                                           'id' => 'totalTempo')));
+            $tabela->show();
+        }
+        
         $grid->fechaColuna();
 
     #############################3
@@ -1062,30 +1088,45 @@ class Aposentadoria{
                   array("Total",$totalTempoGeral)
         );
 
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo('Resumo Geral');
-        $tabela->set_conteudo($dados3);
-        $tabela->set_label(array("Descrição","Dias"));
-        $tabela->set_align(array("left","center"));
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                                                    'valor' => "Total",
-                                                    'operador' => '=',
-                                                    'id' => 'totalTempo'),
-                                                array('coluna' => 0,
-                                                    'valor' => "Ocorrências",
-                                                    'operador' => '=',
-                                                    'id' => 'ocorrencia'),
-                                                 array('coluna' => 0,
-                                                       'valor' => "Dias Sobrando",
-                                                       'operador' => '=',
-                                                       'id' => 'diasSobrando'),
-                                                 array('coluna' => 0,
-                                                       'valor' => "Dias Faltando",
-                                                       'operador' => '=',
-                                                       'id' => 'diasFaltando')));
-        $tabela->show();            
+        if($relatorio){
+            $relatorio = new Relatorio();
+            $relatorio->set_subtitulo('Resumo Geral');
+            $relatorio->set_label(array("Descrição","Dias"));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo($dados1);
+            $relatorio->set_cabecalhoRelatorio(FALSE);
+            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_totalRegistro(FALSE);
+            $relatorio->set_exibeSomatorioGeral(FALSE);
+            $relatorio->set_botaoVoltar(FALSE);
+            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->show();
+        }else{
+            $tabela = new Tabela();
+            $tabela->set_titulo('Resumo Geral');
+            $tabela->set_conteudo($dados3);
+            $tabela->set_label(array("Descrição","Dias"));
+            $tabela->set_align(array("left","center"));
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                                                        'valor' => "Total",
+                                                        'operador' => '=',
+                                                        'id' => 'totalTempo'),
+                                                    array('coluna' => 0,
+                                                        'valor' => "Ocorrências",
+                                                        'operador' => '=',
+                                                        'id' => 'ocorrencia'),
+                                                     array('coluna' => 0,
+                                                           'valor' => "Dias Sobrando",
+                                                           'operador' => '=',
+                                                           'id' => 'diasSobrando'),
+                                                     array('coluna' => 0,
+                                                           'valor' => "Dias Faltando",
+                                                           'operador' => '=',
+                                                           'id' => 'diasFaltando')));
+            $tabela->show();
+        }
+        
         $grid->fechaColuna();
         $grid->fechaGrid();
 
@@ -1106,7 +1147,6 @@ class Aposentadoria{
         # Título
         if($relatorio){
             p("Previsão de Aposentadoria","f16","center");
-            hr();
         }else{
             titulo("Previsão de Aposentadoria");
             br();
@@ -1351,9 +1391,6 @@ class Aposentadoria{
         $ocorrencia = $this->get_tempoOcorrencias($idServidorPesquisado);
         $totalPublico = ($uenf + $publica) - $ocorrencia;
         
-        #$painel = new Callout();
-        #$painel->abre();
-        
         # Aposentadoria Proporcional
         if(jaPassou($dtAposentadoriaProporcional)){
             callout("Desde $dtAposentadoriaProporcional o servidor já pode solicitar Aposentadoria Proporcional!","success");
@@ -1409,8 +1446,6 @@ class Aposentadoria{
         }else{
             p("O servidor já alcançou os <b>$regraTempoProporcional</b> dias de tempo serviço público para solicitar aposentadoria proporcional.","f14");
         }
-
-        #$painel->fecha();
     }
     
     ##############################################################################################################################################
@@ -1434,9 +1469,6 @@ class Aposentadoria{
         # Aposentadoria Compulsória
         $dtAposentadoriaCompulsoria = $this->get_dataAposentadoriaCompulsoria($idServidorPesquisado);
         $idadeAposentadoriaCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
-    
-        #$painel = new Callout();
-        #$painel->abre();
         
         # Aposentadoria Compulsória
         if(jaPassou($dtAposentadoriaCompulsoria)){
@@ -1481,8 +1513,6 @@ class Aposentadoria{
         }else{
             p("O servidor já alcançou a idade para a aposentadoria compulsória.","f14");
         }
-
-        #$painel->fecha();
     }
     ##############################################################################################################################################
     

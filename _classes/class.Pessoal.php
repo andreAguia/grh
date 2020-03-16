@@ -5302,32 +5302,4 @@ class Pessoal extends Bd {
     
 ###########################################################
     
-    public function exibePasta($id){
-    /**
-     * Exibe um link para a publicação
-     * 
-     * @param $idConcursoPublicacao integer NULL O id do Concurso
-     * 
-     * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
-     */
-        
-        # Monta o arquivo
-        $arquivo = "../../_funcional/".$id.".pdf";
-        
-        # Verifica se ele existe
-        if(file_exists($arquivo)){
-            
-            # Monta o link
-            $link = new Link(NULL,$arquivo,"Exibe o MCF");
-            $link->set_imagem(PASTA_FIGURAS."ver.png",20,20);
-            $link->set_target("_blank");
-            $link->show();
-            
-        }else{
-            echo "-";
-        }
-    }
-    
-###########################################################
-
 }

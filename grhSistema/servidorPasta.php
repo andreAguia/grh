@@ -17,7 +17,7 @@ $acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso){
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase','exibe');
     
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
@@ -52,7 +52,7 @@ if($acesso){
     $objeto->set_nome('Cadastro de documentos na Pasta Funcional');
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php?fase=pasta');
+    $objeto->set_voltarLista('servidorMenu.php');
     
     # select da lista
     $objeto->set_selectLista('SELECT descricao,
@@ -78,8 +78,8 @@ if($acesso){
     $objeto->set_width(array(80,5));
     $objeto->set_align(array("left"));
         
-    #$objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
-    #$objeto->set_metodo(array(NULL,NULL,NULL,"exibePasta"));
+    $objeto->set_classe(array(NULL,"PastaFuncional"));
+    $objeto->set_metodo(array(NULL,"exibePasta"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -125,6 +125,70 @@ if($acesso){
     ################################################################
     switch ($fase){
         case "" :
+        case "exibe" :
+            $grid = new Grid();
+            $grid->abreColuna(6);
+
+            # Título
+            tituloTable('Pasta Funcional');
+
+            br();
+
+            # Define a pasta
+            $pasta = "../../_funcional/";
+
+            # Pega os documentos
+            $select = "SELECT idPasta, 
+                              descricao
+                         FROM tbpasta
+                        WHERE idServidor = $idServidorPesquisado";
+
+            $dados = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            if($count > 0){
+
+                # Inicia o menu
+                $menu = new MenuGrafico($count);
+
+                foreach($dados as $dd){
+
+                    # Monta o arquivo
+                    $arquivo = $dd[0].".pdf";
+
+                    # Procura o arquivo
+                    if(file_exists($arquivo)){
+
+                        # Monta o botão
+                        $botao = new BotaoGrafico();
+                        $botao->set_label($dd[1]);
+                        $botao->set_url($arquivo);
+                        $botao->set_target('_blank');
+                        $botao->set_imagem(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
+                        $menu->add_item($botao);
+                    }
+
+                }
+
+                $menu->show();
+
+            }else{
+                p("Nenhum arquivo encontrado.","center");
+            }
+
+
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+
+                #############################################################
+
+                tituloTable('Processos');
+                br();
+                
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+            break;
+            
         case "listar" :
             $objeto->listar();
             break;

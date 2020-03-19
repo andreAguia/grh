@@ -208,6 +208,9 @@ if($acesso){
                     # Procura o arquivo
                     if(file_exists($arquivo)){
                         
+                        # Define as variáveis
+                        $figura = 'documentacao.png';
+                        
                         # Define o tipo para saber qual o icone
                         switch ($dd[2]){
                             case 1 :
@@ -277,6 +280,8 @@ if($acesso){
                     </form>";
                                 
                 $pasta = "../../_funcional/";
+                
+                # Extensões possíveis
                 $extensoes = array("pdf");
                 
                 $texto = "Extensões Permitidas:";

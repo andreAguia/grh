@@ -18,16 +18,13 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    
-    # Roda a rotina que verifica os status
-    $reducao = new ReducaoCargaHoraria();
-    $reducao->mudaStatus();
 	
     # Verifica a fase do programa
     $fase = get('fase');
     
     # Pega o id
     $idPessoa = get('idPessoa');
+    $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);  ##### Parei aqui
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
@@ -199,7 +196,7 @@ if($acesso){
                 $foto = new ExibeFoto();
                 $foto->set_fotoLargura(300);
                 $foto->set_fotoAltura(400);
-                $foto->set_url('?');
+                #$foto->set_url('?');
                 $foto->show($idPessoa);
                 
                 br(2);
@@ -230,28 +227,43 @@ if($acesso){
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
                 
-                # 
-                
+                # Gera a área de upload
                 echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>
-                        <p>Click aqui ou arraste o arquivo. Somente arquivos jpg ou img.</p>
+                        <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
                 $pasta = "../../_fotos/";
+                
+                # Extensões possíveis
+                $extensoes = array("jpg");
+                
+                $texto = "Extensões Permitidas:";
+                
+                foreach($extensoes as $pp){
+                    $texto .= " $pp";
+                }
+                
+                br();
+                p($texto,"f14","center");
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
-                    $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta, $idPessoa);
-                    echo $upload->salvar();
+                    $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta, $idPessoa, $extensoes);
                     
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $atividade = "Alterou a foto do servidor $nome";
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idPessoa);
-                    
-                    # Volta para o menu
-                    loadPage("?fase=exibeFoto&idPessoa=$idPessoa");
+                    # Salva e verifica se houve erro
+                    if($upload->salvar()){
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $atividade = "Alterou a foto do servidor $nome";
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idPessoa);
+echo "oi";
+                        # Volta para o menu
+                        loadPage("?fase=exibeFoto&idPessoa=$idPessoa");
+                    }else{
+                        loadPage("?fase=uploadFoto&idPessoa=$idPessoa");
+                    }
                 }
                 
                 #br(4);                

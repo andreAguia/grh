@@ -90,6 +90,7 @@ if($acesso){
         $menu->add_link($linkBotao1,"left");
 
         if(Verifica::acesso($idUsuario,1)){
+            
             # Histórico
             $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);
             $linkBotao4->set_class('button');
@@ -620,18 +621,30 @@ if($acesso){
         ##################################################################
             
             case "uploadFoto" :
+                
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
                 
-                # 
-                
+                # Gera a área de upload
                 echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>
-                        <p>Click aqui ou arraste o arquivo. Somente arquivos jpg ou img.</p>
-                        <button type='submit' name='submit'>Upload</button>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
                 $pasta = "../../_fotos/";
+                
+                # Extensões possíveis
+                $extensoes = array("jpg");
+                
+                $texto = "Extensões Permitidas:";
+                
+                foreach($extensoes as $pp){
+                    $texto .= " $pp";
+                }
+                
+                br();
+                p($texto,"f14","center");
                 
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                      

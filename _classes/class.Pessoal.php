@@ -4313,16 +4313,22 @@ class Pessoal extends Bd {
 	 */
 
 	public function get_idServidoridPessoa($idPessoa){
-            # Pega o cargo do servidor
-            $select = 'SELECT idServidor
-                         FROM tbservidor
-                        WHERE idPessoa = '.$idPessoa.'  
-                     ORDER BY idPerfil, dtAdmissao desc';
-
-            $row = parent::select($select,FALSE);
             
-            return $row[0];
-			
+            # Verifica o $idPessoa
+            if(is_null($idPessoa)){
+                return NULL;
+            }else{
+            
+                # Pega o cargo do servidor
+                $select = 'SELECT idServidor
+                             FROM tbservidor
+                            WHERE idPessoa = '.$idPessoa.'  
+                         ORDER BY idPerfil, dtAdmissao desc';
+
+                $row = parent::select($select,FALSE);
+
+                return $row[0];
+            }	
 	}        
         
         ###########################################################

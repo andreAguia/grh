@@ -49,20 +49,28 @@ if($acesso){
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo
-    $objeto->set_nome('Cadastro de documentos na Pasta Funcional');
+    $objeto->set_nome('Documentos da Pasta Funcional');
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
-    
+    $objeto->set_voltarLista('?fase=exibe&id='.$id);
+    $objeto->set_voltarForm('?fase=listar');
+        
     # select da lista
-    $objeto->set_selectLista('SELECT descricao,
+    $objeto->set_selectLista('SELECT CASE tipo
+                                        WHEN 1 THEN "Pasta"
+                                        WHEN 2 THEN "Processo"
+                                        WHEN 3 THEN "Documento"
+                                     END,
+                                     descricao,
+                                     idPasta,
                                      idPasta
                                 FROM tbpasta
                           WHERE idServidor='.$idServidorPesquisado.'
                        ORDER BY descricao');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT descricao,
+    $objeto->set_selectEdita('SELECT tipo,
+                                     descricao,
                                      idServidor
                                 FROM tbpasta
                                WHERE idPasta = '.$id);
@@ -74,12 +82,21 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Descrição","Ver"));
-    $objeto->set_width(array(80,5));
-    $objeto->set_align(array("left"));
+    $objeto->set_label(array("Tipo","Descrição","Ver","Upload"));
+    $objeto->set_width(array(15,65,5));
+    $objeto->set_align(array("center","left"));
         
-    $objeto->set_classe(array(NULL,"PastaFuncional"));
-    $objeto->set_metodo(array(NULL,"exibePasta"));
+    $objeto->set_classe(array(NULL,NULL,"PastaFuncional"));
+    $objeto->set_metodo(array(NULL,NULL,"exibePasta"));
+    
+    # Botão de Upload
+    $botao = new BotaoGrafico();
+    $botao->set_label('');    
+    $botao->set_url('?fase=upload&id=');   
+    $botao->set_imagem(PASTA_FIGURAS.'upload.png',20,20);
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array("","","",$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -95,42 +112,73 @@ if($acesso){
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array ('linha' => 2,
-               'nome' => 'descricao',
-               'label' => 'Descrição:',
-               'tipo' => 'texto',
-               'required' => TRUE,
-               'autofocus' => TRUE,
-               'col' => 12,
-               'size' => 250),
-        array ('linha' => 3,
-               'nome' => 'idServidor',
-               'label' => 'Servidor:',
-               'tipo' => 'hidden',
-               'padrao' => $idServidorPesquisado,
-               'col' => 6,
-               'size' => 10)));
+                        array('nome' => 'tipo',
+                              'label' => 'Tipo:',
+                              'tipo' => 'combo',
+                              'autofocus' => TRUE,
+                              'required' => TRUE,
+                              'array' => array(array(NULL,NULL),
+                                               array(1,'Pasta'),
+                                               array(2,'Processo'),
+                                               array(3,'Documento')),
+                              'size' => 20,
+                              'title' => 'Qual o tipo de Docuemnto',
+                              'col' => 4,
+                              'linha' => 1),        
+                       array ('linha' => 1,
+                              'nome' => 'descricao',
+                              'label' => 'Descrição:',
+                              'tipo' => 'texto',
+                              'required' => TRUE,        
+                              'col' => 8,
+                              'size' => 250),
+                       array ('linha' => 3,
+                              'nome' => 'idServidor',
+                              'label' => 'Servidor:',
+                              'tipo' => 'hidden',
+                              'padrao' => $idServidorPesquisado,
+                              'col' => 6,
+                              'size' => 10)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
-    
-    # Upload
-    if(!vazio($id)){
-        $botaoUpload = new Button("Upload","?fase=upload&id=".$id);
-        $botaoUpload->set_title("Upload do Documento");
-
-        $objeto->set_botaoEditarExtra(array($botaoUpload));
-    }
 
     ################################################################
     switch ($fase){
         case "" :
         case "exibe" :
             $grid = new Grid();
-            $grid->abreColuna(6);
+            $grid->abreColuna(12);
+            
+            # Cria um menu
+            $menu = new MenuBar();
+
+            $linkBotao1 = new Link("Voltar","servidorMenu.php");
+            $linkBotao1->set_class('button');
+            $linkBotao1->set_title('Volta para a página anterior');
+            $linkBotao1->set_accessKey('V');
+            $menu->add_link($linkBotao1,"left");
+
+            if(Verifica::acesso($idUsuario,1)){
+                
+                # Editar
+                $linkBotao5 = new Link("Editar","?fase=listar");
+                $linkBotao5->set_class('button');
+                $linkBotao5->set_title('Editar Documentos da Pasta do Servidor');
+                $menu->add_link($linkBotao5,"right");
+            }
+
+            $menu->show();
+            
+            # Dados do Servidor
+            get_DadosServidor($idServidorPesquisado);
+            
+            # Documentos            
+            $painel = new Callout();
+            $painel->abre();
 
             # Título
-            tituloTable('Pasta Funcional');
+            tituloTable('Documentos da Pasta Funcional');
 
             br();
 
@@ -139,7 +187,8 @@ if($acesso){
 
             # Pega os documentos
             $select = "SELECT idPasta, 
-                              descricao
+                              descricao,
+                              tipo
                          FROM tbpasta
                         WHERE idServidor = $idServidorPesquisado";
 
@@ -149,25 +198,40 @@ if($acesso){
             if($count > 0){
 
                 # Inicia o menu
-                $menu = new MenuGrafico($count);
+                $menu = new MenuGrafico();
 
                 foreach($dados as $dd){
 
                     # Monta o arquivo
-                    $arquivo = $dd[0].".pdf";
-
+                    $arquivo = $pasta.$dd[0].".pdf";
+                    
                     # Procura o arquivo
                     if(file_exists($arquivo)){
+                        
+                        # Define o tipo para saber qual o icone
+                        switch ($dd[2]){
+                            case 1 :
+                                $figura = 'pasta.png';
+                                break;
+                            
+                            case 2 :
+                                $figura = 'processo.png';
+                                break;
+                            
+                            case 3 :
+                                $figura = 'documentacao.png';
+                                break;
+                        }
 
                         # Monta o botão
                         $botao = new BotaoGrafico();
                         $botao->set_label($dd[1]);
                         $botao->set_url($arquivo);
                         $botao->set_target('_blank');
-                        $botao->set_imagem(PASTA_FIGURAS.'pasta.png',$tamanhoImage,$tamanhoImage);
+                        $botao->set_imagem(PASTA_FIGURAS.$figura,50,50);
                         $menu->add_item($botao);
+                        
                     }
-
                 }
 
                 $menu->show();
@@ -175,18 +239,11 @@ if($acesso){
             }else{
                 p("Nenhum arquivo encontrado.","center");
             }
-
-
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
-
-                #############################################################
-
-                tituloTable('Processos');
-                br();
+            
+            $painel->fecha();
                 
-                $grid->fechaColuna();
-                $grid->fechaGrid();
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
             
         case "listar" :
@@ -206,7 +263,7 @@ if($acesso){
                 $grid->abreColuna(12);
                                 
                 # Botão voltar
-                botaoVoltar('?fase=editar&id='.$id);
+                botaoVoltar('?fase=listar');
                 
                 tituloTable("Upload de Documento para Pasta Funcional"); 
                 
@@ -220,19 +277,33 @@ if($acesso){
                     </form>";
                                 
                 $pasta = "../../_funcional/";
+                $extensoes = array("pdf");
+                
+                $texto = "Extensões Permitidas:";
+                
+                foreach($extensoes as $pp){
+                    $texto .= " $pp";
+                }
+                
+                br();
+                p($texto,"f14","center");
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
-                    $upload = new UploadDoc($_FILES['doc'], $pasta,$id);
-                    echo $upload->salvar();
+                    $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
                     
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload de documento para pasta funcional";
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4,$idServidorPesquisado);
-                    
-                    # Volta para o menu
-                    loadPage("?fase=editar&id=.$id");
+                    # Salva e verifica se houve erro
+                    if($upload->salvar()){
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $atividade = "Fez o upload de documento para pasta funcional";
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4,$idServidorPesquisado);
+
+                        # Volta para o menu
+                        loadPage("?fase=listar");
+                    }else{
+                        loadPage("?fase=upload&id=.$id");
+                    }
                 }
                 
                 $grid->fechaColuna();

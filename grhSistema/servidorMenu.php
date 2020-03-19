@@ -89,19 +89,6 @@ if($acesso){
         $linkBotao1->set_accessKey('V');
         $menu->add_link($linkBotao1,"left");
 
-        # Pasta Funcional
-        $linkBotao3 = new Link("Pasta","?fase=pasta");
-        $linkBotao3->set_class('button'); 
-        $linkBotao3->set_title('Exibe a pasta funcional do servidor');
-        $linkBotao3->set_accessKey('P');
-        #$menu->add_link($linkBotao3,"right");
-        
-        # Foto
-        $linkBotao3 = new Link("Foto","?fase=uploadFoto");
-        $linkBotao3->set_class('button'); 
-        $linkBotao3->set_title('Upload uma nova foto');
-        #$menu->add_link($linkBotao3,"right");
-
         if(Verifica::acesso($idUsuario,1)){
             # Histórico
             $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);

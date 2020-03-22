@@ -152,7 +152,7 @@ if($acesso){
                 # Monta a tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
-                $tabela->set_titulo("Área deFotografias dos Servidores");
+                $tabela->set_titulo("Área de Fotografias dos Servidores");
                 $tabela->set_label(array("IdFuncional","Nome","Cargo","Lotação","Foto"));
                 $tabela->set_align(array("center","left","left","left"));
                 

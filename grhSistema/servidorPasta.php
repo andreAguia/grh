@@ -290,10 +290,11 @@ if($acesso){
                                 
                 $pasta = PASTA_FUNCIONAL;
                 
-                # Extensões possíveis
+                # Valores
                 $extensoes = array("pdf");
+                $postMax = ini_get('post_max_size');
                 
-                $texto = "Extensões Permitidas:";
+                $texto = "Tamanho Máximo do Arquivo: $postMax<br/>Extensões Permitidas:";
                 
                 foreach($extensoes as $pp){
                     $texto .= " $pp";

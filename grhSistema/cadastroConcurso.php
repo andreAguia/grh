@@ -916,15 +916,21 @@ if($acesso){
                                 
                 $pasta = PASTA_CONCURSO;
                 
-                # Valores
+                # Extensões possíveis
                 $extensoes = array("pdf");
-                $postMax = ini_get('post_max_size');
                 
-                $texto = "Tamanho Máximo do Arquivo: $postMax<br/>Extensões Permitidas:";
+                # Pega os valores do php.ini
+                $postMax = limpa_numero(ini_get('post_max_size'));
+                $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+                $limite = menorValor(array($postMax,$uploadMax));
                 
+                $texto = "Extensões Permitidas:";
+                                
                 foreach($extensoes as $pp){
                     $texto .= " $pp";
                 }
+                
+                $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
                 
                 br(2);
                 p($texto,"f14","center");

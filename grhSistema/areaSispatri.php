@@ -5,6 +5,14 @@
  * By Alat
  */
 
+
+#
+#       ATENÇÃO !!
+#       Esta rotina usa a classe upload que foi descontinuada
+#       Para reativá-la deve-se fazer a conversão para as novas rotinas !!
+#
+#
+
 # Reservado para o servidor logado
 $idUsuario = NULL;
 

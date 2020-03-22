@@ -102,9 +102,9 @@ if($acesso){
         
         # Alterações
         $linkArea = new Link("Alterações",'?fase=atualizacoes');
-        $linkArea->set_class('button success');
+        $linkArea->set_class('button');
         $linkArea->set_title('Área de Procedimentos da GRH');
-	$menu->add_link($linkArea,"left");
+	$menu->add_link($linkArea,"right");
 
         # Relatórios
         $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -118,13 +118,21 @@ if($acesso){
         $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
         $linkArea->set_class('button');
         $linkArea->set_title('Área do Servidor');
-	$menu->add_link($linkArea,"right");
+	#$menu->add_link($linkArea,"right");
         
-        # Procedimentos
-        $linkArea = new Link("Procedimentos",'../../areaServidor/sistema/procedimentos.php');
-        $linkArea->set_class('button');
-        $linkArea->set_title('Área de Procedimentos da GRH');
-	$menu->add_link($linkArea,"right");
+        # Administração do Sistema
+        if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+            # Procedimentos
+            $linkArea = new Link("Procedimentos",'../../areaServidor/sistema/procedimentos.php');
+            $linkArea->set_class('button success');
+            $linkArea->set_title('Área de Procedimentos da GRH');
+            $menu->add_link($linkArea,"right");
+        
+            $linkAdm = new Link("Administração","../../areaServidor/sistema/administracao.php");
+            $linkAdm->set_class('button success');
+            $linkAdm->set_title('Administração dos Sistemas');
+            $menu->add_link($linkAdm,"right");
+        }
         
         $menu->show();
 
@@ -401,30 +409,19 @@ if($acesso){
             $titulo = "Aniversariantes de ".get_nomeMes($parametroMes);
             
             # Tabela
-            if($count > 0){
-                $tabela = new Tabela();
-                $tabela->set_conteudo($result);
-                $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
-                $tabela->set_align(array("center","left","left","left"));
-                $tabela->set_classe(array(NULL,NULL,'Pessoal','Pessoal','Pessoal'));
-                $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfilSimples'));
-                $tabela->set_titulo($titulo);
-                if(date("m") == $parametroMes){
-                    $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));
-                }
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
-                $tabela->show();
-            
-            }else{
-
-                br();
-                tituloTable($titulo);
-                $callout = new Callout();
-                $callout->abre();
-                    p('Nenhum item encontrado !!','center');
-                $callout->fecha();
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(array("Dia","Nome","Lotação","Cargo","Perfil"));
+            $tabela->set_align(array("center","left","left","left"));
+            $tabela->set_classe(array(NULL,NULL,'Pessoal','Pessoal','Pessoal'));
+            $tabela->set_metodo(array(NULL,NULL,'get_lotacao','get_cargo','get_perfilSimples'));
+            $tabela->set_titulo($titulo);
+            if(date("m") == $parametroMes){
+                $tabela->set_formatacaoCondicional(array(array('coluna' => 0,'valor' => date("d"),'operador' => '=','id' => 'aniversariante')));
             }
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+            $tabela->show();
             
             $grid->fechaColuna();
             $grid->fechaGrid();

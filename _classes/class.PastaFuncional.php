@@ -75,7 +75,7 @@ class PastaFuncional
      */
         
         # Monta o arquivo
-        $arquivo = "../../_funcional/".$id.".pdf";
+        $arquivo = PASTA_FUNCIONAL.$id.".pdf";
         
         # Verifica se ele existe
         if(file_exists($arquivo)){

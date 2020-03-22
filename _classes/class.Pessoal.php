@@ -5290,7 +5290,7 @@ class Pessoal extends Bd {
      */
         
         # Monta o arquivo
-        $arquivo = "../../_mcf/".$id.".pdf";
+        $arquivo = PASTA_MCF.$id.".pdf";
         
         # Verifica se ele existe
         if(file_exists($arquivo)){

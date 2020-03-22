@@ -467,7 +467,7 @@ class Grh{
                 $idPessoa = $pessoal->get_idPessoa($idServidor);
 
                 # Define a pasta
-                $arquivo = "../../_fotos/$idPessoa.jpg";
+                $arquivo = PASTA_FOTOS."$idPessoa.jpg";
 
                 # Verifica se tem pasta desse servidor
                 if(file_exists($arquivo)){

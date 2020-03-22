@@ -11,16 +11,22 @@ define("PASTA_CLASSES_ADMIN","../../areaServidor/_classes/");       # Classes do
 define("PASTA_CLASSES","../_classes/");                             # Classes Específicas
 
 # Funções
-define("PASTA_FUNCOES_GERAIS","../../_framework/_funcoesGerais/"); # Funções Gerais
-define("PASTA_FUNCOES","../_funcoes/");                            # Funções Específicas
+define("PASTA_FUNCOES_GERAIS","../../_framework/_funcoesGerais/");  # Funções Gerais
+define("PASTA_FUNCOES","../_funcoes/");                             # Funções Específicas
 
 # Figuras
-define("PASTA_FIGURAS_GERAIS","../../_framework/_imgGerais/");     # Figuras Gerais
-define("PASTA_FIGURAS","../_img/");                                # Figuras Específicas
+define("PASTA_FIGURAS_GERAIS","../../_framework/_imgGerais/");      # Figuras Gerais
+define("PASTA_FIGURAS","../_img/");                                 # Figuras Específicas
 
 # Estilos
-define("PASTA_ESTILOS_GERAIS","../../_framework/_cssGerais/");     # Estilos Gerais (Foundation)
-define("PASTA_ESTILOS","../_css/");                                # Estilos Específicos
+define("PASTA_ESTILOS_GERAIS","../../_framework/_cssGerais/");      # Estilos Gerais (Foundation)
+define("PASTA_ESTILOS","../_css/");                                 # Estilos Específicos
+
+# Uploads
+define("PASTA_FOTOS","../../_arquivos/fotos/");                     # Fotos dos Servidores
+define("PASTA_MCF","../../_arquivos/mcf/");                         # MCF dos Servidores
+define("PASTA_CONCURSO","../../_arquivos/concurso/");               # Publicações de concurso
+define("PASTA_FUNCIONAL","../../_arquivos/pastaFuncional/");        # Pasta Funcional do Servidor
 
 # Fontes para PDF
 #define('FPDF_FONTPATH','../../_framework/_pdfFont/');

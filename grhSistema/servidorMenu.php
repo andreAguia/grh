@@ -93,7 +93,7 @@ if($acesso){
             
             # Histórico
             $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);
-            $linkBotao4->set_class('button');
+            $linkBotao4->set_class('button success');
             $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');        
             $linkBotao4->set_accessKey('H');
             $menu->add_link($linkBotao4,"right");
@@ -180,7 +180,7 @@ if($acesso){
                 br();
             
                 # Define a pasta
-                $pasta = "../../_arquivo/";
+                $pasta = "../../_arquivos/_arquivo/";
 
                 $achei = NULL;
 
@@ -197,7 +197,7 @@ if($acesso){
 
                     # Inicia o menu
                     $tamanhoImage = 60;
-                    $menu = new MenuGrafico(1);
+                    $menu = new MenuGrafico();
 
                     # pasta
                     $ponteiro  = opendir($achei."/");
@@ -251,7 +251,7 @@ if($acesso){
 
                     # Inicia o menu
                     $tamanhoImage = 60;
-                    $menu = new MenuGrafico(4);
+                    $menu = new MenuGrafico();
 
                     # pasta
                     $ponteiro  = opendir($achei."/");
@@ -307,7 +307,7 @@ if($acesso){
                 br();
             
                 # Define a pasta
-                $pasta = "../../_funcional/";
+                $pasta = PASTA_FUNCIONAL;
                 
                 # Pega os documentos
                 $select = "SELECT idPasta, descricao
@@ -581,7 +581,7 @@ if($acesso){
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                 
                 # Verifica qual arquivo foi gravado
-                $arquivo = "../../_fotos/$idPessoa.jpg";
+                $arquivo = PASTA_FOTOS."$idPessoa.jpg";
                 
                 $painel = new Callout("secondary","center");
                 $painel->abre();
@@ -632,7 +632,8 @@ if($acesso){
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
-                $pasta = "../../_fotos/";
+                $pasta = PASTA_FOTOS;
+
                 
                 # Extensões possíveis
                 $extensoes = array("jpg");
@@ -650,20 +651,22 @@ if($acesso){
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
                     $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idPessoa);
-                    echo $upload->salvar();
-                    
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $atividade = "Alterou a foto do servidor ".$pessoal->get_nome($idServidorPesquisado);
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
-                    
-                    # Volta para o menu
-                    loadPage("?");
+                    # Salva e verifica se houve erro
+                    if($upload->salvar()){
+                        
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $atividade = "Alterou a foto do servidor ".$pessoal->get_nome($idServidorPesquisado);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
+
+                        # Volta para o menu
+                        loadPage("?");
+                    }else{
+                        loadPage("?fase=uploadFoto");
+                    }
                 }
                 
-                #br();                
-                #callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

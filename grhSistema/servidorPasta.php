@@ -24,6 +24,9 @@ if($acesso){
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Verifica a origem 
+    $origem = get_session("origem");
 
     # Começa uma nova página
     $page = new Page();
@@ -50,16 +53,21 @@ if($acesso){
 
     # Nome do Modelo
     $objeto->set_nome('Documentos da Pasta Funcional');
-
+    
     # Botão de voltar da lista
-    $objeto->set_voltarLista('?fase=exibe&id='.$id);
+    if(vazio($origem)){
+        $caminhoVolta = '?fase=exibe&id='.$id;
+    }else{
+        $caminhoVolta = $origem;
+    }
+    
+    $objeto->set_voltarLista($caminhoVolta);
     $objeto->set_voltarForm('?fase=listar');
         
     # select da lista
     $objeto->set_selectLista('SELECT CASE tipo
-                                        WHEN 1 THEN "Pasta"
+                                        WHEN 1 THEN "Documento"
                                         WHEN 2 THEN "Processo"
-                                        WHEN 3 THEN "Documento"
                                      END,
                                      descricao,
                                      idPasta,
@@ -83,7 +91,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("Tipo","Descrição","Ver","Upload"));
-    $objeto->set_width(array(15,65,5));
+    $objeto->set_width(array(15,50,10,10));
     $objeto->set_align(array("center","left"));
         
     $objeto->set_classe(array(NULL,NULL,"PastaFuncional"));
@@ -118,9 +126,8 @@ if($acesso){
                               'autofocus' => TRUE,
                               'required' => TRUE,
                               'array' => array(array(NULL,NULL),
-                                               array(1,'Pasta'),
-                                               array(2,'Processo'),
-                                               array(3,'Documento')),
+                                               array(1,'Documento'),
+                                               array(2,'Processo')),
                               'size' => 20,
                               'title' => 'Qual o tipo de Docuemnto',
                               'col' => 4,
@@ -183,7 +190,7 @@ if($acesso){
             br();
 
             # Define a pasta
-            $pasta = "../../_funcional/";
+            $pasta = PASTA_FUNCIONAL;
 
             # Pega os documentos
             $select = "SELECT idPasta, 
@@ -199,6 +206,7 @@ if($acesso){
 
                 # Inicia o menu
                 $menu = new MenuGrafico();
+                $temUm = FALSE;
 
                 foreach($dados as $dd){
 
@@ -207,6 +215,7 @@ if($acesso){
                     
                     # Procura o arquivo
                     if(file_exists($arquivo)){
+                        $temUm = TRUE;
                         
                         # Define as variáveis
                         $figura = 'documentacao.png';
@@ -214,15 +223,11 @@ if($acesso){
                         # Define o tipo para saber qual o icone
                         switch ($dd[2]){
                             case 1 :
-                                $figura = 'pasta.png';
+                                $figura = 'documentacao.png';
                                 break;
                             
                             case 2 :
                                 $figura = 'processo.png';
-                                break;
-                            
-                            case 3 :
-                                $figura = 'documentacao.png';
                                 break;
                         }
 
@@ -236,8 +241,9 @@ if($acesso){
                         
                     }
                 }
-
-                $menu->show();
+                if($temUm){
+                    $menu->show();
+                }
 
             }else{
                 p("Nenhum arquivo encontrado.","center");
@@ -268,6 +274,9 @@ if($acesso){
                 # Botão voltar
                 botaoVoltar('?fase=listar');
                 
+                # Dados do Servidor
+                get_DadosServidor($idServidorPesquisado);
+                
                 tituloTable("Upload de Documento para Pasta Funcional"); 
                 
                 $grid->fechaColuna();
@@ -279,7 +288,7 @@ if($acesso){
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
-                $pasta = "../../_funcional/";
+                $pasta = PASTA_FUNCIONAL;
                 
                 # Extensões possíveis
                 $extensoes = array("pdf");
@@ -305,9 +314,9 @@ if($acesso){
                         $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4,$idServidorPesquisado);
 
                         # Volta para o menu
-                        loadPage("?fase=listar");
+                        #loadPage("?fase=listar");
                     }else{
-                        loadPage("?fase=upload&id=.$id");
+                        #loadPage("?fase=upload&id=.$id");
                     }
                 }
                 

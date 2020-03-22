@@ -1,6 +1,6 @@
 <?php
 /**
- * Área de Licença Prêmio
+ * Área de Acumulação
  *  
  * By Alat
  */

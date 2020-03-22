@@ -662,13 +662,7 @@ class Afastamento{
        }
 
        $tabela->set_conteudo($result);
-
-       if($cont>0){
-           $tabela->show();
-       }else{
-           titulotable('Servidores com Afastamentos');
-           callout("Nenhum valor a ser exibido !","secondary");
-       }
+       $tabela->show();
   }
 
   ###########################################################

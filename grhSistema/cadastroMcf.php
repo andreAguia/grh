@@ -82,6 +82,7 @@ if($acesso){
                                       mes,
                                       obs,
                                       idMcf,
+                                      idMcf,
                                       idMcf
                                  FROM tbmcf
                                 WHERE ano LIKE "%'.$parametro.'%"
@@ -102,13 +103,22 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Ano","Mês","Obs"," Ver"));
-    $objeto->set_width(array(5,10,10,50.15));
+    $objeto->set_label(array("Id","Ano","Mês","Obs"," Ver","Upload"));
+    $objeto->set_width(array(5,10,10,40,10,10));
     $objeto->set_align(array("center","center","center","left"));
     $objeto->set_funcao(array(null,null,"get_nomeMes"));
     
     $objeto->set_classe(array(NULL,NULL,NULL,NULL,"Pessoal"));
     $objeto->set_metodo(array(NULL,NULL,NULL,NULL,"exibeMcf"));
+    
+    # Botão de Upload
+    $botao = new BotaoGrafico();
+    $botao->set_label('');    
+    $botao->set_url('?fase=uploadMcf&id=');   
+    $botao->set_imagem(PASTA_FIGURAS.'upload.png',20,20);
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(NULL,NULL,NULL,NULL,NULL,$botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -150,14 +160,6 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
-    
-    # MCF
-    if(!vazio($id)){
-        $botaoMcf = new Button("Upload MCF","?fase=uploadMcf&id=".$id);
-        $botaoMcf->set_title("Upload do MCF");
-
-        $objeto->set_botaoEditarExtra(array($botaoMcf));
-    }
 
     ################################################################
     switch ($fase){
@@ -179,7 +181,7 @@ if($acesso){
                 $grid->abreColuna(12);
                                 
                 # Botão voltar
-                botaoVoltar('?fase=editar&id='.$id);
+                botaoVoltar('?fase=listar');
                 
                 tituloTable("Upload de MCf"); 
                 
@@ -192,20 +194,37 @@ if($acesso){
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
-                $pasta = "../../_mcf/";
-                     
+                $pasta = PASTA_MCF;
+                
+                # Extensões possíveis
+                $extensoes = array("pdf");
+                
+                $texto = "Extensões Permitidas:";
+                
+                foreach($extensoes as $pp){
+                    $texto .= " $pp";
+                }
+                
+                br(2);
+                p($texto,"f14","center");
+                
                 if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
-                    $upload = new UploadDoc($_FILES['doc'], $pasta,$id);
-                    echo $upload->salvar();
+                    $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
                     
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload do mcf";
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4);
-                    
-                    # Volta para o menu
-                    loadPage("?fase=editar&id=.$id");
+                    # Salva e verifica se houve erro
+                    if($upload->salvar()){
+                        
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $atividade = "Fez o upload do mcf";
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4);
+
+                        # Volta para o menu
+                        loadPage("?fase=listar");
+                    }else{
+                        loadPage("?fase=uploadMcf&id=.$id");
+                    }
                 }
                 
                 $grid->fechaColuna();

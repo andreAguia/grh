@@ -24,7 +24,7 @@ if($acesso){
     
     # Pega o id
     $idPessoa = get('idPessoa');
-    $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);  ##### Parei aqui
+    $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
@@ -179,11 +179,8 @@ if($acesso){
                 # Botão de Voltar
                 botaoVoltar("?");
                 
-                # Nome
-                $nome = $pessoal->get_nomeidPessoa($idPessoa);
-                
-                # Exibe o nome
-                titulotable($nome);
+                # Dados do Servidor
+                get_DadosServidor($idServidor);
             
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
@@ -199,7 +196,7 @@ if($acesso){
                 #$foto->set_url('?');
                 $foto->show($idPessoa);
                 
-                br(2);
+                #br();
                 
                 $link = new Link("Alterar Foto","?fase=uploadFoto&idPessoa=$idPessoa");
                 $link->set_id("alteraFoto");
@@ -221,8 +218,9 @@ if($acesso){
                 # Nome
                 $nome = $pessoal->get_nomeidPessoa($idPessoa);
                 
-                # Exibe o nome
-                titulotable($nome);
+                # Dados do Servidor
+                get_DadosServidor($idServidor);
+                br();
                 
                 $grid = new Grid("center");
                 $grid->abreColuna(6);
@@ -234,7 +232,7 @@ if($acesso){
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
-                $pasta = "../../_fotos/";
+                $pasta = PASTA_FOTOS;
                 
                 # Extensões possíveis
                 $extensoes = array("jpg");
@@ -245,7 +243,6 @@ if($acesso){
                     $texto .= " $pp";
                 }
                 
-                br();
                 p($texto,"f14","center");
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
@@ -258,7 +255,7 @@ if($acesso){
                         $data = date("Y-m-d H:i:s");
                         $atividade = "Alterou a foto do servidor $nome";
                         $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idPessoa);
-echo "oi";
+
                         # Volta para o menu
                         loadPage("?fase=exibeFoto&idPessoa=$idPessoa");
                     }else{

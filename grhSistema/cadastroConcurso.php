@@ -372,11 +372,6 @@ if($acesso){
                 $botaoInserir->set_title("Incluir Publicação");
                 $menu1->add_link($botaoInserir,"right");
 
-                # Editar
-                #$botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
-                #$botaoEditar->set_title("Editar concurso"); 
-                #$menu1->add_link($botaoEditar,"right");
-
                 $menu1->show();
                 
                 $grid->fechaColuna();
@@ -421,6 +416,7 @@ if($acesso){
                                  pag,
                                  idConcursoPublicacao,
                                  idConcursoPublicacao,
+                                 idConcursoPublicacao,
                                  idConcursoPublicacao
                             FROM tbconcursopublicacao
                            WHERE idConcurso = $id  
@@ -433,11 +429,11 @@ if($acesso){
                     # Monta a tabela
                     $tabela = new Tabela();
                     $tabela->set_conteudo($conteudo);
-                    $tabela->set_label(array("Descrição","Data","Pag","Publicação"));
+                    $tabela->set_label(array("Descrição","Data","Pag","Ver","Upload"));
                     $tabela->set_titulo("Publicações");
                     $tabela->set_funcao(array(NULL,"date_to_php"));
                     $tabela->set_align(array("left"));
-                    $tabela->set_width(array(60,10,10,10,10));
+                    $tabela->set_width(array(40,10,10,10,10));
                     
                     $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao"));
                     $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao"));
@@ -447,6 +443,15 @@ if($acesso){
                     
                     $tabela->set_excluir('cadastroConcursoPublicacao.php?fase=excluir&idConcurso='.$id);
                     $tabela->set_idCampo('idConcursoPublicacao');
+                    
+                    # Botão de Upload
+                    $botao = new BotaoGrafico();
+                    $botao->set_label('');    
+                    $botao->set_url("cadastroConcurso.php?fase=uploadPublicacao&id=$id&idConcursoPublicacao=");
+                    $botao->set_imagem(PASTA_FIGURAS.'upload.png',20,20);
+
+                    # Coloca o objeto link na tabela			
+                    $tabela->set_link(array(NULL,NULL,NULL,NULL,$botao));
                     
                     $tabela->show();
                 }else{
@@ -494,11 +499,6 @@ if($acesso){
                 $botaoRel->set_target("_blank");
                 $botaoRel->set_imagem($imagem);
                 $menu1->add_link($botaoRel,"right");
-
-                # Editar
-                #$botaoEditar = new Button("Editar Concurso","?fase=editardeFato&id=".$id);
-                #$botaoEditar->set_title("Editar concurso"); 
-                #$menu1->add_link($botaoEditar,"right");
 
                 $menu1->show();
                 
@@ -914,20 +914,37 @@ if($acesso){
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
                                 
-                $pasta = "../../_concursoPublicacoes/";
+                $pasta = PASTA_CONCURSO;
+                
+                # Extensões possíveis
+                $extensoes = array("pdf");
+                
+                $texto = "Extensões Permitidas:";
+                
+                foreach($extensoes as $pp){
+                    $texto .= " $pp";
+                }
+                
+                br(2);
+                p($texto,"f14","center");
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){
                     $upload = new UploadDoc($_FILES['doc'], $pasta,$idConcursoPublicacao);
-                    echo $upload->salvar();
                     
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload de publicação do concurso ".$concurso->get_nomeConcurso($id);
-                    $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$id);
-                    
-                    # Volta para o menu
-                    loadPage("?fase=editar&id=.$id");
+                    # Salva e verifica se houve erro
+                    if($upload->salvar()){
+                        
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $atividade = "Fez o upload de publicação do concurso ".$concurso->get_nomeConcurso($id);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$id);
+
+                        # Volta para o menu
+                        loadPage("?fase=editar&id=".$id);
+                    }else{
+                        loadPage("cadastroConcurso.php?fase=uploadPublicacao&id=$id&idConcursoPublicacao=$idConcursoPublicacao");
+                    }
                 }
                 
                 $grid->fechaColuna();

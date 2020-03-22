@@ -75,7 +75,7 @@ class ConcursoPublicacao
      */
         
         # Monta o arquivo
-        $arquivo = "../../_concursoPublicacoes/".$idConcursoPublicacao.".pdf";
+        $arquivo = PASTA_CONCURSO.$idConcursoPublicacao.".pdf";
         
         # Verifica se ele existe
         if(file_exists($arquivo)){

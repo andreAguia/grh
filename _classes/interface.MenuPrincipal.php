@@ -488,6 +488,16 @@ class MenuPrincipal{
         $botao->set_title('Controle de MCF');
         $menu->add_item($botao);
         
+        # Controle de pastas Digitalizadas
+        if(Verifica::acesso($this->idUsuario,4)){
+            $botao = new BotaoGrafico();
+            $botao->set_label('Pastas Digitalizadas');
+            $botao->set_url('cadastroPasta.php');
+            $botao->set_imagem(PASTA_FIGURAS.'funcional.jpg',$tamanhoImage,$tamanhoImage);
+            $botao->set_title('Controle de pastas digitalizadas');
+            $menu->add_item($botao);
+        }
+        
         if(Verifica::acesso($this->idUsuario,1)){
             $botao = new BotaoGrafico();
             $botao->set_label('Recadastramento');

@@ -76,7 +76,7 @@ class ExibeFoto{
         $menu = new MenuGrafico(1);
             
         # Define a pasta
-        $arquivo = "../../_fotos/$idPessoa.jpg";
+        $arquivo = PASTA_FOTOS."$idPessoa.jpg";
 
         # Verifica se tem pasta desse servidor
         if(file_exists($arquivo)){

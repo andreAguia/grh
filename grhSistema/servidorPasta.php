@@ -314,9 +314,9 @@ if($acesso){
                         $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4,$idServidorPesquisado);
 
                         # Volta para o menu
-                        #loadPage("?fase=listar");
+                        loadPage("?fase=listar");
                     }else{
-                        #loadPage("?fase=upload&id=.$id");
+                        loadPage("?fase=upload&id=.$id");
                     }
                 }
                 

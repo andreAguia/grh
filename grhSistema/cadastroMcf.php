@@ -221,9 +221,9 @@ if($acesso){
                         $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4);
 
                         # Volta para o menu
-                        #loadPage("?fase=listar");
+                        loadPage("?fase=listar");
                     }else{
-                        #loadPage("?fase=uploadMcf&id=.$id");
+                        loadPage("?fase=uploadMcf&id=.$id");
                     }
                 }
                 

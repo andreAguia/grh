@@ -209,7 +209,7 @@ class MenuPrincipal{
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(5);
+        $menu = new MenuGrafico(4);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Afastamentos');
@@ -248,7 +248,7 @@ class MenuPrincipal{
         $botao->set_url('?fase=resumoAlertas');
         $botao->set_imagem(PASTA_FIGURAS.'aviso.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Alertas do Sistema');
-        $menu->add_item($botao);
+        #$menu->add_item($botao);
         
         $menu->show();
         $painel->fecha();

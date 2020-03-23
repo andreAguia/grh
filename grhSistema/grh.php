@@ -121,6 +121,12 @@ if($acesso){
             $linkArea->set_class('button');
             $linkArea->set_title('Área de Procedimentos da GRH');
             $menu->add_link($linkArea,"right");
+            
+            # Alertas
+            $linkArea = new Link("Alertas","?fase=resumoAlertas");
+            $linkArea->set_class('button alert');
+            $linkArea->set_title('Alertas do Sistema');
+            $menu->add_link($linkArea,"right");
 
             # Relatórios
             $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
@@ -130,11 +136,7 @@ if($acesso){
             $botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel,"right");
 
-            # Área do Servidor
-            $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
-            $linkArea->set_class('button');
-            $linkArea->set_title('Área do Servidor');
-            #$menu->add_link($linkArea,"right");
+            
 
             # Administração do Sistema
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores

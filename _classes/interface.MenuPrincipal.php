@@ -54,7 +54,7 @@ class MenuPrincipal{
         # Módulos
         $this->moduloBalcao();
         $this->moduloAniversariantes();
-        $this->moduloAlertas();
+        #$this->moduloAlertas();
         
         # Calendário
         $cal = new Calendario();
@@ -209,7 +209,7 @@ class MenuPrincipal{
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(5);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Afastamentos');
@@ -244,12 +244,11 @@ class MenuPrincipal{
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Procedimentos');
-        #$botao->set_target('blank');
-        $botao->set_url('../../areaServidor/sistema/procedimentos.php');
-        $botao->set_imagem(PASTA_FIGURAS.'procedimentos.png',$tamanhoImage,$tamanhoImage);
-        $botao->set_title('Área de Procedimentos da GRH');
-        #$menu->add_item($botao);
+        $botao->set_label('Alertas');
+        $botao->set_url('?fase=resumoAlertas');
+        $botao->set_imagem(PASTA_FIGURAS.'aviso.png',$tamanhoImage,$tamanhoImage);
+        $botao->set_title('Alertas do Sistema');
+        $menu->add_item($botao);
         
         $menu->show();
         $painel->fecha();

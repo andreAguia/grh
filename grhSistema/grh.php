@@ -30,16 +30,10 @@ if($acesso){
 
     # Começa uma nova página
     $page = new Page();
-    
-    if($fase == 'menu'){
-        $page->set_bodyOnLoad("ajaxLoadPage('grh.php?fase=resumoAlertas','divAlertas',null);");
-    }   
     $page->iniciaPagina();
     
     # Cabeçalho da Página
-    if($fase <> 'resumoAlertas'){  
-        AreaServidor::cabecalho();
-    }
+    AreaServidor::cabecalho();
    
     # Zera sessions
     set_session('origem');                  // Informa a rotina de origem
@@ -74,101 +68,92 @@ if($acesso){
     set_session('sessionLicenca');      # Zera a session do tipo de licença
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
     
-    # Menu
-    if(($fase <> 'alerta') 
-            AND ($fase <> 'resumoAlertas') 
-            AND ($fase <> 'sobre') 
-            AND ($fase <> 'atualizacoes') 
-            AND ($fase <> 'aniversariantes') 
-            AND ($fase <> 'ferias')){
-        
-        p(SISTEMA,'grhTitulo');
-        p("Versão: ".VERSAO,"versao");
-    
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(12);
-        
-        # Perfil
-        $idPessoa = $intra->get_idPessoa($idUsuario);
-        $nickUser = $intra->get_nickUsuario($idUsuario);
-        $title = "Usuário: $nickUser";
-        
-        $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
-        $figura->set_id('perfil');
-        $figura->set_onclick("abreFechaDivId('menuPerfil');");
-        $figura->show();
-        
-        $div = new Div("menuPerfil");
-        $div->abre();
-        # Cria um menu 
-            titulo("Usuário");
-            
-            $menu = new Menu("menuPerfilUsuario");
-            
-            $menu->add_item('link','Trocar Senha','../../areaServidor/sistema/trocarSenha.php','Altera a senha do usuário logado');  
-            #$menu->add_item('link','Histórico','/areaServidor/sistema/usuarios.php?fase=exibeAtividades&id='.$idUsuario);
-
-            $menu->show();
-        $div->fecha();
-
-        # Cria um menu
-        $menu = new MenuBar();
-
-        # Voltar
-        $linkVoltar = new Link("Sair","../../areaServidor/sistema/login.php");
-        $linkVoltar->set_class('button');
-        $linkVoltar->set_title('Sair do Sistema');
-        $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
-        $linkVoltar->set_accessKey('i');
-        $menu->add_link($linkVoltar,"left");
-        
-        # Alterações
-        $linkArea = new Link("Alterações",'?fase=atualizacoes');
-        $linkArea->set_class('button');
-        $linkArea->set_title('Área de Procedimentos da GRH');
-	$menu->add_link($linkArea,"right");
-
-        # Relatórios
-        $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
-        $botaoRel = new Button();
-        $botaoRel->set_url("grhRelatorios.php");
-        $botaoRel->set_title("Relatórios dos Sistema");
-        $botaoRel->set_imagem($imagem1);
-        $menu->add_link($botaoRel,"right");
-        
-        # Área do Servidor
-        $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
-        $linkArea->set_class('button');
-        $linkArea->set_title('Área do Servidor');
-	#$menu->add_link($linkArea,"right");
-        
-        # Administração do Sistema
-        if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-            # Procedimentos
-            $linkArea = new Link("Procedimentos",'../../areaServidor/sistema/procedimentos.php');
-            $linkArea->set_class('button success');
-            $linkArea->set_title('Área de Procedimentos da GRH');
-            $menu->add_link($linkArea,"right");
-        
-            $linkAdm = new Link("Administração","../../areaServidor/sistema/administracao.php");
-            $linkAdm->set_class('button success');
-            $linkAdm->set_title('Administração dos Sistemas');
-            $menu->add_link($linkAdm,"right");
-        }
-        
-        $menu->show();
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-    }
-    
 ##################################################################
     
     # Menu
     switch ($fase){	
         # Exibe o Menu Inicial
         case "menu" :
+            
+            p(SISTEMA,'grhTitulo');
+            p("Versão: ".VERSAO,"versao");
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Perfil
+            $idPessoa = $intra->get_idPessoa($idUsuario);
+            $nickUser = $intra->get_nickUsuario($idUsuario);
+            $title = "Usuário: $nickUser";
+
+            $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
+            $figura->set_id('perfil');
+            $figura->set_onclick("abreFechaDivId('menuPerfil');");
+            $figura->show();
+
+            $div = new Div("menuPerfil");
+            $div->abre();
+            # Cria um menu 
+                titulo("Usuário");
+
+                $menu = new Menu("menuPerfilUsuario");
+
+                $menu->add_item('link','Trocar Senha','../../areaServidor/sistema/trocarSenha.php','Altera a senha do usuário logado');  
+                #$menu->add_item('link','Histórico','/areaServidor/sistema/usuarios.php?fase=exibeAtividades&id='.$idUsuario);
+
+                $menu->show();
+            $div->fecha();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Sair","../../areaServidor/sistema/login.php");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Sair do Sistema');
+            $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
+            $linkVoltar->set_accessKey('i');
+            $menu->add_link($linkVoltar,"left");
+
+            # Alterações
+            $linkArea = new Link("Alterações",'?fase=atualizacoes');
+            $linkArea->set_class('button');
+            $linkArea->set_title('Área de Procedimentos da GRH');
+            $menu->add_link($linkArea,"right");
+
+            # Relatórios
+            $imagem1 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $botaoRel = new Button();
+            $botaoRel->set_url("grhRelatorios.php");
+            $botaoRel->set_title("Relatórios dos Sistema");
+            $botaoRel->set_imagem($imagem1);
+            $menu->add_link($botaoRel,"right");
+
+            # Área do Servidor
+            $linkArea = new Link("Área do Servidor","../../areaServidor/sistema/areaServidor.php");
+            $linkArea->set_class('button');
+            $linkArea->set_title('Área do Servidor');
+            #$menu->add_link($linkArea,"right");
+
+            # Administração do Sistema
+            if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
+                # Procedimentos
+                $linkArea = new Link("Procedimentos",'../../areaServidor/sistema/procedimentos.php');
+                $linkArea->set_class('button success');
+                $linkArea->set_title('Área de Procedimentos da GRH');
+                $menu->add_link($linkArea,"right");
+
+                $linkAdm = new Link("Administração","../../areaServidor/sistema/administracao.php");
+                $linkAdm->set_class('button success');
+                $linkAdm->set_title('Administração dos Sistemas');
+                $menu->add_link($linkAdm,"right");
+            }
+
+            $menu->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             
             ########
             
@@ -213,13 +198,43 @@ if($acesso){
 ##################################################################	
 
         case "resumoAlertas" :
-            titulo('Alertas');
-            br();                
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            br();
+            titulo('Alertas do Sistema');
+            br(5);
+            aguarde("Isto pode demorar um pouquinho...");
+            br(5);
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            
+            loadPage("?fase=resumoAlertas2");
+            break;
+            
+############
+
+        case "resumoAlertas2" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            botaoVoltar("?");
+            titulo('Alertas do Sistema');
+            $painel = new Callout();
+            $painel->abre();
+            
             $checkup = New Checkup(FALSE);
             
             echo "<ul class='checkupResumo'>";
             $checkup->get_all();
             echo "</ul>";
+            
+            $painel->fecha();
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
 
 ##################################################################	
@@ -286,7 +301,7 @@ if($acesso){
 
         case "alerta" :
             # Botão voltar
-            botaoVoltar('?');
+            botaoVoltar('?fase=resumoAlertas');
             
             # Limita o tamanho da tela
             $grid = new Grid();

@@ -71,11 +71,6 @@ if($acesso){
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar,"left");
-            
-            # Incluir
-            $botaoInserir = new Button("Incluir","?fase=incluir");
-            $botaoInserir->set_title("Incluir um Servidor"); 
-            $menu1->add_link($botaoInserir,"right");
 
             $menu1->show();
             

@@ -70,6 +70,17 @@ img#perfil{
     cursor:pointer;
 }
 
+div#menuPerfil{
+    display: none;
+    position: absolute;
+    border:#000 solid thin;
+    top: 70px;
+    right: 30px;
+    width: 130px;
+    height: 80px;
+    background-color: #ff; 
+}
+
 /*******************************************
  * Check up
  *******************************************/

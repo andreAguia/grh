@@ -92,12 +92,25 @@ if($acesso){
         # Perfil
         $idPessoa = $intra->get_idPessoa($idUsuario);
         $nickUser = $intra->get_nickUsuario($idUsuario);
-        $title = "Usuário Logado: $nickUser - Clique para alterar a senha.";
+        $title = "Usuário: $nickUser";
         
         $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
         $figura->set_id('perfil');
-        $figura->set_onclick("../../areaServidor/sistema/trocarSenha.php");
+        $figura->set_onclick("abreFechaDivId('menuPerfil');");
         $figura->show();
+        
+        $div = new Div("menuPerfil");
+        $div->abre();
+        # Cria um menu 
+            titulo("Usuário");
+            
+            $menu = new Menu("menuPerfilUsuario");
+            
+            $menu->add_item('link','Trocar Senha','../../areaServidor/sistema/trocarSenha.php','Altera a senha do usuário logado');  
+            #$menu->add_item('link','Histórico','/areaServidor/sistema/usuarios.php?fase=exibeAtividades&id='.$idUsuario);
+
+            $menu->show();
+        $div->fecha();
 
         # Cria um menu
         $menu = new MenuBar();

@@ -73,12 +73,21 @@ img#perfil{
 div#menuPerfil{
     display: none;
     position: absolute;
-    border:#000 solid thin;
+    border:#8a8a8a solid thin;
     top: 70px;
     right: 30px;
-    width: 130px;
-    height: 80px;
-    background-color: #ff; 
+    width: 300px;
+    height:200px;
+    background-color: #fff;
+    border-radius: 5% 5% 5% 5%;
+    padding: 10px;
+}
+
+p#puser{
+    font-size: 10px;
+    padding: 1px;
+    margin: 0px;
+    text-align: left;
 }
 
 /*******************************************

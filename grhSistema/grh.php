@@ -82,29 +82,6 @@ if($acesso){
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            # Perfil
-            $idPessoa = $intra->get_idPessoa($idUsuario);
-            $nickUser = $intra->get_nickUsuario($idUsuario);
-            $title = "Usuário: $nickUser";
-
-            $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
-            $figura->set_id('perfil');
-            $figura->set_onclick("abreFechaDivId('menuPerfil');");
-            $figura->show();
-
-            $div = new Div("menuPerfil");
-            $div->abre();
-            # Cria um menu 
-                titulo("Usuário");
-
-                $menu = new Menu("menuPerfilUsuario");
-
-                $menu->add_item('link','Trocar Senha','../../areaServidor/sistema/trocarSenha.php','Altera a senha do usuário logado');  
-                #$menu->add_item('link','Histórico','/areaServidor/sistema/usuarios.php?fase=exibeAtividades&id='.$idUsuario);
-
-                $menu->show();
-            $div->fecha();
-
             # Cria um menu
             $menu = new MenuBar();
 
@@ -152,8 +129,8 @@ if($acesso){
                 $menu->add_link($linkAdm,"right");
             }
 
-            $menu->show();
-
+            $menu->show();            
+            
             $grid->fechaColuna();
             $grid->fechaGrid();
             
@@ -189,6 +166,38 @@ if($acesso){
 
             # monta o menu principal
             $menu = new MenuPrincipal($idUsuario);
+            
+            # Perfil
+            $idPessoa = $intra->get_idPessoa($idUsuario);
+            $nickUser = $intra->get_nickUsuario($idUsuario);
+            $title = "Usuário: $nickUser";
+
+            $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
+            $figura->set_id('perfil');
+            $figura->set_onclick("abreFechaDivId('menuPerfil');");
+            $figura->show();
+
+            $div = new Div("menuPerfil");
+            $div->abre();
+            
+                $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,70,70);
+                $figura->set_id('perfil');
+                $figura->show();
+                
+                br();
+                p("Usuário:","puser");
+                p($intra->get_nickUsuario($idUsuario),"f12","left");
+                
+                p("Nome:","puser");
+                p($intra->get_nomeUsuario($idUsuario),"f12","left");
+                
+                # Trocar Senha
+                $botao = new Link("Trocar Senha",'../../areaServidor/sistema/trocarSenha.php');
+                $botao->set_class('button small');
+                $botao->set_title('Altera a senha do usuário logado');
+                $botao->show();
+            $div->fecha();
+
     
             # Zera a session de alerta
             set_session('alerta');

@@ -88,6 +88,16 @@ if($acesso){
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
+        
+        # Perfil
+        $idPessoa = $intra->get_idPessoa($idUsuario);
+        $nickUser = $intra->get_nickUsuario($idUsuario);
+        $title = "Usuário Logado: $nickUser - Clique para alterar a senha.";
+        
+        $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
+        $figura->set_id('perfil');
+        $figura->set_onclick("../../areaServidor/sistema/trocarSenha.php");
+        $figura->show();
 
         # Cria um menu
         $menu = new MenuBar();

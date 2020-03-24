@@ -81,6 +81,8 @@ if($acesso){
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            
 
             # Cria um menu
             $menu = new MenuBar();
@@ -171,15 +173,16 @@ if($acesso){
             $idPessoa = $intra->get_idPessoa($idUsuario);
             $nickUser = $intra->get_nickUsuario($idUsuario);
             $title = "Usuário: $nickUser";
-
-            $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,40,40);
-            $figura->set_id('perfil');
-            $figura->set_onclick("abreFechaDivId('menuPerfil');");
-            $figura->show();
-
+            
             $div = new Div("menuPerfil");
             $div->abre();
             
+            echo '<button class="button" type="button" data-toggle="example-dropdown-1">'.$nickUser.'</button>';
+            
+            $div->fecha();
+                        
+            echo '<div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true" data-hover-pane="true">';
+                
                 $figura = new Imagem(PASTA_FOTOS.$idPessoa.'.jpg',$title,70,70);
                 $figura->set_id('perfil');
                 $figura->show();
@@ -196,8 +199,9 @@ if($acesso){
                 $botao->set_class('button small');
                 $botao->set_title('Altera a senha do usuário logado');
                 $botao->show();
-            $div->fecha();
-
+                
+            
+            echo '</div>';
     
             # Zera a session de alerta
             set_session('alerta');

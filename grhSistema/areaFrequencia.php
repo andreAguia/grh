@@ -37,12 +37,19 @@ if($acesso){
     # Pega os parâmetros
     $parametroAno = post('parametroAno',get_session('parametroAno',date('Y')));
     $parametroMes = post('parametroMes',get_session('parametroMes',date('m')));
-    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao',66));
+    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));    
+    $parametroTipo = post('parametroTipo',get_session('parametroTipo'));
+    
+    # atribui lotação padrão quanfo vem de grh.php
+    if($grh){
+        $parametroLotacao = 66;
+    }
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno',$parametroAno);
     set_session('parametroMes',$parametroMes);
     set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroTipo',$parametroTipo);
 
     # Começa uma nova página
     $page = new Page();
@@ -128,7 +135,7 @@ if($acesso){
             $controle->set_valor($parametroMes);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             # Lotação
@@ -139,6 +146,8 @@ if($acesso){
                                            WHERE ativo)
                                         ORDER BY 2');
             
+            array_unshift($result,array(NULL,"Todos"));
+            
             $controle = new Input('parametroLotacao','combo','Lotação:',1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Lotação');
@@ -146,7 +155,27 @@ if($acesso){
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(7);
+            $controle->set_col(5);
+            $form->add_item($controle);
+            
+            # Tipo do afastamento
+            $result = $pessoal->select('SELECT idTpLicenca,nome FROM tbtipolicenca ORDER BY nome'); // Licenças gerais
+            $result[] = array("ferias","Ferias");
+            $result[] = array("faltas","Faltas Abonadas");
+            $result[] = array("TTRE","Trabalhando TRE");
+            $result[] = array("FTRE","Folga TRE");
+            
+            array_unshift($result,array(NULL,"Todos"));
+            
+            
+            $controle = new Input('parametroTipo','combo','Tipo:',1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por tipo de afastamento.');
+            $controle->set_array($result);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -157,6 +186,7 @@ if($acesso){
             $afast = new Afastamento();
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
+            $afast->set_tipo($parametroTipo);
             $afast->set_lotacao($parametroLotacao);
             $afast->set_linkEditar('?fase=editaServidor');
             $afast->exibeTabela();
@@ -190,6 +220,7 @@ if($acesso){
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
             $afast->set_lotacao($parametroLotacao);
+            $afast->set_tipo($parametroTipo);
             $afast->set_linkEditar('?fase=editaServidor');
             $afast->exibeRelatorio();
             break;

@@ -89,7 +89,7 @@ if($acesso){
                 $menu->add_item('linkAjax','Financeiro','?fase=financeiro','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Formação','?fase=formacao','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Geral','?fase=geral','','','divMenuRelatorioGrh');
-                $menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
+                #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Lotação','?fase=lotacao','','','divMenuRelatorioGrh');                
                 $menu->add_item('linkAjax','Movimentação de Pessoal','?fase=sigFis','','','divMenuRelatorioGrh');
                 $menu->add_item('linkAjax','Outros','?fase=outros','','','divMenuRelatorioGrh');
@@ -324,7 +324,9 @@ if($acesso){
             break;    
 
         ######################################
-
+        /*
+         * Retirado devido a área de afastamento já permite relatórios completos
+         
         case "licenca";
             $menu = new Menu();
             $menu->add_item('titulo','Licença e Afastamentos');
@@ -345,7 +347,9 @@ if($acesso){
             }
             $menu->show();
             break;    
-
+            
+         * 
+         */
         ######################################
 
         case "lotacao";

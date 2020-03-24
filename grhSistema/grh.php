@@ -49,6 +49,7 @@ if($acesso){
     set_session('parametroCurso');
     set_session('parametroInstituicao');
     set_session('parametroNivel');
+    set_session('parametroTipo');
     set_session('parametroEscolaridade');
     set_session('parametroPerfil');
     set_session('parametroSituacao');
@@ -114,8 +115,6 @@ if($acesso){
             $botaoRel->set_title("Relatórios dos Sistema");
             $botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel,"right");
-
-            
 
             # Administração do Sistema
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores

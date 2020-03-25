@@ -245,24 +245,14 @@ class MenuServidor{
         $botao->set_imagem(PASTA_FIGURAS.'obs.jpg',$this->tamanhoImagem,$this->tamanhoImagem);
         $botao->set_title('Observações Gerais do Servidor');
         $menu->add_item($botao);
-
+        
         # Pasta Funcional
         $botao = new BotaoGrafico();
         $botao->set_label('Pasta Funcional');
-        $botao->set_url('?fase=pasta');
+        $botao->set_url('servidorPasta.php');
         $botao->set_imagem(PASTA_FIGURAS.'arquivo.png',$this->tamanhoImagem,$this->tamanhoImagem);
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
-        
-        # Pasta Funcional Nova
-        if(Verifica::acesso($this->idUsuario,1)){   // Somente Administradores
-            $botao = new BotaoGrafico();
-            $botao->set_label('Pasta Funcional');
-            $botao->set_url('servidorPasta.php');
-            $botao->set_imagem(PASTA_FIGURAS.'arquivo.png',$this->tamanhoImagem,$this->tamanhoImagem);
-            $botao->set_title('Pasta funcional do servidor');
-            $menu->add_item($botao);
-        }
 
         # Elogios e Advertências
         if($this->perfil <> 10){          // Se não for bolsista

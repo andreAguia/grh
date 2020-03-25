@@ -166,7 +166,7 @@ if($acesso){
             $linkBotao1->set_accessKey('V');
             $menu->add_link($linkBotao1,"left");
 
-            if(Verifica::acesso($idUsuario,1)){
+            if(Verifica::acesso($idUsuario,4)){
                 
                 # Editar
                 $linkBotao5 = new Link("Editar","?fase=listar");
@@ -180,13 +180,18 @@ if($acesso){
             # Dados do Servidor
             get_DadosServidor($idServidorPesquisado);
             
-            # Documentos            
+            $grid->fechaColuna();
+            
+            ###############################################################
+            # Documentos
+            $grid->abreColuna(6);
+            
+            # Painel
             $painel = new Callout();
             $painel->abre();
 
             # Título
-            tituloTable('Documentos da Pasta Funcional');
-
+            tituloTable('Documentos');
             br();
 
             # Define a pasta
@@ -223,28 +228,95 @@ if($acesso){
                         # Define o tipo para saber qual o icone
                         switch ($dd[2]){
                             case 1 :
-                                $figura = 'documentacao.png';
-                                break;
-                            
-                            case 2 :
-                                $figura = 'processo.png';
+                                # Monta o botão
+                                $botao = new BotaoGrafico();
+                                $botao->set_label($dd[1]);
+                                $botao->set_url($arquivo);
+                                $botao->set_target('_blank');
+                                $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',50,50);
+                                $menu->add_item($botao);
                                 break;
                         }
-
-                        # Monta o botão
-                        $botao = new BotaoGrafico();
-                        $botao->set_label($dd[1]);
-                        $botao->set_url($arquivo);
-                        $botao->set_target('_blank');
-                        $botao->set_imagem(PASTA_FIGURAS.$figura,50,50);
-                        $menu->add_item($botao);
-                        
                     }
                 }
                 if($temUm){
                     $menu->show();
+                }else{
+                    br(2);
+                    p("Nenhum arquivo encontrado.","center");
+                    br(4);
                 }
+            }else{
+                p("Nenhum arquivo encontrado.","center");
+            }
+            
+            $painel->fecha();            
+            $grid->fechaColuna();
+            
+            ###################################################33
+            # Processos            
+            $grid->abreColuna(6);
+            
+            # Abre painel
+            $painel = new Callout();
+            $painel->abre();
 
+            # Título
+            tituloTable('Processos');
+            br();
+
+            # Define a pasta
+            $pasta = PASTA_FUNCIONAL;
+
+            # Pega os documentos
+            $select = "SELECT idPasta, 
+                              descricao,
+                              tipo
+                         FROM tbpasta
+                        WHERE tipo = 2 AND idServidor = $idServidorPesquisado";
+
+            $dados = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            if($count > 0){
+
+                # Inicia o menu
+                $menu = new MenuGrafico();
+                $temUm = FALSE;
+
+                foreach($dados as $dd){
+
+                    # Monta o arquivo
+                    $arquivo = $pasta.$dd[0].".pdf";
+                    
+                    # Procura o arquivo
+                    if(file_exists($arquivo)){
+                        $temUm = TRUE;
+                        
+                        # Define as variáveis
+                        $figura = 'documentacao.png';
+                        
+                        # Define o tipo para saber qual o icone
+                        switch ($dd[2]){
+                            case 2 :
+                                # Monta o botão
+                                $botao = new BotaoGrafico();
+                                $botao->set_label($dd[1]);
+                                $botao->set_url($arquivo);
+                                $botao->set_target('_blank');
+                                $botao->set_imagem(PASTA_FIGURAS.'processo.png',50,50);
+                                $menu->add_item($botao);
+                                break;
+                        }
+                    }
+                }
+                if($temUm){
+                    $menu->show();
+                }else{
+                    br(2);
+                    p("Nenhum arquivo encontrado.","center");
+                    br(4);
+                }
             }else{
                 p("Nenhum arquivo encontrado.","center");
             }
@@ -305,8 +377,7 @@ if($acesso){
                 }
                 
                 $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
-                
-                br(2);
+                br();
                 p($texto,"f14","center");
                      
                 if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))){

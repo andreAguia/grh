@@ -234,7 +234,7 @@ class Afastamento{
         $select .= '       tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                           CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                           CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,""),IF(alta=1," - Com Alta"," - Sem Alta")),
                           tbservidor.idServidor
                       FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                            JOIN tbhistlot USING (idServidor)

@@ -130,7 +130,7 @@ if($acesso){
                                                array(2,'Processo')),
                               'size' => 20,
                               'title' => 'Qual o tipo de Docuemnto',
-                              'col' => 4,
+                              'col' => 3,
                               'linha' => 1),        
                        array ('linha' => 1,
                               'nome' => 'descricao',
@@ -144,7 +144,7 @@ if($acesso){
                               'label' => 'Servidor:',
                               'tipo' => 'hidden',
                               'padrao' => $idServidorPesquisado,
-                              'col' => 6,
+                              'col' => 9,
                               'size' => 10)));
 
     # idUsuário para o Log

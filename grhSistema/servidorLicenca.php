@@ -78,8 +78,8 @@ if($acesso){
             # Pega o tipo de licença desse id
             $idTipo = $pessoal->get_tipoLicenca($id);
             
-            # Exibe campos de tipo e alta se for Licença Médica (Inicial e Prorrogaçao)
-            if(($idTipo == 1) OR ($idTipo == 30)){
+            # Exibe campos de tipo e alta se for Licença Médica (Inicial e Prorrogaçao) ou tratamento na familia
+            if(($idTipo == 1) OR ($idTipo == 30) OR ($idTipo == 2)){
             $script .= '$("#alta").show();
                         $("#labelalta").show();
                         ';
@@ -131,7 +131,7 @@ if($acesso){
         
         # Licença Médica
         $script .= '
-                        if(id == 1 || id == 30) {
+                        if(id == 1 || id == 30 || id == 2) {
                             $("#alta").show();
                             $("#labelalta").show();
                         }else{

@@ -140,7 +140,7 @@ class Declaracao{
             $grid->fechaColuna();
             $grid->abreColuna(4);
                 
-                $figura = new Imagem(PASTA_FIGURAS.'carimboCnpj.jpg',NULL,200,120);
+                $figura = new Imagem(PASTA_FIGURAS.'carimboCnpj.png',NULL,200,120);
                 $figura->show();
             
             $grid->fechaColuna();

@@ -82,8 +82,6 @@ if($acesso){
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-            
-            
 
             # Cria um menu
             $menu = new MenuBar();
@@ -115,14 +113,16 @@ if($acesso){
             $botaoRel->set_title("Relatórios dos Sistema");
             $botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel,"right");
+            
+            # Procedimentos
+                $linkArea = new Link("Chat",'../../areaServidor/sistema/chat.php');
+                $linkArea->set_class('button success');
+                $linkArea->set_title('Área de Comunicação da GRH');
+                $menu->add_link($linkArea,"right");
 
             # Administração do Sistema
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                # Procedimentos
-                $linkArea = new Link("Procedimentos",'../../areaServidor/sistema/procedimentos.php');
-                $linkArea->set_class('button success');
-                $linkArea->set_title('Área de Procedimentos da GRH');
-                $menu->add_link($linkArea,"right");
+                
 
                 $linkAdm = new Link("Administração","../../areaServidor/sistema/administracao.php");
                 $linkAdm->set_class('button success');

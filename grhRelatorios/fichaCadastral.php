@@ -970,6 +970,17 @@ if($acesso){
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = '.$idFicha.')
+                               UNION
+                                (SELECT tbtipolicenca.nome,
+                                        "",
+                                        tblicencasemvencimentos.dtInicial,
+                                        tblicencasemvencimentos.numDias,
+                                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                                        CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencasemvencimentos),
+                                        tblicencasemvencimentos.dtPublicacao,
+                                        idLicencasemvencimentos
+                                   FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
+                                   WHERE tblicencasemvencimentos.idServidor = '.$idFicha.')
                               ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
@@ -979,7 +990,7 @@ if($acesso){
         #$relatorio->set_subtitulo($subtitulo);
         $relatorio->set_label(array("Licença ou Afastamento","Alta","Inicio","Dias","Término","Processo","Publicação"));
         #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-        $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcessoPremio','date_to_php'));
+        $relatorio->set_funcao(array(NULL,NULL,'date_to_php',NULL,'date_to_php','exibeProcesso','date_to_php'));
         $relatorio->set_align(array('left','center'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);

@@ -251,15 +251,21 @@ class LicencaPremio{
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         
-        # Pega os dias publicados
-        $select = 'SELECT processoPremio
-                     FROM tbservidor
-                    WHERE idServidor = '.$idServidor;
+        if(is_numeric($idServidor)){
         
-        $retorno = $pessoal->select($select,FALSE);
+            # Pega os dias publicados
+            $select = 'SELECT processoPremio
+                         FROM tbservidor
+                        WHERE idServidor = '.$idServidor;
+
+            $retorno = $pessoal->select($select,FALSE);
+
+            # Retorno
+            return $retorno[0];
+        }else{
+            return $idServidor;
+        }
         
-        # Retorno
-        return $retorno[0];
     }
     
     ###########################################################

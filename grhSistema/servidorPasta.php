@@ -243,11 +243,11 @@ if($acesso){
                     $menu->show();
                 }else{
                     br(2);
-                    p("Nenhum arquivo encontrado.","center");
+                    p("Nenhum arquivo encontrado.","f14","center");
                     br(4);
                 }
             }else{
-                p("Nenhum arquivo encontrado.","center");
+                p("Nenhum arquivo encontrado.","f14","center");
             }
             
             $painel->fecha();            
@@ -314,11 +314,11 @@ if($acesso){
                     $menu->show();
                 }else{
                     br(2);
-                    p("Nenhum arquivo encontrado.","center");
+                    p("Nenhum arquivo encontrado.","f14","center");
                     br(4);
                 }
             }else{
-                p("Nenhum arquivo encontrado.","center");
+                p("Nenhum arquivo encontrado.","f14","center");
             }
             
             $painel->fecha();

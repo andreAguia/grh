@@ -114,15 +114,8 @@ if($acesso){
             $botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel,"right");
             
-            # Procedimentos
-                $linkArea = new Link("Chat",'../../areaServidor/sistema/chat.php');
-                $linkArea->set_class('button success');
-                $linkArea->set_title('Área de Comunicação da GRH');
-                $menu->add_link($linkArea,"right");
-
             # Administração do Sistema
             if(Verifica::acesso($idUsuario,1)){   // Somente Administradores
-                
 
                 $linkAdm = new Link("Administração","../../areaServidor/sistema/administracao.php");
                 $linkAdm->set_class('button success');

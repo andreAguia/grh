@@ -149,6 +149,7 @@ if($acesso){
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
     switch ($fase){

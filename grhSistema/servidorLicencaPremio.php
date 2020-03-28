@@ -323,8 +323,6 @@ if($acesso){
                 
                 #$painel->fecha();
 
-                
-
                 # Exibe o idServidor
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                 $texto = '';

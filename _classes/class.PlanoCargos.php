@@ -31,7 +31,7 @@ class PlanoCargos{
      * @syntax $plano->get_dadosPlano([$idPlano]);  
      */
     
-        # Pega os projetos cadastrados
+        # Pega os planos cadastrados
         $select = 'SELECT numDecreto,
                           dtPublicacao,
                           dtDecreto,
@@ -103,9 +103,10 @@ class PlanoCargos{
             # Pega os valores
             $select = 'SELECT faixa,
                               valor,
-                              idClasse
-                         FROM tbclasse
-                        WHERE idPlano = '.$idPlano.' AND nivel = "'.$nn.'" ORDER BY SUBSTRING(faixa, 1, 1), valor';
+                              idClasse,
+                              tbtipocargo.cargo
+                         FROM tbclasse LEFT JOIN tbtipocargo USING (idTipoCargo)
+                        WHERE idPlano = '.$idPlano.' AND tbclasse.nivel = "'.$nn.'" ORDER BY SUBSTRING(faixa, 1, 1), valor';
             
             $row = $pessoal->select($select);
             
@@ -115,6 +116,7 @@ class PlanoCargos{
                 $faixa = $rr[0];
                 $valor = $rr[1];
                 $url = $rr[2];
+                $cargo = $rr[3];
                 
                 # Trata faixa
                 $parte = explode("-",$faixa);
@@ -124,7 +126,6 @@ class PlanoCargos{
                 }else{
                     $faixaRomanos = substr($parte[0],0);
                 }
-                
                 
                 # Verifica se é pulo de linha
                 if($faixaRomanosAnterior <> $faixaRomanos){
@@ -162,7 +163,9 @@ class PlanoCargos{
                     }
                     
                     $faixaRomanosAnterior = $faixaRomanos;
-                    echo "<td align='left'>$nn</td>";
+                    echo "<td align='left'>$nn<br/>";
+                    p($cargo,"ptabelaSalarial");
+                    echo"</td>";
                     if($temLetra){
                         echo "<td align='center'>$letra</td>";
                     }

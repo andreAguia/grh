@@ -3189,20 +3189,27 @@ class Pessoal extends Bd {
 
     /**
      * Método get_classeInicial
-     * Informa o idClasse inicial (sal�rio Inicial)
+     * Informa o idClasse inicial (salário Inicial)
      * 
      * @param   string $plano
      * @param   string $nivel 
      * 	 
      */
 
-    public function get_classeInicial($plano,$nivel)
-    {
+    public function get_classeInicial($plano,$nivel,$cargo){
         $select = 'SELECT idClasse
                      FROM tbclasse
                     WHERE idPlano = '.$plano.'
-                      AND nivel = "'.$nivel.'"
-                 ORDER BY valor';
+                      AND nivel = "'.$nivel.'"';
+                          
+        # Verifica qual professor (quando é docente)
+        if($cargo == 128){           // Prof Associado
+            $select .= ' AND idTipoCargo = 2';
+        }elseif($cargo == 129){      // Prof Titular
+            $select .= ' AND idTipoCargo = 1';
+        }
+                          
+        $select .= ' ORDER BY valor';
 
         $row = parent::select($select,FALSE);
 

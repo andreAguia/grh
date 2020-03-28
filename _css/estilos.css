@@ -569,6 +569,12 @@ div#menuSuspenso{
     border:#f0f0f0 thin solid;
 }
 
+p#ptabelaSalarial{
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+}
+
 /*******************************************
  * Área de Vagas de Docentes
  ******************************************/

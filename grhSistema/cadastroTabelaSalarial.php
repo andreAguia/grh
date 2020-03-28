@@ -72,25 +72,28 @@ if($acesso){
 
     # select da lista
     $objeto->set_selectLista ('SELECT idClasse,
-                                    tbplano.numDecreto,
-                                    nivel,
-                                    faixa,
-                                    valor,                 
-                                    CASE tbplano.planoAtual                                        
-                                          WHEN 1 THEN "Vigente"
-                                          ELSE "Antigo"
-                                     end,                      
-                                    idClasse
-                               FROM tbclasse JOIN tbplano USING (idPlano)
-                              WHERE nivel LIKE "%'.$parametroNivel.'%"
-                                 AND tbplano.idPlano LIKE "%'.$parametroPlano.'%"   
-                           ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, nivel desc, faixa asc');
+                                      tbplano.numDecreto,
+                                      tbclasse.nivel,
+                                      tbtipocargo.cargo,
+                                      faixa,
+                                      valor,                 
+                                      CASE tbplano.planoAtual                                        
+                                           WHEN 1 THEN "Vigente"
+                                           ELSE "Antigo"
+                                      end,                      
+                                      idClasse
+                                 FROM tbclasse JOIN tbplano USING (idPlano)
+                                               LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                WHERE tbclasse.nivel LIKE "%'.$parametroNivel.'%"
+                                  AND tbplano.idPlano LIKE "%'.$parametroPlano.'%"   
+                             ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, tbclasse.nivel desc, faixa asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,
-                                      faixa,
-                                      valor,
-                                      idPlano
+                                     idTipoCargo,
+                                     faixa,
+                                     valor,
+                                     idPlano
                                 FROM tbclasse
                                WHERE idClasse = '.$id);
     
@@ -105,14 +108,14 @@ if($acesso){
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id","Plano","Nível","Faixa","Valor","Status"));
-    $objeto->set_width(array(5,30,20,10,10,10));
+    $objeto->set_label(array("id","Plano","Nível","Cargo","Faixa","Valor","Status"));
+    #$objeto->set_width(array(5,30,20,10,10,10));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL,NULL,NULL,NULL,"formataMoeda"));
+    $objeto->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"formataMoeda"));
 
     $planoAtual = $pessoal->get_numDecretoPlanoAtual();
 
-    $objeto->set_formatacaoCondicional(array(array('coluna' => 5,
+    $objeto->set_formatacaoCondicional(array(array('coluna' => 6,
                                                    'valor' => "Vigente",
                                                    'operador' => '<>',
                                                    'id' => 'inativo')));
@@ -127,11 +130,17 @@ if($acesso){
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Pega os dados da combo de cargo
+    $cargo = $pessoal->select('SELECT idTipoCArgo, 
+                                       cargo
+                                  FROM tbtipocargo
+                              ORDER BY cargo desc');
+    array_unshift($cargo, array(0,NULL)); 
 
     # Pega os dados da combo de Plano e Cargos
-    $tabela = new Pessoal();
-    $result = $tabela->select('SELECT idPlano, 
-                                      numDecreto
+    $result = $pessoal->select('SELECT idPlano, 
+                                       numDecreto
                                   FROM tbplano
                               ORDER BY dtPublicacao desc');
     array_unshift($result, array(0,NULL)); 
@@ -153,6 +162,13 @@ if($acesso){
                'array' => array(NULL,"Doutorado","Superior","Médio","Fundamental","Elementar"),
                'required' => TRUE,
                'size' => 20),
+        array ('linha' => 1,
+               'nome' => 'idTipoCargo',
+               'label' => 'Cargo:',
+               'tipo' => 'combo',
+               'array' => $cargo,
+               'required' => TRUE,
+               'size' => 20),    
         array ('linha' => 1,
                'nome' => 'faixa',
                'label' => 'Faixa:',

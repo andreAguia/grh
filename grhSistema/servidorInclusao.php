@@ -612,12 +612,12 @@ if($acesso){
                     ###################################
 
                     # Grava na tbprogressao
-                    if($perfil == 1) // somente estatutários
-                    {
+                    if($perfil == 1){ // somente estatutários
+                    
                         # dados
-                        $nivel = $pessoal->get_nivelCargoCargo($cargo); // nível do cargo
-                        $plano = $pessoal->get_idPlanoAtual();      // plano de carcos atual
-                        $classe = $pessoal->get_classeInicial($plano,$nivel);  // primeiro salário desse nível                
+                        $nivel = $pessoal->get_nivelCargoCargo($cargo);         // nível do cargo
+                        $plano = $pessoal->get_idPlanoAtual();                  // plano de carcos atual
+                        $classe = $pessoal->get_classeInicial($plano,$nivel,$cargo);   // primeiro salário desse nível                
 
                         $campos = array('idServidor','idTpProgressao','dtInicial','idClasse');
                         $valor = array($idServidor,1,$dtAdmissao,$classe);

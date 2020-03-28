@@ -97,6 +97,7 @@ if($acesso){
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
         
+    # Excluir somente para Administradores
     if(Verifica::acesso($idUsuario,1)){
         $objeto->set_linkExcluir('?fase=excluir');  // Excluir somente para administradores
     }

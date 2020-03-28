@@ -37,6 +37,9 @@ if($acesso){
     $id = soNumeros(get('id'));
     $idConcursoPublicacao = soNumeros(get('idConcursoPublicacao'));
     
+    echo "  id: $id";br();
+    echo "  fase: $fase";br();
+    
     # Pega os parâmetros
     $parametroAno = post('parametroAno',get_session('parametroAno'));
     $parametroTipo = post('parametroTipo',get_session('parametroTipo'));
@@ -131,7 +134,7 @@ if($acesso){
     }else{
         $objeto->set_voltarForm('cadastroConcurso.php?fase=editar&id='.$id);
     }
-
+    
     # Parametros da tabela
     $objeto->set_label(array("id","Ano Base","Publicação <br/>do Edital","Regime","Tipo","Executor","Ativos","Inativos","Total"));
     $objeto->set_width(array(5,12,12,12,12,22,5,5,5));
@@ -175,8 +178,9 @@ if($acesso){
                'label' => 'Ano:',
                'tipo' => 'texto',
                'autofocus' => TRUE,
+               'required' => TRUE,
                'col' => 2,
-               'size' => 10,
+               'size' => 4,
                'title' => 'Ano base do concurso'),
         array ('linha' => 2,
                'nome' => 'edital',
@@ -197,12 +201,14 @@ if($acesso){
                'label' => 'Regime:',
                'tipo' => 'combo',                              
                'array' => array("CLT","Estatutário"),
+               'required' => TRUE,        
                'col' => 3,
                'size' => 20),
         array ('linha' => 3,
                'nome' => 'tipo',
                'label' => 'Tipo:',
-               'tipo' => 'combo',                              
+               'tipo' => 'combo', 
+               'required' => TRUE,            
                'array' => array(array(NULL,NULL),
                                 array(1,"Adm & Tec"),
                                 array(2,"Professor")),
@@ -248,30 +254,6 @@ if($acesso){
     switch ($fase){
         case "" :
         case "listar" :
-            
-            # Limita o tamanho da tela
-            $grid = new Grid("center");
-            $grid->abreColuna(12);
-            br(6);
-            
-            tituloTable("Concursos");
-            br(2);
-            
-            aguarde();
-            br();
-            
-            $grid->fechaColuna();
-            $grid->abreColuna(5);
-                p("Aguarde...","center");
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
-            loadPage('?fase=exibeLista');
-            break;
-        
-    ################################################################
-        
-        case "exibeLista" :    
             
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -353,8 +335,11 @@ if($acesso){
             $grid->abreColuna(12);
             
             if(vazio($id)){
+                # Informa a origem
+                set_session('origem','cadastroConcurso.php');
+            
                 # Vai para a rotina de inclusão
-                $objeto->editar();
+                loadPage("?fase=editardeFato");
             }else{
                 
                 # Rotina de edição

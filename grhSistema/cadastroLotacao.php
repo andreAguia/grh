@@ -77,7 +77,7 @@ if($acesso){
     
     # select da lista
     $objeto->set_selectLista ('SELECT idLotacao,
-                                      DIR,
+                                      IF(ativo = 1,DIR,CONCAT(DIR,"<br/>","(",UADM,")")),
                                       campus,
                                       GER,
                                       nome,
@@ -93,7 +93,7 @@ if($acesso){
                                    OR ramais LIKE "%'.$parametro.'%"
                                    OR campus LIKE "%'.$parametro.'%"    
                                    OR idLotacao LIKE "%'.$parametro.'%") 
-                             ORDER BY ativo desc, DIR asc, GER asc, nome asc');
+                             ORDER BY ativo desc, UADM asc,DIR asc, GER asc, nome asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT codigo,

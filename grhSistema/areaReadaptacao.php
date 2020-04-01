@@ -27,7 +27,7 @@ if($acesso){
     
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Readaptação";
+        $atividade = "Visualizou a área de readaptação";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

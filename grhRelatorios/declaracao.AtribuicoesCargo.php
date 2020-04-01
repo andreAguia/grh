@@ -48,9 +48,17 @@ if($acesso){
         $dec->set_data(date("d/m/Y"));
 
         if($idSituacao == 1){
-        $dec->set_texto("Declaramos que o(a) Sr.(a) <b>".strtoupper($nomeServidor)."</b>, ID Funcional n° $idFuncional, é servidor(a) desta"
-               . "  Universidade, admitido(a) através de Concurso Público em $dtAdmissao, para ocupar o cargo de $cargoEfetivo, lotado(a) no(a) $lotacao."
-               . " O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.");
+            $texto = "Declaramos que o(a) Sr.(a) <b>".strtoupper($nomeServidor)."</b>,";
+
+            if(!vazio($idFuncional)){
+                $texto .= " ID Funcional n° $idFuncional,";
+            }
+
+            $texto .= " é servidor(a) desta Universidade, admitido(a) através de Concurso Público em $dtAdmissao,"
+                          . " para ocupar o cargo de $cargoEfetivo, lotado(a) no(a) $lotacao. "
+                          . "O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.";
+            
+            $dec->set_texto($texto);
         }else{
             # Pega a data de Saída
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);            
@@ -82,7 +90,7 @@ if($acesso){
 
         # Grava o log da visualização do relatório
         $data = date("Y-m-d H:i:s");    
-        $atividades = 'Visualizou a Declaração de Atribuições do Cargo';
+        $atividades = 'Visualizou a declaração de atribuições do cargo';
         $tipoLog = 4;
         $intra->registraLog($idUsuario,$data,$atividades,NULL,NULL,$tipoLog,$idServidorPesquisado);
     }else{

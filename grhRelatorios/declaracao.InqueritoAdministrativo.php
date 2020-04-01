@@ -53,7 +53,7 @@ if($acesso){
     
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Declaração que NÃO responde a inquérito administrativo';
+    $atividades = 'Visualizou a declaração que NÃO responde a inquérito administrativo';
     $tipoLog = 4;
     $intra->registraLog($idUsuario,$data,$atividades,NULL,NULL,$tipoLog,$idServidorPesquisado);
     

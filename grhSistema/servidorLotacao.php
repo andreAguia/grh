@@ -21,6 +21,16 @@ if($acesso){
     
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Histórico de lotação";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));

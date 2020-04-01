@@ -1,6 +1,6 @@
 <?php
 /**
- * Pastas e Processos do Servidor
+ * Pastas e Pasta Funcional
  *  
  * By Alat
  */
@@ -21,6 +21,16 @@ if($acesso){
     
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Pasta Funcional";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -91,7 +101,7 @@ if($acesso){
 
     # Parametros da tabela
     $objeto->set_label(array("Tipo","Descrição","Ver","Upload"));
-    $objeto->set_width(array(15,50,10,10));
+    $objeto->set_width(array(15,65,5,5));
     $objeto->set_align(array("center","left"));
         
     $objeto->set_classe(array(NULL,NULL,"PastaFuncional"));

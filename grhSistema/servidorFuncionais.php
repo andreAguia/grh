@@ -18,9 +18,19 @@ $acesso = Verifica::acesso($idUsuario,2);
 if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
 	
     # Verifica a fase do programa
     $fase = get('fase','ver');
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Dados funcionais";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
     
     # Verifica de onde veio
     $origem = get_session("origem");

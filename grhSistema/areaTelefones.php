@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Lotação
+ * Cadastro de Telefones
  *  
  * By Alat
  */
@@ -26,7 +26,7 @@ if($acesso){
     $grh = get('grh',FALSE);
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a area de Telefones";
+        $atividade = "Visualizou a area de telefones";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

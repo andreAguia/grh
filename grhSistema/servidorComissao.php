@@ -19,6 +19,16 @@ if($acesso){
     # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
     $cargoComissao = new CargoComissao();
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Histórico dos cargos em comissão";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
     
     # Verifica a fase do programa
     $fase = get('fase','listar');
@@ -65,7 +75,7 @@ if($acesso){
     $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Cargos em Comissão');
+    $objeto->set_nome('Histórico dos Cargos em Comissão');
     
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');

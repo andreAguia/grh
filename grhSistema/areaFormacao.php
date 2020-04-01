@@ -26,7 +26,7 @@ if($acesso){
     $grh = get('grh',FALSE);
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Formação";
+        $atividade = "Visualizou a área de formação";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

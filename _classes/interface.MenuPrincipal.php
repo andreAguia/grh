@@ -214,7 +214,7 @@ class MenuPrincipal{
         $botao = new BotaoGrafico();
         $botao->set_label('Afastamentos');
         #$botao->set_target('blank');
-        $botao->set_url('grhAfastamentos.php');
+        $botao->set_url('grhAfastamentos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'afastamento.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Afastamentos dos Servidores da GRH');
         $menu->add_item($botao);
@@ -376,7 +376,7 @@ class MenuPrincipal{
 
         $botao = new BotaoGrafico();
         $botao->set_label('Licença Prêmio');
-        $botao->set_url('areaLicencaPremio.php');
+        $botao->set_url('areaLicencaPremio.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'premio.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Área de Licença Prêmio');
         $menu->add_item($botao);
@@ -397,35 +397,35 @@ class MenuPrincipal{
         
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');
-        $botao->set_url('areaReadaptacao.php');
+        $botao->set_url('areaReadaptacao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'readaptacao.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Redução da CH');
-        $botao->set_url('areaReducao.php');
+        $botao->set_url('areaReducao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'reducao.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Benefícios dos Servidores');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Acumulação de Cargos Públicos');
-        $botao->set_url('areaAcumulacao.php');
+        $botao->set_url('areaAcumulacao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'acumulacao.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de Acumulação de Cargo Público');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Licença Sem Vencimentos');
-        $botao->set_url('areaLicencaSemVencimentos.php');
+        $botao->set_url('areaLicencaSemVencimentos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'semVencimento.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Formação');
-        $botao->set_url('areaFormacao.php');
+        $botao->set_url('areaFormacao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'diploma.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Formação Escolar dos Servidores');
         $menu->add_item($botao);
@@ -467,14 +467,14 @@ class MenuPrincipal{
         
         $botao = new BotaoGrafico();
         $botao->set_label('Telefones e Ramais');
-        $botao->set_url('areaTelefones.php');
+        $botao->set_url('areaTelefones.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS.'telefone.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Exibe os telefones e ramais da UENF');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Sispatri');
-        $botao->set_url("areaSispatri.php");
+        $botao->set_url("areaSispatri.php?grh=1");
         $botao->set_imagem(PASTA_FIGURAS.'sispatri.png',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de Sispatri');
         #$botao->set_accesskey('S');
@@ -482,7 +482,7 @@ class MenuPrincipal{
         
         $botao = new BotaoGrafico();
         $botao->set_label('MCF');
-        $botao->set_url("cadastroMcf.php");
+        $botao->set_url("cadastroMcf.php?grh=1");
         $botao->set_imagem(PASTA_FIGURAS.'mcf.jpg',$tamanhoImage,$tamanhoImage);
         $botao->set_title('Controle de MCF');
         $menu->add_item($botao);
@@ -491,7 +491,7 @@ class MenuPrincipal{
         if(Verifica::acesso($this->idUsuario,4)){
             $botao = new BotaoGrafico();
             $botao->set_label('Pastas Digitalizadas');
-            $botao->set_url('cadastroPasta.php');
+            $botao->set_url('cadastroPasta.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS.'funcional.jpg',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Controle de pastas digitalizadas');
             $menu->add_item($botao);
@@ -500,7 +500,7 @@ class MenuPrincipal{
         if(Verifica::acesso($this->idUsuario,1)){
             $botao = new BotaoGrafico();
             $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php');
+            $botao->set_url('areaRecadastramento.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS.'recadastramento.png',$tamanhoImage,$tamanhoImage);
             $botao->set_title('Recadastramento de Servidores');
             $menu->add_item($botao);

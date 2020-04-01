@@ -22,15 +22,6 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase');
 
-    # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
-        # Grava no log a atividade
-        $atividade = "Visualizou a área de Frequência";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
-    }
-
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
@@ -41,7 +32,16 @@ if($acesso){
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno',$parametroAno);
-    set_session('parametroMes',$parametroMes);
+    set_session('parametroMes',$parametroMes);    
+
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Visualizou a área de afastamentos da GRH";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
 
     # Começa uma nova página
     $page = new Page();
@@ -106,7 +106,7 @@ if($acesso){
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Mês
@@ -117,7 +117,7 @@ if($acesso){
             $controle->set_valor($parametroMes);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(7);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();

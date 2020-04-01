@@ -1,6 +1,6 @@
 <?php
 /**
- * Área de Acumulação
+ * Controle de Pastas Funcionais
  *  
  * By Alat
  */
@@ -27,7 +27,7 @@ if($acesso){
     
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou o Controle de Pastas Funcionanais";
+        $atividade = "Visualizou o controle de pastas funcionanais";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

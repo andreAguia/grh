@@ -30,7 +30,7 @@ if($acesso){
     $grh = get('grh',FALSE);
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Redução de Car4ga Horária";
+        $atividade = "Visualizou a área de redução de carga horária";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

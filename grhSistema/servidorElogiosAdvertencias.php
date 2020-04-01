@@ -23,6 +23,17 @@ if($acesso)
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Elogios e advertências";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
+    
     # Começa uma nova página
     $page = new Page();			
     $page->iniciaPagina();

@@ -24,12 +24,16 @@ $origemId = get_session("origemId");
 # Verifica se veio dos alertas
 $alerta = get_session("alerta");
 
+# Verifica se veio menu grh e registra o acesso no log
+$grh = get('grh',FALSE);
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario,2);
 
 if($acesso){    
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
 	
     # Verifica a fase do programa
     $fase = get('fase','menu');
@@ -39,11 +43,6 @@ if($acesso){
         
     # Joga os parâmetros par as sessions    
     set_session('parametroAno',$parametroAno);
-    
-    # Registra no log  
-    $atividade = "Visualizou o cadastro do servidor ".$pessoal->get_nome($idServidorPesquisado);
-    $data = date("Y-m-d H:i:s");
-    $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
     
     # Começa uma nova página
     $page = new Page();
@@ -67,7 +66,14 @@ if($acesso){
     $grid = new Grid();
     $grid->abreColuna(12);
     
-    if($fase == "menu"){  
+    if($fase == "menu"){ 
+        
+        # Registra no log  
+        if($grh){
+            $atividade = "Cadastro do servidor - Menu";
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        }
 
         # Cria um menu
         $menu = new MenuBar();
@@ -564,6 +570,13 @@ if($acesso){
             ##################################################################
             
             case "afastamentoGeral" :
+                
+                # Registra no log  
+                if($grh){
+                    $atividade = "Cadastro do servidor - Afastamento geral";
+                    $data = date("Y-m-d H:i:s");
+                    $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+                }
                 
                 $grid = new Grid("center");
                 $grid->abreColuna(12);

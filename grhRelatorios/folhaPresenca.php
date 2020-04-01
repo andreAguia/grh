@@ -85,7 +85,7 @@ if($acesso){
     $relatorio->set_formFocus('anoBase');
     $relatorio->set_formLink('?');
     $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_logDetalhe("Visualizou a Folha de Presença");
+    $relatorio->set_logDetalhe("Visualizou a Folha de Presença de ".$trimestre."° Trimestre / $anoBase");
     $relatorio->show();
     
     br();

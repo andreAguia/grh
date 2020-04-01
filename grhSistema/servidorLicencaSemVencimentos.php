@@ -18,9 +18,18 @@ $acesso = Verifica::acesso($idUsuario,2);
 if($acesso){
     
     # Conecta ao Banco de Dados
-    $intra = new Intra();
     $pessoal = new Pessoal();
     $lsv = new LicencaSemVencimentos();
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Histórico de llicenças sem vencimentos";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
 	
     # Verifica a fase do programa
     $fase = get('fase','listar');

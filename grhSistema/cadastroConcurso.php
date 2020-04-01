@@ -19,10 +19,6 @@ if($acesso){
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
-    # Verifica a fase do programa
-    $fase = get('fase','listar');
-    $subFase = get('subFase',1);
     
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh',FALSE);
@@ -32,13 +28,14 @@ if($acesso){
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }
+	
+    # Verifica a fase do programa
+    $fase = get('fase','listar');
+    $subFase = get('subFase',1);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     $idConcursoPublicacao = soNumeros(get('idConcursoPublicacao'));
-    
-    echo "  id: $id";br();
-    echo "  fase: $fase";br();
     
     # Pega os parâmetros
     $parametroAno = post('parametroAno',get_session('parametroAno'));

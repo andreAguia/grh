@@ -35,7 +35,7 @@ if($acesso){
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     
     $destino = "À $postChefia,<br/>$postCargo<br/><br/>A/C $nomeServidor";        
-    $texto[] = "Para ciência da Chefia Imediata, com vistas ao servidor para que o mesmo retire uma via do ATO DE $postAto, preso na contracapa do p.p., mediante recibo na última folha, com posterior devolução a esta GRH para o devido arquivamento.";
+    $texto = "Para ciência da Chefia Imediata, com vistas ao servidor para que o mesmo retire uma via do ATO DE $postAto, preso na contracapa do p.p., mediante recibo na última folha, com posterior devolução a esta GRH para o devido arquivamento.";
     
     # despacho
     $despacho = new Despacho();
@@ -58,7 +58,7 @@ if($acesso){
                 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o despacho para Chefia - Resultado Setor - Ato de $postAto";
+    $atividades = "Visualizou o despacho para chefia - Resultado Setor - Ato de $postAto";
     $tipoLog = 4;
     $intra->registraLog($idUsuario,$data,$atividades,"tbreducao",NULL,$tipoLog,$idServidorPesquisado);                
     

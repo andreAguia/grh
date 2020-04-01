@@ -332,7 +332,7 @@ if($acesso){
             aguarde();
             
             set_session('idServidorPesquisado',$id);
-            loadPage('servidorMenu.php');
+            loadPage('servidorMenu.php?grh=1');
             break; 
         
         ###############################

@@ -1,6 +1,6 @@
 <?php
 /**
- * Área de Licença Prêmio
+ * Área de Fotografia
  *  
  * By Alat
  */
@@ -30,7 +30,7 @@ if($acesso){
     $grh = get('grh',FALSE);
     if($grh){
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Acumulação";
+        $atividade = "Visualizou a área de fotografia";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
     }

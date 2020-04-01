@@ -19,6 +19,15 @@ if($acesso){
     $intra = new Intra();
     $pessoal = new Pessoal();
     $comissao = new CargoComissao();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Visualizou o cadastro de cargo em comissão";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
 
     # Verifica a fase do programa
     $fase = get('fase','inicial');

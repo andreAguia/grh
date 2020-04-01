@@ -23,6 +23,15 @@ if($acesso){
     $fase = get('fase');
     
     # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Visualizou a área de recadastramento";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+    }
+    
+    # Verifica se veio menu grh e registra o acesso no log
     $origem = get('origem',get_session('origem'));
     set_session('origem',$origem);
     

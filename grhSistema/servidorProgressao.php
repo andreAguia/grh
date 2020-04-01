@@ -20,6 +20,17 @@ if($acesso){
     # Verifica a fase do programa
     $fase = get('fase','listar');
     
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh',FALSE);
+    if($grh){
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Histórico de progressão e enquadramento";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+    }
+    
     # Verifica de onde veio
     $origem = get_session("origem");
 

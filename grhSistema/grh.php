@@ -95,9 +95,9 @@ if($acesso){
             $menu->add_link($linkVoltar,"left");
 
             # Alterações
-            $linkArea = new Link("Alterações",'?fase=atualizacoes');
+            $linkArea = new Link("Atualizações",'?fase=atualizacoes&grh=1');
             $linkArea->set_class('button');
-            $linkArea->set_title('Área de Procedimentos da GRH');
+            $linkArea->set_title('Exibe o histórico de atualizações do sistema');
             $menu->add_link($linkArea,"right");
 
             # Relatórios
@@ -109,7 +109,7 @@ if($acesso){
             $menu->add_link($botaoRel,"right");
             
             # Alertas
-            $linkArea = new Link("Alertas","?fase=resumoAlertas");
+            $linkArea = new Link("Alertas","?fase=resumoAlertas&grh=1");
             $linkArea->set_class('button alert');
             $linkArea->set_title('Alertas do Sistema');
             $menu->add_link($linkArea,"right");
@@ -209,6 +209,15 @@ if($acesso){
             $grid = new Grid();
             $grid->abreColuna(12);
             
+            # Verifica se veio menu grh e registra o acesso no log
+            $grh = get('grh',FALSE);
+            if($grh){
+                # Grava no log a atividade
+                $atividade = "Visualizou os alertas do sistema";
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+            }
+            
             br();
             titulo('Alertas do Sistema');
             br(5);
@@ -240,66 +249,6 @@ if($acesso){
             echo "</ul>";
             
             $painel->fecha();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-##################################################################	
-
-        case "ferias" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            
-            # Botãp Voltar
-            botaoVoltar('?');
-            
-            # Pega o ano
-            $ano = date("Y");
-            
-            # Conecta com o banco de dados
-            $servidor = new Pessoal();
-
-            $select ="SELECT month(tbferias.dtInicial),
-                         tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbferias.anoExercicio,
-                         tbferias.dtInicial,
-                         tbferias.numDias,
-                         date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
-                         idFerias,
-                         tbferias.status,
-                         tbsituacao.situacao
-                    FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                         JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
-                                         JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                   WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND YEAR(tbferias.dtInicial) = $ano
-                     AND (tblotacao.idlotacao = 66)
-                ORDER BY dtInicial";
-
-            $result = $servidor->select($select);
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("Férias dos Servidores da GRH em $ano");
-            $tabela->set_label(array('Mês','Nome','Lotação','Exercício','Inicio','Dias','Fim','Período','Status','Situação'));
-            $tabela->set_align(array("center","left","left"));
-            $tabela->set_funcao(array("get_nomeMes",NULL,NULL,NULL,"date_to_php",NULL,NULL,NULL,NULL));
-            $tabela->set_classe(array(NULL,NULL,"pessoal",NULL,NULL,NULL,NULL,"pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,"get_lotacaoSimples",NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
-            $tabela->set_conteudo($result);
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-            $tabela->show();
-            
-            # Grava no log a atividade
-            $atividade = 'Visualizou os servidores em férias da GRH';
-            $Objetolog = new Intra();
-            $data = date("Y-m-d H:i:s");
-            $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
-            
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
@@ -479,6 +428,15 @@ if($acesso){
             # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            # Verifica se veio menu grh e registra o acesso no log
+            $grh = get('grh',FALSE);
+            if($grh){
+                # Grava no log a atividade
+                $atividade = "Visualizou a area de atualizações do sistema";
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+            }
             
             # botão voltar
             botaoVoltar("../../grh/grhSistema/grh.php","Voltar","Volta ao Menu principal");

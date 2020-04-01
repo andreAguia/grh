@@ -88,17 +88,11 @@ if($acesso){
             
             # Botão voltar
             botaoVoltar('servidor.php');
-
+            
             # Título
             titulo('Incluir Novo Servidor');
             $callout = new Callout();
             $callout->abre();
-            
-            # Exibe o nº da página
-            $div = new Div("right");
-            $div->abre();
-                badge("1","warning");
-            $div->fecha();
             
             # Inicia o formulário
             $form = new Form('?fase=validaCPF','novoServidor');
@@ -209,26 +203,16 @@ if($acesso){
             titulo('Incluir Novo Servidor');
             $callout = new Callout();
             $callout->abre();
-            
-            # Exibe o nº da página
-            $div = new Div("right");
-            $div->abre();
-            badge("2","warning");
-            $div->fecha();
 
             # Mensagem
             if (is_null($nome)) {
-                $mensagem = 'O CPF ' . $cpf . ' não está cadastrado no sistema.';
+                $mensagem = 'O CPF ' . $cpf . ' não está cadastrado no sistema, dessa forma um novo servidor será incluído.';
             } else {
-                $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor INATIVO: ' . $nome . '. Entre com os dados da sua nova matrícula.';
+                $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor INATIVO: ' . $nome . '. Entre com os dados de seu novo vínculo.';
             }
 
             # Mensagem do cpf
             br();
-            callout($mensagem);
-            
-            # Mensagem sobre a matrícula
-            $mensagem = 'Você tem a opção de digitar a matrícula ou deixar em branco para que o sistema gere automaticamente.<br/>Se uma matrícula for informada ela deve seguir os limítes definidos no cadastro de perfil.';
             callout($mensagem);
             
             $form = new Form('?fase=validaDados','novoServidor');
@@ -285,7 +269,7 @@ if($acesso){
                                              WHERE novoServidor
                                           ORDER BY nome');
 
-                array_push($perfil, array(NULL,NULL)); 
+                array_unshift($perfil, array(NULL,NULL)); 
 
                 $controle = new Input('perfil','combo','Perfil:',1);
                 $controle->set_size(20);            
@@ -308,7 +292,7 @@ if($acesso){
                                               WHERE ativo
                                            ORDER BY tblotacao.DIR,tblotacao.GER');
 
-                array_push($lotacao, array(NULL,NULL)); # Adiciona o valor de nulo
+                array_unshift($lotacao, array(NULL,NULL)); # Adiciona o valor de nulo
 
                 $controle = new Input('lotacao','combo','Lotação Inicial:',1);
                 $controle->set_size(20);            
@@ -344,7 +328,7 @@ if($acesso){
                         . '                  FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)'
                         . '              ORDER BY tbtipocargo.cargo,tbcargo.nome');
 
-                array_push($cargo, array(NULL,NULL)); 
+                array_unshift($cargo, array(NULL,NULL)); 
 
                 $controle = new Input('cargo','combo','Cargo:',1);
                 $controle->set_size(20);            

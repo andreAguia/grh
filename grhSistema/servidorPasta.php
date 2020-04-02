@@ -231,6 +231,9 @@ if($acesso){
                 $tabela->set_totalRegistro(FALSE);
                 $tabela->show();
             }else{
+                tituloTable($titulo);
+                br(2);
+                
                 p("Nenhum arquivo encontrado.","f14","center");
             }
             
@@ -274,6 +277,9 @@ if($acesso){
                 $tabela->set_totalRegistro(FALSE);
                 $tabela->show();
             }else{
+                tituloTable($titulo);
+                br(2);
+                
                 p("Nenhum arquivo encontrado.","f14","center");
             }
             

@@ -207,7 +207,7 @@ if($acesso){
                               descricao,
                               tipo
                          FROM tbpasta
-                        WHERE tipo = 2 AND idServidor = $idServidorPesquisado";
+                        WHERE tipo = 1 AND idServidor = $idServidorPesquisado";
 
             $dados = $pessoal->select($select);
             $count = $pessoal->count($select);

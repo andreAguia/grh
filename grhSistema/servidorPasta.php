@@ -229,6 +229,7 @@ if($acesso){
                 br(2);
                 
                 p("Nenhum arquivo encontrado.","f14","center");
+                br(2);
             }
             
             $painel->fecha();            
@@ -269,6 +270,7 @@ if($acesso){
                 br(2);
                 
                 p("Nenhum arquivo encontrado.","f14","center");
+                br(2);
             }
             
             $painel->fecha();

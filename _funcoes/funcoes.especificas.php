@@ -1075,7 +1075,7 @@ function exibeDocumentoPasta($idPasta){
         $botao = new BotaoGrafico();
         $botao->set_url($arquivo);
         $botao->set_target('_blank');
-        $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',50,50);
+        $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',40,40);
         $botao->show();
     }
     
@@ -1112,7 +1112,7 @@ function exibeProcessoPasta($idPasta){
         $botao = new BotaoGrafico();
         $botao->set_url($arquivo);
         $botao->set_target('_blank');
-        $botao->set_imagem(PASTA_FIGURAS.'processo.png',50,50);
+        $botao->set_imagem(PASTA_FIGURAS.'processo.png',40,40);
         $botao->show();
     }
     

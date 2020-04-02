@@ -212,26 +212,20 @@ if($acesso){
             $dados = $pessoal->select($select);
             $count = $pessoal->count($select);
 
-            if($count > 0){
-                
-                # Cabeçalho da tabela
-                $titulo = 'Documentos';
-                $label = array(NULL,NULL);
-                $width = array(15,80);
-                $align = array('center','left');            
+            if($count > 0){            
 
                 # Exibe a tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($dados);
-                $tabela->set_align($align);
-                $tabela->set_label($label);
-                $tabela->set_width($width);
-                $tabela->set_titulo($titulo);
+                $tabela->set_align(array('center','left'));
+                $tabela->set_label(array(NULL,NULL));
+                $tabela->set_width(array(15,80));
+                $tabela->set_titulo('Documentos');
                 $tabela->set_funcao(array("exibeDocumentoPasta"));
                 $tabela->set_totalRegistro(FALSE);
                 $tabela->show();
             }else{
-                tituloTable($titulo);
+                tituloTable('Documentos');
                 br(2);
                 
                 p("Nenhum arquivo encontrado.","f14","center");
@@ -260,24 +254,18 @@ if($acesso){
 
             if($count > 0){
                 
-                # Cabeçalho da tabela
-                $titulo = 'Processos';
-                $label = array(NULL,NULL);
-                $width = array(15,80);
-                $align = array('center','left');            
-
                 # Exibe a tabela
                 $tabela = new Tabela();
                 $tabela->set_conteudo($dados);
-                $tabela->set_align($align);
-                $tabela->set_label($label);
-                $tabela->set_width($width);
-                $tabela->set_titulo($titulo);
+                $tabela->set_align(array('center','left'));
+                $tabela->set_label(array(NULL,NULL));
+                $tabela->set_width(array(15,80));
+                $tabela->set_titulo('Processos');
                 $tabela->set_funcao(array("exibeProcessoPasta"));
                 $tabela->set_totalRegistro(FALSE);
                 $tabela->show();
             }else{
-                tituloTable($titulo);
+                tituloTable('Processos');
                 br(2);
                 
                 p("Nenhum arquivo encontrado.","f14","center");

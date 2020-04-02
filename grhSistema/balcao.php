@@ -1,6 +1,6 @@
 <?php
 /**
- * Cadastro de Servidores
+ * Cadastro de Atendimento no balcão
  *
  * By Alat
  */
@@ -177,7 +177,9 @@ if($acesso){
             $painel->fecha();
 
             $grid1->fechaColuna();
+            
             ###########################################################################################################
+            
             $grid1->abreColuna(7);
 
             # Cabeçalho
@@ -263,7 +265,7 @@ if($acesso){
                         # Monta os array de servidores para cada turno
 
                         # Manhã
-                        $select1 = "SELECT nome "
+                        $select1 = "SELECT idServidor"
                                 . "   FROM tbusuario JOIN grh.tbservidor USING (idServidor) "
                                 . "                  JOIN grh.tbpessoa USING (idPessoa) "
                                 . "   WHERE balcao = 'Manhã' OR  balcao = 'Ambos'"
@@ -272,7 +274,7 @@ if($acesso){
                         $manha = $intra->select($select1);
                         array_unshift($manha, array(NULL,NULL)); # Adiciona o valor de nulo
 
-                        $select2 = "SELECT nome "
+                        $select2 = "SELECT idServidor"
                                 . "   FROM tbusuario JOIN grh.tbservidor USING (idServidor) "
                                 . "                  JOIN grh.tbpessoa USING (idPessoa) "
                                 . "   WHERE balcao = 'Tarde' OR  balcao = 'Ambos'"
@@ -296,7 +298,7 @@ if($acesso){
                                 foreach($manha as $servidores){
 
                                     # Simplifica o nome
-                                    $servidores[0] = get_nomeSimples($servidores[0]);
+                                    #$servidores[0] = get_nomeSimples($servidores[0]);
 
                                     echo ' <option value="'.$servidores[0].'"';
 
@@ -305,7 +307,7 @@ if($acesso){
                                         echo ' selected="selected"';
                                     }
 
-                                    echo '>'.$servidores[0].'</option>';
+                                    echo '>'.$pessoal->get_nomeSimples($servidores[0]).'</option>';
                                 }
 
                             echo '</select>';
@@ -326,7 +328,7 @@ if($acesso){
                                 foreach($tarde as $servidores){
 
                                     # Simplifica o nome
-                                    $servidores[0] = get_nomeSimples($servidores[0]);
+                                    #$servidores[0] = get_nomeSimples($servidores[0]);
 
                                     echo ' <option value="'.$servidores[0].'"';
 
@@ -335,7 +337,7 @@ if($acesso){
                                         echo ' selected="selected"';
                                     }
 
-                                    echo '>'.$servidores[0].'</option>';
+                                    echo '>'.$pessoal->get_nomeSimples($servidores[0]).'</option>';
                                 }
                             echo '</select>';
                             echo '</td>';
@@ -349,8 +351,11 @@ if($acesso){
                             $ditoCujo = get_servidorBalcao($parametroAno,$parametroMes,$contador,"m");
                             echo '<td';
 
-                            if($ditoCujo == '?'){
+                            if(is_null($ditoCujo)){
                                 echo ' id="ausente"';
+                                $ditoCujo = "?";
+                            }else{
+                                $ditoCujo = $pessoal->get_nomeSimples($ditoCujo);
                             }
                             echo ' align="center"><span id="f14">'.$ditoCujo.'</span></td>';
                         }else{
@@ -362,8 +367,11 @@ if($acesso){
                             $ditoCujo = get_servidorBalcao($parametroAno,$parametroMes,$contador,"t");
                             echo '<td';
 
-                            if($ditoCujo == '?'){
+                            if(is_null($ditoCujo)){
                                 echo ' id="ausente"';
+                                $ditoCujo = "?";
+                            }else{
+                                $ditoCujo = $pessoal->get_nomeSimples($ditoCujo);
                             }
                             echo ' align="center"><span id="f14">'.$ditoCujo.'</span></td>';
                         }else{
@@ -398,6 +406,18 @@ if($acesso){
                 $contador++;
                 $vmanha = post("m$contador");
                 $vtarde = post("t$contador");
+                
+                echo "->".$vmanha;br();
+                echo "->".$vtarde;br();
+                
+                # Limpa os valores
+                if(($vmanha == "?") OR (vazio($vmanha))){
+                    $vmanha = NULL;
+                }
+                
+                if(($vtarde == "?") OR (vazio($vtarde))){
+                    $vtarde = NULL;
+                }
 
                 # Abre o banco de dados
                 $pessoal = new Pessoal();
@@ -406,7 +426,7 @@ if($acesso){
                 $idBalcao = get_idBalcao($parametroAno,$parametroMes,$contador);
 
                 # Grava na tabela
-                $campos = array("ano","mes","dia","manha","tarde");
+                $campos = array("ano","mes","dia","idServidorManha","idServidorTarde");
                 $valor = array($parametroAno,$parametroMes,$contador,$vmanha,$vtarde);
                 $pessoal->gravar($campos,$valor,$idBalcao,"tbbalcao","idBalcao",FALSE);
             }
@@ -443,7 +463,7 @@ if($acesso){
             $tabela->set_classe(array("pessoal","pessoal","pessoal"));
             $tabela->set_metodo(array("get_nomeSimples","get_lotacao","get_cargo"));
             $tabela->set_titulo("Controle de Servidores da GRH que atendem ao Balcão");
-            $tabela->set_editar('?fase=editaServidor&id=');
+            $tabela->set_editar('?fase=editaServidor');
             #$tabela->set_nomeColunaEditar("Editar");
             #$tabela->set_editarBotao("ver.png");
             $tabela->set_idCampo('idUsuario');
@@ -477,7 +497,10 @@ if($acesso){
             # Pega os valores
             $idServidor = $intra->get_idServidor($id);
             $nome = $pessoal->get_nomeSimples($idServidor);
-            $valorAnterior = NULL;
+            
+            # Pega o valor atual
+            $select = "SELECT balcao FROM tbusuario WHERE idUsuario = $id";
+            $valorAtual = $intra->select($select,FALSE);
 
             # Abre o form
             $form = new Form('?fase=validaServidor&id='.$id);
@@ -499,7 +522,7 @@ if($acesso){
             $controle->set_size(30);
             $controle->set_title('Atendimento no Balcão');
             $controle->set_array($array);
-            $controle->set_valor($valorAnterior);
+            $controle->set_valor($valorAtual[0]);
             $controle->set_autofocus(TRUE);
             $controle->set_linha(1);
             $controle->set_col(4);

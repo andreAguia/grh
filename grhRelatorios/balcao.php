@@ -121,8 +121,11 @@ if($acesso)
                 $ditoCujo = get_servidorBalcao($parametroAno,$parametroMes,$contador,"m");
                 echo '<td';
 
-                if($ditoCujo == '?'){
+                if(is_null($ditoCujo)){
                     echo ' id="ausente"';
+                    $ditoCujo = "?";
+                }else{
+                    $ditoCujo = $pessoal->get_nomeSimples($ditoCujo);
                 }
                 echo ' align="center"><span id="f14">'.$ditoCujo.'</span></td>';
             }else{
@@ -134,8 +137,11 @@ if($acesso)
                 $ditoCujo = get_servidorBalcao($parametroAno,$parametroMes,$contador,"t");
                 echo '<td';
 
-                if($ditoCujo == '?'){
+                if(is_null($ditoCujo)){
                     echo ' id="ausente"';
+                    $ditoCujo = "?";
+                }else{
+                    $ditoCujo = $pessoal->get_nomeSimples($ditoCujo);
                 }
                 echo ' align="center"><span id="f14">'.$ditoCujo.'</span></td>';
             }else{

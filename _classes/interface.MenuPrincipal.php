@@ -52,7 +52,7 @@ class MenuPrincipal{
         $grid->abreColuna(12,6,4);
         
         # Módulos
-        $this->moduloBalcao();
+        $this->moduloBalcao($idUsuario);
         $this->moduloAniversariantes();
         #$this->moduloAlertas();
         
@@ -168,25 +168,43 @@ class MenuPrincipal{
      * Exibe os servidores que atendem o balcão
      */
     
-    private function moduloBalcao(){
+    private function moduloBalcao($idUsuario = NULL){ 
         
+        # Banco de dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+        
+        # Pega os sortudos
+        $select = "SELECT idServidorManha, idServidorTarde FROM tbbalcao WHERE month(curdate()) = mes AND day(curdate()) = dia AND year(curdate()) = ano";
+        $sortudos = $pessoal->select($select, false);
+        
+        # Verifica se o usuário logado é um sortudo
+        $idServidor = $intra->get_idServidor($idUsuario);
+        
+        # Caso seja exibe uma mensagem
+        if(($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1])){
+            $painel2 = new Callout("warning");
+            $painel2->abre();
+
+            p("Parabéns servidor!!<br/>Hoje é seu dia de balcão!!","center");
+
+            $painel2->fecha();
+        }
+            
+        # Inicia painel
         $painel = new Callout("primary");
         $painel->abre();
         
         titulo('Hoje no Balcão');
         br();
-        
-        $select = "SELECT manha, tarde FROM tbbalcao WHERE month(curdate()) = mes AND day(curdate()) = dia AND year(curdate()) = ano";
-        $pessoal = new Pessoal();
-        $sortudos = $pessoal->select($select, false);
 
         if(is_NULL($sortudos)){
             p("Não Haverá Atendimento Hoje.");
         }else{
             echo "<table class='tabelaPadrao'>";
             #echo "<tr><th>Turno</th><th>Servidor</th></tr>";
-            echo "<tr><td>Manhã:</td><td>".trataNulo($sortudos[0])."</td></tr>";
-            echo "<tr><td>Tarde:</td><td>".trataNulo($sortudos[1])."</td></tr>";
+            echo "<tr><td>Manhã:</td><td>".trataNulo($pessoal->get_nomeSimples($sortudos[0]))."</td></tr>";
+            echo "<tr><td>Tarde:</td><td>".trataNulo($pessoal->get_nomeSimples($sortudos[1]))."</td></tr>";
             echo "</table>";
         }
         $painel->fecha();

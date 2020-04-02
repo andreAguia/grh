@@ -689,8 +689,8 @@ function get_situacaoRel($idServidor){
 function get_servidorBalcao($ano,$mes,$dia,$turno){
     $pessoal = new Pessoal();
     
-    $select = 'SELECT manha,
-                      tarde
+    $select = 'SELECT idServidorManha,
+                      idServidorTarde
                 FROM tbbalcao
                WHERE ano = '.$ano.'
                  AND mes = '.$mes.' 
@@ -700,17 +700,17 @@ function get_servidorBalcao($ano,$mes,$dia,$turno){
    $count = $pessoal->count($select,FALSE);
    
    if($count == 0){
-       return "?";
+       return NULL;
    }else{
        if($turno == "m"){
            if(vazio($row[0])){
-               return "?";
+               return NULL;
            }else{
                return $row[0];
            }
        }else{
            if(vazio($row[1])){
-               return "?";
+               return NULL;
            }else{
                return $row[1];
            }

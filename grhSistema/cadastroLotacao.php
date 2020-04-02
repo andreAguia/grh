@@ -136,12 +136,26 @@ if($acesso){
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
     
-    # Pega os dados da combo de Campus
-    $result3 = $pessoal->select('SELECT idCampus,
+    # Pega os dados da combo do Campus
+    $result1 = $pessoal->select('SELECT idCampus,
                                         campus
                                   FROM tbcampus
                               ORDER BY campus');
-    array_push($result3, array(NULL,NULL));
+    array_unshift($result1, array(NULL,NULL));
+    
+    # Pega os dados da datalist da Diretoria
+    $result2 = $pessoal->select('SELECT DISTINCT DIR,
+                                        DIR
+                                  FROM tblotacao WHERE ativo
+                              ORDER BY DIR');
+    #array_unshift($result2, array(NULL,NULL));
+    
+    # Pega os dados da datalist da Geância
+    $result3 = $pessoal->select('SELECT DISTINCT GER,
+                                        GER
+                                  FROM tblotacao WHERE ativo
+                              ORDER BY GER');
+    #array_unshift($result3, array(NULL,NULL));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -166,6 +180,7 @@ if($acesso){
                'label' => 'Sigla da Diretoria:',
                'title' => 'Sigla da Diretoria',
                'tipo' => 'texto',
+               'datalist' => $result2,
                'required' => TRUE,
                'size' => 15),
         array ('linha' => 1,
@@ -174,7 +189,7 @@ if($acesso){
                'label' => 'Campus:',
                'tipo' => 'combo',
                'required' => TRUE,
-               'array' => $result3,
+               'array' => $result1,
                'size' => 15),
         array ('linha' => 1,
                'col' => 2,
@@ -182,6 +197,7 @@ if($acesso){
                'label' => 'Sigla da Gerência:',
                'title' => 'Sigla da Gerência',
                'tipo' => 'texto',
+               'datalist' => $result3,
                'size' => 15),
         array ('linha' => 2,
                'col' => 10,

@@ -456,7 +456,7 @@ if($acesso){
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
                         $atividade = "Alterou a foto do servidor ".$pessoal->get_nome($idServidorPesquisado);
-                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idServidorPesquisado);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,8,$idServidorPesquisado);
 
                         # Volta para o menu
                         loadPage("?");

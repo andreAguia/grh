@@ -927,7 +927,7 @@ if($acesso){
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
                         $atividade = "Fez o upload de publicação do concurso ".$concurso->get_nomeConcurso($id);
-                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$id);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,8,$id);
 
                         # Volta para o menu
                         loadPage("?fase=editar&id=".$id);

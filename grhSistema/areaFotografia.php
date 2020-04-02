@@ -262,7 +262,7 @@ if($acesso){
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
                         $atividade = "Alterou a foto do servidor $nome";
-                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,4,$idPessoa);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,8,$idPessoa);
 
                         # Volta para o menu
                         loadPage("?fase=exibeFoto&idPessoa=$idPessoa");

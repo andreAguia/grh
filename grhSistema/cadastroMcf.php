@@ -226,7 +226,7 @@ if($acesso){
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
                         $atividade = "Fez o upload do mcf";
-                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,4);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,$id,8);
 
                         # Volta para o menu
                         loadPage("?fase=listar");

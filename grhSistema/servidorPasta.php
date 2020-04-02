@@ -400,7 +400,7 @@ if($acesso){
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
                         $atividade = "Fez o upload de documento para pasta funcional";
-                        $Objetolog->registraLog($idUsuario,$data,$atividade,"tbpasta",$id,4,$idServidorPesquisado);
+                        $Objetolog->registraLog($idUsuario,$data,$atividade,"tbpasta",$id,8,$idServidorPesquisado);
 
                         # Volta para o menu
                         loadPage("?fase=listar");

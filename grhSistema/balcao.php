@@ -407,9 +407,6 @@ if($acesso){
                 $vmanha = post("m$contador");
                 $vtarde = post("t$contador");
                 
-                echo "->".$vmanha;br();
-                echo "->".$vtarde;br();
-                
                 # Limpa os valores
                 if(($vmanha == "?") OR (vazio($vmanha))){
                     $vmanha = NULL;
@@ -418,9 +415,6 @@ if($acesso){
                 if(($vtarde == "?") OR (vazio($vtarde))){
                     $vtarde = NULL;
                 }
-
-                # Abre o banco de dados
-                $pessoal = new Pessoal();
 
                 # Verifica se já existe esse campo e pega o id para o update
                 $idBalcao = get_idBalcao($parametroAno,$parametroMes,$contador);

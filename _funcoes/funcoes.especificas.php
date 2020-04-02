@@ -1046,3 +1046,77 @@ function exibeRegraStatusLSV(){
 }
 
 ###########################################################
+
+function exibeDocumentoPasta($idPasta){
+/**
+ * Exibe umbotão que leva a um documento ou processo n a pasta funcional
+ * 
+ * @note Usado na rotina de pasta funcional 
+ * 
+ * @syntax exibeDocumentoPasta($idPasta);
+ * 
+ * @param $idPasta integer NULL o id da pasta
+ */
+    
+    
+    # Define a pasta
+    $pasta = PASTA_FUNCIONAL;
+            
+    # Monta o arquivo
+    $arquivo = $pasta.$idPasta.".pdf";
+
+    # Procura o arquivo
+    if(file_exists($arquivo)){
+
+        # Define as variáveis
+        $figura = 'documentacao.png';
+
+        # Monta o botão
+        $botao = new BotaoGrafico();
+        $botao->set_url($arquivo);
+        $botao->set_target('_blank');
+        $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',50,50);
+        $botao->show();
+    }
+    
+    return;
+}
+
+###########################################################
+
+function exibeProcessoPasta($idPasta){
+/**
+ * Exibe umbotão que leva a um documento ou processo n a pasta funcional
+ * 
+ * @note Usado na rotina de pasta funcional 
+ * 
+ * @syntax exibeDocumentoPasta($idPasta);
+ * 
+ * @param $idPasta integer NULL o id da pasta
+ */
+    
+    
+    # Define a pasta
+    $pasta = PASTA_FUNCIONAL;
+            
+    # Monta o arquivo
+    $arquivo = $pasta.$idPasta.".pdf";
+
+    # Procura o arquivo
+    if(file_exists($arquivo)){
+
+        # Define as variáveis
+        $figura = 'documentacao.png';
+
+        # Monta o botão
+        $botao = new BotaoGrafico();
+        $botao->set_url($arquivo);
+        $botao->set_target('_blank');
+        $botao->set_imagem(PASTA_FIGURAS.'processo.png',50,50);
+        $botao->show();
+    }
+    
+    return;
+}
+
+###########################################################

@@ -194,69 +194,42 @@ if($acesso){
             $grid->fechaColuna();
             
             ###############################################################
+            
             # Documentos
             $grid->abreColuna(6);
             
             # Painel
             $painel = new Callout();
             $painel->abre();
-
-            # Título
-            tituloTable('Documentos');
-            br();
-
-            # Define a pasta
-            $pasta = PASTA_FUNCIONAL;
-
+            
             # Pega os documentos
             $select = "SELECT idPasta, 
                               descricao,
                               tipo
                          FROM tbpasta
-                        WHERE idServidor = $idServidorPesquisado";
+                        WHERE tipo = 2 AND idServidor = $idServidorPesquisado";
 
             $dados = $pessoal->select($select);
             $count = $pessoal->count($select);
 
             if($count > 0){
+                
+                # Cabeçalho da tabela
+                $titulo = 'Documentos';
+                $label = array(NULL,NULL);
+                $width = array(15,80);
+                $align = array('center','left');            
 
-                # Inicia o menu
-                $menu = new MenuGrafico();
-                $temUm = FALSE;
-
-                foreach($dados as $dd){
-
-                    # Monta o arquivo
-                    $arquivo = $pasta.$dd[0].".pdf";
-                    
-                    # Procura o arquivo
-                    if(file_exists($arquivo)){
-                        $temUm = TRUE;
-                        
-                        # Define as variáveis
-                        $figura = 'documentacao.png';
-                        
-                        # Define o tipo para saber qual o icone
-                        switch ($dd[2]){
-                            case 1 :
-                                # Monta o botão
-                                $botao = new BotaoGrafico();
-                                $botao->set_label($dd[1]);
-                                $botao->set_url($arquivo);
-                                $botao->set_target('_blank');
-                                $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',50,50);
-                                $menu->add_item($botao);
-                                break;
-                        }
-                    }
-                }
-                if($temUm){
-                    $menu->show();
-                }else{
-                    br(2);
-                    p("Nenhum arquivo encontrado.","f14","center");
-                    br(4);
-                }
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($dados);
+                $tabela->set_align($align);
+                $tabela->set_label($label);
+                $tabela->set_width($width);
+                $tabela->set_titulo($titulo);
+                $tabela->set_funcao(array("exibeDocumentoPasta"));
+                $tabela->set_totalRegistro(FALSE);
+                $tabela->show();
             }else{
                 p("Nenhum arquivo encontrado.","f14","center");
             }
@@ -268,16 +241,9 @@ if($acesso){
             # Processos            
             $grid->abreColuna(6);
             
-            # Abre painel
+            # Painel
             $painel = new Callout();
             $painel->abre();
-
-            # Título
-            tituloTable('Processos');
-            br();
-
-            # Define a pasta
-            $pasta = PASTA_FUNCIONAL;
 
             # Pega os documentos
             $select = "SELECT idPasta, 
@@ -290,44 +256,23 @@ if($acesso){
             $count = $pessoal->count($select);
 
             if($count > 0){
+                
+                # Cabeçalho da tabela
+                $titulo = 'Processos';
+                $label = array(NULL,NULL);
+                $width = array(15,80);
+                $align = array('center','left');            
 
-                # Inicia o menu
-                $menu = new MenuGrafico();
-                $temUm = FALSE;
-
-                foreach($dados as $dd){
-
-                    # Monta o arquivo
-                    $arquivo = $pasta.$dd[0].".pdf";
-                    
-                    # Procura o arquivo
-                    if(file_exists($arquivo)){
-                        $temUm = TRUE;
-                        
-                        # Define as variáveis
-                        $figura = 'documentacao.png';
-                        
-                        # Define o tipo para saber qual o icone
-                        switch ($dd[2]){
-                            case 2 :
-                                # Monta o botão
-                                $botao = new BotaoGrafico();
-                                $botao->set_label($dd[1]);
-                                $botao->set_url($arquivo);
-                                $botao->set_target('_blank');
-                                $botao->set_imagem(PASTA_FIGURAS.'processo.png',50,50);
-                                $menu->add_item($botao);
-                                break;
-                        }
-                    }
-                }
-                if($temUm){
-                    $menu->show();
-                }else{
-                    br(2);
-                    p("Nenhum arquivo encontrado.","f14","center");
-                    br(4);
-                }
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($dados);
+                $tabela->set_align($align);
+                $tabela->set_label($label);
+                $tabela->set_width($width);
+                $tabela->set_titulo($titulo);
+                $tabela->set_funcao(array("exibeProcessoPasta"));
+                $tabela->set_totalRegistro(FALSE);
+                $tabela->show();
             }else{
                 p("Nenhum arquivo encontrado.","f14","center");
             }

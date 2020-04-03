@@ -49,18 +49,34 @@ class MenuPrincipal{
         ###############################################################################################
         
         # Terceira Coluna
-        $grid->abreColuna(12,6,4);
+        $grid->abreColuna(12,12,4);
+        
+        $grid1 = new Grid();
+        $grid1->abreColuna(12,6,12);
         
         # Módulos
         $this->moduloBalcao($idUsuario);
+        
+        $grid1->fechaColuna();
+        $grid1->abreColuna(12,6,12);
+        
         $this->moduloAniversariantes();
         #$this->moduloAlertas();
+        
+        $grid1->fechaColuna();
+        $grid1->abreColuna(12,6,12);
         
         # Calendário
         $cal = new Calendario();
         $cal->show();
         
+        $grid1->fechaColuna();
+        $grid1->abreColuna(12,6,12);
+        
         $this->moduloRamais();
+        
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
         
         $grid->fechaColuna();
         $grid->fechaGrid();        

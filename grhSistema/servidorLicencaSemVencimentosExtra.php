@@ -13,10 +13,18 @@ $numDias = $campoValor[7];
 $dtTermino = $campoValor[8];
 $dtRetorno = $campoValor[9];
 
+
 # Preenche a data de término quando for nula
 if(vazio($dtTermino)){
-    $campoValor[8] = date_to_bd(addDias($dtInicial, $numDias));
-    $dtTermino = $campoValor[8];
+    if(!vazio($dtInicial)){
+        $campoValor[8] = date_to_bd(addDias($dtInicial, $numDias));
+        $dtTermino = $campoValor[8];
+    }
+}
+
+if(vazio($numDias)){
+    $campoValor[8] = NULL;
+    $campoValor[6] = NULL;
 }
 
 # Verifica a data de retorno

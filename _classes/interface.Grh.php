@@ -785,61 +785,151 @@ class Grh{
     * 
     * @param    string $idServidor -> idServidor do servidor
     */
-    public static function listaDadosServidor($idServidor)
-    {       
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-
-        $select ='SELECT tbservidor.idFuncional,
-                         tbservidor.matricula,
-                         tbpessoa.nome,
-                         tbservidor.idServidor,
-                         tbservidor.idServidor,
-                         tbservidor.dtAdmissao,
-                         tbservidor.idServidor,
-                         tbservidor.idServidor,
-                         tbservidor.dtDemissao
-                    FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
-                                       LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
-                   WHERE idServidor = '.$idServidor;
-
-        $conteudo = $servidor->select($select,TRUE);
-        
-        # Pega a situação
-        $situacao = $servidor->get_situacao($idServidor);
-        
-        if ($situacao == "Ativo"){
-            $label = array("Id Funcional","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
-            $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php");
-        }else{
-            $label = array("Id Funcional","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação","Saída");
-            $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php");
-        }
-        #$align = array("center");
-        
-        $classe = array(NULL,NULL,NULL,"pessoal","pessoal",NULL,"pessoal","pessoal");
-        $metodo = array(NULL,NULL,NULL,"get_Perfil","get_Cargo",NULL,"get_Lotacao","get_Situacao");
-        
-        $formatacaoCondicional = array( array('coluna' => 0,
-                                              'valor' => $servidor->get_idFuncional($idServidor),
-                                              'operador' => '=',
-                                              'id' => 'listaDados'));
-
-        # Monta a tabela
-        $tabela = new Tabela();
-        $tabela->set_conteudo($conteudo);
-        $tabela->set_label($label);
-        $tabela->set_funcao($function);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(FALSE);
-        $tabela->set_formatacaoCondicional($formatacaoCondicional);
+    public static function listaDadosServidor($idServidor){ 
         
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
+            
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
         
-        $tabela->show();
+        # Telas maiores
+        $div = new Div(NULL,"hide-for-small-only");
+        $div->abre();
+        
+            $select ='SELECT tbservidor.idFuncional,
+                             tbservidor.matricula,
+                             tbpessoa.nome,
+                             tbservidor.idServidor,
+                             tbservidor.idServidor,
+                             tbservidor.dtAdmissao,
+                             tbservidor.idServidor,
+                             tbservidor.idServidor,
+                             tbservidor.dtDemissao
+                        FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                           LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                       WHERE idServidor = '.$idServidor;
+
+            $conteudo = $servidor->select($select,TRUE);
+
+            # Pega a situação
+            $situacao = $servidor->get_situacao($idServidor);
+
+            if ($situacao == "Ativo"){
+                $label = array("Id Funcional","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação");
+                $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php");
+            }else{
+                $label = array("Id Funcional","Matrícula","Servidor","Perfil","Cargo","Admissão","Lotação","Situação","Saída");
+                $function = array(NULL,"dv",NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php");
+            }
+            #$align = array("center");
+
+            $classe = array(NULL,NULL,NULL,"pessoal","pessoal",NULL,"pessoal","pessoal");
+            $metodo = array(NULL,NULL,NULL,"get_Perfil","get_Cargo",NULL,"get_Lotacao","get_Situacao");
+
+            $formatacaoCondicional = array( array('coluna' => 0,
+                                                  'valor' => $servidor->get_idFuncional($idServidor),
+                                                  'operador' => '=',
+                                                  'id' => 'listaDados'));
+        
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label($label);
+            $tabela->set_funcao($function);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional($formatacaoCondicional);
+
+            $tabela->show();
+
+        $div->fecha();
+        
+        ######################################3
+        
+        # Telas menores
+        $div = new Div(NULL,"show-for-small-only");
+        $div->abre();
+        
+            $select ='SELECT tbservidor.idFuncional,
+                             tbservidor.matricula,
+                             tbpessoa.nome,
+                             tbservidor.idServidor
+                        FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                        LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                       WHERE idServidor = '.$idServidor;
+
+            $conteudo = $servidor->select($select,TRUE);
+
+            # Pega a situação
+            $situacao = $servidor->get_situacao($idServidor);
+            $label = array("Id Funcional","Matrícula","Servidor","Perfil");
+            $function = array(NULL,"dv",NULL,NULL);
+            $classe = array(NULL,NULL,NULL,"pessoal");
+            $metodo = array(NULL,NULL,NULL,"get_Perfil");
+
+            $formatacaoCondicional = array( array('coluna' => 0,
+                                                  'valor' => $servidor->get_idFuncional($idServidor),
+                                                  'operador' => '=',
+                                                  'id' => 'listaDados'));
+        
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label($label);
+            $tabela->set_funcao($function);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional($formatacaoCondicional);
+
+            $tabela->show();
+            
+            $select ='SELECT tbservidor.idServidor,
+                             tbservidor.dtAdmissao,
+                             tbservidor.idServidor,
+                             tbservidor.idServidor,
+                             tbservidor.dtDemissao
+                        FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                           LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                       WHERE idServidor = '.$idServidor;
+
+            $conteudo = $servidor->select($select,TRUE);
+
+            # Pega a situação
+            $situacao = $servidor->get_situacao($idServidor);
+
+            if ($situacao == "Ativo"){
+                $label = array("Cargo","Admissão","Lotação","Situação");
+                $function = array(NULL,"date_to_php");
+            }else{
+                $label = array("Cargo","Admissão","Lotação","Situação","Saída");
+                $function = array(NULL,"date_to_php",NULL,NULL,"date_to_php");
+            }
+
+            $classe = array("pessoal",NULL,"pessoal","pessoal");
+            $metodo = array("get_Cargo",NULL,"get_Lotacao","get_Situacao");
+
+            $formatacaoCondicional = array( array('coluna' => 3,
+                                                  'valor' => $situacao,
+                                                  'operador' => '=',
+                                                  'id' => 'listaDados'));
+        
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label($label);
+            $tabela->set_funcao($function);
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_formatacaoCondicional($formatacaoCondicional);
+
+            $tabela->show();
+        
+        $div->fecha();
 
         $grid->fechaColuna();
         $grid->fechaGrid();        

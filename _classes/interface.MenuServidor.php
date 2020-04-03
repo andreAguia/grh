@@ -57,48 +57,51 @@ class MenuServidor{
             $grid->fechaColuna();
         }
         
-        $grid->abreColuna(6);
+        $grid->abreColuna(12,6);
 
         $this->moduloOcorrencias();
         
         $grid->fechaColuna();
-        $grid->abreColuna(6);
+        $grid->abreColuna(12,6);
 
         $this->moduloVinculos();
 
         $grid->fechaColuna();
-        $grid->abreColuna(5);
+        
+        ###
+        
+        $grid->abreColuna(12,6,5);
 
         $this->moduloFuncionais();
 
         $grid->fechaColuna();
-        $grid->abreColuna(3);
+        $grid->abreColuna(12,6,3);
 
         $this->moduloPessoais();
 
         $grid->fechaColuna();
-        $grid->abreColuna(2);
+        $grid->abreColuna(12,6,2);
             
         $this->moduloBeneficios();
         
         $grid->fechaColuna();
         
-        $grid->abreColuna(2);
+        $grid->abreColuna(12,6,2);
         
         $this->moduloFoto();
         
         $grid->fechaColuna();        
-        $grid->abreColuna(4);
+        $grid->abreColuna(12,6,4);
         
         $this->moduloFinanceiro();    
         
         $grid->fechaColuna();        
-        $grid->abreColuna(4);
+        $grid->abreColuna(12,6,4);
 
         $this->moduloAfastamentos();
         
         $grid->fechaColuna();
-        $grid->abreColuna(4);
+        $grid->abreColuna(12,6,4);
 
         $this->moduloRelatorios();
 

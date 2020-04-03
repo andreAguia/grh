@@ -91,6 +91,7 @@ if($acesso){
                   
                 });
              </script>';
+    
     # Começa uma nova página
     $page = new Page();
     if($fase == "editar"){
@@ -163,7 +164,7 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Status","Tipo","Licença Sem Vencimentos","Dados","Período","Entregou CRP?","Documentos"));
+    $objeto->set_label(array("Status","Tipo","Tipo","Dados","Período","Entregou CRP?","Documentos"));
     $objeto->set_width(array(10,5,15,20,20,5,20));	
     $objeto->set_align(array("center","center","left","left","left"));
     #$objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
@@ -214,14 +215,14 @@ if($acesso){
 
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'idTpLicenca',
-                                    'label' => 'Tipo de Afastamento ou Licença:',
+                                    'label' => 'Tipo:',
                                     'tipo' => 'combo',
                                     'size' => 50,
                                     'array' => $result,
                                     'required' => TRUE,
                                     'autofocus' => TRUE,
                                     'title' => 'Tipo do Adastamento/Licença.',
-                                    'col' => 12,
+                                    'col' => 10,
                                     'linha' => 1),
                             array ( 'nome' => 'tipo',
                                     'label' => 'Tipo:',
@@ -234,7 +235,7 @@ if($acesso){
                                     'valor' => 0,
                                     'col' => 2,
                                    'title' => 'Se é inicial ou renovação.',
-                                   'linha' => 2),
+                                   'linha' => 1),
                            array ( 'nome' => 'dtSolicitacao',
                                    'label' => 'Solicitado em:',
                                    'tipo' => 'data',
@@ -246,23 +247,23 @@ if($acesso){
                                   'label' => 'Processo:',
                                   'tipo' => 'processo',
                                   'size' => 30,
-                                  'col' => 3,
+                                  'col' => 4,
                                   'title' => 'Número do Processo',
-                                  'linha' => 3),
+                                  'linha' => 2),
                           array ( 'nome' => 'dtPublicacao',
                                   'label' => 'Data da Publicação:',
                                   'tipo' => 'data',
                                   'size' => 10,
                                   'col' => 3,
                                   'title' => 'A Data da Publicação.',
-                                  'linha' => 3),
+                                  'linha' => 2),
                           array ( 'nome' => 'pgPublicacao',
                                   'label' => 'Página:',
                                   'tipo' => 'texto',
                                   'size' => 5,
                                   'col' => 2,
                                   'title' => 'A página da Publicação no DOERJ.',
-                                  'linha' => 3),
+                                  'linha' => 2),
                           array ( 'nome' => 'dtInicial',
                                   'label' => 'Data Inicial:',
                                   'tipo' => 'data',
@@ -276,7 +277,7 @@ if($acesso){
                                   'min' => 1,
                                   'size' => 5,
                                   'title' => 'Número de dias.',
-                                  'col' => 2,
+                                  'col' => 3,
                                   'linha' => 4),
                           array ( 'nome' => 'dtTermino',
                                   'label' => 'Data de Termino (previsto):',
@@ -301,7 +302,7 @@ if($acesso){
                                   'array' => array(array(FALSE,"Não"),
                                                    array(TRUE,"Sim")),
                                   'size' => 10),
-                          array ( 'linha' => 6,
+                          array ( 'linha' => 5,
                                   'nome' => 'obs',
                                   'label' => 'Observação:',
                                   'tipo' => 'textarea',

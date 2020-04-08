@@ -402,7 +402,7 @@ if($acesso){
                                  idConcursoPublicacao
                             FROM tbconcursopublicacao
                            WHERE idConcurso = $id  
-                        ORDER BY data desc";
+                        ORDER BY data desc, idConcursoPublicacao desc";
                 
                 $conteudo = $pessoal->select($select);
                 $numConteudo = $pessoal->count($select);
@@ -416,6 +416,8 @@ if($acesso){
                     $tabela->set_funcao(array(NULL,"date_to_php"));
                     $tabela->set_align(array("left"));
                     $tabela->set_width(array(40,10,10,10,10));
+                    $tabela->set_numeroOrdem(TRUE);
+                    $tabela->set_numeroOrdemTipo('d');
                     
                     $tabela->set_classe(array(NULL,NULL,NULL,"ConcursoPublicacao"));
                     $tabela->set_metodo(array(NULL,NULL,NULL,"exibePublicacao"));

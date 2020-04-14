@@ -1308,7 +1308,8 @@ if($acesso){
                                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                                 JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
+                               WHERE idPerfil = 1
+                               AND tbservidor.situacao = 1
                                AND tbtipocargo.tipo = "Adm/Tec"';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -1468,7 +1469,7 @@ if($acesso){
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
-            $tabela->set_titulo("Adm/Tec");
+            $tabela->set_titulo("Servidores Estatutários Adm/Tec");
             $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
             $tabela->set_width(array(55,15,15,15));
             $tabela->set_align(array("left","center"));

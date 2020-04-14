@@ -1301,73 +1301,170 @@ if($acesso){
             br(); 
 
             $grid3 = new Grid();
-            $grid3->abreColuna(6);
+            $grid3->abreColuna(12);
                 
             # Adm/Tec
-            $selectGrafico = 'SELECT tbescolaridade.escolaridade, tbpessoa.sexo, count(tbservidor.idServidor) as jj
+            $selectGrafico = 'SELECT idServidor, tbpessoa.sexo
                                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                                JOIN tbformacao USING (idPessoa)
-                                                JOIN tbescolaridade USING (idEscolaridade)
                                                 JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbservidor.situacao = 1
-                               AND tbservidor.idPerfil <> 10
-                               AND idEscolaridade <> 12
-                               AND tbtipocargo.tipo = "Adm/Tec"
-                            GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
-                            ORDER BY tbescolaridade.idEscolaridade';
+                               AND tbtipocargo.tipo = "Adm/Tec"';
 
             $servidores = $pessoal->select($selectGrafico);
+            
+            # Inicia a classe de formação
+            $formação = new Formacao();
+            
+            # Cria um array para o gráfico
+            $elementarMasculino = 0;
+            $elementarFeminino = 0;
+            $elementarTotal = 0;
+            
+            $fundamentalMasculino = 0;
+            $fundamentalFeminino = 0;
+            $fundamentalTotal = 0;
+            
+            $medioMasculino = 0;
+            $medioFeminino = 0;
+            $medioTotal = 0;
+            
+            $superiorMasculino = 0;
+            $superiorFeminino = 0;
+            $superiorTotal = 0;
+            
+            $especializacaoMasculino = 0;
+            $especializacaoFeminino = 0;
+            $especializacaoTotal = 0;
+            
+            $mestradoMasculino = 0;
+            $mestradoFeminino = 0;
+            $mestradoTotal = 0;
+            
+            $doutoradoMasculino = 0;
+            $doutoradoFeminino = 0;
+            $doutoradoTotal = 0;
+            
+            $masculinoTotal = 0;
+            $femininoTotal = 0;
 
-            # Novo array 
-            $arrayEscolaridade = array();
-
-            # Valores anteriores
-            $escolaridadeAnterior = NULL;
-
-            # inicia as variáveis
-            $masc = 0;
-            $femi = 0;
-            $totalMasc = 0;
-            $totalFemi = 0;
-            $total = 0;
-
-            # Modelar o novo array
-            foreach ($servidores as $value) {
+            # Percorre o array preenchendo os valores
+            foreach($servidores as $value) {
+                
                 # Carrega as variáveis
-                $escolaridade = $value[0];
-                $sexo = $value[1];                    
-                $contagem = $value[2];
-
-                # Verifica se mudou de escolaridade
-                if($escolaridade <> $escolaridadeAnterior){
-                    if(is_null($escolaridadeAnterior)){
-                        $escolaridadeAnterior = $escolaridade;
-                    }else{
-                        $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
-                        $masc = 0;
-                        $femi = 0;
-                        $escolaridadeAnterior = $escolaridade;
-                        $total += ($femi+$masc);
-                    }
+                $escolaridade = $formação->get_escolaridade($value[0]);
+                $sexo = $value[1];
+                
+                /* Preenche os array de acordo com a escolaridade e o sexo
+                 *  2	Elementar
+                 *  4	Fundamental
+                 *  6	Médio
+                 *  8	Superior
+                 *  9	Latu Senso/MBA
+                 *  10	Mestrado
+                 *  11	Doutorado
+                 *  12	Extensão
+                 * 
+                 */
+                
+                switch ($escolaridade){
+                                       
+                    # Elementar
+                    case 2:
+                        if($sexo == 'Masculino'){
+                            $elementarMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $elementarFeminino++;
+                            $femininoTotal++;
+                        }
+                        $elementarTotal++;
+                        break;
+                        
+                    # Fundamental    
+                    case 4:
+                        if($sexo == 'Masculino'){
+                            $fundamentalMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $fundamentalFeminino++;
+                            $femininoTotal++;
+                        }
+                        $fundamentalTotal++;
+                        break;
+                        
+                    # Médio    
+                    case 6:
+                        if($sexo == 'Masculino'){
+                            $medioMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $medioFeminino++;
+                            $femininoTotal++;
+                        }
+                        $medioTotal++;
+                        break;
+                        
+                    # Superior    
+                    case 8:
+                        if($sexo == 'Masculino'){
+                            $superiorMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $superiorFeminino++;
+                            $femininoTotal++;
+                        }
+                        $superiorTotal++;
+                        break;
+                        
+                    # Latu sensu / MBA
+                    case 9:
+                        if($sexo == 'Masculino'){
+                            $especializacaoMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $especializacaoFeminino++;
+                            $femininoTotal++;
+                        }
+                        $especializacaoTotal++;
+                        break;
+                        
+                    # Mestrado    
+                    case 10:
+                        if($sexo == 'Masculino'){
+                            $mestradoMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $mestradoFeminino++;
+                            $femininoTotal++;
+                        }
+                        $mestradoTotal++;
+                        break;
+                        
+                    # Doutorado
+                    case 11:
+                        if($sexo == 'Masculino'){
+                            $doutoradoMasculino++;
+                            $masculinoTotal++;
+                        }else{
+                            $doutoradoFeminino++;
+                            $femininoTotal++;
+                        }
+                        $doutoradoTotal++;
+                        break;
                 }
-
-                if($sexo == 'Masculino'){
-                   $masc = $contagem;
-                   $totalMasc += $masc;
-                }else{
-                   $femi = $contagem;
-                   $totalFemi += $femi; 
-                }   
             }
-
-            $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
-
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));          
-
-            $arrayEscolaridade[] = array("Total",$totalFemi,$totalMasc,$total);
-
+            
+            # Forma o array da tabela
+            $arrayEscolaridade[] = array("Doutorado",$doutoradoFeminino,$doutoradoMasculino,$doutoradoTotal);
+            $arrayEscolaridade[] = array("Mestrado",$mestradoFeminino,$mestradoMasculino,$mestradoTotal);
+            $arrayEscolaridade[] = array("Especialização",$especializacaoFeminino,$especializacaoMasculino,$especializacaoTotal);
+            $arrayEscolaridade[] = array("Superior",$superiorFeminino,$superiorMasculino,$superiorTotal);
+            $arrayEscolaridade[] = array("Médio",$medioFeminino,$medioMasculino,$medioTotal);
+            $arrayEscolaridade[] = array("Fundamental",$fundamentalFeminino,$fundamentalMasculino,$fundamentalTotal);
+            $arrayEscolaridade[] = array("Elementar",$elementarFeminino,$elementarMasculino,$elementarTotal);
+            $arrayEscolaridade[] = array("Total",$femininoTotal,$masculinoTotal,$femininoTotal+$masculinoTotal);
+            
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
@@ -1383,94 +1480,7 @@ if($acesso){
 
             $tabela->show();
 
-            $grid3->fechaColuna();
-
-    ##########################################
-
-            $grid3->abreColuna(6);               
-
-
-            # Professor
-            $selectGrafico = 'SELECT tbescolaridade.escolaridade, tbpessoa.sexo, count(tbservidor.idServidor) as jj
-                                FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                                JOIN tbformacao USING (idPessoa)
-                                                JOIN tbescolaridade USING (idEscolaridade)
-                                                JOIN tbcargo USING (idCargo)
-                                                JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                               AND tbservidor.idPerfil <> 10
-                               AND idEscolaridade <> 12
-                               AND tbtipocargo.tipo = "Professor"
-                            GROUP BY tbescolaridade.idEscolaridade, tbpessoa.sexo
-                            ORDER BY tbescolaridade.idEscolaridade';
-
-            $servidores = $pessoal->select($selectGrafico);
-
-            # Novo array 
-            $arrayEscolaridade = array();
-
-            # Valores anteriores
-            $escolaridadeAnterior = NULL;
-
-            # inicia as variáveis
-            $masc = 0;
-            $femi = 0;
-            $totalMasc = 0;
-            $totalFemi = 0;
-            $total = 0;
-
-            # Modelar o novo array
-            foreach ($servidores as $value) {
-                # Carrega as variáveis
-                $escolaridade = $value[0];
-                $sexo = $value[1];                    
-                $contagem = $value[2];
-
-                # Verifica se mudou de escolaridade
-                if($escolaridade <> $escolaridadeAnterior){
-                    if(is_null($escolaridadeAnterior)){
-                        $escolaridadeAnterior = $escolaridade;
-                    }else{
-                        $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
-                        $masc = 0;
-                        $femi = 0;
-                        $escolaridadeAnterior = $escolaridade;
-                        $total += ($femi+$masc);
-                    }
-                }
-
-                if($sexo == 'Masculino'){
-                   $masc = $contagem;
-                   $totalMasc += $masc;
-                }else{
-                   $femi = $contagem;
-                   $totalFemi += $femi; 
-                }   
-            }
-
-            $arrayEscolaridade[] = array($escolaridadeAnterior,$femi,$masc,$femi+$masc);
-
-            # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));          
-
-            $arrayEscolaridade[] = array("Total",$totalFemi,$totalMasc,$total);
-
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($arrayEscolaridade);
-            $tabela->set_titulo("Professor");
-            $tabela->set_label(array("Escolaridade","Feminino","Masculino","Total"));
-            $tabela->set_width(array(55,15,15,15));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_totalRegistro(FALSE);
-            $tabela->set_formatacaoCondicional(array( array('coluna' => 0,
-                                                'valor' => "Total",
-                                                'operador' => '=',
-                                                'id' => 'estatisticaTotal')));
-
-            $tabela->show();
-
-            $grid3->fechaColuna();                
+            $grid3->fechaColuna();        
             $grid3->fechaGrid();
         $painel->fecha();
         break;

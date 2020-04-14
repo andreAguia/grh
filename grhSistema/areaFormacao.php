@@ -206,6 +206,8 @@ if($acesso){
             $tabela->set_align(array("center","left","left","left","center","left","left"));
             $tabela->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,"Formacao"));
             $tabela->set_metodo(array(NULL,NULL,"get_Cargo","get_Lotacao",NULL,"get_curso"));
+            $tabela->set_rowspan(1);
+            $tabela->set_grupoCorColuna(1);
             
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

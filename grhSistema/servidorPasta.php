@@ -218,8 +218,8 @@ if($acesso){
                 $tabela = new Tabela();
                 $tabela->set_conteudo($dados);
                 $tabela->set_align(array('center','left'));
-                $tabela->set_label(array(NULL,NULL));
-                $tabela->set_width(array(15,80));
+                $tabela->set_label(array("Ver","Descrição"));
+                $tabela->set_width(array(10,90));
                 $tabela->set_titulo('Documentos');
                 $tabela->set_funcao(array("exibeDocumentoPasta"));
                 $tabela->set_totalRegistro(FALSE);
@@ -259,8 +259,8 @@ if($acesso){
                 $tabela = new Tabela();
                 $tabela->set_conteudo($dados);
                 $tabela->set_align(array('center','left'));
-                $tabela->set_label(array(NULL,NULL));
-                $tabela->set_width(array(15,80));
+                $tabela->set_label(array("Ver","Descrição"));
+                $tabela->set_width(array(10,90));
                 $tabela->set_titulo('Processos');
                 $tabela->set_funcao(array("exibeProcessoPasta"));
                 $tabela->set_totalRegistro(FALSE);

@@ -1074,8 +1074,9 @@ function exibeDocumentoPasta($idPasta){
         # Monta o botão
         $botao = new BotaoGrafico();
         $botao->set_url($arquivo);
+        $botao->set_title("Clique para exibir o documento");
         $botao->set_target('_blank');
-        $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',30,30);
+        $botao->set_imagem(PASTA_FIGURAS.'documentacao.png',20,20);
         $botao->show();
     }
     
@@ -1111,8 +1112,9 @@ function exibeProcessoPasta($idPasta){
         # Monta o botão
         $botao = new BotaoGrafico();
         $botao->set_url($arquivo);
+        $botao->set_title("Clique para exibir o processo");
         $botao->set_target('_blank');
-        $botao->set_imagem(PASTA_FIGURAS.'processo.png',30,30);
+        $botao->set_imagem(PASTA_FIGURAS.'processo.png',20,20);
         $botao->show();
     }
     

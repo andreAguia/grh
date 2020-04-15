@@ -52,6 +52,7 @@ if($acesso){
     set_session('parametroTipo');
     set_session('parametroEscolaridade');
     set_session('parametroPerfil');
+    set_session('parametroPasta');
     set_session('parametroSituacao');
     set_session('parametroPaginacao');   
     set_session('parametroOrdenacao');   

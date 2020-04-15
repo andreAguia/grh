@@ -38,10 +38,12 @@ if($acesso){
     # Pega os parâmetros    
     $parametroNome = retiraAspas(post('parametroNome',get_session('parametroNome')));
     $parametroSituacao = retiraAspas(post('parametroSituacao',get_session('parametroSituacao',TRUE)));
+    $parametroPasta = retiraAspas(post('parametroPasta',get_session('parametroPasta',"TD")));
         
     # Joga os parâmetros par as sessions
     set_session('parametroNome',$parametroNome);
     set_session('parametroSituacao',$parametroSituacao);
+    set_session('parametroPasta',$parametroPasta);
     
     # Começa uma nova página
     $page = new Page();
@@ -90,6 +92,7 @@ if($acesso){
             $controle->set_autofocus(TRUE);
             $form->add_item($controle);
             
+            # Situação
             $situacao = array(array(TRUE,"Ativo"),
                               array(FALSE,"Não Ativo"));
             
@@ -97,8 +100,22 @@ if($acesso){
             $controle->set_size(8);
             $controle->set_title('Filtra por Situação');
             $controle->set_array($situacao);
-            $controle->set_valor(date("Ativo"));
             $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            #Com ou sem pasta
+            $pastas = array(array("TD","Todas"),
+                            array("CP","Com pasta"),
+                            array("SP","Sem Pasta"));
+            
+            $controle = new Input('parametroPasta','combo','Pastas:',1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Pastas');
+            $controle->set_array($pastas);
+            $controle->set_valor($parametroPasta);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(3);
@@ -111,36 +128,66 @@ if($acesso){
             # Pega o time inicial
             $time_start = microtime(TRUE);
             
-            # Pega os dados
-            $select = 'SELECT tbpessoa.nome,
+            # Se for todos
+            if($parametroPasta == "TD"){
+                $select = "SELECT tbpessoa.nome,
                               idServidor,
                               CASE tbpasta.tipo
-                                   WHEN 1 THEN "Documento"
-                                   WHEN 2 THEN "Processo"
+                                   WHEN 1 THEN 'Documento' 
+                                   WHEN 2 THEN 'Processo'
                               END,
                               tbpasta.descricao,
                               tbpasta.idPasta,
                               tbpasta.idPasta
                          FROM tbpasta right JOIN tbservidor USING (idServidor)
-                                      JOIN tbpessoa USING (idPessoa)
-                         WHERE TRUE';
+                                            JOIN tbpessoa USING (idPessoa)
+                        WHERE TRUE";
+            }
             
+            # Se for SEM pasta
+            if($parametroPasta == "CP"){
+                $select = "SELECT tbpessoa.nome,
+                                  idServidor,
+                                  CASE tbpasta.tipo
+                                       WHEN 1 THEN 'Documento' 
+                                       WHEN 2 THEN 'Processo'
+                                  END,
+                                  tbpasta.descricao,
+                                  tbpasta.idPasta,
+                                  tbpasta.idPasta
+                             FROM tbpasta JOIN tbservidor USING (idServidor)
+                                          JOIN tbpessoa USING (idPessoa)
+                             WHERE TRUE";
+            }
+            
+            # Se for SEM pasta
+            if($parametroPasta == "SP"){
+                $select = "SELECT tbpessoa.nome,
+                                  idServidor,
+                                  NULL,
+                                  NULL,
+                                  NULL,
+                                  NULL
+                             FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                             WHERE idServidor NOT IN (Select idServidor FROM tbpasta)";
+            }
+
             # nome
             if(!vazio($parametroNome)){
-                $select .= ' AND tbpessoa.nome LIKE "%'.$parametroNome.'%"';
+                $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
             }
             
             # Situação
             if($parametroSituacao){
-                $select .= ' AND tbservidor.situacao = 1';
+                $select .= " AND tbservidor.situacao = 1";
             }else{
-                $select .= ' AND tbservidor.situacao <> 1';
+                $select .= " AND tbservidor.situacao <> 1";
             }
                     
             $select .= " ORDER BY tbpessoa.nome";
             
             $resumo = $pessoal->select($select);
-            
+                       
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);

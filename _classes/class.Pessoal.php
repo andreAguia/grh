@@ -3730,18 +3730,22 @@ class Pessoal extends Bd {
                          FROM tbferiado 
                         WHERE (tipo = "anual" AND MONTH(data) = MONTH(current_date()) AND DAY(data) = DAY(current_date())
                            OR (tipo = "data única" and  data = current_date()))';
+            $row = parent::select($select,FALSE);       
+            return $row[0];
         }else{
-            $data = date_to_bd($data);
+            if(validaData($data)){
+                $data = date_to_bd($data);
 
-            # Monta o select
-            $select = 'SELECT descricao
-                         FROM tbferiado 
-                        WHERE (tipo = "anual" AND MONTH(data) = MONTH("'.$data.'") AND DAY(data) = DAY("'.$data.'")
-                           OR (tipo = "data única" and  data = "'.$data.'"))';
+                # Monta o select
+                $select = 'SELECT descricao
+                             FROM tbferiado 
+                            WHERE (tipo = "anual" AND MONTH(data) = MONTH("'.$data.'") AND DAY(data) = DAY("'.$data.'")
+                               OR (tipo = "data única" and  data = "'.$data.'"))';
+                
+                $row = parent::select($select,FALSE);       
+                return $row[0];
+            }
         }
-        
-        $row = parent::select($select,FALSE);       
-        return $row[0];
     }
 	
     ##########################################################################################

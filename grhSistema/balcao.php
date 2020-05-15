@@ -266,8 +266,8 @@ if($acesso){
 
                         # Manhã
                         $select1 = "SELECT idServidor"
-                                . "   FROM tbusuario JOIN grh.tbservidor USING (idServidor) "
-                                . "                  JOIN grh.tbpessoa USING (idPessoa) "
+                                . "   FROM tbusuario JOIN uenf_grh.tbservidor USING (idServidor) "
+                                . "                  JOIN uenf_grh.tbpessoa USING (idPessoa) "
                                 . "   WHERE balcao = 'Manhã' OR  balcao = 'Ambos'"
                                 . "ORDER BY nome";
 
@@ -275,8 +275,8 @@ if($acesso){
                         array_unshift($manha, array(NULL,NULL)); # Adiciona o valor de nulo
 
                         $select2 = "SELECT idServidor"
-                                . "   FROM tbusuario JOIN grh.tbservidor USING (idServidor) "
-                                . "                  JOIN grh.tbpessoa USING (idPessoa) "
+                                . "   FROM tbusuario JOIN uenf_grh.tbservidor USING (idServidor) "
+                                . "                  JOIN uenf_grh.tbpessoa USING (idPessoa) "
                                 . "   WHERE balcao = 'Tarde' OR  balcao = 'Ambos'"
                                 . "ORDER BY nome";
 
@@ -440,8 +440,8 @@ if($acesso){
                               idServidor,
                               balcao,
                               idUsuario
-                         FROM areaservidor.tbusuario JOIN grh.tbservidor USING (idServidor)
-                                                     JOIN grh.tbpessoa USING (idPessoa)
+                         FROM uenf_areaservidor.tbusuario JOIN uenf_grh.tbservidor USING (idServidor)
+                                                     JOIN uenf_grh.tbpessoa USING (idPessoa)
                         WHERE senha IS NOT NULL
                      ORDER BY tbpessoa.nome asc';
 

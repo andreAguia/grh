@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,23 +14,22 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     # Pega os parâmetros dos relatórios
-    $lotacao = get('lotacao',post('lotacao'));
+    $lotacao = get('lotacao', post('lotacao'));
 
     ######
-    
-    $select ='SELECT idTpLicenca,
+
+    $select = 'SELECT idTpLicenca,
                     nome,
                     periodo,
                     pericia,
@@ -47,9 +46,9 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Tipos de Afastamentos e Licenças');
     $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_label(array("id","Licença","Período</br>(em dias)","Perícia","Publicação","Processo","Período Aquisitivo","Gênero"));
-    $relatorio->set_width(array(5,35,10,10,10,10,10,10));
-    $relatorio->set_align(array("center","left"));
+    $relatorio->set_label(array("id", "Licença", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero"));
+    $relatorio->set_width(array(5, 35, 10, 10, 10, 10, 10, 10));
+    $relatorio->set_align(array("center", "left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(FALSE);
     $relatorio->show();

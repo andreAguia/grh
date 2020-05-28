@@ -1,42 +1,41 @@
 <?php
+
 /**
  * Dados Gerais do servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Endereços e contatos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','ver');
-    
+    $fase = get('fase', 'ver');
+
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -46,11 +45,10 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
-    
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Endereço & Contatos');
 
@@ -68,7 +66,7 @@ if($acesso){
                                      emailUenf,
                                      emailPessoal
                                 FROM tbpessoa
-                               WHERE idPessoa = '.$idPessoa);
+                               WHERE idPessoa = ' . $idPessoa);
 
 
     # Caminhos
@@ -93,129 +91,128 @@ if($acesso){
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-    
+
     # Pega os dados da combo de cidade
     $cidade = $pessoal->select('SELECT idCidade,
                                        CONCAT(tbcidade.nome," (",tbestado.uf,")")
                                   FROM tbcidade JOIN tbestado USING (idEstado)
                               ORDER BY proximidade,tbestado.uf,tbcidade.nome');
-    array_unshift($cidade, array(NULL,NULL)); # Adiciona o valor de nulo
-
+    array_unshift($cidade, array(NULL, NULL)); # Adiciona o valor de nulo
     # Campos para o formulario
-    $objeto->set_campos(array(         
-                        array ('linha' => 5,
-                               'nome' => 'endereco',
-                               'label' => 'Endereço:',
-                               'tipo' => 'texto',
-                               'autofocus' => TRUE,
-                               'fieldset' => 'Endereço',
-                               'plm' => TRUE,
-                               'title' => 'Endereço do Servidor',
-                               'col' => 12,
-                               'size' => 150),
-                        array ('linha' => 6,
-                               'nome' => 'bairro',
-                               'label' => 'Bairro:',
-                               'tipo' => 'texto',                          
-                               'title' => 'Bairro',
-                               'plm' => TRUE,
-                               'col' => 4,
-                               'size' => 50),
-                        array ('linha' => 6,
-                               'nome' => 'idCidade',
-                               'label' => 'Cidade:',
-                               'tipo' => 'combo',
-                               'array' => $cidade,                        
-                               'title' => 'Cidade de Moradia do Servidor',                           
-                               'col' => 5,
-                               'size' => 30),
-                        array ('linha' => 6,
-                               'nome' => 'cep',
-                               'label' => 'Cep:',
-                               'tipo' => 'cep',                          
-                               'title' => 'Cep',
-                               'col' => 3,
-                               'size' => 10),
-                        array ('linha' => 7,
-                               'nome' => 'telResidencialDDD',
-                               'label' => 'DDD:',
-                               'tipo' => 'texto',
-                               'title' => 'DDD',
-                               'autofocus' => TRUE,
-                               'col' => 1,
-                               'fieldset' => 'Telefones',
-                               'size' => 2),
-                        array ('linha' => 7,
-                               'nome' => 'telResidencial',
-                               'label' => 'Telefone Residencial:',
-                               'tipo' => 'telefone',
-                               'title' => 'Telefone Residencial',
-                               'col' => 3,
-                               'fieldset' => 'Telefones',
-                               'size' => 30),
-                        array ('linha' => 7,
-                               'nome' => 'telCelularDDD',
-                               'label' => 'DDD:',
-                               'tipo' => 'texto',
-                               'title' => 'DDD',
-                               'col' => 1,
-                               'size' => 2),
-                        array ('linha' => 7,
-                               'nome' => 'telCelular',
-                               'label' => 'Telefone Celular:',
-                               'tipo' => 'celular',
-                               'title' => 'Telefone Celular',
-                               'col' => 3,
-                               'size' => 30),
-                        array ('linha' => 7,
-                               'nome' => 'telRecadosDDD',
-                               'label' => 'DDD:',
-                               'tipo' => 'texto',
-                               'title' => 'DDD',
-                               'col' => 1,
-                               'size' => 2),
-                        array ('linha' => 7,
-                               'nome' => 'telRecados',
-                               'label' => 'Outro telefone para recado:',
-                               'tipo' => 'texto',
-                               'title' => 'Telefone Recados',
-                               'col' => 3,
-                               'size' => 30),
-                        array ('linha' => 8,
-                               'nome' => 'emailUenf',
-                               'label' => 'E-mail Uenf:',
-                               'tipo' => 'texto',
-                               'title' => 'E-mail institucional da Uenf',
-                               'col' => 4,
-                               'fieldset' => 'E-mails',
-                               'size' => 100),
-                        array ('linha' => 8,
-                               'nome' => 'emailPessoal',
-                               'label' => 'E-mail Pessoal:',
-                               'tipo' => 'texto',
-                               'title' => 'E-mail Pessoal',
-                               'col' => 4,
-                               'size' => 100),
-                                ));
+    $objeto->set_campos(array(
+        array('linha' => 5,
+            'nome' => 'endereco',
+            'label' => 'Endereço:',
+            'tipo' => 'texto',
+            'autofocus' => TRUE,
+            'fieldset' => 'Endereço',
+            'plm' => TRUE,
+            'title' => 'Endereço do Servidor',
+            'col' => 12,
+            'size' => 150),
+        array('linha' => 6,
+            'nome' => 'bairro',
+            'label' => 'Bairro:',
+            'tipo' => 'texto',
+            'title' => 'Bairro',
+            'plm' => TRUE,
+            'col' => 4,
+            'size' => 50),
+        array('linha' => 6,
+            'nome' => 'idCidade',
+            'label' => 'Cidade:',
+            'tipo' => 'combo',
+            'array' => $cidade,
+            'title' => 'Cidade de Moradia do Servidor',
+            'col' => 5,
+            'size' => 30),
+        array('linha' => 6,
+            'nome' => 'cep',
+            'label' => 'Cep:',
+            'tipo' => 'cep',
+            'title' => 'Cep',
+            'col' => 3,
+            'size' => 10),
+        array('linha' => 7,
+            'nome' => 'telResidencialDDD',
+            'label' => 'DDD:',
+            'tipo' => 'texto',
+            'title' => 'DDD',
+            'autofocus' => TRUE,
+            'col' => 1,
+            'fieldset' => 'Telefones',
+            'size' => 2),
+        array('linha' => 7,
+            'nome' => 'telResidencial',
+            'label' => 'Telefone Residencial:',
+            'tipo' => 'telefone',
+            'title' => 'Telefone Residencial',
+            'col' => 3,
+            'fieldset' => 'Telefones',
+            'size' => 30),
+        array('linha' => 7,
+            'nome' => 'telCelularDDD',
+            'label' => 'DDD:',
+            'tipo' => 'texto',
+            'title' => 'DDD',
+            'col' => 1,
+            'size' => 2),
+        array('linha' => 7,
+            'nome' => 'telCelular',
+            'label' => 'Telefone Celular:',
+            'tipo' => 'celular',
+            'title' => 'Telefone Celular',
+            'col' => 3,
+            'size' => 30),
+        array('linha' => 7,
+            'nome' => 'telRecadosDDD',
+            'label' => 'DDD:',
+            'tipo' => 'texto',
+            'title' => 'DDD',
+            'col' => 1,
+            'size' => 2),
+        array('linha' => 7,
+            'nome' => 'telRecados',
+            'label' => 'Outro telefone para recado:',
+            'tipo' => 'texto',
+            'title' => 'Telefone Recados',
+            'col' => 3,
+            'size' => 30),
+        array('linha' => 8,
+            'nome' => 'emailUenf',
+            'label' => 'E-mail Uenf:',
+            'tipo' => 'texto',
+            'title' => 'E-mail institucional da Uenf',
+            'col' => 4,
+            'fieldset' => 'E-mails',
+            'size' => 100),
+        array('linha' => 8,
+            'nome' => 'emailPessoal',
+            'label' => 'E-mail Pessoal:',
+            'tipo' => 'texto',
+            'title' => 'E-mail Pessoal',
+            'col' => 4,
+            'size' => 100),
+    ));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
-    switch ($fase){
+    switch ($fase) {
         case "ver" :
         case "editar" :
         case "excluir" :
             $objeto->$fase($idPessoa);
             break;
-        
+
         case "gravar" :
-            $objeto->gravar($idPessoa,"servidorEnderecoContatosExtra.php"); 
+            $objeto->gravar($idPessoa, "servidorEnderecoContatosExtra.php");
             break;
     }
-    
+
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

@@ -1,7 +1,8 @@
 <?php
 
 class Pessoal extends Bd {
-    /** 
+
+    /**
      * Classe de acesso ao Banco de Dados Pessoal
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
@@ -14,7 +15,6 @@ class Pessoal extends Bd {
      * @var private $tabela   string NULL      A tabela que está sendo acessada
      * @var private $idCampo  string NULL      O nome do campo id da tabela    
      */
-	
     private $servidor = "localhost";
     private $usuario = "intranet";
     private $senha = "txzVHnMdh53ZWX9p";
@@ -22,25 +22,24 @@ class Pessoal extends Bd {
     private $sgdb = "mysql";
     private $tabela;
     private $idCampo;
-    
+
 ###########################################################
-	
+
     /**
      * Faz uma conexão
-     */ 
-    
-    public function __construct(){
-        parent::__construct($this->servidor,$this->usuario,$this->senha,$this->banco,$this->sgdb);		
+     */
+    public function __construct() {
+        parent::__construct($this->servidor, $this->usuario, $this->senha, $this->banco, $this->sgdb);
     }
-    
+
 ###########################################################
-	
+
     /**
      * Método set_tabela
      * 
      * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que será utilizada
      */
-    public function set_tabela($nomeTabela){
+    public function set_tabela($nomeTabela) {
         $this->tabela = $nomeTabela;
     }
 
@@ -51,8 +50,7 @@ class Pessoal extends Bd {
      * 
      * @param  	$idCampo)	-> Nome do campo chave da tabela
      */
-    public function set_idCampo($idCampo)
-    {
+    public function set_idCampo($idCampo) {
         $this->idCampo = $idCampo;
     }
 
@@ -61,17 +59,17 @@ class Pessoal extends Bd {
     /**
      * Método Gravar
      */
-    public function gravar($campos = NULL,$valor = NULL,$idValor = NULL,$tabela = NULL,$idCampo = NULL,$alerta = FALSE){
+    public function gravar($campos = NULL, $valor = NULL, $idValor = NULL, $tabela = NULL, $idCampo = NULL, $alerta = FALSE) {
 
-        if(is_null($tabela)){
+        if (is_null($tabela)) {
             $tabela = $this->tabela;
         }
 
-        if(is_null($idCampo)){
+        if (is_null($idCampo)) {
             $idCampo = $this->idCampo;
         }
 
-        parent::gravar($campos,$valor,$idValor,$tabela,$idCampo,$alerta);
+        parent::gravar($campos, $valor, $idValor, $tabela, $idCampo, $alerta);
     }
 
 ###########################################################
@@ -79,12 +77,12 @@ class Pessoal extends Bd {
     /**
      * Método Excluir
      */
-    public function excluir($idValor = NULL,$tabela = NULL,$idCampo = 'id'){
+    public function excluir($idValor = NULL, $tabela = NULL, $idCampo = 'id') {
 
         # efetua a exclus�o
-        parent::excluir($idValor,$this->tabela,$this->idCampo);
+        parent::excluir($idValor, $this->tabela, $this->idCampo);
 
-        return TRUE;		
+        return TRUE;
     }
 
 ###########################################################
@@ -95,19 +93,16 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_gratificacao($idServidor)
-    {
+    public function get_gratificacao($idServidor) {
         $select = 'SELECT valor
                      FROM tbgratificacao
-                    WHERE idServidor = '.$idServidor.'
+                    WHERE idServidor = ' . $idServidor . '
                       AND current_date() >= dtInicial 
                       AND (dtFinal is NULL OR current_date() <= dtFinal)';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
-
     }
 
 ###########################################################
@@ -118,19 +113,16 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_direitoPessoal($idServidor)
-    {
-            $select = 'SELECT valor
+    public function get_direitoPessoal($idServidor) {
+        $select = 'SELECT valor
                          FROM tbdireitopessoal
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                           AND current_date() >= dtInicial 
                           AND (dtFinal is NULL OR current_date() <= dtFinal)';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
 ###########################################################
@@ -141,25 +133,24 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_gratificacaoDtFinal($idServidor){
+    public function get_gratificacaoDtFinal($idServidor) {
         $select = 'SELECT dtFinal
                      FROM tbgratificacao
-                    WHERE idServidor = '.$idServidor.'
+                    WHERE idServidor = ' . $idServidor . '
                     ORDER BY dtInicial desc';
         $numero = parent::count($select);
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
 
         # For�a como NULL caso seja em branco
-        if((is_null($row[0])) OR ($row == '')){
+        if ((is_null($row[0])) OR ($row == '')) {
             $row[0] = NULL;
         }
 
         # Verifica se j� tem alguma graificação ou se nunca teve
-        if($numero == 0){
+        if ($numero == 0) {
             return FALSE; # nunca teve graificação
-        }else{
+        } else {
             return $row[0]; # Informa se tem graificação em aberto
         }
     }
@@ -172,9 +163,8 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_periodoDisponivel($idServidor){
-            $select = "SELECT anoExercicio,
+    public function get_periodoDisponivel($idServidor) {
+        $select = "SELECT anoExercicio,
                       sum(numDias) as dias,
                       status
                  FROM tbferias
@@ -183,26 +173,25 @@ class Pessoal extends Bd {
          ORDER BY 1 DESC
          LIMIT 1";
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            # Informa o status
-            if (is_null($row[0])){
-                $primeira = 1;
-            }else{ 
-                $primeira = 0;
-            }
+        # Informa o status
+        if (is_null($row[0])) {
+            $primeira = 1;
+        } else {
+            $primeira = 0;
+        }
 
-            # Dias que sobram para serem 'gozados'
-            if ($row[1] < 30){
-                $dias = (30 - $row[1]);
-                $ano = $row[0];
-            }else{
-                $dias = 30;
-                $ano = ($row[0] + 1);
-            }
+        # Dias que sobram para serem 'gozados'
+        if ($row[1] < 30) {
+            $dias = (30 - $row[1]);
+            $ano = $row[0];
+        } else {
+            $dias = 30;
+            $ano = ($row[0] + 1);
+        }
 
-            return array($ano,$dias,$primeira);
-
+        return array($ano, $dias, $primeira);
     }
 
 ###########################################################
@@ -211,9 +200,9 @@ class Pessoal extends Bd {
      * Método get_ramais
      * Retorna um array com os setores e os ramais
      */
-    public function get_ramais(){
-        
-        $select =' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
+    public function get_ramais() {
+
+        $select = ' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
                       ramais
                  FROM tblotacao
                 WHERE ativo = "Sim"
@@ -235,16 +224,15 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
+    public function get_salarioBase($idServidor) {
 
-    public function get_salarioBase($idServidor){
-        
         $select = 'SELECT tbclasse.valor
                      FROM tbprogressao, tbclasse
-                     WHERE idServidor = '.$idServidor.'
+                     WHERE idServidor = ' . $idServidor . '
                        AND tbprogressao.idClasse = tbclasse.idClasse
               ORDER BY valor desc';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -257,15 +245,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
+    public function get_idClasseServidor($idServidor) {
 
-    public function get_idClasseServidor($idServidor){
-        
         $select = "SELECT idClasse
                      FROM tbprogressao
                     WHERE idServidor = $idServidor
                  ORDER BY dtInicial desc";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -278,8 +265,7 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_salarioTotal($idServidor){
+    public function get_salarioTotal($idServidor) {
 
         # Resumo financeira
         $salario = $this->get_salarioBase($idServidor);
@@ -287,7 +273,7 @@ class Pessoal extends Bd {
         $comissao = $this->get_salarioCargoComissao($idServidor);
         $gratificacao = $this->get_gratificacao($idServidor);
         $cessao = $this->get_salarioCessao($idServidor);
-        $total = $salario+$trienio+$comissao+$gratificacao+$cessao;
+        $total = $salario + $trienio + $comissao + $gratificacao + $cessao;
 
         return $total;
     }
@@ -300,16 +286,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_salarioCessao($idServidor){
-            $select = 'SELECT salario
+    public function get_salarioCessao($idServidor) {
+        $select = 'SELECT salario
                          FROM tbcedido
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
 ###########################################################
@@ -320,10 +304,10 @@ class Pessoal extends Bd {
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_aniversariantes($mes = NULL){
-        
+    public function get_aniversariantes($mes = NULL) {
+
         # Se o mês não for definido pega-se o mês atual
-        if (is_null($mes)){
+        if (is_null($mes)) {
             $mes = date("n");
         }
 
@@ -331,16 +315,16 @@ class Pessoal extends Bd {
         $select = 'SELECT concat(date_format(tbpessoa.dtNasc,"%d/%m")," - ",tbpessoa.nome) as nasc,
                           date_format(tbpessoa.dtNasc,"%d")	
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                    WHERE month(dtNasc) = '.$mes.' 
+                    WHERE month(dtNasc) = ' . $mes . ' 
                       AND tbservidor.situacao = 1
                  ORDER BY nasc';
 
         # Pega o resultado do select
         $result = parent::select($select);
 
-        return $result; 
+        return $result;
     }
-    
+
 ###########################################################
 
     /**
@@ -349,33 +333,33 @@ class Pessoal extends Bd {
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_numAniversariantes($mes = NULL){
-        
+    public function get_numAniversariantes($mes = NULL) {
+
         # Se o mês não for definido pega-se o mês atual
-        if (is_null($mes)){
+        if (is_null($mes)) {
             $mes = date("n");
         }
 
         # Monta o select
         $select = 'SELECT idPessoa
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                    WHERE month(dtNasc) = '.$mes.' 
+                    WHERE month(dtNasc) = ' . $mes . ' 
                       AND tbservidor.situacao = 1';
 
         # Pega o resultado do select
         $result = parent::count($select);
 
-        return $result; 
+        return $result;
     }
-    
+
 ###########################################################
 
     /**
      * Método get_numAniversariantesHoje
      * Exibe os aniversariantes de hoje
      */
-    public function get_numAniversariantesHoje(){
-        
+    public function get_numAniversariantesHoje() {
+
         # Monta o select
         $select = 'SELECT idPessoa
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
@@ -385,9 +369,9 @@ class Pessoal extends Bd {
         # Pega o resultado do select
         $result = parent::count($select);
 
-        return $result; 
+        return $result;
     }
-    
+
 ###########################################################
 
     /**
@@ -397,12 +381,11 @@ class Pessoal extends Bd {
      * @param	string 	$idServidor 	-> idServidor do servidor
      * @param 	string	$senha		-> senha (não criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
      */
-    public function set_senhaNull($matr,$alert = TRUE)
-    {
-            $senha = NULL;
-            parent::gravar('senha_intra',$senha,$matr,'tbservidor','idServidor',$alert);
-
+    public function set_senhaNull($matr, $alert = TRUE) {
+        $senha = NULL;
+        parent::gravar('senha_intra', $senha, $matr, 'tbservidor', 'idServidor', $alert);
     }
+
 ###########################################################
 
     /**
@@ -412,23 +395,20 @@ class Pessoal extends Bd {
      *
      * @param	string $idServidor	idServidor do servidor
      */
-    public function get_diasAusentes($idServidor)
-    { 
+    public function get_diasAusentes($idServidor) {
 
-            $select = "SELECT date_format(ult_acesso,'%d/%m/%Y')		  
+        $select = "SELECT date_format(ult_acesso,'%d/%m/%Y')		  
                                      FROM tbservidor
                     WHERE idServidor = '$idServidor'";
 
-            # Pega o resultado do select
-            $result = parent::select($select,FALSE);
+        # Pega o resultado do select
+        $result = parent::select($select, FALSE);
 
-            $data_Inicial = $result[0];
+        $data_Inicial = $result[0];
 
-            $diferenca = dataDif($data_Inicial);	# chama o m�todo est�tico dataDiff
+        $diferenca = dataDif($data_Inicial); # chama o m�todo est�tico dataDiff
 
-            return $diferenca;
-
-
+        return $diferenca;
     }
 
 ######################################################################################
@@ -439,28 +419,27 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    public function get_lotacao($idServidor){
+    public function get_lotacao($idServidor) {
         $select = 'SELECT UADM,
                           DIR,
                           GER,
                           idLotacao 
                       FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                     WHERE tbhistlot.idServidor = '.$idServidor.'
+                     WHERE tbhistlot.idServidor = ' . $idServidor . '
                      ORDER BY data DESC';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         # Verifica se está cedido para exibir onde o servidor está
-        if($row[3] == 113){
+        if ($row[3] == 113) {
             $orgao = $this->get_orgaoCedido($idServidor);
-            if($orgao == ""){
+            if ($orgao == "") {
                 $orgao = "-";
             }
             #$retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
             $retorno = "Cedido para<br/><span id='orgaoCedido'>$orgao</span>";
-        }else{
-            $retorno = $row[0].'-'.$row[1].'-'.$row[2];
+        } else {
+            $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
         }
 
         return $retorno;
@@ -474,28 +453,27 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    public function get_lotacaoRel($idServidor){
+    public function get_lotacaoRel($idServidor) {
         $select = 'SELECT UADM,
                           DIR,
                           GER,
                           idLotacao 
                       FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                     WHERE tbhistlot.idServidor = '.$idServidor.'
+                     WHERE tbhistlot.idServidor = ' . $idServidor . '
                      ORDER BY data DESC';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         # Verifica se está cedido para exibir onde o servidor está
-        if($row[3] == 113){
+        if ($row[3] == 113) {
             $orgao = $this->get_orgaoCedido($idServidor);
-            if($orgao == ""){
+            if ($orgao == "") {
                 $orgao = "-";
             }
             $retorno = "Cedido para <span id='orgaoCedido'>$orgao</span>";
             #$retorno = $row[0].'-'.$row[1].'-'.$row[2].' ('.$orgao.')</span>';
-        }else{
-            $retorno = $row[0].'-'.$row[1].'-'.$row[2];
+        } else {
+            $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
         }
 
         return $retorno;
@@ -509,14 +487,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idLotacao  o id da lotaçao
      */
-
-    public function get_lotacaoDiretoria($idLotacao){
+    public function get_lotacaoDiretoria($idLotacao) {
         $select = 'SELECT DIR
                      FROM tblotacao
-                    WHERE idLotacao = '.$idLotacao;
+                    WHERE idLotacao = ' . $idLotacao;
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         return $row[0];
     }
 
@@ -528,14 +505,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idLotacao  o id da lotaçao
      */
-
-    public function get_lotacaoGerencia($idLotacao){
+    public function get_lotacaoGerencia($idLotacao) {
         $select = 'SELECT GER
                      FROM tblotacao
-                    WHERE idLotacao = '.$idLotacao;
+                    WHERE idLotacao = ' . $idLotacao;
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         return $row[0];
     }
 
@@ -547,18 +523,16 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    public function get_lotacaoSimples($idServidor)  {
-            $select = 'SELECT  tblotacao.DIR,
+    public function get_lotacaoSimples($idServidor) {
+        $select = 'SELECT  tblotacao.DIR,
                                tblotacao.GER
                           FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                         WHERE tbhistlot.idServidor = '.$idServidor.'
+                         WHERE tbhistlot.idServidor = ' . $idServidor . '
                          ORDER BY data DESC';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0].'-'.$row[1];
-
+        return $row[0] . '-' . $row[1];
     }
 
 ######################################################################################
@@ -569,20 +543,16 @@ class Pessoal extends Bd {
      * 
      * @param	integer $idLotacao  id da lotação
      */
-
-    public function get_servidoresAtivosLotacao($idLotacao)
-
-    {
-            $select = 'SELECT tbservidor.idServidor
+    public function get_servidoresAtivosLotacao($idLotacao) {
+        $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                           WHERE tbservidor.situacao = 1 AND idPerfil <> 10
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                            AND tbhistlot.lotacao = '.$idLotacao;
+                            AND tbhistlot.lotacao = ' . $idLotacao;
 
-            $numero = parent::count($select);
-            return $numero;
-
+        $numero = parent::count($select);
+        return $numero;
     }
 
 ######################################################################################
@@ -593,21 +563,17 @@ class Pessoal extends Bd {
      * 
      * @param	integer $idLotacao  id da lotação
      */
-
-    public function get_servidoresInativosLotacao($idLotacao)
-
-    {
-            $select = 'SELECT tbservidor.idServidor
+    public function get_servidoresInativosLotacao($idLotacao) {
+        $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                           WHERE tbservidor.situacao <> 1
                             AND idPerfil <> 10
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                            AND tbhistlot.lotacao = '.$idLotacao;
+                            AND tbhistlot.lotacao = ' . $idLotacao;
 
-            $numero = parent::count($select);
-            return $numero;
-
+        $numero = parent::count($select);
+        return $numero;
     }
 
 ###########################################################
@@ -618,20 +584,18 @@ class Pessoal extends Bd {
      *
      * @param	string $idServidor  id do servidor
      */
-
-    public function get_idLotacao($idServidor){
+    public function get_idLotacao($idServidor) {
         $select = 'SELECT  tblotacao.idlotacao
                       FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                     WHERE tbhistlot.idServidor = '.$idServidor.'
+                     WHERE tbhistlot.idServidor = ' . $idServidor . '
                      ORDER BY data DESC';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         return $row[0];
     }
 
     ###########################################################
 
-
     /**
      * Método get_cargo
      * Informa o cargo do servidor
@@ -639,51 +603,49 @@ class Pessoal extends Bd {
      * @param string $idServidor    NULL idServidor do servidor
      * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
      */
-
-    public function get_cargo($idServidor, $exibeComissao = TRUE){
+    public function get_cargo($idServidor, $exibeComissao = TRUE) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
             $tipoCargo = NULL;
-        }else{
-            $tipoCargo = $row[1];      
+        } else {
+            $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
         $retorno = NULL;
-        
+
         $comissao = $this->get_cargoComissao($idServidor);
         #$descricao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if(!empty($tipoCargo)){
-            $retorno = $tipoCargo;             
+        if (!empty($tipoCargo)) {
+            $retorno = $tipoCargo;
         }
 
-        if(!empty($nomeCargo)){
-            if(!empty($tipoCargo)){
-                $retorno .= ' - '.$nomeCargo;
-            }else{
+        if (!empty($nomeCargo)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $nomeCargo;
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if((!empty($comissao)) AND ($exibeComissao)){
-             $retorno .= '<br/>'.$comissao;
+        if ((!empty($comissao)) AND ($exibeComissao)) {
+            $retorno .= '<br/>' . $comissao;
         }
-        
+
         return $retorno;
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargo
@@ -692,51 +654,49 @@ class Pessoal extends Bd {
      * @param string $idServidor    NULL idServidor do servidor
      * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
      */
-
-    public function get_cargoSimples2($idServidor, $exibeComissao = TRUE){
+    public function get_cargoSimples2($idServidor, $exibeComissao = TRUE) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
             $tipoCargo = NULL;
-        }else{
-            $tipoCargo = $row[1];      
+        } else {
+            $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
         $retorno = NULL;
-        
+
         $comissao = $this->get_cargoComissao($idServidor);
         $descricao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if(!empty($tipoCargo)){
-            $retorno = $tipoCargo;             
+        if (!empty($tipoCargo)) {
+            $retorno = $tipoCargo;
         }
 
-        if(!empty($nomeCargo)){
-            if(!empty($tipoCargo)){
-                $retorno .= ' - '.$nomeCargo;
-            }else{
+        if (!empty($nomeCargo)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $nomeCargo;
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if((!empty($comissao)) AND ($exibeComissao)){
-             $retorno .= '<br/><span title="'.$descricao.'" id="orgaoCedido">['.$descricao.']</span>';
+        if ((!empty($comissao)) AND ($exibeComissao)) {
+            $retorno .= '<br/><span title="' . $descricao . '" id="orgaoCedido">[' . $descricao . ']</span>';
         }
-        
+
         return $retorno;
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargoSimples
@@ -744,46 +704,44 @@ class Pessoal extends Bd {
      * 
      * @param string $idServidor    NULL idServidor do servidor
      */
-
-    public function get_cargoSimples($idServidor){
+    public function get_cargoSimples($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
             $tipoCargo = NULL;
-        }else{
-            $tipoCargo = $row[1];      
+        } else {
+            $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
         $retorno = NULL;
-        
+
         $descricao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if(!empty($tipoCargo)){
-            $retorno = $tipoCargo;             
+        if (!empty($tipoCargo)) {
+            $retorno = $tipoCargo;
         }
 
-        if(!empty($nomeCargo)){
-            if(!empty($tipoCargo)){
-                $retorno .= ' - '.$nomeCargo;
-            }else{
+        if (!empty($nomeCargo)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $nomeCargo;
+            } else {
                 $retorno = $nomeCargo;
             }
         }
-        
+
         return $retorno;
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargoCompleto
@@ -792,8 +750,7 @@ class Pessoal extends Bd {
      * @param string $idServidor    NULL idServidor do servidor
      * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
      */
-
-    public function get_cargoCompleto($idServidor, $exibeComissao = TRUE){
+    public function get_cargoCompleto($idServidor, $exibeComissao = TRUE) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.cargo,
@@ -802,52 +759,51 @@ class Pessoal extends Bd {
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                                      LEFt JOIN tbarea USING (idarea)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(($row[0] == 1) OR ($row[0] == 2)){ // Se é professor
+        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
             $tipoCargo = NULL;
             $area = NULL;
-        }else{
+        } else {
             $tipoCargo = $row[1];
             $area = $row[2];
         }
 
         $nomeCargo = $row[3];
         $retorno = NULL;
-        
+
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if(!empty($tipoCargo)){
-            $retorno = $tipoCargo;             
+        if (!empty($tipoCargo)) {
+            $retorno = $tipoCargo;
         }
-        
-        if(!empty($area)){
-            if(!empty($tipoCargo)){
-                $retorno .= ' - '.$area;
-            }else{
+
+        if (!empty($area)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $area;
+            } else {
                 $retorno = $area;
             }
         }
 
-        if(!empty($nomeCargo)){
-            if(!empty($tipoCargo)){
-                $retorno .= ' - '.$nomeCargo;
-            }else{
+        if (!empty($nomeCargo)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $nomeCargo;
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if((!empty($comissao)) AND ($exibeComissao)){
-             $retorno .= '<br/><span id="orgaoCedido">('.$comissao.')</span)';
+        if ((!empty($comissao)) AND ($exibeComissao)) {
+            $retorno .= '<br/><span id="orgaoCedido">(' . $comissao . ')</span)';
         }
-        
+
         return $retorno;
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargoRel
@@ -855,22 +811,21 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    public function get_cargoRel($idServidor){
+    public function get_cargoRel($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(($row[0] == 1)OR($row[0] == 2)){ // Se é professor
+        if (($row[0] == 1)OR($row[0] == 2)) { // Se é professor
             $tipoCargo = NULL;
-        }else{
-            $tipoCargo = $row[1];      
+        } else {
+            $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
@@ -878,26 +833,25 @@ class Pessoal extends Bd {
 
         $retorno = NULL;
 
-        if(!empty($tipoCargo)){
-            $retorno = $tipoCargo;             
+        if (!empty($tipoCargo)) {
+            $retorno = $tipoCargo;
         }
 
-        if(!empty($nomeCargo)){
-            if(!empty($tipoCargo)){
-                $retorno .= ' - '.$nomeCargo;
-            }else{
+        if (!empty($nomeCargo)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $nomeCargo;
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if(!empty($comissao)){
-             $retorno .= '<span id="orgaoCedido"> '.$comissao.'</span)';
+        if (!empty($comissao)) {
+            $retorno .= '<span id="orgaoCedido"> ' . $comissao . '</span)';
         }
         return $retorno;
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargo
@@ -905,20 +859,18 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    public function get_cargoTipo($idServidor){
+    public function get_cargoTipo($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.tipo
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         return $row[0];
     }
 
 ###########################################################
-
 
     /**
      * Método get_perfil
@@ -926,33 +878,28 @@ class Pessoal extends Bd {
      * 
      * @param   string $idServidor  idServidor do servidor
      */
-
-    public function get_perfil($idServidor)
-
-    {
+    public function get_perfil($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
                      FROM tbservidor JOIN tbperfil USING (idPerfil)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         $retorno = $row[1];
 
         # Verifica se e cedido para exibir o orgao de origem
-        if($row[0] == 2){
+        if ($row[0] == 2) {
             $orgaoOrigem = $this->get_orgaoOrigem($idServidor);
-            if(!vazio($orgaoOrigem)){
-                $retorno .= '<br/><span id="orgaoCedido">('.$orgaoOrigem.')';
+            if (!vazio($orgaoOrigem)) {
+                $retorno .= '<br/><span id="orgaoCedido">(' . $orgaoOrigem . ')';
             }
         }
 
         return $retorno;
-
     }
 
 ###########################################################
-
 
     /**
      * Método get_perfilSimples
@@ -960,24 +907,19 @@ class Pessoal extends Bd {
      * 
      * @param   string $idServidor  idServidor do servidor
      */
-
-    public function get_perfilSimples($idServidor)
-
-    {
+    public function get_perfilSimples($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
                      FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         $retorno = $row[1];
         return $retorno;
-
     }
 
 ###########################################################
-
 
     /**
      * Método get_orgaoOrigem
@@ -985,23 +927,18 @@ class Pessoal extends Bd {
      * 
      * @param   string $idServidor  idServidor do servidor
      */
-
-    public function get_orgaoOrigem($idServidor)
-
-    {
+    public function get_orgaoOrigem($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT orgaoOrigem
                      FROM tbcedido
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
-
     }
 
 ###########################################################
-
 
     /**
      * Método get_idCargo
@@ -1009,19 +946,16 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    public function get_idCargo($idServidor)
-
-    {
-            # Pega o cargo do servidor
-            $select = 'SELECT tbcargo.idCargo
+    public function get_idCargo($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbcargo.idCargo
                          FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
-            $idcargo = $row[0];
+        $row = parent::select($select, FALSE);
+        $idcargo = $row[0];
 
-            return $idcargo;
+        return $idcargo;
     }
 
     ###########################################################
@@ -1032,16 +966,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_idPessoa($idServidor)
-    {
-            $select = 'SELECT idPessoa
+    public function get_idPessoa($idServidor) {
+        $select = 'SELECT idPessoa
                          FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $id_pessoa = parent::select($select,FALSE);
+        $id_pessoa = parent::select($select, FALSE);
 
-            return $id_pessoa[0];
+        return $id_pessoa[0];
     }
 
     ###########################################################
@@ -1052,16 +984,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $cpf cpf do servidor
      */
-
-    public function get_idPessoaCPF($cpf)
-    {
-            $select = 'SELECT idPessoa
+    public function get_idPessoaCPF($cpf) {
+        $select = 'SELECT idPessoa
                          FROM tbdocumentacao
-                        WHERE cpf = "'.$cpf.'"';
+                        WHERE cpf = "' . $cpf . '"';
 
-            $idPessoa = parent::select($select,FALSE);
+        $idPessoa = parent::select($select, FALSE);
 
-            return $idPessoa[0];                
+        return $idPessoa[0];
     }
 
     ###########################################################
@@ -1072,17 +1002,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $pis do servidor
      */
-
-    public function get_idPessoaPis($pis)
-    {
-            $select = 'SELECT idPessoa
+    public function get_idPessoaPis($pis) {
+        $select = 'SELECT idPessoa
                          FROM tbdocumentacao
-                        WHERE pisPasep = "'.$pis.'"';
+                        WHERE pisPasep = "' . $pis . '"';
 
-            $idPessoa = parent::select($select,FALSE);
+        $idPessoa = parent::select($select, FALSE);
 
-            return $idPessoa[0];
-
+        return $idPessoa[0];
     }
 
     ##########################################################
@@ -1093,15 +1020,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_anoAdmissao($idServidor){
-            $select = 'SELECT YEAR(dtAdmissao)
+    function get_anoAdmissao($idServidor) {
+        $select = 'SELECT YEAR(dtAdmissao)
                                  FROM tbservidor
-                                WHERE idServidor = '.$idServidor;
+                                WHERE idServidor = ' . $idServidor;
 
-            $ano = parent::select($select,FALSE);
+        $ano = parent::select($select, FALSE);
 
-            return $ano[0];
+        return $ano[0];
     }
 
     ###########################################################
@@ -1112,15 +1038,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_dtAdmissao($idServidor){
-            $select = 'SELECT dtAdmissao
+    function get_dtAdmissao($idServidor) {
+        $select = 'SELECT dtAdmissao
                          FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $dt = parent::select($select,FALSE);
+        $dt = parent::select($select, FALSE);
 
-            return date_to_php($dt[0]);
+        return date_to_php($dt[0]);
     }
 
     ###########################################################
@@ -1131,20 +1056,18 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_dtSaida($idServidor)
-    {
-            $select = 'SELECT dtDemissao
+    function get_dtSaida($idServidor) {
+        $select = 'SELECT dtDemissao
                          FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $dt = parent::select($select,FALSE);
-            
-            if(vazio($dt[0])){
-                return NULL;
-            }else{
-                return date_to_php($dt[0]);
-            }
+        $dt = parent::select($select, FALSE);
+
+        if (vazio($dt[0])) {
+            return NULL;
+        } else {
+            return date_to_php($dt[0]);
+        }
     }
 
     ###########################################################
@@ -1156,106 +1079,100 @@ class Pessoal extends Bd {
      * informa o id do perfil do servidor
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-
-
-    {
-            $select = 'SELECT idPerfil
+     */ {
+        $select = 'SELECT idPerfil
                          FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
+        return $row[0];
     }
 
     ###########################################################
 
-    function get_digito($idServidor){
+    function get_digito($idServidor) {
 
-    /**
-     * Método get_digito
-     * informa o d�gito verificador de uma matrícula
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-
-    
+        /**
+         * Método get_digito
+         * informa o d�gito verificador de uma matrícula
+         * 
+         * @param	string $idServidor idServidor do servidor
+         */
         $ndig = 0;
 
-        switch (strlen($idServidor)){
+        switch (strlen($idServidor)) {
             case 4:
-                $idServidor = "0".$idServidor;
+                $idServidor = "0" . $idServidor;
                 break;
             case 3:
-                $idServidor = "00".$idServidor;
+                $idServidor = "00" . $idServidor;
                 break;
             case 2:
-                $idServidor = "000".$idServidor;
+                $idServidor = "000" . $idServidor;
                 break;
         }
 
-        $npos = substr($idServidor,4,1);
+        $npos = substr($idServidor, 4, 1);
         $npos = $npos * 2;
-        if ($npos < 10){ 
-           $ndig = $ndig + $npos;
-        }else{
-           $ndig = $ndig + 1 + ($npos - 10);
+        if ($npos < 10) {
+            $ndig = $ndig + $npos;
+        } else {
+            $ndig = $ndig + 1 + ($npos - 10);
         }
 
-        $npos = substr($idServidor,3,1);
+        $npos = substr($idServidor, 3, 1);
         $ndig = $ndig + $npos;
 
-        $npos = substr($idServidor,2,1);
+        $npos = substr($idServidor, 2, 1);
         $npos = $npos * 2;
 
-        if ($npos < 10){
-           $ndig = $ndig + $npos;
-        }else{
-           $ndig = $ndig + 1 + ($npos - 10);
+        if ($npos < 10) {
+            $ndig = $ndig + $npos;
+        } else {
+            $ndig = $ndig + 1 + ($npos - 10);
         }
 
-        $npos = substr($idServidor,1,1);
+        $npos = substr($idServidor, 1, 1);
         $ndig = $ndig + $npos;
 
-        $npos = substr($idServidor,0,1);
+        $npos = substr($idServidor, 0, 1);
         $npos = $npos * 2;
-        
-        if ($npos < 10){
-           $ndig = $ndig + $npos;
-        }else{
-           $ndig = $ndig + 1 + ($npos - 10);
+
+        if ($npos < 10) {
+            $ndig = $ndig + $npos;
+        } else {
+            $ndig = $ndig + 1 + ($npos - 10);
         }
 
-        $divisao = $ndig/10;
+        $divisao = $ndig / 10;
         $int_div = intval($divisao);
         $fra_div = $divisao - $int_div;
         $mod = $fra_div * 10;
 
-        if ($mod == 0){
+        if ($mod == 0) {
             $ndig = 0;
-        }else{
+        } else {
             $ndig = 10 - $mod;
         }
-        
+
         return $ndig;
     }
 
     ##########################################################################################
 
-    function emFerias($idServidor, $data = NULL){
+    function emFerias($idServidor, $data = NULL) {
 
-    # Função que informa se a idServidor esta em férias na data informada
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-        
+        # Função que informa se a idServidor esta em férias na data informada
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
-        
+
         # Monta o select
         $select = "SELECT idFerias 
                      FROM tbferias
@@ -1263,30 +1180,29 @@ class Pessoal extends Bd {
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if (is_null($row[0])){
+        if (is_null($row[0])) {
             return 0;
-        }else{ 
+        } else {
             return 1;
         }
     }
 
     ##########################################################################################
 
-    function emFeriasExercicio($idServidor, $data = NULL){
+    function emFeriasExercicio($idServidor, $data = NULL) {
 
-    # Função que informa o exercicio das ferias na data informada
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-        
+        # Função que informa o exercicio das ferias na data informada
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
-        
+
         # Monta o select
         $select = "SELECT anoExercicio 
                      FROM tbferias
@@ -1294,28 +1210,26 @@ class Pessoal extends Bd {
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
 
     ##########################################################################################
 
-    function emLicenca($idServidor, $data = NULL){
+    function emLicenca($idServidor, $data = NULL) {
 
 
-    # Função que informa se a idServidor está em licenca na data informada
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-
-    
+        # Função que informa se a idServidor está em licenca na data informada
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
-   
+
         # Monta o select
         $select = "SELECT idLicenca 
                      FROM tblicenca
@@ -1323,28 +1237,27 @@ class Pessoal extends Bd {
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if (is_null($row[0])){
+        if (is_null($row[0])) {
             return 0;
-        }else{ 
+        } else {
             return 1;
         }
     }
-    
+
     ##########################################################################################
 
-    function emLicencaPremio($idServidor, $data = NULL){
+    function emLicencaPremio($idServidor, $data = NULL) {
 
 
-    # Função que informa se a idServidor está em licanca Prêmio na data atual
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-    
+        # Função que informa se a idServidor está em licanca Prêmio na data atual
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1355,27 +1268,26 @@ class Pessoal extends Bd {
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         if (is_null($row[0]))
             return 0;
-        else 
+        else
             return 1;
     }
-    
+
     ##########################################################################################
 
-    function emLicencaSemVencimentos($idServidor, $data = NULL){
+    function emLicencaSemVencimentos($idServidor, $data = NULL) {
 
 
-    # Função que informa se a idServidor está em licanca Sem Vencimentos na data atual
-    #
-    # Parâmetro: a idServidor a ser pesquisada
-    
+        # Função que informa se a idServidor está em licanca Sem Vencimentos na data atual
+        #
+        # Parâmetro: a idServidor a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1386,24 +1298,22 @@ class Pessoal extends Bd {
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         if (is_null($row[0]))
             return 0;
-        else 
+        else
             return 1;
     }
-    
+
     ##########################################################################################
-    
-    function emCessao($idServidor)
+
+    function emCessao($idServidor) {
 
 
-    # Função que informa se o servidor está cedido para outro órgão
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-
-    {
+        # Função que informa se o servidor está cedido para outro órgão
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Monta o select		
         $select = "SELECT orgao 
                      FROM tbhistcessao
@@ -1411,24 +1321,22 @@ class Pessoal extends Bd {
                       AND current_date() >= dtInicio
                       AND (isNull(dtFim) OR current_date() <= dtFim)";
 
-        $row = parent::count($select,FALSE);
-        if($row == 0){
+        $row = parent::count($select, FALSE);
+        if ($row == 0) {
             return FALSE;
-        }else{
+        } else {
             return TRUE;
         }
     }
 
     ##########################################################################################
-    
-    function get_orgaoCedido($idServidor)
+
+    function get_orgaoCedido($idServidor) {
 
 
-    # Função que informa o órgão onde o servidor da uenf está cedido
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-
-    {
+        # Função que informa o órgão onde o servidor da uenf está cedido
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Monta o select		
         $select = "SELECT orgao 
                      FROM tbhistcessao
@@ -1436,28 +1344,26 @@ class Pessoal extends Bd {
                       AND current_date() >= dtInicio
                       AND (isNull(dtFim) OR current_date() <= dtFim)";
 
-        $row = parent::select($select,FALSE);
-        return $row[0];		
-
+        $row = parent::select($select, FALSE);
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licenca($idServidor,$data = NULL){
+    function get_licenca($idServidor, $data = NULL) {
 
 
-    # Função que informa licenca de uma matrícula
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-    #             a data no formato dd/mm/aaaa
-    
+        # Função que informa licenca de uma matrícula
+        #
+        # Parâmetro: a matrícula a ser pesquisada
+        #             a data no formato dd/mm/aaaa
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
-        
+
         # Monta o select		
         $select = "SELECT tbtipolicenca.nome 
                      FROM tblicenca JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
@@ -1465,283 +1371,252 @@ class Pessoal extends Bd {
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaPeriodo($idLicenca){
+    function get_licencaPeriodo($idLicenca) {
 
 
-    # Função que informa se a licença tem per�odo aquisitivo
-    #
-    # Parâmetro: id do tipo de licença
-    
+        # Função que informa se a licença tem per�odo aquisitivo
+        #
+        # Parâmetro: id do tipo de licença
         # Valida parametro
-        if(is_null($idLicenca))
+        if (is_null($idLicenca))
             return FALSE;
 
         # Monta o select
         $select = 'SELECT dtPeriodo
                      FROM tbtipolicenca
-                    WHERE idTpLicenca = '.$idLicenca;
+                    WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        return $row[0];	
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaProcesso($idLicenca)
+    function get_licencaProcesso($idLicenca) {
 
 
-    # Função que informa se a licença necessita um processo administrativo
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa se a licença necessita um processo administrativo
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca)) {
+            return FALSE;
+        }
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca)){
-                return FALSE;
-            }
-
-            # Monta o select
-            $select = 'SELECT processo
+        # Monta o select
+        $select = 'SELECT processo
                          FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+                        WHERE idTpLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaNumeroProcesso($idLicenca)
+    function get_licencaNumeroProcesso($idLicenca) {
 
 
-    # Função que informa o Número do processo de uma licença
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa o Número do processo de uma licença
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca)) {
+            return FALSE;
+        }
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca)){
-                return FALSE;
-            }
-
-            # Monta o select
-            $select = 'SELECT processo
+        # Monta o select
+        $select = 'SELECT processo
                          FROM tblicenca
-                        WHERE idLicenca = '.$idLicenca;
+                        WHERE idLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaPublicacao($idLicenca)
+    function get_licencaPublicacao($idLicenca) {
 
 
-    # Função que informa se a licença necessita de publicação no DOERJ
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa se a licença necessita de publicação no DOERJ
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select
-            $select = 'SELECT publicacao
+        # Monta o select
+        $select = 'SELECT publicacao
                          FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+                        WHERE idTpLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaPericia($idLicenca)
+    function get_licencaPericia($idLicenca) {
 
 
-    # Função que informa se esse tipo de licença necessita de perícia (licença m�dica)
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa se esse tipo de licença necessita de perícia (licença m�dica)
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT pericia
+        # Monta o select		
+        $select = 'SELECT pericia
                          FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+                        WHERE idTpLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaNome($idLicenca)
+    function get_licencaNome($idLicenca) {
 
 
-    # Função que informa o nome do tipo de licença
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa o nome do tipo de licença
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT nome
+        # Monta o select		
+        $select = 'SELECT nome
                          FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+                        WHERE idTpLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaSexo($idLicenca)
+    function get_licencaSexo($idLicenca) {
 
 
-    # Função que informa limitação por genero (sexo) do tipo de licença
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa limitação por genero (sexo) do tipo de licença
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT limite_sexo
+        # Monta o select		
+        $select = 'SELECT limite_sexo
                          FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+                        WHERE idTpLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_licencaDias($idLicenca)
+    function get_licencaDias($idLicenca) {
 
 
-    # Função que informa a quantidade de dias fixos para esse tipo de licença
-    #
-    # Parâmetro: id do tipo de licença
+        # Função que informa a quantidade de dias fixos para esse tipo de licença
+        #
+        # Parâmetro: id do tipo de licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT periodo
+        # Monta o select		
+        $select = 'SELECT periodo
                          FROM tbtipolicenca
-                        WHERE idTpLicenca = '.$idLicenca;
+                        WHERE idTpLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_tipoLicenca($idLicenca)
+    function get_tipoLicenca($idLicenca) {
 
 
-    # Função que informa o tipo da licença de uma licença de um servidor
-    #
-    # Parâmetro: id da licença
+        # Função que informa o tipo da licença de uma licença de um servidor
+        #
+        # Parâmetro: id da licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT idTpLicenca
+        # Monta o select		
+        $select = 'SELECT idTpLicenca
                          FROM tblicenca
-                        WHERE idLicenca = '.$idLicenca;
+                        WHERE idLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_nomeTipoLicenca($idTpLicenca)
+    function get_nomeTipoLicenca($idTpLicenca) {
 
 
-    # Função que informa o nome de um tipo da licença
-    #
-    # Parâmetro: id do tipo da licença
+        # Função que informa o nome de um tipo da licença
+        #
+        # Parâmetro: id do tipo da licença
+        # Valida parametro
+        if (is_null($idTpLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idTpLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT nome
+        # Monta o select		
+        $select = 'SELECT nome
                          FROM tbtipolicenca
-                        WHERE idtpLicenca = '.$idTpLicenca;
+                        WHERE idtpLicenca = ' . $idTpLicenca;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ##########################################################################################
 
-    function get_nomeTipoCargo($idTipoCargo)
+    function get_nomeTipoCargo($idTipoCargo) {
 
 
-    # Função que informa o nome de um tipo da licença
-    #
-    # Parâmetro: id do tipo da licença
+        # Função que informa o nome de um tipo da licença
+        #
+        # Parâmetro: id do tipo da licença
+        # Valida parametro
+        if (is_null($idTipoCargo))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idTipoCargo))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT cargo
+        # Monta o select		
+        $select = 'SELECT cargo
                          FROM tbtipocargo
-                        WHERE idTipoCargo = '.$idTipoCargo;
+                        WHERE idTipoCargo = ' . $idTipoCargo;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];		
-
+        return $row[0];
     }
 
     ###########################################################
@@ -1752,13 +1627,12 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_situacao($idServidor){
+    function get_situacao($idServidor) {
         $select = 'SELECT tbsituacao.situacao
                      FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $situacao = parent::select($select,FALSE);
+        $situacao = parent::select($select, FALSE);
 
         return $situacao[0];
     }
@@ -1771,15 +1645,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_idSituacao($idServidor){
-            $select = 'SELECT idsituacao
+    function get_idSituacao($idServidor) {
+        $select = 'SELECT idsituacao
                          FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $situacao = parent::select($select,FALSE);
+        $situacao = parent::select($select, FALSE);
 
-            return $situacao[0];
+        return $situacao[0];
     }
 
     ###########################################################
@@ -1790,15 +1663,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_motivo($idServidor){
-            $select = 'SELECT tbmotivo.motivo
+    function get_motivo($idServidor) {
+        $select = 'SELECT tbmotivo.motivo
                          FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $motivo = parent::select($select,FALSE);
+        $motivo = parent::select($select, FALSE);
 
-            return $motivo[0];
+        return $motivo[0];
     }
 
     ###########################################################
@@ -1809,15 +1681,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idMotivo idMotivo
      */
-
-    function get_motivoAposentadoria($idMotivo){
-            $select = 'SELECT tbmotivo.motivo
+    function get_motivoAposentadoria($idMotivo) {
+        $select = 'SELECT tbmotivo.motivo
                          FROM tbmotivo 
-                        WHERE idMotivo = '.$idMotivo;
+                        WHERE idMotivo = ' . $idMotivo;
 
-            $motivo = parent::select($select,FALSE);
+        $motivo = parent::select($select, FALSE);
 
-            return $motivo[0];
+        return $motivo[0];
     }
 
     ###########################################################
@@ -1828,16 +1699,14 @@ class Pessoal extends Bd {
      * 
      * @param	integer $idPessoa   idPessoa do servidor
      */
-
-    function get_idPessoaAtiva($idPessoa)
-    {
-            $select = 'SELECT idServidor
+    function get_idPessoaAtiva($idPessoa) {
+        $select = 'SELECT idServidor
                          FROM tbservidor
-                        WHERE situacao = 1 AND idPessoa = '.$idPessoa;
+                        WHERE situacao = 1 AND idPessoa = ' . $idPessoa;
 
-            $situacao = parent::select($select,FALSE);
+        $situacao = parent::select($select, FALSE);
 
-            return $situacao[0];
+        return $situacao[0];
     }
 
     ###########################################################
@@ -1848,21 +1717,19 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_nome($idServidor)
-    {
-        if(is_numeric($idServidor)){
+    function get_nome($idServidor) {
+        if (is_numeric($idServidor)) {
             $select = 'SELECT tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            if($idServidor == 0){
+            if ($idServidor == 0) {
                 $nome[0] = "";
-            }else{ 
-                $nome = parent::select($select,FALSE);
+            } else {
+                $nome = parent::select($select, FALSE);
             }
             return $nome[0];
-        }else{
+        } else {
             return $idServidor;
         }
     }
@@ -1875,22 +1742,20 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_nomeSimples($idServidor)
-    {
-        if(is_numeric($idServidor)){
+    function get_nomeSimples($idServidor) {
+        if (is_numeric($idServidor)) {
             $select = 'SELECT tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            if($idServidor == 0){
+            if ($idServidor == 0) {
                 return "----";
-            }else{ 
-                $nome = parent::select($select,FALSE);
-                
+            } else {
+                $nome = parent::select($select, FALSE);
+
                 return get_nomeSimples($nome[0]);
             }
-        }else{
+        } else {
             return "----";
         }
     }
@@ -1903,14 +1768,12 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_sexo($idServidor)
-    {
+    function get_sexo($idServidor) {
         $select = 'SELECT tbpessoa.sexo
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                    WHERE idServidor = '.$idServidor;
-        
-        $sexo = parent::select($select,FALSE);
+                    WHERE idServidor = ' . $idServidor;
+
+        $sexo = parent::select($select, FALSE);
         return $sexo[0];
     }
 
@@ -1920,18 +1783,16 @@ class Pessoal extends Bd {
      * Método get_nomeidPessoa
      * fornece o nome de um idPessoa
      * 
- * @param   integer $idPessoa    idPessoa do servidor
+     * @param   integer $idPessoa    idPessoa do servidor
      */
-
-    function get_nomeidPessoa($idPessoa)
-    {
-            $select = 'SELECT tbpessoa.nome
+    function get_nomeidPessoa($idPessoa) {
+        $select = 'SELECT tbpessoa.nome
                          FROM tbpessoa
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $nome = parent::select($select,FALSE);
+        $nome = parent::select($select, FALSE);
 
-            return $nome[0];
+        return $nome[0];
     }
 
     ###########################################################
@@ -1942,66 +1803,65 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
+    function get_cargoComissao($idServidor) {
 
-    function get_cargoComissao($idServidor){
-        
         # Classe CargoComissão
         $cargoComissao = new CargoComissao();
-        
+
         # Pega o id do cargo em comissão (se houver)		 
         $select = 'SELECT idComissao, tipo
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is NULL))
-                    AND idServidor = '.$idServidor;
+                    AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $num = parent::count($select);
-        
+
         $tipo = NULL;
         $retorno = NULL;
         $contador = 1;
-        
+
         # Percorre os cargos
-        foreach ($row as $rr){
-        
+        foreach ($row as $rr) {
+
             # Pega o $idComissao
-            $idComissao = $rr[0];            
+            $idComissao = $rr[0];
 
             # Verifica se é designado ou protempore
-            if($rr[1] == 1){
+            if ($rr[1] == 1) {
                 $tipo = " - Pro Tempore";
             }
 
-            if($rr[1] == 2){
+            if ($rr[1] == 2) {
                 $tipo = " - Designado";
-            }            
+            }
 
             # Verifica se tem cargo
-            if (!is_null($idComissao)){
-                
+            if (!is_null($idComissao)) {
+
                 # Pega o nome do cargo em comissão
-                $select ='SELECT tbtipocomissao.descricao 
+                $select = 'SELECT tbtipocomissao.descricao 
                             FROM tbcomissao 
                             JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                           WHERE idcomissao = '.$idComissao;
+                           WHERE idcomissao = ' . $idComissao;
 
-                $row2 = parent::select($select,FALSE);
+                $row2 = parent::select($select, FALSE);
                 $tipoCargo = $row2[0];
-                
+
                 # Pega a descrição do cargo
                 $descricao = $cargoComissao->get_descricaoCargo($idComissao);
-                
-                 # Verifica se tem tipo
-                if(!vazio($tipo)){
+
+                # Verifica se tem tipo
+                if (!vazio($tipo)) {
                     $tipoCargo .= $tipo;
                 }
-                
+
                 # Coloca na variável retorno
-                $retorno .= '<span title="'.$descricao.'" id="orgaoCedido">['.$tipoCargo.']</span>';
+                $retorno .= '<span title="' . $descricao . '" id="orgaoCedido">[' . $tipoCargo . ']</span>';
             }
-            
-            if($contador < $num){
+
+            if ($contador < $num) {
                 $contador++;
                 $retorno .= "<br/>";
             }
@@ -2018,37 +1878,36 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
+    function get_cargoComissaoDescricao($idServidor) {
 
-    function get_cargoComissaoDescricao($idServidor){
-        
         # Inicia a classe de Cargo em comissão
         $comissao = new CargoComissao();
-        
+
         # Pega o id do cargo em comissão (se houver)		 
         $select = 'SELECT idComissao
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is NULL))
-                    AND idServidor = '.$idServidor;
+                    AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $count = parent::count($select);
         $contador = 1;
-        
+
         # Inicia a variável de retorno
         $retorno = NULL;
-        
-        foreach($row as $rr){
-            
+
+        foreach ($row as $rr) {
+
             # Pega o id
             $idComissao = $rr[0];
 
             # Pega a descrição 
-            if (!is_null($idComissao)){
+            if (!is_null($idComissao)) {
                 $retorno .= $comissao->get_descricaoCargo($idComissao);
             }
-            
-            if($contador < $count){
+
+            if ($contador < $count) {
                 $contador++;
                 $retorno .= '<br/>';
             }
@@ -2066,19 +1925,16 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    function get_cargoComissaoPorId($id)
-
-    {
+    function get_cargoComissaoPorId($id) {
         # Pega o nome do id do cargo em comiss�o
-        $select ='SELECT tbtipocomissao.idTipoComissao,
+        $select = 'SELECT tbtipocomissao.idTipoComissao,
                          CONCAT(tbtipocomissao.descricao," - ",tbtipocomissao.simbolo)
                     FROM tbcomissao 
                     JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                   WHERE idcomissao = '.$id;
+                   WHERE idcomissao = ' . $id;
 
-        $row = parent::select($select,FALSE);
-        return array($row[0],$row[1]);
+        $row = parent::select($select, FALSE);
+        return array($row[0], $row[1]);
     }
 
     ###########################################################
@@ -2089,30 +1945,26 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-
-    function get_salarioCargoComissao($idServidor)
-
-    {
-            # Pega o id do cargo em comiss�o (se houver)		 
-            $select = 'SELECT idComissao
+    function get_salarioCargoComissao($idServidor) {
+        # Pega o id do cargo em comiss�o (se houver)		 
+        $select = 'SELECT idComissao
                          FROM tbcomissao
-                        WHERE dtExo is NULL AND idServidor = '.$idServidor;
+                        WHERE dtExo is NULL AND idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
-            $idCargo = $row[0];
+        $row = parent::select($select, FALSE);
+        $idCargo = $row[0];
 
-            # Pega o sal�rio do id do cargo em comiss�o
-            if (!is_null($idCargo)) {
-                    $select ='SELECT tbtipocomissao.valsal 
+        # Pega o sal�rio do id do cargo em comiss�o
+        if (!is_null($idCargo)) {
+            $select = 'SELECT tbtipocomissao.valsal 
                                             FROM tbcomissao 
                                             JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                                       WHERE idcomissao = '.$idCargo;
+                                       WHERE idcomissao = ' . $idCargo;
 
-                    $row = parent::select($select,FALSE);
-            }
+            $row = parent::select($select, FALSE);
+        }
 
-            return $row[0];	
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2123,18 +1975,15 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_trienioPercentual($idServidor)
-    {
-            $select = 'SELECT percentual
+    function get_trienioPercentual($idServidor) {
+        $select = 'SELECT percentual
                          FROM tbtrienio
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2145,16 +1994,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
+    function get_trienioValor($idServidor) {
+        $salario = $this->get_salarioBase($idServidor);
+        $percentual = $this->get_trienioPercentual($idServidor);
 
-    function get_trienioValor($idServidor)
-    {
-            $salario = $this->get_salarioBase($idServidor);
-            $percentual = $this->get_trienioPercentual($idServidor);
+        $valor = $salario * ($percentual / 100);
 
-            $valor = $salario * ($percentual/100);
-
-            return $valor;
-
+        return $valor;
     }
 
     ###########################################################
@@ -2165,18 +2011,15 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_trienioDataInicial($idServidor)
-    {
-            $select = 'SELECT dtInicial
+    function get_trienioDataInicial($idServidor) {
+        $select = 'SELECT dtInicial
                          FROM tbtrienio
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return date_to_php($row[0]);
-
+        return date_to_php($row[0]);
     }
 
     ###########################################################
@@ -2189,24 +2032,22 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_trienioDataProximoTrienio($idServidor)
-    {
-            $select = 'SELECT dtInicial
+    function get_trienioDataProximoTrienio($idServidor) {
+        $select = 'SELECT dtInicial
                          FROM tbtrienio
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-            $row = parent::select($select,FALSE);
-            
-            if(!vazio($row[0])){
-                $dataTrienio = date_to_php($row[0]);
-                $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
-            }else{
-                $dataProximo = NULL;
-            }           
+        $row = parent::select($select, FALSE);
 
-            return $dataProximo;
+        if (!vazio($row[0])) {
+            $dataTrienio = date_to_php($row[0]);
+            $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
+        } else {
+            $dataProximo = NULL;
+        }
+
+        return $dataProximo;
     }
 
     ###########################################################
@@ -2217,19 +2058,16 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_trienioPeriodoAquisitivo($idServidor)
-    {
-            $select = 'SELECT dtInicioPeriodo,
+    function get_trienioPeriodoAquisitivo($idServidor) {
+        $select = 'SELECT dtInicioPeriodo,
                               dtFimPeriodo
                          FROM tbtrienio
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return date_to_php($row[0]).' - '.date_to_php($row[1]);
-
+        return date_to_php($row[0]) . ' - ' . date_to_php($row[1]);
     }
 
     ###########################################################
@@ -2240,18 +2078,15 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_trienioNumProcesso($idServidor)
-    {
-            $select = 'SELECT numProcesso
+    function get_trienioNumProcesso($idServidor) {
+        $select = 'SELECT numProcesso
                          FROM tbtrienio
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2262,18 +2097,15 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_trienioPublicacao($idServidor)
-    {
-            $select = 'SELECT dtPublicacao
+    function get_trienioPublicacao($idServidor) {
+        $select = 'SELECT dtPublicacao
                          FROM tbtrienio
-                        WHERE idServidor = '.$idServidor.'
+                        WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return date_to_php($row[0]);
-
+        return date_to_php($row[0]);
     }
 
     ###########################################################
@@ -2284,24 +2116,19 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id da lota��o
      */
-
-    public function get_nomeLotacao($idLotacao)
-
-    {
-            if (!is_numeric($idLotacao))
-                return $idLotacao;
-            else
-            {
-                $select = 'SELECT UADM,
+    public function get_nomeLotacao($idLotacao) {
+        if (!is_numeric($idLotacao))
+            return $idLotacao;
+        else {
+            $select = 'SELECT UADM,
                                   DIR,
                                   GER
                              FROM tblotacao
-                            WHERE idLotacao = '.$idLotacao;
+                            WHERE idLotacao = ' . $idLotacao;
 
-                $row = parent::select($select,FALSE);		
-                return $row[0].'-'.$row[1].'-'.$row[2];
-            }
-
+            $row = parent::select($select, FALSE);
+            return $row[0] . '-' . $row[1] . '-' . $row[2];
+        }
     }
 
     ###########################################################
@@ -2312,24 +2139,19 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id da lotação
      */
-
-    public function get_nomeLotacao2($idLotacao)
-
-    {
-            if (!is_numeric($idLotacao))
-                return $idLotacao;
-            else
-            {
-                $select = 'SELECT DIR,
+    public function get_nomeLotacao2($idLotacao) {
+        if (!is_numeric($idLotacao))
+            return $idLotacao;
+        else {
+            $select = 'SELECT DIR,
                                   GER,
                                   Nome
                              FROM tblotacao
-                            WHERE idLotacao = '.$idLotacao;
+                            WHERE idLotacao = ' . $idLotacao;
 
-                $row = parent::select($select,FALSE);		
-                return $row[0].' - '.$row[1].' - '.$row[2];
-            }
-
+            $row = parent::select($select, FALSE);
+            return $row[0] . ' - ' . $row[1] . ' - ' . $row[2];
+        }
     }
 
     ###########################################################
@@ -2340,23 +2162,18 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id da lotação
      */
-
-    public function get_nomeLotacao3($idLotacao)
-
-    {
-            if (!is_numeric($idLotacao))
-                return $idLotacao;
-            else
-            {
-                $select = 'SELECT GER,
+    public function get_nomeLotacao3($idLotacao) {
+        if (!is_numeric($idLotacao))
+            return $idLotacao;
+        else {
+            $select = 'SELECT GER,
                                   Nome
                              FROM tblotacao
-                            WHERE idLotacao = '.$idLotacao;
+                            WHERE idLotacao = ' . $idLotacao;
 
-                $row = parent::select($select,FALSE);		
-                return $row[0].' - '.$row[1];
-            }
-
+            $row = parent::select($select, FALSE);
+            return $row[0] . ' - ' . $row[1];
+        }
     }
 
     ###########################################################
@@ -2367,24 +2184,19 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id da lota��o
      */
-
-    public function get_nomeCompletoLotacao($id)
-
-    {
-            if (!is_numeric($id))
-                return $id;
-            else
-            {
-                $select = 'SELECT nome,
+    public function get_nomeCompletoLotacao($id) {
+        if (!is_numeric($id))
+            return $id;
+        else {
+            $select = 'SELECT nome,
                                   DIR,
                                   GER
                              FROM tblotacao
-                            WHERE idLotacao = '.$id;
+                            WHERE idLotacao = ' . $id;
 
-                $row = parent::select($select,FALSE);
-                return $row[0].' - '.$row[1].'/'.$row[2];
-            }
-
+            $row = parent::select($select, FALSE);
+            return $row[0] . ' - ' . $row[1] . '/' . $row[2];
+        }
     }
 
     ###########################################################
@@ -2394,13 +2206,11 @@ class Pessoal extends Bd {
      * 
      * Exibe o n�mero de servidores ativos em um determinado cargo
      */
-
-    public function get_servidoresCargo($id)
-    {
+    public function get_servidoresCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
-                          idCargo = '.$id;
+                          idCargo = ' . $id;
 
         $numero = parent::count($select);
         return $numero;
@@ -2413,14 +2223,12 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
-
-    public function get_servidoresAtivosTipoCargo($id)
-    {
+    public function get_servidoresAtivosTipoCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao = 1 
                     AND idPerfil <> 10
-                    AND tbcargo.idTipoCargo = '.$id;
+                    AND tbcargo.idTipoCargo = ' . $id;
 
         $numero = parent::count($select);
         return $numero;
@@ -2433,18 +2241,16 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores inativos em um determinado tipo de cargo
      */
-
-    public function get_servidoresInativosTipoCargo($id)
-    {
+    public function get_servidoresInativosTipoCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao <> 1 AND 
-                          tbcargo.idTipoCargo = '.$id;
+                          tbcargo.idTipoCargo = ' . $id;
 
         $numero = parent::count($select);
         return $numero;
     }
-    
+
     ###########################################################
 
     /**
@@ -2452,14 +2258,12 @@ class Pessoal extends Bd {
      * 
      * Exibe o símbolo de um determinado cargo em comissao
      */
-
-    public function get_cargoComissaoSimbolo($id)
-    {
+    public function get_cargoComissaoSimbolo($id) {
         $select = 'SELECT simbolo                             
                      FROM tbtipocomissao 
-                    WHERE idTipoComissao = '.$id;
+                    WHERE idTipoComissao = ' . $id;
 
-        $row = parent::select($select,FALSE);		
+        $row = parent::select($select, FALSE);
         return $row[0];
     }
 
@@ -2470,14 +2274,12 @@ class Pessoal extends Bd {
      * 
      * Exibe o n�mero de vagas em um determinado cargo em comissao
      */
-
-    public function get_cargoComissaoVagas($id)
-    {
+    public function get_cargoComissaoVagas($id) {
         $select = 'SELECT vagas                             
                      FROM tbtipocomissao 
-                    WHERE idTipoComissao = '.$id;
+                    WHERE idTipoComissao = ' . $id;
 
-        $row = parent::select($select,FALSE);		
+        $row = parent::select($select, FALSE);
         return $row[0];
     }
 
@@ -2488,28 +2290,27 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos e Inativos em um determinado concurso
      */
+    public function get_servidoresConcurso($idConcurso) {
 
-    public function get_servidoresConcurso($idConcurso){
-        
         # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
         $dados = $concurso->get_dados($idConcurso);
         $tipo = $dados['tipo'];
-        
+
         $select = 'SELECT tbservidor.idServidor                             
                      FROM tbservidor';
-        
+
         # Se for concurso de professor
-        if($tipo == 2){
+        if ($tipo == 2) {
             $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
         }
-                
+
         $select .= ' WHERE TRUE';
-        
-        if($tipo == 1){
-            $select .= ' AND (tbservidor.idConcurso = '.$idConcurso.')'; 
-        }else{
-            $select .= ' AND (tbvagahistorico.idConcurso = '.$idConcurso.')'; 
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
         }
 
         $numero = parent::count($select);
@@ -2523,28 +2324,27 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos em um determinado concurso
      */
+    public function get_servidoresAtivosConcurso($idConcurso) {
 
-    public function get_servidoresAtivosConcurso($idConcurso){
-        
         # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
         $dados = $concurso->get_dados($idConcurso);
         $tipo = $dados['tipo'];
-        
+
         $select = 'SELECT tbservidor.idServidor                             
                      FROM tbservidor';
-        
+
         # Se for concurso de professor
-        if($tipo == 2){
+        if ($tipo == 2) {
             $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
         }
-                
+
         $select .= ' WHERE situacao = 1';
-        
-        if($tipo == 1){
-            $select .= ' AND (tbservidor.idConcurso = '.$idConcurso.')'; 
-        }else{
-            $select .= ' AND (tbvagahistorico.idConcurso = '.$idConcurso.')'; 
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
         }
 
         $numero = parent::count($select);
@@ -2558,28 +2358,27 @@ class Pessoal extends Bd {
      * 
      * Exibe o n�mero de servidores inativos em um determinado concurso
      */
+    public function get_servidoresInativosConcurso($idConcurso) {
 
-    public function get_servidoresInativosConcurso($idConcurso){
-            
-    # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
         $dados = $concurso->get_dados($idConcurso);
         $tipo = $dados['tipo'];
-        
+
         $select = 'SELECT tbservidor.idServidor                             
                      FROM tbservidor';
-        
+
         # Se for concurso de professor
-        if($tipo == 2){
+        if ($tipo == 2) {
             $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
         }
-                
+
         $select .= ' WHERE situacao <> 1';
-        
-        if($tipo == 1){
-            $select .= ' AND (tbservidor.idConcurso = '.$idConcurso.')'; 
-        }else{
-            $select .= ' AND (tbvagahistorico.idConcurso = '.$idConcurso.')'; 
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
         }
 
         $numero = parent::count($select);
@@ -2593,13 +2392,11 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos 
      */
-
-    public function get_servidoresAtivosPerfil($id)
-    {
+    public function get_servidoresAtivosPerfil($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
-                          idPerfil = '.$id;
+                          idPerfil = ' . $id;
 
         $numero = parent::count($select);
         return $numero;
@@ -2612,13 +2409,11 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores inativos 
      */
-
-    public function get_servidoresInativosPerfil($id)
-    {
+    public function get_servidoresInativosPerfil($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao <> 1 AND 
-                          idPerfil = '.$id;
+                          idPerfil = ' . $id;
 
         $numero = parent::count($select);
         return $numero;
@@ -2631,13 +2426,11 @@ class Pessoal extends Bd {
      * 
      * Exibe o n�mero de servidores ativos em um determinado concurso
      */
-
-    public function get_servidoresSituacao($id)
-    {
+    public function get_servidoresSituacao($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE idPerfil <> 10
-                      AND situacao = '.$id;
+                      AND situacao = ' . $id;
 
         $numero = parent::count($select);
         return $numero;
@@ -2651,17 +2444,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    function get_perfilLicenca($id)
-    {
-            $select = 'SELECT licenca
+    function get_perfilLicenca($id) {
+        $select = 'SELECT licenca
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2672,17 +2462,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    function get_perfilProgressao($id)
-    {
-            $select = 'SELECT progressao
+    function get_perfilProgressao($id) {
+        $select = 'SELECT progressao
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2693,17 +2480,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    function get_perfilTrienio($id)
-    {
-            $select = 'SELECT trienio
+    function get_perfilTrienio($id) {
+        $select = 'SELECT trienio
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2714,17 +2498,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    function get_perfilComissao($id)
-    {
-            $select = 'SELECT comissao
+    function get_perfilComissao($id) {
+        $select = 'SELECT comissao
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2735,18 +2516,15 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    function get_perfilMatricula($id)
-    {
-            $select = 'SELECT matIni,
+    function get_perfilMatricula($id) {
+        $select = 'SELECT matIni,
                               matFim
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row;
-
+        return $row;
     }
 
     ###########################################################
@@ -2757,17 +2535,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    public function get_perfilGratificacao($id)
-    {
-            $select = 'SELECT gratificacao
+    public function get_perfilGratificacao($id) {
+        $select = 'SELECT gratificacao
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2778,18 +2553,15 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    public function get_perfilQuantidade($id)
-    {
-            $select = 'SELECT idServidor
+    public function get_perfilQuantidade($id) {
+        $select = 'SELECT idServidor
                          FROM tbservidor
                         WHERE situacao = 1
-                          AND idPerfil = '.$id;
+                          AND idPerfil = ' . $id;
 
-            $count = parent::count($select);
+        $count = parent::count($select);
 
-            return $count;
-
+        return $count;
     }
 
     ###########################################################
@@ -2800,19 +2572,16 @@ class Pessoal extends Bd {
      * 
      * @nota usada na rotina de estatistica por cargo
      */
-
-    public function get_perfilComServidores()
-    {
-            $select = 'SELECT tbperfil.idPErfil, tbperfil.nome
+    public function get_perfilComServidores() {
+        $select = 'SELECT tbperfil.idPErfil, tbperfil.nome
                          FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                         WHERE tbservidor.situacao = 1 
                      GROUP BY tbperfil.nome
                      HAVING count(tbservidor.idServidor) > 0';
 
-            $row = parent::select($select);
+        $row = parent::select($select);
 
-            return $row;
-
+        return $row;
     }
 
     ###########################################################
@@ -2823,17 +2592,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    public function get_perfilFerias($id)
-    {
-            $select = 'SELECT ferias
+    public function get_perfilFerias($id) {
+        $select = 'SELECT ferias
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-
+        return $row[0];
     }
 
     ###########################################################
@@ -2844,36 +2610,32 @@ class Pessoal extends Bd {
      * 
      * @param   string $idServidor do servidor
      */
-
-    public function get_nivelCargo($idServidor)
-    {
+    public function get_nivelCargo($idServidor) {
         $select = 'SELECT tbtipocargo.nivel
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
 
-   
     ##########################################################################################
 
-    public function mudaStatusFeriasSolicitadaFruida(){      
+    public function mudaStatusFeriasSolicitadaFruida() {
 
-    /**	
-     * Função acerta o status das férias de acordo com a data atual. 
-     * Muda para fruídas as férias que foram solicitadas cuja data inicial já passou e
-     * Muda para solicitadas as férias que foram fruídas cuja data inicial ainda não passou
-     */
-        
+        /** 	
+         * Função acerta o status das férias de acordo com a data atual. 
+         * Muda para fruídas as férias que foram solicitadas cuja data inicial já passou e
+         * Muda para solicitadas as férias que foram fruídas cuja data inicial ainda não passou
+         */
         # primeira alteração
         $sql = 'UPDATE tbferias SET status = "fruída"
                  WHERE status = "solicitada"
                    AND dtInicial < current_date()';
         parent::update($sql);
-        
+
         # segunda alteração
         $sql = 'UPDATE tbferias SET status = "solicitada"
                  WHERE status = "fruída"
@@ -2890,21 +2652,18 @@ class Pessoal extends Bd {
      * informa o id da tabela tddbv
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-
-
-    {
-            $select = 'SELECT idDbv
+     */ {
+        $select = 'SELECT idDbv
                          FROM tbdbv
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
-            $count = parent::count($select);
+        $row = parent::select($select, FALSE);
+        $count = parent::count($select);
 
-            if($count == 0)
-                return NULL;
-            else
-                return $row[0];
+        if ($count == 0)
+            return NULL;
+        else
+            return $row[0];
     }
 
     ###########################################################
@@ -2916,15 +2675,12 @@ class Pessoal extends Bd {
      * informa se o servidor tem ou não cargo acumulado
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-
-
-    {
+     */ {
         $select = 'SELECT acumulacao
                      FROM tbdbv
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $count = parent::count($select);
 
         if ($count == 0) {
@@ -2943,91 +2699,85 @@ class Pessoal extends Bd {
      * informa o ano base da dbv
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-
-
-    {
-            $select = 'SELECT anoBase
+     */ {
+        $select = 'SELECT anoBase
                          FROM tbdbv
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
-            $count = parent::count($select);
+        $row = parent::select($select, FALSE);
+        $count = parent::count($select);
 
-            if($count == 0)
-                return NULL;
-            else
-                return $row[0];
+        if ($count == 0)
+            return NULL;
+        else
+            return $row[0];
     }
 
     ###########################################################
 
-    function get_treDiasTrabalhados($idServidor){
+    function get_treDiasTrabalhados($idServidor) {
 
-    /**
-     * informa a quantidade de dias trabalhados no TRE
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-
+        /**
+         * informa a quantidade de dias trabalhados no TRE
+         * 
+         * @param	string $idServidor idServidor do servidor
+         */
         $select = 'SELECT IFNULL(sum(dias),0)
                      FROM tbtrabalhotre
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $count = parent::count($select);
 
-        if($count == 0){
+        if ($count == 0) {
             return '0';
-        }else{
+        } else {
             return $row[0];
         }
     }
 
     ###########################################################
 
-    function get_treFolgasConcedidas($idServidor){
-        
-    /**
-     * informa a quantidade de dias de folga que o servidor tem direito
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
+    function get_treFolgasConcedidas($idServidor) {
 
+        /**
+         * informa a quantidade de dias de folga que o servidor tem direito
+         * 
+         * @param	string $idServidor idServidor do servidor
+         */
         $select = 'SELECT IFNULL(sum(folgas),0)
                      FROM tbtrabalhotre
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $count = parent::count($select);
 
-        if($count == 0){
+        if ($count == 0) {
             return '0';
-        }else{
+        } else {
             return $row[0];
         }
     }
 
     ###########################################################
 
-    function get_treFolgasFruidas($idServidor){
+    function get_treFolgasFruidas($idServidor) {
 
-    /**
-     * informa a quantidade de folga que o servidor fruiu (tirou)
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    
+        /**
+         * informa a quantidade de folga que o servidor fruiu (tirou)
+         * 
+         * @param	string $idServidor idServidor do servidor
+         */
         $select = 'SELECT IFNULL(sum(dias), 0)
                      FROM tbfolga
-                    WHERE idServidor = '.$idServidor;
+                    WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $count = parent::count($select);
 
-        if($count == 0){
+        if ($count == 0) {
             return '0';
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -3040,19 +2790,16 @@ class Pessoal extends Bd {
      * informa se a idServidor informada existe no cadastro
      * 
      * @param	string $matricula A matrícula do servidor
-     */
-
-
-    {
+     */ {
         $select = 'SELECT idServidor
                      FROM tbservidor
-                    WHERE matricula = '.$matricula;		
+                    WHERE matricula = ' . $matricula;
 
         $count = parent::count($select);
 
-        if($count == 0){
+        if ($count == 0) {
             return FALSE;
-        }else{
+        } else {
             return TRUE;
         }
     }
@@ -3065,41 +2812,39 @@ class Pessoal extends Bd {
      * informa uma matrícula nova (gera nova matrícula)
      * 
      * @param	string $perfil perfil para saber a faixa da matrícula
-     */
-
-    {
+     */ {
         # pega a faixa da matrícula para esse perfil
         $faixa = $this->get_perfilMatricula($perfil);
-        if(is_null($faixa[0])){
+        if (is_null($faixa[0])) {
             return "-";
-        }else{
+        } else {
 
             # pega a última matrícula utilizada nessa faixa
             $select = 'SELECT matricula
                          FROM tbservidor
-                        WHERE matricula >= '.$faixa[0].'
-                          AND matricula < '.$faixa[1].'
-                     ORDER BY matricula desc';		
+                        WHERE matricula >= ' . $faixa[0] . '
+                          AND matricula < ' . $faixa[1] . '
+                     ORDER BY matricula desc';
 
-            $row = parent::select($select,FALSE);
-            $count = parent::count($select);            
+            $row = parent::select($select, FALSE);
+            $count = parent::count($select);
 
             # se não tiver nenhum idServidor cadastrada nessa faixa pega-se a matrícula inicial da faixa                
-            if($count == 0){
+            if ($count == 0) {
                 # Diferencia se o select voltou vazio por não ter ninguém na faixa
                 # ou se por não ter matrícula vaga na faixa.
-                if($pessoal->get_existeMatricula($faixa[1])){
+                if ($pessoal->get_existeMatricula($faixa[1])) {
                     # Já ocupado o último valor dessa faixa
                     alert("Não há mais matrículas vagas para esse perfil./nAumente o número de matrículas no cadastro de perfil.");
                     back(1);
-                }else{
+                } else {
                     # Faixa vazia então pega-se o primeiro valor
                     $novaMatricula = $faixa[0];
                 }
-            }else{
+            } else {
                 # pega a última matrícula
                 $ultimaMatricula = $row[0];
-                $novaMatricula = $ultimaMatricula +1;
+                $novaMatricula = $ultimaMatricula + 1;
             }
 
             return $novaMatricula;
@@ -3114,14 +2859,13 @@ class Pessoal extends Bd {
      * 
      * @param   string $idCargo
      */
+    public function get_nivelCargoCargo($idCargo) {
 
-    public function get_nivelCargoCargo($idCargo){
-                
         $select = 'SELECT tbtipocargo.nivel
                      FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idCargo = '.$idCargo;
+                    WHERE idCargo = ' . $idCargo;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -3133,14 +2877,12 @@ class Pessoal extends Bd {
      * Informa o id do Plano de CArgos Atual (com a data de publicação mais recente)
      * 	 
      */
-
-    public function get_planoCargosAtual()
-    {
+    public function get_planoCargosAtual() {
         $select = 'SELECT idPlano
                      FROM tbplano
                  ORDER BY dtPublicacao desc';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -3153,14 +2895,12 @@ class Pessoal extends Bd {
      * 
      * @param   string $idPlano	 
      */
-
-    public function get_nomePlanoCargos($idPlano)
-    {
+    public function get_nomePlanoCargos($idPlano) {
         $select = 'SELECT numdecreto
                      FROM tbplano
-                    WHERE idPlano = '.$idPlano;
+                    WHERE idPlano = ' . $idPlano;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -3173,14 +2913,12 @@ class Pessoal extends Bd {
      * 
      * @param   string $idPlano	 
      */
-
-    public function get_planoLink($idPlano)
-    {
+    public function get_planoLink($idPlano) {
         $select = 'SELECT link
                      FROM tbplano
-                    WHERE idPlano = '.$idPlano;
+                    WHERE idPlano = ' . $idPlano;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -3195,23 +2933,22 @@ class Pessoal extends Bd {
      * @param   string $nivel 
      * 	 
      */
-
-    public function get_classeInicial($plano,$nivel,$cargo){
+    public function get_classeInicial($plano, $nivel, $cargo) {
         $select = 'SELECT idClasse
                      FROM tbclasse
-                    WHERE idPlano = '.$plano.'
-                      AND nivel = "'.$nivel.'"';
-                          
+                    WHERE idPlano = ' . $plano . '
+                      AND nivel = "' . $nivel . '"';
+
         # Verifica qual professor (quando é docente)
-        if($cargo == 128){           // Prof Associado
+        if ($cargo == 128) {           // Prof Associado
             $select .= ' AND idTipoCargo = 2';
-        }elseif($cargo == 129){      // Prof Titular
+        } elseif ($cargo == 129) {      // Prof Titular
             $select .= ' AND idTipoCargo = 1';
         }
-                          
+
         $select .= ' ORDER BY valor';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -3224,17 +2961,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idPessoa do servidor
      */
-
-    public function get_Pis($idPessoa)
-    {
-            $select = 'SELECT pisPasep
+    public function get_Pis($idPessoa) {
+        $select = 'SELECT pisPasep
                          FROM tbdocumentacao
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $idPessoa = parent::select($select,FALSE);
+        $idPessoa = parent::select($select, FALSE);
 
-            return $idPessoa[0];
-
+        return $idPessoa[0];
     }
 
     ###########################################################
@@ -3245,16 +2979,14 @@ class Pessoal extends Bd {
      * 
      * @param   integer $id id do Perfil
      */
-
-    public function get_perfilNome($id)
-    {
-            $select = 'SELECT nome
+    public function get_perfilNome($id) {
+        $select = 'SELECT nome
                          FROM tbperfil
-                        WHERE idPerfil = '.$id;
+                        WHERE idPerfil = ' . $id;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];					
+        return $row[0];
     }
 
     ###########################################################
@@ -3265,22 +2997,17 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id do cargo
      */
-
-    public function get_nomeCargo($idCargo)
-
-    {
-            if (!is_numeric($idCargo))
-                return $idCargo;
-            else
-            {
-                $select = 'SELECT nome
+    public function get_nomeCargo($idCargo) {
+        if (!is_numeric($idCargo))
+            return $idCargo;
+        else {
+            $select = 'SELECT nome
                              FROM tbcargo
-                            WHERE idCargo = '.$idCargo;
+                            WHERE idCargo = ' . $idCargo;
 
-                $row = parent::select($select,FALSE);
-                return $row[0];
-            }
-
+            $row = parent::select($select, FALSE);
+            return $row[0];
+        }
     }
 
     ##########################################################
@@ -3291,16 +3018,15 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id do cargo
      */
-
-    public function get_nomeCargoComissao($id){
-        if (!is_numeric($id)){
+    public function get_nomeCargoComissao($id) {
+        if (!is_numeric($id)) {
             return $id;
-        }else{
-           $select ='SELECT tbtipocomissao.descricao 
+        } else {
+            $select = 'SELECT tbtipocomissao.descricao 
                             FROM tbtipocomissao 
-                           WHERE idTipoComissao = '.$id;
+                           WHERE idTipoComissao = ' . $id;
 
-            $row = parent::select($select,FALSE);
+            $row = parent::select($select, FALSE);
             return $row[0];
         }
     }
@@ -3313,22 +3039,17 @@ class Pessoal extends Bd {
      *
      * @param	string $id  id do cargo
      */
-
-    public function get_nomeArea($id)
-
-    {
+    public function get_nomeArea($id) {
         if (!is_numeric($id))
             return $id;
-        else
-        {
+        else {
             $select = 'SELECT area
                          FROM tbarea
-                        WHERE idArea = '.$id;
+                        WHERE idArea = ' . $id;
 
-            $row = parent::select($select,FALSE);
+            $row = parent::select($select, FALSE);
             return $row[0];
         }
-
     }
 
     ###########################################################
@@ -3339,42 +3060,38 @@ class Pessoal extends Bd {
      * informa o n�mero de dependentes de um idPessoa
      * 
      * @param	string $idPessoa do servidor
-     */
-
-
-    {
-            $select = 'SELECT idDependente
+     */ {
+        $select = 'SELECT idDependente
                          FROM tbdependente
-                        WHERE idPessoa = '.$idPessoa;		
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $count = parent::count($select);
+        $count = parent::count($select);
 
-            return $count;
+        return $count;
     }
 
     ###########################################################
 
-    function get_numServidoresAtivos($idLotacao = NULL){
+    function get_numServidoresAtivos($idLotacao = NULL) {
 
-    /**
-     * informa o número de Servidores Ativos
-     * 
-     * @param integer $idPessoa do servidor
-     */
-        
+        /**
+         * informa o número de Servidores Ativos
+         * 
+         * @param integer $idPessoa do servidor
+         */
         $select = 'SELECT idServidor
                      FROM tbservidor
                      JOIN tbhistlot USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND situacao = 1 AND idPerfil <> 10';	
+                      AND situacao = 1 AND idPerfil <> 10';
 
         # Lotação
-        if((!is_null($idLotacao)) AND ($idLotacao <> "*")){
-            if(is_numeric($idLotacao)){
-                $select .= ' AND (tblotacao.idlotacao = "'.$idLotacao.'")'; 
-            }else{ # senão é uma diretoria genérica
-                $select .= ' AND (tblotacao.DIR = "'.$idLotacao.'")';
+        if ((!is_null($idLotacao)) AND ($idLotacao <> "*")) {
+            if (is_numeric($idLotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $idLotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
             }
         }
 
@@ -3384,21 +3101,20 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-    function get_numEstatutariosAtivosSexo($sexo = NULL){
+    function get_numEstatutariosAtivosSexo($sexo = NULL) {
 
-    /**
-     * informa o número de Servidores Ativos
-     * 
-     * @param integer $idPessoa do servidor
-     */
-        
+        /**
+         * informa o número de Servidores Ativos
+         * 
+         * @param integer $idPessoa do servidor
+         */
         $select = 'SELECT idServidor
                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                    WHERE situacao = 1 AND idPerfil = 1';	
+                    WHERE situacao = 1 AND idPerfil = 1';
 
         # Sexo
-        if(!is_null($sexo)){
-            $select .= ' AND sexo = "'.$sexo.'"'; 
+        if (!is_null($sexo)) {
+            $select .= ' AND sexo = "' . $sexo . '"';
         }
 
         $count = parent::count($select);
@@ -3407,22 +3123,20 @@ class Pessoal extends Bd {
 
     ###########################################################
 
+    function get_numServidoresAtivosPerfil($idPerfil = NULL) {
 
-    function get_numServidoresAtivosPerfil($idPerfil = NULL){
-
-    /**
-     * informa o número de Servidores Ativos por perfil
-     * 
-     * @param integer $idPerfil do servidor
-     */
-        
+        /**
+         * informa o número de Servidores Ativos por perfil
+         * 
+         * @param integer $idPerfil do servidor
+         */
         $select = 'SELECT idServidor
                      FROM tbservidor
-                    WHERE situacao = 1';	
+                    WHERE situacao = 1';
 
         # Lotação
-        if((!is_null($idPerfil)) AND ($idPerfil <> "*")){
-            $select .= ' AND idPerfil = '.$idPerfil;
+        if ((!is_null($idPerfil)) AND ($idPerfil <> "*")) {
+            $select .= ' AND idPerfil = ' . $idPerfil;
         }
 
         $count = parent::count($select);
@@ -3431,15 +3145,14 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-    function get_numServidoresAtivosCargoLotacao($idCargo = NULL, $idLotacao = NULL, $idPerfil = NULL){
+    function get_numServidoresAtivosCargoLotacao($idCargo = NULL, $idLotacao = NULL, $idPerfil = NULL) {
 
-    /**
-     * informa o número de Servidores Ativos por cargo em uma determinada lotaçao
-     * 
-     * @param integer $idCargo do servidor
-     * @param integer $idLotacao do servidor
-     */
-        
+        /**
+         * informa o número de Servidores Ativos por cargo em uma determinada lotaçao
+         * 
+         * @param integer $idCargo do servidor
+         * @param integer $idLotacao do servidor
+         */
         $select = 'SELECT tbservidor.idServidor
                      FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -3448,21 +3161,21 @@ class Pessoal extends Bd {
                     WHERE situacao = 1
                       AND idPerfil <> 10
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND idTipoCargo = '.$idCargo;
-        
+                      AND idTipoCargo = ' . $idCargo;
+
         # Perfil
-        if(!is_null($idPerfil)){
-            $select .= ' AND idPerfil = '.$idPerfil;
+        if (!is_null($idPerfil)) {
+            $select .= ' AND idPerfil = ' . $idPerfil;
         }
 
         # Lotaçao
         # Verifica se é numérico
-        if(is_numeric($idLotacao)){
-            $select .= ' AND tblotacao.idlotacao = "'.$idLotacao.'"'; 
-        }else{ # senão é uma diretoria genérica
-            $select .= ' AND tblotacao.DIR = "'.$idLotacao.'"';
+        if (is_numeric($idLotacao)) {
+            $select .= ' AND tblotacao.idlotacao = "' . $idLotacao . '"';
+        } else { # senão é uma diretoria genérica
+            $select .= ' AND tblotacao.DIR = "' . $idLotacao . '"';
         }
-        
+
         $count = parent::count($select);
         return $count;
     }
@@ -3475,74 +3188,63 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    function get_ultimoAcesso($idServidor)
-    {
-            $select = 'SELECT date(ult_acesso)
+    function get_ultimoAcesso($idServidor) {
+        $select = 'SELECT date(ult_acesso)
                          FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            # verifica se a idServidor foi informada
-            if(is_null($idServidor))
-                $data[0] = "1900-01-01";
-            else
-            {
-                $data = parent::select($select,FALSE);
-            }
+        # verifica se a idServidor foi informada
+        if (is_null($idServidor))
+            $data[0] = "1900-01-01";
+        else {
+            $data = parent::select($select, FALSE);
+        }
 
-            return $data[0];
+        return $data[0];
     }
 
     ##########################################################################################
 
-    function aniversariante($idServidor)
+    function aniversariante($idServidor) {
 
 
-    # Função que informa se a idServidor est� fazendo anivers�rio na data atual
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-
-    {
-            # Pega a data de nascimento		
-            $select = "SELECT date_format(tbpessoa.dtNasc,'%d/%m')
+        # Função que informa se a idServidor est� fazendo anivers�rio na data atual
+        #
+        # Parâmetro: a matrícula a ser pesquisada
+        # Pega a data de nascimento		
+        $select = "SELECT date_format(tbpessoa.dtNasc,'%d/%m')
                          FROM tbpessoa JOIN tbservidor ON(tbservidor.idPessoa = tbpessoa.idPessoa)
                         WHERE idServidor = '$idServidor'";
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            # Divide a data 
-            $data = explode('/',$row[0]); 
-            $d = $data[0];   // dia
-            $m = $data[1];   // mês
-
-            # Verifica se � hoje o anivers�rio
-            if ((intval(date('d')) == intval($d)) AND (intval(date('m')) == intval($m)))
-                return 1;
-            else
-                return 0;
-
+        # Divide a data 
+        $data = explode('/', $row[0]);
+        $d = $data[0];   // dia
+        $m = $data[1];   // mês
+        # Verifica se � hoje o anivers�rio
+        if ((intval(date('d')) == intval($d)) AND (intval(date('m')) == intval($m)))
+            return 1;
+        else
+            return 0;
     }
 
     ###########################################################
 
     public function get_dataVencimentoCarteiraMotorista($idPessoa)
 
-    /**	 
+    /** 	 
      * fornece a data de vencimento da carteira de Motorista de um idPessoa
      * 
      * @param	string $idPessoa do servidor
-     */
-
-
-    {
-            $select = 'SELECT date_format(dtVencMotorista,"%d/%m/%Y")
+     */ {
+        $select = 'SELECT date_format(dtVencMotorista,"%d/%m/%Y")
                          FROM tbdocumentacao
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $idPessoa = parent::select($select,FALSE);
+        $idPessoa = parent::select($select, FALSE);
 
-            return $idPessoa[0];
-
+        return $idPessoa[0];
     }
 
     ###########################################################
@@ -3553,19 +3255,16 @@ class Pessoal extends Bd {
      * 
      * Informa o id do plano que est� ativo na tabela tbplano
      * 
-     */
-
-    {
+     */ {
         # Pega o cargo do servidor
         $select = 'SELECT idPlano
                      FROM tbplano
                     WHERE planoAtual = 1';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $id = $row[0];
 
         return $id;
-
     }
 
     ###########################################################
@@ -3576,34 +3275,29 @@ class Pessoal extends Bd {
      * 
      * Informa o id do plano que est� ativo na tabela tbplano
      * 
-     */
-
-    {
+     */ {
         # Pega o cargo do servidor
         $select = 'SELECT numDecreto
                      FROM tbplano
                     WHERE planoAtual = 1';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $id = $row[0];
 
         return $id;
-
     }
-		
+
     ##########################################################################################
 
     function get_dadosDiaria($idDiaria)
-    
-     /**
-      * 
-      * Retorna dados de uma di�ria
-      * 
-      * @param $iddiaria integer o id da diaria
-      * 
-      */
-            
-    {
+
+    /**
+     * 
+     * Retorna dados de uma di�ria
+     * 
+     * @param $iddiaria integer o id da diaria
+     * 
+     */ {
         # Monta o select
         $select = "SELECT date_format(dataCi,'%d/%m/%Y'),
                           numeroCi,
@@ -3611,12 +3305,12 @@ class Pessoal extends Bd {
                           valor
                      FROM tbdiaria
                     WHERE idDiaria = '$idDiaria'";
-        
-        $row = parent::select($select,FALSE);
+
+        $row = parent::select($select, FALSE);
         return $row;
     }
 
-   ###########################################################
+    ###########################################################
 
     /**
      * Método get_parentesco
@@ -3624,49 +3318,42 @@ class Pessoal extends Bd {
      * 
      * @param	string $id  id do parentesco
      */
-
-    public function get_parentesco($id)
-
-    {
+    public function get_parentesco($id) {
         $select = 'SELECT  parentesco
                       FROM tbparentesco
-                     WHERE idparentesco = '.$id;
+                     WHERE idparentesco = ' . $id;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
-
     }
 
     ###########################################################
-    
-    function get_licencaDados($idLicenca)
+
+    function get_licencaDados($idLicenca) {
 
 
-    # Função que informa varios dados de uma licença
-    #
-    # Função usada na rotina temporario que transforma uma licença em publicação de licença premio
-    # 
-    # Parâmetro: id da licença
+        # Função que informa varios dados de uma licença
+        #
+        # Função usada na rotina temporario que transforma uma licença em publicação de licença premio
+        # 
+        # Parâmetro: id da licença
+        # Valida parametro
+        if (is_null($idLicenca))
+            return FALSE;
 
-    {
-            # Valida parametro
-            if(is_null($idLicenca))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT processo,
+        # Monta o select		
+        $select = 'SELECT processo,
                               dtInicioPeriodo,
                               dtFimPeriodo,
                               dtPublicacao
                               obs,
                               idServidor                              
                          FROM tblicenca
-                        WHERE idLicenca = '.$idLicenca;
+                        WHERE idLicenca = ' . $idLicenca;
 
-            $row = parent::select($select,FALSE);
-            return $row;		
-
+        $row = parent::select($select, FALSE);
+        return $row;
     }
 
     ###########################################################
@@ -3677,17 +3364,14 @@ class Pessoal extends Bd {
      * 
      * @param	string $idPessoa do servidor
      */
-
-    public function get_cpf($idPessoa)
-    {
-            $select = 'SELECT cpf
+    public function get_cpf($idPessoa) {
+        $select = 'SELECT cpf
                          FROM tbdocumentacao
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $idPessoa = parent::select($select,FALSE);
+        $idPessoa = parent::select($select, FALSE);
 
-            return $idPessoa[0];
-
+        return $idPessoa[0];
     }
 
     ###########################################################
@@ -3699,79 +3383,74 @@ class Pessoal extends Bd {
      * 
      * @param	string $idPessoa do servidor
      */
-
-    public function get_identidade($idPessoa)
-    {
-            $select = 'SELECT CONCAT(identidade," - ",orgaoId," - ",DATE_FORMAT(dtId,"%d/%m/%Y"))
+    public function get_identidade($idPessoa) {
+        $select = 'SELECT CONCAT(identidade," - ",orgaoId," - ",DATE_FORMAT(dtId,"%d/%m/%Y"))
                          FROM tbdocumentacao
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $valor = parent::select($select,FALSE);
+        $valor = parent::select($select, FALSE);
 
-            return $valor[0];
-
+        return $valor[0];
     }
 
     ###########################################################
 
-    public function get_feriado($data = NULL){
-    /**
-     * 
-     * Retorna uma string com o nome do feriado
-     * ou NULLo se não tiver feriado nessa data
-     * 
-     * @param date $data a data (no formato dia/mês/ano) a ser pesquisada, se nulo pega a data atual
-     * 
-     */
-    
-        if(is_null($data)){
+    public function get_feriado($data = NULL) {
+        /**
+         * 
+         * Retorna uma string com o nome do feriado
+         * ou NULLo se não tiver feriado nessa data
+         * 
+         * @param date $data a data (no formato dia/mês/ano) a ser pesquisada, se nulo pega a data atual
+         * 
+         */
+        if (is_null($data)) {
             # Monta o select
             $select = 'SELECT descricao
                          FROM tbferiado 
                         WHERE (tipo = "anual" AND MONTH(data) = MONTH(current_date()) AND DAY(data) = DAY(current_date())
                            OR (tipo = "data única" and  data = current_date()))';
-            $row = parent::select($select,FALSE);       
+            $row = parent::select($select, FALSE);
             return $row[0];
-        }else{
-            if(validaData($data)){
+        } else {
+            if (validaData($data)) {
                 $data = date_to_bd($data);
 
                 # Monta o select
                 $select = 'SELECT descricao
                              FROM tbferiado 
-                            WHERE (tipo = "anual" AND MONTH(data) = MONTH("'.$data.'") AND DAY(data) = DAY("'.$data.'")
-                               OR (tipo = "data única" and  data = "'.$data.'"))';
-                
-                $row = parent::select($select,FALSE);       
+                            WHERE (tipo = "anual" AND MONTH(data) = MONTH("' . $data . '") AND DAY(data) = DAY("' . $data . '")
+                               OR (tipo = "data única" and  data = "' . $data . '"))';
+
+                $row = parent::select($select, FALSE);
                 return $row[0];
             }
         }
     }
-	
+
     ##########################################################################################
 
-    function emFolgaTre($idServidor, $data = NULL){
+    function emFolgaTre($idServidor, $data = NULL) {
 
-    # Função que informa se a idServidor est� folgando (TRE) na data atual
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-        
+        # Função que informa se a idServidor est� folgando (TRE) na data atual
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
-    
+
         # Monta o select
         $select = "SELECT idFolga
                      FROM tbfolga
                     WHERE idServidor = '$idServidor'
                       AND '$data' >= data 
-                      AND '$data' <= ADDDATE(data,dias-1)"; 
+                      AND '$data' <= ADDDATE(data,dias-1)";
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         if (is_null($row[0])) {
             return 0;
         } else {
@@ -3781,28 +3460,27 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-    function emAfastamentoTre($idServidor, $data = NULL){
+    function emAfastamentoTre($idServidor, $data = NULL) {
 
-    # Função que informa se a idServidor está afastada para o (TRE) na data atual
-    #
-    # Parâmetro: a matrícula a ser pesquisada
-        
+        # Função que informa se a idServidor está afastada para o (TRE) na data atual
+        #
+        # Parâmetro: a matrícula a ser pesquisada
         # Verifica a data
-        if(is_null($data)){
+        if (is_null($data)) {
             $data = date("Y-m-d");
-        }else{
+        } else {
             $data = date_to_bd($data);
         }
-        
+
         # Monta o select
         $select = "SELECT idTrabalhoTre
                      FROM tbtrabalhotre
                     WHERE idServidor = '$idServidor'
                       AND '$data' >= data 
-                      AND '$data' <= ADDDATE(data,dias-1)"; 
+                      AND '$data' <= ADDDATE(data,dias-1)";
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         if (is_null($row[0])) {
             return 0;
         } else {
@@ -3812,53 +3490,47 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-	
-	/**
-	 * Método get_idFuncional
-	 * Informa a idFuncional de um servidor
-	 * 
-	 * @param	string $idServidor  idServidor do servidor
-	 */
-
-	public function get_idFuncional($idServidor){
-            # Pega o cargo do servidor
-            $select = 'SELECT idFuncional
+    /**
+     * Método get_idFuncional
+     * Informa a idFuncional de um servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_idFuncional($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT idFuncional
                          FROM tbservidor
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
-            
-            return $row[0];
-	}
-		
-    		
+        $row = parent::select($select, FALSE);
+
+        return $row[0];
+    }
+
 ###########################################################
-	
+
     /**
      * Método get_tipoSenha
      * Informa o tipo da senha (padrão/bloqueada/Ok) 
      * 
      * @param	string $idServidor	idServidor do servidor
      */
-
-    function get_tipoSenha($idServidor)
-    { 
+    function get_tipoSenha($idServidor) {
 
         $select = "SELECT senha_intra		  
                      FROM tbservidor
-                    WHERE idServidor = ".$idServidor;
-        
+                    WHERE idServidor = " . $idServidor;
+
         $pessoal = new Pessoal();
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
         $padrao = MD5(SENHA_PADRAO);
-        
-        switch ($row[0])
-        {
+
+        switch ($row[0]) {
             # senha padrão
             case $padrao :
                 return 1;
                 break;
-            
+
             # senha bloqueada
             case NULL :
                 return 2;
@@ -3873,682 +3545,645 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-	
-	/**
-	 * Método get_idServidor
-	 * Informa a idServidor de uma matrícula
-	 * 
-	 * @param	string $matricula  matricula do servidor
-	 */
+    /**
+     * Método get_idServidor
+     * Informa a idServidor de uma matrícula
+     * 
+     * @param	string $matricula  matricula do servidor
+     */
+    public function get_idServidor($matricula) {
 
-	public function get_idServidor($matricula){
-	
-	    # Pega o cargo do servidor
-            $select = 'SELECT idServidor
+        # Pega o cargo do servidor
+        $select = 'SELECT idServidor
                          FROM tbservidor
-                        WHERE matricula = '.$matricula;
+                        WHERE matricula = ' . $matricula;
 
-            $row = parent::select($select,FALSE);
-            
-            return $row[0];
-			
-	}
-		
+        $row = parent::select($select, FALSE);
+
+        return $row[0];
+    }
+
     ###########################################################
 
-	
-	/**
-	 * Método get_idServidorFerias
-	 * Informa o id servidor de um pedido de férias
-	 * 
-	 * @param	string $idFerias  matricula do servidor
-	 */
+    /**
+     * Método get_idServidorFerias
+     * Informa o id servidor de um pedido de férias
+     * 
+     * @param	string $idFerias  matricula do servidor
+     */
+    public function get_idServidorFerias($idFerias) {
 
-	public function get_idServidorFerias($idFerias){
-	
-	    # Pega o cargo do servidor
-            $select = 'SELECT idServidor
+        # Pega o cargo do servidor
+        $select = 'SELECT idServidor
                          FROM tbferias
-                        WHERE idFerias = '.$idFerias;
+                        WHERE idFerias = ' . $idFerias;
 
-            $row = parent::select($select,FALSE);
-            
-            return $row[0];
-			
-	}
-		
+        $row = parent::select($select, FALSE);
+
+        return $row[0];
+    }
+
     ###########################################################
-	
-	function get_numCargoComissaoAtivo(){
-	
-	/**
-	 * informa o número de Lotações ativas
-	 */
 
-            $select = 'SELECT idTipoComissao
+    function get_numCargoComissaoAtivo() {
+
+        /**
+         * informa o número de Lotações ativas
+         */
+        $select = 'SELECT idTipoComissao
                          FROM tbtipocomissao
-                        WHERE ativo';		
+                        WHERE ativo';
 
-            $count = parent::count($select);
+        $count = parent::count($select);
 
-            return $count;
-	}
-	
-	###########################################################
-        
-	
-	function get_numLotacaoAtiva(){
-	
-	/**
-	 * informa o número de Lotações ativas
-	 */
-            
-            $select = 'SELECT idLotacao
+        return $count;
+    }
+
+    ###########################################################
+
+    function get_numLotacaoAtiva() {
+
+        /**
+         * informa o número de Lotações ativas
+         */
+        $select = 'SELECT idLotacao
                          FROM tblotacao
-                        WHERE ativo';		
+                        WHERE ativo';
 
-            $count = parent::count($select);
+        $count = parent::count($select);
 
-            return $count;
-	}
-	
-	###########################################################
-        
-	/**
-	 * Método get_TipoCargoVagas
-	 * 
-	 * Exibe o n�mero de vagas em um determinado cargo em comissao
-	 */
-	
-	public function get_TipoCargoVagas($id){
-            $select = 'SELECT vagas                             
+        return $count;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_TipoCargoVagas
+     * 
+     * Exibe o n�mero de vagas em um determinado cargo em comissao
+     */
+    public function get_TipoCargoVagas($id) {
+        $select = 'SELECT vagas                             
                          FROM tbtipocargo 
-                        WHERE idTipoCargo = '.$id;
-           
-            $row = parent::select($select,FALSE);		
-            return $row[0];
-	}
+                        WHERE idTipoCargo = ' . $id;
 
-	###########################################################
-	
-	/**
-	 * Método get_tipoCargoVagasDisponiveis
-	 * 
-	 * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
-	 */
-	
-	public function get_tipoCargoVagasDisponiveis($id){
-            $vagas = $this->get_TipoCargoVagas($id);
-            $ocupadas = $this->get_servidoresAtivosTipoCargo($id);
-            $disponiveis = $vagas - $ocupadas;
-           
-            return $disponiveis;
-	}
+        $row = parent::select($select, FALSE);
+        return $row[0];
+    }
 
-	###########################################################
-	
-	/**
-	 * Método get_servidoresArea
-	 * 
-	 * Exibe o número de servidores ativos em uma determinada area
-	 */
-	
-	public function get_servidoresArea($id){
-            $select = 'SELECT idServidor                             
+    ###########################################################
+
+    /**
+     * Método get_tipoCargoVagasDisponiveis
+     * 
+     * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
+     */
+    public function get_tipoCargoVagasDisponiveis($id) {
+        $vagas = $this->get_TipoCargoVagas($id);
+        $ocupadas = $this->get_servidoresAtivosTipoCargo($id);
+        $disponiveis = $vagas - $ocupadas;
+
+        return $disponiveis;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresArea
+     * 
+     * Exibe o número de servidores ativos em uma determinada area
+     */
+    public function get_servidoresArea($id) {
+        $select = 'SELECT idServidor                             
                          FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                         WHERE situacao = 1 AND 
-                              tbcargo.idArea = '.$id;
-           
-            $numero = parent::count($select);
-            return $numero;
-	}
+                              tbcargo.idArea = ' . $id;
 
-	###########################################################
-	
-	/**
-	 * Método get_nomeSituacao
-	 * 
-	 * Informa o nome de um idsituacao
-	 */
-	
-	public function get_nomeSituacao($idsituacao){
-            $select = 'SELECT situacao                            
+        $numero = parent::count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeSituacao
+     * 
+     * Informa o nome de um idsituacao
+     */
+    public function get_nomeSituacao($idsituacao) {
+        $select = 'SELECT situacao                            
                          FROM tbsituacao
-                        WHERE idsituacao = '.$idsituacao;
-           
-             $row = parent::select($select,FALSE);
-             return $row[0];
-	}
+                        WHERE idsituacao = ' . $idsituacao;
 
-	###########################################################
-	
-	/**
-	 * Método get_nomePerfil
-	 * 
-	 * Informa o nome de um idperfil
-	 */
-	
-	public function get_nomePerfil($idperfil){
-            $select = 'SELECT nome                            
+        $row = parent::select($select, FALSE);
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomePerfil
+     * 
+     * Informa o nome de um idperfil
+     */
+    public function get_nomePerfil($idperfil) {
+        $select = 'SELECT nome                            
                          FROM tbperfil
-                        WHERE idperfil = '.$idperfil;
-           
-             $row = parent::select($select,FALSE);
-             return $row[0];
-	}
+                        WHERE idperfil = ' . $idperfil;
 
-	###########################################################
+        $row = parent::select($select, FALSE);
+        return $row[0];
+    }
 
-	/**
-	 * Método get_nomeCompletoCargo
-	 * Informa o nome do cargo a partir do id
-	 *
-	 * @param	string $id  id do cargo
-	 */
+    ###########################################################
 
-	public function get_nomeCompletoCargo($id){
-		if (!is_numeric($id)){
-                    return $id;
-                }else{
-                    $select = 'SELECT tbtipocargo.cargo,
+    /**
+     * Método get_nomeCompletoCargo
+     * Informa o nome do cargo a partir do id
+     *
+     * @param	string $id  id do cargo
+     */
+    public function get_nomeCompletoCargo($id) {
+        if (!is_numeric($id)) {
+            return $id;
+        } else {
+            $select = 'SELECT tbtipocargo.cargo,
                                       tbarea.area,
                                       tbcargo.nome
                                  FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
                                               LEFT JOIN tbarea USING (idarea)
-                                WHERE idCargo = '.$id;
+                                WHERE idCargo = ' . $id;
 
-                    $row = parent::select($select,FALSE);
-                    return $row[0]." - ".$row[1]." - ".$row[2];
-                }
+            $row = parent::select($select, FALSE);
+            return $row[0] . " - " . $row[1] . " - " . $row[2];
+        }
+    }
 
-	}
+    ###########################################################
 
-	###########################################################
-	
-	/**
-	 * Método get_numIdservidor
-	 * fornece o número de idservidores de um idpessoa
-	 * 
-	 * @param	string $idPessoa idPessoa do servidor
-	 */
-
-	public function get_numIdservidor($idPessoa)
-	{
-		$select = 'SELECT idservidor
+    /**
+     * Método get_numIdservidor
+     * fornece o número de idservidores de um idpessoa
+     * 
+     * @param	string $idPessoa idPessoa do servidor
+     */
+    public function get_numIdservidor($idPessoa) {
+        $select = 'SELECT idservidor
                              FROM tbservidor
-                            WHERE idpessoa = '.$idPessoa;
-		
-		$numIdservidor = parent::count($select);
-				
-		return $numIdservidor;
-	}
-	
-	#####################################################################################
-	
-	/**
-	 * Método get_feriasResumo
-	 * 
-	 * Fornece um array com a lista de totais de dias fruidos/solicitados por ano de exercicio
-         */
-	
-	public function get_feriasResumo($idservidor){
-            
-            $select = 'SELECT anoexercicio, SUM(numDias) as total                        
+                            WHERE idpessoa = ' . $idPessoa;
+
+        $numIdservidor = parent::count($select);
+
+        return $numIdservidor;
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_feriasResumo
+     * 
+     * Fornece um array com a lista de totais de dias fruidos/solicitados por ano de exercicio
+     */
+    public function get_feriasResumo($idservidor) {
+
+        $select = 'SELECT anoexercicio, SUM(numDias) as total                        
                          FROM tbferias
-                        WHERE idservidor = '.$idservidor.'
+                        WHERE idservidor = ' . $idservidor . '
                           AND (status = "fruída" OR status = "solicitada" OR status = "confirmada")
                      GROUP BY anoexercicio
                      ORDER BY anoexercicio desc';
-           
-             $row = parent::select($select);
-             $quantos = count($row);
-             
-             $novoArray = NULL;
-             
-             # Pega o menor ano cadastrado
-             if($quantos > 0){
-                $menorValor = $row[$quantos-1];
-                $menorAno = $menorValor['anoexercicio'];
-                          
-                # Pega o maior ano (anoatual +1)
-                $maiorAno = date("Y")+1;
 
-                # Verifica ano a ano
-                for($i = $maiorAno;$i >= $menorAno;$i--){
-                   if(array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
-                       $novoArray[]=array($i,0,30);               // Acrescenta o ano com valor 0
-                   }else{
-                       $dias = $this->get_feriasSomaDias($i, $idservidor);
-                       $novoArray[]=array($i,$dias, 30 - $dias);  // Acrescenta o ano com valor 0
-                   }
-                }
-             }
-             
-             return $novoArray;
-	}
+        $row = parent::select($select);
+        $quantos = count($row);
 
-	#####################################################################################
-	
-	/**
-	 * Método get_exercicioDisponivel
-	 * 
-	 * Informa o ano exercício das férias disponivel para fruir
-         */
-	
-	public function get_feriasExercicioDisponivel($idservidor){
-            
-            # Pega as férias cadastradas no sistema
-            $lista = $this->get_feriasResumo($idservidor);
-            
-            # Pega o ano de admissão do servidor
-            $anoAdmissao = $this->get_anoAdmissao($idservidor);
-            
-            # Pega o ano atual
-            $anoAtual = date("Y");
-            
-            # Definr a variável
-            $retorno = NULL;
-            $ultimo = NULL;
-            
-            # Se não tiver férias cadastradas o ano disponível é o posterior ao da admissão
-            if(count($lista) == 0){
-                $retorno = $anoAdmissao + 1;
-            }else{
-                # Se houver verifica se alguma das férias tem menos de 30 dias 
-                foreach ($lista as $value){
-                    if($value[1] < 30){
-                        $retorno = $value[0];
-                    }
-                    $ultimo = $value[0];
+        $novoArray = NULL;
+
+        # Pega o menor ano cadastrado
+        if ($quantos > 0) {
+            $menorValor = $row[$quantos - 1];
+            $menorAno = $menorValor['anoexercicio'];
+
+            # Pega o maior ano (anoatual +1)
+            $maiorAno = date("Y") + 1;
+
+            # Verifica ano a ano
+            for ($i = $maiorAno; $i >= $menorAno; $i--) {
+                if (array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
+                    $novoArray[] = array($i, 0, 30);               // Acrescenta o ano com valor 0
+                } else {
+                    $dias = $this->get_feriasSomaDias($i, $idservidor);
+                    $novoArray[] = array($i, $dias, 30 - $dias);  // Acrescenta o ano com valor 0
                 }
             }
-            
-            # 
-            if(is_null($retorno)){
-                $retorno = $ultimo+1;
-            }
-            return $retorno;
-	}
+        }
 
-	#####################################################################################
-	
-	/**
-	 * Método get_emailUenf(idServidor)
-	 * 
-	 * Informa se o servidor tem email principal e qual seria
-         */
-	
-	public function get_emailUenf($idServidor){
-            $select = 'SELECT emailUenf
+        return $novoArray;
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_exercicioDisponivel
+     * 
+     * Informa o ano exercício das férias disponivel para fruir
+     */
+    public function get_feriasExercicioDisponivel($idservidor) {
+
+        # Pega as férias cadastradas no sistema
+        $lista = $this->get_feriasResumo($idservidor);
+
+        # Pega o ano de admissão do servidor
+        $anoAdmissao = $this->get_anoAdmissao($idservidor);
+
+        # Pega o ano atual
+        $anoAtual = date("Y");
+
+        # Definr a variável
+        $retorno = NULL;
+        $ultimo = NULL;
+
+        # Se não tiver férias cadastradas o ano disponível é o posterior ao da admissão
+        if (count($lista) == 0) {
+            $retorno = $anoAdmissao + 1;
+        } else {
+            # Se houver verifica se alguma das férias tem menos de 30 dias 
+            foreach ($lista as $value) {
+                if ($value[1] < 30) {
+                    $retorno = $value[0];
+                }
+                $ultimo = $value[0];
+            }
+        }
+
+        # 
+        if (is_null($retorno)) {
+            $retorno = $ultimo + 1;
+        }
+        return $retorno;
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_emailUenf(idServidor)
+     * 
+     * Informa se o servidor tem email principal e qual seria
+     */
+    public function get_emailUenf($idServidor) {
+        $select = 'SELECT emailUenf
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                        WHERE idservidor = '.$idServidor;
-           
-             $row = parent::select($select,FALSE);
-             return $row[0];
-	}
+                        WHERE idservidor = ' . $idServidor;
 
-	#####################################################################################
-	
-	/**
-	 * Método get_feriasSomaDias
-	 * 
-	 * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
-         */
-	
-	public function get_feriasSomaDias($anoExercicio,$idservidor,$id=NULL){
-            $select = 'SELECT anoexercicio, SUM(numDias)                          
+        $row = parent::select($select, FALSE);
+        return $row[0];
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_feriasSomaDias
+     * 
+     * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
+     */
+    public function get_feriasSomaDias($anoExercicio, $idservidor, $id = NULL) {
+        $select = 'SELECT anoexercicio, SUM(numDias)                          
                          FROM tbferias
-                        WHERE idservidor = '.$idservidor.'
-                          AND anoExercicio = '.$anoExercicio;
-            
-            # Retira o id ferias do calculo caso seja edição desse mesmo registro
-            # para não contá-lo 2 vezes
-            if(!vazio($id)){
-                $select .= ' AND idFerias <> '.$id;
-            }
-            
-            $select .= ' GROUP BY anoexercicio
+                        WHERE idservidor = ' . $idservidor . '
+                          AND anoExercicio = ' . $anoExercicio;
+
+        # Retira o id ferias do calculo caso seja edição desse mesmo registro
+        # para não contá-lo 2 vezes
+        if (!vazio($id)) {
+            $select .= ' AND idFerias <> ' . $id;
+        }
+
+        $select .= ' GROUP BY anoexercicio
                          ORDER BY anoexercicio asc';
-            
-            $row = parent::select($select,FALSE);
-            return $row[1];
-	}
-        
-        #####################################################################################
-	
-	/**
-	 * Método get_feriasQuantidadesPeriodos
-	 * 
-	 * Informa os períodos solicitados por um servidor em um anoexercicio
-         */
-	
-	public function get_feriasPeriodo($idFerias){
-            # Pega os dados dessas ferias
-            $select1 = "SELECT idServidor,
+
+        $row = parent::select($select, FALSE);
+        return $row[1];
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_feriasQuantidadesPeriodos
+     * 
+     * Informa os períodos solicitados por um servidor em um anoexercicio
+     */
+    public function get_feriasPeriodo($idFerias) {
+        # Pega os dados dessas ferias
+        $select1 = "SELECT idServidor,
                               dtInicial,
                               anoExercicio,
                               numDias,
                               status
                          FROM tbferias
                          WHERE idFerias = $idFerias";
-            
-            $ferias = parent::select($select1,false);
-            
-            # Preenche as variáveis
-            $idServidor = $ferias[0];
-            $dtInicial = $ferias[1];
-            $anoExercicio = $ferias[2];
-            $numDias = $ferias[3];
-            $status = $ferias[4];
-            $periodo = NULL;
-            
-            # Verifica as férias desse servidor nesse periodo
-            $select2 = "SELECT idFerias
+
+        $ferias = parent::select($select1, false);
+
+        # Preenche as variáveis
+        $idServidor = $ferias[0];
+        $dtInicial = $ferias[1];
+        $anoExercicio = $ferias[2];
+        $numDias = $ferias[3];
+        $status = $ferias[4];
+        $periodo = NULL;
+
+        # Verifica as férias desse servidor nesse periodo
+        $select2 = "SELECT idFerias
                           FROM tbferias
                          WHERE idServidor = $idServidor
                            AND anoExercicio = $anoExercicio
-                      ORDER BY dtInicial asc";       
+                      ORDER BY dtInicial asc";
 
-            $listaFerias = parent::select($select2);
+        $listaFerias = parent::select($select2);
 
-            # Percorre as féras desse servidor no exercicio informado
-            # para saber em que lugar na ordem ela se encontra
-            $ordem = 1;            
-            foreach ($listaFerias as $value){
-                if($value[0] == $idFerias){
-                    $periodo = $ordem."º";
-                }
-                $ordem ++;
-                
-                # Se for único
-                if($numDias == 30){
-                    $periodo = "Único";
-                }
+        # Percorre as féras desse servidor no exercicio informado
+        # para saber em que lugar na ordem ela se encontra
+        $ordem = 1;
+        foreach ($listaFerias as $value) {
+            if ($value[0] == $idFerias) {
+                $periodo = $ordem . "º";
             }
-            
-            return $periodo;
-	}
-        
-        ###########################################################
-	
-	/**
-	 * Método get_dataNascimento
-	 * informa a data de nascimento de um idServidor
-	 * 
-	 * @param	string $idServidor idServidor do servidor
-	 */
+            $ordem++;
 
-	function get_dataNascimento($idServidor)
-	{
-            $select = 'SELECT tbpessoa.dtNasc
+            # Se for único
+            if ($numDias == 30) {
+                $periodo = "Único";
+            }
+        }
+
+        return $periodo;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_dataNascimento
+     * informa a data de nascimento de um idServidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_dataNascimento($idServidor) {
+        $select = 'SELECT tbpessoa.dtNasc
                          FROM tbpessoa JOIN tbservidor USING(idPessoa)
-                        WHERE tbservidor.idServidor = '.$idServidor;
+                        WHERE tbservidor.idServidor = ' . $idServidor;
 
-            if($idServidor == 0){
-                alert("$idServidor inválido");
-            }else{ 
-                $nome = parent::select($select,FALSE);
-                return date_to_php($nome[0]);
-            }
-	}
-	
-	###########################################################
+        if ($idServidor == 0) {
+            alert("$idServidor inválido");
+        } else {
+            $nome = parent::select($select, FALSE);
+            return date_to_php($nome[0]);
+        }
+    }
 
-	
-	/**
-	 * Método get_idServidoridFuncional
-	 * Informa a idServidor de um idFuncional
-	 * 
-	 * @param	string $idFuncional  idFuncional do servidor
-	 */
+    ###########################################################
 
-	public function get_idServidoridFuncional($idFuncional){
+    /**
+     * Método get_idServidoridFuncional
+     * Informa a idServidor de um idFuncional
+     * 
+     * @param	string $idFuncional  idFuncional do servidor
+     */
+    public function get_idServidoridFuncional($idFuncional) {
+        # Pega o cargo do servidor
+        $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idFuncional = ' . $idFuncional;
+
+        $row = parent::select($select, FALSE);
+
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_idServidoridPessoa
+     * Informa a idServidor de um idPessoa
+     * 
+     * @param	string $idFuncional  idFuncional do servidor
+     */
+    public function get_idServidoridPessoa($idPessoa) {
+
+        # Verifica o $idPessoa
+        if (is_null($idPessoa)) {
+            return NULL;
+        } else {
+
             # Pega o cargo do servidor
             $select = 'SELECT idServidor
-                         FROM tbservidor
-                        WHERE idFuncional = '.$idFuncional;
-
-            $row = parent::select($select,FALSE);
-            
-            return $row[0];
-			
-	}
-        
-        ###########################################################
-	
-	/**
-	 * Método get_idServidoridPessoa
-	 * Informa a idServidor de um idPessoa
-	 * 
-	 * @param	string $idFuncional  idFuncional do servidor
-	 */
-
-	public function get_idServidoridPessoa($idPessoa){
-            
-            # Verifica o $idPessoa
-            if(is_null($idPessoa)){
-                return NULL;
-            }else{
-            
-                # Pega o cargo do servidor
-                $select = 'SELECT idServidor
                              FROM tbservidor
-                            WHERE idPessoa = '.$idPessoa.'  
+                            WHERE idPessoa = ' . $idPessoa . '  
                          ORDER BY idPerfil, dtAdmissao desc';
 
-                $row = parent::select($select,FALSE);
+            $row = parent::select($select, FALSE);
 
-                return $row[0];
-            }	
-	}        
-        
-        ###########################################################
-	
-	/**
-	 * Método get_idade
-	 * Informa a idade do servidor
-	 * 
-	 * @param string $idServidor idServidor do servidor
-	 */
-
-        public function get_idade($idServidor){
-            
-            # Pega a data de nascimento do servidor
-            $dataNascimento = $this->get_dataNascimento($idServidor);
-            
-            
-            # Separa em dia, mês e ano
-            list($dia, $mes, $ano) = explode('/', $dataNascimento);
-
-            # Descobre que dia é hoje e retorna a unix timestamp
-            $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-            
-            # Descobre a unix timestamp da data de nascimento
-            $nascimento = mktime( 0, 0, 0, $mes, $dia, $ano);
-
-            # Depois apenas fazemos o cálculo já citado :)
-            $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
-            
-            return $idade;
+            return $row[0];
         }
+    }
 
-        ###########################################################
-	
-	/**
-	 * Método temLotacaoNestaData
-	 * Verifica se servidor já tem lotação na data informada. Evita problema de duplicidade de servidor quando tem 2 ou mais lotações começando na mesma data.
-	 * 
-	 * @param data    $data       A data do início da lotação a ser verificadaidServidor do servidor
-         * @param integer $idServidor O idServidor do servidor em questão
-         * @param integer $idHistLot  O id da tabela tbhistlot para certificar que não está comparando o mesno registro.
-	 */
+    ###########################################################
 
-        public function temLotacaoNestaData($data, $idServidor, $idHistLot = NULL){
-            
-            $select = 'SELECT data
+    /**
+     * Método get_idade
+     * Informa a idade do servidor
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_idade($idServidor) {
+
+        # Pega a data de nascimento do servidor
+        $dataNascimento = $this->get_dataNascimento($idServidor);
+
+
+        # Separa em dia, mês e ano
+        list($dia, $mes, $ano) = explode('/', $dataNascimento);
+
+        # Descobre que dia é hoje e retorna a unix timestamp
+        $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+
+        # Descobre a unix timestamp da data de nascimento
+        $nascimento = mktime(0, 0, 0, $mes, $dia, $ano);
+
+        # Depois apenas fazemos o cálculo já citado :)
+        $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+
+        return $idade;
+    }
+
+    ###########################################################
+
+    /**
+     * Método temLotacaoNestaData
+     * Verifica se servidor já tem lotação na data informada. Evita problema de duplicidade de servidor quando tem 2 ou mais lotações começando na mesma data.
+     * 
+     * @param data    $data       A data do início da lotação a ser verificadaidServidor do servidor
+     * @param integer $idServidor O idServidor do servidor em questão
+     * @param integer $idHistLot  O id da tabela tbhistlot para certificar que não está comparando o mesno registro.
+     */
+    public function temLotacaoNestaData($data, $idServidor, $idHistLot = NULL) {
+
+        $select = 'SELECT data
                          FROM tbhistlot
-                         WHERE idServidor = '.$idServidor.'
-                           AND data = "'.$data.'"';
-            
-            if(!is_null($idHistLot)){
-                $select .= ' AND idHistLot <> '.$idHistLot;
-            }
+                         WHERE idServidor = ' . $idServidor . '
+                           AND data = "' . $data . '"';
 
-            $result = parent::count($select);
-            
-            if($result > 0){
-                return TRUE;
-            }else{
-                return FALSE;
-            }
+        if (!is_null($idHistLot)) {
+            $select .= ' AND idHistLot <> ' . $idHistLot;
         }
 
-        ###########################################################
-	
-	/**
-	 * Método podeNovoServidor
-	 * Verifica se é permitido incluir novos servidores nesse perfil.
-	 *
-         * @param integer $idPerfil O idPerfil do servidor a ser incluído
-	 */
+        $result = parent::count($select);
 
-        public function podeNovoServidor($idPerfil){
-            
-            $select = 'SELECT novoServidor
+        if ($result > 0) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método podeNovoServidor
+     * Verifica se é permitido incluir novos servidores nesse perfil.
+     *
+     * @param integer $idPerfil O idPerfil do servidor a ser incluído
+     */
+    public function podeNovoServidor($idPerfil) {
+
+        $select = 'SELECT novoServidor
                          FROM tbperfil
-                         WHERE idPerfil = '.$idPerfil;
-            
-            $result = parent::select($select,FALSE);
-            
-            return $result[0];
-        }
+                         WHERE idPerfil = ' . $idPerfil;
 
-        ##########################################################################################
+        $result = parent::select($select, FALSE);
 
-        public function get_licencaLei($idTipoLicenca)
+        return $result[0];
+    }
+
+    ##########################################################################################
+
+    public function get_licencaLei($idTipoLicenca) {
 
 
         # Função que informa o nome do tipo de licença
         #
         # Parâmetro: id do tipo de licença
-
-        {
-                # Valida parametro
-                if(is_null($idTipoLicenca)){
-                    return FALSE;
-                }
-
-                # Monta o select		
-                $select = 'SELECT lei
-                             FROM tbtipolicenca
-                            WHERE idTpLicenca = '.$idTipoLicenca;
-
-                $row = parent::select($select,FALSE);
-
-                return $row[0];		
-
+        # Valida parametro
+        if (is_null($idTipoLicenca)) {
+            return FALSE;
         }
 
+        # Monta o select		
+        $select = 'SELECT lei
+                             FROM tbtipolicenca
+                            WHERE idTpLicenca = ' . $idTipoLicenca;
+
+        $row = parent::select($select, FALSE);
+
+        return $row[0];
+    }
+
     ##########################################################################################
-       
-        public function get_emailPessoal($idServidor){
+
+    public function get_emailPessoal($idServidor) {
 
         # Função que retorna o email pessoal do servidor cadastrado no sistema
         #
         # Parâmetro: id do servidor
-        
-            $select = 'SELECT emailPessoal
+
+        $select = 'SELECT emailPessoal
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                        WHERE idservidor = '.$idServidor;
-           
-             $row = parent::select($select,FALSE);
-             return $row[0];
-            }
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, FALSE);
+        return $row[0];
+    }
 
     ##########################################################################################
-       
-        public function get_emails($idServidor){
+
+    public function get_emails($idServidor) {
 
         # Função que retorna os emails pessoal e Uenf do servidor cadastrado no sistema
         #
         # Parâmetro: id do servidor
-        
-            $select = 'SELECT emailPessoal,
+
+        $select = 'SELECT emailPessoal,
                               emailUenf  
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                        WHERE idservidor = '.$idServidor;
-           
-            $row = parent::select($select,FALSE);
-            $retorno = NULL;
-            
-            if(!vazio($row[0])){
-                $retorno .= "$row[0]<br/>"; 
-            }
-            
-            if(!vazio($row[1])){
-                $retorno .= $row[1]; 
-            }   
-             
-             return $retorno;
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, FALSE);
+        $retorno = NULL;
+
+        if (!vazio($row[0])) {
+            $retorno .= "$row[0]<br/>";
         }
 
+        if (!vazio($row[1])) {
+            $retorno .= $row[1];
+        }
+
+        return $retorno;
+    }
+
     ##########################################################################################
-       
-        public function get_telefones($idServidor){
+
+    public function get_telefones($idServidor) {
 
         # Função que retorna os telefones do servidor cadastrado no sistema
         #
         # Parâmetro: id do servidor
-        
-            $select = 'SELECT telResidencialDDD,
+
+        $select = 'SELECT telResidencialDDD,
                               telResidencial,
                               telCelularDDD,
                               telCelular,
                               telRecadosDDD,
                               telRecados
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
-                        WHERE idservidor = '.$idServidor;
-           
-            $row = parent::select($select,FALSE);
-            $retorno = NULL;
-            
-            if(!vazio($row[1])){
-                $retorno .= "($row[0]) $row[1]<br/>"; 
-            }
-            
-            if(!vazio($row[3])){
-                $retorno .= "($row[2]) $row[3]<br/>"; 
-            }
-            
-            if(!vazio($row[5])){
-                $retorno .= "($row[4]) $row[5]<br/>"; 
-            }   
-             
-             return $retorno;
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, FALSE);
+        $retorno = NULL;
+
+        if (!vazio($row[1])) {
+            $retorno .= "($row[0]) $row[1]<br/>";
         }
+
+        if (!vazio($row[3])) {
+            $retorno .= "($row[2]) $row[3]<br/>";
+        }
+
+        if (!vazio($row[5])) {
+            $retorno .= "($row[4]) $row[5]<br/>";
+        }
+
+        return $retorno;
+    }
 
     ##########################################################################################
 
-        public function get_idCedido($idServidor)
+    public function get_idCedido($idServidor)
 
-        /**
-        * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
-        */
+    /**
+     * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
+     */ {
+        # Valida parametro
+        if (is_null($idServidor))
+            return FALSE;
 
-        {
-            # Valida parametro
-            if(is_null($idServidor))
-                return FALSE;
-
-            # Monta o select		
-            $select = 'SELECT idCedido
+        # Monta o select		
+        $select = 'SELECT idCedido
                          FROM tbcedido
-                        WHERE idServidor = '.$idServidor;
+                        WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-            return $row[0];
-        }
+        return $row[0];
+    }
 
     ###########################################################
 
@@ -4558,18 +4193,17 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
-    public function get_totalAverbadoPublico($idServidor){
+    public function get_totalAverbadoPublico($idServidor) {
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
-                    WHERE empresaTipo = 1 AND idServidor = '.$idServidor.'
+                    WHERE empresaTipo = 1 AND idServidor = ' . $idServidor . '
                          ORDER BY total';
 
-        $row = parent::select($select,FALSE);
-        
-        if(is_null($row[0])){
+        $row = parent::select($select, FALSE);
+
+        if (is_null($row[0])) {
             return 0;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -4582,18 +4216,17 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
-
     public function get_totalAverbadoPrivado($idServidor) {
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
-                    WHERE empresaTipo = 2 AND idServidor = '.$idServidor.'
+                    WHERE empresaTipo = 2 AND idServidor = ' . $idServidor . '
                          ORDER BY total';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(is_null($row[0])){
+        if (is_null($row[0])) {
             return 0;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -4607,12 +4240,10 @@ class Pessoal extends Bd {
      * @param string $idServidor idServidor do servidor
      * @param date   $dtFinal    Data até quando vai ser feito o calculo. 
      */
+    public function get_tempoServicoUenf($idServidor, $dtFinal) {
 
-    public function get_tempoServicoUenf($idServidor,$dtFinal){
-        
         # Data de admissão
         $dtAdmissao = $this->get_dtAdmissao($idServidor);   # Data de entrada na UENF
-        
         # Define a data inicial
         $dtInicial = date_to_bd($dtAdmissao);
 
@@ -4634,211 +4265,200 @@ class Pessoal extends Bd {
      * @param string  $idServidor    idServidor do servidor
      * @param integer $idtipoLicenca o id do tipo de licença
      */
-
-    public function get_totalDiasLicencaAfastamento($idServidor,$idTipoLicenca)
-    {
+    public function get_totalDiasLicencaAfastamento($idServidor, $idTipoLicenca) {
         $select = 'SELECT SUM(dias) as total
                      FROM tblicenca
-                    WHERE idTipoLicenca = '.$idTipoLicenca.' AND idServidor = '.$idServidor.'
+                    WHERE idTipoLicenca = ' . $idTipoLicenca . ' AND idServidor = ' . $idServidor . '
                          ORDER BY total';
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
-        if(is_null($row[0])){
+        if (is_null($row[0])) {
             return 0;
-        }else{
+        } else {
             return $row[0];
         }
     }
 
     ##########################################################################################
 
-    public function get_endereco($idServidor){
+    public function get_endereco($idServidor) {
 
         # Função que retorna string com o endereço cadastrado do servidor
         #
         # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }
+        # Valida parametro
+        if (is_null($idServidor)) {
+            return FALSE;
+        }
 
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
+        # Pega o idPessoa desse idServidor
+        $idPessoa = $this->get_idPessoa($idServidor);
 
-            # Monta o select		
-            $select = 'SELECT endereco,
+        # Monta o select		
+        $select = 'SELECT endereco,
                               bairro,
                               tbcidade.nome,
                               cep
                          FROM tbpessoa JOIN tbcidade USING (idCidade)
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $row = parent::select($select,FALSE);
-            $numero = parent::count($select);
-            $return = NULL;
+        $row = parent::select($select, FALSE);
+        $numero = parent::count($select);
+        $return = NULL;
 
-            if($numero > 0){
-                $return = $row[0]." - ".$row[1]." - ".$row[2]." Cep: ".$row[3];
-            }
-
-            return $return;		
-
+        if ($numero > 0) {
+            $return = $row[0] . " - " . $row[1] . " - " . $row[2] . " Cep: " . $row[3];
         }
+
+        return $return;
+    }
 
     ##########################################################################################
 
-    public function get_enderecoRel($idServidor){
+    public function get_enderecoRel($idServidor) {
 
         # Função que retorna string com o endereço cadastrado do servidor para relatorio. Unica diferença e o salto de pagina antes da cidade.
         #
         # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }
+        # Valida parametro
+        if (is_null($idServidor)) {
+            return FALSE;
+        }
 
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
+        # Pega o idPessoa desse idServidor
+        $idPessoa = $this->get_idPessoa($idServidor);
 
-            # Monta o select		
-            $select = 'SELECT endereco,
+        # Monta o select		
+        $select = 'SELECT endereco,
                               bairro,
                               tbcidade.nome,
                               tbestado.uf,
                               cep
                          FROM tbpessoa JOIN tbcidade USING (idCidade)
                                        JOIN tbestado USING (idEstado)
-                        WHERE idPessoa = '.$idPessoa;
+                        WHERE idPessoa = ' . $idPessoa;
 
-            $row = parent::select($select,FALSE);
-            $numero = parent::count($select);
-            $return = NULL;
+        $row = parent::select($select, FALSE);
+        $numero = parent::count($select);
+        $return = NULL;
 
-            if($numero > 0){
-                $return = plm($row[0])." - ".
-                          plm($row[1])."<br/> ".
-                          plm($row[2])." - ".
-                          strtoupper($row[3])." Cep: ".$row[4];
-            }
-
-            return $return;		
-
+        if ($numero > 0) {
+            $return = plm($row[0]) . " - " .
+                    plm($row[1]) . "<br/> " .
+                    plm($row[2]) . " - " .
+                    strtoupper($row[3]) . " Cep: " . $row[4];
         }
+
+        return $return;
+    }
 
     ##########################################################################################
 
-    public function get_numVinculos($idServidor){
+    public function get_numVinculos($idServidor) {
 
         # Função que retorna quantos vinculos esse servidor teve com a uenf.
         #
         # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }            
-
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
-
-            # Monta o select		
-            $select = 'SELECT idServidor
-                         FROM tbservidor
-                        WHERE idPessoa = '.$idPessoa;
-
-            $numero = parent::count($select);
-            return $numero;
+        # Valida parametro
+        if (is_null($idServidor)) {
+            return FALSE;
         }
+
+        # Pega o idPessoa desse idServidor
+        $idPessoa = $this->get_idPessoa($idServidor);
+
+        # Monta o select		
+        $select = 'SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = ' . $idPessoa;
+
+        $numero = parent::count($select);
+        return $numero;
+    }
 
     ##########################################################################################
 
-        function get_numVinculosAtivos($idServidor){
+    function get_numVinculosAtivos($idServidor) {
 
         # Função que retorna quantos vinculos ativos esse servidor tem com a uenf
         #
         # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }            
+        # Valida parametro
+        if (is_null($idServidor)) {
+            return FALSE;
+        }
 
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
+        # Pega o idPessoa desse idServidor
+        $idPessoa = $this->get_idPessoa($idServidor);
 
-            # Monta o select		
-            $select = "SELECT idServidor
+        # Monta o select		
+        $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
                           AND situacao = 1";
 
-            $numero = parent::count($select);
-            return $numero;
-        }
+        $numero = parent::count($select);
+        return $numero;
+    }
 
     ##########################################################################################
 
-        function get_numVinculosNaoAtivos($idServidor){
+    function get_numVinculosNaoAtivos($idServidor) {
 
         # Função que retorna quantos vinculos nao ativos esse servidor tem com a uenf
         #
         # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }            
+        # Valida parametro
+        if (is_null($idServidor)) {
+            return FALSE;
+        }
 
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
+        # Pega o idPessoa desse idServidor
+        $idPessoa = $this->get_idPessoa($idServidor);
 
-            # Monta o select		
-           $select = "SELECT idServidor
+        # Monta o select		
+        $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
                           AND situacao <> 1";
 
-            $numero = parent::count($select);
-            return $numero;
-        }
+        $numero = parent::count($select);
+        return $numero;
+    }
 
     ##########################################################################################
 
-        function get_vinculos($idServidor){
+    function get_vinculos($idServidor) {
 
         # Função que retorna o idServidor de cada vinculos esse servidor teve com a uenf.
         #
         # Parâmetro: id do servidor
-        
-            # Valida parametro
-            if(is_null($idServidor)){
-                return FALSE;
-            }            
+        # Valida parametro
+        if (is_null($idServidor)) {
+            return FALSE;
+        }
 
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $this->get_idPessoa($idServidor);
+        # Pega o idPessoa desse idServidor
+        $idPessoa = $this->get_idPessoa($idServidor);
 
-            # Monta o select		
-            $select = "SELECT idServidor
+        # Monta o select		
+        $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
                      ORDER BY dtadmissao";
 
-            $row = parent::select($select);
-            return $row;
-        }
+        $row = parent::select($select);
+        return $row;
+    }
 
     ##########################################################################################
 
-        function get_nomeReitor(){
+    function get_nomeReitor() {
 
         # Função que retorna o nome do reitor atual
-
-            # Monta o select		
-            $select ='SELECT tbpessoa.nome 
+        # Monta o select		
+        $select = 'SELECT tbpessoa.nome 
                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                       LEFT JOIN tbcomissao USING (idServidor)
                                       LEFT JOIN tbtipocomissao USING (idTipoComissao)
@@ -4846,24 +4466,23 @@ class Pessoal extends Bd {
                           OR (dtExo is NULL))                 
                          AND idTipoComissao = 13';
 
-            $row = parent::select($select,FALSE);
-            return $row[0];
-        }
+        $row = parent::select($select, FALSE);
+        return $row[0];
+    }
 
     ##########################################################################################
 
-    function get_dadosTipoComissao($idTipoComissao){
-    
-     /**
-      * 
-      * Retorna dados de um tipo de comissao
-      * 
-      * @param $idTipoComissao integer o id do tipo de comissao
-      * 
-      * @note Usada na rotina que gera o ato de nomeaçao 
-      * 
-      */
-    
+    function get_dadosTipoComissao($idTipoComissao) {
+
+        /**
+         * 
+         * Retorna dados de um tipo de comissao
+         * 
+         * @param $idTipoComissao integer o id do tipo de comissao
+         * 
+         * @note Usada na rotina que gera o ato de nomeaçao 
+         * 
+         */
         # Monta o select
         $select = "SELECT descricao,
                           simbolo,
@@ -4873,23 +4492,22 @@ class Pessoal extends Bd {
                           ativo
                      FROM tbtipocomissao
                     WHERE idTipoComissao = $idTipoComissao";
-        
-        $row = parent::select($select,FALSE);
+
+        $row = parent::select($select, FALSE);
         return $row;
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_gerente($idLotacao){
-    
-     /**
-      * 
-      * Retorna o idServidor do gerente/chefe de laboratorio da lotação fornecida
-      * 
-      * @param $idLotacao integer o id da lotaçao
-      * 
-      */
-    
+    function get_gerente($idLotacao) {
+
+        /**
+         * 
+         * Retorna o idServidor do gerente/chefe de laboratorio da lotação fornecida
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         * 
+         */
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -4900,23 +4518,22 @@ class Pessoal extends Bd {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is NULL AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = $idLotacao)";
-        
-        $row = parent::select($select,false);
+
+        $row = parent::select($select, false);
         return $row[0];
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_gerenciaDescricao($idLotacao){
-    
-     /**
-      * 
-      * Retorna a descrição dessa gerência ou chefia de Laboratório da lotação fornecida
-      * 
-      * @param $idLotacao integer o id da lotaçao
-      * 
-      */
-    
+    function get_gerenciaDescricao($idLotacao) {
+
+        /**
+         * 
+         * Retorna a descrição dessa gerência ou chefia de Laboratório da lotação fornecida
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         * 
+         */
         # Monta o select
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -4929,19 +4546,18 @@ class Pessoal extends Bd {
                      AND tbcomissao.dtExo is NULL 
                      AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = $idLotacao)";
-        
-        $row = parent::select($select,false);
+
+        $row = parent::select($select, false);
         return $row[0];
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_reitor(){
-    
-     /**
-      * Retorna o idServidor do reitor da Universidade
-      */
-        
+    function get_reitor() {
+
+        /**
+         * Retorna o idServidor do reitor da Universidade
+         */
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -4949,28 +4565,27 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbcomissao.dtExo is NULL 
                      AND tbtipocomissao.idTipoComissao = 13";
-        
-        $row = parent::select($select,false);
+
+        $row = parent::select($select, false);
         return $row[0];
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_diretor($idLotacao){
-    
-     /**
-      * 
-      * Retorna o idServidor do diretor da lotação fornecida
-      * 
-      * @param $idLotacao integer o id da lotaçao
-      * 
-      */
-        
+    function get_diretor($idLotacao) {
+
+        /**
+         * 
+         * Retorna o idServidor do diretor da lotação fornecida
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         * 
+         */
         # Pega a diretoria dessa lotação
-        $select = "SELECT DIR FROM tblotacao WHERE idLotacao = ".$idLotacao;
-        $row = parent::select($select,false);
+        $select = "SELECT DIR FROM tblotacao WHERE idLotacao = " . $idLotacao;
+        $row = parent::select($select, false);
         $diretoria = $row[0];
-        
+
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -4982,24 +4597,23 @@ class Pessoal extends Bd {
                      AND tbcomissao.dtExo is NULL 
                      AND tbtipocomissao.idTipoComissao = 16
                      AND (tblotacao.dir = '$diretoria')";
-        
-        $row = parent::select($select,false);
+
+        $row = parent::select($select, false);
         return $row[0];
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_chefiaImediata($idServidor){
-    
-     /**
-      * Retorna o idServidor da chefia imediata de um servidor específico
-      * 
-      * @param $idLotacao integer o id da lotaçao
-      */
-        
+    function get_chefiaImediata($idServidor) {
+
+        /**
+         * Retorna o idServidor da chefia imediata de um servidor específico
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         */
         # Pega a lotação do servidor
         $idLotacao = $this->get_idLotacao($idServidor);
-        
+
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -5012,39 +4626,38 @@ class Pessoal extends Bd {
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
                       AND (tblotacao.idlotacao = $idLotacao) 
                  ORDER BY tbtipocomissao.simbolo LIMIT 1";
-        
-        $row = parent::select($select,false);
+
+        $row = parent::select($select, false);
         $chefia = $row[0];
-        
+
         # Verifica se o servidor é o cargo em comissão e procura o diretor
-        if(($chefia == $idServidor) OR (is_null($chefia))){
+        if (($chefia == $idServidor) OR (is_null($chefia))) {
             $chefia = $this->get_diretor($idLotacao);
         }
-        
+
         # Verifica se o servidor é diretorr
-        if(($chefia == $idServidor) OR (is_null($chefia))){
+        if (($chefia == $idServidor) OR (is_null($chefia))) {
             $chefia = $this->get_reitor();
         }
-        
+
         # Verifica se o servidor é o reitor
-        if($chefia == $idServidor){
+        if ($chefia == $idServidor) {
             $chefia = NULL;
         }
-        
+
         # Retorna
         return $chefia;
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_chefiaImediataIdLotacao($idLotacao){
-    
-     /**
-      * Retorna o idServidor da chefia imediata de uma lotação
-      * 
-      * @param $idLotacao integer o id da lotaçao
-      */
-        
+    function get_chefiaImediataIdLotacao($idLotacao) {
+
+        /**
+         * Retorna o idServidor da chefia imediata de uma lotação
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         */
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -5057,96 +4670,93 @@ class Pessoal extends Bd {
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)";
         # Lotacao
         # Verifica se o que veio é numérico
-        if(is_numeric($idLotacao)){
-            $select .= " AND (tblotacao.idlotacao = $idLotacao)"; 
-        }else{ # senão é uma diretoria genérica
+        if (is_numeric($idLotacao)) {
+            $select .= " AND (tblotacao.idlotacao = $idLotacao)";
+        } else { # senão é uma diretoria genérica
             $select .= " AND (tblotacao.DIR = '$idLotacao')";
         }
-        
+
         $select .= " ORDER BY tbtipocomissao.simbolo LIMIT 1";
-        
-        $row = parent::select($select,false);
+
+        $row = parent::select($select, false);
         $chefia = $row[0];
-        
+
         # Retorna
         return $chefia;
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_chefiaImediataDescricao($idServidor){
-    
-     /**
-      * Retorna a descrição do cargo em comissão do servidor indcado
-      * 
-      * @param $idServidor integer o id do servidor com cargo
-      * 
-      */
-        
+    function get_chefiaImediataDescricao($idServidor) {
+
+        /**
+         * Retorna a descrição do cargo em comissão do servidor indcado
+         * 
+         * @param $idServidor integer o id do servidor com cargo
+         * 
+         */
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediata($idServidor);
-        
+
         # Monta o select
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
                     WHERE (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
-        
-        $row = parent::select($select,false);
-        
+
+        $row = parent::select($select, false);
+
         # Retorna
         return $row[0];
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_chefiaImediataDescricaoIdLotacao($idLotacao){
-    
-     /**
-      * Retorna a descrição do cargo em comissão da lotação indcado
-      * 
-      * @param $idLotacao integer o id da lotação
-      * 
-      */
-        
+    function get_chefiaImediataDescricaoIdLotacao($idLotacao) {
+
+        /**
+         * Retorna a descrição do cargo em comissão da lotação indcado
+         * 
+         * @param $idLotacao integer o id da lotação
+         * 
+         */
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediataIdLotacao($idLotacao);
-        
+
         # Monta o select
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
                     WHERE (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
-        
-        $row = parent::select($select,false);
-        
+
+        $row = parent::select($select, false);
+
         # Retorna
         return $row[0];
     }
 
-   ##########################################################################################
+    ##########################################################################################
 
-    function get_diretorServidor($idServidor){
-    
-     /**
-      * 
-      * Retorna o idServidor do gerente/chefe de laboratorio de Um servidor
-      * 
-      * @param $idLotacao integer o id da lotaçao
-      * 
-      */
-        
+    function get_diretorServidor($idServidor) {
+
+        /**
+         * 
+         * Retorna o idServidor do gerente/chefe de laboratorio de Um servidor
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         * 
+         */
         # Pega a lotação do servidor
         $idLotacao = $this->get_idLotacao($idServidor);
-        
+
         # Pega o idServidor do Gerente dessa Lotação
         $idDiretor = $this->get_diretor($idLotacao);
-        
+
         # Retorna
         return $idDiretor;
     }
 
-   #####################################################################################
+    #####################################################################################
 
     /**
      * Método get_cargoAtribuicoes
@@ -5154,14 +4764,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idCargo  o id do cargo
      */
-
-    public function get_cargoAtribuicoes($idCargo){
+    public function get_cargoAtribuicoes($idCargo) {
         $select = 'SELECT atribuicoes
                      FROM tbcargo
-                    WHERE idcargo = '.$idCargo;
+                    WHERE idcargo = ' . $idCargo;
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         return $row[0];
     }
 
@@ -5173,14 +4782,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idArea o id da area
      */
-
-    public function get_areaDescricao($idArea){
+    public function get_areaDescricao($idArea) {
         $select = 'SELECT descricao
                      FROM tbarea
-                    WHERE idarea = '.$idArea;
+                    WHERE idarea = ' . $idArea;
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         return $row[0];
     }
 
@@ -5192,14 +4800,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idCargo o id da area
      */
-
-    public function get_idAreaCargo($idCargo){
+    public function get_idAreaCargo($idCargo) {
         $select = 'SELECT idArea
                      FROM tbcargo
-                    WHERE idCargo = '.$idCargo;
+                    WHERE idCargo = ' . $idCargo;
 
-        $row = parent::select($select,FALSE);
-        
+        $row = parent::select($select, FALSE);
+
         return $row[0];
     }
 
@@ -5211,13 +4818,12 @@ class Pessoal extends Bd {
      * 
      * @param	integer $idEscolaridade id da escolaridadeservidor
      */
-
-    function get_escolaridade($idEscolaridade){
+    function get_escolaridade($idEscolaridade) {
         $select = 'SELECT escolaridade
                      FROM tbescolaridade
-                    WHERE idEscolaridade = '.$idEscolaridade;
+                    WHERE idEscolaridade = ' . $idEscolaridade;
 
-        $retorno = parent::select($select,FALSE);
+        $retorno = parent::select($select, FALSE);
         return $retorno[0];
     }
 
@@ -5232,23 +4838,22 @@ class Pessoal extends Bd {
      * @param integer $idServidor id do servidor
      * @param integer $idade      a idade
      */
+    function get_dataIdade($idServidor, $idade) {
 
-    function get_dataIdade($idServidor, $idade){
-        
         # Pega a data de nascimento
         $dtNasc = $this->get_dataNascimento($idServidor);
-        
+
         # Calcula a data da idade
-        $dia = substr($dtNasc,0,2);
-        $mes = substr($dtNasc,3,2);
-        $ano = substr($dtNasc,6,4);
-        
-        $novoAno = $ano+$idade;
-        $dataFinal = $dia."/".$mes."/".$novoAno;
+        $dia = substr($dtNasc, 0, 2);
+        $mes = substr($dtNasc, 3, 2);
+        $ano = substr($dtNasc, 6, 4);
+
+        $novoAno = $ano + $idade;
+        $dataFinal = $dia . "/" . $mes . "/" . $novoAno;
         return $dataFinal;
     }
 
- ###########################################################
+    ###########################################################
 
     /**
      * Método get_idTipoCargo
@@ -5256,14 +4861,13 @@ class Pessoal extends Bd {
      * 
      * @param   string $idCargo
      */
+    public function get_idTipoCargo($idCargo) {
 
-    public function get_idTipoCargo($idCargo){
-                
         $select = 'SELECT idTipoCargo
                      FROM tbcargo
-                    WHERE idCargo = '.$idCargo;
+                    WHERE idCargo = ' . $idCargo;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
@@ -5276,47 +4880,42 @@ class Pessoal extends Bd {
      * 
      * @param   string $idLicenca
      */
+    public function get_idTipoLicenca($idLicenca) {
 
-    public function get_idTipoLicenca($idLicenca){
-                
         $select = 'SELECT idTpLicenca
                      FROM tblicenca
-                    WHERE idLicenca = '.$idLicenca;
+                    WHERE idLicenca = ' . $idLicenca;
 
-        $row = parent::select($select,FALSE);
+        $row = parent::select($select, FALSE);
 
         return $row[0];
     }
 
     ###########################################################
-    
-    
-    public function exibeMcf($id){
-    /**
-     * Exibe um link para a publicação
-     * 
-     * @param $idConcursoPublicacao integer NULL O id do Concurso
-     * 
-     * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
-     */
-        
+
+    public function exibeMcf($id) {
+        /**
+         * Exibe um link para a publicação
+         * 
+         * @param $idConcursoPublicacao integer NULL O id do Concurso
+         * 
+         * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
+         */
         # Monta o arquivo
-        $arquivo = PASTA_MCF.$id.".pdf";
-        
+        $arquivo = PASTA_MCF . $id . ".pdf";
+
         # Verifica se ele existe
-        if(file_exists($arquivo)){
-            
+        if (file_exists($arquivo)) {
+
             # Monta o link
-            $link = new Link(NULL,$arquivo,"Exibe o MCF");
-            $link->set_imagem(PASTA_FIGURAS."ver.png",20,20);
+            $link = new Link(NULL, $arquivo, "Exibe o MCF");
+            $link->set_imagem(PASTA_FIGURAS . "ver.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
-            
-        }else{
+        } else {
             echo "-";
         }
     }
-    
+
 ###########################################################
-    
 }

@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Área de Frequência
  *
  * By Alat
  */
-
 # Reservado para o servidor logado
 $idUsuario = NULL;
 
@@ -12,9 +12,9 @@ $idUsuario = NULL;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -23,46 +23,46 @@ if($acesso){
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de afastamento";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
     }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros
-    $parametroAno = post('parametroAno',get_session('parametroAno',date('Y')));
-    $parametroMes = post('parametroMes',get_session('parametroMes',date('m')));
-    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));    
-    $parametroTipo = post('parametroTipo',get_session('parametroTipo'));
-    
+    $parametroAno = post('parametroAno', get_session('parametroAno', date('Y')));
+    $parametroMes = post('parametroMes', get_session('parametroMes', date('m')));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+    $parametroTipo = post('parametroTipo', get_session('parametroTipo'));
+
     # atribui lotação padrão quanfo vem de grh.php
-    if($grh){
+    if ($grh) {
         $parametroLotacao = 66;
     }
 
     # Joga os parâmetros par as sessions
-    set_session('parametroAno',$parametroAno);
-    set_session('parametroMes',$parametroMes);
-    set_session('parametroLotacao',$parametroLotacao);
-    set_session('parametroTipo',$parametroTipo);
+    set_session('parametroAno', $parametroAno);
+    set_session('parametroMes', $parametroMes);
+    set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroTipo', $parametroTipo);
 
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if($fase <> "relatorio"){
+    if ($fase <> "relatorio") {
         AreaServidor::cabecalho();
     }
 
 ################################################################
 
-    switch ($fase){
+    switch ($fase) {
         case "" :
             br(4);
             aguarde();
@@ -71,7 +71,7 @@ if($acesso){
             # Limita a tela
             $grid1 = new Grid("center");
             $grid1->abreColuna(5);
-                p("Aguarde...","center");
+            p("Aguarde...", "center");
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
@@ -89,34 +89,33 @@ if($acesso){
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar = new Link("Voltar", "grh.php");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar,"left");
+            $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel,"right");
+            $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
 
-        ################################################################
-
+            ################################################################
             # Formulário de Pesquisa
             $form = new Form('?');
 
             # Cria um array com os anos possíveis
             $anoInicial = 1999;
             $anoAtual = date('Y');
-            $anoExercicio = arrayPreenche($anoInicial,$anoAtual);
+            $anoExercicio = arrayPreenche($anoInicial, $anoAtual);
 
-            $controle = new Input('parametroAno','combo','Ano Exercício:',1);
+            $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Ano exercício');
             $controle->set_array($anoExercicio);
@@ -128,7 +127,7 @@ if($acesso){
             $form->add_item($controle);
 
             # Mês
-            $controle = new Input('parametroMes','combo','Mês:',1);
+            $controle = new Input('parametroMes', 'combo', 'Mês:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra pelo Mês');
             $controle->set_array($mes);
@@ -145,10 +144,10 @@ if($acesso){
                                             FROM tblotacao
                                            WHERE ativo)
                                         ORDER BY 2');
-            
-            array_unshift($result,array(NULL,"Todos"));
-            
-            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+
+            array_unshift($result, array(NULL, "Todos"));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Lotação');
             $controle->set_array($result);
@@ -157,18 +156,18 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(5);
             $form->add_item($controle);
-            
+
             # Tipo do afastamento
             $result = $pessoal->select('SELECT idTpLicenca,nome FROM tbtipolicenca ORDER BY nome'); // Licenças gerais
-            $result[] = array("ferias","Ferias");
-            $result[] = array("faltas","Faltas Abonadas");
-            $result[] = array("TTRE","Trabalhando TRE");
-            $result[] = array("FTRE","Folga TRE");
-            
-            array_unshift($result,array(NULL,"Todos"));
-            
-            
-            $controle = new Input('parametroTipo','combo','Tipo:',1);
+            $result[] = array("ferias", "Ferias");
+            $result[] = array("faltas", "Faltas Abonadas");
+            $result[] = array("TTRE", "Trabalhando TRE");
+            $result[] = array("FTRE", "Folga TRE");
+
+            array_unshift($result, array(NULL, "Todos"));
+
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por tipo de afastamento.');
             $controle->set_array($result);
@@ -181,7 +180,6 @@ if($acesso){
             $form->show();
 
             ################################################################
-
             # Exibe a tabela de Servidores afastados
             $afast = new Afastamento();
             $afast->set_ano($parametroAno);
@@ -195,27 +193,26 @@ if($acesso){
             $grid->fechaGrid();
             break;
 
-    ################################################################
+        ################################################################
 
         case "editaServidor" :
             br(8);
             aguarde();
 
             # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
+            set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem','areaFrequencia.php');
+            set_session('origem', 'areaFrequencia.php');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
 
-    ################################################################
-        
+        ################################################################
         # Relatório
         case "relatorio" :
-            
+
             $afast = new Afastamento();
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
@@ -225,11 +222,10 @@ if($acesso){
             $afast->exibeRelatorio();
             break;
 
-    ################################################################
-        
+        ################################################################
     }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Área de Licença Prêmio
  *  
  * By Alat
  */
-
 # Reservado para o servidor logado
 $idUsuario = NULL;
 
@@ -12,66 +12,66 @@ $idUsuario = NULL;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){   
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
+
     # Verifica a fase do programa
     $fase = get('fase');
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de TRE";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
     }
-    
+
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaPremio',FALSE);
-    
+    set_session('areaPremio', FALSE);
+
     # Pega os parâmetros
-    $parametroNomeMat = post('parametroNomeMat',get_session('parametroNomeMat'));
-    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
-        
+    $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+
     # Joga os parâmetros par as sessions    
-    set_session('parametroNomeMat',$parametroNomeMat);
-    set_session('parametroLotacao',$parametroLotacao);
-    
+    set_session('parametroNomeMat', $parametroNomeMat);
+    set_session('parametroLotacao', $parametroLotacao);
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
-    
+
     # Cabeçalho da Página
-    if($fase <> "relatorio"){
+    if ($fase <> "relatorio") {
         AreaServidor::cabecalho();
     }
-    
+
 ################################################################
-    
-    switch ($fase){
-        case "" : 
+
+    switch ($fase) {
+        case "" :
             br(4);
             aguarde();
             br();
-            
+
             # Limita a tela
             $grid1 = new Grid("center");
             $grid1->abreColuna(5);
-                p("Aguarde...","center");
+            p("Aguarde...", "center");
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
             loadPage('?fase=exibeLista');
             break;
-        
+
 ################################################################
-        
+
         case "exibeLista" :
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -81,49 +81,47 @@ if($acesso){
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar","grh.php");
+            $botaoVoltar = new Link("Voltar", "grh.php");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar,"left");
+            $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
             #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button('Relatorio da Tela');
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("../grhRelatorios/treGeral.php");
-            $menu1->add_link($botaoRel,"right");
-            
+            $menu1->add_link($botaoRel, "right");
+
             #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button('Anual de Dias Trabalhados');
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("../grhRelatorios/treAfastamentoAnual.php");
-            $menu1->add_link($botaoRel,"right");
-            
+            $menu1->add_link($botaoRel, "right");
+
             #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
             $botaoRel = new Button('Anual de Folgas Fruídas');
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("../grhRelatorios/treFolgaAnual.php");
-            $menu1->add_link($botaoRel,"right");
+            $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
-            
+
             # Relatórios
             $menu = new Menu('horizontal');
             #$menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow','Relatorio da Tela','../grhRelatorios/treGeral.php');
+            $menu->add_item('linkWindow', 'Relatorio da Tela', '../grhRelatorios/treGeral.php');
             #$menu->add_item('linkWindow','Mensal de Dias Trabalhados','../grhRelatorios/treAfastamentoMensal.php');
-            $menu->add_item('linkWindow','Anual de Dias Trabalhados','../grhRelatorios/treAfastamentoAnual.php'); 
+            $menu->add_item('linkWindow', 'Anual de Dias Trabalhados', '../grhRelatorios/treAfastamentoAnual.php');
             #$menu->add_item('linkWindow','Mensal de Folgas Fruídas','../grhRelatorios/treFolgaMensal.php'); 
-            $menu->add_item('linkWindow','Anual de Folgas Fruídas','../grhRelatorios/treFolgaAnual.php'); 
+            $menu->add_item('linkWindow', 'Anual de Folgas Fruídas', '../grhRelatorios/treFolgaAnual.php');
             # $menu->show();
-            
             ###
-            
             # Formulário de Pesquisa
             $form = new Form('?');
 
-            $controle = new Input('parametroNomeMat','texto','Nome, Matrícula ou id:',1);
+            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
             $controle->set_size(100);
             $controle->set_title('Nome do servidor');
             $controle->set_valor($parametroNomeMat);
@@ -140,9 +138,9 @@ if($acesso){
                                                       FROM tblotacao
                                                      WHERE ativo)
                                                   ORDER BY 2');
-            array_unshift($result,array('*','-- Todos --'));
+            array_unshift($result, array('*', '-- Todos --'));
 
-            $controle = new Input('parametroLotacao','combo','Lotação:',1);
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Lotação');
             $controle->set_array($result);
@@ -151,14 +149,13 @@ if($acesso){
             $controle->set_linha(1);
             $controle->set_col(6);
             $form->add_item($controle);
-            
+
             $form->show();
-            
+
             ###
-                
             # Pega o time inicial
             $time_start = microtime(TRUE);
-            
+
             # Conecta com o banco de dados
             $servidor = new Pessoal();
 
@@ -176,92 +173,90 @@ if($acesso){
                                          JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1";
-            
+
             # Matrícula, nome ou id
-            if(!is_null($parametroNomeMat)){
-                if(is_numeric($parametroNomeMat)){
+            if (!is_null($parametroNomeMat)) {
+                if (is_numeric($parametroNomeMat)) {
                     $select .= ' AND ((';
-                }else{
+                } else {
                     $select .= ' AND (';
                 }
 
-                $select .= 'tbpessoa.nome LIKE "%'.$parametroNomeMat.'%")';
+                $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
 
-                if(is_numeric($parametroNomeMat)){
-                    $select .= ' OR (tbservidor.matricula LIKE "%'.$parametroNomeMat.'%")
-                                 OR (tbservidor.idfuncional LIKE "%'.$parametroNomeMat.'%"))';        
+                if (is_numeric($parametroNomeMat)) {
+                    $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
+                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
                 }
             }
-            
+
             # Lotação
-            if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-                if(is_numeric($parametroLotacao)){
-                    $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")';
-                }else{ # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")';
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                if (is_numeric($parametroLotacao)) {
+                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                } else { # senão é uma diretoria genérica
+                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
                 }
             }
-            
+
             $select .= " AND (SELECT sum(dias) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) > 0
                      ORDER BY tbpessoa.nome";
-            
+
             # Guarde o select para o relatório
-            set_session('selectRelatorio',$select);
-            
+            set_session('selectRelatorio', $select);
+
             $resumo = $servidor->select($select);
 
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Id","Matricula","Nome","Lotação","Dias Trabalhados","Folgas Concedidas","Folgas Fruidas","Folgas Pendentes"));
-            $tabela->set_align(array("center","center","left","left"));
+            $tabela->set_label(array("Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"));
+            $tabela->set_align(array("center", "center", "left", "left"));
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            $tabela->set_funcao(array(NULL,"dv"));
-            $tabela->set_classe(array(NULL,NULL,NULL,"pessoal"));
-            $tabela->set_metodo(array(NULL,NULL,NULL,"get_lotacao"));
+            $tabela->set_funcao(array(NULL, "dv"));
+            $tabela->set_classe(array(NULL, NULL, NULL, "pessoal"));
+            $tabela->set_metodo(array(NULL, NULL, NULL, "get_lotacao"));
             $tabela->set_titulo("TRE");
-            
-            if(!is_null($parametroNomeMat)){
+
+            if (!is_null($parametroNomeMat)) {
                 $tabela->set_textoRessaltado($parametroNomeMat);
             }
-            
+
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->show();
-            
+
             # Pega o time final
             $time_end = microtime(TRUE);
             $time = $time_end - $time_start;
-            p(number_format($time, 4, '.', ',')." segundos","right","f10");
-            
+            p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-        
-################################################################
 
+################################################################
         # Chama o menu do Servidor que se quer editar
         case "editaServidor" :
-            
+
             br(8);
             aguarde();
-            
+
             # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
-            
+            set_session('idServidorPesquisado', $id);
+
             # Informa a origem
-            set_session('origem','areaTre');
-            
+            set_session('origem', 'areaTre');
+
             # Carrega a página específica
             loadPage('servidorTre.php');
-            break; 
-        
+            break;
+
 ################################################################
-        
     }
-    
+
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbpessoa.nome,
+
+    $select = 'SELECT tbpessoa.nome,
                      tbdocumentacao.cpf,
                      tbpessoa.dtNasc
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -40,10 +39,10 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Estatutários');
     $relatorio->set_subtitulo('(Ex-Fenorte)');
-    $relatorio->set_label(array('Nome','CPF','Nascimento'));
-    $relatorio->set_width(array(50,30,20));
-    $relatorio->set_align(array("left","center","center"));
-    $relatorio->set_funcao(array(NULL,NULL,"date_to_php"));
+    $relatorio->set_label(array('Nome', 'CPF', 'Nascimento'));
+    $relatorio->set_width(array(50, 30, 20));
+    $relatorio->set_align(array("left", "center", "center"));
+    $relatorio->set_funcao(array(NULL, NULL, "date_to_php"));
     #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
     #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
     $relatorio->set_conteudo($result);

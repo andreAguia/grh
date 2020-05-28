@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idfuncional,
+
+    $select = 'SELECT tbservidor.idfuncional,
                      tbpessoa.nome,                 
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -48,13 +47,13 @@ if($acesso)
     $relatorio->set_titulo('Relatório Geral Financeiro');
     $relatorio->set_subtitulo('Agrupado por Perfil - Ordenados por Matricula');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Salário','Triênio','Comissão','Gratificação Especial','Salário Cedidos','Total','Perfil'));
-    $relatorio->set_width(array(10,30,10,10,10,10,10,10,0));
-    $relatorio->set_align(array("center","left","right","right","right","right","right","right"));
-    $relatorio->set_funcao(array(NULL,NULL,"formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda","formataMoeda"));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Salário', 'Triênio', 'Comissão', 'Gratificação Especial', 'Salário Cedidos', 'Total', 'Perfil'));
+    $relatorio->set_width(array(10, 30, 10, 10, 10, 10, 10, 10, 0));
+    $relatorio->set_align(array("center", "left", "right", "right", "right", "right", "right", "right"));
+    $relatorio->set_funcao(array(NULL, NULL, "formataMoeda", "formataMoeda", "formataMoeda", "formataMoeda", "formataMoeda", "formataMoeda"));
 
-    $classe = array("","","pessoal","pessoal","pessoal","pessoal","pessoal","pessoal");
-    $metodo = array("","","get_salarioBase","get_trienioValor","get_salarioCargoComissao","get_gratificacao","get_salarioCessao","get_salarioTotal");
+    $classe = array("", "", "pessoal", "pessoal", "pessoal", "pessoal", "pessoal", "pessoal");
+    $metodo = array("", "", "get_salarioBase", "get_trienioValor", "get_salarioCargoComissao", "get_gratificacao", "get_salarioCessao", "get_salarioTotal");
 
     $relatorio->set_classe($classe);
     $relatorio->set_metodo($metodo);

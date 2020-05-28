@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -12,19 +12,18 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $anoBase = post('anoBase',date('Y'));
+    $anoBase = post('anoBase', date('Y'));
 
     ######
 
@@ -41,10 +40,10 @@ if($acesso)
                                  LEFT JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)                             
                                  LEFT JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
-                  AND ((YEAR(tblicenca.dtInicial)='.$anoBase.') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))='.$anoBase.'))
+                  AND ((YEAR(tblicenca.dtInicial)=' . $anoBase . ') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))=' . $anoBase . '))
                   AND tblicenca.idTpLicenca = 25
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-             ORDER BY dtInicial desc';		
+             ORDER BY dtInicial desc';
 
     $result = $servidor->select($select);
 
@@ -53,10 +52,10 @@ if($acesso)
     $relatorio->set_tituloLinha2($anoBase);
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Falta');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Perfil','Lotação','Data Inicial','Dias','Data Final'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Data Inicial', 'Dias', 'Data Final'));
     #$relatorio->set_width(array(10,40,20,10,10,10));
-    $relatorio->set_align(array("center","left","center","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
+    $relatorio->set_align(array("center", "left", "center", "left"));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
@@ -64,17 +63,17 @@ if($acesso)
     #$relatorio->set_bordaInterna(TRUE);
     #$relatorio->set_cabecalho(FALSE);
     $relatorio->set_formCampos(array(
-                  array ('nome' => 'anoBase',
-                         'label' => 'Ano:',
-                         'tipo' => 'texto',
-                         'size' => 4,
-                         'title' => 'Ano',
-                         'padrao' => $anoBase,
-                         'onChange' => 'formPadrao.submit();',
-                         'col' => 3,
-                         'linha' => 1)));
+        array('nome' => 'anoBase',
+            'label' => 'Ano:',
+            'tipo' => 'texto',
+            'size' => 4,
+            'title' => 'Ano',
+            'padrao' => $anoBase,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1)));
 
-    $relatorio->set_formFocus('anoBase');		
+    $relatorio->set_formFocus('anoBase');
     $relatorio->set_formLink('?');
     $relatorio->show();
 

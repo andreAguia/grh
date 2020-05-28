@@ -1,36 +1,35 @@
 <?php
+
 /**
  * Histórico de Gratificações Especiais
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Cadastro de abonos e direito pessoal";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-    
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -40,7 +39,7 @@ if($acesso){
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -50,10 +49,9 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Abonos e Direitos Pessoais do Servidor');
@@ -62,23 +60,23 @@ if($acesso){
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo)){
+    if (is_null($orderCampo)) {
         $orderCampo = "1";
     }
 
-    if(is_null($orderTipo)){
+    if (is_null($orderTipo)) {
         $orderTipo = 'desc';
     }
 
     # Evita que um servidor que já esteja recebendo gratificação passe a receber outra.
     # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
-    if(is_null($pessoal->get_gratificacaoDtFinal($idServidorPesquisado))){
+    if (is_null($pessoal->get_gratificacaoDtFinal($idServidorPesquisado))) {
         # Retira o botão de incluir
         $objeto->set_botaoIncluir(FALSE);
-        
+
         # Informa o porquê
         $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor ainda está recebendo uma gratificação.<br/>"
-                   ."Somente será permitido a inserção de uma nova gratificação quanfo for informado a data de término da gratificação atual.";
+                . "Somente será permitido a inserção de uma nova gratificação quanfo for informado a data de término da gratificação atual.";
         $objeto->set_rotinaExtraListar("callout");
         $objeto->set_rotinaExtraListarParametro($mensagem);
     }
@@ -92,8 +90,8 @@ if($acesso){
                                      obs,
                                      idDireitoPessoal
                                 FROM tbdireitopessoal
-                               WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY '.$orderCampo.' '.$orderTipo);
+                               WHERE idServidor = ' . $idServidorPesquisado . '
+                            ORDER BY ' . $orderCampo . ' ' . $orderTipo);
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtInicial,
@@ -104,7 +102,7 @@ if($acesso){
                                      obs,
                                      idServidor
                                 FROM tbdireitopessoal
-                               WHERE idDireitoPessoal = '.$id);
+                               WHERE idDireitoPessoal = ' . $id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -118,10 +116,10 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Data Final","Valor","Processo","Publicaçao","Obs"));
+    $objeto->set_label(array("Data Inicial", "Data Final", "Valor", "Processo", "Publicaçao", "Obs"));
     #$objeto->set_width(array(20,20,20,30));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php","date_to_php","formataMoeda",NULL,"date_to_php"));
+    $objeto->set_funcao(array("date_to_php", "date_to_php", "formataMoeda", NULL, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -136,87 +134,86 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'dtInicial',
-                                       'label' => 'Data Inicial:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'required' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'title' => 'Data inícial da Gratificação.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtFinal',
-                                       'label' => 'Data Final:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Data final da gratificação.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'valor',
-                                       'label' => 'Valor:',
-                                       'tipo' => 'moeda',
-                                       'size' => 20,
-                                       'required' => TRUE,
-                                       'col' => 3,
-                                       'title' => 'Valor da Gratificação.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'processo',
-                                       'label' => 'Processo:',
-                                       'tipo' => 'processo',
-                                       'size' => 30,
-                                       'col' => 3,
-                                       'title' => 'Número do Processo',
-                                       'linha' => 2),
-                                array ( 'nome' => 'dtPublicacao',
-                                       'label' => 'Publicação:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Data final da Publicação.',
-                                       'linha' => 2),
-                                array ('linha' => 3,
-                                       'col' => 12,
-                                       'nome' => 'obs',
-                                       'label' => 'Observação:',
-                                       'tipo' => 'textarea',
-                                       'size' => array(80,5)),
-                               array ( 'nome' => 'idServidor',
-                                       'label' => 'idServidor:',
-                                       'tipo' => 'hidden',
-                                       'padrao' => $idServidorPesquisado,
-                                       'size' => 5,
-                                       'title' => 'Matrícula',
-                                       'linha' => 5)));
+    $objeto->set_campos(array(array('nome' => 'dtInicial',
+            'label' => 'Data Inicial:',
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'title' => 'Data inícial da Gratificação.',
+            'linha' => 1),
+        array('nome' => 'dtFinal',
+            'label' => 'Data Final:',
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Data final da gratificação.',
+            'linha' => 1),
+        array('nome' => 'valor',
+            'label' => 'Valor:',
+            'tipo' => 'moeda',
+            'size' => 20,
+            'required' => TRUE,
+            'col' => 3,
+            'title' => 'Valor da Gratificação.',
+            'linha' => 1),
+        array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'col' => 3,
+            'title' => 'Número do Processo',
+            'linha' => 2),
+        array('nome' => 'dtPublicacao',
+            'label' => 'Publicação:',
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Data final da Publicação.',
+            'linha' => 2),
+        array('linha' => 3,
+            'col' => 12,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Gratificação Especial");    
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Gratificação Especial");
     $botaoRel->set_url("../grhRelatorios/servidorGratificacao.php");
     $botaoRel->set_target("_blank");
-    
+
     #$objeto->set_botaoListarExtra(array($botaoRel));
-    
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
 
-    switch ($fase){
+    switch ($fase) {
         case "" :
         case "listar" :
-        case "editar" :			
+        case "editar" :
         case "excluir" :
-            $objeto->$fase($id); 
+            $objeto->$fase($id);
             break;
-        
+
         case "gravar" :
-            $objeto->$fase($id,"servidorDireitoPessoalExtra.php"); 
+            $objeto->$fase($id, "servidorDireitoPessoalExtra.php");
             break;
     }
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

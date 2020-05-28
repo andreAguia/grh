@@ -1,37 +1,35 @@
 <?php
+
 /**
  * Histórico de Atestados do Servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de atestados para abono de faltas";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -70,7 +68,7 @@ if($acesso)
                 }
                     
                     ';
-    
+
     # Começa uma nova página
     $page = new Page();
     $page->set_ready($jscript);
@@ -83,10 +81,9 @@ if($acesso)
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Histórico de Atestados para Abono de Faltas');
@@ -95,10 +92,10 @@ if($acesso)
     $objeto->set_voltarLista('servidorMenu.php');
 
     # ordenação
-    if(is_null($orderCampo))
+    if (is_null($orderCampo))
         $orderCampo = "1";
 
-    if(is_null($orderTipo))
+    if (is_null($orderTipo))
         $orderTipo = 'desc';
 
     # select da lista
@@ -112,8 +109,8 @@ if($acesso)
                                      tbatestado.obs,
                                      idAtestado
                                 FROM tbatestado LEFT JOIN tbparentesco ON (tbatestado.parentesco = tbparentesco.idParentesco)
-                               WHERE idServidor = '.$idServidorPesquisado.'
-                            ORDER BY '.$orderCampo.' '.$orderTipo);
+                               WHERE idServidor = ' . $idServidorPesquisado . '
+                            ORDER BY ' . $orderCampo . ' ' . $orderTipo);
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtInicio,
@@ -125,7 +122,7 @@ if($acesso)
                                      obs,
                                      idServidor
                                 FROM tbatestado
-                               WHERE idAtestado = '.$id);
+                               WHERE idAtestado = ' . $id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -139,10 +136,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial","Dias","Data Término","Médico","Especialidade","Tipo","Parentesco","Obs"));
+    $objeto->set_label(array("Data Inicial", "Dias", "Data Término", "Médico", "Especialidade", "Tipo", "Parentesco", "Obs"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center","center","center","left","center","center","center","left"));
-    $objeto->set_funcao(array ("date_to_php",NULL,"date_to_php"));
+    $objeto->set_align(array("center", "center", "center", "left", "center", "center", "center", "left"));
+    $objeto->set_funcao(array("date_to_php", NULL, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -162,79 +159,78 @@ if($acesso)
                                      Parentesco
                                 FROM tbparentesco
                             ORDER BY parentesco');
-    array_push($result, array(0,NULL)); # Adiciona o valor de nulo
-
+    array_push($result, array(0, NULL)); # Adiciona o valor de nulo
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'dtInicio',
-                                       'label' => 'Data Inicial:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'required' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'title' => 'Data inícial do atestado.',
-                                       'col' => 3,
-                                       'linha' => 1),
-                               array ( 'nome' => 'numDias',
-                                       'label' => 'Dias:',
-                                       'tipo' => 'numero',
-                                       'size' => 5,
-                                       'col' => 2,
-                                       'required' => TRUE,
-                                       'title' => 'Quantidade de dias do atestado.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'tipo',
-                                       'label' => 'Tipo:',
-                                       'tipo' => 'combo',
-                                       'array' => array ("Próprio","Acompanhante"),
-                                       'size' => 20,                               
-                                       'title' => 'tipo de atestado',
-                                       'col' => 3,
-                                       'linha' => 1), 
-                               array ( 'nome' => 'parentesco',
-                                       'label' => 'Parentesco:',
-                                       'tipo' => 'combo',
-                                       'array' => $result,
-                                       'size' => 20,                               
-                                       'title' => 'Parentesco',
-                                       'col' => 4,
-                                       'linha' => 1), 
-                               array ( 'nome' => 'nome_medico',
-                                       'label' => 'Nome do Médico:',
-                                       'tipo' => 'texto',
-                                       'size' => 80,
-                                       'col' => 6,
-                                       'required' => TRUE,
-                                       'title' => 'Nome do Médico.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'especi_medico',
-                                       'label' => 'Especialidade:',
-                                       'tipo' => 'texto',
-                                       'size' => 80,
-                                       'col' => 6,
-                                       'required' => TRUE,
-                                       'title' => 'Especialidade do Médico.',
-                                       'linha' => 2),                               
-                                array ('linha' => 5,
-                                       'nome' => 'obs',
-                                       'label' => 'Observação:',
-                                       'tipo' => 'textarea',
-                                       'size' => array(80,5)),
-                               array ( 'nome' => 'idServidor',
-                                       'label' => 'idServidor',
-                                       'tipo' => 'hidden',
-                                       'padrao' => $idServidorPesquisado,
-                                       'size' => 5,
-                                       'title' => 'Matrícula',
-                                       'linha' => 6)));
+    $objeto->set_campos(array(array('nome' => 'dtInicio',
+            'label' => 'Data Inicial:',
+            'tipo' => 'data',
+            'size' => 20,
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'title' => 'Data inícial do atestado.',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'numDias',
+            'label' => 'Dias:',
+            'tipo' => 'numero',
+            'size' => 5,
+            'col' => 2,
+            'required' => TRUE,
+            'title' => 'Quantidade de dias do atestado.',
+            'linha' => 1),
+        array('nome' => 'tipo',
+            'label' => 'Tipo:',
+            'tipo' => 'combo',
+            'array' => array("Próprio", "Acompanhante"),
+            'size' => 20,
+            'title' => 'tipo de atestado',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'parentesco',
+            'label' => 'Parentesco:',
+            'tipo' => 'combo',
+            'array' => $result,
+            'size' => 20,
+            'title' => 'Parentesco',
+            'col' => 4,
+            'linha' => 1),
+        array('nome' => 'nome_medico',
+            'label' => 'Nome do Médico:',
+            'tipo' => 'texto',
+            'size' => 80,
+            'col' => 6,
+            'required' => TRUE,
+            'title' => 'Nome do Médico.',
+            'linha' => 2),
+        array('nome' => 'especi_medico',
+            'label' => 'Especialidade:',
+            'tipo' => 'texto',
+            'size' => 80,
+            'col' => 6,
+            'required' => TRUE,
+            'title' => 'Especialidade do Médico.',
+            'linha' => 2),
+        array('linha' => 5,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 6)));
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Atestados (Faltas Abonadas)");
     $botaoRel->set_url("../grhRelatorios/servidorAtestado.php");
     $objeto->set_botaoListarExtra(array($botaoRel));
     $botaoRel->set_target("_blank");
-    
+
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -243,26 +239,22 @@ if($acesso)
     #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
-
-
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
-        case "editar" :			
+        case "editar" :
         case "excluir" :
-            $objeto->$fase($id); 
+            $objeto->$fase($id);
             break;
 
         case "gravar" :
-            $objeto->gravar($id,'servidorAtestadoExtra.php');              
+            $objeto->gravar($id, 'servidorAtestadoExtra.php');
             break;
-
-    }									 	 		
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

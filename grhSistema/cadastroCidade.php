@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Cadastro de Estado Civil
  *  
  * By Alat
  */
-
 # Reservado para o servidor logado
 $idUsuario = NULL;
 
@@ -12,28 +12,27 @@ $idUsuario = NULL;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
-    
+    $fase = get('fase', 'listar');
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de cidade";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
     }
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));    
+    $id = soNumeros(get('id'));
 
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
@@ -48,7 +47,7 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -58,7 +57,6 @@ if($acesso)
     $objeto = new Modelo();
 
     ################################################################
-
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cidade');
 
@@ -79,19 +77,19 @@ if($acesso)
     }
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idCidade,
+    $objeto->set_selectLista('SELECT idCidade,
                                       tbcidade.nome,
                                       tbestado.nome
                                  FROM tbcidade JOIN tbestado USING (idEstado)
-                                WHERE tbcidade.nome LIKE "%'.$parametro.'%"
-                                   OR tbestado.nome LIKE "%'.$parametro.'%" 
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                                WHERE tbcidade.nome LIKE "%' . $parametro . '%"
+                                   OR tbestado.nome LIKE "%' . $parametro . '%" 
+                             ORDER BY ' . $orderCampo . ' ' . $orderTipo);
 
     # select do edita
     $objeto->set_selectEdita('SELECT nome,
                                      idEstado
                                 FROM tbcidade
-                               WHERE idCidade = '.$id);
+                               WHERE idCidade = ' . $id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -105,9 +103,9 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Cidade","Estado"));
-    $objeto->set_width(array(10,40,40));
-    $objeto->set_align(array("center","left","left"));
+    $objeto->set_label(array("Id", "Cidade", "Estado"));
+    $objeto->set_width(array(10, 40, 40));
+    $objeto->set_align(array("center", "left", "left"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -120,53 +118,52 @@ if($acesso)
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-    
+
     # Pega os dados da combo de Estado
     $result3 = $pessoal->select('SELECT idEstado,
                                         nome
                                   FROM tbestado
                               ORDER BY nome');
-    array_push($result3, array(NULL,NULL));
+    array_push($result3, array(NULL, NULL));
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array ('linha' => 1,
-               'nome' => 'nome',
-               'label' => 'Estado:',
-               'tipo' => 'texto',
-               'required' => TRUE,
-               'autofocus' => TRUE,
-               'col' => 10,
-               'size' => 60),
-        array ('linha' => 1,
-               'nome' => 'idEstado',
-               'title' => 'Estado',
-               'label' => 'Estado:',
-               'tipo' => 'combo',               
-               'required' => TRUE,
-               'array' => $result3,
-               'col' => 2,
-               'size' => 10)));
+        array('linha' => 1,
+            'nome' => 'nome',
+            'label' => 'Estado:',
+            'tipo' => 'texto',
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'col' => 10,
+            'size' => 60),
+        array('linha' => 1,
+            'nome' => 'idEstado',
+            'title' => 'Estado',
+            'label' => 'Estado:',
+            'tipo' => 'combo',
+            'required' => TRUE,
+            'array' => $result3,
+            'col' => 2,
+            'size' => 10)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
             break;
 
-        case "editar" :	
-        case "excluir" :	
+        case "editar" :
+        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;
-    }									 	 		
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

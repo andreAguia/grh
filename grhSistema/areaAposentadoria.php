@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Área de Aposentadoria
  *
  * By Alat
  */
-
 # Reservado para o servidor logado
 $idUsuario = NULL;
 
@@ -12,9 +12,9 @@ $idUsuario = NULL;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){
+if ($acesso) {
 
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
@@ -28,12 +28,12 @@ if($acesso){
     $id = soNumeros(get('id'));
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de aposentadoria";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
     }
 
     # Começa uma nova página
@@ -44,73 +44,70 @@ if($acesso){
     AreaServidor::cabecalho();
 
     # Pega os parâmetros
-    $parametroAno = post('parametroAno',get_session('parametroAno',date('Y')));
-    $parametroMotivo = post('parametroMotivo',get_session('parametroMotivo',3));
-    $parametroNome = post('parametroNome',get_session('parametroNome'));
-    $parametroSexo = get('parametroSexo',get_session('parametroSexo',"Feminino"));
+    $parametroAno = post('parametroAno', get_session('parametroAno', date('Y')));
+    $parametroMotivo = post('parametroMotivo', get_session('parametroMotivo', 3));
+    $parametroNome = post('parametroNome', get_session('parametroNome'));
+    $parametroSexo = get('parametroSexo', get_session('parametroSexo', "Feminino"));
 
     # Joga os parâmetros par as sessions
-    set_session('parametroAno',$parametroAno);
-    set_session('parametroMotivo',$parametroMotivo);
-    set_session('parametroSexo',$parametroSexo);
-    set_session('parametroNome',$parametroNome);
+    set_session('parametroAno', $parametroAno);
+    set_session('parametroMotivo', $parametroMotivo);
+    set_session('parametroSexo', $parametroSexo);
+    set_session('parametroNome', $parametroNome);
 
     $grid = new Grid();
     $grid->abreColuna(12);
 
     # Cria um menu
     $menu = new MenuBar();
-    
+
     # Voltar
-    $botaoVoltar = new Link("Voltar","grh.php");
+    $botaoVoltar = new Link("Voltar", "grh.php");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar,"left");
+    $menu->add_link($botaoVoltar, "left");
 
-    if(($fase == "previsaoM") OR ($fase == "previsaoM1")){        
-        
-        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    if (($fase == "previsaoM") OR ($fase == "previsaoM1")) {
+
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório");
         $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel,"right");
-        
-        set_session('parametroSexo',"Masculino");
-        
-    }elseif(($fase == "previsaoF") OR ($fase == "previsaoF1")){        
-        
-        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $menu->add_link($botaoRel, "right");
+
+        set_session('parametroSexo', "Masculino");
+    } elseif (($fase == "previsaoF") OR ($fase == "previsaoF1")) {
+
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório");
         $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel,"right");
-        
-        set_session('parametroSexo',"Feminino");
-        
-    }elseif(($fase == "") OR ($fase == "porAno")){
-        
-        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $menu->add_link($botaoRel, "right");
+
+        set_session('parametroSexo', "Feminino");
+    } elseif (($fase == "") OR ($fase == "porAno")) {
+
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório de Aposentados por Ano de Saída");
         $botaoRel->set_url("../grhRelatorios/aposentados.porAno.php");
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel,"right");
-   
-     }elseif($fase == "motivo"){
-        
-        $imagem2 = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+        $menu->add_link($botaoRel, "right");
+    } elseif ($fase == "motivo") {
+
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório de Aposentados por Tipo");
         $botaoRel->set_url("../grhRelatorios/aposentados.porTipo.php");
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel,"right");   
+        $menu->add_link($botaoRel, "right");
     }
 
     $menu->show();
@@ -119,26 +116,25 @@ if($acesso){
     titulo("Área de Aposentadoria");
     br();
 
-    switch ($fase){
+    switch ($fase) {
 
 ####################################################################################################################
-
         # Aposentados por ano
         case "" :
         case "porAno" :
-            
+
             $grid2 = new Grid();
-            $grid2->abreColuna(12,3);
-            
+            $grid2->abreColuna(12, 3);
+
             $painel = new Callout();
             $painel->abre();
-            
+
             $aposentadoria->exibeMenu(1);
 
             $painel->fecha();
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(12,9);
+            $grid2->abreColuna(12, 9);
 
             # Formulário de Pesquisa
             $form = new Form('?fase=porAno');
@@ -147,7 +143,7 @@ if($acesso){
             $anoInicial = 1999;
             $anoAtual = date('Y');
 
-            $controle = new Input('parametroAno','numero');
+            $controle = new Input('parametroAno', 'numero');
             $controle->set_size(6);
             $controle->set_title('Filtra por Ano exercício');
             $controle->set_valor(date("Y"));
@@ -159,31 +155,30 @@ if($acesso){
             $form->add_item($controle);
 
             $form->show();
-            
+
             # Exibe a lista
             $aposentadoria->exibeAposentadosPorAno($parametroAno);
-            
+
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
-        
-####################################################################################################################
 
+####################################################################################################################
         # Aposentadoria por Motivo / Tipo
         case "motivo" :
-            
+
             $grid2 = new Grid();
-            $grid2->abreColuna(12,3);
-            
+            $grid2->abreColuna(12, 3);
+
             $painel = new Callout();
             $painel->abre();
-            
+
             $aposentadoria->exibeMenu(2);
 
             $painel->fecha();
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(12,9);
+            $grid2->abreColuna(12, 9);
 
             # Formulário de Pesquisa
             $form = new Form('?fase=motivo');
@@ -198,7 +193,7 @@ if($acesso){
 
             $motivosPossiveis = $pessoal->select($selectMotivo);
 
-            $controle = new Input('parametroMotivo','combo','Motivo:',1);
+            $controle = new Input('parametroMotivo', 'combo', 'Motivo:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Motivo');
             $controle->set_array($motivosPossiveis);
@@ -211,184 +206,181 @@ if($acesso){
             $form->add_item($controle);
 
             $form->show();
-            
+
             # Exibe a lista
             $aposentadoria->exibeAposentadosPorTipo($parametroMotivo);
-            
+
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
 
 ####################################################################################################################
 
-    case "regras" :
-        
-        $grid2 = new Grid();
-        $grid2->abreColuna(12,3);
+        case "regras" :
 
-        $painel = new Callout();
-        $painel->abre();
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
 
-        $aposentadoria->exibeMenu(7);
+            $painel = new Callout();
+            $painel->abre();
 
-        $painel->fecha();
+            $aposentadoria->exibeMenu(7);
 
-        $grid2->fechaColuna();
-        $grid2->abreColuna(12,9);
+            $painel->fecha();
 
-        $aposentadoria->exibeRegras();
-        
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
-        break;
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
 
-################################################################
-    
-    case "previsaoM" :
-        
-        $grid2 = new Grid();
-        $grid2->abreColuna(12,3);
+            $aposentadoria->exibeRegras();
 
-        $painel = new Callout();
-        $painel->abre();
-
-        $aposentadoria->exibeMenu(4);
-
-        $painel->fecha();
-
-        $grid2->fechaColuna();
-        $grid2->abreColuna(12,9);
-
-        br(5);
-        aguarde("Calculando ...");
-        br();
-        
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
-        
-        loadPage('?fase=previsaoM1');
-        break;
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
 
 ################################################################
 
-    # Listagem de servidores ativos com previsão para posentadoria
-    case "previsaoM1" :
-                
-        $grid2 = new Grid();
-        $grid2->abreColuna(12,3);
+        case "previsaoM" :
 
-        $painel = new Callout();
-        $painel->abre();
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
 
-        $aposentadoria->exibeMenu(4);
+            $painel = new Callout();
+            $painel->abre();
 
-        $painel->fecha();
+            $aposentadoria->exibeMenu(4);
 
-        $grid2->fechaColuna();
-        $grid2->abreColuna(12,9);
-        
-        # Formulário de Pesquisa
-        $form = new Form('?fase=previsaoM');
+            $painel->fecha();
 
-        # Nome
-        $controle = new Input('parametroNome','texto','Nome do Servidor',1);
-        $controle->set_size(100);
-        $controle->set_title('Filtra por Nome');
-        $controle->set_valor($parametroNome);
-        $controle->set_autofocus(TRUE);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(12);
-        $form->add_item($controle);
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
 
-        $form->show();
-        
-        # Exibe a lista
-        $aposentadoria->exibeAtivosPrevisao("Masculino",$parametroNome);
-        
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
-        break;
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            loadPage('?fase=previsaoM1');
+            break;
 
 ################################################################
-    
-    case "previsaoF" :
-        
-        $grid2 = new Grid();
-        $grid2->abreColuna(12,3);
+        # Listagem de servidores ativos com previsão para posentadoria
+        case "previsaoM1" :
 
-        $painel = new Callout();
-        $painel->abre();
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
 
-        $aposentadoria->exibeMenu(5);
+            $painel = new Callout();
+            $painel->abre();
 
-        $painel->fecha();
+            $aposentadoria->exibeMenu(4);
 
-        $grid2->fechaColuna();
-        $grid2->abreColuna(12,9);
+            $painel->fecha();
 
-        br(5);
-        aguarde("Calculando ...");
-        br();
-        
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
-        
-        loadPage('?fase=previsaoF1');
-        break;
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=previsaoM');
+
+            # Nome
+            $controle = new Input('parametroNome', 'texto', 'Nome do Servidor', 1);
+            $controle->set_size(100);
+            $controle->set_title('Filtra por Nome');
+            $controle->set_valor($parametroNome);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Exibe a lista
+            $aposentadoria->exibeAtivosPrevisao("Masculino", $parametroNome);
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
 
 ################################################################
 
-    # Listagem de servidores ativos com previsão para posentadoria
-    case "previsaoF1" :
-                
-        $grid2 = new Grid();
-        $grid2->abreColuna(12,3);
+        case "previsaoF" :
 
-        $painel = new Callout();
-        $painel->abre();
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
 
-        $aposentadoria->exibeMenu(5);
+            $painel = new Callout();
+            $painel->abre();
 
-        $painel->fecha();
+            $aposentadoria->exibeMenu(5);
 
-        $grid2->fechaColuna();
-        $grid2->abreColuna(12,9);
-        
-        # Formulário de Pesquisa
-        $form = new Form('?fase=previsaoF');
+            $painel->fecha();
 
-        # Nome
-        $controle = new Input('parametroNome','texto','Nome do Servidor',1);
-        $controle->set_size(100);
-        $controle->set_title('Filtra por Nome');
-        $controle->set_valor($parametroNome);
-        $controle->set_autofocus(TRUE);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(12);
-        $form->add_item($controle);
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
 
-        $form->show();
-        
-        # Exibe a lista
-        $aposentadoria->exibeAtivosPrevisao("Feminino",$parametroNome);
-        
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
-        break;
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            loadPage('?fase=previsaoF1');
+            break;
+
+################################################################
+        # Listagem de servidores ativos com previsão para posentadoria
+        case "previsaoF1" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(5);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=previsaoF');
+
+            # Nome
+            $controle = new Input('parametroNome', 'texto', 'Nome do Servidor', 1);
+            $controle->set_size(100);
+            $controle->set_title('Filtra por Nome');
+            $controle->set_valor($parametroNome);
+            $controle->set_autofocus(TRUE);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Exibe a lista
+            $aposentadoria->exibeAtivosPrevisao("Feminino", $parametroNome);
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
 
 ####################################################################################################################
-
         # Estatística
         case "anoEstatistica" :
 
             $grid = new Grid();
-            $grid->abreColuna(12,3);
-            
+            $grid->abreColuna(12, 3);
+
             $painel = new Callout();
             $painel->abre();
-            
+
             $aposentadoria->exibeMenu(3);
 
             $painel->fecha();
@@ -396,16 +388,16 @@ if($acesso){
             # Número de Servidores
             $painel = new Callout("success");
             $painel->abre();
-                $numServidores = $aposentadoria->get_numServidoresAposentados();
-                p($numServidores,"estatisticaNumero");
-                p("Servidores Aposentados<br/>(Estatutários e Celetistas)","estatisticaTexto");
+            $numServidores = $aposentadoria->get_numServidoresAposentados();
+            p($numServidores, "estatisticaNumero");
+            p("Servidores Aposentados<br/>(Estatutários e Celetistas)", "estatisticaTexto");
             $painel->fecha();
 
             $grid->fechaColuna();
 
-    #################################################################
+            #################################################################
 
-            $grid->abreColuna(12,9);
+            $grid->abreColuna(12, 9);
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
@@ -430,15 +422,15 @@ if($acesso){
             $total = array_sum(array_column($servidores, "jj"));
 
 
-            $chart = new Chart("Pie",$servidores);
+            $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv("cargo");
             $chart->set_legend(FALSE);
-            $chart->set_tamanho($largura = 300,$altura = 300);
+            $chart->set_tamanho($largura = 300, $altura = 300);
             $chart->show();
 
             $grid->fechaColuna();
 
-    #################################################################
+            #################################################################
 
             $grid->abreColuna(6);
 
@@ -446,10 +438,10 @@ if($acesso){
             $tabela = new Tabela();
             #$tabela->set_titulo("por Tipo de Aposentadoria");
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Aposentadoria","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->set_label(array("Aposentadoria", "Servidores"));
+            $tabela->set_width(array(80, 20));
+            $tabela->set_align(array("left", "center"));
+            $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->show();
 
             $grid->fechaColuna();
@@ -460,8 +452,7 @@ if($acesso){
             $grid->fechaColuna();
             $grid->fechaGrid();
 
-    #################################################################
-
+            #################################################################
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
@@ -485,17 +476,16 @@ if($acesso){
             $tabela = new Tabela();
             #$tabela->set_titulo("por Perfil");
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Ano","Servidores"));
-            $tabela->set_width(array(80,20));
-            $tabela->set_align(array("left","center"));
-            $tabela->set_rodape("Total de Servidores: ".$total);
+            $tabela->set_label(array("Ano", "Servidores"));
+            $tabela->set_width(array(80, 20));
+            $tabela->set_align(array("left", "center"));
+            $tabela->set_rodape("Total de Servidores: " . $total);
             #$tabela->show();
-
             # Gráfico
-            $chart = new Chart("ColumnChart",$servidores);
+            $chart = new Chart("ColumnChart", $servidores);
             $chart->set_idDiv("perfil");
             $chart->set_legend(FALSE);
-            $chart->set_label(array("Ano","Nº de Servidores"));
+            $chart->set_label(array("Ano", "Nº de Servidores"));
             #$chart->set_tamanho($largura = 1000,$altura = 500);
             $chart->show();
 
@@ -503,7 +493,7 @@ if($acesso){
 
             $grid->fechaColuna();
             $grid->fechaGrid();
-        break;
+            break;
 
 
 ####################################################################################################################
@@ -513,96 +503,69 @@ if($acesso){
             aguarde();
 
             # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
+            set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem','areaAposentadoria.php?');
+            set_session('origem', 'areaAposentadoria.php?');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
 
-    ################################################################
+        ################################################################
 
         case "editarMotivo" :
             br(8);
             aguarde();
 
             # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
+            set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem','areaAposentadoria.php?fase=motivo');
+            set_session('origem', 'areaAposentadoria.php?fase=motivo');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
 
-    ################################################################
+        ################################################################
 
         case "editarPrevisaoF" :
             br(8);
             aguarde();
 
             # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
+            set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem','areaAposentadoria.php?fase=previsaoF');
+            set_session('origem', 'areaAposentadoria.php?fase=previsaoF');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
 
-    ################################################################
+        ################################################################
 
         case "editarPrevisaoM" :
             br(8);
             aguarde();
 
             # Informa o $id Servidor
-            set_session('idServidorPesquisado',$id);
+            set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem','areaAposentadoria.php?fase=previsaoM');
+            set_session('origem', 'areaAposentadoria.php?fase=previsaoM');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
 
-    ################################################################
-        
+        ################################################################
+
         case "somatorio" :
-            
-        $grid2 = new Grid();
-        $grid2->abreColuna(12,3);
 
-        $painel = new Callout();
-        $painel->abre();
-
-        $aposentadoria->exibeMenu(6);
-
-        $painel->fecha();
-
-        $grid2->fechaColuna();
-        $grid2->abreColuna(12,9);
-
-        br(5);
-        aguarde("Calculando ...");
-        br();
-        
-        $grid2->fechaColuna();
-        $grid2->fechaGrid();
-        
-        loadPage('?fase=previsaoSomatorio');
-        break;
-    
-################################################################
-        
-        case "previsaoSomatorio" :
-            
             $grid2 = new Grid();
-            $grid2->abreColuna(12,3);
+            $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
@@ -612,24 +575,49 @@ if($acesso){
             $painel->fecha();
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(12,9);
-        
+            $grid2->abreColuna(12, 9);
+
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            loadPage('?fase=previsaoSomatorio');
+            break;
+
+################################################################
+
+        case "previsaoSomatorio" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
             $painel = new Callout();
             $painel->abre();
-            
-            $aposentadoria->exibeSomatorio();
-            
+
+            $aposentadoria->exibeMenu(6);
+
             $painel->fecha();
-            
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeSomatorio();
+
+            $painel->fecha();
+
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
 
-    ################################################################
-
+        ################################################################
     }
     $page->terminaPagina();
-
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Cadastro de Motivo de Saída do Servidor da Instituição
  *  
  * By Alat
  */
-
 # Reservado para o servidor logado
 $idUsuario = NULL;
 
@@ -12,36 +12,34 @@ $idUsuario = NULL;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
-    
+    $fase = get('fase', 'listar');
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de motivos de saída";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
     }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))					# Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));	# passa o parametro da session para a variavel parametro retirando as aspas
-    else
-    { 
+    if (is_null(post('parametro')))     # Se o parametro n?o vier por post (for nulo)
+        $parametro = retiraAspas(get_session('sessionParametro'));# passa o parametro da session para a variavel parametro retirando as aspas
+    else {
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro',$parametro);    # transfere para a session para poder recuperá-lo depois
+        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
     # Ordem da tabela
@@ -49,7 +47,7 @@ if($acesso)
     $orderTipo = get('orderTipo');
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -59,7 +57,6 @@ if($acesso)
     $objeto = new Modelo();
 
     ################################################################
-
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Motivo de Saída do Servidor');
 
@@ -71,27 +68,27 @@ if($acesso)
     $objeto->set_parametroValue($parametro);
 
     # ordenaç?o
-    if(is_null($orderCampo)){
+    if (is_null($orderCampo)) {
         $orderCampo = "1";
     }
 
-    if(is_null($orderTipo)){
+    if (is_null($orderTipo)) {
         $orderTipo = 'asc';
     }
 
     # select da lista
-    $objeto->set_selectLista ('SELECT idmotivo,
+    $objeto->set_selectLista('SELECT idmotivo,
                                       motivo,
                                       obs
                                  FROM tbmotivo
-                                WHERE motivo LIKE "%'.$parametro.'%"
-                             ORDER BY '.$orderCampo.' '.$orderTipo);
+                                WHERE motivo LIKE "%' . $parametro . '%"
+                             ORDER BY ' . $orderCampo . ' ' . $orderTipo);
 
     # select do edita
     $objeto->set_selectEdita('SELECT motivo,
                                      obs
                                 FROM tbmotivo
-                               WHERE idmotivo = '.$id);
+                               WHERE idmotivo = ' . $id);
 
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
@@ -105,13 +102,12 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id","Motivo","Obs"));
-    $objeto->set_width(array(5,35,50));
-    $objeto->set_align(array("center","left","left"));
+    $objeto->set_label(array("Id", "Motivo", "Obs"));
+    $objeto->set_width(array(5, 35, 50));
+    $objeto->set_align(array("center", "left", "left"));
 
     #$objeto->set_classe(array(NULL,NULL,NULL,"Pessoal"));
     #$objeto->set_metodo(array(NULL,NULL,NULL,"get_servidoresSituacao"));
-
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -126,40 +122,39 @@ if($acesso)
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array ('linha' => 1,
-               'nome' => 'motivo',
-               'label' => 'Motivo:',
-               'tipo' => 'texto',
-               'required' => TRUE,
-               'autofocus' => TRUE,
-               'col' => 12,
-               'size' => 50),
-        array ('linha' => 2,
-               'nome' => 'obs',
-               'label' => 'Observação:',
-               'tipo' => 'textarea',
-               'col' => 12,
-               'size' => array(80,5))));
+        array('linha' => 1,
+            'nome' => 'motivo',
+            'label' => 'Motivo:',
+            'tipo' => 'texto',
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'col' => 12,
+            'size' => 50),
+        array('linha' => 2,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'col' => 12,
+            'size' => array(80, 5))));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
             break;
 
-        case "editar" :	
-        case "excluir" :	
+        case "editar" :
+        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;
-    }									 	 		
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

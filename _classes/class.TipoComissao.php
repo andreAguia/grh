@@ -1,39 +1,37 @@
 <?php
-class TipoComissao{
- /**
-  * Abriga as várias rotina do Cadastro de tipos de cargo em Comissao
-  * 
-  * @author André Águia (Alat) - alataguia@gmail.com  
-  */
-    
-    
-    ###########################################################
-    
+
+class TipoComissao {
     /**
-    * Método Construtor
-    */
-    public function __construct(){
+     * Abriga as várias rotina do Cadastro de tipos de cargo em Comissao
+     * 
+     * @author André Águia (Alat) - alataguia@gmail.com  
+     */
+    ###########################################################
+
+    /**
+     * Método Construtor
+     */
+    public function __construct() {
         
     }
 
     ###########################################################
-    
-    function get_dados($idTipoComissao){
-        
-    /**
-     * fornece a próxima tarefa a ser realizada
-     */
-        
+
+    function get_dados($idTipoComissao) {
+
+        /**
+         * fornece a próxima tarefa a ser realizada
+         */
         # Pega os dados
-        $select="SELECT *
+        $select = "SELECT *
                    FROM tbtipocomissao
                   WHERE idTipoComissao = $idTipoComissao";
-        
+
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select,FALSE);
-        
+        $dados = $pessoal->select($select, FALSE);
+
         return $dados;
     }
-    
+
     ###########################################################
 }

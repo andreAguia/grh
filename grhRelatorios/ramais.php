@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     ######  FENORTE
 
-    $select ='SELECT DIR,
+    $select = 'SELECT DIR,
                      CONCAT(GER," - ",nome),
                      ramais
                 FROM tblotacao
@@ -51,9 +50,9 @@ if($acesso)
     $relatorio = new Relatorio('relatorioRamal');
     $relatorio->set_titulo('FENORTE');
     $relatorio->set_subtitulo('Telefones e Ramais');
-    $relatorio->set_label(array('Diretoria','Setor','Ramais'));
-    $relatorio->set_width(array(0,40,30));
-    $relatorio->set_align(array("center","left"));
+    $relatorio->set_label(array('Diretoria', 'Setor', 'Ramais'));
+    $relatorio->set_width(array(0, 40, 30));
+    $relatorio->set_align(array("center", "left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);
     $relatorio->set_totalRegistro(FALSE);
@@ -68,7 +67,7 @@ if($acesso)
     echo '<br/>';
 
     $servidor = new Pessoal();
-    $select ='SELECT DIR,
+    $select = 'SELECT DIR,
                      CONCAT(GER," - ",nome),
                      ramais
                 FROM tblotacao
@@ -83,9 +82,9 @@ if($acesso)
     $relatorio = new Relatorio('relatorioRamal');
     $relatorio->set_titulo('TECNORTE');
     $relatorio->set_subtitulo('Telefones e Ramais');
-    $relatorio->set_label(array('Diretoria','Setor','Ramais'));
-    $relatorio->set_width(array(0,40,30));
-    $relatorio->set_align(array("center","left"));
+    $relatorio->set_label(array('Diretoria', 'Setor', 'Ramais'));
+    $relatorio->set_width(array(0, 40, 30));
+    $relatorio->set_align(array("center", "left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);
     $relatorio->set_cabecalhoRelatorio(FALSE);

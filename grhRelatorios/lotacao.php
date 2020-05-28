@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,23 +14,22 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     # Pega os parâmetros dos relatórios
-    $lotacao = get('lotacao',post('lotacao'));
+    $lotacao = get('lotacao', post('lotacao'));
 
     ######
-    
-    $select ='SELECT codigo,
+
+    $select = 'SELECT codigo,
                      DIR,
                      campus,
                      GER,
@@ -44,9 +43,9 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Lotações Ativas');
     $relatorio->set_subtitulo('Agrupados por Diretoria - Ordenados pelo Nome');
-    $relatorio->set_label(array('Código','Diretoria','Campus','Sigla','Nome'));
+    $relatorio->set_label(array('Código', 'Diretoria', 'Campus', 'Sigla', 'Nome'));
     #$relatorio->set_width(array(10,10,10,50));
-    $relatorio->set_align(array("center","center","center","center","left"));
+    $relatorio->set_align(array("center", "center", "center", "center", "left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(1);
     $relatorio->show();

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbhistcessao.orgao,
                      tbhistcessao.dtInicio,
@@ -45,12 +44,12 @@ if($acesso)
     $relatorio->set_titulo('Histórico de Estatutários Cedidos');
     $relatorio->set_subtitulo('Agrupados pelo Ano de Cessão');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Órgão','Início','Término','Ano','Situação'));
-    $relatorio->set_width(array(10,30,30,10,10,0,10));
-    $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php","date_to_php"));
-    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));  
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Ano', 'Situação'));
+    $relatorio->set_width(array(10, 30, 30, 10, 10, 0, 10));
+    $relatorio->set_align(array("center", "left", "left", "left"));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, "date_to_php", "date_to_php"));
+    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, NULL, NULL, "Pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, NULL, NULL, "get_Situacao"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);

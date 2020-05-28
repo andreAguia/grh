@@ -1,41 +1,39 @@
 <?php
+
 /**
  * Cadastro de Elogios e Advertências do Servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Elogios e advertências";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-    
+
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -45,10 +43,9 @@ if($acesso)
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Elogios e Advertências do Servidor');
@@ -65,7 +62,7 @@ if($acesso)
                                      descricao,                           
                                      idElogio
                                 FROM tbelogio
-                          WHERE idServidor='.$idServidorPesquisado.'
+                          WHERE idServidor=' . $idServidorPesquisado . '
                        ORDER BY data desc');
 
     # select do edita
@@ -74,13 +71,12 @@ if($acesso)
                                      descricao,
                                      idServidor
                                 FROM tbelogio
-                               WHERE idElogio = '.$id);
+                               WHERE idElogio = ' . $id);
 
     # ordem da lista
     #$objeto->set_orderCampo($orderCampo);
     #$objeto->set_orderTipo($orderTipo);
     #$objeto->set_orderChamador('?fase=listar');
-    
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -88,10 +84,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data","Tipo","Descrição"));
-    $objeto->set_width(array(10,10,70));	
-    $objeto->set_align(array("center","center","left"));
-    $objeto->set_funcao(array ("date_to_php"));
+    $objeto->set_label(array("Data", "Tipo", "Descrição"));
+    $objeto->set_width(array(10, 10, 70));
+    $objeto->set_align(array("center", "center", "left"));
+    $objeto->set_funcao(array("date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -106,40 +102,40 @@ if($acesso)
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'data',
-                                       'label' => 'Data:',
-                                       'tipo' => 'data',
-                                       'size' => 20,
-                                       'maxLength' => 20,                                   
-                                       'required' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'col' => 3,
-                                       'title' => 'Data do Elogio/Advertência.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'tipo',
-                                       'label' => 'Tipo:',
-                                       'tipo' => 'combo',
-                                       'required' => TRUE,
-                                       'array' => array(array(1,'Elogio'),array(2,'Advertência')),
-                                       'size' => 20,
-                                       'title' => 'Qual o tipo de ocorrência',
-                                       'col' => 4,
-                                       'linha' => 1),        
-                               array ( 'nome' => 'descricao',
-                                       'label' => 'Descrição:',
-                                       'tipo' => 'textarea',
-                                       'size' => array(80,5),
-                                       'col' => 12,
-                                       'required' => TRUE,
-                                       'title' => 'Descrição do Elogio ou Advertência.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'idServidor',
-                                       'label' => 'idServidor:',
-                                       'tipo' => 'hidden',
-                                       'padrao' => $idServidorPesquisado,
-                                       'size' => 5,
-                                       'title' => 'Matrícula',
-                                       'linha' => 4)));
+    $objeto->set_campos(array(array('nome' => 'data',
+            'label' => 'Data:',
+            'tipo' => 'data',
+            'size' => 20,
+            'maxLength' => 20,
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'col' => 3,
+            'title' => 'Data do Elogio/Advertência.',
+            'linha' => 1),
+        array('nome' => 'tipo',
+            'label' => 'Tipo:',
+            'tipo' => 'combo',
+            'required' => TRUE,
+            'array' => array(array(1, 'Elogio'), array(2, 'Advertência')),
+            'size' => 20,
+            'title' => 'Qual o tipo de ocorrência',
+            'col' => 4,
+            'linha' => 1),
+        array('nome' => 'descricao',
+            'label' => 'Descrição:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5),
+            'col' => 12,
+            'required' => TRUE,
+            'title' => 'Descrição do Elogio ou Advertência.',
+            'linha' => 2),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 4)));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -147,21 +143,20 @@ if($acesso)
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
-        case "editar" :			
+        case "editar" :
         case "excluir" :
-            $objeto->$fase($id);  
+            $objeto->$fase($id);
             break;
 
         case "gravar" :
-            $objeto->gravar($id,'servidorElogiosAdvertenciasExtra.php'); 	
+            $objeto->gravar($id, 'servidorElogiosAdvertenciasExtra.php');
             break;
-    }									 	 		
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

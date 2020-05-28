@@ -1,46 +1,45 @@
 <?php
+
 /**
  * Cadastro de Tempo de Serviço
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
     $aposentadoria = new Aposentadoria();
-       
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Tempo de serviço averbado";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Pega o parametro de pesquisa (se tiver)
-    $parametro = retiraAspas(post('parametro',get('parametro')));
-    
+    $parametro = retiraAspas(post('parametro', get('parametro')));
+
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -50,17 +49,16 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Tempo de Serviço Averbado');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
-    
+
     $select = 'SELECT dtInicial,
                       dtFinal,
                       dias,
@@ -79,7 +77,7 @@ if($acesso){
                       processo,
                       idAverbacao
                  FROM tbaverbacao
-                WHERE idServidor = '.$idServidorPesquisado.'
+                WHERE idServidor = ' . $idServidorPesquisado . '
              ORDER BY dtInicial desc';
 
     # select da lista
@@ -98,24 +96,24 @@ if($acesso){
                                      obs,
                                      idServidor
                                 FROM tbaverbacao
-                               WHERE idAverbacao = '.$id);
+                               WHERE idAverbacao = ' . $id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
-    
-    $label = array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo");
-    $align = array("center","center","center","left");
-    $funcao = array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php");
+
+    $label = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
+    $align = array("center", "center", "center", "left");
+    $funcao = array("date_to_php", "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php");
 
     # Parametros da tabela
     $objeto->set_label($label);
     #$objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
     $objeto->set_align($align);
     $objeto->set_funcao($funcao);
-    
+
     $objeto->set_colunaSomatorio(2);
     $objeto->set_textoSomatorio("Total de Dias:");
     $objeto->set_totalRegistro(FALSE);
@@ -133,169 +131,167 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'empresa',
-                                       'label' => 'Empresa:',
-                                       'tipo' => 'texto',
-                                       'required' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'size' => 80,                                   
-                                       'title' => 'Nome da Empresa.',
-                                       'col' => 6,
-                                       'linha' => 1),
-                               array ( 'nome' => 'empresaTipo',
-                                       'label' => 'Tipo:',
-                                       'tipo' => 'combo',
-                                       'required' => TRUE,
-                                       'array' => Array(Array(1,"Pública"),Array(2,"Privada")),
-                                       'size' => 20,
-                                       'col' => 2,
-                                       'title' => 'Tipo da Empresa',
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtPublicacao',
-                                       'label' => 'Data da Pub. no DOERJ:',
-                                       'tipo' => 'data',
-                                       'required' => TRUE,
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'title' => 'Data da Publicação no DOERJ.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'processo',
-                                       'label' => 'Processo:',
-                                       'tipo' => 'processo',
-                                       'required' => TRUE,
-                                       'size' => 30,
-                                       'col' => 3,
-                                       'title' => 'Número do Processo',
-                                       'linha' => 2), 
-                               array ( 'nome' => 'dtInicial',
-                                       'label' => 'Data Inicial:',
-                                       'tipo' => 'data',
-                                       'notNull' => TRUE,
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'required' => TRUE,
-                                       'title' => 'Data inícial do Período.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'dtFinal',
-                                       'label' => 'Data Final:',
-                                       'tipo' => 'data',
-                                       'required' => TRUE,
-                                       'size' => 20,
-                                       'col' => 3,
-                                       'notNull' => TRUE,
-                                       'title' => 'Data final do Período.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'dias',
-                                       'label' => 'Dias:',
-                                       'tipo' => 'numero',
-                                       'required' => TRUE,
-                                       'size' => 5,
-                                       'col' => 2,
-                                       'notNull' => TRUE,
-                                       'title' => 'Quantidade de Dias Averbado.',
-                                       'linha' => 3),
-                               array ( 'nome' => 'regime',
-                                       'label' => 'Regime:',
-                                       'tipo' => 'combo',
-                                       'col' => 3,
-                                       'required' => TRUE,
-                                       'array' => Array(Array(1,"Celetista"),Array(2,"Estatutário"),Array(3,"Próprio")),
-                                       'size' => 20,                               
-                                       'title' => 'Tipo do Regime',
-                                       'linha' => 4),
-                               array ( 'nome' => 'cargo',
-                                       'label' => 'Cargo:',
-                                       'tipo' => 'texto',
-                                       'col' => 6,
-                                       'size' => 100,                               
-                                       'title' => 'Cargo',
-                                       'linha' => 4),
-                                array ('linha' => 9,
-                                       'nome' => 'obs',
-                                       'label' => 'Observação:',
-                                       'tipo' => 'textarea',
-                                       'size' => array(80,5)),
-                               array ( 'nome' => 'idServidor',
-                                       'label' => 'idServidor:',
-                                       'tipo' => 'hidden',
-                                       'padrao' => $idServidorPesquisado,
-                                       'size' => 5,
-                                       'title' => 'Matrícula',
-                                       'linha' => 10)));
-    
+    $objeto->set_campos(array(array('nome' => 'empresa',
+            'label' => 'Empresa:',
+            'tipo' => 'texto',
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'size' => 80,
+            'title' => 'Nome da Empresa.',
+            'col' => 6,
+            'linha' => 1),
+        array('nome' => 'empresaTipo',
+            'label' => 'Tipo:',
+            'tipo' => 'combo',
+            'required' => TRUE,
+            'array' => Array(Array(1, "Pública"), Array(2, "Privada")),
+            'size' => 20,
+            'col' => 2,
+            'title' => 'Tipo da Empresa',
+            'linha' => 1),
+        array('nome' => 'dtPublicacao',
+            'label' => 'Data da Pub. no DOERJ:',
+            'tipo' => 'data',
+            'required' => TRUE,
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Data da Publicação no DOERJ.',
+            'linha' => 2),
+        array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'required' => TRUE,
+            'size' => 30,
+            'col' => 3,
+            'title' => 'Número do Processo',
+            'linha' => 2),
+        array('nome' => 'dtInicial',
+            'label' => 'Data Inicial:',
+            'tipo' => 'data',
+            'notNull' => TRUE,
+            'size' => 20,
+            'col' => 3,
+            'required' => TRUE,
+            'title' => 'Data inícial do Período.',
+            'linha' => 3),
+        array('nome' => 'dtFinal',
+            'label' => 'Data Final:',
+            'tipo' => 'data',
+            'required' => TRUE,
+            'size' => 20,
+            'col' => 3,
+            'notNull' => TRUE,
+            'title' => 'Data final do Período.',
+            'linha' => 3),
+        array('nome' => 'dias',
+            'label' => 'Dias:',
+            'tipo' => 'numero',
+            'required' => TRUE,
+            'size' => 5,
+            'col' => 2,
+            'notNull' => TRUE,
+            'title' => 'Quantidade de Dias Averbado.',
+            'linha' => 3),
+        array('nome' => 'regime',
+            'label' => 'Regime:',
+            'tipo' => 'combo',
+            'col' => 3,
+            'required' => TRUE,
+            'array' => Array(Array(1, "Celetista"), Array(2, "Estatutário"), Array(3, "Próprio")),
+            'size' => 20,
+            'title' => 'Tipo do Regime',
+            'linha' => 4),
+        array('nome' => 'cargo',
+            'label' => 'Cargo:',
+            'tipo' => 'texto',
+            'col' => 6,
+            'size' => 100,
+            'title' => 'Cargo',
+            'linha' => 4),
+        array('linha' => 9,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 10)));
+
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Tempo de Serviço Averbado");    
+    $botaoRel->set_title("Imprimir Relatório de Tempo de Serviço Averbado");
     $botaoRel->set_url("../grhRelatorios/servidorAverbacao.php");
     $botaoRel->set_target("_blank");
-    
+
     $objeto->set_botaoListarExtra(array($botaoRel));
-    
+
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
 
-    switch ($fase){
+    switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
-            
+
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-            
+
             # Verifica a data de saída
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
             $dtHoje = date("Y-m-d");                                      # Data de hoje
             $dtFinal = NULL;
 
             # Analisa a data
-            if(!vazio($dtSaida)){           // Se tem saída é a saída
+            if (!vazio($dtSaida)) {           // Se tem saída é a saída
                 $dtFinal = date_to_bd($dtSaida);
                 $disabled = TRUE;
                 $autofocus = FALSE;
-            }else{                          // Não tem saída então é hoje
-                $dtFinal = $dtHoje;         
+            } else {                          // Não tem saída então é hoje
+                $dtFinal = $dtHoje;
             }
-            
+
             ################################################################
-            
             # Verifica se tem Tempo averbado sobreposto
-            
             # Pega as averbações desse servidor
-            $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = '.$idServidorPesquisado.' ORDER BY dtInicial';
+            $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = ' . $idServidorPesquisado . ' ORDER BY dtInicial';
             $resultSobreposicao = $pessoal->select($selectSobreposicao);
-            
+
             # Acrescenta o tempo de UENF
             $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
-            $resultSobreposicao[] = array($dtAdmissao,$dtFinal,NULL);
-            
+            $resultSobreposicao[] = array($dtAdmissao, $dtFinal, NULL);
+
             # Inicia a variável que informa se tem sobreposicao
             $sobreposicao = FALSE;
-            
+
             # Inicia o array que guarda os períodos problemáticos
             $idsProblemáticos[] = NULL;
-            
+
             # Percorre os registros
-            foreach($resultSobreposicao as $periodo){
+            foreach ($resultSobreposicao as $periodo) {
                 $dtInicial1 = date_to_php($periodo[0]);
                 $dtFinal1 = date_to_php($periodo[1]);
                 $idAverbado1 = $periodo[2];
-                
+
                 # Percorre a mesma listagem novamente
-                foreach($resultSobreposicao as $periodoVerificado){
-                    
+                foreach ($resultSobreposicao as $periodoVerificado) {
+
                     $dtInicial2 = date_to_php($periodoVerificado[0]);
                     $dtFinal2 = date_to_php($periodoVerificado[1]);
                     $idAverbado2 = $periodoVerificado[2];
-                    
+
                     # Evita que seja comparado com ele mesmo
-                    if($idAverbado1 <> $idAverbado2){
-                        if(verificaSobreposicao($dtInicial1,$dtFinal1,$dtInicial2,$dtFinal2)){
+                    if ($idAverbado1 <> $idAverbado2) {
+                        if (verificaSobreposicao($dtInicial1, $dtFinal1, $dtInicial2, $dtFinal2)) {
                             $sobreposicao = TRUE;
                             $idsProblemáticos[] = $idAverbado1;
                             $idsProblemáticos[] = $idAverbado2;
@@ -303,18 +299,17 @@ if($acesso){
                     }
                 }
             }
-            
-            if($sobreposicao){
-                
-                $painel = new Callout("alert","center");
+
+            if ($sobreposicao) {
+
+                $painel = new Callout("alert", "center");
                 $painel->abre();
-                    echo "Atenção - Períodos com Sobreposição de Dias !!!";
-                    p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: ".date_to_php($dtAdmissao),"center","f11");
+                echo "Atenção - Períodos com Sobreposição de Dias !!!";
+                p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao), "center", "f11");
                 $painel->fecha();
             }
-            
+
             #############################################################
-            
             # Exibe o timeline
             $select1 = "SELECT empresa,
                                dtInicial,
@@ -328,12 +323,12 @@ if($acesso){
             $numAtividades = $pessoal->count($select1);
             $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
 
-            if($numAtividades > 0){
-                
+            if ($numAtividades > 0) {
+
                 tituloTable("Grafico");
 
                 # Carrega a rotina do Google
-                echo '<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>';
+                echo '<script type="text/javascript" src="' . PASTA_FUNCOES_GERAIS . '/loader.js"></script>';
 
                 # Inicia o script
                 echo "<script type='text/javascript'>";
@@ -351,33 +346,33 @@ if($acesso){
                 echo "dataTable.addRows([";
 
                 $separador = '-';
-                
+
                 # inclui o tempo de uenf
-                $dt1 = explode($separador,$dtAdmissao);
-                $dt2 = explode($separador,$dtFinal);
-                
+                $dt1 = explode($separador, $dtAdmissao);
+                $dt2 = explode($separador, $dtFinal);
+
                 echo "['UENF', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
-                
-                if($numAtividades>0){
-                   echo ","; 
+
+                if ($numAtividades > 0) {
+                    echo ",";
                 }
 
-                foreach ($atividades1 as $row){
+                foreach ($atividades1 as $row) {
 
                     # Trata as datas
-                    $dt1 = explode($separador,$row['dtInicial']);
-                    $dt2 = explode($separador,$row['dtFinal']);
+                    $dt1 = explode($separador, $row['dtInicial']);
+                    $dt2 = explode($separador, $row['dtFinal']);
 
-                    echo "['".$row['empresa']."', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+                    echo "['" . $row['empresa'] . "', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
 
                     $contador--;
 
-                    if($contador > 0){
+                    if ($contador > 0) {
                         echo ",";
                     }
                 }
-                
-                
+
+
                 echo "]);";
 
                 echo "var options = {
@@ -386,30 +381,30 @@ if($acesso){
                              timeline: { rowLabelStyle: {fontSize: 10}},
                              hAxis: { format: 'yyyy', },
                              };";
-                
+
                 echo "chart.draw(dataTable, options);";
                 echo "}";
                 echo "</script>";
 
-                $altura = (($numAtividades+1) * 45) + 50;
-                echo '<div id="timeline" style="height: '.$altura.'px; width: 100%;"></div>';
-            }        
-            
+                $altura = (($numAtividades + 1) * 45) + 50;
+                echo '<div id="timeline" style="height: ' . $altura . 'px; width: 100%;"></div>';
+            }
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-            
-        case "editar" :			
+
+        case "editar" :
         case "excluir" :
             $objeto->$fase($id);
             break;
-            
+
         case "gravar" :
-            $objeto->gravar($id,"servidorAverbacaoExtra.php");
+            $objeto->gravar($id, "servidorAverbacaoExtra.php");
             break;
-    }									 	 		
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

@@ -316,19 +316,19 @@ a#editarVaga{
  *******************************************/
 
 tr#totalTempo{
-     background-color:#99ccff;
+    background-color:#99ccff;
 }
 
 tr#ocorrencia{
-     color:#ff0000;
+    color:#ff0000;
 }
 
 tr#diasSobrando{
-     background-color:#8FBC8F;
+    background-color:#8FBC8F;
 }
 
 tr#diasFaltando{
-     background-color:#FFA07A;
+    background-color:#FFA07A;
 }
 
 /*******************************************
@@ -404,11 +404,11 @@ tr#naoPode{
 }
 
 div#divRegrasAposentadoria{
-     display: none;
+    display: none;
 }
 
 div#divTempoServicoAposentadoria{
-     display: none;
+    display: none;
 }
 /*******************************************
  * Estatística
@@ -648,8 +648,8 @@ div#divNota ul,li{
 }
 
 div#divNota ul{
-  font-size: 12px;
-  padding-top: 3px;
+    font-size: 12px;
+    padding-top: 3px;
 }
 
 div#divNota h1{
@@ -678,7 +678,7 @@ div#editarProcedimento{
     position: relative;
     float: right;
 }
- 
+
 /*******************************************
  * Cadastro de Licença Sem Vencimentos
  *******************************************/
@@ -729,7 +729,7 @@ p#patualizacaoL{
     font-size: 14px;
     text-align: left;
 }
-  
+
 /*******************************************
  * Relatórios
  *******************************************/
@@ -739,19 +739,19 @@ p#patualizacaoL{
  *******************************************/
 p#aim{
     font-size: 12px;
- }
+}
 
- /*******************************************
- * Ficha Cadastral
- *******************************************/
+/*******************************************
+* Ficha Cadastral
+*******************************************/
 
- div#tituloFichaCadastral{
-     background-color: #e6e6e6;
-     font-weight: normal;
-     font-size: 12px;
-     text-align: left;
-     margin-top: 10px;
-     padding: 4px 2px 2px 10px;
+div#tituloFichaCadastral{
+    background-color: #e6e6e6;
+    font-weight: normal;
+    font-size: 12px;
+    text-align: left;
+    margin-top: 10px;
+    padding: 4px 2px 2px 10px;
 }
 
 /*******************************************
@@ -759,252 +759,252 @@ p#aim{
  *******************************************/
 
 p#preambulo{
-     text-align: justify;
-     margin-left: 10em;
+    text-align: justify;
+    margin-left: 10em;
 }
 
 p#principal{
-     text-align: justify;
-     text-indent: 10em;
+    text-align: justify;
+    text-indent: 10em;
 }
 
 p#reitor{
-     text-align: center;
+    text-align: center;
 }
 
 p#rodape{
-     text-align: center;
-     padding: 0px;
-     margin: 0px;
-     font-size: 10px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    font-size: 10px;
 }
 
 p#termodePosse{
-     text-align: justify;
-     padding-left: 80px;
-     padding-right: 80px;
-     margin: 0px;
-     font-size: 16px;
+    text-align: justify;
+    padding-left: 80px;
+    padding-right: 80px;
+    margin: 0px;
+    font-size: 16px;
 }
 
 /*******************************************
  * Ato do Reitor
  *******************************************/
 
- p#pAto{
-     text-align: justify;
-     font-size: 16px;
-     line-height: 2.0;
-     text-indent: 50px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pAto{
+    text-align: justify;
+    font-size: 16px;
+    line-height: 2.0;
+    text-indent: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pAtoData{
-     text-align: center;
-     font-size: 16px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pAtoData{
+    text-align: center;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pAtoAssinatura{
-     text-align: center;
-     font-size: 16px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pAtoAssinatura{
+    text-align: center;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pAtoTitulo{
-     text-align: center;
-     font-size: 16px;
-     font-weight: bolder;
-     text-transform: capitalize;
-     padding: 0px;
-     margin: 0px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pAtoTitulo{
+    text-align: center;
+    font-size: 16px;
+    font-weight: bolder;
+    text-transform: capitalize;
+    padding: 0px;
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
 /*******************************************
  * Declaração
  *******************************************/
 
- p#pDeclaracaoTitulo{
-     text-align: center;
-     font-size: 14px;
-     font-weight: bolder;
-     text-transform: capitalize;
-     text-decoration: underline;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pDeclaracaoTitulo{
+    text-align: center;
+    font-size: 14px;
+    font-weight: bolder;
+    text-transform: capitalize;
+    text-decoration: underline;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pDeclaracaoData{
-     text-align: left;
-     font-size: 14px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pDeclaracaoData{
+    text-align: left;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- /*******************************************
- * CI
- *******************************************/
+/*******************************************
+* CI
+*******************************************/
 
- p#pCiDePara1{
-     text-align: left;
-     font-size: 14px;
-     line-height: 1.0;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pCiDePara1{
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.0;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pCiDePara2{
-     text-align: left;
-     font-size: 14px;
-     line-height: 1.0;
-     font-family: Arial, Helvetica, sans-serif;
-     text-indent: 2.5em;
- }
+p#pCiDePara2{
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.0;
+    font-family: Arial, Helvetica, sans-serif;
+    text-indent: 2.5em;
+}
 
- p#pCi{
-     text-align: justify;
-     font-size: 14px;
-     line-height: 2.0;
-     font-family: Arial, Helvetica, sans-serif;
-     text-indent: 3em;
- }
+p#pCi{
+    text-align: justify;
+    font-size: 14px;
+    line-height: 2.0;
+    font-family: Arial, Helvetica, sans-serif;
+    text-indent: 3em;
+}
 
 p#pCiNum{
-     text-align: left;
-     font-size: 14px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+    text-align: left;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pCiData{
-     text-align: right;
-     font-size: 14px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pCiData{
+    text-align: right;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pCiAssinatura{
-     text-align: center;
-     font-size: 14px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pCiAssinatura{
+    text-align: center;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- p#pCiRodape{
-     text-align: center;
-     font-size: 11px;
-     padding: 0px;
-     font-family: Arial, Helvetica, sans-serif;
- }
+p#pCiRodape{
+    text-align: center;
+    font-size: 11px;
+    padding: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
- /*******************************************
- * Folha de Presença
- *******************************************/
+/*******************************************
+* Folha de Presença
+*******************************************/
 
- table#tableFolhaPresenca {
-     border: 1px solid black;
-     color: #000000;
-     border-collapse:collapse;
-     width: 100%;
- }
+table#tableFolhaPresenca {
+    border: 1px solid black;
+    color: #000000;
+    border-collapse:collapse;
+    width: 100%;
+}
 
- table#tableFolhaPresenca th{
-     color: #000000;
-     font-size: 14px;
-     text-align: center;
-     border: 2px solid black;
-     height: 20px;
- }
+table#tableFolhaPresenca th{
+    color: #000000;
+    font-size: 14px;
+    text-align: center;
+    border: 2px solid black;
+    height: 20px;
+}
 
- table#tableFolhaPresenca td{
-     color: #000000;
-     font-size: 12px;
-     text-align: center;
-     border: 2px solid black;
-     height: 20px;
- }
+table#tableFolhaPresenca td{
+    color: #000000;
+    font-size: 12px;
+    text-align: center;
+    border: 2px solid black;
+    height: 20px;
+}
 
- table#tableFolhaPresenca2 td{
-     color: #000000;
-     font-size: 12px;
-     text-align: center;
-     height: 20px;
- }
+table#tableFolhaPresenca2 td{
+    color: #000000;
+    font-size: 12px;
+    text-align: center;
+    height: 20px;
+}
 
- p#pFolhaPresencaRodape{
-     color: #000000;
-     text-align: left;
-     font-size: 10px;
-  }
+p#pFolhaPresencaRodape{
+    color: #000000;
+    text-align: left;
+    font-size: 10px;
+}
 
- /*******************************************
- * relatório de Balcao
- *******************************************/
+/*******************************************
+* relatório de Balcao
+*******************************************/
 
- table#tableRelatorioBalcao {
-     border: 1px solid black;
-     color: #000000;
-     border-collapse:collapse;
-     width: 100%;
- }
+table#tableRelatorioBalcao {
+    border: 1px solid black;
+    color: #000000;
+    border-collapse:collapse;
+    width: 100%;
+}
 
- table#tableRelatorioBalcao caption{
-     font-size: 30px;
-     text-align: center;
-     font-weight: normal;
-     padding-bottom: 20px;
-     padding-top: 20px;
- }
+table#tableRelatorioBalcao caption{
+    font-size: 30px;
+    text-align: center;
+    font-weight: normal;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
 
- table#tableRelatorioBalcao th{
-     color: #000000;
-     font-size: 18px;
-     text-align: center;
-     border: 1px solid black;
- }
+table#tableRelatorioBalcao th{
+    color: #000000;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid black;
+}
 
- table#tableRelatorioBalcao td{
-     color: #000000;
-     font-size: 18px;
-     text-align: center;
-     border: 1px solid black;
- }
+table#tableRelatorioBalcao td{
+    color: #000000;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid black;
+}
 
-  /*******************************************
- * Ficha de avaliação Funcional
- *******************************************/
+/*******************************************
+* Ficha de avaliação Funcional
+*******************************************/
 
-  p#fichaAvaliacaoLabel{
-     font-size: 11px;
-     padding: 2px;
-     margin: 0px;
-  }
+p#fichaAvaliacaoLabel{
+    font-size: 11px;
+    padding: 2px;
+    margin: 0px;
+}
 
-  p#fichaAvaliacaoCampo{
-     font-size: 14px;
-     padding: 2px;
-     margin: 0px;
-  }
+p#fichaAvaliacaoCampo{
+    font-size: 14px;
+    padding: 2px;
+    margin: 0px;
+}
 
-  table#faf1{
-      width: 100%;
-      border: 2px solid black;
- }
+table#faf1{
+    width: 100%;
+    border: 2px solid black;
+}
 
- table#faf2{
-      width: 100%;
-      border: 2px solid black;
- }
+table#faf2{
+    width: 100%;
+    border: 2px solid black;
+}
 
-  table#faf1 th{
-     text-align: center;
-     border: 2px solid black;
-     font-size: 12px;
- }
+table#faf1 th{
+    text-align: center;
+    border: 2px solid black;
+    font-size: 12px;
+}
 
- table#faf1 td{
-     text-align: left;
-     border: 2px solid black;
-     font-size: 12px;
- }
+table#faf1 td{
+    text-align: left;
+    border: 2px solid black;
+    font-size: 12px;
+}
 
- table#faf2 td{
-     text-align: center;
-     border: 2px solid black;
-     font-size: 12px;
- }
+table#faf2 td{
+    text-align: center;
+    border: 2px solid black;
+    font-size: 12px;
+}

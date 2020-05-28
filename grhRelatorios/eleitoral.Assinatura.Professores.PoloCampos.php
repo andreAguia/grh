@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbdocumentacao.cpf,                    
                      "_________________________________________"
@@ -50,14 +49,13 @@ if($acesso)
     $relatorio->set_titulo('Relatório de Professores Ativos');
     $relatorio->set_tituloLinha2('Polo Campos dos Goytacazes');
     $relatorio->set_subtitulo('Ordenado pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','CPF','Assinatura'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Assinatura'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center","left","left","left"));
+    $relatorio->set_align(array("center", "left", "left", "left"));
     #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
-    
     #$relatorio->set_classe(array(NULL,NULL,"pessoal"));
     #$relatorio->set_metodo(array(NULL,NULL,"get_CargoSimples"));
-    
+
     $relatorio->set_conteudo($result);
     $relatorio->set_espacamento(3);
     $relatorio->show();

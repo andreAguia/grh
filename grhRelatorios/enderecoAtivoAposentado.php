@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbservidor.matricula,
                      tbpessoa.nome,
                      tbservidor.idServidor,
@@ -50,14 +49,14 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Ativos e Aposentados Com Endereço');
     $relatorio->set_subtitulo('Ordenado pelo nome');
-    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Cargo','Lotação','Endereço','Perfil','Situação'));
+    $relatorio->set_label(array('IdFuncional', 'Matrícula', 'Nome', 'Cargo', 'Lotação', 'Endereço', 'Perfil', 'Situação'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center","center","left","left","left","left"));
-    $relatorio->set_funcao(array(NULL,"dv"));
-    
-    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal",NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo",NULL,"get_endereco"));
-    
+    $relatorio->set_align(array("center", "center", "left", "left", "left", "left"));
+    $relatorio->set_funcao(array(NULL, "dv"));
+
+    $relatorio->set_classe(array(NULL, NULL, NULL, "pessoal", NULL, "pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, NULL, "get_cargo", NULL, "get_endereco"));
+
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(7);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

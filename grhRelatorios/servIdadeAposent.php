@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,23 +14,22 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     # Pega os parâmetros dos relatórios
-    $sexo = post('sexo',"Feminino");
+    $sexo = post('sexo', "Feminino");
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -42,41 +41,41 @@ if($acesso)
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                WHERE tbservidor.situacao = 1
                  AND idPerfil = 1
-                 AND tbpessoa.sexo = "'.$sexo.'"
+                 AND tbpessoa.sexo = "' . $sexo . '"
             ORDER BY tbpessoa.dtNasc';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Estatutários com Idade para Aposentadoria');
-    $relatorio->set_subtitulo('Servidores do Sexo '.$sexo);
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotaçao','Admissão','Nascimento','Idade','Aposentadoria','Compulsória'));
+    $relatorio->set_subtitulo('Servidores do Sexo ' . $sexo);
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotaçao', 'Admissão', 'Nascimento', 'Idade', 'Aposentadoria', 'Compulsória'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php","date_to_php"));
-    
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal",NULL,NULL,"pessoal","pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_CargoRel","get_LotacaoRel",NULL,NULL,"get_idade","get_dataAposentadoria","get_dataCompulsoria"));
-    
+    $relatorio->set_align(array("center", "left", "left", "left"));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", "date_to_php"));
+
+    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal", NULL, NULL, "pessoal", "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, "get_CargoRel", "get_LotacaoRel", NULL, NULL, "get_idade", "get_dataAposentadoria", "get_dataCompulsoria"));
+
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
 
     $relatorio->set_formCampos(array(
-                               array ('nome' => 'sexo',
-                                      'label' => 'Sexo:',
-                                      'tipo' => 'combo',
-                                      'array' => array("Masculino","Feminino"),
-                                      'size' => 30,
-                                      'padrao' => $sexo,
-                                      'title' => 'Mês',
-                                      'onChange' => 'formPadrao.submit();',
-                                      'col' => 4,
-                                      'linha' => 1)));
+        array('nome' => 'sexo',
+            'label' => 'Sexo:',
+            'tipo' => 'combo',
+            'array' => array("Masculino", "Feminino"),
+            'size' => 30,
+            'padrao' => $sexo,
+            'title' => 'Mês',
+            'onChange' => 'formPadrao.submit();',
+            'col' => 4,
+            'linha' => 1)));
 
     $relatorio->set_formFocus('sexo');
     $relatorio->set_formLink('?');
-        
+
     $relatorio->show();
 
     $page->terminaPagina();

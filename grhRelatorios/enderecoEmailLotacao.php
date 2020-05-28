@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
                      tbservidor.idServidor,
@@ -50,13 +49,13 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores com Endereço, Emails e Telefones');
     $relatorio->set_subtitulo('Agrupado por Lotaçao e Ordenado pelo nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Cargo','Endereço','E-mail','Telefones','Perfil'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Cargo', 'Endereço', 'E-mail', 'Telefones', 'Perfil'));
     $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_align(array("center","left","left","left","left","left","left"));
+    $relatorio->set_align(array("center", "left", "left", "left", "left", "left", "left"));
     #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"plm"));
-    
-    $relatorio->set_classe(array(NULL,NULL,NULL,"pessoal","pessoal","pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"get_cargo","get_enderecoRel","get_emails","get_telefones"));
+
+    $relatorio->set_classe(array(NULL, NULL, NULL, "pessoal", "pessoal", "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, NULL, "get_cargo", "get_enderecoRel", "get_emails", "get_telefones"));
     $relatorio->set_numGrupo(2);
     $relatorio->set_conteudo($result);
     $relatorio->show();

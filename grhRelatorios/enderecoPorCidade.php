@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,19 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -46,14 +46,14 @@ if($acesso){
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Ativos Com Endereço');
     $relatorio->set_subtitulo('Agrupado por Cidade e Ordenado pelo nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Endereço','Perfil','Cidade'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Endereço', 'Perfil', 'Cidade'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center","left","left","left","left"));
+    $relatorio->set_align(array("center", "left", "left", "left", "left"));
     #$relatorio->set_funcao(array(NULL,"dv"));
-    
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_cargo","get_lotacao"));
-    
+
+    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, "get_cargo", "get_lotacao"));
+
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

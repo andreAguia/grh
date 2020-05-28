@@ -1,37 +1,34 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
 # Pega os parâmetros
 $parametroNomeMat = get_session('parametroNomeMat');
-$parametroStatus = get_session('parametroStatus',0);
+$parametroStatus = get_session('parametroStatus', 0);
 
 # Variáveis
-$statusPossiveis = array(array(0,"-- Todos --"),array(1,"Em Aberto"),array(2,"Vigente"),array(3,"Arquivado"));
+$statusPossiveis = array(array(0, "-- Todos --"), array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado"));
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######   
-    
     # Título & Subtitulo
     $subTitulo = NULL;
     $titulo = "Servidores com Solicitação de Redução de Carga Horária";
@@ -57,16 +54,16 @@ if($acesso)
                 WHERE tbservidor.idPerfil <> 10";
 
     # status
-    if($parametroStatus <> 0){
-        $select .= " AND status = ".$parametroStatus;
-        $subTitulo .= "Status: ".$statusPossiveis[$parametroStatus][1];
+    if ($parametroStatus <> 0) {
+        $select .= " AND status = " . $parametroStatus;
+        $subTitulo .= "Status: " . $statusPossiveis[$parametroStatus][1];
     }
 
     # nome ou matrícula
-    if(!is_null($parametroNomeMat)){
+    if (!is_null($parametroNomeMat)) {
         $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
-        $subTitulo .= "Nome: ".$parametroNomeMat;
-    }       
+        $subTitulo .= "Nome: " . $parametroNomeMat;
+    }
 
     $select .= " ORDER BY status, dtInicio";
 
@@ -75,12 +72,12 @@ if($acesso)
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-    $relatorio->set_label(array("Id/Matrícula","Nome","Tipo","Status","Processo","Solicitado em:","Pericia","Resultado","Publicação","Período"));
-    $relatorio->set_align(array("center","left","center","center","center","center","left","center","center","left"));
-    $relatorio->set_funcao(array("idMatricula",NULL,NULL,NULL,NULL,"date_to_php"));
-    
-    $relatorio->set_classe(array(NULL,NULL,NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria",NULL,"ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria","ReducaoCargaHoraria"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,"exibeStatus","get_numProcesso",NULL,"exibeDadosPericia","exibeResultado","exibePublicacao","exibePeriodo"));
+    $relatorio->set_label(array("Id/Matrícula", "Nome", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
+    $relatorio->set_align(array("center", "left", "center", "center", "center", "center", "left", "center", "center", "left"));
+    $relatorio->set_funcao(array("idMatricula", NULL, NULL, NULL, NULL, "date_to_php"));
+
+    $relatorio->set_classe(array(NULL, NULL, NULL, "ReducaoCargaHoraria", "ReducaoCargaHoraria", NULL, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
+    $relatorio->set_metodo(array(NULL, NULL, NULL, "exibeStatus", "get_numProcesso", NULL, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

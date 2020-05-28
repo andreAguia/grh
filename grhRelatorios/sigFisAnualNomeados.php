@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -12,19 +12,18 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     # Pega os parâmetros dos relatórios
-    $relatorioAno = post('ano',date('Y'));
+    $relatorioAno = post('ano', date('Y'));
 
     ######
 
@@ -42,37 +41,37 @@ if($acesso)
                                     JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                     JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                WHERE YEAR(tbcomissao.dtNom) = "'.$relatorioAno.'"
+                WHERE YEAR(tbcomissao.dtNom) = "' . $relatorioAno . '"
                   AND tbservidor.idPerfil <> 10  
-             ORDER BY MONTH(tbcomissao.dtNom), tbcomissao.dtNom';		
+             ORDER BY MONTH(tbcomissao.dtNom), tbcomissao.dtNom';
 
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Servidores Nomeados em '.$relatorioAno);
+    $relatorio->set_titulo('Relatório Anual de Servidores Nomeados em ' . $relatorioAno);
     $relatorio->set_subtitulo('Ordenado pela Data de Nomeação');
 
-    $relatorio->set_label(array('IdFuncional','Nome','CPF','Nascimento','Cargo','Perfil','Nomeação','Publicação','Mês'));
-    $relatorio->set_width(array(10,30,10,10,10,10,10,10));
-    $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,"date_to_php",NULL,NULL,"date_to_php","date_to_php","get_NomeMes"));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Perfil', 'Nomeação', 'Publicação', 'Mês'));
+    $relatorio->set_width(array(10, 30, 10, 10, 10, 10, 10, 10));
+    $relatorio->set_align(array('center', 'left'));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, "date_to_php", NULL, NULL, "date_to_php", "date_to_php", "get_NomeMes"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(8);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_formCampos(array(
-                  array ('nome' => 'ano',
-                         'label' => 'Ano:',
-                         'tipo' => 'texto',
-                         'size' => 4,
-                         'title' => 'Ano',
-                         'padrao' => $relatorioAno,
-                         'onChange' => 'formPadrao.submit();',
-                         'col' => 3,
-                         'linha' => 1)));
+        array('nome' => 'ano',
+            'label' => 'Ano:',
+            'tipo' => 'texto',
+            'size' => 4,
+            'title' => 'Ano',
+            'padrao' => $relatorioAno,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1)));
 
-    $relatorio->set_formFocus('ano');		
+    $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');
     $relatorio->show();
 

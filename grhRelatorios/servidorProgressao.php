@@ -1,33 +1,31 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Histórico de Progressões e Enquadramentos');
-    
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Histórico de Progressões e Enquadramentos');
+
     br();
     $select = "SELECT tbprogressao.dtInicial,
                       tbtipoprogressao.nome,
@@ -43,15 +41,15 @@ if($acesso){
 
     $result = $pessoal->select($select);
 
-    $relatorio = new Relatorio();   
+    $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(FALSE);
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Data Inicial","Tipo de aumento","Valor","Processo","DOERJ","Documento"));
-    $relatorio->set_width(array(10,25,15,18,17,15));
-    $relatorio->set_align(array('center','left','left'));
-    $relatorio->set_funcao(array ('date_to_php',NULL,NULL,NULL,'date_to_php'));
+    $relatorio->set_label(array("Data Inicial", "Tipo de aumento", "Valor", "Processo", "DOERJ", "Documento"));
+    $relatorio->set_width(array(10, 25, 15, 18, 17, 15));
+    $relatorio->set_align(array('center', 'left', 'left'));
+    $relatorio->set_funcao(array('date_to_php', NULL, NULL, NULL, 'date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

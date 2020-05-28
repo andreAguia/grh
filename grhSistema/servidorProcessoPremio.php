@@ -1,29 +1,28 @@
 <?php
+
 /**
  * Dados Gerais do servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','editar');
-    
+    $fase = get('fase', 'editar');
+
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -33,21 +32,20 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
-    
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Processo de '.$pessoal->get_licencaNome(6));
+    $objeto->set_nome('Processo de ' . $pessoal->get_licencaNome(6));
 
     # select do edita
     $selectEdita = 'SELECT processoPremio
                       FROM tbservidor
-                     WHERE idServidor = '.$idServidorPesquisado;
+                     WHERE idServidor = ' . $idServidorPesquisado;
 
     $objeto->set_selectEdita($selectEdita);
 
@@ -76,13 +74,13 @@ if($acesso){
 
     # Campos para o formulario
     $campos = array(array('linha' => 1,
-                          'nome' => 'processoPremio',
-                          'label' => 'Processo:',
-                          'tipo' => 'processo',
-                          'autofocus' => TRUE,
-                          'size' => 25,
-                          'col' => 3,
-                          'title' => 'Número do processo.'));
+            'nome' => 'processoPremio',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'autofocus' => TRUE,
+            'size' => 25,
+            'col' => 3,
+            'title' => 'Número do processo.'));
 
     $objeto->set_campos($campos);
 
@@ -92,16 +90,16 @@ if($acesso){
 
     ################################################################
 
-    switch ($fase){
+    switch ($fase) {
         case "editar" :
-            $objeto->$fase($idServidorPesquisado);  
+            $objeto->$fase($idServidorPesquisado);
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado);  
+            $objeto->gravar($idServidorPesquisado);
             break;
     }
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -12,28 +12,28 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){
-    
+if ($acesso) {
+
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     # Pega os parâmetros dos relatórios
-    $parametroMes = post('mes',date('m'));
-    $parametroAno = post('ano',date('Y'));
+    $parametroMes = post('mes', date('m'));
+    $parametroAno = post('ano', date('Y'));
     $parametroLotacao = post('lotacao');
-    
-    if($parametroLotacao == "*"){
+
+    if ($parametroLotacao == "*") {
         $parametroLotacao = NULL;
     }
 
     ######
-    
+
     $afast = new Afastamento();
     $afast->set_ano($parametroAno);
     $afast->set_mes($parametroMes);

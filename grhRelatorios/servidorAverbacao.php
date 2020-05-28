@@ -1,36 +1,34 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     $parametro = retiraAspas(get('data'));
-    
+
     ######
-    
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado,'Tempo de Serviço');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Tempo de Serviço');
     br();
-    
+
     # Tempo de Serviço
     $select = "SELECT dtInicial,
                       dtFinal,
@@ -62,12 +60,12 @@ if($acesso){
     $relatorio->set_menuRelatorio(FALSE);
     $relatorio->set_subTotal(TRUE);
     $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_label(array("Data Inicial","Data Final","Dias","Empresa","Tipo","Regime","Cargo","Publicação","Processo"));
+    $relatorio->set_label(array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"));
     $relatorio->set_colunaSomatorio(2);
     $relatorio->set_textoSomatorio("Total de Dias Averbados:");
     $relatorio->set_exibeSomatorioGeral(FALSE);
-    $relatorio->set_align(array('center','center','center','left'));
-    $relatorio->set_funcao(array("date_to_php","date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
+    $relatorio->set_align(array('center', 'center', 'center', 'left'));
+    $relatorio->set_funcao(array("date_to_php", "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
@@ -75,7 +73,7 @@ if($acesso){
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Tempo de Serviço Averbado");
     $relatorio->show();
-    
+
     #p('Total de Dias Averbados:'.$totalAverbado,'pRelatorioDataImpressao');
 
     $page->terminaPagina();

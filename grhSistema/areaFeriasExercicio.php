@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Área de Férias
  *  
  * By Alat
  */
-
 # Reservado para o servidor logado
 $idUsuario = NULL;
 
@@ -12,44 +12,44 @@ $idUsuario = NULL;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){   
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-	
+
     # Verifica a fase do programa
     $fase = get('fase');
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de férias";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
     }
-    
+
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaFerias',FALSE);
-    
+    set_session('areaFerias', FALSE);
+
     # Pega os parâmetros
-    $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
-    $parametroLotacao = post('parametroLotacao',get_session('parametroLotacao'));
-        
+    $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+
     # Joga os parâmetros par as sessions    
-    set_session('parametroAno',$parametroAno);
-    set_session('parametroLotacao',$parametroLotacao);
-    
+    set_session('parametroAno', $parametroAno);
+    set_session('parametroLotacao', $parametroLotacao);
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
-    
+
     # Cabeçalho da Página
     AreaServidor::cabecalho();
-    
+
     $grid = new Grid();
     $grid->abreColuna(12);
 
@@ -57,40 +57,38 @@ if($acesso){
     $menu1 = new MenuBar();
 
     # Voltar
-    $botaoVoltar = new Link("Voltar","grh.php");
+    $botaoVoltar = new Link("Voltar", "grh.php");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
-    $menu1->add_link($botaoVoltar,"left");
-    
+    $menu1->add_link($botaoVoltar, "left");
+
     # Ano Exercício
     $botaoVoltar = new Link("Ano Exercício");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Férias por Ano Exercício');
     #$menu1->add_link($botaoVoltar,"right");
-    
     # Ano por Fruíção
-    $botaoVoltar = new Link("por Ano de Fruição","areaFeriasFruicao.php");
+    $botaoVoltar = new Link("por Ano de Fruição", "areaFeriasFruicao.php");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Férias por Ano em que foi realmente fruído');
     #$menu1->add_link($botaoVoltar,"right");
 
     $menu1->show();
-    
+
     # Título
     titulo("Área de Férias - Por Ano de Exercício");
-    
+
 ################################################################
-    
     # Formulário de Pesquisa
     $form = new Form('?');
 
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoAtual+2,$anoInicial,"d");
-    
-    $controle = new Input('parametroAno','combo','Ano Exercício:',1);
+    $anoExercicio = arrayPreenche($anoAtual + 2, $anoInicial, "d");
+
+    $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
     $controle->set_size(8);
     $controle->set_title('Filtra por Ano exercício');
     $controle->set_array($anoExercicio);
@@ -108,9 +106,9 @@ if($acesso){
                                               FROM tblotacao
                                              WHERE ativo)
                                           ORDER BY 2');
-    array_unshift($result,array("*",'Todas'));
-    
-    $controle = new Input('parametroLotacao','combo','Lotação:',1);
+    array_unshift($result, array("*", 'Todas'));
+
+    $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
     $controle->set_size(30);
     $controle->set_title('Filtra por Lotação');
     $controle->set_array($result);
@@ -121,94 +119,86 @@ if($acesso){
     $form->add_item($controle);
 
     $form->show();
-            
+
 ################################################################
-    
-    switch ($fase){
-        case "" : 
+
+    switch ($fase) {
+        case "" :
             br(4);
             aguarde();
             br();
-            
+
             # Limita a tela
             $grid1 = new Grid("center");
             $grid1->abreColuna(5);
-                p("Aguarde...","center");
+            p("Aguarde...", "center");
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
             loadPage('?fase=exibeLista');
             break;
-        
+
 ################################################################
-        
+
         case "exibeLista" :
-            
+
             $grid2 = new Grid();
-            
+
             # Área Lateral
             $grid2->abreColuna(3);
-            
+
             ########################################
-            
             # Menu
             tituloTable("Menu");
-            
+
             $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo','Tipo');
-            $menu->add_item('link','<b>por Ano de Exercício</b>','#');
-            $menu->add_item('link','por Ano de Fruíção','areaFeriasFruicao.php');
-           
-            $menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow','Agrupado pelo Total de Dias','../grhRelatorios/ferias.exercicio.porTotalDias.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-            $menu->add_item('linkWindow','Agrupado pelo Total de Dias (menor que 30)','../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-            $menu->add_item('linkWindow','Solicitações Agrupadas por Mês','../grhRelatorios/ferias.exercicio.solicitacoes.php?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
+            $menu->add_item('titulo', 'Tipo');
+            $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
+            $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
+
+            $menu->add_item('titulo', 'Relatórios');
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
+            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
             $menu->show();
-            
+
             #######################################
-            
             # Resumo Geral
-            
             # Informa a classe com os parâmetros
             $lista1 = new ListaFerias($parametroAno);
             $lista1->set_lotacao($parametroLotacao);
-            
+
             # resumo geral
             $lista1->showResumoGeral();
-            
+
             # por dias
             $lista1->showResumoPorDia();
-            
+
             #######################################
-            
-            
-            
             # Área Principal            
-            $grid2->fechaColuna(); 
+            $grid2->fechaColuna();
             $grid2->abreColuna(9);
-                
+
             $lista1->showPorDia();
-                        
+
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
-        
-################################################################
 
+################################################################
         # Chama o menu do Servidor que se quer editar
         case "editaServidorFerias" :
-            set_session('idServidorPesquisado',$id);
-            set_session('areaFerias',"exercicio");
+            set_session('idServidorPesquisado', $id);
+            set_session('areaFerias', "exercicio");
             loadPage('servidorFerias.php');
-            break; 
-        
+            break;
+
 ################################################################
-        
     }
     $grid->fechaColuna();
     $grid->fechaGrid();
-    
+
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

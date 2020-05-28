@@ -28,53 +28,53 @@ $sexo = $pessoal->get_sexo($idServidor);
 $restricao = $pessoal->get_licencaSexo($idTpLicenca);
 
 # Feminino
-if($restricao == "Feminino"){
-    if($sexo <> "Feminino"){
-        $msgErro.='Esse tipo de licença só é permitido para servidores do sexo feminino!\n';
+if ($restricao == "Feminino") {
+    if ($sexo <> "Feminino") {
+        $msgErro .= 'Esse tipo de licença só é permitido para servidores do sexo feminino!\n';
         $erro = 1;
     }
 }
 
 # Masculino
-if($restricao == "Masculino"){
-    if($sexo <> "Masculino"){
-        $msgErro.='Esse tipo de licença só é permitido para servidores do sexo masculino!\n';
+if ($restricao == "Masculino") {
+    if ($sexo <> "Masculino") {
+        $msgErro .= 'Esse tipo de licença só é permitido para servidores do sexo masculino!\n';
         $erro = 1;
     }
 }
 
 # Verifica se nas licenças 110 e 111 tem a alta digitada
-if(($idTpLicenca == 1) OR ($idTpLicenca == 30)){
-    if(is_null($alta)){
-        $msgErro.='E necessario informar se teve ou não alta!\n';
+if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
+    if (is_null($alta)) {
+        $msgErro .= 'E necessario informar se teve ou não alta!\n';
         $erro = 1;
     }
 }
-    
+
 # Apaga a alta se nao for licenca medica
-if(($idTpLicenca <> 1) AND ($idTpLicenca <> 30) AND ($idTpLicenca <> 2)){
+if (($idTpLicenca <> 1) AND ($idTpLicenca <> 30) AND ($idTpLicenca <> 2)) {
     $campoValor[1] = NULL;
     $campoValor[2] = NULL;
 }
 
 # Apaga o periodo aquisitivo quando não precisa
-if($pessoal->get_licencaPeriodo($idTpLicenca) == "Não"){
+if ($pessoal->get_licencaPeriodo($idTpLicenca) == "Não") {
     $campoValor[2] = NULL;
     $campoValor[3] = NULL;
 }
 
 # Apaga o processo quando não precisa
-if($pessoal->get_licencaProcesso($idTpLicenca) == "Não"){
+if ($pessoal->get_licencaProcesso($idTpLicenca) == "Não") {
     $campoValor[6] = NULL;
 }
 
 # Apaga a publicação quando não precisa
-if($pessoal->get_licencaPublicacao($idTpLicenca) == "Não"){
+if ($pessoal->get_licencaPublicacao($idTpLicenca) == "Não") {
     $campoValor[7] = NULL;
 }
 
 # Apaga a perícia quando não precisa
-if($pessoal->get_licencaPericia($idTpLicenca) == "Não"){
+if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
     $campoValor[8] = NULL;
     $campoValor[9] = NULL;
 }
@@ -82,7 +82,7 @@ if($pessoal->get_licencaPericia($idTpLicenca) == "Não"){
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 $dtAdmissao = date_to_bd($dtAdmissao);
-if($dtInicial < $dtAdmissao){
+if ($dtInicial < $dtAdmissao) {
     $erro = 1;
     $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';
 }
@@ -91,9 +91,9 @@ if($dtInicial < $dtAdmissao){
 $dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida
-if(!is_null($dtSaida)){
+if (!is_null($dtSaida)) {
     $dtSaida = date_to_bd($dtSaida);
-    if($dtInicial > $dtSaida){
+    if ($dtInicial > $dtSaida) {
         $erro = 1;
         $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
     }

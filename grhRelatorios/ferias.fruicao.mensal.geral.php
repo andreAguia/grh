@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,38 +14,37 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
-    
+
     # Pega os parâmetros
-    $parametroAno = get_session('parametroAno',date("Y"));
+    $parametroAno = get_session('parametroAno', date("Y"));
     $parametroLotacao = get_session('parametroLotacao');
     $parametroStatus = get_session('parametroStatus');
-    
+
     # Transforma em nulo a máscara *
-    if($parametroLotacao == "*"){
+    if ($parametroLotacao == "*") {
         $parametroLotacao = NULL;
     }
-    
+
     # Transforma em nulo a máscara *
-    if($parametroStatus == "Todos"){
+    if ($parametroStatus == "Todos") {
         $parametroStatus = NULL;
     }
-    
+
     # Pega o mes
-    $parametroMes = post('parametroMes',1);
-    
+    $parametroMes = post('parametroMes', 1);
+
     ######
-    
-    $select ="SELECT tbservidor.idfuncional,        
+
+    $select = "SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
                      concat(IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,''),' - ',IFNULL(tblotacao.nome,'')) lotacao,
                      tbferias.anoExercicio,
@@ -62,68 +61,67 @@ if($acesso)
                WHERE YEAR(tbferias.dtInicial) = $parametroAno
                  AND MONTH(tbferias.dtInicial) = $parametroMes
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-    
+
     # Lotação
-    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
-        
+    if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+
         # Verifica se o que veio é numérico
-        if(is_numeric($parametroLotacao)){
-            $select .= ' AND (tblotacao.idlotacao = "'.$parametroLotacao.'")'; 
-        }else{ # senão é uma diretoria genérica
-            $select .= ' AND (tblotacao.DIR = "'.$parametroLotacao.'")'; 
+        if (is_numeric($parametroLotacao)) {
+            $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+        } else { # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
         }
-        
-    }      
+    }
 
     # Status
-    if(($parametroStatus <> "Todos") AND ($parametroStatus <> "")){
-        $select .= ' AND (tbferias.status = "'.$parametroStatus.'")';
+    if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
+        $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
     }
-        
+
     $select .= " ORDER BY tbpessoa.nome";
-    
+
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    
+
     # Status no subtítulo
-    if(!is_null($parametroStatus)){
-        $relatorio->set_tituloLinha3('Ferias '.plm($parametroStatus).'s');
+    if (!is_null($parametroStatus)) {
+        $relatorio->set_tituloLinha3('Ferias ' . plm($parametroStatus) . 's');
     }
-    
+
     $relatorio->set_titulo('Relatório Mensal Geral de Férias');
-    $relatorio->set_tituloLinha2(get_nomeMes($parametroMes)." / ".$parametroAno);
-    
+    $relatorio->set_tituloLinha2(get_nomeMes($parametroMes) . " / " . $parametroAno);
+
     $relatorio->set_subtitulo('Ordenados pelo Nome do Servidor');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Lotação','Exercício','Dt Inicial','Dias','Dt Final','Período','Situação'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Situação'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
-    $relatorio->set_align(array("center","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
-    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
-    
-    if(($parametroLotacao <> "*") AND ($parametroLotacao <> "")){
+    $relatorio->set_align(array("center", "left", "left"));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, NULL, NULL, NULL, "pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, NULL, NULL, NULL, "get_feriasPeriodo"));
+
+    if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
         $relatorio->set_numGrupo(2);
     }
 
     $relatorio->set_conteudo($result);
-    
+
     $relatorio->set_formCampos(array(
-                               array ('nome' => 'parametroMes',
-                                      'label' => 'Mês:',
-                                      'tipo' => 'combo',
-                                      'array' => $mes,
-                                      'size' => 10,
-                                      'padrao' => $parametroMes,
-                                      'title' => 'Mês',
-                                      'onChange' => 'formPadrao.submit();',
-                                      'col' => 3,
-                                      'linha' => 1)));
+        array('nome' => 'parametroMes',
+            'label' => 'Mês:',
+            'tipo' => 'combo',
+            'array' => $mes,
+            'size' => 10,
+            'padrao' => $parametroMes,
+            'title' => 'Mês',
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1)));
 
     $relatorio->set_formFocus('mesBase');
-    $relatorio->set_formLink('?parametroAno='.$parametroAno.'&parametroLotacao='.$parametroLotacao);
-    
+    $relatorio->set_formLink('?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
+
     $relatorio->show();
 
     $page->terminaPagina();

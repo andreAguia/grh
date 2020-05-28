@@ -1,43 +1,41 @@
 <?php
+
 /**
  * Dados Bancários do servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados bancários";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','editar');
-    
+    $fase = get('fase', 'editar');
+
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -47,7 +45,6 @@ if($acesso)
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
@@ -61,7 +58,7 @@ if($acesso)
                                      conta,
                                      obsFinanceiro
                                 FROM tbpessoa
-                               WHERE idPessoa = '.$idPessoa);
+                               WHERE idPessoa = ' . $idPessoa);
 
 
     # Caminhos
@@ -90,58 +87,56 @@ if($acesso)
     # Pega os dados da combo parentesco
     $bancos = new Pessoal();
     $result = $bancos->select('SELECT idBanco, banco FROM tbbanco order by banco');
-    array_push($result, array(NULL,NULL)); # Adiciona o valor de nulo
-
+    array_push($result, array(NULL, NULL)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(
-                        array ('linha' => 1,
-                               'nome' => 'banco',
-                               'label' => 'Banco:',
-                               'tipo' => 'combo',
-                               'array' => $result,
-                               'required' => TRUE,
-                               'autofocus' => TRUE,
-                               'col' => 4,
-                               'title' => 'Nome do Banco do Servidor',                           
-                               'size' => 20),
-                        array ('linha' => 1,
-                               'nome' => 'agencia',
-                               'label' => 'Agência:',
-                               'tipo' => 'texto',
-                               'required' => TRUE,
-                               'col' => 4,
-                               'title' => 'Número da Agência',                           
-                               'size' => 10),
-                        array ('linha' => 1,
-                               'nome' => 'conta',
-                               'label' => 'Conta Corrente:',
-                               'tipo' => 'texto',
-                               'col' => 4,
-                               'required' => TRUE,
-                               'title' => 'Número da conta corrente do servidor',                           
-                               'size' => 20),
-                        array ('linha' => 4,
-                               'nome' => 'obsFinanceiro',
-                               'label' => 'Observação:',
-                               'tipo' => 'textarea',
-                               'col' => 12,
-                               'size' => array(80,5))));
+        array('linha' => 1,
+            'nome' => 'banco',
+            'label' => 'Banco:',
+            'tipo' => 'combo',
+            'array' => $result,
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'col' => 4,
+            'title' => 'Nome do Banco do Servidor',
+            'size' => 20),
+        array('linha' => 1,
+            'nome' => 'agencia',
+            'label' => 'Agência:',
+            'tipo' => 'texto',
+            'required' => TRUE,
+            'col' => 4,
+            'title' => 'Número da Agência',
+            'size' => 10),
+        array('linha' => 1,
+            'nome' => 'conta',
+            'label' => 'Conta Corrente:',
+            'tipo' => 'texto',
+            'col' => 4,
+            'required' => TRUE,
+            'title' => 'Número da conta corrente do servidor',
+            'size' => 20),
+        array('linha' => 4,
+            'nome' => 'obsFinanceiro',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'col' => 12,
+            'size' => array(80, 5))));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
-    switch ($fase)
-    {
-        case "editar" :            
-        case "excluir" :	
+    switch ($fase) {
+        case "editar" :
+        case "excluir" :
         case "gravar" :
             $objeto->$fase($idPessoa);
-            break;	
-    }									 	 		
+            break;
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

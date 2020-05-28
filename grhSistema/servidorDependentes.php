@@ -1,37 +1,35 @@
 <?php
+
 /**
  * Cadastro de Dependentes de um servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Parentes";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -112,7 +110,7 @@ if($acesso)
                 
                     
                     ';
-    
+
     # Começa uma nova página
     $page = new Page();
     $page->set_ready($jscript);
@@ -125,14 +123,12 @@ if($acesso)
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
-    
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+
     #$objeto->set_rotinaExtraEditar("exibeColloutDependente");
     #$objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);     
-
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Parentes');
 
@@ -156,7 +152,7 @@ if($acesso)
                                      dtTermino,
                                      idDependente
                                 FROM tbdependente LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-                          WHERE idPessoa='.$idPessoa.'
+                          WHERE idPessoa=' . $idPessoa . '
                        ORDER BY dtNasc desc');
 
     # select do edita
@@ -173,13 +169,12 @@ if($acesso)
                                      obs,
                                      idPessoa
                                 FROM tbdependente
-                               WHERE idDependente = '.$id);
+                               WHERE idDependente = ' . $id);
 
     # ordem da lista
     #$objeto->set_orderCampo($orderCampo);
     #$objeto->set_orderTipo($orderTipo);
     #$objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -187,10 +182,10 @@ if($acesso)
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Nome","Nascimento","Parentesco","Sexo","Idade","Dependente no IR","Auxílio Creche","Término do Aux. Creche"));
+    $objeto->set_label(array("Nome", "Nascimento", "Parentesco", "Sexo", "Idade", "Dependente no IR", "Auxílio Creche", "Término do Aux. Creche"));
     #$objeto->set_width(array(20,10,10,10,10,10,10,10));	
     $objeto->set_align(array("left"));
-    $objeto->set_funcao(array(NULL,"date_to_php",NULL,NULL,NULL,NULL,NULL,"date_to_php"));
+    $objeto->set_funcao(array(NULL, "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -210,108 +205,107 @@ if($acesso)
                                           parentesco
                                      FROM tbparentesco
                                  ORDER BY idParentesco');
-    array_push($result, array(NULL,NULL)); # Adiciona o valor de nulo
-
+    array_push($result, array(NULL, NULL)); # Adiciona o valor de nulo
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'nome',
-                                       'label' => 'Nome do Parente:',
-                                       'tipo' => 'texto',
-                                       'size' => 50,
-                                       'required' => TRUE,
-                                       'plm' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'title' => 'Nome do Parente.',
-                                       'col' => 6,
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtNasc',
-                                       'label' => 'Data de Nascimento:',
-                                       'tipo' => 'data',
-                                       'size' => 12,
-                                       'maxLength' => 20,
-                                       'required' => TRUE,
-                                       'title' => 'Data de Nascimento.',
-                                       'col' => 3,
-                                       'linha' => 1),
-                               array ( 'nome' => 'CPF',
-                                       'label' => 'CPF (quando houver):',
-                                       'tipo' => 'cpf',
-                                       'size' => 20,                                   
-                                       'title' => 'CPF do Parente',
-                                       'col' => 3,
-                                       'linha' => 1),
-                               array ( 'nome' => 'parentesco',
-                                       'label' => 'Parentesco:',
-                                       'tipo' => 'combo',
-                                       'array' => $result,
-                                       'required' => TRUE,
-                                       'size' => 20,                                       
-                                       'title' => 'Parentesco do Parente',
-                                       'col' => 3,
-                                       'linha' => 2),
-                               array ( 'nome' => 'sexo',
-                                       'label' => 'Sexo:',
-                                       'tipo' => 'combo',
-                                       'array' => array("","M","F"),
-                                       'required' => TRUE,
-                                       'size' => 20,
-                                       'col' => 2,
-                                       'title' => 'Gênero do Parente.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'dependente',
-                                       'label' => 'Dependente no IR:',
-                                       'tipo' => 'combo',
-                                       'array' => array("Não","Sim"),
-                                       'required' => TRUE,
-                                       'size' => 20, 
-                                       'col' => 2,
-                                       'title' => 'Dependente no Imposto de Renda.',
-                                       'linha' => 2),
-                               array ( 'nome' => 'auxCreche',
-                                       'label' => 'Auxílio Creche:',
-                                       'tipo' => 'combo',
-                                       'array' => array("Não","Sim"),                                   
-                                       'size' => 20,                                       
-                                       'title' => 'Dependente tem Auxílio Creche.',
-                                       'col' => 2,
-                                       'linha' => 2),
-                               array ( 'nome' => 'dtTermino',
-                                       'label' => 'Data de Término:',
-                                       'tipo' => 'data',
-                                       'size' => 12,
-                                       'fieldset' => 'Auxílio Creche',
-                                       'title' => 'Data de Termino do Auxílio Creche.',
-                                       'col' => 3,
-                                       'linha' => 3),
-                               array ( 'nome' => 'processo',
-                                       'label' => 'Processo:',
-                                       'tipo' => 'processo',
-                                       'size' => 20,                                   
-                                       'title' => 'Processo de exclusão do auxílio Creche.',
-                                       'col' => 4,
-                                       'linha' => 3),                        	 
-                               array ( 'nome' => 'ciExclusao',
-                                       'label' => 'Documento de Exclusão:',
-                                       'tipo' => 'texto',
-                                       'size' => 30,                                   
-                                       'title' => 'Documento de Exclusão do auxílio Creche.',
-                                       'col' => 4,
-                                       'linha' => 3),
-                                array ('linha' => 4,
-                                       'fieldset' => 'fecha',
-                                       'nome' => 'obs',
-                                       'label' => 'Observação:',
-                                       'tipo' => 'textarea',
-                                       'size' => array(80,5)),
-                               array ( 'nome' => 'idPessoa',
-                                       'label' => 'idPessoa:',
-                                       'tipo' => 'hidden',
-                                       'padrao' => $idPessoa,
-                                       'size' => 5,
-                                       'title' => 'idPessoa',
-                                       'linha' => 5)));
+    $objeto->set_campos(array(array('nome' => 'nome',
+            'label' => 'Nome do Parente:',
+            'tipo' => 'texto',
+            'size' => 50,
+            'required' => TRUE,
+            'plm' => TRUE,
+            'autofocus' => TRUE,
+            'title' => 'Nome do Parente.',
+            'col' => 6,
+            'linha' => 1),
+        array('nome' => 'dtNasc',
+            'label' => 'Data de Nascimento:',
+            'tipo' => 'data',
+            'size' => 12,
+            'maxLength' => 20,
+            'required' => TRUE,
+            'title' => 'Data de Nascimento.',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'CPF',
+            'label' => 'CPF (quando houver):',
+            'tipo' => 'cpf',
+            'size' => 20,
+            'title' => 'CPF do Parente',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'parentesco',
+            'label' => 'Parentesco:',
+            'tipo' => 'combo',
+            'array' => $result,
+            'required' => TRUE,
+            'size' => 20,
+            'title' => 'Parentesco do Parente',
+            'col' => 3,
+            'linha' => 2),
+        array('nome' => 'sexo',
+            'label' => 'Sexo:',
+            'tipo' => 'combo',
+            'array' => array("", "M", "F"),
+            'required' => TRUE,
+            'size' => 20,
+            'col' => 2,
+            'title' => 'Gênero do Parente.',
+            'linha' => 2),
+        array('nome' => 'dependente',
+            'label' => 'Dependente no IR:',
+            'tipo' => 'combo',
+            'array' => array("Não", "Sim"),
+            'required' => TRUE,
+            'size' => 20,
+            'col' => 2,
+            'title' => 'Dependente no Imposto de Renda.',
+            'linha' => 2),
+        array('nome' => 'auxCreche',
+            'label' => 'Auxílio Creche:',
+            'tipo' => 'combo',
+            'array' => array("Não", "Sim"),
+            'size' => 20,
+            'title' => 'Dependente tem Auxílio Creche.',
+            'col' => 2,
+            'linha' => 2),
+        array('nome' => 'dtTermino',
+            'label' => 'Data de Término:',
+            'tipo' => 'data',
+            'size' => 12,
+            'fieldset' => 'Auxílio Creche',
+            'title' => 'Data de Termino do Auxílio Creche.',
+            'col' => 3,
+            'linha' => 3),
+        array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'size' => 20,
+            'title' => 'Processo de exclusão do auxílio Creche.',
+            'col' => 4,
+            'linha' => 3),
+        array('nome' => 'ciExclusao',
+            'label' => 'Documento de Exclusão:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'title' => 'Documento de Exclusão do auxílio Creche.',
+            'col' => 4,
+            'linha' => 3),
+        array('linha' => 4,
+            'fieldset' => 'fecha',
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idPessoa',
+            'label' => 'idPessoa:',
+            'tipo' => 'hidden',
+            'padrao' => $idPessoa,
+            'size' => 5,
+            'title' => 'idPessoa',
+            'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Parente");
@@ -327,22 +321,20 @@ if($acesso)
     #$objeto->set_paginacao(TRUE);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
-
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
             break;
 
-        case "editar" : 
+        case "editar" :
             $objeto->editar($id);
-            break;            
+            break;
 
         case "gravar" :
-            $objeto->gravar($id,'servidorDependentesExtra.php');
+            $objeto->gravar($id, 'servidorDependentesExtra.php');
             break;
 
         case "excluir" :
@@ -350,6 +342,6 @@ if($acesso)
             break;
     }
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

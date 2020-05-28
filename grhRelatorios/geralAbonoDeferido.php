@@ -1,30 +1,28 @@
 <?php
+
 /**
  * Relatório
  *    
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######   
-    
+
     br();
     $select = "SELECT idFuncional,
                       tbpessoa.nome,
@@ -44,12 +42,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos com Abono Permanencia Deferido');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array("IdFuncional","Nome","Cargo","Lotação","Data","Processo","Publicaçao","Status"));
+    $relatorio->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Data", "Processo", "Publicaçao", "Status"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array("left","left","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php",NULL,"date_to_php"));
-    $relatorio->set_classe(array(NULL,NULL,"pessoal","pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,"get_cargoRel","get_lotacaoRel"));    
+    $relatorio->set_align(array("left", "left", "left", "left"));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
+    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, "get_cargoRel", "get_lotacaoRel"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

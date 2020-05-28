@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,25 +14,24 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-	
-	# Pega o cargo
+
+    # Pega o cargo
     $cargo = get('cargo');
-	
+
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
 
     $servidor = new Pessoal();
-    $select ='SELECT distinct tbservidor.idFuncional,
+    $select = 'SELECT distinct tbservidor.idFuncional,
                      tbservidor.matricula,
                      tbpessoa.nome,
                      tbcomissao.idComissao,
@@ -43,11 +42,11 @@ if($acesso)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                 LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)';
-				
-	if(!is_null($cargo)){
-		$select .= ' WHERE tbtipocomissao.idTipoComissao = '.$cargo;
-	}
-			                    
+
+    if (!is_null($cargo)) {
+        $select .= ' WHERE tbtipocomissao.idTipoComissao = ' . $cargo;
+    }
+
     $select .= ' ORDER BY 7, tbdescricaocomissao.descricao,tbcomissao.dtNom desc';
 
     $result = $servidor->select($select);
@@ -55,12 +54,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Histórico de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados pelo Símbolo - Ordenados Cronologicamente');
-    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','Descrição','Nomeação','Exoneração',''));
+    $relatorio->set_label(array('IdFuncional', 'Matrícula', 'Nome', 'Descrição', 'Nomeação', 'Exoneração', ''));
     #$relatorio->set_width(array(10,10,30,15,15,20,0));
-    $relatorio->set_align(array("center","center","left","left","center","center"));
-    $relatorio->set_funcao(array(NULL,"dv",NULL,"descricaoComissao","date_to_php","date_to_php"));
+    $relatorio->set_align(array("center", "center", "left", "left", "center", "center"));
+    $relatorio->set_funcao(array(NULL, "dv", NULL, "descricaoComissao", "date_to_php", "date_to_php"));
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(6);    
+    $relatorio->set_numGrupo(6);
     $relatorio->show();
 
     $page->terminaPagina();

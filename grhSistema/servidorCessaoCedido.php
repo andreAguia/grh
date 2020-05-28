@@ -1,41 +1,40 @@
 <?php
+
 /**
  * Dados do servidor cedido
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
 # Pega o valor do idCedido 
 $pessoal = new Pessoal();
 $idCedido = $pessoal->get_idCedido($idServidorPesquisado);
 
-if($acesso){    
+if ($acesso) {
     # Verifica a fase do programa
-    $fase = get('fase','editar');
-    
+    $fase = get('fase', 'editar');
+
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados do órgão de origem";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-    
+
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -45,10 +44,9 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Dados do Servidor Cedido');
@@ -64,7 +62,7 @@ if($acesso){
                                      obs,
                                      idServidor
                                 FROM tbcedido
-                               WHERE idCedido = '.$idCedido);
+                               WHERE idCedido = ' . $idCedido);
 
 
     # Caminhos
@@ -92,71 +90,71 @@ if($acesso){
 
     # Campos para o formulario
     $objeto->set_campos(array(
-                        array ('linha' => 1,
-                               'nome' => 'orgaoOrigem',
-                               'label' => 'Órgão de Origem:',
-                               'tipo' => 'texto',
-                               'required' => TRUE,
-                               'autofocus' => TRUE,
-                               'title' => 'Órgão de Origem do servidor cedido',
-                               'col' => 6,
-                               'size' => 50),
-                        array ('linha' => 1,
-                               'nome' => 'matExterna',
-                               'label' => 'Matrícula do Órgão de Origem:',
-                               'tipo' => 'texto',
-                               'title' => 'Matrícula do Órgão de Origem',
-                               'col' => 3,
-                               'size' => 20),
-                        array ('linha' => 1,
-                               'nome' => 'matsare',
-                               'label' => 'Matrícula da Sare:',
-                               'tipo' => 'texto',
-                               'title' => 'Matrícula da Sare',
-                               'col' => 3,
-                               'size' => 25),
-                        array ('linha' => 2,
-                               'nome' => 'onus',
-                               'label' => 'Ônus para a UENF?:',
-                               'tipo' => 'combo',
-                               'array' => array(NULL,"Sim","Não"),
-                               'size' => 20,
-                               'col' => 3,
-                               'title' => 'Cedido com ônus para a UENF?'),
-                        array ('linha' => 2,
-                               'nome' => 'salario',
-                               'label' => 'Valor recebido pelo órgão de origem:',
-                               'tipo' => 'moeda',
-                               'col' => 3,
-                               'title' => 'Valor recebido pelo órgão de origem',                           
-                               'size' => 10),
-                       array ( 'nome' => 'processo',
-                               'label' => 'Processo:',
-                               'tipo' => 'texto',
-                               'size' => 30,
-                               'col' => 3,
-                               'title' => 'Número do Processo',
-                               'linha' => 2), 
-                       array ( 'nome' => 'dtPublicacao',
-                               'label' => 'Data da Pub. no DOERJ:',
-                               'tipo' => 'data',
-                               'size' => 20,
-                               'col' => 3,
-                               'title' => 'Data da Publicação no DOERJ.',
-                               'linha' => 2),
-                        array ('linha' => 4,
-                               'nome' => 'obs',
-                               'col' => 12,
-                               'label' => 'Observação:',
-                               'tipo' => 'textarea',
-                               'size' => array(80,5)),
-                       array ( 'nome' => 'idServidor',
-                               'label' => 'idServidor:',
-                               'tipo' => 'hidden',
-                               'padrao' => $idServidorPesquisado,
-                               'size' => 5,
-                               'title' => 'Matrícula',
-                               'linha' => 8)));
+        array('linha' => 1,
+            'nome' => 'orgaoOrigem',
+            'label' => 'Órgão de Origem:',
+            'tipo' => 'texto',
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'title' => 'Órgão de Origem do servidor cedido',
+            'col' => 6,
+            'size' => 50),
+        array('linha' => 1,
+            'nome' => 'matExterna',
+            'label' => 'Matrícula do Órgão de Origem:',
+            'tipo' => 'texto',
+            'title' => 'Matrícula do Órgão de Origem',
+            'col' => 3,
+            'size' => 20),
+        array('linha' => 1,
+            'nome' => 'matsare',
+            'label' => 'Matrícula da Sare:',
+            'tipo' => 'texto',
+            'title' => 'Matrícula da Sare',
+            'col' => 3,
+            'size' => 25),
+        array('linha' => 2,
+            'nome' => 'onus',
+            'label' => 'Ônus para a UENF?:',
+            'tipo' => 'combo',
+            'array' => array(NULL, "Sim", "Não"),
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Cedido com ônus para a UENF?'),
+        array('linha' => 2,
+            'nome' => 'salario',
+            'label' => 'Valor recebido pelo órgão de origem:',
+            'tipo' => 'moeda',
+            'col' => 3,
+            'title' => 'Valor recebido pelo órgão de origem',
+            'size' => 10),
+        array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'col' => 3,
+            'title' => 'Número do Processo',
+            'linha' => 2),
+        array('nome' => 'dtPublicacao',
+            'label' => 'Data da Pub. no DOERJ:',
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Data da Publicação no DOERJ.',
+            'linha' => 2),
+        array('linha' => 4,
+            'nome' => 'obs',
+            'col' => 12,
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 8)));
 
 
     # Log
@@ -164,16 +162,16 @@ if($acesso){
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
-    switch ($fase){
-        case "editar" :            
-        case "excluir" :	
+    switch ($fase) {
+        case "editar" :
+        case "excluir" :
         case "gravar" :
-            
+
             $objeto->$fase($idCedido);
-            break;	
-    }									 	 		
+            break;
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

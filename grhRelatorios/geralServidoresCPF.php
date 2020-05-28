@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbservidor.matricula,
                      tbpessoa.nome,
                      tbdocumentacao.cpf,
@@ -43,10 +42,10 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos e Inativos');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Matrícula','Nome','CPF','Perfil'));
+    $relatorio->set_label(array('IdFuncional', 'Matrícula', 'Nome', 'CPF', 'Perfil'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center","center","left","cener"));
-    
+    $relatorio->set_align(array("center", "center", "left", "cener"));
+
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

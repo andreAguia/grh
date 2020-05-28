@@ -1,42 +1,41 @@
 <?php
+
 /**
  * Dados Gerais do servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','ver');
-    
+    $fase = get('fase', 'ver');
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados funcionais";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-    
+
     # Verifica de onde veio
     $origem = get_session("origem");
-    
+
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -46,14 +45,13 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
-    
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Dados Funcionais');
 
@@ -63,7 +61,7 @@ if($acesso){
                            idPerfil,';
 
     # Somente se for estatutário
-    if (($perfilServidor == 1) OR ($perfilServidor == 4)){
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         $selectEdita .= 'idConcurso,';
     }
 
@@ -82,7 +80,7 @@ if($acesso){
                     tipoAposentadoria,
                     motivoDetalhe
             FROM tbservidor
-            WHERE idServidor = '.$idServidorPesquisado;
+            WHERE idServidor = ' . $idServidorPesquisado;
 
 
     $objeto->set_selectEdita($selectEdita);
@@ -113,33 +111,32 @@ if($acesso){
                                   FROM tbperfil
                               ORDER BY nome');
 
-    array_unshift($perfil, array(NULL,NULL)); 
-    
+    array_unshift($perfil, array(NULL, NULL));
+
     # Pega o tipo do cargo (Adm & Tec ou Professor)
     $tipoCargo = $pessoal->get_cargoTipo($idServidorPesquisado);
-    
+
     # Trata o tipo
-    if($tipoCargo == "Adm/Tec"){
+    if ($tipoCargo == "Adm/Tec") {
         $select = "SELECT idconcurso,
                           concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
                      FROM tbconcurso
                WHERE tipo = 1     
             ORDER BY dtPublicacaoEdital desc";
-        
+
         # Pega os dados da combo concurso
         $concurso = $pessoal->select($select);
         $idConcurso = NULL;
 
-        array_unshift($concurso, array(NULL,NULL)); 
-
-    }else{
+        array_unshift($concurso, array(NULL, NULL));
+    } else {
         # Professor
-        
+
         $vaga = new Vaga();
         $idConcurso = $vaga->get_idConcursoProfessor($idServidorPesquisado);
-        
-        if(!vazio($idConcurso)){
-        
+
+        if (!vazio($idConcurso)) {
+
             $select = "SELECT idconcurso,
                               concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
                          FROM tbconcurso
@@ -147,12 +144,12 @@ if($acesso){
 
             # Pega os dados da combo concurso
             $concurso = $pessoal->select($select);
-        }else{
+        } else {
             $concurso = NULL;
             $idConcurso = NULL;
         }
     }
-    
+
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
                                       concat(tbtipocargo.cargo," - ",tbarea.area," - ",nome)
@@ -160,7 +157,7 @@ if($acesso){
                                               LEFT JOIN tbarea USING (idarea)
                              ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
-    array_unshift($cargo, array(0,NULL)); 
+    array_unshift($cargo, array(0, NULL));
 
     # Pega os dados da combo situação
     $situacao = $pessoal->select('SELECT idsituacao,
@@ -168,159 +165,159 @@ if($acesso){
                                     FROM tbsituacao
                                 ORDER BY situacao');
 
-    array_unshift($situacao, array(NULL,NULL)); 
-    
+    array_unshift($situacao, array(NULL, NULL));
+
     # Pega os dados da combo motivo de Saída do servidor
     $motivo = $pessoal->select('SELECT idmotivo,
                                        motivo
                                   FROM tbmotivo
                               ORDER BY motivo');
 
-    array_unshift($motivo, array(NULL,NULL)); 
+    array_unshift($motivo, array(NULL, NULL));
 
     # Campos para o formulario
-    $campos = array(array( 'linha' => 1,
-                           'nome' => 'idFuncional',
-                           'label' => 'id Funcional:',
-                           'tipo' => 'texto',
-                           'autofocus' => TRUE,
-                           'size' => 10,
-                           'col' => 2,
-                           'title' => 'Número da id funcional do servidor.'),
-                  array ( 'linha' => 1,
-                           'nome' => 'matricula',
-                           'label' => 'Matricula:',
-                           'tipo' => 'texto',
-                           'autofocus' => TRUE,
-                           'size' => 10,
-                           'unique'=> TRUE,
-                           'col' => 2,
-                           'title' => 'Matrícula do servidor.'),
-                   array ('linha' => 1,
-                           'nome' => 'idPerfil',
-                           'label' => 'Perfil:',
-                           'tipo' => 'combo',
-                           'required' => TRUE,
-                           'array' => $perfil,
-                           'title' => 'Perfil do servidor', 
-                           'col' => 3,
-                           'size' => 15));
+    $campos = array(array('linha' => 1,
+            'nome' => 'idFuncional',
+            'label' => 'id Funcional:',
+            'tipo' => 'texto',
+            'autofocus' => TRUE,
+            'size' => 10,
+            'col' => 2,
+            'title' => 'Número da id funcional do servidor.'),
+        array('linha' => 1,
+            'nome' => 'matricula',
+            'label' => 'Matricula:',
+            'tipo' => 'texto',
+            'autofocus' => TRUE,
+            'size' => 10,
+            'unique' => TRUE,
+            'col' => 2,
+            'title' => 'Matrícula do servidor.'),
+        array('linha' => 1,
+            'nome' => 'idPerfil',
+            'label' => 'Perfil:',
+            'tipo' => 'combo',
+            'required' => TRUE,
+            'array' => $perfil,
+            'title' => 'Perfil do servidor',
+            'col' => 3,
+            'size' => 15));
 
     # Somente se for estatutário ou celetista
-    if (($perfilServidor == 1) OR ($perfilServidor == 4)){
-        array_push($campos, array ('linha' => 1,
-                                   'nome' => 'idConcurso',
-                                   'label' => 'Concurso:',
-                                   'tipo' => 'combo',
-                                   'array' => $concurso,
-                                   'title' => 'Concurso',
-                                   'padrao' => $idConcurso,
-                                   'col' => 3,
-                                   'size' => 15));
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+        array_push($campos, array('linha' => 1,
+            'nome' => 'idConcurso',
+            'label' => 'Concurso:',
+            'tipo' => 'combo',
+            'array' => $concurso,
+            'title' => 'Concurso',
+            'padrao' => $idConcurso,
+            'col' => 3,
+            'size' => 15));
     }
-    
+
     # Situação
-    array_push($campos,  array ('linha' => 1,
-                               'nome' => 'situacao',
-                               'label' => 'Situação:',
-                               'tipo' => 'combo',
-                               'array' => $situacao,
-                               'col' => 2,
-                               'title' => 'Situação',                           
-                               'size' => 15));
+    array_push($campos, array('linha' => 1,
+        'nome' => 'situacao',
+        'label' => 'Situação:',
+        'tipo' => 'combo',
+        'array' => $situacao,
+        'col' => 2,
+        'title' => 'Situação',
+        'size' => 15));
 
     # os demais
-    array_push($campos,array ( 'linha' => 2,
-                               'nome' => 'idCargo',
-                               'label' => 'Cargo / Área / Função:',
-                               'tipo' => 'combo',
-                               'array' => $cargo,
-                               'title' => 'Cargo',
-                               'col' => 12,
-                               'size' => 15),
-                       array ( 'linha' => 3,
-                               'nome' => 'dtAdmissao',
-                               'label' => 'Data de Admissão:',
-                               'tipo' => 'data',
-                               'size' => 20,
-                               'col' => 3,
-                               'fieldset' => 'Dados da Admissão',
-                               'required' => TRUE,
-                               'title' => 'Data de Admissão.'),
-                       array ( 'linha' => 3,
-                               'nome' => 'processoAdm',
-                               'label' => 'Processo de Admissão:',
-                               'tipo' => 'processo',
-                               'col' => 3,
-                               'size' => 25,
-                               'title' => 'Número do processo de admissão.'),
-                       array ( 'linha' => 3,
-                               'nome' => 'dtPublicAdm',
-                               'label' => 'Data da Publicação:',
-                               'tipo' => 'data',
-                               'size' => 20,
-                               'col' => 3,
-                               'title' => 'Data da Publicação no DOERJ.'),                       
-                       array ( 'linha' => 3,
-                               'nome' => 'ciGepagAdm',
-                               'label' => 'Documento:',
-                               'tipo' => 'texto',
-                               'size' => 30,
-                               'col' => 3,
-                               'title' => 'Documento informando a admissão.'),
-                      array ( 'linha' => 4,
-                               'nome' => 'dtDemissao',
-                               'label' => 'Data da Saída:',
-                               'tipo' => 'data',
-                               'col' => 3,
-                               'fieldset' => 'Dados da Saída do Servidor',
-                               'size' => 20,
-                               'title' => 'Data da Saída do Servidor.'),
-                       array ( 'linha' => 4,
-                               'nome' => 'processoExo',
-                               'label' => 'Processo:',
-                               'tipo' => 'processo',
-                               'size' => 25,
-                               'col' => 3,
-                               'title' => 'Número do processo.'),
-                       array ( 'linha' => 4,
-                               'nome' => 'dtPublicExo',
-                               'label' => 'Data da Publicação:',
-                               'tipo' => 'data',
-                               'size' => 20,
-                               'col' => 3,
-                               'title' => 'Data da Publicação no DOERJ.'),
-                       array ( 'linha' => 4,
-                               'nome' => 'ciGepagExo',
-                               'label' => 'Documento:',
-                               'tipo' => 'texto',
-                               'size' => 30,
-                               'col' => 3,
-                               'title' => 'Documento informando a saída do servidor'),
-                       array ( 'linha' => 5,
-                               'nome' => 'motivo',
-                               'label' => 'Motivo:',
-                               'tipo' => 'combo',
-                               'array' => $motivo,
-                               'col' => 4,
-                               'size' => 30,
-                               'title' => 'Motivo da Saida do Servidor.'),
-                       array  ('linha' => 5,
-                               'nome' => 'tipoAposentadoria',
-                               'label' => 'Tipo:',
-                               'tipo' => 'combo',
-                               'array' => array("","Integral","Proporcional"),
-                               'title' => 'Tipo de Aposentadoria', 
-                               'col' => 2,
-                               'size' => 15),
-                       array ( 'linha' => 5,
-                               'nome' => 'motivoDetalhe',
-                               'label' => 'Motivo Detalhado:',
-                               'tipo' => 'texto',
-                               'size' => 100,
-                               'col' => 6,
-                               'title' => 'Motivo detalhado da Saida do Servidor.')    
-                                );
+    array_push($campos, array('linha' => 2,
+        'nome' => 'idCargo',
+        'label' => 'Cargo / Área / Função:',
+        'tipo' => 'combo',
+        'array' => $cargo,
+        'title' => 'Cargo',
+        'col' => 12,
+        'size' => 15),
+            array('linha' => 3,
+                'nome' => 'dtAdmissao',
+                'label' => 'Data de Admissão:',
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
+                'fieldset' => 'Dados da Admissão',
+                'required' => TRUE,
+                'title' => 'Data de Admissão.'),
+            array('linha' => 3,
+                'nome' => 'processoAdm',
+                'label' => 'Processo de Admissão:',
+                'tipo' => 'texto',
+                'col' => 3,
+                'size' => 25,
+                'title' => 'Número do processo de admissão.'),
+            array('linha' => 3,
+                'nome' => 'dtPublicAdm',
+                'label' => 'Data da Publicação:',
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
+                'title' => 'Data da Publicação no DOERJ.'),
+            array('linha' => 3,
+                'nome' => 'ciGepagAdm',
+                'label' => 'Documento:',
+                'tipo' => 'texto',
+                'size' => 30,
+                'col' => 3,
+                'title' => 'Documento informando a admissão.'),
+            array('linha' => 4,
+                'nome' => 'dtDemissao',
+                'label' => 'Data da Saída:',
+                'tipo' => 'data',
+                'col' => 3,
+                'fieldset' => 'Dados da Saída do Servidor',
+                'size' => 20,
+                'title' => 'Data da Saída do Servidor.'),
+            array('linha' => 4,
+                'nome' => 'processoExo',
+                'label' => 'Processo:',
+                'tipo' => 'processo',
+                'size' => 25,
+                'col' => 3,
+                'title' => 'Número do processo.'),
+            array('linha' => 4,
+                'nome' => 'dtPublicExo',
+                'label' => 'Data da Publicação:',
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
+                'title' => 'Data da Publicação no DOERJ.'),
+            array('linha' => 4,
+                'nome' => 'ciGepagExo',
+                'label' => 'Documento:',
+                'tipo' => 'texto',
+                'size' => 30,
+                'col' => 3,
+                'title' => 'Documento informando a saída do servidor'),
+            array('linha' => 5,
+                'nome' => 'motivo',
+                'label' => 'Motivo:',
+                'tipo' => 'combo',
+                'array' => $motivo,
+                'col' => 4,
+                'size' => 30,
+                'title' => 'Motivo da Saida do Servidor.'),
+            array('linha' => 5,
+                'nome' => 'tipoAposentadoria',
+                'label' => 'Tipo:',
+                'tipo' => 'combo',
+                'array' => array("", "Integral", "Proporcional"),
+                'title' => 'Tipo de Aposentadoria',
+                'col' => 2,
+                'size' => 15),
+            array('linha' => 5,
+                'nome' => 'motivoDetalhe',
+                'label' => 'Motivo Detalhado:',
+                'tipo' => 'texto',
+                'size' => 100,
+                'col' => 6,
+                'title' => 'Motivo detalhado da Saida do Servidor.')
+    );
 
     $objeto->set_campos($campos);
 
@@ -330,17 +327,17 @@ if($acesso){
 
     ################################################################
 
-    switch ($fase){
-        case "ver" :  
+    switch ($fase) {
+        case "ver" :
         case "editar" :
             $objeto->$fase($idServidorPesquisado);
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado,'servidorFuncionaisExtra.php'); 	
+            $objeto->gravar($idServidorPesquisado, 'servidorFuncionaisExtra.php');
             break;
     }
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

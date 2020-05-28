@@ -5,17 +5,16 @@
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = NULL;              // Servidor logado
+$idServidorPesquisado = NULL;   // Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
 
 # Zera session usadas
-set_session('sessionParametro');	# Zera a session do parâmetro de pesquisa da classe modelo1
-set_session('sessionPaginacao');	# Zera a session de paginação da classe modelo1
+set_session('sessionParametro'); // Zera a session do parâmetro de pesquisa da classe modelo1
+set_session('sessionPaginacao'); // Zera a session de paginação da classe modelo1
 
 # Verifica a origem 
 $origem = get_session("origem");
@@ -25,28 +24,28 @@ $origemId = get_session("origemId");
 $alerta = get_session("alerta");
 
 # Verifica se veio menu grh e registra o acesso no log
-$grh = get('grh',FALSE);
+$grh = get('grh', FALSE);
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','menu');
-    
+    $fase = get('fase', 'menu');
+
     # Pega os parâmetros
-    $parametroAno = post('parametroAno',get_session('parametroAno',date("Y")));
-        
+    $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
+
     # Joga os parâmetros par as sessions    
-    set_session('parametroAno',$parametroAno);
-    
+    set_session('parametroAno', $parametroAno);
+
     # Começa uma nova página
     $page = new Page();
-    if($fase == "uploadFoto"){
+    if ($fase == "uploadFoto") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -54,126 +53,123 @@ if($acesso){
                             });');
     }
     $page->iniciaPagina();
-    
-    if(($fase <> "despacho") AND
-       ($fase <> "despachoChefia")){
-        
+
+    if (($fase <> "despacho") AND
+            ($fase <> "despachoChefia")) {
+
         # Cabeçalho da Página
         AreaServidor::cabecalho();
     }
-    
+
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
-    
-    if($fase == "menu"){ 
-        
+
+    if ($fase == "menu") {
+
         # Registra no log  
-        if($grh){
+        if ($grh) {
             $atividade = "Cadastro do servidor - Menu";
             $data = date("Y-m-d H:i:s");
-            $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+            $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
         }
 
         # Cria um menu
         $menu = new MenuBar();
-        
+
         # Verifica se veio de um alerta
-        if(!is_null($alerta)){
-            $caminhoVolta = 'grh.php?fase=alerta&alerta='.$alerta;
-        }else{
-            if(is_null($origem)){
+        if (!is_null($alerta)) {
+            $caminhoVolta = 'grh.php?fase=alerta&alerta=' . $alerta;
+        } else {
+            if (is_null($origem)) {
                 $caminhoVolta = 'servidor.php';
-            }else{
+            } else {
                 $caminhoVolta = $origem;
             }
         }
-        
-        $linkBotao1 = new Link("Voltar",$caminhoVolta);
+
+        $linkBotao1 = new Link("Voltar", $caminhoVolta);
         $linkBotao1->set_class('button');
         $linkBotao1->set_title('Volta para a página anterior');
         $linkBotao1->set_accessKey('V');
-        $menu->add_link($linkBotao1,"left");
+        $menu->add_link($linkBotao1, "left");
 
-        if(Verifica::acesso($idUsuario,1)){
-            
+        if (Verifica::acesso($idUsuario, 1)) {
+
             # Histórico
-            $linkBotao4 = new Link("Histórico","../../areaServidor/sistema/historico.php?idServidor=".$idServidorPesquisado);
+            $linkBotao4 = new Link("Histórico", "../../areaServidor/sistema/historico.php?idServidor=" . $idServidorPesquisado);
             $linkBotao4->set_class('button success');
-            $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');        
+            $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');
             $linkBotao4->set_accessKey('H');
-            $menu->add_link($linkBotao4,"right");
-            
+            $menu->add_link($linkBotao4, "right");
+
             # Excluir
-            $linkBotao5 = new Link("Excluir","servidorExclusao.php");
+            $linkBotao5 = new Link("Excluir", "servidorExclusao.php");
             $linkBotao5->set_class('alert button');
             $linkBotao5->set_title('Excluir Servidor');
             $linkBotao5->set_accessKey('x');
-            $menu->add_link($linkBotao5,"right");
+            $menu->add_link($linkBotao5, "right");
         }
 
         $menu->show();
-        
-    }elseif($fase == "pasta"){  
-        
+    } elseif ($fase == "pasta") {
+
         # Cria um menu
         $menu = new MenuBar();
-        
-        $linkBotao1 = new Link("Voltar","?");
+
+        $linkBotao1 = new Link("Voltar", "?");
         $linkBotao1->set_class('button');
         $linkBotao1->set_title('Volta para a página anterior');
         $linkBotao1->set_accessKey('V');
-        $menu->add_link($linkBotao1,"left");
-        
+        $menu->add_link($linkBotao1, "left");
+
         $menu->show();
-        
-    }else{
-        if(($fase <> "despacho") AND
-           ($fase <> "despachoChefia")){
+    } else {
+        if (($fase <> "despacho") AND
+                ($fase <> "despachoChefia")) {
             botaoVoltar("?");
         }
     }
-    
-    if(($fase <> "despacho") AND
-       ($fase <> "despachoChefia")){
-        
+
+    if (($fase <> "despacho") AND
+            ($fase <> "despachoChefia")) {
+
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
     }
-    
+
     $grid->fechaColuna();
     $grid->fechaGrid();
-    
-    switch ($fase){	
+
+    switch ($fase) {
         # Exibe o Menu Inicial
         case "menu" :
             # monta o menu do servidor
-            $menu = new MenuServidor($idServidorPesquisado,$idUsuario);
-            
+            $menu = new MenuServidor($idServidorPesquisado, $idUsuario);
+
             # Exibe o rodapé da página
-            Grh::rodape($idUsuario,$idServidorPesquisado,$pessoal->get_idPessoa($idServidorPesquisado));
+            Grh::rodape($idUsuario, $idServidorPesquisado, $pessoal->get_idPessoa($idServidorPesquisado));
             break;
-                
+
         ##################################################################
-            
-            case "timeline" :
-                
+
+        case "timeline" :
+
             # Nome
-            
+
             $grid = new Grid();
             $grid->abreColuna(12);
-            
+
             #tituloTable("Afastamentos Anuais");
-            
             # Formulário de Pesquisa
             $form = new Form('?fase=timeline');
 
             # Cria um array com os anos possíveis
             $anoInicial = 1999;
             $anoAtual = date('Y');
-            $anos = arrayPreenche($anoInicial,$anoAtual+2);
+            $anos = arrayPreenche($anoInicial, $anoAtual + 2);
 
-            $controle = new Input('parametroAno','combo','Ano:',1);
+            $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Ano');
             $controle->set_array($anos);
@@ -184,7 +180,7 @@ if($acesso){
             $form->add_item($controle);
 
             $form->show();
-            
+
             # Define a data de hoje
             $hoje = date("d/m/Y");
 
@@ -248,10 +244,10 @@ if($acesso){
 
             tituloTable("Afastamentos de $parametroAno");
 
-            if($numAtividades > 0){
+            if ($numAtividades > 0) {
 
                 # Carrega a rotina do Google
-                echo '<script type="text/javascript" src="'.PASTA_FUNCOES_GERAIS.'/loader.js"></script>';
+                echo '<script type="text/javascript" src="' . PASTA_FUNCOES_GERAIS . '/loader.js"></script>';
 
                 # Inicia o script
                 echo "<script type='text/javascript'>";
@@ -269,23 +265,23 @@ if($acesso){
                 echo "dataTable.addRows([";
 
                 $separador = '-';
-                
-                foreach ($atividades1 as $row){
+
+                foreach ($atividades1 as $row) {
 
                     # Trata a data inicial
-                    $dt1 = explode($separador,$row['dtInicial']);
-                    $dt2 = explode($separador,$row['dtFinal']);
-                    
-                    echo "['".$row['descricao']."', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
-                    
+                    $dt1 = explode($separador, $row['dtInicial']);
+                    $dt2 = explode($separador, $row['dtFinal']);
+
+                    echo "['" . $row['descricao'] . "', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+
                     $contador--;
-                    
-                    if($contador > 0){
+
+                    if ($contador > 0) {
                         echo ",";
                     }
                 }
                 echo "]);";
-                
+
                 echo "var options = { 
                              timeline: { colorByRowLabel: true},
                              backgroundColor: '#f2f2f2',
@@ -297,18 +293,16 @@ if($acesso){
                 #[ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
                 #[ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
                 #[ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
-                
+
                 $altura = ($numAtividades * 45) + 50;
-                echo '<div id="timeline" style="height: '.$altura.'px; width: 100%;"></div>';
-                
-            }else{
+                echo '<div id="timeline" style="height: ' . $altura . 'px; width: 100%;"></div>';
+            } else {
                 br();
-                p("Não há dados para serem exibidos.","f14","center");
+                p("Não há dados para serem exibidos.", "f14", "center");
             }
-            
+
             #$grid->fechaColuna();
             #$grid->abreColuna(4);
-            
             # Tabela
             $select2 = "(SELECT CONCAT('Férias',' - ',anoExercicio) as descricao,
                               dtInicial,
@@ -334,19 +328,19 @@ if($acesso){
                         WHERE idServidor = $idServidorPesquisado
                           AND YEAR(dtInicial) = $parametroAno  
                      ORDER BY dtInicial) order by 2";
-            
+
             # Acessa o banco
             $atividades2 = $pessoal->select($select2);
-            
+
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($atividades2);
-            $tabela->set_label(array("Afastamento","Inicial","Dias","Final"));
-            $tabela->set_align(array("left","center"));
+            $tabela->set_label(array("Afastamento", "Inicial", "Dias", "Final"));
+            $tabela->set_align(array("left", "center"));
             #$tabela->set_totalRegistro(FALSE);
-            $tabela->set_funcao(array(NULL,"date_to_php",NULL,"date_to_php"));
+            $tabela->set_funcao(array(NULL, "date_to_php", NULL, "date_to_php"));
             $tabela->set_titulo("Tabela");
-            
+
             #$numAtividades = $pessoal->count($select2);
             #if($numAtividades > 0){
             #    $tabela->show();
@@ -355,269 +349,268 @@ if($acesso){
             #    br();
             #    p("Não há dados para serem exibidos.","f14","center");
             #}
-            
+
             $grid->fechaColuna();
-            $grid->fechaGrid();    
+            $grid->fechaGrid();
             break;
-        
-        ##################################################################
-            
-            case "exibeFoto" :
-                $grid = new Grid("center");
-                $grid->abreColuna(6);
-                
-                $fotoLargura = 300;
-                $fotoAltura = 400;
 
-                # Define a pasta
-                $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
-                
-                # Verifica qual arquivo foi gravado
-                $arquivo = PASTA_FOTOS."$idPessoa.jpg";
-                
-                $painel = new Callout("secondary","center");
-                $painel->abre();
-                
-                # Monta o Menu
-                $menu = new MenuGrafico(1);
-                
-                # Verifica se tem pasta desse servidor
-                if(file_exists($arquivo)){
-                    $botao = new BotaoGrafico("foto");
-                    $botao->set_url('?');
-                    $botao->set_imagem($arquivo,$fotoLargura,$fotoAltura);
-                    $botao->set_title('Foto do Servidor');
-                    $menu->add_item($botao);
-                }else{
-                    $botao = new BotaoGrafico("foto");
-                    $botao->set_url('?');
-                    $botao->set_imagem(PASTA_FIGURAS.'foto.png',$fotoLargura,$fotoAltura);
-                    $botao->set_title('Servidor sem foto cadastrada');
-                    $menu->add_item($botao);
-                }
-
-                $menu->show();
-                
-                br(2);
-                
-                $link = new Link("Alterar Foto","?fase=uploadFoto");
-                $link->set_id("alteraFoto");
-                $link->show();
-                
-                $painel->fecha();
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;
-                
         ##################################################################
-            
-            case "uploadFoto" :
-                
-                $grid = new Grid("center");
-                $grid->abreColuna(6);
-                
-                # Gera a área de upload
-                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+
+        case "exibeFoto" :
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+
+            $fotoLargura = 300;
+            $fotoAltura = 400;
+
+            # Define a pasta
+            $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+
+            # Verifica qual arquivo foi gravado
+            $arquivo = PASTA_FOTOS . "$idPessoa.jpg";
+
+            $painel = new Callout("secondary", "center");
+            $painel->abre();
+
+            # Monta o Menu
+            $menu = new MenuGrafico(1);
+
+            # Verifica se tem pasta desse servidor
+            if (file_exists($arquivo)) {
+                $botao = new BotaoGrafico("foto");
+                $botao->set_url('?');
+                $botao->set_imagem($arquivo, $fotoLargura, $fotoAltura);
+                $botao->set_title('Foto do Servidor');
+                $menu->add_item($botao);
+            } else {
+                $botao = new BotaoGrafico("foto");
+                $botao->set_url('?');
+                $botao->set_imagem(PASTA_FIGURAS . 'foto.png', $fotoLargura, $fotoAltura);
+                $botao->set_title('Servidor sem foto cadastrada');
+                $menu->add_item($botao);
+            }
+
+            $menu->show();
+
+            br(2);
+
+            $link = new Link("Alterar Foto", "?fase=uploadFoto");
+            $link->set_id("alteraFoto");
+            $link->show();
+
+            $painel->fecha();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ##################################################################
+
+        case "uploadFoto" :
+
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+
+            # Gera a área de upload
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='foto'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
-                                
-                $pasta = PASTA_FOTOS;
-                
-                # Extensões possíveis
-                $extensoes = array("jpg");
-                
-                # Pega os valores do php.ini
-                $postMax = limpa_numero(ini_get('post_max_size'));
-                $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
-                $limite = menorValor(array($postMax,$uploadMax));
-                
-                $texto = "Extensões Permitidas:";
-                                
-                foreach($extensoes as $pp){
-                    $texto .= " $pp";
-                }
-                
-                #$texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
-                
-                br();
-                p($texto,"f14","center");
-                
-                $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
-                     
-                if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))){
-                    $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta,$idPessoa);
-                    # Salva e verifica se houve erro
-                    if($upload->salvar()){
-                        
-                        # Registra log
-                        $Objetolog = new Intra();
-                        $data = date("Y-m-d H:i:s");
-                        $atividade = "Alterou a foto do servidor ".$pessoal->get_nome($idServidorPesquisado);
-                        $Objetolog->registraLog($idUsuario,$data,$atividade,NULL,NULL,8,$idServidorPesquisado);
 
-                        # Volta para o menu
-                        loadPage("?");
-                    }else{
-                        loadPage("?fase=uploadFoto");
-                    }
-                }
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;
-                
-        ##################################################################
-            
-            case "despacho" :
-                # Limita a tela
-                $grid = new Grid("center");
-                $grid->abreColuna(10);
-                br(3);
+            $pasta = PASTA_FOTOS;
 
-                # Título
-                titulo("Despacho Para Abertura de Processo no Protocolo");
-                $painel = new Callout();
-                $painel->abre();
+            # Extensões possíveis
+            $extensoes = array("jpg");
 
-                # Monta o formulário
-                $form = new Form('../grhRelatorios/despacho.Protocolo.php');
+            # Pega os valores do php.ini
+            $postMax = limpa_numero(ini_get('post_max_size'));
+            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+            $limite = menorValor(array($postMax, $uploadMax));
 
-                # folha da publicação no processo 
-                $controle = new Input('assunto','texto','Assunto:',1);
-                $controle->set_size(200);
-                $controle->set_linha(1);
-                $controle->set_col(12);
-                $controle->set_autofocus(TRUE);
-                $controle->set_title('O assunto do processo.');
-                $form->add_item($controle);
+            $texto = "Extensões Permitidas:";
 
-                # submit
-                $controle = new Input('imprimir','submit');
-                $controle->set_valor('Imprimir');
-                $controle->set_linha(5);
-                $controle->set_col(2);
-                $form->add_item($controle);
+            foreach ($extensoes as $pp) {
+                $texto .= " $pp";
+            }
 
-                $form->show();
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;     
-        ##################################################################
-            
-            case "despachoChefia" :
-                # Limita a tela
-                $grid = new Grid("center");
-                $grid->abreColuna(10);
-                br(3);
-                
-                # Pega os valores
-                $idServidorChefia = $pessoal->get_chefiaImediata($idServidorPesquisado);
-                $nomeChefia = $pessoal->get_nome($idServidorChefia);
-                $chefiaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+            #$texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
 
-                # Título
-                titulo("Despacho para Chefia - Resultado Setor - Ato Servidor");
-                $painel = new Callout();
-                $painel->abre();
+            br();
+            p($texto, "f14", "center");
 
-                # Monta o formulário
-                $form = new Form('../grhRelatorios/despacho.AtoReitor.php');
+            $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
-                # Chefia
-                $controle = new Input('chefia','texto','Chefia:',1);
-                $controle->set_size(200);
-                $controle->set_linha(1);
-                $controle->set_col(12);
-                $controle->set_valor($nomeChefia);
-                $controle->set_autofocus(TRUE);
-                $controle->set_title('A chefia imediata.');
-                $form->add_item($controle);
-                
-                # Cargo da Chefia
-                $controle = new Input('cargo','texto','Cargo da Chefia:',1);
-                $controle->set_size(200);
-                $controle->set_linha(1);
-                $controle->set_col(12);
-                $controle->set_valor($chefiaImediataDescricao);
-                $controle->set_title('O cargo da chefia imediata.');
-                $form->add_item($controle);
-                
-                # Cargo da Chefia
-                $controle = new Input('ato','texto','Ato de:',1);
-                $controle->set_size(200);
-                $controle->set_linha(1);
-                $controle->set_col(12);
-                $controle->set_title('O Ato ao qual o despacho se refere.');
-                $form->add_item($controle);
+            if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))) {
+                $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta, $idPessoa);
+                # Salva e verifica se houve erro
+                if ($upload->salvar()) {
 
-                # submit
-                $controle = new Input('imprimir','submit');
-                $controle->set_valor('Imprimir');
-                $controle->set_linha(5);
-                $controle->set_col(2);
-                $form->add_item($controle);
-
-                $form->show();
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;
-            
-            ##################################################################
-            
-            case "afastamentoGeral" :
-                
-                # Registra no log  
-                if($grh){
-                    $atividade = "Cadastro do servidor - Afastamento geral";
+                    # Registra log
+                    $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+                    $atividade = "Alterou a foto do servidor " . $pessoal->get_nome($idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, NULL, 8, $idServidorPesquisado);
+
+                    # Volta para o menu
+                    loadPage("?");
+                } else {
+                    loadPage("?fase=uploadFoto");
                 }
-                
-                $grid = new Grid("center");
-                $grid->abreColuna(12);
-                
-                # Formulário de Pesquisa
-                $form = new Form('?fase=afastamentoGeral');
+            }
 
-                # Cria um array com os anos possíveis
-                $anoInicial = 1999;
-                $anoAtual = date('Y');
-                $anos = arrayPreenche($anoInicial,$anoAtual+2);
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
 
-                $controle = new Input('parametroAno','combo','Ano:',1);
-                $controle->set_size(8);
-                $controle->set_title('Filtra por Ano');
-                $controle->set_array($anos);
-                $controle->set_valor($parametroAno);
-                $controle->set_onChange('formPadrao.submit();');
-                $controle->set_linha(1);
-                $controle->set_col(3);
-                $form->add_item($controle);
+        ##################################################################
 
-                $form->show();
-            
-                $afast = new Afastamento();
-                $afast->set_idServidor($idServidorPesquisado);
-                $afast->set_ano($parametroAno);
-                $afast->exibeTabela();
-                #$afast->exibeTimeline();
-                
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-                break;
-            
-            ##################################################################
+        case "despacho" :
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
 
+            # Título
+            titulo("Despacho Para Abertura de Processo no Protocolo");
+            $painel = new Callout();
+            $painel->abre();
+
+            # Monta o formulário
+            $form = new Form('../grhRelatorios/despacho.Protocolo.php');
+
+            # folha da publicação no processo 
+            $controle = new Input('assunto', 'texto', 'Assunto:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_autofocus(TRUE);
+            $controle->set_title('O assunto do processo.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('imprimir', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+        ##################################################################
+
+        case "despachoChefia" :
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(10);
+            br(3);
+
+            # Pega os valores
+            $idServidorChefia = $pessoal->get_chefiaImediata($idServidorPesquisado);
+            $nomeChefia = $pessoal->get_nome($idServidorChefia);
+            $chefiaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
+            # Título
+            titulo("Despacho para Chefia - Resultado Setor - Ato Servidor");
+            $painel = new Callout();
+            $painel->abre();
+
+            # Monta o formulário
+            $form = new Form('../grhRelatorios/despacho.AtoReitor.php');
+
+            # Chefia
+            $controle = new Input('chefia', 'texto', 'Chefia:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_valor($nomeChefia);
+            $controle->set_autofocus(TRUE);
+            $controle->set_title('A chefia imediata.');
+            $form->add_item($controle);
+
+            # Cargo da Chefia
+            $controle = new Input('cargo', 'texto', 'Cargo da Chefia:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_valor($chefiaImediataDescricao);
+            $controle->set_title('O cargo da chefia imediata.');
+            $form->add_item($controle);
+
+            # Cargo da Chefia
+            $controle = new Input('ato', 'texto', 'Ato de:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_title('O Ato ao qual o despacho se refere.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('imprimir', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ##################################################################
+
+        case "afastamentoGeral" :
+
+            # Registra no log  
+            if ($grh) {
+                $atividade = "Cadastro do servidor - Afastamento geral";
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+            }
+
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=afastamentoGeral');
+
+            # Cria um array com os anos possíveis
+            $anoInicial = 1999;
+            $anoAtual = date('Y');
+            $anos = arrayPreenche($anoInicial, $anoAtual + 2);
+
+            $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano');
+            $controle->set_array($anos);
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $afast = new Afastamento();
+            $afast->set_idServidor($idServidorPesquisado);
+            $afast->set_ano($parametroAno);
+            $afast->exibeTabela();
+            #$afast->exibeTimeline();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ##################################################################
     }
 
     $grid->fechaColuna();
     $grid->fechaGrid();
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

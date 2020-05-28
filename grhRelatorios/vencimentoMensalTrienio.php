@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Relatório Mensal de Vencimento de Triênio
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,23 +14,22 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $relatorioMes = post('mes',date('m'));
-    $relatorioAno = post('ano',date('Y'));
+    $relatorioMes = post('mes', date('m'));
+    $relatorioAno = post('ano', date('Y'));
 
     ######
-    
+
     $select = '(SELECT DISTINCT tbservidor.idFuncional,  
                       tbpessoa.nome,
                       tbservidor.dtadmissao,
@@ -42,8 +41,8 @@ if($acesso)
                 WHERE tbservidor.situacao = 1
                   AND idPerfil = 1              
              GROUP BY tbservidor.idServidor
-               HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = "'.$relatorioAno.'"
-                  AND month(DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR))="'.$relatorioMes.'" 
+               HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = "' . $relatorioAno . '"
+                  AND month(DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR))="' . $relatorioMes . '" 
              ORDER BY tbpessoa.nome)
              UNION 
                 (SELECT DISTINCT tbservidor.idFuncional,  
@@ -57,50 +56,50 @@ if($acesso)
                 WHERE tbservidor.situacao = 1
                   AND idPerfil = 1
                   AND tbtrienio.dtInicial is NULL
-                  AND YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = "'.$relatorioAno.'"
-                  AND month(DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR))= "'.$relatorioMes.'"               
+                  AND YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = "' . $relatorioAno . '"
+                  AND month(DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR))= "' . $relatorioMes . '"               
              GROUP BY tbservidor.idServidor           
              ORDER BY tbpessoa.nome) 
-             ORDER BY 2';		
+             ORDER BY 2';
 
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Vencimento de Triênios');
-    $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes).' / '.$relatorioAno);
+    $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes) . ' / ' . $relatorioAno);
     $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
 
-    $relatorio->set_label(array('IdFuncional','Nome','Admissão','Último Percentual','Último Triênio','Próximo Triênio'));
-    $relatorio->set_width(array(10,50,10,10,10,10));
-    $relatorio->set_align(array('center','left'));
-    $relatorio->set_funcao(array(NULL,NULL,"date_to_php",NULL,"date_to_php","date_to_php"));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio'));
+    $relatorio->set_width(array(10, 50, 10, 10, 10, 10));
+    $relatorio->set_align(array('center', 'left'));
+    $relatorio->set_funcao(array(NULL, NULL, "date_to_php", NULL, "date_to_php", "date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(FALSE);
     $relatorio->set_formCampos(array(
-                  array ('nome' => 'ano',
-                         'label' => 'Ano:',
-                         'tipo' => 'texto',
-                         'size' => 4,
-                         'title' => 'Ano',
-                         'onChange' => 'formPadrao.submit();',
-                         'padrao' => $relatorioAno,
-                         'col' => 3,
-                         'linha' => 1), 
-                  array ('nome' => 'mes',
-                         'label' => 'Mês',
-                         'tipo' => 'combo',
-                         'array' => $mes,
-                         'size' => 10,
-                         'padrao' => $relatorioMes,
-                         'title' => 'Mês do Ano.',
-                         'onChange' => 'formPadrao.submit();',
-                         'col' => 3,
-                         'linha' => 1)));
+        array('nome' => 'ano',
+            'label' => 'Ano:',
+            'tipo' => 'texto',
+            'size' => 4,
+            'title' => 'Ano',
+            'onChange' => 'formPadrao.submit();',
+            'padrao' => $relatorioAno,
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'mes',
+            'label' => 'Mês',
+            'tipo' => 'combo',
+            'array' => $mes,
+            'size' => 10,
+            'padrao' => $relatorioMes,
+            'title' => 'Mês do Ano.',
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1)));
 
-    $relatorio->set_formFocus('ano');		
+    $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');
     $relatorio->show();
 

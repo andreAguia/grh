@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,19 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idServidor,
+
+    $select = 'SELECT tbservidor.idServidor,
                     tbpessoa.nome,
                     tbcomissao.dtNom,
                     tbcomissao.dtPublicNom,
@@ -42,12 +42,12 @@ if($acesso){
            ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
     $result = $pessoal->select($select);
-    
-    $label = array('Id / Matrícula','Nome','Nomeação','Publicação','Nome do Cargo','Perfil','Cargo');
-    $align = array("center","left","center","center","left","center");
-    $function = array("idMatricula",NULL,"date_to_php","date_to_php","descricaoComissao");
-    $classe = array(NULL,NULL,NULL,NULL,NULL,"Pessoal");
-    $metodo = array(NULL,NULL,NULL,NULL,NULL,"get_perfil");
+
+    $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Publicação', 'Nome do Cargo', 'Perfil', 'Cargo');
+    $align = array("center", "left", "center", "center", "left", "center");
+    $function = array("idMatricula", NULL, "date_to_php", "date_to_php", "descricaoComissao");
+    $classe = array(NULL, NULL, NULL, NULL, NULL, "Pessoal");
+    $metodo = array(NULL, NULL, NULL, NULL, NULL, "get_perfil");
 
     # Monta a tabela
     $relatorio = new Relatorio();

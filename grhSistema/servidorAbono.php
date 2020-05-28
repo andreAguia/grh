@@ -1,42 +1,41 @@
 <?php
+
 /**
  * Controle do Abono de Permanencia
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL;	# Servidor Editado na pesquisa do sistema do GRH
-
+$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso){    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh',FALSE);
-    if($grh){
+    $grh = get('grh', FALSE);
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Cadastro de abono permanência";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario,$data,$atividade,NULL,NULL,7,$idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
     }
-	
+
     # Verifica a fase do programa
-    $fase = get('fase','listar');
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -46,10 +45,9 @@ if($acesso){
     $objeto = new Modelo();
 
     ################################################################
-
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado); 
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Abono Permanência');
@@ -65,7 +63,7 @@ if($acesso){
                                      idServidor,
                                      idAbono
                                 FROM tbabono
-                               WHERE idServidor = '.$idServidorPesquisado.'
+                               WHERE idServidor = ' . $idServidorPesquisado . '
                             ORDER BY dtPublicacao desc');
 
     # select do edita
@@ -75,7 +73,7 @@ if($acesso){
                                      data,
                                      idServidor
                                 FROM tbabono
-                               WHERE idAbono = '.$id);
+                               WHERE idAbono = ' . $id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -84,10 +82,10 @@ if($acesso){
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Processo","Publicaçao","Status","Data"));
+    $objeto->set_label(array("Processo", "Publicaçao", "Status", "Data"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array (NULL,"date_to_php",NULL,"date_to_php"));
+    $objeto->set_funcao(array(NULL, "date_to_php", NULL, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -102,76 +100,75 @@ if($acesso){
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array( array ( 'nome' => 'processo',
-                                       'label' => 'Processo:',
-                                       'tipo' => 'processo',
-                                       'size' => 30,
-                                       'required' => TRUE,
-                                       'autofocus' => TRUE,
-                                       'title' => 'O numero do processo.',
-                                       'col' => 3,
-                                       'linha' => 1),
-                               array ( 'nome' => 'dtPublicacao',
-                                       'label' => 'Publicaçao:',
-                                       'tipo' => 'data',
-                                       'size' => 10,
-                                       'col' => 3,
-                                       'required' => TRUE,
-                                       'title' => 'A data da publicaçao no DOERJ.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'status',
-                                       'label' => 'Status:',
-                                       'tipo' => 'combo',
-                                       'array' => array(array(NULL,""),array(1,"Deferido"),array(2,"Indeferido")),
-                                       'size' => 20,                               
-                                       'title' => 'Se o processo foi deferido ou indeferido',
-                                       'col' => 3,
-                                       'required' => TRUE,
-                                       'linha' => 1), 
-                               array ( 'nome' => 'data',
-                                       'label' => 'Data:',
-                                       'tipo' => 'data',
-                                       'size' => 10,
-                                       'col' => 3,
-                                       'title' => 'A data em que o servidor passou a receber.',
-                                       'linha' => 1),
-                               array ( 'nome' => 'idServidor',
-                                       'label' => 'idServidor',
-                                       'tipo' => 'hidden',
-                                       'padrao' => $idServidorPesquisado,
-                                       'size' => 5,
-                                       'title' => 'Matrícula',
-                                       'linha' => 6)));
-    
+    $objeto->set_campos(array(array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'required' => TRUE,
+            'autofocus' => TRUE,
+            'title' => 'O numero do processo.',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'dtPublicacao',
+            'label' => 'Publicaçao:',
+            'tipo' => 'data',
+            'size' => 10,
+            'col' => 3,
+            'required' => TRUE,
+            'title' => 'A data da publicaçao no DOERJ.',
+            'linha' => 1),
+        array('nome' => 'status',
+            'label' => 'Status:',
+            'tipo' => 'combo',
+            'array' => array(array(NULL, ""), array(1, "Deferido"), array(2, "Indeferido")),
+            'size' => 20,
+            'title' => 'Se o processo foi deferido ou indeferido',
+            'col' => 3,
+            'required' => TRUE,
+            'linha' => 1),
+        array('nome' => 'data',
+            'label' => 'Data:',
+            'tipo' => 'data',
+            'size' => 10,
+            'col' => 3,
+            'title' => 'A data em que o servidor passou a receber.',
+            'linha' => 1),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 6)));
+
     # Alterar Senha
     $botao1 = new Button("Site da GRH");
     $botao1->set_target('_blank');
     $botao1->set_title("Pagina no site da GRH sobre Abono Permanencia");
     $botao1->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/abono-de-permanencia/");
-    
+
     $objeto->set_botaoListarExtra(array($botao1));
-    
+
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
 
-    switch ($fase){
+    switch ($fase) {
         case "" :
         case "listar" :
-        case "editar" :			
+        case "editar" :
         case "excluir" :
-            $objeto->$fase($id); 
+            $objeto->$fase($id);
             break;
 
         case "gravar" :
-            $objeto->gravar($id,"servidorAbonoExtra.php");              
+            $objeto->gravar($id, "servidorAbonoExtra.php");
             break;
-
-    }									 	 		
+    }
 
     $page->terminaPagina();
-}else{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }

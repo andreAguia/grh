@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -6,7 +7,6 @@
  *   
  * By Alat
  */
-
 # Servidor logado 
 $idUsuario = NULL;
 
@@ -14,20 +14,19 @@ $idUsuario = NULL;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,2);
+$acesso = Verifica::acesso($idUsuario, 2);
 
-if($acesso)
-{    
+if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
 
     # Começa uma nova página
-    $page = new Page();			
+    $page = new Page();
     $page->iniciaPagina();
 
     ######
-    
-    $select ='SELECT tbservidor.idFuncional,
+
+    $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      CONCAT(tbtipocargo.cargo," - ",tbcargo.nome),
                      CONCAT(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
@@ -50,12 +49,12 @@ if($acesso)
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Estatutários');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional','Nome','Cargo','Lotação','Perfil','Admissão','Situação'));
-    $relatorio->set_width(array(10,30,0,30,10,10,10));
-    $relatorio->set_align(array("center","left","left","left"));
-    $relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
-    $relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    $relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Situação'));
+    $relatorio->set_width(array(10, 30, 0, 30, 10, 10, 10));
+    $relatorio->set_align(array("center", "left", "left", "left"));
+    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, NULL, NULL, "Pessoal"));
+    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, NULL, NULL, "get_Situacao"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

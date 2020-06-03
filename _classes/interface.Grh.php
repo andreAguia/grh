@@ -1,19 +1,21 @@
 <?php
 
-class Grh {
+class Grh
+{
+
     /**
      * Encapsula as rotivas de interface do sistema de pessoal
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      */
 ######################################################################################################################    
-
     /**
      * Método cabecalho
      * 
      * Exibe o cabecalho
      */
-    public static function cabecalho($titulo = NULL) {
+    public static function cabecalho($titulo = NULL)
+    {
         # tag do cabeçalho
         echo '<header>';
 
@@ -40,8 +42,8 @@ class Grh {
     }
 
 ######################################################################################################################
-
-    public static function menuServidor($idServidor, $idUsuario) {
+    public static function menuServidor($idServidor, $idUsuario)
+    {
 
         /**
          * método menuServidor
@@ -61,7 +63,8 @@ class Grh {
         if ($perfil == 10) {          // Se for bolsista
             $grid2->abreColuna(12, 6);
             $itensMenu = 4;
-        } else {
+        }
+        else {
             $grid2->abreColuna(12, 4);
             $itensMenu = 3;
         }
@@ -125,7 +128,8 @@ class Grh {
             $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Histórico de Cessões do Servidor');
             $menu->add_item($botao);
-        } elseif ($perfil == 2) { // se for cedido
+        }
+        elseif ($perfil == 2) { // se for cedido
             $botao = new BotaoGrafico();
             $botao->set_label('Cessão');
             $botao->set_url('servidorCessaoCedido.php');
@@ -171,7 +175,8 @@ class Grh {
         if ($perfil == 10) {          // Se for bolsista
             $grid2->abreColuna(12, 6);
             $itensMenu = 4;
-        } else {
+        }
+        else {
             $grid2->abreColuna(12, 4);
             $itensMenu = 3;
         }
@@ -465,7 +470,8 @@ class Grh {
                 $botao->set_imagem($arquivo, 'Foto do Servidor', 200, 150);
                 $botao->set_title('Foto do Servidor');
                 $botao->show();
-            } else {
+            }
+            else {
                 $foto = new Imagem(PASTA_FIGURAS . 'foto.png', 'Foto do Servidor', 150, 100);
                 $foto->set_id('foto');
                 $foto->show();
@@ -489,12 +495,12 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * método quadroLicencaPremio
      * Exibe um quadro informativo da licença Prêmio de um servidor
      */
-    public static function quadroLicencaPremio($idServidor) {
+    public static function quadroLicencaPremio($idServidor)
+    {
 
         # Pega os dados para o alerta
         $licenca = new LicencaPremio();
@@ -524,12 +530,12 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * método quadroVagasCargoComissao
      * Exibe um quadro informativo das vagas dos Cargos em Comissão
      */
-    public static function quadroVagasCargoComissao() {
+    public static function quadroVagasCargoComissao()
+    {
         $select = 'SELECT descricao,
                           simbolo,
                           valsal,
@@ -550,7 +556,8 @@ class Grh {
         if (count($result) == 0) {
             $p = new P('Nenhum item encontrado !!', 'center');
             $p->show();
-        } else {
+        }
+        else {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
@@ -560,30 +567,30 @@ class Grh {
             $tabela->set_funcao(array(NULL, NULL, "formataMoeda"));
             $tabela->set_classe(array(NULL, NULL, NULL, NULL, 'CargoComissao', 'CargoComissao', 'CargoComissao', 'CargoComissao'));
             $tabela->set_metodo(array(NULL, NULL, NULL, NULL, 'get_numServidoresNomeados', 'get_numServidoresProTempore', 'get_numServidoresDesignados', 'get_vagasDisponiveis'));
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 7,
-                    'valor' => 0,
+            $tabela->set_formatacaoCondicional(array(array('coluna'   => 7,
+                    'valor'    => 0,
                     'operador' => '<',
-                    'id' => "comissaoVagasNegativas"),
-                array('coluna' => 7,
-                    'valor' => 0,
+                    'id'       => "comissaoVagasNegativas"),
+                array('coluna'   => 7,
+                    'valor'    => 0,
                     'operador' => '=',
-                    'id' => "comissaoSemVagas"),
-                array('coluna' => 7,
-                    'valor' => 0,
+                    'id'       => "comissaoSemVagas"),
+                array('coluna'   => 7,
+                    'valor'    => 0,
                     'operador' => '>',
-                    'id' => "comissaoSemVagas")));
+                    'id'       => "comissaoSemVagas")));
 
             $tabela->show();
         }
     }
 
 ######################################################################################################################
-
     /**
      * método exibeOcorênciaServidor
      * Div que ressalta situação do servidor (licença, férias, etc)
      */
-    public static function exibeOcorênciaServidor($idServidor) {
+    public static function exibeOcorênciaServidor($idServidor)
+    {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
@@ -678,7 +685,8 @@ class Grh {
             # Verifica se tem os dois ou se tem um
             if (($qtdMensagem > 0) AND ($numVinculos > 1)) {
                 $coluna = 6;
-            } else {
+            }
+            else {
                 $coluna = 12;
             }
 
@@ -756,14 +764,14 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * método listaDadosServidor
      * Exibe os dados principais do servidor logado
      * 
      * @param    string $idServidor -> idServidor do servidor
      */
-    public static function listaDadosServidor($idServidor) {
+    public static function listaDadosServidor($idServidor)
+    {
 
         # Limita o tamanho da tela
         $grid = new Grid();
@@ -777,17 +785,16 @@ class Grh {
         $div->abre();
 
         $select = 'SELECT tbservidor.idFuncional,
-                             tbservidor.matricula,
-                             tbpessoa.nome,
-                             tbservidor.idServidor,
-                             tbservidor.idServidor,
-                             tbservidor.dtAdmissao,
-                             tbservidor.idServidor,
-                             tbservidor.idServidor,
-                             tbservidor.dtDemissao
-                        FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
-                                           LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
-                       WHERE idServidor = ' . $idServidor;
+                          tbpessoa.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.dtAdmissao,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.dtDemissao
+                     FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                     LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                    WHERE idServidor = ' . $idServidor;
 
         $conteudo = $servidor->select($select, TRUE);
 
@@ -795,21 +802,22 @@ class Grh {
         $situacao = $servidor->get_situacao($idServidor);
 
         if ($situacao == "Ativo") {
-            $label = array("Id Funcional", "Matrícula", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação");
-            $function = array(NULL, "dv", NULL, NULL, NULL, "date_to_php");
-        } else {
-            $label = array("Id Funcional", "Matrícula", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação", "Saída");
-            $function = array(NULL, "dv", NULL, NULL, NULL, "date_to_php", NULL, NULL, "date_to_php");
+            $label = array("Id Funcional", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação");
+            $function = array(null, null, null, null, "date_to_php");
+        }
+        else {
+            $label = array("Id Funcional", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação", "Saída");
+            $function = array(null, null, null, null, "date_to_php", null, null, "date_to_php");
         }
         #$align = array("center");
 
-        $classe = array(NULL, NULL, NULL, "pessoal", "pessoal", NULL, "pessoal", "pessoal");
-        $metodo = array(NULL, NULL, NULL, "get_Perfil", "get_Cargo", NULL, "get_Lotacao", "get_Situacao");
+        $classe = array(null, null, "pessoal", "pessoal", null, "pessoal", "pessoal");
+        $metodo = array(null, null, "get_Perfil", "get_Cargo", null, "get_Lotacao", "get_Situacao");
 
-        $formatacaoCondicional = array(array('coluna' => 0,
-                'valor' => $servidor->get_idFuncional($idServidor),
+        $formatacaoCondicional = array(array('coluna'   => 0,
+                'valor'    => $servidor->get_idFuncional($idServidor),
                 'operador' => '=',
-                'id' => 'listaDados'));
+                'id'       => 'listaDados'));
 
         # Monta a tabela
         $tabela = new Tabela();
@@ -831,7 +839,6 @@ class Grh {
         $div->abre();
 
         $select = 'SELECT tbservidor.idFuncional,
-                             tbservidor.matricula,
                              tbpessoa.nome,
                              tbservidor.idServidor
                         FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
@@ -842,15 +849,15 @@ class Grh {
 
         # Pega a situação
         $situacao = $servidor->get_situacao($idServidor);
-        $label = array("Id Funcional", "Matrícula", "Servidor", "Perfil");
-        $function = array(NULL, "dv", NULL, NULL);
-        $classe = array(NULL, NULL, NULL, "pessoal");
-        $metodo = array(NULL, NULL, NULL, "get_Perfil");
+        $label = array("Id Funcional", "Servidor", "Perfil");
+        $function = array(NULL, NULL, NULL);
+        $classe = array(NULL, NULL, "pessoal");
+        $metodo = array(NULL, NULL, "get_Perfil");
 
-        $formatacaoCondicional = array(array('coluna' => 0,
-                'valor' => $servidor->get_idFuncional($idServidor),
+        $formatacaoCondicional = array(array('coluna'   => 0,
+                'valor'    => $servidor->get_idFuncional($idServidor),
                 'operador' => '=',
-                'id' => 'listaDados'));
+                'id'       => 'listaDados'));
 
         # Monta a tabela
         $tabela = new Tabela();
@@ -881,7 +888,8 @@ class Grh {
         if ($situacao == "Ativo") {
             $label = array("Cargo", "Admissão", "Lotação", "Situação");
             $function = array(NULL, "date_to_php");
-        } else {
+        }
+        else {
             $label = array("Cargo", "Admissão", "Lotação", "Situação", "Saída");
             $function = array(NULL, "date_to_php", NULL, NULL, "date_to_php");
         }
@@ -889,10 +897,10 @@ class Grh {
         $classe = array("pessoal", NULL, "pessoal", "pessoal");
         $metodo = array("get_Cargo", NULL, "get_Lotacao", "get_Situacao");
 
-        $formatacaoCondicional = array(array('coluna' => 3,
-                'valor' => $situacao,
+        $formatacaoCondicional = array(array('coluna'   => 3,
+                'valor'    => $situacao,
                 'operador' => '=',
-                'id' => 'listaDados'));
+                'id'       => 'listaDados'));
 
         # Monta a tabela
         $tabela = new Tabela();
@@ -913,14 +921,14 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * método listaFolgasTre
      * Exibe os dados de Folgas do TRE
      * 
      * @param    string $idServidor -> idServidor do servidor
      */
-    public static function listaFolgasTre($idServidor) {
+    public static function listaFolgasTre($idServidor)
+    {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -948,10 +956,10 @@ class Grh {
         $tabela->set_cabecalho($label, $width, $align);
         $tabela->set_totalRegistro(FALSE);
         $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 0,
-                'valor' => 'Folgas Pendentes',
+            array('coluna'   => 0,
+                'valor'    => 'Folgas Pendentes',
                 'operador' => '=',
-                'id' => 'trePendente')));
+                'id'       => 'trePendente')));
 
         $tabela->show();
 
@@ -959,7 +967,6 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * método listaDadosServidorRelatório
      * Exibe os dados principais do servidor para relatório
@@ -968,7 +975,8 @@ class Grh {
      * @param string $titulo     NULL O título do relatório 
      * @param string $cabecalho  TRUE Se exibirá o início do relatório (menu, cabecalho, etc) 
      */
-    public static function listaDadosServidorRelatorio($idServidor, $titulo = NULL, $cabecalho = TRUE) {
+    public static function listaDadosServidorRelatorio($idServidor, $titulo = NULL, $cabecalho = TRUE)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1017,14 +1025,14 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * método rodape
      * Exibe oo rodapé
      * 
      * @param    string $idUsuario -> Usuário logado
      */
-    public static function rodape($idUsuario, $idServidor = NULL, $idPessoa = NULL) {
+    public static function rodape($idUsuario, $idServidor = NULL, $idPessoa = NULL)
+    {
 
         # Exibe faixa azul
         $grid = new Grid();
@@ -1059,14 +1067,14 @@ class Grh {
     }
 
 ######################################################################################################################
-
     /**
      * Método exibe get_numServidoresAtivosTipoCargo
      * 
      * Exibe o número de servidores ativos por tipo de cargo e o link para exibí-los
      * Usado na tabela da rotina de cadastro de cargo efetivo
      */
-    public function get_numServidoresAtivosTipoCargo($id) {
+    public function get_numServidoresAtivosTipoCargo($id)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1084,14 +1092,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresAtivosTipoCargo
      * 
      * Exibe o número de servidores ativos por tipo de cargo e o link para exibí-los
      * Usado na tabela da rotina de cadastro de cargo efetivo
      */
-    public function get_numServidoresInativosTipoCargo($id) {
+    public function get_numServidoresInativosTipoCargo($id)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1108,14 +1116,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresCargoComissao
      * 
      * Exibe o número de servidores ativos por de cargo em comissão e o link para exibí-los
      * Usado na tabela da rotina de cadastro de cargo em comissão
      */
-    public function get_numServidoresCargoComissao($id) {
+    public function get_numServidoresCargoComissao($id)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1132,14 +1140,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresAtivosPerfil
      * 
      * Exibe o número de servidores ativos por perfil e o link para exibí-los
      * Usado na tabela da rotina de cadastro de perfil
      */
-    public function get_numServidoresAtivosPerfil($id) {
+    public function get_numServidoresAtivosPerfil($id)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1156,14 +1164,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresInativosPerfil
      * 
      * Exibe o número de servidores inativos por perfil e o link para exibí-los
      * Usado na tabela da rotina de cadastro de perfil
      */
-    public function get_numServidoresInativosPerfil($id) {
+    public function get_numServidoresInativosPerfil($id)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1180,14 +1188,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresAtivosLotacao
      * 
      * Exibe o número de servidores ativos por lotação e o link para exibí-los
      * Usado na tabela da rotina de cadastro de lotação
      */
-    public function get_numServidoresAtivosLotacao($idLotacao) {
+    public function get_numServidoresAtivosLotacao($idLotacao)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1204,14 +1212,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresInativosLotacao
      * 
      * Exibe o número de servidores inativos por lotação e o link para exibí-los
      * Usado na tabela da rotina de cadastro de lotação
      */
-    public function get_numServidoresInativosLotacao($idLotacao) {
+    public function get_numServidoresInativosLotacao($idLotacao)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1228,14 +1236,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresAtivosConcurso
      * 
      * Exibe o número de servidores ativos por concurso e o link para exibí-los
      * Usado na tabela da rotina de cadastro de concurso
      */
-    public function get_numServidoresAtivosConcurso($idConcurso) {
+    public function get_numServidoresAtivosConcurso($idConcurso)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -1252,14 +1260,14 @@ class Grh {
     }
 
     ###########################################################
-
     /**
      * Método exibe get_numServidoresInativosConcurso
      * 
      * Exibe o número de servidores inativos por concurso e o link para exibí-los
      * Usado na tabela da rotina de cadastro de concurso
      */
-    public function get_numServidoresInativosConcurso($idConcurso) {
+    public function get_numServidoresInativosConcurso($idConcurso)
+    {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();

@@ -24,6 +24,11 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
+    # Pega os parâmetros dos relatórios
+    $lotacao = get('lotacao', post('lotacao'));
+
+    ######
+
     # Pega o sisgen
     $sisgen = get('sisgen', 1);
 
@@ -56,9 +61,20 @@ if ($acesso) {
              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                AND tbservidor.situacao = 1
                AND tbrecadastramento.dataAtualizacao is NOT NULL
-               AND tbrecadastramento.sisgen = ' . $sisgen . '
-               ORDER BY lotacao, tbpessoa.nome';
+               AND tbrecadastramento.sisgen = '.$sisgen;
 
+    # lotacao
+    if (!is_null($lotacao)) {
+        # Verifica se o que veio é numérico
+        if (is_numeric($lotacao)) {
+            $select .= ' AND (tblotacao.idlotacao =  "' . $lotacao . '")';
+        } else { # senão é uma diretoria genérica
+            $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
+        }
+    }
+
+    $select .= ' ORDER BY lotacao, tbpessoa.nome';
+    
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
@@ -74,7 +90,28 @@ if ($acesso) {
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+    
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+    array_unshift($listaLotacao, array('*', '-- Selecione a Lotação --'));
+
+    $relatorio->set_formCampos(array(
+        array('nome' => 'lotacao',
+            'label' => 'Lotação:',
+            'tipo' => 'combo',
+            'array' => $listaLotacao,
+            'size' => 30,
+            'padrao' => $lotacao,
+            'title' => 'Mês',
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1)));
+
+    $relatorio->set_formFocus('lotacao');
+    $relatorio->set_formLink('?sisgen='.$sisgen);
     $relatorio->show();
 
     $page->terminaPagina();

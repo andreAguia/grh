@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -37,7 +37,7 @@ if ($acesso) {
     $folgasPendentes = $folgasConcedidas - $folgasFruidas;
 
     $select = "SELECT YEAR(data) as ano,
-                       IFNULL(sum(folgas),0)
+                       IFnull(sum(folgas),0)
                   FROM tbtrabalhotre
                  WHERE idServidor = $idServidorPesquisado
                 GROUP BY ano ORDER BY ano";
@@ -45,12 +45,12 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_subtitulo('Folgas Concedidas');
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
     $relatorio->set_label(array('Ano', 'Folgas Concedidas'));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
@@ -63,7 +63,7 @@ if ($acesso) {
 
 
     $select = "SELECT YEAR(data) as ano,
-                       IFNULL(sum(dias),0)
+                       IFnull(sum(dias),0)
                   FROM tbfolga
                  WHERE idServidor = $idServidorPesquisado
                 GROUP BY ano ORDER BY ano";
@@ -71,12 +71,12 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_subtitulo('Folgas Fruidas');
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
     $relatorio->set_label(array('Ano', 'Folgas Fruidas'));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
@@ -91,12 +91,12 @@ if ($acesso) {
         Array('Folgas Fruídas', $folgasFruidas));
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_subtitulo('Resumo Geral');
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
     $relatorio->set_label(array("Folgas", "Dias"));
     $relatorio->set_align(array('left'));
     $relatorio->set_conteudo($folgas);
@@ -119,9 +119,9 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(TRUE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(true);
     #$relatorio->set_titulo('Relatório Mensal de Folgas Fruídas do TRE');
     #$relatorio->set_tituloLinha2($relatorioAno);
     #$relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
@@ -129,9 +129,9 @@ if ($acesso) {
     $relatorio->set_label(array('Data Inicial', 'Dias', 'Data Final'));
     #$relatorio->set_width(array(10,30,20,10,10,10));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php", NULL, "date_to_php"));
-    #$relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));  
+    $relatorio->set_funcao(array("date_to_php", null, "date_to_php"));
+    #$relatorio->set_classe(array(null,null,"pessoal"));
+    #$relatorio->set_metodo(array(null,null,"get_lotacao"));  
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);

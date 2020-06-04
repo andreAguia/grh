@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -51,9 +51,9 @@ if ($acesso) {
     $relatorio->set_width(array(10, 25, 20, 15, 10, 10, 10));
     $relatorio->set_align(array("center", "left"));
 
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", "date_to_php", "formataMoeda"));
-    $relatorio->set_classe(array(NULL, 'Pessoal'));
-    $relatorio->set_metodo(array(NULL, 'get_nome'));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php", "formataMoeda"));
+    $relatorio->set_classe(array(null, 'Pessoal'));
+    $relatorio->set_metodo(array(null, 'get_nome'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(9);
@@ -76,7 +76,7 @@ if ($acesso) {
     $relatorio->set_colunaSomatorio(6);
     $relatorio->set_funcaoSomatorio('formataMoeda');
     $relatorio->set_textoSomatorio('Total das Diárias:');
-    $relatorio->set_exibeSomatorioGeral(FALSE);
+    $relatorio->set_exibeSomatorioGeral(false);
 
     $relatorio->show();
 

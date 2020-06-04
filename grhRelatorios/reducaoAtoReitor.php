@@ -8,8 +8,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -38,7 +38,7 @@ if ($acesso) {
     # do Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, FALSE);
+    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
 

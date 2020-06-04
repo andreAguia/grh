@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -50,10 +50,10 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Admissão', 'Saída', 'Motivo'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'left'));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, "date_to_php", "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_cargo"));
+    $relatorio->set_classe(array(null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

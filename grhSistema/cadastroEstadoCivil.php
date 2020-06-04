@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de estado civil";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -124,8 +124,8 @@ if ($acesso) {
             'nome' => 'estciv',
             'label' => 'Estado Civil:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 6,
             'size' => 40),
         array('linha' => 2,

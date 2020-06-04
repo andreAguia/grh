@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -41,7 +41,7 @@ if ($acesso) {
                                 JOIN tbcargo USING (idCargo)
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE year(dtAdmissao) <= "' . $parametroAno . '"
-                 AND (dtDemissao IS NULL OR year(dtDemissao) >= "' . $parametroAno . '")
+                 AND (dtDemissao IS null OR year(dtDemissao) >= "' . $parametroAno . '")
                  AND tbtipocargo.tipo = "Professor"
                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
             ORDER BY tbpessoa.nome';
@@ -55,10 +55,10 @@ if ($acesso) {
     $relatorio->set_label(array('Nome', 'CPF', 'Lotação', 'Email', 'Nome da Mãe', 'Admissão', 'Saída'));
     $relatorio->set_width(array(20, 10, 20, 10, 20, 10, 10));
     $relatorio->set_align(array("left", "left", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "date_to_php", "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_lotacao", "get_emails"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_lotacao", "get_emails"));
 
     $relatorio->set_conteudo($result);
 

@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -51,25 +51,25 @@ if ($acesso) {
              ORDER BY 1 desc";
 
     $result = $pessoal->select($select);
-    #array_push($result,array(NULL,NULL,$publica + $privada,NULL,NULL,NULL,NULL,NULL,NULL));
-    #array_push($result,array(NULL,NULL,$publica + $privada,NULL,NULL,NULL,NULL,NULL,NULL));
+    #array_push($result,array(null,null,$publica + $privada,null,null,null,null,null,null));
+    #array_push($result,array(null,null,$publica + $privada,null,null,null,null,null,null));
 
     $relatorio = new Relatorio();
     #$relatorio->set_subtitulo('Tempo de Serviço Averbado');
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(TRUE);
-    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_totalRegistro(false);
     $relatorio->set_label(array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"));
     $relatorio->set_colunaSomatorio(2);
     $relatorio->set_textoSomatorio("Total de Dias Averbados:");
-    $relatorio->set_exibeSomatorioGeral(FALSE);
+    $relatorio->set_exibeSomatorioGeral(false);
     $relatorio->set_align(array('center', 'center', 'center', 'left'));
-    $relatorio->set_funcao(array("date_to_php", "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Tempo de Serviço Averbado");
     $relatorio->show();

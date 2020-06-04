@@ -7,8 +7,8 @@ class LicencaSemVencimentos {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    private $linkEditar = NULL;
-    private $atual = TRUE;
+    private $linkEditar = null;
+    private $atual = true;
 
     ###########################################################
 
@@ -39,7 +39,7 @@ class LicencaSemVencimentos {
                         WHERE idLicencaSemVencimentos = ' . $idLicencaSemVencimentos;
 
             $pessoal = new Pessoal();
-            $row = $pessoal->select($select, FALSE);
+            $row = $pessoal->select($select, false);
 
             # Retorno
             return $row;
@@ -65,7 +65,7 @@ class LicencaSemVencimentos {
         $dtTermino = $dados["dtTermino"];
         $dtSolicitacao = $dados["dtSolicitacao"];
 
-        $retorno = NULL;
+        $retorno = null;
 
         # Se estiver vazio a data de publicação -> Em aberto
         if (vazio($dtPublicacao)) {
@@ -318,7 +318,7 @@ class LicencaSemVencimentos {
         /**
          * Informa a rotina de edição (se houver)
          *
-         * @param $linkEditar string NULL O link da rotina de edição
+         * @param $linkEditar string null O link da rotina de edição
          *
          * @syntax $input->set_linkEditar($linkEditar);
          */
@@ -331,7 +331,7 @@ class LicencaSemVencimentos {
         /**
          * Informa o nome da licença de forma compacta para ser exibida na tabela
          *
-         * @param $idTpLicenca integer NULL O id do tipo de licença
+         * @param $idTpLicenca integer null O id do tipo de licença
          *
          * @syntax $input->get_nomeLicenca($idTpLicenca);
          */
@@ -392,10 +392,10 @@ class LicencaSemVencimentos {
         $tabela->set_label(array("Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));
         $tabela->set_width(array(10, 5, 20, 12, 25, 18, 5));
         $tabela->set_align(array("center", "center", "left", "left", "left", "left"));
-        #$tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+        #$tabela->set_funcao(array(null,null,null,null,"date_to_php"));
 
-        $tabela->set_classe(array("LicencaSemVencimentos", NULL, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-        $tabela->set_metodo(array("exibeStatus", NULL, "get_nome", "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
+        $tabela->set_classe(array("LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
+        $tabela->set_metodo(array("exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
 
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => 'Em Aberto',
@@ -464,8 +464,8 @@ class LicencaSemVencimentos {
         $relatorio->set_label(array("Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));
         $relatorio->set_align(array("center", "center", "left", "left", "left", "left"));
 
-        $relatorio->set_classe(array("LicencaSemVencimentos", NULL, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-        $relatorio->set_metodo(array("exibeStatus", NULL, "get_nome", "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
+        $relatorio->set_classe(array("LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
+        $relatorio->set_metodo(array("exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
 
         $relatorio->set_conteudo($result);
 

@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de licenças prêmio";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Inicia a classe de licença
@@ -105,12 +105,12 @@ if ($acesso) {
         $objeto->set_label(array("Data da Publicação", "Período Aquisitivo<br/>Início", "Período Aquisitivo<br/>Fim", "Inicio", "Dias", "Término"));
         #$objeto->set_width(array(25,10,25,25));	
         $objeto->set_align(array("center"));
-        $objeto->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', NULL, 'date_to_php'));
-        #$objeto->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
-        #$objeto->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
-        $objeto->set_numeroOrdem(TRUE);
+        $objeto->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
+        #$objeto->set_classe(array(null,null,null,'LicencaPremio'));
+        #$objeto->set_metodo(array(null,null,null,'get_publicacao'));
+        $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
-        $objeto->set_exibeTempoPesquisa(FALSE);
+        $objeto->set_exibeTempoPesquisa(false);
 
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
@@ -150,13 +150,13 @@ if ($acesso) {
 
         $publicacao = $pessoal->select($select);
 
-        array_unshift($publicacao, array(NULL, ' -- Selecione uma Publicação')); # Adiciona o valor de nulo
+        array_unshift($publicacao, array(null, ' -- Selecione uma Publicação')); # Adiciona o valor de nulo
         # Campos para o formulario
         $objeto->set_campos(array(array('nome' => 'dtInicial',
                 'label' => 'Data Inicial:',
                 'tipo' => 'data',
-                'required' => TRUE,
-                'autofocus' => TRUE,
+                'required' => true,
+                'autofocus' => true,
                 'size' => 20,
                 'col' => 3,
                 'title' => 'Data do início.',
@@ -166,7 +166,7 @@ if ($acesso) {
                 'tipo' => 'combo',
                 'array' => $array = array(90, 60, 30),
                 'size' => 5,
-                'required' => TRUE,
+                'required' => true,
                 'title' => 'Número de dias.',
                 'col' => 2,
                 'linha' => 1),
@@ -196,14 +196,14 @@ if ($acesso) {
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-        $imagem = new Imagem(PASTA_FIGURAS . 'ajuda.png', NULL, 15, 15);
+        $imagem = new Imagem(PASTA_FIGURAS . 'ajuda.png', null, 15, 15);
         $botaoHelp = new Button();
         $botaoHelp->set_imagem($imagem);
         $botaoHelp->set_title("Ajuda");
         $botaoHelp->set_url("../grhRelatorios/servidorLicenca.php");
         $botaoHelp->set_target("_blank");
 
-        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Relatório de Licença Prêmio");
@@ -231,24 +231,24 @@ if ($acesso) {
                 # inicia o array das rotinas extras
                 $rotinaExtra = array();
                 $rotinaExtraParametro = array();
-                $mensagem = NULL;
+                $mensagem = null;
 
                 # Exibe alerta se $diasDisponíveis for negativo no geral
                 if ($diasDisponiveis < 0) {
                     $mensagem .= "Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
-                    $objeto->set_botaoIncluir(FALSE);
+                    $objeto->set_botaoIncluir(false);
                 }
 
                 # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
                 if ($diasDisponiveis < 1) {
                     $mensagem .= "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma $nome.<br/>";
-                    $objeto->set_botaoIncluir(FALSE);
+                    $objeto->set_botaoIncluir(false);
                 }
 
                 # Servidor sem processo cadastrado
                 if (is_null($numProcesso)) {
                     $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
-                    $objeto->set_botaoIncluir(FALSE);
+                    $objeto->set_botaoIncluir(false);
                 }
 
                 if (!is_null($mensagem)) {

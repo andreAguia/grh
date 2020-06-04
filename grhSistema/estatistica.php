@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -25,12 +25,12 @@ if ($acesso) {
     $grafico = get('grafico');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de estatística";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Pega o ano
@@ -190,7 +190,7 @@ if ($acesso) {
             # Chart
             $chart = new Chart("ColumnChart", $dados);
             $chart->set_idDiv("idade");
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_label(array("Descrição", "Idade"));
             $chart->show();
 
@@ -211,7 +211,7 @@ if ($acesso) {
             $chart = new Chart("ColumnChart", $servidores);
             $chart->set_idDiv("faixa");
             $chart->set_label(array("Idade", "Servidores"));
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_idDiv("cadaIdade");
             $chart->show();
 
@@ -258,7 +258,7 @@ if ($acesso) {
             $controle->set_array($result);
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_linha(1);
             $controle->set_col(6);
             $form->add_item($controle);
@@ -325,7 +325,7 @@ if ($acesso) {
             $arrayGrafico = array();
 
             # Valores anteriores
-            $escolaridadeAnterior = NULL;
+            $escolaridadeAnterior = null;
 
             # inicia as variáveis
             $masc = 0;
@@ -379,7 +379,7 @@ if ($acesso) {
             $chart->set_label(array("Faixa", "Feminino", "Masculino"));
             $chart->set_tituloEixoY("Servidores");
             $chart->set_tituloEixoX("Faixa Etária");
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->show();
             br();
 
@@ -390,7 +390,7 @@ if ($acesso) {
             $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -482,7 +482,7 @@ if ($acesso) {
             #tituloTable("por Cargo");
             $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv("cargo");
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_tamanho($largura = 300, $altura = 300);
             $chart->show();
 
@@ -502,7 +502,7 @@ if ($acesso) {
             tituloTable("Administrativos e Técnicos");
             $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv("administrativos");
-            #$chart->set_legend(FALSE);
+            #$chart->set_legend(false);
             $chart->show();
 
             # Tabela
@@ -522,7 +522,7 @@ if ($acesso) {
             $arrayEscolaridade = array();
 
             # Valores anteriores
-            $escolaridadeAnterior = NULL;
+            $escolaridadeAnterior = null;
 
             # inicia as variáveis
             $masc = 0;
@@ -574,7 +574,7 @@ if ($acesso) {
             $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -598,7 +598,7 @@ if ($acesso) {
             tituloTable("Professores");
             $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv("professores");
-            #$chart->set_legend(FALSE);
+            #$chart->set_legend(false);
             $chart->show();
 
             # Soma a coluna do count
@@ -621,7 +621,7 @@ if ($acesso) {
             $arrayEscolaridade = array();
 
             # Valores anteriores
-            $escolaridadeAnterior = NULL;
+            $escolaridadeAnterior = null;
 
             # inicia as variáveis
             $masc = 0;
@@ -673,7 +673,7 @@ if ($acesso) {
             $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -736,7 +736,7 @@ if ($acesso) {
             $arrayEscolaridade = array();
 
             # Valores anteriores
-            $escolaridadeAnterior = NULL;
+            $escolaridadeAnterior = null;
 
             # inicia as variáveis
             $masc = 0;
@@ -788,7 +788,7 @@ if ($acesso) {
             $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -825,7 +825,7 @@ if ($acesso) {
                 $arrayEscolaridade = array();
 
                 # Valores anteriores
-                $escolaridadeAnterior = NULL;
+                $escolaridadeAnterior = null;
 
                 # inicia as variáveis
                 $masc = 0;
@@ -877,7 +877,7 @@ if ($acesso) {
                 $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
                 $tabela->set_width(array(55, 15, 15, 15));
                 $tabela->set_align(array("left", "center"));
-                $tabela->set_totalRegistro(FALSE);
+                $tabela->set_totalRegistro(false);
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                         'valor' => "Total",
                         'operador' => '=',
@@ -940,7 +940,7 @@ if ($acesso) {
             #tituloTable($item[0]);
             $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv('porLotacao');
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_tamanho($largura = 500, $altura = 500);
             $chart->show();
 
@@ -968,7 +968,7 @@ if ($acesso) {
             $arrayEscolaridade = array();
 
             # Valores anteriores
-            $escolaridadeAnterior = NULL;
+            $escolaridadeAnterior = null;
 
             # inicia as variáveis
             $masc = 0;
@@ -1020,7 +1020,7 @@ if ($acesso) {
             $tabela->set_label(array("Lotação", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -1055,7 +1055,7 @@ if ($acesso) {
             $arrayEscolaridade = array();
 
             # Valores anteriores
-            $escolaridadeAnterior = NULL;
+            $escolaridadeAnterior = null;
 
             # inicia as variáveis
             $masc = 0;
@@ -1107,7 +1107,7 @@ if ($acesso) {
             $tabela->set_label(array("Lotação", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -1157,7 +1157,7 @@ if ($acesso) {
 
             # Trata o parametro do perfil transformanto * em nulo
             if ($parametroPerfil == "*") {
-                $idPerfil = NULL;
+                $idPerfil = null;
             } else {
                 $idPerfil = $parametroPerfil;
             }
@@ -1193,7 +1193,7 @@ if ($acesso) {
             $tabela->set_titulo("Número de Servidores por Diretoria / Cargo");
             $tabela->set_conteudo($resultado);
             $tabela->set_label($label);
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("left", "center"));
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
@@ -1256,7 +1256,7 @@ if ($acesso) {
                 tituloTable($item[0]);
                 $chart = new Chart("Pie", $servidores);
                 $chart->set_idDiv($item[0]);
-                $chart->set_legend(FALSE);
+                $chart->set_legend(false);
                 $chart->show();
 
                 # Soma a coluna do count
@@ -1464,7 +1464,7 @@ if ($acesso) {
             $tabela->set_label(array("Escolaridade", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -1601,7 +1601,7 @@ if ($acesso) {
                                 FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
                                WHERE YEAR(dtadmissao) <= "' . $ano . '" 
-                                 AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "' . $ano . '"))
+                                 AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
                                  AND tbservidor.idPerfil <> 10    
                             GROUP BY tbtipocargo.tipo
                             ORDER BY 2 DESC ';
@@ -1643,7 +1643,7 @@ if ($acesso) {
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE YEAR(dtadmissao) <= "' . $ano . '" 
-                                 AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "' . $ano . '"))
+                                 AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
                                  AND tbservidor.idPerfil <> 10
                                  AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo
@@ -1672,7 +1672,7 @@ if ($acesso) {
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
                                WHERE YEAR(dtadmissao) <= "' . $ano . '" 
-                                 AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "' . $ano . '"))
+                                 AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
                                  AND tbservidor.idPerfil <> 10    
                                  AND tbtipocargo.tipo = "Professor"
                             GROUP BY tbtipocargo.cargo
@@ -1711,7 +1711,7 @@ if ($acesso) {
                                     FROM tbservidor JOIN tbcargo USING (idCargo)
                                                     JOIN tbtipocargo USING (idTipoCargo)
                                    WHERE YEAR(dtadmissao) <= "' . $ano . '" 
-                                     AND ((dtdemissao IS NULL) OR (YEAR(dtdemissao) >= "' . $ano . '"))
+                                     AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
                                      AND tbtipocargo.cargo = "' . $valor . '"
                                      AND tbservidor.idPerfil <> 10
                                 GROUP BY tbcargo.nome
@@ -1769,7 +1769,7 @@ if ($acesso) {
             $controle->set_array($result);
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_linha(1);
             $controle->set_col(6);
             $form->add_item($controle);
@@ -1795,7 +1795,7 @@ if ($acesso) {
 
             ########
             # Monta o select
-            $select = 'SELECT CONCAT(IFNULL(tblotacao.dir,"")," - ",IFNULL(tblotacao.ger,"")) lotacao,                          
+            $select = 'SELECT CONCAT(IFnull(tblotacao.dir,"")," - ",IFnull(tblotacao.ger,"")) lotacao,                          
                           CONCAT(tbtipocargo.sigla," - ",tbcargo.nome) efetivo, 
                           count(tbservidor.idServidor) as jj
                     FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)

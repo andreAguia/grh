@@ -28,7 +28,7 @@ if (!$erro) {
         # Grava a nova lotação
         $campos = array("idServidor", "data", "lotacao", "motivo");
         $valor = array($idServidor, $dtInicial, $lotacaoCedidos, "Cedido a(o) " . $orgao);
-        $pessoal->gravar($campos, $valor, NULL, "tbhistlot", "idHistLot", FALSE);
+        $pessoal->gravar($campos, $valor, null, "tbhistlot", "idHistLot", false);
     }
 }
 

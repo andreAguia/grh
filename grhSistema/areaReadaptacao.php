@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,18 +23,18 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
 
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de readaptação";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaPremio', FALSE);
+    set_session('areaPremio', false);
 
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
@@ -87,7 +87,7 @@ if ($acesso) {
             $menu1->add_link($botaoInserir, "right");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/readaptacao.geral.php");
@@ -114,7 +114,7 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             # Origem    
@@ -143,7 +143,7 @@ if ($acesso) {
 
             ###
             # Pega o time inicial
-            $time_start = microtime(TRUE);
+            $time_start = microtime(true);
 
             # Pega os dados
             $select = "SELECT idFuncional,
@@ -200,8 +200,8 @@ if ($acesso) {
             $tabela->set_align(array("center", "left", "center", "center", "center", "center", "center", "left", "center", "center", "left"));
             #$tabela->set_funcao(array("idMatricula"));
 
-            $tabela->set_classe(array(NULL, NULL, NULL, NULL, "Readaptacao", NULL, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-            $tabela->set_metodo(array(NULL, NULL, NULL, NULL, "exibeStatus", NULL, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
+            $tabela->set_classe(array(null, null, null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
+            $tabela->set_metodo(array(null, null, null, null, "exibeStatus", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
             $tabela->set_titulo("Readaptação");
 
@@ -225,7 +225,7 @@ if ($acesso) {
             $tabela->show();
 
             # Pega o time final
-            $time_end = microtime(TRUE);
+            $time_end = microtime(true);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
 
@@ -298,7 +298,7 @@ if ($acesso) {
             $controle->set_size(100);
             $controle->set_title('Nome, matrícula ou ID:');
             $controle->set_valor($parametroNome);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(12);
@@ -332,8 +332,8 @@ if ($acesso) {
             $tabela->set_conteudo($conteudo);
             $tabela->set_label(array("IdFuncional", "Servidor", "Cargo", "Lotação"));
             $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_classe(array(NULL, NULL, "Pessoal", "Pessoal"));
-            $tabela->set_metodo(array(NULL, NULL, "get_cargo", "get_lotacao"));
+            $tabela->set_classe(array(null, null, "Pessoal", "Pessoal"));
+            $tabela->set_metodo(array(null, null, "get_cargo", "get_lotacao"));
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=insere&id=');
             $tabela->set_nomeColunaEditar("Inserir");

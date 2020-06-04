@@ -10,40 +10,40 @@
 class ListaServidores {
     # Título
 
-    private $nomeLista = NULL;  # Nome da lista que aparece no título
+    private $nomeLista = null;  # Nome da lista que aparece no título
     # Parâmetros de Pesquisa
-    private $matNomeId = NULL;  # Busca por matricula nome ou id em um só campos
-    private $cargo = NULL;
-    private $cargoComissao = NULL;
-    private $perfil = NULL;
-    private $concurso = NULL;
-    private $situacao = NULL;
+    private $matNomeId = null;  # Busca por matricula nome ou id em um só campos
+    private $cargo = null;
+    private $cargoComissao = null;
+    private $perfil = null;
+    private $concurso = null;
+    private $situacao = null;
     private $situacaoSinal = "=";
-    private $lotacao = NULL;
+    private $lotacao = null;
 
     # Parâmetro de edição
-    private $permiteEditar = TRUE;          # Indica se terá botão para acessar informções dos servidores
+    private $permiteEditar = true;          # Indica se terá botão para acessar informções dos servidores
     # Outros
     private $totReg = 0;        # Total de registros encontrados
-    private $detalhado = TRUE;  # Exibe detalhes 
+    private $detalhado = true;  # Exibe detalhes 
     # Parâmetros da paginação da listagem
-    private $paginacao = FALSE;   # Flag que indica se terá ou não paginação na lista
+    private $paginacao = false;   # Flag que indica se terá ou não paginação na lista
     private $paginacaoItens = 15;  # Quantidade de registros por página. 
     private $paginacaoInicial = 0;  # A paginação inicial
     private $pagina = 1;   # Página atual
     private $quantidadeMaxLinks = 10;           # Quantidade Máximo de links de paginação a ser exibido na página
-    private $texto = NULL;                      # texto a ser exibido no rodapé indicando quantas páginas e a página atual
-    private $itemFinal = NULL;
-    private $itemInicial = NULL;
+    private $texto = null;                      # texto a ser exibido no rodapé indicando quantas páginas e a página atual
+    private $itemFinal = null;
+    private $itemInicial = null;
 
     # Ordenação
     private $ordenacao = "3 asc";               # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordanação
     # Parâmetros do relatório
-    private $select = NULL;     // Guarda o select para ser recuperado pela rotina de relatório
-    private $selectPaginacao = NULL;  // Guarda o texto acrescido ao select quando se tem paginação
-    private $titulo = NULL;     // guarda o título do relatório que é montado a partir da pesquisa
-    private $subTitulo = NULL;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
+    private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
+    private $selectPaginacao = null;  // Guarda o texto acrescido ao select quando se tem paginação
+    private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
+    private $subTitulo = null;  // guarda o subTítulo do relatório que é montado a partir da pesquisa
 
     ###########################################################
 
@@ -115,9 +115,9 @@ class ListaServidores {
      */
     private function prepara() {
         # Pega o time inicial
-        #$this->time_start = microtime(TRUE);
+        #$this->time_start = microtime(true);
         # Inicia variáveis
-        $tipo = NULL;
+        $tipo = null;
 
         # Pega o tipo do concurso quando se solicita servidores de um concurso específico
         if (!is_null($this->concurso)) {
@@ -224,7 +224,7 @@ class ListaServidores {
 
         # cargo em comissão
         if (!is_null($this->cargoComissao)) {
-            $select .= ' AND tbcomissao.dtExo is NULL AND tbtipocomissao.idTipoComissao = "' . $this->cargoComissao . '"';
+            $select .= ' AND tbcomissao.dtExo is null AND tbtipocomissao.idTipoComissao = "' . $this->cargoComissao . '"';
             $this->subTitulo .= "Cargo em comissão: " . $servidor->get_nomeCargoComissao($this->cargoComissao) . "<br/>";
         }
 
@@ -270,12 +270,12 @@ class ListaServidores {
         }
 
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($select, TRUE);
+        $conteudo = $servidor->select($select, true);
         $totalRegistros = count($conteudo);
 
         # Verifica a necessidade de paginação pelo número de registro
         if ($this->paginacaoItens >= $totalRegistros) {
-            $this->paginacao = FALSE;
+            $this->paginacao = false;
         }
 
         # Verifica se página Inicial que veio por session deverá ser atualizada para 0
@@ -284,7 +284,7 @@ class ListaServidores {
         }
 
         # Calculos da paginaçao
-        $this->texto = NULL;
+        $this->texto = null;
         if ($this->paginacao) {
             # Calcula o total de páginas
             $totalPaginas = ceil($totalRegistros / $this->paginacaoItens);
@@ -393,7 +393,7 @@ class ListaServidores {
     public function showTabela() {
 
         # Pega o time inicial
-        $time_start = microtime(TRUE);
+        $time_start = microtime(true);
 
         # Executa rotina interna
         $this->prepara();
@@ -417,15 +417,15 @@ class ListaServidores {
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center", "center", "left", "left", "left");
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $function = array("trataNulo", "dv", NULL, NULL, NULL, NULL, "date_to_php", $situacao);
+            $function = array("trataNulo", "dv", null, null, null, null, "date_to_php", $situacao);
         } else {
-            $function = array("trataNulo", "dv", NULL, NULL, NULL, NULL, "date_to_php", "date_to_php", $situacao);
+            $function = array("trataNulo", "dv", null, null, null, null, "date_to_php", "date_to_php", $situacao);
         }
-        $classe = array(NULL, NULL, NULL, "pessoal", "pessoal", "pessoal");
-        $metodo = array(NULL, NULL, NULL, "get_cargo", "get_lotacao", "get_perfil");
+        $classe = array(null, null, null, "pessoal", "pessoal", "pessoal");
+        $metodo = array(null, null, null, "get_cargo", "get_lotacao", "get_perfil");
 
         # Executa o select juntando o selct e o select de paginacao
-        $conteudo = $servidor->select($this->select . $this->selectPaginacao, TRUE);
+        $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);
 
         if ($this->totReg == 0) {
             tituloTable($this->nomeLista);
@@ -446,7 +446,7 @@ class ListaServidores {
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_funcao($function);
-            $tabela->set_totalRegistro(TRUE);
+            $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
             if ($this->permiteEditar) {
                 $tabela->set_editar('servidor.php?fase=editar&id=');
@@ -463,7 +463,7 @@ class ListaServidores {
             $tabela->show();
 
             # Pega o time final
-            $time_end = microtime(TRUE);
+            $time_end = microtime(true);
 
             # Calcula e exibe o tempo
             $time = $time_end - $time_start;
@@ -487,7 +487,7 @@ class ListaServidores {
         $servidor = new Pessoal();
         #echo $this->select;
         # Pega a quantidade de itens da lista
-        $conteudo = $servidor->select($this->select, TRUE);
+        $conteudo = $servidor->select($this->select, true);
 
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
             $label = array("IDFuncional", "Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
@@ -497,12 +497,12 @@ class ListaServidores {
         #$width = array(5,5,15,16,15,8,8,5,5);
         $align = array("center", "center", "left", "left", "left");
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $function = array(NULL, "dv", NULL, NULL, NULL, NULL, "date_to_php", "get_situacaoRel");
+            $function = array(null, "dv", null, null, null, null, "date_to_php", "get_situacaoRel");
         } else {
-            $function = array(NULL, "dv", NULL, NULL, NULL, NULL, "date_to_php", "date_to_php", "get_situacaoRel");
+            $function = array(null, "dv", null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel");
         }
-        $classe = array(NULL, NULL, NULL, "pessoal", "pessoal", "pessoal");
-        $metodo = array(NULL, NULL, NULL, "get_cargoRel", "get_lotacao", "get_perfil");
+        $classe = array(null, null, null, "pessoal", "pessoal", "pessoal");
+        $metodo = array(null, null, null, "get_cargoRel", "get_lotacao", "get_perfil");
 
         # Relatório
         $relatorio = new Relatorio();
@@ -518,7 +518,7 @@ class ListaServidores {
         $relatorio->set_funcao($function);
         $relatorio->set_classe($classe);
         $relatorio->set_metodo($metodo);
-        $relatorio->set_subTotal(FALSE);
+        $relatorio->set_subTotal(false);
         $relatorio->set_conteudo($conteudo);
         $relatorio->show();
     }

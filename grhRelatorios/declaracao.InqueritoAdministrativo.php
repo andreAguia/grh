@@ -8,8 +8,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -23,7 +23,7 @@ if ($acesso) {
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, FALSE);
+    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
 
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
@@ -39,7 +39,7 @@ if ($acesso) {
 
     # Monta a Declaração
     $dec = new Declaracao();
-    $dec->set_carimboCnpj(TRUE);
+    $dec->set_carimboCnpj(true);
     $dec->set_data(date("d/m/Y"));
     $dec->set_texto("Declaro para os devidos fins, que $texto1 <b>" . strtoupper($nomeServidor) . "</b>,"
             . " ID funcional nº $idFuncional, $cargoEfetivo, não está respondendo a inquérito administrativo por"
@@ -54,7 +54,7 @@ if ($acesso) {
     $data = date("Y-m-d H:i:s");
     $atividades = 'Visualizou a declaração que NÃO responde a inquérito administrativo';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario, $data, $atividades, NULL, NULL, $tipoLog, $idServidorPesquisado);
+    $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 
     $page->terminaPagina();
 }

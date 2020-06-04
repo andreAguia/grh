@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -41,7 +41,7 @@ if ($acesso) {
                                JOIN tbtipocargo USING (idTipoCargo)
              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                AND tbservidor.situacao = 1
-               AND tbrecadastramento.dataAtualizacao is NOT NULL
+               AND tbrecadastramento.dataAtualizacao is NOT null
                ORDER BY tbtipocargo.nivel asc, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -52,10 +52,10 @@ if ($acesso) {
     $relatorio->set_subtitulo('Agrupada por Tipo de Cargo - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Atualizado em:', 'Tipo'));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_CargoRel", "get_LotacaoRel"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_CargoRel", "get_LotacaoRel"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);

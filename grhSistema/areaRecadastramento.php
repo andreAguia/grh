@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de recadastramento";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Verifica se veio menu grh e registra o acesso no log
@@ -47,7 +47,7 @@ if ($acesso) {
     set_session('parametroNomeMat', $parametroNomeMat);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroCargo', $parametroCargo);
-    set_session('areaRecadastramento', FALSE);
+    set_session('areaRecadastramento', false);
 
     # Começa uma nova página
     $page = new Page();
@@ -93,14 +93,14 @@ if ($acesso) {
             $controle->set_size(100);
             $controle->set_title('Nome do servidor');
             $controle->set_valor($parametroNomeMat);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
                                                      WHERE ativo) UNION (SELECT distinct DIR, DIR
                                                       FROM tblotacao
@@ -218,7 +218,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Descrição", "Nº de Servidores"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("center"));
             $tabela->set_titulo("Resumo Geral");
             #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
@@ -244,7 +244,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Descrição", "Nº de Servidores"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("center"));
             $tabela->set_titulo("Professores");
             #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
@@ -275,7 +275,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Descrição", "Nº de Servidores"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("center"));
             $tabela->set_titulo("Sisgen");
             #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
@@ -307,10 +307,10 @@ if ($acesso) {
             $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Atualizado em:', 'Usuario','Editar'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
+            $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
 
-            $tabela->set_classe(array(NULL, NULL, "pessoal", "pessoal", NULL, "Intra"));
-            $tabela->set_metodo(array(NULL, NULL, "get_Cargo", "get_Lotacao", NULL, "get_usuario"));
+            $tabela->set_classe(array(null, null, "pessoal", "pessoal", null, "Intra"));
+            $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_usuario"));
 
             if (!is_null($parametroNomeMat)) {
                 $tabela->set_textoRessaltado($parametroNomeMat);
@@ -402,10 +402,10 @@ if ($acesso) {
                 $controle = new Input('sisgen', 'combo', 'Realizou as atividades descritas no Anexo III?:', 1);
                 $controle->set_size(100);
                 $controle->set_linha(1);
-                $controle->set_array(array(array(1, "Realizei"), array(0, "Não Realizei"), array(2, "Não Respondeu"), array(NULL, "---")));
+                $controle->set_array(array(array(1, "Realizei"), array(0, "Não Realizei"), array(2, "Não Respondeu"), array(null, "---")));
                 $controle->set_valor($result['sisgen']);
                 $controle->set_col(4);
-                $controle->set_autofocus(TRUE);
+                $controle->set_autofocus(true);
                 $controle->set_fieldset("Declaração de Conformidade com o SISGEN");
                 $form->add_item($controle);
             }
@@ -416,7 +416,7 @@ if ($acesso) {
             $controle->set_linha(2);
             $controle->set_valor($result['cpf']);
             $controle->set_col(3);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_fieldset("Documentos");
             $form->add_item($controle);
 
@@ -466,7 +466,7 @@ if ($acesso) {
                                                CONCAT(tbcidade.nome," (",tbestado.uf,")")
                                           FROM tbcidade JOIN tbestado USING (idEstado)
                                       ORDER BY proximidade,tbestado.uf,tbcidade.nome');
-            array_unshift($cidade, array(NULL, NULL)); # Adiciona o valor de nulo
+            array_unshift($cidade, array(null, null)); # Adiciona o valor de nulo
             # Cidade
             $controle = new Input('idCidade', 'combo', 'Cidade:', 1);
             $controle->set_size(50);
@@ -552,7 +552,7 @@ if ($acesso) {
 
             # Pega os dados da combo de estado civil
             $estadoCivil = $pessoal->select('SELECT idestCiv,estciv FROM tbestciv ORDER BY estciv');
-            array_unshift($estadoCivil, array(NULL, NULL)); # Adiciona o valor de nulo
+            array_unshift($estadoCivil, array(null, null)); # Adiciona o valor de nulo
             # Estado Civil
             $controle = new Input('estCiv', 'combo', 'Estado Civil:', 1);
             $controle->set_size(15);
@@ -612,7 +612,7 @@ if ($acesso) {
         # Chama o menu do Servidor que se quer editar
         case "editaServidor" :
             set_session('idServidorPesquisado', $id);
-            set_session('areaRecadastramento', TRUE);
+            set_session('areaRecadastramento', true);
             loadPage('servidorFormacao.php');
             break;
 
@@ -648,11 +648,11 @@ if ($acesso) {
 
             # Variáveis dos erros
             $erro = 0;
-            $msgErro = NULL;
+            $msgErro = null;
 
             # dtId
             if (vazio($dtId)) {
-                $dtId = NULL;
+                $dtId = null;
             }
 
             # Cpf
@@ -693,12 +693,12 @@ if ($acesso) {
                 # Grava na tabela tbpessoa
                 $campos = array('endereco', 'bairro', 'idCidade', 'cep', 'telResidencialDDD', 'telResidencial', 'telCelularDDD', 'telCelular', 'telRecadosDDD', 'telRecados', 'emailUenf', 'emailPessoal', 'estCiv', 'conjuge', 'nomePai', 'nomeMae');
                 $valor = array($endereco, $bairro, $idCidade, $cep, $telResidencialDDD, $telResidencial, $telCelularDDD, $telCelular, $telRecadosDDD, $telRecados, $emailUenf, $emailPessoal, $estCiv, $conjuge, $nomePai, $nomeMae);
-                $pessoal->gravar($campos, $valor, $idPessoa, "tbpessoa", "idPessoa", FALSE);
+                $pessoal->gravar($campos, $valor, $idPessoa, "tbpessoa", "idPessoa", false);
 
                 # Grava na tabela tbdocumentacao
                 $campos = array('cpf', 'identidade', 'orgaoId', 'dtId');
                 $valor = array($cpf, $identidade, $orgaoId, $dtId);
-                $pessoal->gravar($campos, $valor, $idPessoa, "tbdocumentacao", "idPessoa", FALSE);
+                $pessoal->gravar($campos, $valor, $idPessoa, "tbdocumentacao", "idPessoa", false);
 
                 # Grava na tabela tbrecadastramento                
                 $campos = array('idServidor', 'dataAtualizacao', 'idUsuario', 'sisgen');
@@ -706,9 +706,9 @@ if ($acesso) {
 
                 # Antes de gravar verifica se já 
                 # não existe um registro desse servidor
-                $idRecadastramento = $pessoal->select('SELECT idRecadastramento FROM tbrecadastramento WHERE idServidor = ' . $idServidor, FALSE);
+                $idRecadastramento = $pessoal->select('SELECT idRecadastramento FROM tbrecadastramento WHERE idServidor = ' . $idServidor, false);
                 #echo $idRecadastramento[0];
-                $pessoal->gravar($campos, $valor, $idRecadastramento[0], "tbrecadastramento", "idRecadastramento", FALSE);
+                $pessoal->gravar($campos, $valor, $idRecadastramento[0], "tbrecadastramento", "idRecadastramento", false);
 
                 # Grava no log a atividade                
                 $tipoLog = 2;

@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -58,7 +58,7 @@ if ($acesso) {
                   AND idPerfil = 1              
              GROUP BY tbservidor.idServidor
              HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = "' . $relatorioAno . '"
-                 AND MAX(tbtrienio.dtInicial) IS NULL
+                 AND MAX(tbtrienio.dtInicial) IS null
              ORDER BY tbpessoa.nome)
              ORDER BY 6,2';
 
@@ -72,11 +72,11 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio', 'Mês'));
     $relatorio->set_width(array(10, 50, 10, 10, 10, 10));
     $relatorio->set_align(array('center', 'left'));
-    $relatorio->set_funcao(array(NULL, NULL, "date_to_php", NULL, "date_to_php", "date_to_php", "get_nomeMes"));
+    $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php", "date_to_php", "get_nomeMes"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',
             'label' => 'Ano:',

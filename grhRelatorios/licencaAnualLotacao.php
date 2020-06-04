@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -27,7 +27,7 @@ if ($acesso) {
     $relatorioLotacao = post('lotacao');
 
     if ($relatorioLotacao == "*") {
-        $relatorioLotacao = NULL;
+        $relatorioLotacao = null;
     }
 
     ######
@@ -37,8 +37,8 @@ if ($acesso) {
     $select = '(SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
-                      CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
+                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                      CONCAT(tbtipolicenca.nome," ",IFnull(tbtipolicenca.lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)
@@ -69,8 +69,8 @@ if ($acesso) {
              (SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      tbperfil.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
-                     (SELECT CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                     (SELECT CONCAT(tbtipolicenca.nome," ",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                      tblicencapremio.dtInicial,
                      tblicencapremio.numDias,
                      ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)
@@ -105,14 +105,14 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Perfil', 'Lotaçao', 'Licença', 'Data Inicial', 'Dias', 'Data Final'));
     #$relatorio->set_width(array(10,30,10,25,10,5,10));
     $relatorio->set_align(array('center', 'left', 'center', 'left', 'left'));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", null, "date_to_php"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
 
     # Dados da combo lotacao
-    $lotacao = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $lotacao = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                   FROM tblotacao
                                  WHERE ativo) UNION (SELECT distinct DIR, DIR
                                   FROM tblotacao
@@ -120,8 +120,8 @@ if ($acesso) {
                               ORDER BY 2');
     array_unshift($lotacao, array('*', '-- Todos --'));
 
-    #$relatorio->set_bordaInterna(TRUE);
-    #$relatorio->set_cabecalho(FALSE);
+    #$relatorio->set_bordaInterna(true);
+    #$relatorio->set_cabecalho(false);
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',
             'label' => 'Ano:',

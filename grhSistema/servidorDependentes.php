@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Parentes";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -185,7 +185,7 @@ if ($acesso) {
     $objeto->set_label(array("Nome", "Nascimento", "Parentesco", "Sexo", "Idade", "Dependente no IR", "Auxílio Creche", "Término do Aux. Creche"));
     #$objeto->set_width(array(20,10,10,10,10,10,10,10));	
     $objeto->set_align(array("left"));
-    $objeto->set_funcao(array(NULL, "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php"));
+    $objeto->set_funcao(array(null, "date_to_php", null, null, null, null, null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -205,15 +205,15 @@ if ($acesso) {
                                           parentesco
                                      FROM tbparentesco
                                  ORDER BY idParentesco');
-    array_push($result, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_push($result, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'nome',
             'label' => 'Nome do Parente:',
             'tipo' => 'texto',
             'size' => 50,
-            'required' => TRUE,
-            'plm' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'plm' => true,
+            'autofocus' => true,
             'title' => 'Nome do Parente.',
             'col' => 6,
             'linha' => 1),
@@ -222,7 +222,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 12,
             'maxLength' => 20,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data de Nascimento.',
             'col' => 3,
             'linha' => 1),
@@ -237,7 +237,7 @@ if ($acesso) {
             'label' => 'Parentesco:',
             'tipo' => 'combo',
             'array' => $result,
-            'required' => TRUE,
+            'required' => true,
             'size' => 20,
             'title' => 'Parentesco do Parente',
             'col' => 3,
@@ -246,7 +246,7 @@ if ($acesso) {
             'label' => 'Sexo:',
             'tipo' => 'combo',
             'array' => array("", "M", "F"),
-            'required' => TRUE,
+            'required' => true,
             'size' => 20,
             'col' => 2,
             'title' => 'Gênero do Parente.',
@@ -255,7 +255,7 @@ if ($acesso) {
             'label' => 'Dependente no IR:',
             'tipo' => 'combo',
             'array' => array("Não", "Sim"),
-            'required' => TRUE,
+            'required' => true,
             'size' => 20,
             'col' => 2,
             'title' => 'Dependente no Imposto de Renda.',
@@ -305,7 +305,7 @@ if ($acesso) {
             'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Parente");
@@ -318,7 +318,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
     ################################################################

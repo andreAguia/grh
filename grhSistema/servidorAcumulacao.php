@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Acumulações de cargos públicos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -123,9 +123,9 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(array("Conclusão", "Resultado", "Data", "Processo", "Instituição", "Cargo", "Matrícula"));
     $objeto->set_align(array("center", "center", "center", "left", "left", "left"));
-    $objeto->set_funcao(array(NULL, NULL, "date_to_php"));
-    $objeto->set_classe(array(NULL, "Acumulacao"));
-    $objeto->set_metodo(array(NULL, "get_resultado"));
+    $objeto->set_funcao(array(null, null, "date_to_php"));
+    $objeto->set_classe(array(null, "Acumulacao"));
+    $objeto->set_metodo(array(null, "get_resultado"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -146,7 +146,7 @@ if ($acesso) {
             'size' => 30,
             'col' => 3,
             'title' => 'Número do Processo',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'linha' => 1),
         array('nome' => 'dtProcesso',
             'label' => 'Data do Processo:',
@@ -159,7 +159,7 @@ if ($acesso) {
             'label' => 'Processo aberto por:',
             'tipo' => 'texto',
             'size' => 200,
-            'valor' => NULL,
+            'valor' => null,
             'col' => 3,
             'title' => 'Órgão que abriu o processo.',
             'linha' => 1),
@@ -196,11 +196,11 @@ if ($acesso) {
             'fieldset' => 'fecha',
             'label' => 'Resultado:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
-            'valor' => NULL,
+            'valor' => null,
             'col' => 2,
             'title' => 'Resultado.',
             'linha' => 4),
@@ -223,12 +223,12 @@ if ($acesso) {
         array('nome' => 'conclusao',
             'label' => 'Conclusão:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Pendente"),
                 array(2, "Resolvido")),
             'size' => 2,
-            'required' => TRUE,
-            'valor' => NULL,
+            'required' => true,
+            'valor' => null,
             'col' => 2,
             'title' => 'Conclusão.',
             'linha' => 4),
@@ -236,11 +236,11 @@ if ($acesso) {
             'fieldset' => 'Recursos:',
             'label' => 'Recurso 1:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
-            'valor' => NULL,
+            'valor' => null,
             'col' => 2,
             'title' => 'Resultado.',
             'linha' => 5),
@@ -263,11 +263,11 @@ if ($acesso) {
         array('nome' => 'resultado2',
             'label' => 'Recurso 2:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
-            'valor' => NULL,
+            'valor' => null,
             'col' => 2,
             'title' => 'Resultado.',
             'linha' => 6),
@@ -290,11 +290,11 @@ if ($acesso) {
         array('nome' => 'resultado3',
             'label' => 'Recurso 3:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
-            'valor' => NULL,
+            'valor' => null,
             'col' => 2,
             'title' => 'Resultado.',
             'linha' => 7),
@@ -330,7 +330,7 @@ if ($acesso) {
             'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Acumulação de Cargo");

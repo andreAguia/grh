@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -27,12 +27,12 @@ if ($acesso) {
     $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de fotografia";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -101,7 +101,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
@@ -123,14 +123,14 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             $form->show();
 
             ###
             # Pega o time inicial
-            $time_start = microtime(TRUE);
+            $time_start = microtime(true);
 
             # Pega os dados
             $select = "SELECT idFuncional,
@@ -158,14 +158,14 @@ if ($acesso) {
                     $tabela->set_textoRessaltado($parametro);
                 }
 
-                $tabela->set_funcao(array(NULL, NULL, NULL, NULL, "exibeFoto"));
-                $tabela->set_classe(array(NULL, NULL, "Pessoal", "Pessoal"));
-                $tabela->set_metodo(array(NULL, NULL, "get_cargo", "get_Lotacao"));
+                $tabela->set_funcao(array(null, null, null, null, "exibeFoto"));
+                $tabela->set_classe(array(null, null, "Pessoal", "Pessoal"));
+                $tabela->set_metodo(array(null, null, "get_cargo", "get_Lotacao"));
                 $tabela->show();
             }
 
             # Pega o time final
-            $time_end = microtime(TRUE);
+            $time_end = microtime(true);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
             break;
@@ -259,7 +259,7 @@ if ($acesso) {
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
                     $atividade = "Alterou a foto do servidor $nome";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, NULL, 8, $idPessoa);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $idPessoa);
 
                     # Volta para o menu
                     loadPage("?fase=exibeFoto&idPessoa=$idPessoa");

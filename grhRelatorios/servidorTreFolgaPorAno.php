@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -44,9 +44,9 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(false);
     #$relatorio->set_titulo('Relatório Mensal de Folgas Fruídas do TRE');
     #$relatorio->set_tituloLinha2($relatorioAno);
     #$relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
@@ -54,9 +54,9 @@ if ($acesso) {
     $relatorio->set_label(array('Data Inicial', 'Dias', 'Data Final'));
     #$relatorio->set_width(array(10,30,20,10,10,10));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php", NULL, "date_to_php"));
-    #$relatorio->set_classe(array(NULL,NULL,"pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,"get_lotacao"));  
+    $relatorio->set_funcao(array("date_to_php", null, "date_to_php"));
+    #$relatorio->set_classe(array(null,null,"pessoal"));
+    #$relatorio->set_metodo(array(null,null,"get_lotacao"));  
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);

@@ -118,7 +118,7 @@ function exibeDescricaoStatus($status) {
      * 
      * @syntax exibeDescricaoStatus($status);
      * 
-     * @param $status string NULL o status das férias
+     * @param $status string null o status das férias
      */
     $texto = "";
     switch ($status) {
@@ -143,7 +143,7 @@ function descricaoComissao($idComissao) {
      * 
      * @syntax descricaoComissao($idComissao);
      * 
-     * @param $idComissao integer NULL o id do cargo em comissão
+     * @param $idComissao integer null o id do cargo em comissão
      */
     # Conecta ao Banco de Dados
     $comissao = new CargoComissao();
@@ -231,7 +231,7 @@ function exibeProcesso($texto) {
     $id = $pedaco[1];
 
     # Inicia a variável de retorno
-    $processo = NULL;
+    $processo = null;
 
     # Execute uma rotina específica para cada tipo de licença
     switch ($tipo) {
@@ -458,7 +458,7 @@ function exibePrazoParaGozoEscalaFerias($texto) {
     $anoAdmissao = year($dtAdmissao);
 
     # Define a variável de retorno
-    $retorno = NULL;
+    $retorno = null;
 
     # Se o ano pesquisado for o mesmo da admissão
     if ($anoPesquisado == $anoAdmissao) {
@@ -510,7 +510,7 @@ function exibeFeriasPendentes($texto) {
     $anoPesquisado = $pedaco[1];
 
     # Define as variaveis 
-    $retorno = NULL;
+    $retorno = null;
     $linhas = 0;    // numero de linhas para saber se for mais de um tere que ter br
     # Conecta o banco de dados
     $pessoal = new Pessoal();
@@ -581,7 +581,7 @@ function consertaUf($uf) {
                     WHERE uf = ' . $uf;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         $uf = $row[0];
     }
@@ -598,8 +598,8 @@ function consertaUf($uf) {
 function get_situacao($idServidor) {
     $pessoal = new Pessoal();
     $situacao = $pessoal->get_situacao($idServidor);
-    $especial = NULL;
-    $title = NULL;
+    $especial = null;
+    $title = null;
 
     # Pega as situações
     $ferias = $pessoal->emFerias($idServidor);
@@ -608,7 +608,7 @@ function get_situacao($idServidor) {
     $folgaTre = $pessoal->emFolgaTre($idServidor);
     $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
     $cedido = $pessoal->emCessao($idServidor);
-    $orgaoCedido = NULL;
+    $orgaoCedido = null;
 
     # Férias
     if ($ferias) {
@@ -685,21 +685,21 @@ function get_servidorBalcao($ano, $mes, $dia, $turno) {
                  AND mes = ' . $mes . ' 
                  AND dia = ' . $dia;
 
-    $row = $pessoal->select($select, FALSE);
-    $count = $pessoal->count($select, FALSE);
+    $row = $pessoal->select($select, false);
+    $count = $pessoal->count($select, false);
 
     if ($count == 0) {
-        return NULL;
+        return null;
     } else {
         if ($turno == "m") {
             if (vazio($row[0])) {
-                return NULL;
+                return null;
             } else {
                 return $row[0];
             }
         } else {
             if (vazio($row[1])) {
-                return NULL;
+                return null;
             } else {
                 return $row[1];
             }
@@ -722,7 +722,7 @@ function get_idBalcao($ano, $mes, $dia) {
                  AND mes = ' . $mes . ' 
                  AND dia = ' . $dia;
 
-    $row = $pessoal->select($select, FALSE);
+    $row = $pessoal->select($select, false);
     return $row[0];
 }
 
@@ -760,7 +760,7 @@ function statusReducao($arquivado) {
      * 
      * @syntax statusReducao($arquivado);
      * 
-     * @param $arquivado int NULL se foi arquivado ou não
+     * @param $arquivado int null se foi arquivado ou não
      */
     if ($arquivado) {
         $figura = new Imagem(PASTA_FIGURAS . 'arquivo.png', 'Arquivado', 30, 30);
@@ -785,7 +785,7 @@ function idMatricula($idServidor) {
                      FROM tbservidor
                    WHERE idServidor = ' . $idServidor;
 
-    $row = $pessoal->select($select, FALSE);
+    $row = $pessoal->select($select, false);
     $matricula = dv($row[1]);
 
     if (vazio($row[0]) OR vazio($matricula)) {
@@ -845,7 +845,7 @@ function linkExibeVaga($idConcurso) {
     /**
      * Exibe um link para as vagas de um concurso
      * 
-     * @param $idConcurso integer NULL O id do Concurso
+     * @param $idConcurso integer null O id do Concurso
      * 
      * @syntax $plano->linkExibeVaga($idConcurso);
      */
@@ -862,7 +862,7 @@ function linkExibeVaga($idConcurso) {
 
         if ($tipo == 2) {
             # Monta o link
-            $link = new Link(NULL, "cadastroConcurso.php?fase=listaVagasConcurso&id=$idConcurso", "Exibe as vagas");
+            $link = new Link(null, "cadastroConcurso.php?fase=listaVagasConcurso&id=$idConcurso", "Exibe as vagas");
             $link->set_imagem(PASTA_FIGURAS_GERAIS . "ver.png", 20, 20);
             $link->show();
         } else {
@@ -886,7 +886,7 @@ function exibeDadosSalarioAtual($idServidor) {
     $idClasse = $pessoal->get_idClasseServidor($idServidor);
 
     if (vazio($idClasse)) {
-        return NULL;
+        return null;
     } else {
 
         # Pega os dados desse idClasse
@@ -896,7 +896,7 @@ function exibeDadosSalarioAtual($idServidor) {
                          FROM tbclasse LEFT JOIN tbplano USING (idPlano)
                          WHERE idClasse = $idClasse";
 
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         $return = $row[0] . " - " . $row[1] . "<br/>" . $row[2];
         return $return;
@@ -913,7 +913,7 @@ function exibeDocumentacaoLicenca($idTipoLicenca) {
      * 
      * @syntax exibeDocumentacaoLicenca($idTpLicenca);
      * 
-     * @param $idTipoLicenca integer NULL o id do tipo de licença
+     * @param $idTipoLicenca integer null o id do tipo de licença
      */
     # Conecta 
     $pessoal = new Pessoal();
@@ -925,7 +925,7 @@ function exibeDocumentacaoLicenca($idTipoLicenca) {
                  FROM tbtipolicenca
                  WHERE idTpLicenca = $idTipoLicenca";
 
-    $row = $pessoal->select($select, FALSE);
+    $row = $pessoal->select($select, false);
 
 
     p($row[2], "f22", "center");
@@ -963,7 +963,7 @@ function exibeBotaoDocumentacaoLicenca($idTipoLicenca) {
      * 
      * @syntax exibeDocumentacaoLicenca($idTpLicenca);
      * 
-     * @param $idTipoLicenca integer NULL o id do tipo de licença
+     * @param $idTipoLicenca integer null o id do tipo de licença
      */
     # Conecta 
     $pessoal = new Pessoal();
@@ -973,7 +973,7 @@ function exibeBotaoDocumentacaoLicenca($idTipoLicenca) {
                  FROM tbtipolicenca
                  WHERE idTpLicenca = $idTipoLicenca";
 
-    $row = $pessoal->select($select, FALSE);
+    $row = $pessoal->select($select, false);
 
     if (vazio($row[0])) {
         echo "---";
@@ -1016,7 +1016,7 @@ function exibeRegraStatusLSV() {
     $tabela->set_label(array("", ""));
     $tabela->set_width(array(20, 80));
     $tabela->set_align(array("left", "left"));
-    $tabela->set_totalRegistro(FALSE);
+    $tabela->set_totalRegistro(false);
     $tabela->show();
 
     $div->fecha();
@@ -1034,7 +1034,7 @@ function exibeDocumentoPasta($idPasta) {
      * 
      * @syntax exibeDocumentoPasta($idPasta);
      * 
-     * @param $idPasta integer NULL o id da pasta
+     * @param $idPasta integer null o id da pasta
      */
     # Define a pasta
     $pasta = PASTA_FUNCIONAL;
@@ -1070,7 +1070,7 @@ function exibeProcessoPasta($idPasta) {
      * 
      * @syntax exibeDocumentoPasta($idPasta);
      * 
-     * @param $idPasta integer NULL o id da pasta
+     * @param $idPasta integer null o id da pasta
      */
     # Define a pasta
     $pasta = PASTA_FUNCIONAL;

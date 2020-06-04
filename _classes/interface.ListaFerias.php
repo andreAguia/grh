@@ -7,13 +7,13 @@ class ListaFerias {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $anoExercicio   integer NULL O Ano de exercícios das férias
-     * @var private $lotacao        integer NULL O id da lotação. Quando NULL exibe de todas a universidade
-     * @var private $permiteEditar  boolean TRUE Indica se terá botão para acessar informções dos servidores
+     * @var private $anoExercicio   integer null O Ano de exercícios das férias
+     * @var private $lotacao        integer null O id da lotação. Quando null exibe de todas a universidade
+     * @var private $permiteEditar  boolean true Indica se terá botão para acessar informções dos servidores
      */
-    private $anoExercicio = NULL;
-    private $lotacao = NULL;
-    private $permiteEditar = TRUE;
+    private $anoExercicio = null;
+    private $lotacao = null;
+    private $permiteEditar = true;
 
     ###########################################################
 
@@ -22,18 +22,18 @@ class ListaFerias {
         /**
          * Inicia a classe atribuindo um valor ao anoExercicio
          * 
-         * @param $anoExercicio integer NULL O Ano de exercícios das férias
+         * @param $anoExercicio integer null O Ano de exercícios das férias
          */
         $this->anoExercicio = $anoExercicio;
     }
 
     ###########################################################
 
-    public function set_lotacao($idLotacao = NULL) {
+    public function set_lotacao($idLotacao = null) {
         /**
          * Informa a lotação dos servidores cujas ferias serão exibidas
          * 
-         * @param $idLotacao integer NULL o idLotacão da lotação a ser exibida as férias
+         * @param $idLotacao integer null o idLotacão da lotação a ser exibida as férias
          * 
          * @note Quando o $idLotacao não é informado será exibido de todas as lotações.
          * 
@@ -41,12 +41,12 @@ class ListaFerias {
          */
         # Força a ser nulo mesmo quando for ""
         if (vazio($idLotacao)) {
-            $idLotacao = NULL;
+            $idLotacao = null;
         }
 
         # Transforma em nulo a máscara *
         if ($idLotacao == "*") {
-            $idLotacao = NULL;
+            $idLotacao = null;
         }
 
         $this->lotacao = $idLotacao;
@@ -78,7 +78,7 @@ class ListaFerias {
         $tabela = new Tabela();
         $tabela->set_conteudo($semFerias);
         $tabela->set_label(array("Descrição", "Nº de Servidores"));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
         $tabela->set_titulo("Resumo Geral");
         $tabela->set_rodape("Total de Servidores: " . $totalServidores3);
@@ -122,7 +122,7 @@ class ListaFerias {
         $tabela = new Tabela();
         $tabela->set_conteudo($conta);
         $tabela->set_label(array("Dias", "Servidores"));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
         $tabela->set_titulo("Servidores Por Dia");
         $tabela->set_rodape("Total de Servidores: " . $totalServidores);
@@ -168,9 +168,9 @@ class ListaFerias {
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
             $tabela->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
-            $tabela->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-            $tabela->set_metodo(array(NULL, NULL, "get_lotacaoSimples", "get_perfilSimples"));
-            $tabela->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
+            $tabela->set_classe(array(null, null, "pessoal", "pessoal"));
+            $tabela->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
+            $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
             $tabela->set_align(array("center", "left", "left"));
             $tabela->set_idCampo('idServidor');
             $tabela->set_formatacaoCondicional(array(
@@ -206,7 +206,7 @@ class ListaFerias {
      * Informa os totais de dias de férias de uma determinada lotação de uma ano exercício
      *
      */
-    private function getDiasFerias($idLotacao = NULL) {
+    private function getDiasFerias($idLotacao = null) {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -324,7 +324,7 @@ class ListaFerias {
          ORDER BY soma,tbpessoa.nome)";
 
         # Pega os dados do banco
-        $retorno = $servidor->select($select1, TRUE);
+        $retorno = $servidor->select($select1, true);
 
         return $retorno;
     }
@@ -391,7 +391,7 @@ class ListaFerias {
               ORDER BY tbpessoa.nome asc";
 
         # Pega os dados do banco
-        $retorno = $servidor->select($select2, TRUE);
+        $retorno = $servidor->select($select2, true);
 
         return $retorno;
     }

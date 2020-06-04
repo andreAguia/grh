@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -54,9 +54,9 @@ if ($acesso) {
     $relatorio->set_label(array('Processo', 'Data', 'CI', 'Servidor', 'Origem', 'Destino', 'Saída', 'Chegada', 'Valor'));
     $relatorio->set_width(array(20, 8, 8, 20, 10, 10, 8, 8, 8));
     $relatorio->set_align(array("center", "center", "center", "left"));
-    $relatorio->set_funcao(array(NULL, "date_to_php", NULL, NULL, NULL, NULL, "date_to_php", "date_to_php", "formataMoeda"));
-    $relatorio->set_classe(array(NULL, NULL, NULL, "Pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, 'get_nome'));
+    $relatorio->set_funcao(array(null, "date_to_php", null, null, null, null, "date_to_php", "date_to_php", "formataMoeda"));
+    $relatorio->set_classe(array(null, null, null, "Pessoal"));
+    $relatorio->set_metodo(array(null, null, null, 'get_nome'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(9);
@@ -89,7 +89,7 @@ if ($acesso) {
     $relatorio->set_colunaSomatorio(8);
     $relatorio->set_funcaoSomatorio('formataMoeda');
     $relatorio->set_textoSomatorio('Total das Diárias:');
-    $relatorio->set_exibeSomatorioGeral(FALSE);
+    $relatorio->set_exibeSomatorioGeral(false);
 
     $relatorio->show();
 

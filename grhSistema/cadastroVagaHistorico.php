@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -24,12 +24,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de bancos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -64,7 +64,7 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT concat(tbconcurso.anoBase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
-                                      concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
+                                      concat(IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao,
                                       area,
                                       idServidor,
                                       tbvagahistorico.obs,
@@ -92,19 +92,19 @@ if ($acesso) {
     $objeto->set_botaoIncluirNome("Incluir concurso nessa vaga");
 
     # Esconde o botão iniciar para usar um diferente na rotina de listar
-    $objeto->set_botaoIncluir(FALSE);
-    $objeto->set_botaoVoltarLista(FALSE);
+    $objeto->set_botaoIncluir(false);
+    $objeto->set_botaoVoltarLista(false);
 
-    $objeto->set_numeroOrdem(TRUE);
+    $objeto->set_numeroOrdem(true);
     $objeto->set_numeroOrdemTipo('d');
 
     # Parametros da tabela
     $objeto->set_label(array("Concurso", "Laboratório", "Área", "Servidor", "Obs"));
-    $objeto->set_funcao(array(NULL, NULL, NULL));
+    $objeto->set_funcao(array(null, null, null));
     $objeto->set_align(array("left", "left", "left", "left", "left"));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, "Vaga"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, "get_Nome"));
+    $objeto->set_classe(array(null, null, null, "Vaga"));
+    $objeto->set_metodo(array(null, null, null, "get_Nome"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -132,7 +132,7 @@ if ($acesso) {
                                  FROM tbvaga AS A LEFT JOIN tbcargo USING (idCargo)
                                  WHERE idCargo = $idCargo AND centro = '$centro'");
 
-    array_unshift($vagas, array(0, NULL));
+    array_unshift($vagas, array(0, null));
 
     ###############
     # Pega os dados para combo concurso 
@@ -142,18 +142,18 @@ if ($acesso) {
                                     WHERE tipo = 2
                                 ORDER BY dtPublicacaoEdital desc');
 
-    array_unshift($concurso, array(0, NULL));
+    array_unshift($concurso, array(0, null));
 
     ###############
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
-                             concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao                       
+                             concat(IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao                       
                         FROM tblotacao 
                         WHERE tblotacao.DIR = "' . $centro . '"  
                         ORDER BY ativo desc, lotacao';
 
     $result = $pessoal->select($selectLotacao);
-    array_unshift($result, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($result, array(null, null)); # Adiciona o valor de nulo
     ###############
     # Pega o cargo dessa vaga
     $idCargo = $vaga->get_idCargoVaga($idVaga);
@@ -167,7 +167,7 @@ if ($acesso) {
 
     # Se for inclusão
     if (vazio($id)) {
-        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT NULL) ';
+        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT null) ';
 
         # Pega o último ocupante
         $idUltimo = $vaga->get_idServidorOcupante($idVaga);
@@ -181,7 +181,7 @@ if ($acesso) {
             $select .= 'AND (dtAdmissao > "' . date_to_bd($dtSaida) . '") ';
         }
     } else { # Se for edição
-        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT NULL AND idVagaHistorico <> ' . $id . ') ';
+        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT null AND idVagaHistorico <> ' . $id . ') ';
 
         # Pega os servidores que já ocuparam essa vaga
         $ocupantes = $vaga->get_idServidoresOcupantes($idVaga);
@@ -191,7 +191,7 @@ if ($acesso) {
                  FROM tbvagahistorico
                 WHERE idVagaHistorico = $id";
 
-        $essaVaga = $pessoal->select($ss, FALSE);
+        $essaVaga = $pessoal->select($ss, false);
 
         if (!vazio($essaVaga)) {
 
@@ -220,7 +220,7 @@ if ($acesso) {
     $select .= ' ORDER BY tbpessoa.nome';
 
     $docente = $pessoal->select($select);
-    array_unshift($docente, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($docente, array(null, null)); # Adiciona o valor de nulo
     ###############
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -231,7 +231,7 @@ if ($acesso) {
             'array' => $vagas,
             'col' => 9,
             'padrao' => $idVaga,
-            'required' => TRUE,
+            'required' => true,
             'size' => 50),
         array('linha' => 1,
             'nome' => 'idConcurso',
@@ -239,13 +239,13 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $concurso,
             'col' => 3,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'size' => 30),
         array('nome' => 'idLotacao',
             'label' => 'Laboratório:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result,
             'size' => 50,
             'col' => 6,
@@ -295,7 +295,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório");
             $botaoRel->set_url("../grhRelatorios/vagas.historico.php");

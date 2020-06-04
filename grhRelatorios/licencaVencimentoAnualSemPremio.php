@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -30,7 +30,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbperfil.nome,
-                      CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")),
+                      CONCAT(tbtipolicenca.nome," ",IFnull(tbtipolicenca.lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
@@ -53,11 +53,11 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Perfil', 'Licença', 'Data Inicial', 'Dias', 'Data Final', 'Mês'));
     $relatorio->set_width(array(10, 30, 10, 25, 10, 5, 10));
     $relatorio->set_align(array('center', 'left', 'center', 'left'));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", NULL, "date_to_php", "get_nomeMes"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, "date_to_php", "get_nomeMes"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(7);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',
             'label' => 'Ano:',

@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,17 +23,17 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de TRE";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaPremio', FALSE);
+    set_session('areaPremio', false);
 
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
@@ -88,19 +88,19 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
             $botaoRel = new Button('Relatorio da Tela');
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("../grhRelatorios/treGeral.php");
             $menu1->add_link($botaoRel, "right");
 
-            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
             $botaoRel = new Button('Anual de Dias Trabalhados');
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("../grhRelatorios/treAfastamentoAnual.php");
             $menu1->add_link($botaoRel, "right");
 
-            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',NULL,15,15);
+            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
             $botaoRel = new Button('Anual de Folgas Fruídas');
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("../grhRelatorios/treFolgaAnual.php");
@@ -125,14 +125,14 @@ if ($acesso) {
             $controle->set_size(100);
             $controle->set_title('Nome do servidor');
             $controle->set_valor($parametroNomeMat);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
             $form->add_item($controle);
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
                                                      WHERE ativo) UNION (SELECT distinct DIR, DIR
                                                       FROM tblotacao
@@ -154,7 +154,7 @@ if ($acesso) {
 
             ###
             # Pega o time inicial
-            $time_start = microtime(TRUE);
+            $time_start = microtime(true);
 
             # Conecta com o banco de dados
             $servidor = new Pessoal();
@@ -164,10 +164,10 @@ if ($acesso) {
                               matricula,
                               tbpessoa.nome,
                               idServidor,
-                              (SELECT IFNULL(sum(dias),0) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as trabalhados,
-                              (SELECT IFNULL(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as concedidas,
-                              (SELECT IFNULL(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor) as fruidas,
-                              (SELECT IFNULL(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) - (SELECT IFNULL(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor)
+                              (SELECT IFnull(sum(dias),0) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as trabalhados,
+                              (SELECT IFnull(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as concedidas,
+                              (SELECT IFnull(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor) as fruidas,
+                              (SELECT IFnull(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) - (SELECT IFnull(sum(dias),0) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor)
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
@@ -213,9 +213,9 @@ if ($acesso) {
             $tabela->set_label(array("Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"));
             $tabela->set_align(array("center", "center", "left", "left"));
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            $tabela->set_funcao(array(NULL, "dv"));
-            $tabela->set_classe(array(NULL, NULL, NULL, "pessoal"));
-            $tabela->set_metodo(array(NULL, NULL, NULL, "get_lotacao"));
+            $tabela->set_funcao(array(null, "dv"));
+            $tabela->set_classe(array(null, null, null, "pessoal"));
+            $tabela->set_metodo(array(null, null, null, "get_lotacao"));
             $tabela->set_titulo("TRE");
 
             if (!is_null($parametroNomeMat)) {
@@ -227,7 +227,7 @@ if ($acesso) {
             $tabela->show();
 
             # Pega o time final
-            $time_end = microtime(TRUE);
+            $time_end = microtime(true);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
 

@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -49,11 +49,11 @@ if ($acesso) {
     $relatorio->set_label(array('CPF', 'Nome', 'Emails', 'Nascimento', 'Pais de Origem', 'Admissão', 'Situação'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", NULL, NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_emails", NULL, NULL, NULL, "get_Situacao"));
-    $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_classe(array(null, null, "pessoal", null, null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_emails", null, null, null, "get_Situacao"));
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

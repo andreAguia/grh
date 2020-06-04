@@ -7,17 +7,17 @@ class Acumulacao {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $idAcumulacao integer NULL O id da acumulação
+     * @var private $idAcumulacao integer null O id da acumulação
      */
-    private $idAcumulacao = NULL;
+    private $idAcumulacao = null;
 
 ##############################################################
 
-    public function __construct($idAcumulacao = NULL) {
+    public function __construct($idAcumulacao = null) {
         /**
          * Inicia a Classe somente
          * 
-         * @param $idAcumulacao integer NULL O id da acumulação
+         * @param $idAcumulacao integer null O id da acumulação
          * 
          * @syntax $acumulacao = new Aculumacao([$idAcumulacao]);
          */
@@ -31,7 +31,7 @@ class Acumulacao {
         /**
          * Informa os dados da base de dados
          * 
-         * @param $idAcumulacao integer NULL O id da acumulação
+         * @param $idAcumulacao integer null O id da acumulação
          * 
          * @syntax $acumulacao->get_dados([$idAcumulacao]);
          */
@@ -55,7 +55,7 @@ class Acumulacao {
                     WHERE idAcumulacao = ' . $this->idAcumulacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row;
@@ -68,7 +68,7 @@ class Acumulacao {
         /**
          * Informa o resultado final de uma acumulação
          * 
-         * @param $idAcumulacao integer NULL O id da acumulação
+         * @param $idAcumulacao integer null O id da acumulação
          * 
          * @syntax $acumulacao->get_resultado([$idAcumulacao]);
          */
@@ -78,7 +78,7 @@ class Acumulacao {
         }
 
         # Inicia a variável de retorno
-        $retorno = NULL;
+        $retorno = null;
 
         # Pega os dados
         $dados = $this->get_dados($this->idAcumulacao);
@@ -128,7 +128,7 @@ class Acumulacao {
         /**
          * Informe os dados da Publicação de uma solicitação de Acumulação
          * 
-         * @param $idAcumulacao integer NULL O id da acumulação
+         * @param $idAcumulacao integer null O id da acumulação
          * 
          * @syntax $acumulacao->exibePublicacao([$idAcumulacao]);
          */
@@ -146,7 +146,7 @@ class Acumulacao {
                     WHERE idAcumulacao = ' . $this->idAcumulacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if (is_null($row[0])) {

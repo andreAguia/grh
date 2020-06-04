@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              // Servidor logado
-$idServidorPesquisado = NULL;   // Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              // Servidor logado
+$idServidorPesquisado = null;   // Servidor Editado na pesquisa do sistema do GRH
 
 # Configuração
 include ("_config.php");
@@ -24,7 +24,7 @@ $origemId = get_session("origemId");
 $alerta = get_session("alerta");
 
 # Verifica se veio menu grh e registra o acesso no log
-$grh = get('grh', FALSE);
+$grh = get('grh', false);
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -71,7 +71,7 @@ if ($acesso) {
         if ($grh) {
             $atividade = "Cadastro do servidor - Menu";
             $data = date("Y-m-d H:i:s");
-            $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
         }
 
         # Cria um menu
@@ -193,7 +193,7 @@ if ($acesso) {
                         WHERE idServidor = $idServidorPesquisado
                           AND YEAR(dtInicial) = $parametroAno  
                      ORDER BY dtInicial) UNION 
-                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFNULL(tbtipolicenca.lei,'')) as descricao,
+                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFnull(tbtipolicenca.lei,'')) as descricao,
                               dtInicial,
                               numDias,
                               ADDDATE(dtInicial,numDias-1) as dtFinal
@@ -227,12 +227,12 @@ if ($acesso) {
                      ORDER BY data) UNION 
                        (SELECT 'Outros' as descricao,
                               '$parametroAno-01-01' as dtInicial,
-                              NULL,
+                              null,
                               '$parametroAno-01-01' as dtFinal
                          FROM tblicencapremio) UNION 
                        (SELECT 'Outros' as descricao,
                               '$parametroAno-12-31' as dtInicial,
-                              NULL,
+                              null,
                               '$parametroAno-12-31' as dtFinal
                          FROM tblicencapremio) order by 2";
 
@@ -312,7 +312,7 @@ if ($acesso) {
                         WHERE idServidor = $idServidorPesquisado
                           AND YEAR(dtInicial) = $parametroAno  
                      ORDER BY dtInicial) UNION 
-                       (SELECT CONCAT(tbtipolicenca.nome,'<br/>',IFNULL(tbtipolicenca.lei,'')) as descricao,
+                       (SELECT CONCAT(tbtipolicenca.nome,'<br/>',IFnull(tbtipolicenca.lei,'')) as descricao,
                               dtInicial,
                               numDias,
                               ADDDATE(dtInicial,numDias-1) as dtFinal
@@ -337,8 +337,8 @@ if ($acesso) {
             $tabela->set_conteudo($atividades2);
             $tabela->set_label(array("Afastamento", "Inicial", "Dias", "Final"));
             $tabela->set_align(array("left", "center"));
-            #$tabela->set_totalRegistro(FALSE);
-            $tabela->set_funcao(array(NULL, "date_to_php", NULL, "date_to_php"));
+            #$tabela->set_totalRegistro(false);
+            $tabela->set_funcao(array(null, "date_to_php", null, "date_to_php"));
             $tabela->set_titulo("Tabela");
 
             #$numAtividades = $pessoal->count($select2);
@@ -450,7 +450,7 @@ if ($acesso) {
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
                     $atividade = "Alterou a foto do servidor " . $pessoal->get_nome($idServidorPesquisado);
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, NULL, 8, $idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $idServidorPesquisado);
 
                     # Volta para o menu
                     loadPage("?");
@@ -484,7 +484,7 @@ if ($acesso) {
             $controle->set_size(200);
             $controle->set_linha(1);
             $controle->set_col(12);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_title('O assunto do processo.');
             $form->add_item($controle);
 
@@ -527,7 +527,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(12);
             $controle->set_valor($nomeChefia);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_title('A chefia imediata.');
             $form->add_item($controle);
 
@@ -569,7 +569,7 @@ if ($acesso) {
             if ($grh) {
                 $atividade = "Cadastro do servidor - Afastamento geral";
                 $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+                $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
             }
 
             $grid = new Grid("center");

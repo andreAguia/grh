@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include("_config.php");
@@ -24,12 +24,12 @@ if ($acesso) {
     $subFase = get('subFase', 1);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de lotação";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Verifica tipo (1->ativo ou 0->inativo)
@@ -117,8 +117,8 @@ if ($acesso) {
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center", "center", "center", "center", "left"));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, NULL, "Grh", "Grh"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, NULL, "get_numServidoresAtivosLotacao", "get_numServidoresInativosLotacao"));
+    $objeto->set_classe(array(null, null, null, null, null, "Grh", "Grh"));
+    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao", "get_numServidoresInativosLotacao"));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -140,20 +140,20 @@ if ($acesso) {
                                         campus
                                   FROM tbcampus
                               ORDER BY campus');
-    array_unshift($result1, array(NULL, NULL));
+    array_unshift($result1, array(null, null));
 
     # Pega os dados da datalist da Diretoria
     $result2 = $pessoal->select('SELECT DISTINCT DIR,
                                         DIR
                                   FROM tblotacao WHERE ativo
                               ORDER BY DIR');
-    #array_unshift($result2, array(NULL,NULL));
+    #array_unshift($result2, array(null,null));
     # Pega os dados da datalist da Geância
     $result3 = $pessoal->select('SELECT DISTINCT GER,
                                         GER
                                   FROM tblotacao WHERE ativo
                               ORDER BY GER');
-    #array_unshift($result3, array(NULL,NULL));
+    #array_unshift($result3, array(null,null));
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -161,14 +161,14 @@ if ($acesso) {
             'nome' => 'codigo',
             'label' => 'Código:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'size' => 15),
         array('linha' => 1,
             'col' => 2,
             'nome' => 'UADM',
             'label' => 'Unidade Administrativa:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => array('UENF', 'FENORTE'),
             'size' => 15),
         array('linha' => 1,
@@ -178,14 +178,14 @@ if ($acesso) {
             'title' => 'Sigla da Diretoria',
             'tipo' => 'texto',
             'datalist' => $result2,
-            'required' => TRUE,
+            'required' => true,
             'size' => 15),
         array('linha' => 1,
             'col' => 4,
             'nome' => 'idCampus',
             'label' => 'Campus:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result1,
             'size' => 15),
         array('linha' => 1,
@@ -202,12 +202,12 @@ if ($acesso) {
             'label' => 'Nome completo da lotação:',
             'title' => 'Nome completo da lotação sem siglas',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 100),
         array('linha' => 2,
             'col' => 2,
             'nome' => 'ativo',
-            'required' => TRUE,
+            'required' => true,
             'label' => 'Ativo:',
             'title' => 'Se a lotação está ativa e permite movimentações',
             'tipo' => 'combo',
@@ -224,14 +224,14 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Grafico
-    $imagem1 = new Imagem(PASTA_FIGURAS . 'pie.png', NULL, 15, 15);
+    $imagem1 = new Imagem(PASTA_FIGURAS . 'pie.png', null, 15, 15);
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem1);
     #$botaoGra->set_accessKey('G');
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir");
@@ -239,7 +239,7 @@ if ($acesso) {
     $botaoRel->set_url('../grhRelatorios/lotacao.php');
 
     # Organograma
-    $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', NULL, 15, 15);
+    $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
     $botaoOrg = new Button();
     $botaoOrg->set_title("Exibe o Organograma da UENF");
     $botaoOrg->set_imagem($imagem3);
@@ -247,7 +247,7 @@ if ($acesso) {
     $botaoOrg->set_url('../_img/organograma.png');
 
     # Organograma2
-    $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', NULL, 15, 15);
+    $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
     $botaoOrga = new Button();
     $botaoOrga->set_title("Exibe o Organograma2 da UENF");
     $botaoOrga->set_imagem($imagem3);
@@ -308,7 +308,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
@@ -357,7 +357,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");

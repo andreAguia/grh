@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -39,7 +39,7 @@ if ($acesso) {
 
     $select = 'SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
                      tbservidor.dtAdmissao,
                      concat(tbservidor.idServidor,"&",' . $parametroAno . '),
                      "___/___/___ (___)&nbsp;&nbsp;&nbsp;___/___/___ (___)&nbsp;&nbsp;&nbsp;___/___/___ (___)",
@@ -69,20 +69,20 @@ if ($acesso) {
     $relatorio->set_label(['Id', 'Nome', 'Lotação', 'Admissão', 'Prazo para<br/>o Gozo', 'Início Previsto (Dias)', 'Observação']);
     $relatorio->set_width([6, 25, 0, 10, 10, 35, 25]);
     $relatorio->set_align(["center", "left", "center", "center", "center", "center", "right"]);
-    $relatorio->set_funcao([NULL, NULL, NULL, "date_to_php", "exibePrazoParaGozoEscalaFerias", NULL, "exibeFeriasPendentes"]);
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_feriasPeriodo"));
+    $relatorio->set_funcao([null, null, null, "date_to_php", "exibePrazoParaGozoEscalaFerias", null, "exibeFeriasPendentes"]);
+    #$relatorio->set_classe(array(null,null,null,null,null,null,"pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_feriasPeriodo"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
-    $relatorio->set_saltoAposGrupo(TRUE);
-    $relatorio->set_bordaInterna(TRUE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_saltoAposGrupo(true);
+    $relatorio->set_bordaInterna(true);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
     $relatorio->set_funcaoFinalGrupo("textoEscalaFerias");
-    $relatorio->set_funcaoFinalGrupoParametro(NULL);
+    $relatorio->set_funcaoFinalGrupoParametro(null);
 
-    $listaLotacao = $servidor->select('SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $listaLotacao = $servidor->select('SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                            WHERE tblotacao.ativo  
                                           ORDER BY ativo desc,lotacao');

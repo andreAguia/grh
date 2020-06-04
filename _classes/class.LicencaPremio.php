@@ -31,7 +31,7 @@ class LicencaPremio {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if (is_null($row[0]))
@@ -54,7 +54,7 @@ class LicencaPremio {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if (is_null($row[0]))
@@ -84,7 +84,7 @@ class LicencaPremio {
                       AND tbservidor.idPerfil = 1";
 
         # Pega os valores
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if (is_null($row[0]))
@@ -114,7 +114,7 @@ class LicencaPremio {
                       AND tbservidor.idPerfil = 1";
 
         # Pega os valores
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if (is_null($row[0]))
@@ -168,7 +168,7 @@ class LicencaPremio {
                      FROM tblicencapremio
                     WHERE idLicencaPremio = ' . $idLicencaPremio;
 
-        $retorno = $pessoal->select($select, FALSE);
+        $retorno = $pessoal->select($select, false);
 
         return $retorno[0];
     }
@@ -188,7 +188,7 @@ class LicencaPremio {
                      FROM tblicencapremio 
                     WHERE idPublicacaoPremio = ' . $idPublicacaoPremio;
 
-        $fruidos = $pessoal->select($select, FALSE);
+        $fruidos = $pessoal->select($select, false);
 
         # Retorna
         return $fruidos[0];
@@ -226,7 +226,7 @@ class LicencaPremio {
                      FROM tbpublicacaopremio 
                     WHERE idPublicacaoPremio = ' . $idPublicacaoPremio;
 
-        $retorno = $pessoal->select($select, FALSE);
+        $retorno = $pessoal->select($select, false);
 
         # Retorno
         return $retorno[0];
@@ -249,7 +249,7 @@ class LicencaPremio {
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
 
-            $retorno = $pessoal->select($select, FALSE);
+            $retorno = $pessoal->select($select, false);
 
             # Retorno
             return $retorno[0];
@@ -520,7 +520,7 @@ class LicencaPremio {
         $estatistica->set_label($cargo);
         $estatistica->set_align(array("left"));
         #$estatistica->set_width(array(60,40));
-        $estatistica->set_totalRegistro(FALSE);
+        $estatistica->set_totalRegistro(false);
         $estatistica->set_titulo("Dados");
         $estatistica->show();
 
@@ -560,10 +560,10 @@ class LicencaPremio {
             $titulo = 'Publicações';
             $label = array("Vínculo", "Data da Publicação", "Período Aquisitivo <br/> Início", "Período Aquisitivo <br/> Fim", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis");
             #$width = array(15,10,15,15,15,10,10,10);
-            $funcao = array(NULL, 'date_to_php', 'date_to_php', 'date_to_php');
-            $classe = array("Pessoal", NULL, NULL, NULL, NULL, 'LicencaPremio', 'LicencaPremio');
-            $metodo = array("get_cargoSimples", NULL, NULL, NULL, NULL, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao');
-            $align = array(NULL, 'center');
+            $funcao = array(null, 'date_to_php', 'date_to_php', 'date_to_php');
+            $classe = array("Pessoal", null, null, null, null, 'LicencaPremio', 'LicencaPremio');
+            $metodo = array("get_cargoSimples", null, null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao');
+            $align = array(null, 'center');
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -579,7 +579,7 @@ class LicencaPremio {
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
-            $tabela->set_numeroOrdem(TRUE);
+            $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
 
 
@@ -674,10 +674,10 @@ class LicencaPremio {
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Data da Publicaçãod", "Período Aquisitivo<br/>Início", "Período Aquisitivo<br/>Fim", "Inicio", "Dias", "Término"));
             $tabela->set_align(array("center"));
-            $tabela->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', NULL, 'date_to_php'));
-            $tabela->set_numeroOrdem(TRUE);
+            $tabela->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
+            $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
-            $tabela->set_exibeTempoPesquisa(FALSE);
+            $tabela->set_exibeTempoPesquisa(false);
             $tabela->show();
         } else {
 
@@ -702,7 +702,7 @@ class LicencaPremio {
 
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -730,7 +730,7 @@ class LicencaPremio {
 
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor

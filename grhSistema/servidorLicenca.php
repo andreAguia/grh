@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de licenças";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -256,7 +256,7 @@ if ($acesso) {
                                       FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                      WHERE idServidor=' . $idServidorPesquisado . '                                         
                                   ORDER BY 2');
-        array_unshift($result, array(NULL, '-- Todos --')); # Adiciona o valor de nulo
+        array_unshift($result, array(null, '-- Todos --')); # Adiciona o valor de nulo
         # controle de pesquisa
         $objeto->set_parametroLabel('Pesquisar');
         $objeto->set_parametroValue($parametro);
@@ -273,7 +273,7 @@ if ($acesso) {
         }
 
         # select da lista
-        $selectLicença = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+        $selectLicença = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
                                   tblicenca.idTpLicenca,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
@@ -292,7 +292,7 @@ if ($acesso) {
         } else {
             $selectLicença .= ')
                                UNION
-                               (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                               (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                                        6,"",
                                        dtInicial,
                                        tblicencapremio.numdias,
@@ -303,7 +303,7 @@ if ($acesso) {
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
                                      UNION
-                               (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                               (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
                                        tblicencasemvencimentos.idTpLicenca,"",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
@@ -342,7 +342,7 @@ if ($acesso) {
         #$objeto->set_linkExcluir('?fase=excluir');
         $objeto->set_linkGravar('?fase=gravar');
         $objeto->set_linkListar('?fase=listar');
-        $objeto->set_botaoEditar(FALSE);
+        $objeto->set_botaoEditar(false);
 
         # Cria uma string para usar na comparação 
         # do editar e excluir condicional de forma 
@@ -360,8 +360,8 @@ if ($acesso) {
         $objeto->set_label(array("Licença ou Afastamento", "Doc.", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação"));
         $objeto->set_width(array(30, 5, 5, 10, 5, 10, 15, 5));
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(NULL, "exibeBotaoDocumentacaoLicenca", NULL, 'date_to_php', NULL, 'date_to_php', 'exibeProcesso', 'date_to_php'));
-        $objeto->set_numeroOrdem(TRUE);
+        $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
 
         # Classe do banco de dados
@@ -377,7 +377,7 @@ if ($acesso) {
         $objeto->set_formLabelTipo(1);
 
         # Pega os dados da combo licenca
-        $result = $pessoal->select('SELECT idTpLicenca, CONCAT(IFNULL(tbtipolicenca.lei,"")," ",tbtipolicenca.nome)
+        $result = $pessoal->select('SELECT idTpLicenca, CONCAT(IFnull(tbtipolicenca.lei,"")," ",tbtipolicenca.nome)
                                       FROM tbtipolicenca
                                      WHERE idTpLicenca <> 6
                                        AND idTpLicenca <> 5
@@ -392,8 +392,8 @@ if ($acesso) {
                 'tipo' => 'combo',
                 'size' => 50,
                 'array' => $result,
-                'required' => TRUE,
-                'autofocus' => TRUE,
+                'required' => true,
+                'autofocus' => true,
                 'title' => 'Tipo do Adastamento/Licença.',
                 'col' => 12,
                 'linha' => 1),
@@ -401,7 +401,7 @@ if ($acesso) {
                 'label' => 'Alta: *',
                 'tipo' => 'combo',
                 'size' => 20,
-                'array' => array(array(NULL, NULL),
+                'array' => array(array(null, null),
                     array(2, "Não"),
                     array(1, "Sim")),
                 'col' => 2,
@@ -423,7 +423,7 @@ if ($acesso) {
             array('nome' => 'dtInicial',
                 'label' => 'Data Inicial:',
                 'tipo' => 'data',
-                'required' => TRUE,
+                'required' => true,
                 'size' => 20,
                 'col' => 3,
                 'title' => 'Data do início.',
@@ -432,7 +432,7 @@ if ($acesso) {
                 'label' => 'Dias:',
                 'tipo' => 'numero',
                 'size' => 5,
-                'required' => TRUE,
+                'required' => true,
                 'title' => 'Número de dias.',
                 'col' => 2,
                 'linha' => 4),
@@ -486,7 +486,7 @@ if ($acesso) {
         $botaoPremio->set_url('servidorLicencaPremio.php');
         $botaoPremio->set_accessKey('L');
 
-        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Relatório de Licença");

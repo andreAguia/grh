@@ -57,8 +57,8 @@ if ($acesso) {
     # Inicia o Relatorio
     $ato = new Relatorio();
     $ato->set_titulo("TERMO DE POSSE");
-    $ato->set_totalRegistro(FALSE);
-    $ato->set_dataImpressao(FALSE);
+    $ato->set_totalRegistro(false);
+    $ato->set_dataImpressao(false);
     #$ato->set_formCampos(array(
     #          array ('nome' => 'dataEmissao',
     #                 'label' => 'Data do Documento',

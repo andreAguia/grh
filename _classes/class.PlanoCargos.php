@@ -7,10 +7,10 @@ class PlanoCargos {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $projeto        integer NULL O id do projeto a ser acessado
+     * @var private $projeto        integer null O id do projeto a ser acessado
      * 
      */
-    private $idPlano = NULL;
+    private $idPlano = null;
 
     ###########################################################
 
@@ -23,11 +23,11 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function get_dadosPlano($idPlano = NULL) {
+    public function get_dadosPlano($idPlano = null) {
         /**
          * Retorna um array com todas as informações do plano de cargos informado
          * 
-         * @param $idPlano integer NULL o $idPlano
+         * @param $idPlano integer null o $idPlano
          * 
          * @syntax $plano->get_dadosPlano([$idPlano]);  
          */
@@ -49,11 +49,11 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function exibeTabela($idPlano = NULL, $editavel = FALSE) {
+    public function exibeTabela($idPlano = null, $editavel = false) {
         /**
          * Retorna a tabela salarial do plano
          * 
-         * @param $idPlano integer NULL o $idPlano
+         * @param $idPlano integer null o $idPlano
          * 
          * @syntax $plano->exibeTabela([$idPlano]);  
          */
@@ -64,20 +64,20 @@ class PlanoCargos {
         $nivel = array("Elementar", "Fundamental", "Médio", "Superior", "Doutorado");
 
         # Define as variáveis secundárias
-        $faixaRomanosAnterior = NULL;
-        $nivelAnterior = NULL;
+        $faixaRomanosAnterior = null;
+        $nivelAnterior = null;
         $cor = "tipo1";
 
         # Define o número de padrões de acordo com a tabela
         if ($idPlano == 13) {
             $numPadroes = 1;
-            $temLetra = FALSE;
+            $temLetra = false;
         } elseif ($idPlano == 12) {
             $numPadroes = 10;
-            $temLetra = FALSE;
+            $temLetra = false;
         } else {
             $numPadroes = 5;
-            $temLetra = TRUE;
+            $temLetra = true;
         }
 
         # Pega o nome da tabela
@@ -88,7 +88,7 @@ class PlanoCargos {
         $tabela->set_titulo($dados[0]);
         $tabela->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6]]));
         $tabela->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores"]);
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->show();
 
 
@@ -204,12 +204,12 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function get_planoVigente($data = NULL, $idServidor = NULL) {
+    public function get_planoVigente($data = null, $idServidor = null) {
         /**
          * Retorna o id do plano de cargos que estava vigente na data indicada para o servidor indicado
          * 
-         * @param $data       date    NULL A data desejada
-         * @param $idServidor integer NULL O id do servidor analizado
+         * @param $data       date    null A data desejada
+         * @param $idServidor integer null O id do servidor analizado
          * 
          * @syntax $plano->get_planoVigente($data);
          *
@@ -249,12 +249,12 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function get_salarioClasse($idPlano = NULL, $classe = NULL) {
+    public function get_salarioClasse($idPlano = null, $classe = null) {
         /**
          * Retorna o salário cadastrado da classe do idPlano fornecido
          * 
-         * @param $idPlano integer NULL O id do plano
-         * @param $classe  texto   NULL A classe do salário
+         * @param $idPlano integer null O id do plano
+         * @param $classe  texto   null A classe do salário
          * 
          * @syntax $plano->get_salarioClasse($idPlano, $classe);
          */
@@ -272,12 +272,12 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function get_idClasse($idPlano = NULL, $classe = NULL) {
+    public function get_idClasse($idPlano = null, $classe = null) {
         /**
          * Retorna o salário cadastrado da classe do idPlano fornecido
          * 
-         * @param $idPlano integer NULL O id do plano
-         * @param $classe  texto   NULL A classe do salário
+         * @param $idPlano integer null O id do plano
+         * @param $classe  texto   null A classe do salário
          * 
          * @syntax $plano->get_salarioClasse($idPlano, $classe);
          */
@@ -299,12 +299,12 @@ class PlanoCargos {
         /**
          * Exive informação da faixa, valor e plano referente ao idClasse para ser exibido na rotina de cadastro de enquadramento & progressão
          * 
-         * @param $classe  texto   NULL A classe do salário
+         * @param $classe  texto   null A classe do salário
          * 
          * @syntax $plano->evibeValor($idclasse);
          */
         if (is_null($idClasse)) {
-            return NULL;
+            return null;
         } else {
             # Pega os projetos cadastrados
             $select = "SELECT faixa,
@@ -368,7 +368,7 @@ class PlanoCargos {
         /**
          * Exibe um link para a lei quando o campo link tiver sido preenchido
          * 
-         * @param $idPlano integer NULL O id do plano
+         * @param $idPlano integer null O id do plano
          * 
          * @syntax $plano->exibeLei($idPlano);
          */
@@ -383,7 +383,7 @@ class PlanoCargos {
         if (is_null($row[0])) {
             echo "-";
         } else {
-            $link = new Link(NULL, "../_legislacao/" . $row[0], "Exibe a Lei");
+            $link = new Link(null, "../_legislacao/" . $row[0], "Exibe a Lei");
             $link->set_imagem(PASTA_FIGURAS_GERAIS . "ver.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
@@ -396,11 +396,11 @@ class PlanoCargos {
         /**
          * Exibe um link para a lei quando o campo link tiver sido preenchido
          * 
-         * @param $idPlano integer NULL O id do plano
+         * @param $idPlano integer null O id do plano
          * 
          * @syntax $plano->exibeLei($idPlano);
          */
-        $link = new Link(NULL, "?fase=exibeTabela&id=" . $idPlano, "Exibe a tabela SalariaL");
+        $link = new Link(null, "?fase=exibeTabela&id=" . $idPlano, "Exibe a tabela SalariaL");
         $link->set_imagem(PASTA_FIGURAS_GERAIS . "tabela.png", 20, 20);
         $link->set_target("_blank");
         $link->show();
@@ -466,7 +466,7 @@ class PlanoCargos {
                      FROM tbplano
                      WHERE planoAtual';
 
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
         return $row[0];
     }
 

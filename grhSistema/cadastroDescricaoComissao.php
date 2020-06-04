@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de estado";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -118,15 +118,15 @@ if ($acesso) {
                                     FROM tbtipocomissao
                                 ORDER BY ativo desc, simbolo');
 
-    array_unshift($comissao, array(NULL, NULL));
+    array_unshift($comissao, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
         array('nome' => 'idTipoComissao',
             'label' => 'Tipo da Cargo em Comissão:',
             'tipo' => 'combo',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'array' => $comissao,
             'size' => 20,
             'col' => 9,
@@ -135,7 +135,7 @@ if ($acesso) {
         array('linha' => 1,
             'col' => 3,
             'nome' => 'ativo',
-            'required' => TRUE,
+            'required' => true,
             'label' => 'Ativo:',
             'title' => 'Se o cargo está ativo e permite movimentações',
             'tipo' => 'combo',
@@ -146,7 +146,7 @@ if ($acesso) {
             'nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 12,
             'size' => 250),
         array('linha' => 3,

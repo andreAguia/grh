@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -27,7 +27,7 @@ if ($acesso) {
     # Pega os parâmetros dos relatórios
     $comissao = post('comissao', get('comissao'));
     if ($comissao == '*') {
-        $comissao = NULL;
+        $comissao = null;
     }
 
     ######
@@ -48,7 +48,7 @@ if ($acesso) {
                                 LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
               WHERE tbservidor.situacao = 1
-                AND tbcomissao.dtExo is NULL';
+                AND tbcomissao.dtExo is null';
 
     # cargo em comissão
     if (!is_null($comissao)) {
@@ -63,11 +63,11 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Descrição', 'Nacionalidade', 'CPF', 'RG', ""));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, "descricaoComissao"));
+    $relatorio->set_funcao(array(null, null, null, "descricaoComissao"));
     #$relatorio->set_width(array(10,30,20,0,25,10));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_classe(array(NULL, NULL, "Pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_Lotacao"));
+    $relatorio->set_classe(array(null, null, "Pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_Lotacao"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(7);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

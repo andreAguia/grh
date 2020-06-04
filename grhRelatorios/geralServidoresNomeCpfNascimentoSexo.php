@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -28,10 +28,10 @@ if ($acesso) {
     $lotacao = get('lotacao', post('lotacao'));
 
     if ($lotacao == "*") {
-        $lotacao = NULL;
+        $lotacao = null;
     }
 
-    $subTitulo = NULL;
+    $subTitulo = null;
 
     ######
 
@@ -70,14 +70,14 @@ if ($acesso) {
     #$relatorio->set_width(array(10,35,15,10,30));
     $relatorio->set_align(array("center", "left", "center", "center", "left"));
 
-    $relatorio->set_funcao(array(NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, "date_to_php"));
 
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,"pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,"get_cargoSimples"));
+    #$relatorio->set_classe(array(null,null,null,null,"pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,"get_cargoSimples"));
 
     $relatorio->set_conteudo($result);
 
-    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao

@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include("_config.php");
 
@@ -25,12 +25,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados do órgão de origem";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Começa uma nova página
@@ -74,7 +74,7 @@ if ($acesso) {
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -94,8 +94,8 @@ if ($acesso) {
             'nome' => 'orgaoOrigem',
             'label' => 'Órgão de Origem:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Órgão de Origem do servidor cedido',
             'col' => 6,
             'size' => 50),
@@ -117,7 +117,7 @@ if ($acesso) {
             'nome' => 'onus',
             'label' => 'Ônus para a UENF?:',
             'tipo' => 'combo',
-            'array' => array(NULL, "Sim", "Não"),
+            'array' => array(null, "Sim", "Não"),
             'size' => 20,
             'col' => 3,
             'title' => 'Cedido com ônus para a UENF?'),

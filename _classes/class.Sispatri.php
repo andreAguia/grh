@@ -7,8 +7,8 @@ class Sispatri {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    private $lotacao = NULL;
-    private $situacao = NULL;
+    private $lotacao = null;
+    private $situacao = null;
 
 ###########################################################
 

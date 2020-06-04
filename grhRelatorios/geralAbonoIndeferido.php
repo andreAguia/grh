@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -45,13 +45,13 @@ if ($acesso) {
     $relatorio->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Data", "Processo", "Publicaçao", "Status"));
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(array("left", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_cargoRel", "get_lotacaoRel"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, "date_to_php"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargoRel", "get_lotacaoRel"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Servidores com Abono Permanencia");
     $relatorio->show();

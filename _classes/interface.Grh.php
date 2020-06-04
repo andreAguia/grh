@@ -14,7 +14,7 @@ class Grh
      * 
      * Exibe o cabecalho
      */
-    public static function cabecalho($titulo = NULL)
+    public static function cabecalho($titulo = null)
     {
         # tag do cabeçalho
         echo '<header>';
@@ -523,7 +523,7 @@ class Grh
         $estatistica->set_label(array("", ""));
         $estatistica->set_align(array("center"));
         $estatistica->set_width(array(60, 40));
-        $estatistica->set_totalRegistro(FALSE);
+        $estatistica->set_totalRegistro(false);
         $estatistica->show();
 
         $div->fecha();
@@ -564,9 +564,9 @@ class Grh
             $tabela->set_label(array("Cargo", "Simbolo", "Valor (R$)", "Vagas", "Nomeados", "ProTempore", "Designados", "Vagas Disponíveis"));
             #$tabela->set_width(array(25,15,15,15,15,15));
             $tabela->set_align(array("left"));
-            $tabela->set_funcao(array(NULL, NULL, "formataMoeda"));
-            $tabela->set_classe(array(NULL, NULL, NULL, NULL, 'CargoComissao', 'CargoComissao', 'CargoComissao', 'CargoComissao'));
-            $tabela->set_metodo(array(NULL, NULL, NULL, NULL, 'get_numServidoresNomeados', 'get_numServidoresProTempore', 'get_numServidoresDesignados', 'get_vagasDisponiveis'));
+            $tabela->set_funcao(array(null, null, "formataMoeda"));
+            $tabela->set_classe(array(null, null, null, null, 'CargoComissao', 'CargoComissao', 'CargoComissao', 'CargoComissao'));
+            $tabela->set_metodo(array(null, null, null, null, 'get_numServidoresNomeados', 'get_numServidoresProTempore', 'get_numServidoresDesignados', 'get_vagasDisponiveis'));
             $tabela->set_formatacaoCondicional(array(array('coluna'   => 7,
                     'valor'    => 0,
                     'operador' => '<',
@@ -606,7 +606,7 @@ class Grh
         $folgaTre = $pessoal->emFolgaTre($idServidor);
         $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
         #$cedido = $pessoal->emCessao($idServidor);
-        $orgaoCedido = NULL;
+        $orgaoCedido = null;
 
         # Férias
         if ($ferias) {
@@ -647,7 +647,7 @@ class Grh
         ##### Ocorrências
 
         $metodos = get_class_methods('Checkup');
-        $ocorrencia = new Checkup(FALSE);
+        $ocorrencia = new Checkup(false);
 
         foreach ($metodos as $nomeMetodo) {
             if (($nomeMetodo <> 'get_all') AND ($nomeMetodo <> '__construct')) {
@@ -781,38 +781,38 @@ class Grh
         $servidor = new Pessoal();
 
         # Telas maiores
-        $div = new Div(NULL, "hide-for-small-only");
+        $div = new Div(null, "hide-for-small-only");
         $div->abre();
 
         $select = 'SELECT tbservidor.idFuncional,
                           tbpessoa.nome,
                           tbservidor.idServidor,
                           tbservidor.idServidor,
-                          tbservidor.dtAdmissao,
                           tbservidor.idServidor,
+                          tbservidor.dtAdmissao,
                           tbservidor.idServidor,
                           tbservidor.dtDemissao
                      FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
                                      LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
                     WHERE idServidor = ' . $idServidor;
 
-        $conteudo = $servidor->select($select, TRUE);
+        $conteudo = $servidor->select($select, true);
 
         # Pega a situação
         $situacao = $servidor->get_situacao($idServidor);
 
         if ($situacao == "Ativo") {
-            $label = array("Id Funcional", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação");
-            $function = array(null, null, null, null, "date_to_php");
+            $label = array("Id Funcional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação");
+            $function = array(null, null, null, null, null, "date_to_php");
         }
         else {
-            $label = array("Id Funcional", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação", "Saída");
-            $function = array(null, null, null, null, "date_to_php", null, null, "date_to_php");
+            $label = array("Id Funcional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação", "Saída");
+            $function = array(null, null, null, null, null, "date_to_php", null, "date_to_php");
         }
         #$align = array("center");
 
-        $classe = array(null, null, "pessoal", "pessoal", null, "pessoal", "pessoal");
-        $metodo = array(null, null, "get_Perfil", "get_Cargo", null, "get_Lotacao", "get_Situacao");
+        $classe = array(null, null, "pessoal", "pessoal", "pessoal",null, "pessoal");
+        $metodo = array(null, null, "get_Cargo", "get_Lotacao", "get_Perfil", null, "get_Situacao");
 
         $formatacaoCondicional = array(array('coluna'   => 0,
                 'valor'    => $servidor->get_idFuncional($idServidor),
@@ -826,7 +826,7 @@ class Grh
         $tabela->set_funcao($function);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
 
         $tabela->show();
@@ -835,7 +835,7 @@ class Grh
 
         ######################################3
         # Telas menores
-        $div = new Div(NULL, "show-for-small-only");
+        $div = new Div(null, "show-for-small-only");
         $div->abre();
 
         $select = 'SELECT tbservidor.idFuncional,
@@ -845,14 +845,14 @@ class Grh
                                         LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
                        WHERE idServidor = ' . $idServidor;
 
-        $conteudo = $servidor->select($select, TRUE);
+        $conteudo = $servidor->select($select, true);
 
         # Pega a situação
         $situacao = $servidor->get_situacao($idServidor);
         $label = array("Id Funcional", "Servidor", "Perfil");
-        $function = array(NULL, NULL, NULL);
-        $classe = array(NULL, NULL, "pessoal");
-        $metodo = array(NULL, NULL, "get_Perfil");
+        $function = array(null, null, null);
+        $classe = array(null, null, "pessoal");
+        $metodo = array(null, null, "get_Perfil");
 
         $formatacaoCondicional = array(array('coluna'   => 0,
                 'valor'    => $servidor->get_idFuncional($idServidor),
@@ -866,7 +866,7 @@ class Grh
         $tabela->set_funcao($function);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
 
         $tabela->show();
@@ -880,22 +880,22 @@ class Grh
                                            LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
                        WHERE idServidor = ' . $idServidor;
 
-        $conteudo = $servidor->select($select, TRUE);
+        $conteudo = $servidor->select($select, true);
 
         # Pega a situação
         $situacao = $servidor->get_situacao($idServidor);
 
         if ($situacao == "Ativo") {
             $label = array("Cargo", "Admissão", "Lotação", "Situação");
-            $function = array(NULL, "date_to_php");
+            $function = array(null, "date_to_php");
         }
         else {
             $label = array("Cargo", "Admissão", "Lotação", "Situação", "Saída");
-            $function = array(NULL, "date_to_php", NULL, NULL, "date_to_php");
+            $function = array(null, "date_to_php", null, null, "date_to_php");
         }
 
-        $classe = array("pessoal", NULL, "pessoal", "pessoal");
-        $metodo = array("get_Cargo", NULL, "get_Lotacao", "get_Situacao");
+        $classe = array("pessoal", null, "pessoal", "pessoal");
+        $metodo = array("get_Cargo", null, "get_Lotacao", "get_Situacao");
 
         $formatacaoCondicional = array(array('coluna'   => 3,
                 'valor'    => $situacao,
@@ -909,7 +909,7 @@ class Grh
         $tabela->set_funcao($function);
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional($formatacaoCondicional);
 
         $tabela->show();
@@ -954,7 +954,7 @@ class Grh
         #$estatistica->set_titulo('Legenda'); 
         $tabela->set_conteudo($folgas);
         $tabela->set_cabecalho($label, $width, $align);
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(
             array('coluna'   => 0,
                 'valor'    => 'Folgas Pendentes',
@@ -971,11 +971,11 @@ class Grh
      * método listaDadosServidorRelatório
      * Exibe os dados principais do servidor para relatório
      * 
-     * @param string $idServidor NULL idServidor do servidor
-     * @param string $titulo     NULL O título do relatório 
-     * @param string $cabecalho  TRUE Se exibirá o início do relatório (menu, cabecalho, etc) 
+     * @param string $idServidor null idServidor do servidor
+     * @param string $titulo     null O título do relatório 
+     * @param string $cabecalho  true Se exibirá o início do relatório (menu, cabecalho, etc) 
      */
-    public static function listaDadosServidorRelatorio($idServidor, $titulo = NULL, $cabecalho = TRUE)
+    public static function listaDadosServidorRelatorio($idServidor, $titulo = null, $cabecalho = true)
     {
 
         # Conecta com o banco de dados
@@ -1000,25 +1000,25 @@ class Grh
         $relatorio->set_titulo($titulo);
         $relatorio->set_label(array("Id", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação"));
         #$relatorio->set_width(array(8,20,10,20,10,20,5));
-        $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
-        $relatorio->set_classe(array(NULL, NULL, NULL, "pessoal", NULL, "pessoal", "pessoal"));
-        $relatorio->set_metodo(array(NULL, NULL, NULL, "get_Cargo", NULL, "get_Lotacao", "get_Situacao"));
+        $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+        $relatorio->set_classe(array(null, null, null, "pessoal", null, "pessoal", "pessoal"));
+        $relatorio->set_metodo(array(null, null, null, "get_Cargo", null, "get_Lotacao", "get_Situacao"));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        $relatorio->set_subTotal(FALSE);
-        $relatorio->set_totalRegistro(FALSE);
-        $relatorio->set_dataImpressao(FALSE);
-        $relatorio->set_linhaNomeColuna(FALSE);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_linhaNomeColuna(false);
         $relatorio->set_brHr(0);
-        $relatorio->set_linhaFinal(TRUE);
-        $relatorio->set_log(FALSE);
+        $relatorio->set_linhaFinal(true);
+        $relatorio->set_log(false);
 
         # Verifica se exibe ou não o início do cabeçalho
         # Utilizado para quando os dados doservidor é a primeira coisa a ser
         # exibida no relatório. Se não for esconde o cabeçalho, menu etc
         if (!$cabecalho) {
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
         }
 
         $relatorio->show();
@@ -1031,7 +1031,7 @@ class Grh
      * 
      * @param    string $idUsuario -> Usuário logado
      */
-    public static function rodape($idUsuario, $idServidor = NULL, $idPessoa = NULL)
+    public static function rodape($idUsuario, $idServidor = null, $idPessoa = null)
     {
 
         # Exibe faixa azul

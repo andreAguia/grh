@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de triênios";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -66,7 +66,7 @@ if ($acesso) {
 
     # retira o botão de incluir triênio quando estiver no máximo
     #if ($ultimoPercentual == "60"){
-    #    $objeto->set_botaoIncluir(FALSE);
+    #    $objeto->set_botaoIncluir(false);
     #}
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Triênios do Servidor');
@@ -124,7 +124,7 @@ if ($acesso) {
     $objeto->set_label(array("a partir de", "%", "P.Aq.Início", "P.Aq.Fim", "Processo", "DOERJ", "Documento"));
     #$objeto->set_width(array(10,5,10,10,20,15,20));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", NULL, "date_to_php", "date_to_php", NULL, "date_to_php"));
+    $objeto->set_funcao(array("date_to_php", null, "date_to_php", "date_to_php", null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -160,8 +160,8 @@ if ($acesso) {
     $objeto->set_campos(array(array('nome' => 'percentual',
             'label' => 'Percentual:',
             'tipo' => 'combo',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'array' => $percentuaisPossiveis,
             'size' => 20,
             'col' => 2,
@@ -172,7 +172,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'padrao' => $proximoTrienio,
             'title' => 'Data inícial do Triênio.',
             'linha' => 1),
@@ -182,7 +182,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data de início do período aquisitivo',
             'linha' => 1),
         array('nome' => 'dtFimPeriodo',
@@ -190,7 +190,7 @@ if ($acesso) {
             'tipo' => 'data',
             'col' => 3,
             'size' => 20,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data de término do período aquisitivo',
             'linha' => 1),
         array('nome' => 'documento',
@@ -230,7 +230,7 @@ if ($acesso) {
             'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Triênios");
@@ -303,7 +303,7 @@ if ($acesso) {
 
                 $label = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
                 $align = array("center", "center", "center", "left");
-                $funcao = array("date_to_php", "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php");
+                $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php");
 
                 $tabela = new Tabela();
                 $tabela->set_titulo('Tempo Público Averbado');

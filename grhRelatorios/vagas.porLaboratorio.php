@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -42,7 +42,7 @@ if ($acesso) {
                         WHERE idVaga = con1.idVaga 
                      ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1)
                  FROM tbvaga con1 LEFT JOIN tbcargo USING (idCargo)
-                WHERE TRUE ';
+                WHERE true ';
 
     # parametroCentro
     if (!vazio($parametroCentro)) {
@@ -61,18 +61,18 @@ if ($acesso) {
     $relatorio->set_width(array(5, 20, 10, 30, 25));
     $relatorio->set_align(array("center"));
 
-    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+    #$relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
     #$relatorio->set_width(array(5,5,5,20,5,20,15,15,5));
 
-    $relatorio->set_classe(array(NULL, NULL, "Vaga", "Vaga", "Vaga", "Vaga", "Pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_status", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga", "get_nomelotacao2"));
+    $relatorio->set_classe(array(null, null, "Vaga", "Vaga", "Vaga", "Vaga", "Pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_status", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga", "get_nomelotacao2"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
 
-    #$relatorio->set_numeroOrdem(TRUE);
+    #$relatorio->set_numeroOrdem(true);
     #$relatorio->set_numeroOrdemTipo('d');
-    $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_numGrupo(6);
 
     $relatorio->show();

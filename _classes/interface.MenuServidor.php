@@ -7,17 +7,17 @@ class MenuServidor {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    private $idUsuario = NULL;
-    private $idServidor = NULL;
-    private $perfil = NULL;
-    private $situacao = NULL;
-    private $cargoComissao = NULL;
-    private $orgaoCedido = NULL;
+    private $idUsuario = null;
+    private $idServidor = null;
+    private $perfil = null;
+    private $situacao = null;
+    private $cargoComissao = null;
+    private $orgaoCedido = null;
     private $tamanhoImagem = 50;
 
 ######################################################################################################################    
 
-    public function __construct($idServidor = NULL, $idUsuario = NULL) {
+    public function __construct($idServidor = null, $idUsuario = null) {
         /**
          * Inicia a classe
          */
@@ -289,7 +289,7 @@ class MenuServidor {
         $folgaTre = $pessoal->emFolgaTre($this->idServidor);
         $afastadoTre = $pessoal->emAfastamentoTre($this->idServidor);
         #$cedido = $pessoal->emCessao($this->idServidor);
-        $orgaoCedido = NULL;
+        $orgaoCedido = null;
 
         # Férias
         if ($ferias) {
@@ -336,7 +336,7 @@ class MenuServidor {
         ##### Ocorrências
 
         $metodos = get_class_methods('Checkup');
-        $ocorrencia = new Checkup(FALSE);
+        $ocorrencia = new Checkup(false);
 
         foreach ($metodos as $nomeMetodo) {
             if (($nomeMetodo <> 'get_all') AND ($nomeMetodo <> '__construct')) {

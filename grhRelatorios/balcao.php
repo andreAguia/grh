@@ -8,8 +8,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -35,7 +35,7 @@ if ($acesso) {
     $atividade = 'Visualizou o relatório de controle de balcão';
     $Objetolog = new Intra();
     $data = date("Y-m-d H:i:s");
-    $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, NULL, 4, $idServidorPesquisado);
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 
     # Menu do Relatório
     $menuRelatorio = new menuRelatorio();

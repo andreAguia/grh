@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -60,7 +60,7 @@ if ($acesso) {
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -81,7 +81,7 @@ if ($acesso) {
             'label' => 'DDD:',
             'tipo' => 'texto',
             'title' => 'DDD',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'col' => 1,
             'fieldset' => 'Telefones',
             'size' => 2),

@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,13 +23,13 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
 
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o controle de pastas funcionanais";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -37,7 +37,7 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroNome = retiraAspas(post('parametroNome', get_session('parametroNome')));
-    $parametroSituacao = retiraAspas(post('parametroSituacao', get_session('parametroSituacao', TRUE)));
+    $parametroSituacao = retiraAspas(post('parametroSituacao', get_session('parametroSituacao', true)));
     $parametroPasta = retiraAspas(post('parametroPasta', get_session('parametroPasta', "TD")));
 
     # Joga os parâmetros par as sessions
@@ -88,12 +88,12 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             # Situação
-            $situacao = array(array(TRUE, "Ativo"),
-                array(FALSE, "Não Ativo"));
+            $situacao = array(array(true, "Ativo"),
+                array(false, "Não Ativo"));
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
             $controle->set_size(8);
@@ -124,7 +124,7 @@ if ($acesso) {
 
             ###
             # Pega o time inicial
-            $time_start = microtime(TRUE);
+            $time_start = microtime(true);
 
             # Se for todos
             if ($parametroPasta == "TD") {
@@ -139,7 +139,7 @@ if ($acesso) {
                               tbpasta.idPasta
                          FROM tbpasta right JOIN tbservidor USING (idServidor)
                                             JOIN tbpessoa USING (idPessoa)
-                        WHERE TRUE";
+                        WHERE true";
             }
 
             # Se for SEM pasta
@@ -155,17 +155,17 @@ if ($acesso) {
                                   tbpasta.idPasta
                              FROM tbpasta JOIN tbservidor USING (idServidor)
                                           JOIN tbpessoa USING (idPessoa)
-                             WHERE TRUE";
+                             WHERE true";
             }
 
             # Se for SEM pasta
             if ($parametroPasta == "SP") {
                 $select = "SELECT tbpessoa.nome,
                                   idServidor,
-                                  NULL,
-                                  NULL,
-                                  NULL,
-                                  NULL
+                                  null,
+                                  null,
+                                  null,
+                                  null
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
                              WHERE idServidor NOT IN (Select idServidor FROM tbpasta)";
             }
@@ -191,11 +191,11 @@ if ($acesso) {
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Nome", "Lotação", "Tipo", "Descrição", "Ver"));
             $tabela->set_align(array("left", "left", "left", "left"));
-            #$tabela->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+            #$tabela->set_funcao(array(null,null,null,null,"date_to_php"));
             $tabela->set_width(array(25, 25, 10, 30, 5));
 
-            $tabela->set_classe(array(NULL, "Pessoal", NULL, NULL, "PastaFuncional"));
-            $tabela->set_metodo(array(NULL, "get_lotacao", NULL, NULL, "exibePasta"));
+            $tabela->set_classe(array(null, "Pessoal", null, null, "PastaFuncional"));
+            $tabela->set_metodo(array(null, "get_lotacao", null, null, "exibePasta"));
 
             $tabela->set_titulo("Cobtrole de Pasta Funcional");
 
@@ -211,7 +211,7 @@ if ($acesso) {
             $tabela->show();
 
             # Pega o time final
-            $time_end = microtime(TRUE);
+            $time_end = microtime(true);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
             break;

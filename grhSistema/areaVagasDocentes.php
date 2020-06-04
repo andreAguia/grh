@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -27,12 +27,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de vagas de docentes";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -43,7 +43,7 @@ if ($acesso) {
     $parametroStatus = get('parametroStatus', get_session('parametroStatus'));
 
     if ($parametroCentro == "Todos") {
-        $parametroCentro = NULL;
+        $parametroCentro = null;
     }
 
     # Joga os parâmetros par as sessions    
@@ -99,7 +99,7 @@ if ($acesso) {
                                 WHERE idCargo = 128 OR idCargo = 129              
                              ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
-    array_unshift($cargo, array(0, NULL));
+    array_unshift($cargo, array(0, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -108,9 +108,9 @@ if ($acesso) {
             'nome' => 'centro',
             'label' => 'Centro:',
             'tipo' => 'combo',
-            'array' => array(NULL, "CCT", "CCTA", "CCH", "CBB"),
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'array' => array(null, "CCT", "CCTA", "CCH", "CBB"),
+            'required' => true,
+            'autofocus' => true,
             'size' => 30),
         array('linha' => 1,
             'col' => 4,
@@ -118,14 +118,14 @@ if ($acesso) {
             'label' => 'Cargo:',
             'tipo' => 'combo',
             'array' => $cargo,
-            'required' => TRUE,
+            'required' => true,
             'size' => 30)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
-    $objeto->set_botaoVoltarLista(FALSE);
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoVoltarLista(false);
+    $objeto->set_botaoIncluir(false);
 
     ################################################################
 
@@ -153,7 +153,7 @@ if ($acesso) {
             $menu1->add_link($botaoInserir, "right");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
@@ -212,7 +212,7 @@ if ($acesso) {
             $botaoInserir->set_title("Incluir");
             #$menu1->add_link($botaoInserir,"right");
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
@@ -260,7 +260,7 @@ if ($acesso) {
                                   idVaga,
                                   idVaga
                              FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-                            WHERE TRUE 
+                            WHERE true 
                               AND centro = '$parametroCentro' 
                          ORDER BY centro,idCargo desc";
 
@@ -307,8 +307,8 @@ if ($acesso) {
                 #$tabela->set_width(array(5,10,20,10,30,25));
                 $tabela->set_align(array("center"));
 
-                $tabela->set_classe(array(NULL, NULL, NULL, "Vaga", "Vaga", "Vaga", "Vaga", "Vaga", "Vaga"));
-                $tabela->set_metodo(array(NULL, NULL, NULL, "get_status", "get_nomeLaboratorioOrigem", "temProblema", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga"));
+                $tabela->set_classe(array(null, null, null, "Vaga", "Vaga", "Vaga", "Vaga", "Vaga", "Vaga"));
+                $tabela->set_metodo(array(null, null, null, "get_status", "get_nomeLaboratorioOrigem", "temProblema", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga"));
 
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
                         'valor' => 'Disponível',
@@ -330,9 +330,9 @@ if ($acesso) {
                 $botao1->set_imagem(PASTA_FIGURAS . 'ver.png', 20, 20);
 
                 # Coloca o objeto link na tabela			
-                $tabela->set_link(array(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $botao1));
+                $tabela->set_link(array(null, null, null, null, null, null, null, null, null, $botao1));
 
-                #$tabela->set_numeroOrdem(TRUE);
+                #$tabela->set_numeroOrdem(true);
                 $tabela->set_idCampo('idVaga');
                 $tabela->show();
 
@@ -359,8 +359,8 @@ if ($acesso) {
                 #$tabela->set_width(array(5,10,20,10,30,25));
                 $tabela->set_align(array("center"));
 
-                $tabela->set_classe(array(NULL, NULL, NULL, "Vaga", "Vaga", "Vaga", "Vaga", "Vaga", "Vaga"));
-                $tabela->set_metodo(array(NULL, NULL, NULL, "get_status", "get_nomeLaboratorioOrigem", "temProblema", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga"));
+                $tabela->set_classe(array(null, null, null, "Vaga", "Vaga", "Vaga", "Vaga", "Vaga", "Vaga"));
+                $tabela->set_metodo(array(null, null, null, "get_status", "get_nomeLaboratorioOrigem", "temProblema", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga"));
 
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
                         'valor' => 'Disponível',
@@ -382,9 +382,9 @@ if ($acesso) {
                 $botao1->set_imagem(PASTA_FIGURAS . 'ver.png', 20, 20);
 
                 # Coloca o objeto link na tabela			
-                $tabela->set_link(array(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $botao1));
+                $tabela->set_link(array(null, null, null, null, null, null, null, null, null, $botao1));
 
-                #$tabela->set_numeroOrdem(TRUE);            
+                #$tabela->set_numeroOrdem(true);            
                 $tabela->set_idCampo('idVaga');
                 $tabela->show();
 

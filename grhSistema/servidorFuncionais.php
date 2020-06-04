@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'ver');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados funcionais";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica de onde veio
@@ -91,7 +91,7 @@ if ($acesso) {
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -111,7 +111,7 @@ if ($acesso) {
                                   FROM tbperfil
                               ORDER BY nome');
 
-    array_unshift($perfil, array(NULL, NULL));
+    array_unshift($perfil, array(null, null));
 
     # Pega o tipo do cargo (Adm & Tec ou Professor)
     $tipoCargo = $pessoal->get_cargoTipo($idServidorPesquisado);
@@ -126,9 +126,9 @@ if ($acesso) {
 
         # Pega os dados da combo concurso
         $concurso = $pessoal->select($select);
-        $idConcurso = NULL;
+        $idConcurso = null;
 
-        array_unshift($concurso, array(NULL, NULL));
+        array_unshift($concurso, array(null, null));
     } else {
         # Professor
 
@@ -145,8 +145,8 @@ if ($acesso) {
             # Pega os dados da combo concurso
             $concurso = $pessoal->select($select);
         } else {
-            $concurso = NULL;
-            $idConcurso = NULL;
+            $concurso = null;
+            $idConcurso = null;
         }
     }
 
@@ -157,7 +157,7 @@ if ($acesso) {
                                               LEFT JOIN tbarea USING (idarea)
                              ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
-    array_unshift($cargo, array(0, NULL));
+    array_unshift($cargo, array(0, null));
 
     # Pega os dados da combo situação
     $situacao = $pessoal->select('SELECT idsituacao,
@@ -165,7 +165,7 @@ if ($acesso) {
                                     FROM tbsituacao
                                 ORDER BY situacao');
 
-    array_unshift($situacao, array(NULL, NULL));
+    array_unshift($situacao, array(null, null));
 
     # Pega os dados da combo motivo de Saída do servidor
     $motivo = $pessoal->select('SELECT idmotivo,
@@ -173,14 +173,14 @@ if ($acesso) {
                                   FROM tbmotivo
                               ORDER BY motivo');
 
-    array_unshift($motivo, array(NULL, NULL));
+    array_unshift($motivo, array(null, null));
 
     # Campos para o formulario
     $campos = array(array('linha' => 1,
             'nome' => 'idFuncional',
             'label' => 'id Funcional:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'size' => 10,
             'col' => 2,
             'title' => 'Número da id funcional do servidor.'),
@@ -188,16 +188,16 @@ if ($acesso) {
             'nome' => 'matricula',
             'label' => 'Matricula:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'size' => 10,
-            'unique' => TRUE,
+            'unique' => true,
             'col' => 2,
             'title' => 'Matrícula do servidor.'),
         array('linha' => 1,
             'nome' => 'idPerfil',
             'label' => 'Perfil:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $perfil,
             'title' => 'Perfil do servidor',
             'col' => 3,
@@ -242,7 +242,7 @@ if ($acesso) {
                 'size' => 20,
                 'col' => 3,
                 'fieldset' => 'Dados da Admissão',
-                'required' => TRUE,
+                'required' => true,
                 'title' => 'Data de Admissão.'),
             array('linha' => 3,
                 'nome' => 'processoAdm',

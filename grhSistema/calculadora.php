@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -17,7 +17,7 @@ $page->iniciaPagina();
 
 $data1 = post("data1", get("data1"));
 $data2 = post("data2");
-$numDias = NULL;
+$numDias = null;
 $erro = 0;
 
 # Valida as datas
@@ -28,13 +28,13 @@ if ((!vazio($data1)) AND (!vazio($data2))) {
 
     # Valida a data 1
     if (!validaData($data1)) {
-        $numDias = NULL;
+        $numDias = null;
         $erro = 1;
     }
 
     # Valida a data 2
     if (!validaData($data2)) {
-        $numDias = NULL;
+        $numDias = null;
         $erro = 1;
     }
 
@@ -62,7 +62,7 @@ $controle->set_linha(1);
 $controle->set_col(3);
 $controle->set_valor(date_to_bd($data1));
 #$controle->set_onChange('formPadrao.submit();');
-$controle->set_autofocus(TRUE);
+$controle->set_autofocus(true);
 $form->add_item($controle);
 
 # data 2

@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -33,7 +33,7 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Geral TRE');
     $relatorio->set_subtitulo('Ordenado pelo Nome');
 
-    $titulo2 = NULL;
+    $titulo2 = null;
 
     if (!is_null($parametroLotacao) AND ($parametroLotacao <> "*")) {
         $titulo2 .= $pessoal->get_nomeLotacao($parametroLotacao);
@@ -49,9 +49,9 @@ if ($acesso) {
 
     $relatorio->set_label(array("Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"));
     $relatorio->set_align(array("center", "center", "left", "left"));
-    $relatorio->set_classe(array(NULL, NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, "get_lotacao"));
-    $relatorio->set_funcao(array(NULL, "dv"));
+    $relatorio->set_classe(array(null, null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, null, "get_lotacao"));
+    $relatorio->set_funcao(array(null, "dv"));
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

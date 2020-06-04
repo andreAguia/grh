@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -24,12 +24,12 @@ if ($acesso) {
     $subFase = get('subFase', 1);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de cargo efetivo";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -115,8 +115,8 @@ if ($acesso) {
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, "Pessoal"));
-    $objeto->set_metodo([NULL, NULL, NULL, NULL, "get_servidoresCargo"]);
+    $objeto->set_classe(array(null, null, null, null, "Pessoal"));
+    $objeto->set_metodo([null, null, null, null, "get_servidoresCargo"]);
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -150,14 +150,14 @@ if ($acesso) {
                                         cargo
                                    FROM tbtipocargo
                                ORDER BY idTipoCargo desc');
-    array_push($result2, array(NULL, NULL));
+    array_push($result2, array(null, null));
 
     # Pega os dados da combo de Área
     $result3 = $pessoal->select('SELECT idArea,
                                         CONCAT(tbtipocargo.cargo," - ",area)
                                   FROM tbarea JOIN tbtipocargo USING (idTipoCargo)
                               ORDER BY idarea desc');
-    array_push($result3, array(NULL, NULL));
+    array_push($result3, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -166,7 +166,7 @@ if ($acesso) {
             'nome' => 'idtipocargo',
             'label' => 'Cargo:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result2,
             'size' => 30),
         array('linha' => 1,
@@ -174,7 +174,7 @@ if ($acesso) {
             'nome' => 'idarea',
             'label' => 'Área:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result3,
             'size' => 50),
         array('linha' => 2,
@@ -182,14 +182,14 @@ if ($acesso) {
             'nome' => 'nome',
             'label' => 'Função:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 50),
         array('linha' => 2,
             'col' => 4,
             'nome' => 'idPlano',
             'label' => 'Plano de Cargos:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result1,
             'size' => 30),
         array('linha' => 4,
@@ -209,7 +209,7 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Paginação
-    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     # Cadastro de Áreas
     $botaoArea = new Button("Áreas");
@@ -286,7 +286,7 @@ if ($acesso) {
             $menu->add_link($linkTipo, "right");
 
             # Mapa do Cargo
-            #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',NULL,15,15);
+            #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',null,15,15);
             $botaoMapa = new Button("Mapa do Cargo");
             $botaoMapa->set_title("Mapa do Cargo");
             $botaoMapa->set_target("_blank");
@@ -294,7 +294,7 @@ if ($acesso) {
             $menu->add_link($botaoMapa, "right");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");

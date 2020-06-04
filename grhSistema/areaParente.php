@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de parentes";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -85,7 +85,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url('../grhRelatorios/parentes.geral.php');
@@ -104,7 +104,7 @@ if ($acesso) {
             $controle->set_size(55);
             $controle->set_title('Nome, matrícula ou ID:');
             $controle->set_valor($parametroNome);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
@@ -141,8 +141,8 @@ if ($acesso) {
             $tabela->set_label(array("Parente", "Idade", "Parentesco", "Servidor", "Cargo", "Lotação"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("left", "center", "center", "left", "left", "left"));
-            $tabela->set_classe(array(NULL, NULL, NULL, NULL, "pessoal", "pessoal"));
-            $tabela->set_metodo(array(NULL, NULL, NULL, NULL, "get_Cargo", "get_Lotacao"));
+            $tabela->set_classe(array(null, null, null, null, "pessoal", "pessoal"));
+            $tabela->set_metodo(array(null, null, null, null, "get_Cargo", "get_Lotacao"));
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
@@ -177,7 +177,7 @@ if ($acesso) {
         # Relatório
         case "relatorio" :
 
-            $subTitulo = NULL;
+            $subTitulo = null;
 
             # Pega os dados
             $select = 'SELECT tbservidor.idfuncional,
@@ -224,8 +224,8 @@ if ($acesso) {
             $relatorio->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Escolaridade", "Curso"));
             $relatorio->set_conteudo($result);
             $relatorio->set_align(array("center", "left", "left", "left", "left", "left"));
-            $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal", NULL, "Formacao"));
-            $relatorio->set_metodo(array(NULL, NULL, "get_Cargo", "get_Lotacao", NULL, "get_curso"));
+            $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, "Formacao"));
+            $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_curso"));
             $relatorio->show();
             break;
     }

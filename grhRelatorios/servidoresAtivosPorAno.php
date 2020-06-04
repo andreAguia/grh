@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -43,7 +43,7 @@ if ($acesso) {
                                 JOIN tbcargo USING (idCargo)
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE year(dtAdmissao) <= "' . $parametroAno . '"
-                 AND (dtDemissao IS NULL OR year(dtDemissao) >= "' . $parametroAno . '")
+                 AND (dtDemissao IS null OR year(dtDemissao) >= "' . $parametroAno . '")
                  AND tbtipocargo.tipo = "' . $cargo . '"  
             ORDER BY tbpessoa.nome';
 
@@ -56,10 +56,10 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Admissão', 'Saída'));
     #$relatorio->set_width(array(10,30,16,22,22));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_cargoSimples", "get_perfil"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_perfil"));
 
     $relatorio->set_conteudo($result);
 

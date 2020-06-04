@@ -8,5 +8,5 @@
 
 # Pasa para nulo quando o campo for apenas um espaço;
 if (vazio($campoValor[1])) {
-    $campoValor[1] = NULL;
+    $campoValor[1] = null;
 }

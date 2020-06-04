@@ -7,17 +7,17 @@ class Concurso {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $idConcurso integer NULL O id do concurso
+     * @var private $idConcurso integer null O id do concurso
      */
-    private $idConcurso = NULL;
+    private $idConcurso = null;
 
 ##############################################################
 
-    public function __construct($idConcurso = NULL) {
+    public function __construct($idConcurso = null) {
         /**
          * Inicia a Classe somente
          * 
-         * @param $idConcurso integer NULL O id do concurso
+         * @param $idConcurso integer null O id do concurso
          * 
          * @syntax $concurso = new Concurso([$idConcurso]);
          */
@@ -26,12 +26,12 @@ class Concurso {
 
 ##############################################################
 
-    public function get_dados($idConcurso = NULL) {
+    public function get_dados($idConcurso = null) {
 
         /**
          * Informa os dados da base de dados
          * 
-         * @param $idConcurso integer NULL O id do concurso
+         * @param $idConcurso integer null O id do concurso
          * 
          * @syntax $concurso->get_dados([$idConcurso]);
          */
@@ -55,7 +55,7 @@ class Concurso {
                     WHERE idConcurso = ' . $this->idConcurso;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row;
@@ -69,7 +69,7 @@ class Concurso {
      * 
      * @param	string $idVaga O id da vaga
      */
-    function exibeDadosConcurso($idConcurso = NULL, $editar = FALSE) {
+    function exibeDadosConcurso($idConcurso = null, $editar = false) {
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -125,7 +125,7 @@ class Concurso {
 
         # Pega os dados
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
         return $row[0];
     }
 
@@ -158,7 +158,7 @@ class Concurso {
         $tabela->set_label(array("Tipo", "Sem Concurso", "Com Concurso", "Total"));
         #$tabela->set_width(array(80,20));
         $tabela->set_align(array("left", "center"));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
@@ -177,7 +177,7 @@ class Concurso {
         # Monta o select            
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
-                        WHERE tbvagahistorico.idConcurso is NULL
+                        WHERE tbvagahistorico.idConcurso is null
                           AND tbservidor.situacao = 1
                           AND (idPerfil = 1 OR idPerfil = 4)
                           AND (idCargo = 128 OR idCargo = 129)';
@@ -199,7 +199,7 @@ class Concurso {
         # Monta o select            
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
-                        WHERE tbvagahistorico.idConcurso is NULL
+                        WHERE tbvagahistorico.idConcurso is null
                           AND tbservidor.situacao <> 1
                           AND (idPerfil = 1 OR idPerfil = 4)
                           AND (idCargo = 128 OR idCargo = 129)';
@@ -221,7 +221,7 @@ class Concurso {
         # Monta o select            
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
-                        WHERE tbvagahistorico.idConcurso is NOT NULL
+                        WHERE tbvagahistorico.idConcurso is NOT null
                           AND tbservidor.situacao = 1
                           AND (idPerfil = 1 OR idPerfil = 4)
                           AND (idCargo = 128 OR idCargo = 129)';
@@ -243,7 +243,7 @@ class Concurso {
         # Monta o select            
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbvagahistorico USING (idServidor)
-                        WHERE tbvagahistorico.idConcurso is NOT NULL
+                        WHERE tbvagahistorico.idConcurso is NOT null
                           AND tbservidor.situacao <> 1
                           AND (idPerfil = 1 OR idPerfil = 4)
                           AND (idCargo = 128 OR idCargo = 129)';

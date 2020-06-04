@@ -8,14 +8,14 @@ class Despacho {
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
      */
-    private $data = NULL;
-    private $texto = NULL;
-    private $destino = NULL;
-    private $origemNome = NULL;
-    private $origemSetor = NULL;
-    private $origemDescricao = NULL;
-    private $origemIdFuncional = NULL;
-    private $reitor = NULL;
+    private $data = null;
+    private $texto = null;
+    private $destino = null;
+    private $origemNome = null;
+    private $origemSetor = null;
+    private $origemDescricao = null;
+    private $origemIdFuncional = null;
+    private $reitor = null;
     private $saltoRodape = 3;
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
@@ -68,7 +68,7 @@ class Despacho {
          * 
          * @syntax $form->add_item($objeto);
          * 
-         * @param $controle object NULL Objeto Input a ser inserido no Formulário
+         * @param $controle object null Objeto Input a ser inserido no Formulário
          * 
          */
         $this->texto[] = $texto;
@@ -103,7 +103,7 @@ class Despacho {
         ## Monta o Relatório 
         # Menu
         $menuRelatorio = new menuRelatorio();
-        $menuRelatorio->set_botaoVoltar(NULL);
+        $menuRelatorio->set_botaoVoltar(null);
         $menuRelatorio->show();
 
         # Cabeçalho do Relatório (com o logotipo)

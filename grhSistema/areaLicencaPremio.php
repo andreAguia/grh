@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,17 +23,17 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de licença prêmio";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaPremio', FALSE);
+    set_session('areaPremio', false);
 
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
@@ -92,7 +92,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("?fase=relatorio");
@@ -112,14 +112,14 @@ if ($acesso) {
             $controle->set_size(100);
             $controle->set_title('Nome do servidor');
             $controle->set_valor($parametroNomeMat);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
                                                      WHERE ativo) UNION (SELECT distinct DIR, DIR
                                                       FROM tblotacao
@@ -167,7 +167,7 @@ if ($acesso) {
             $form->show();
 
             # Pega o time inicial
-            $time_start = microtime(TRUE);
+            $time_start = microtime(true);
 
             # Conecta com o banco de dados
             $servidor = new Pessoal();
@@ -177,7 +177,7 @@ if ($acesso) {
                               matricula,  
                               tbpessoa.nome,
                               tbservidor.idServidor,
-                              concat(IFNULL(tblotacao.UADM,''),' - ',IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,'')) lotacao,
+                              concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,'')) lotacao,
                               tbservidor.dtAdmissao,
                               tbservidor.processoPremio,
                               tbservidor.idServidor,
@@ -219,11 +219,11 @@ if ($acesso) {
             # Processo
             switch ($parametroProcesso) {
                 case "Cadastrado":
-                    $select .= ' AND tbservidor.processoPremio IS NOT NULL';
+                    $select .= ' AND tbservidor.processoPremio IS NOT null';
                     break;
 
                 case "Em Branco":
-                    $select .= ' AND tbservidor.processoPremio IS NULL';
+                    $select .= ' AND tbservidor.processoPremio IS null';
                     break;
             }
 
@@ -245,9 +245,9 @@ if ($acesso) {
             $tabela->set_label(array("Id", "Matrícula", "Nome", "Cargo", "Lotação", "Admissão", "Processo", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"));
             $tabela->set_align(array("center", "center", "left", "left", "left", "center", "left"));
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            $tabela->set_funcao(array(NULL, "dv", NULL, NULL, NULL, "date_to_php", NULL, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"));
-            $tabela->set_classe(array(NULL, NULL, NULL, "pessoal"));
-            $tabela->set_metodo(array(NULL, NULL, NULL, "get_Cargo"));
+            $tabela->set_funcao(array(null, "dv", null, null, null, "date_to_php", null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"));
+            $tabela->set_classe(array(null, null, null, "pessoal"));
+            $tabela->set_metodo(array(null, null, null, "get_Cargo"));
             $tabela->set_titulo("Licença Prêmio");
 
             if (!is_null($parametroNomeMat)) {
@@ -261,7 +261,7 @@ if ($acesso) {
             $tabela->show();
 
             # Pega o time final
-            $time_end = microtime(TRUE);
+            $time_end = microtime(true);
             $time = $time_end - $time_start;
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
 
@@ -273,7 +273,7 @@ if ($acesso) {
         # Chama o menu do Servidor que se quer editar
         case "editaServidorPremio" :
             set_session('idServidorPesquisado', $id);
-            set_session('areaPremio', TRUE);
+            set_session('areaPremio', true);
             loadPage('servidorLicencaPremio.php');
             break;
 
@@ -283,7 +283,7 @@ if ($acesso) {
             $result = $pessoal->select($selectRelatorio);
 
             # Inicia a variável do subtítulo
-            $subtitulo = NULL;
+            $subtitulo = null;
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -315,15 +315,15 @@ if ($acesso) {
             $relatorio->set_titulo('Relatório de Licença Prêmio');
 
             # Acrescenta o subtítulo de tiver filtro
-            if ($subtitulo <> NULL) {
+            if ($subtitulo <> null) {
                 $relatorio->set_subtitulo($subtitulo);
             }
 
             $relatorio->set_label(array("Id", "Matrícula", "Nome", "Cargo", "Lotação", "Admissão", "Processo", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"));
             $relatorio->set_align(array("center", "center", "left", "left", "left", "center", "left"));
-            $relatorio->set_funcao(array(NULL, "dv", NULL, NULL, NULL, "date_to_php", NULL, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"));
-            $relatorio->set_classe(array(NULL, NULL, NULL, "pessoal"));
-            $relatorio->set_metodo(array(NULL, NULL, NULL, "get_Cargo"));
+            $relatorio->set_funcao(array(null, "dv", null, null, null, "date_to_php", null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"));
+            $relatorio->set_classe(array(null, null, null, "pessoal"));
+            $relatorio->set_metodo(array(null, null, null, "get_Cargo"));
 
             $relatorio->set_conteudo($result);
             $relatorio->show();

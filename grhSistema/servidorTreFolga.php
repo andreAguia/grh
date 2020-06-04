@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -77,7 +77,7 @@ if ($acesso) {
     $objeto->set_label(array("Data do Início", "Data do Término", "Folgas Fruídas", "Observação"));
     $objeto->set_width(array(10, 10, 10, 60));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", "date_to_php", NULL));
+    $objeto->set_funcao(array("date_to_php", "date_to_php", null));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -95,8 +95,8 @@ if ($acesso) {
             'label' => 'Data do Início da Folga:',
             'tipo' => 'data',
             'size' => 20,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Data da Fola ou do início da folga.',
             'col' => 3,
             'linha' => 1),
@@ -105,7 +105,7 @@ if ($acesso) {
             'tipo' => 'numero',
             'size' => 5,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Quantidade de dias folgados.',
             'linha' => 1),
         array('linha' => 2,
@@ -123,7 +123,7 @@ if ($acesso) {
             'linha' => 4)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório");
@@ -136,13 +136,13 @@ if ($acesso) {
 
     # Libera Inclusao, ediçao e exclusao somente para servidores autorizados na regra 6
     if (Verifica::acesso($idUsuario, 6)) {
-        $objeto->set_botaoIncluir(TRUE);
-        $objeto->set_botaoEditar(TRUE);
-        $objeto->set_botaoExcluir(TRUE);
+        $objeto->set_botaoIncluir(true);
+        $objeto->set_botaoEditar(true);
+        $objeto->set_botaoExcluir(true);
     } else {
-        $objeto->set_botaoIncluir(FALSE);
-        $objeto->set_botaoEditar(FALSE);
-        $objeto->set_botaoExcluir(FALSE);
+        $objeto->set_botaoIncluir(false);
+        $objeto->set_botaoEditar(false);
+        $objeto->set_botaoExcluir(false);
     }
 
     ################################################################

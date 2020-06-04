@@ -28,7 +28,7 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
-    function exibeAposentadosPorAno($parametroAno = NULL) {
+    function exibeAposentadosPorAno($parametroAno = null) {
 
         /**
          * Exibe tabela com os aposentados por ano de aposentadoria
@@ -68,10 +68,10 @@ class Aposentadoria {
         $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Admissão', 'Saída', 'Motivo'));
         #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
         $tabela->set_align(array('center', 'left', 'left', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(NULL, NULL, NULL, "date_to_php", "date_to_php"));
+        $tabela->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
 
-        $tabela->set_classe(array(NULL, NULL, "pessoal"));
-        $tabela->set_metodo(array(NULL, NULL, "get_cargo"));
+        $tabela->set_classe(array(null, null, "pessoal"));
+        $tabela->set_metodo(array(null, null, "get_cargo"));
 
         $tabela->set_conteudo($result);
 
@@ -82,7 +82,7 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
-    function exibeAposentadosPorTipo($parametroMotivo = NULL) {
+    function exibeAposentadosPorTipo($parametroMotivo = null) {
 
         /**
          * Exibe tabela com os aposentados por tipo de aposentadoria
@@ -117,10 +117,10 @@ class Aposentadoria {
         $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Admissão', 'Saída', 'Perfil'));
         #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
         $tabela->set_align(array('center', 'left', 'left'));
-        $tabela->set_funcao(array(NULL, NULL, NULL, "date_to_php", "date_to_php"));
+        $tabela->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
 
-        $tabela->set_classe(array(NULL, NULL, "pessoal", NULL, NULL, "pessoal"));
-        $tabela->set_metodo(array(NULL, NULL, "get_cargo", NULL, NULL, "get_perfil"));
+        $tabela->set_classe(array(null, null, "pessoal", null, null, "pessoal"));
+        $tabela->set_metodo(array(null, null, "get_cargo", null, null, "get_perfil"));
 
         $tabela->set_conteudo($result);
 
@@ -187,7 +187,7 @@ class Aposentadoria {
         # Conecta o banco de dados
         $pessoal = new Pessoal();
 
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -213,7 +213,7 @@ class Aposentadoria {
         # Conecta o banco de dados
         $pessoal = new Pessoal();
 
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -236,7 +236,7 @@ class Aposentadoria {
                            SUM(numDias) as dias
                       FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
                      WHERE idServidor = $idServidor
-                       AND tbtipolicenca.tempoServico IS TRUE
+                       AND tbtipolicenca.tempoServico IS true
                   GROUP BY tbtipolicenca.nome";
 
         # Conecta o banco de dados
@@ -270,7 +270,7 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
-    function exibeAtivosPrevisao($parametroSexo = NULL, $parametroNome = NULL) {
+    function exibeAtivosPrevisao($parametroSexo = null, $parametroNome = null) {
 
         /**
          * Exibe tabela com a previsão de aposentadoria de servidores ativos
@@ -306,14 +306,14 @@ class Aposentadoria {
         $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Integral', 'Proporcional', 'Compulsória'));
         #$tabela->set_width(array(30,15,15,15,15));
         $tabela->set_align(array("center", "left", "left"));
-        $tabela->set_funcaoDepoisClasse(array(NULL, NULL, NULL, "marcaSePassou", "marcaSePassou", "marcaSePassou"));
+        $tabela->set_funcaoDepoisClasse(array(null, null, null, "marcaSePassou", "marcaSePassou", "marcaSePassou"));
 
-        $tabela->set_classe(array(NULL, NULL, "pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"));
-        $tabela->set_metodo(array(NULL, NULL, "get_CargoSimples", "get_dataAposentadoriaIntegral", "get_dataAposentadoriaProporcional", "get_dataAposentadoriaCompulsoria"));
+        $tabela->set_classe(array(null, null, "pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"));
+        $tabela->set_metodo(array(null, null, "get_CargoSimples", "get_dataAposentadoriaIntegral", "get_dataAposentadoriaProporcional", "get_dataAposentadoriaCompulsoria"));
 
         $tabela->set_conteudo($result);
 
-        if (!IS_NULL($parametroNome)) {
+        if (!IS_null($parametroNome)) {
             $tabela->set_textoRessaltado($parametroNome);
         }
 
@@ -422,7 +422,7 @@ class Aposentadoria {
         $faltando = $diasAposentadoriaIntegral - $totalTempoGeral;
 
         # Calcula a data
-        $novaData = addDias(date("d/m/Y"), $faltando, FALSE);
+        $novaData = addDias(date("d/m/Y"), $faltando, false);
 
         return $novaData;
     }
@@ -485,7 +485,7 @@ class Aposentadoria {
         }
 
         $faltando = $tempo - $publicoGeral;
-        $dataPublico = addDias(date("d/m/Y"), $faltando, FALSE);
+        $dataPublico = addDias(date("d/m/Y"), $faltando, false);
 
         return $dataPublico;
     }
@@ -551,7 +551,7 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
-    function exibeRegras($relatorio = FALSE) {
+    function exibeRegras($relatorio = false) {
 
         /**
          * Exibe uma tabela com as regras da aposentadoria
@@ -592,19 +592,19 @@ class Aposentadoria {
             $relatorio->set_label(array('Sexo', 'Idade', 'Tempo de Serviço'));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($valores);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Aposentadoria Integral");
             $tabela->set_label(array('Sexo', 'Idade', 'Tempo de Serviço'));
             #$tabela->set_width(array(12,14,14,18,15,22));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array('left'));
             $tabela->set_conteudo($valores);
             $tabela->show();
@@ -633,18 +633,18 @@ class Aposentadoria {
             $relatorio->set_label(array('Sexo', 'Idade', 'Tempo de Serviço Público'));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($valores);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Aposentadoria Proporcional");
             $tabela->set_label(array('Sexo', 'Idade', 'Tempo de Serviço Público'));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array('left'));
             $tabela->set_conteudo($valores);
             $tabela->show();
@@ -669,18 +669,18 @@ class Aposentadoria {
             $relatorio->set_label(array('Sexo', 'Idade'));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($valores);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Aposentadoria Compulsória");
             $tabela->set_label(array('Sexo', 'Idade'));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array('left'));
             $tabela->set_conteudo($valores);
             $tabela->show();
@@ -729,7 +729,7 @@ class Aposentadoria {
         $tabela->set_titulo("Somatório de Servidores Ativos que Podem se Aposentar");
         $tabela->set_label(array('Sexo', 'Integral', 'Proporcional', 'Compulsória', 'Total'));
         #$tabela->set_width(array(12,14,14,18,15,22));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array('left'));
         $tabela->set_conteudo($valores);
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
@@ -867,7 +867,7 @@ class Aposentadoria {
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function exibeTempo($idServidorPesquisado, $relatorio = FALSE) {
+    public function exibeTempo($idServidorPesquisado, $relatorio = false) {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -875,7 +875,7 @@ class Aposentadoria {
         # Verifica a data de saída
         $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
         $dtHoje = date("Y-m-d");                                      # Data de hoje
-        $dtFinal = NULL;
+        $dtFinal = null;
 
         # Analisa a data
         if (!vazio($dtSaida)) {           // Se tem saída é a saída
@@ -907,13 +907,13 @@ class Aposentadoria {
 
         # Acrescenta o tempo de UENF
         $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
-        $resultSobreposicao[] = array($dtAdmissao, $dtFinal, NULL);
+        $resultSobreposicao[] = array($dtAdmissao, $dtFinal, null);
 
         # Inicia a variável que informa se tem sobreposicao
-        $sobreposicao = FALSE;
+        $sobreposicao = false;
 
         # Inicia o array que guarda os períodos problemáticos
-        $idsProblemáticos[] = NULL;
+        $idsProblemáticos[] = null;
 
         # Percorre os registros
         foreach ($resultSobreposicao as $periodo) {
@@ -931,7 +931,7 @@ class Aposentadoria {
                 # Evita que seja comparado com ele mesmo
                 if ($idAverbado1 <> $idAverbado2) {
                     if (verificaSobreposicao($dtInicial1, $dtFinal1, $dtInicial2, $dtFinal2)) {
-                        $sobreposicao = TRUE;
+                        $sobreposicao = true;
                         $idsProblemáticos[] = $idAverbado1;
                         $idsProblemáticos[] = $idAverbado2;
                     }
@@ -969,12 +969,12 @@ class Aposentadoria {
             $relatorio->set_label(array("Descrição", "Dias"));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($dados1);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
@@ -982,7 +982,7 @@ class Aposentadoria {
             $tabela->set_conteudo($dados1);
             $tabela->set_label(array("Descrição", "Dias"));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -1001,7 +1001,7 @@ class Aposentadoria {
                            SUM(numDias) as dias
                       FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
                      WHERE idServidor = $idServidorPesquisado
-                       AND tbtipolicenca.tempoServico IS TRUE
+                       AND tbtipolicenca.tempoServico IS true
                   GROUP BY tbtipolicenca.nome";
 
         $dados2 = $pessoal->select($reducao);
@@ -1022,12 +1022,12 @@ class Aposentadoria {
             $relatorio->set_label(array("Descrição", "Dias"));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($dados1);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
@@ -1035,7 +1035,7 @@ class Aposentadoria {
             $tabela->set_conteudo($dados2);
             $tabela->set_label(array("Descrição", "Dias"));
             $tabela->set_align(array("left"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -1065,12 +1065,12 @@ class Aposentadoria {
             $relatorio->set_label(array("Descrição", "Dias"));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($dados1);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
@@ -1078,7 +1078,7 @@ class Aposentadoria {
             $tabela->set_conteudo($dados3);
             $tabela->set_label(array("Descrição", "Dias"));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -1112,7 +1112,7 @@ class Aposentadoria {
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function exibePrevisao($idServidorPesquisado, $relatorio = FALSE) {
+    public function exibePrevisao($idServidorPesquisado, $relatorio = false) {
 
         # Título
         if ($relatorio) {
@@ -1158,7 +1158,7 @@ class Aposentadoria {
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function exibePrevisaoIntegral($idServidorPesquisado, $relatorio = FALSE) {
+    public function exibePrevisaoIntegral($idServidorPesquisado, $relatorio = false) {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -1167,7 +1167,7 @@ class Aposentadoria {
         # Verifica a data de saída
         $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
         $dtHoje = date("Y-m-d");                                      # Data de hoje
-        $dtFinal = NULL;
+        $dtFinal = null;
 
         # Analisa a data
         if (!vazio($dtSaida)) {           // Se tem saída é a saída
@@ -1227,12 +1227,12 @@ class Aposentadoria {
             $relatorio->set_label(array("Descrição", "Regra", "Servidor"));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($dados1);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
@@ -1240,7 +1240,7 @@ class Aposentadoria {
             $tabela->set_conteudo($dados1);
             $tabela->set_label(array("Descrição", "Regra", "Servidor"));
             $tabela->set_align(array("left"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
         }
 
@@ -1269,13 +1269,13 @@ class Aposentadoria {
 
         # Acrescenta o tempo de UENF
         $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
-        $resultSobreposicao[] = array($dtAdmissao, $dtFinal, NULL);
+        $resultSobreposicao[] = array($dtAdmissao, $dtFinal, null);
 
         # Inicia a variável que informa se tem sobreposicao
-        $sobreposicao = FALSE;
+        $sobreposicao = false;
 
         # Inicia o array que guarda os períodos problemáticos
-        $idsProblemáticos[] = NULL;
+        $idsProblemáticos[] = null;
 
         # Percorre os registros
         foreach ($resultSobreposicao as $periodo) {
@@ -1293,7 +1293,7 @@ class Aposentadoria {
                 # Evita que seja comparado com ele mesmo
                 if ($idAverbado1 <> $idAverbado2) {
                     if (verificaSobreposicao($dtInicial1, $dtFinal1, $dtInicial2, $dtFinal2)) {
-                        $sobreposicao = TRUE;
+                        $sobreposicao = true;
                         $idsProblemáticos[] = $idAverbado1;
                         $idsProblemáticos[] = $idAverbado2;
                     }
@@ -1321,7 +1321,7 @@ class Aposentadoria {
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function exibePrevisaoProporcional($idServidorPesquisado, $relatorio = FALSE) {
+    public function exibePrevisaoProporcional($idServidorPesquisado, $relatorio = false) {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -1374,12 +1374,12 @@ class Aposentadoria {
             $relatorio->set_label(array("Descrição", "Regra", "Servidor"));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($dados1);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
@@ -1387,7 +1387,7 @@ class Aposentadoria {
             $tabela->set_conteudo($dados1);
             $tabela->set_label(array("Descrição", "Regra", "Servidor"));
             $tabela->set_align(array("left"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
         }
 
@@ -1421,7 +1421,7 @@ class Aposentadoria {
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function exibePrevisaoCompulsoria($idServidorPesquisado, $relatorio = FALSE) {
+    public function exibePrevisaoCompulsoria($idServidorPesquisado, $relatorio = false) {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -1451,12 +1451,12 @@ class Aposentadoria {
             $relatorio->set_label(array("Descrição", "Regra", "Servidor"));
             $relatorio->set_align(array('left'));
             $relatorio->set_conteudo($dados1);
-            $relatorio->set_cabecalhoRelatorio(FALSE);
-            $relatorio->set_menuRelatorio(FALSE);
-            $relatorio->set_totalRegistro(FALSE);
-            $relatorio->set_exibeSomatorioGeral(FALSE);
-            $relatorio->set_botaoVoltar(FALSE);
-            $relatorio->set_dataImpressao(FALSE);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_exibeSomatorioGeral(false);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_dataImpressao(false);
             $relatorio->show();
         } else {
             $tabela = new Tabela();
@@ -1464,7 +1464,7 @@ class Aposentadoria {
             $tabela->set_conteudo($dados1);
             $tabela->set_label(array("Descrição", "Regra", "Servidor"));
             $tabela->set_align(array("left"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
         }
 
@@ -1487,24 +1487,24 @@ class Aposentadoria {
      * 
      * @param string $itemBold o item do menu para colocar o bold no menu
      */
-    public function exibeMenu($itemBold = NULL) {
+    public function exibeMenu($itemBold = null) {
 
-        $bold = array(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+        $bold = array(false, false, false, false, false, false, false, false);
 
-        $bold[$itemBold] = TRUE;
+        $bold[$itemBold] = true;
 
         $menu = new Menu("menuProcedimentos");
 
         $menu->add_item("titulo", "Servidores Aposentados");
-        $menu->add_item("link", "Aposentados por Ano", "?fase=porAno", "Servidores Aposentados por Ano de Aposentadoria", NULL, NULL, $bold[1]);
-        $menu->add_item("link", "Aposentados por Tipo", "?fase=motivo", "Servidores Aposentados por Tipo de Aposentadoria", NULL, NULL, $bold[2]);
-        $menu->add_item("link", "Estatística", "?fase=anoEstatistica", "Estatística dos Servidores Aposentados", NULL, NULL, $bold[3]);
+        $menu->add_item("link", "Aposentados por Ano", "?fase=porAno", "Servidores Aposentados por Ano de Aposentadoria", null, null, $bold[1]);
+        $menu->add_item("link", "Aposentados por Tipo", "?fase=motivo", "Servidores Aposentados por Tipo de Aposentadoria", null, null, $bold[2]);
+        $menu->add_item("link", "Estatística", "?fase=anoEstatistica", "Estatística dos Servidores Aposentados", null, null, $bold[3]);
 
         $menu->add_item("titulo", "Servidores Ativos");
-        $menu->add_item("link", "Previsão Masculino", "?fase=previsaoM", "Previsão de Aposentadoria de Servidores Ativos do Sexo Masculino", NULL, NULL, $bold[4]);
-        $menu->add_item("link", "Previsão Feminino", "?fase=previsaoF", "Previsão de Aposentadoria de Servidores Ativos do Sexo Feminino", NULL, NULL, $bold[5]);
-        $menu->add_item("link", "Somatório", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", NULL, NULL, $bold[6]);
-        $menu->add_item("link", "Regras", "?fase=regras", "Regras de Aposentadoria", NULL, NULL, $bold[7]);
+        $menu->add_item("link", "Previsão Masculino", "?fase=previsaoM", "Previsão de Aposentadoria de Servidores Ativos do Sexo Masculino", null, null, $bold[4]);
+        $menu->add_item("link", "Previsão Feminino", "?fase=previsaoF", "Previsão de Aposentadoria de Servidores Ativos do Sexo Feminino", null, null, $bold[5]);
+        $menu->add_item("link", "Somatório", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", null, null, $bold[6]);
+        $menu->add_item("link", "Regras", "?fase=regras", "Regras de Aposentadoria", null, null, $bold[7]);
 
         $menu->show();
     }

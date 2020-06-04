@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -24,12 +24,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de plano de cargos e vencimentos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -110,10 +110,10 @@ if ($acesso) {
     $objeto->set_label(array("id", "Decreto / Lei", "Servidores", "Data do Decreto / Lei", "Publicação no DOERJ", "Data da Vigência", "Plano Atual", "DO", "Tabela"));
     #$objeto->set_width(array(5,20,20,20,10,10));
     $objeto->set_align(array("center", "left"));
-    $objeto->set_funcao(array(NULL, NULL, NULL, "date_to_php", "date_to_php", "date_to_php"));
+    $objeto->set_funcao(array(null, null, null, "date_to_php", "date_to_php", "date_to_php"));
 
-    $objeto->set_classe([NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'PlanoCargos', 'PlanoCargos']);
-    $objeto->set_metodo([NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'exibeLei', 'exibeBotaoTabela']);
+    $objeto->set_classe([null, null, null, null, null, null, null, 'PlanoCargos', 'PlanoCargos']);
+    $objeto->set_metodo([null, null, null, null, null, null, null, 'exibeLei', 'exibeBotaoTabela']);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 6,
@@ -141,8 +141,8 @@ if ($acesso) {
             'label' => 'Decreto ou Lei:',
             'title' => 'Número do Decreto',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'size' => 30),
         array('linha' => 1,
             'nome' => 'servidores',
@@ -150,7 +150,7 @@ if ($acesso) {
             'label' => 'Servidores:',
             'title' => 'O plano se refere a qual tipo de servidor.',
             'tipo' => 'combo',
-            'array' => array(NULL, "Todos", "Adm/Tec", "Professor"),
+            'array' => array(null, "Todos", "Adm/Tec", "Professor"),
             'padrao' => 'Sim',
             'size' => 10),
         array('linha' => 1,
@@ -159,7 +159,7 @@ if ($acesso) {
             'label' => 'Plano atual:',
             'title' => 'Se é o Plano de Cargos atualmente ativo',
             'tipo' => 'combo',
-            'array' => array(array('1', 'Sim'), array(NULL, 'Não')),
+            'array' => array(array('1', 'Sim'), array(null, 'Não')),
             'padrao' => 'Sim',
             'size' => 10),
         array('linha' => 2,
@@ -168,7 +168,7 @@ if ($acesso) {
             'label' => 'Data do Decreto:',
             'title' => 'Data do decreto',
             'tipo' => 'data',
-            'required' => TRUE,
+            'required' => true,
             'size' => 15),
         array('linha' => 2,
             'nome' => 'dtPublicacao',
@@ -176,7 +176,7 @@ if ($acesso) {
             'label' => 'Data da Publicação:',
             'title' => 'Data da Publicação no DOERJ',
             'tipo' => 'data',
-            'required' => TRUE,
+            'required' => true,
             'size' => 15),
         array('linha' => 2,
             'nome' => 'dtVigencia',
@@ -184,7 +184,7 @@ if ($acesso) {
             'label' => 'Data da Vigência:',
             'title' => 'Data em que o plano passou a vigorar',
             'tipo' => 'data',
-            'required' => TRUE,
+            'required' => true,
             'size' => 15),
         array('linha' => 3,
             'col' => 12,
@@ -192,7 +192,7 @@ if ($acesso) {
             'label' => 'Nome do arquivo da Lei:',
             'title' => 'texto do Decreto',
             'tipo' => 'texto',
-            'bloqueadoEsconde' => TRUE,
+            'bloqueadoEsconde' => true,
             'size' => 250),
         array('linha' => 4,
             'col' => 12,
@@ -254,10 +254,10 @@ if ($acesso) {
 
             $menu->show();
 
-            $objeto->set_botaoVoltarForm(FALSE);
-            $objeto->set_botaoHistorico(FALSE);
+            $objeto->set_botaoVoltarForm(false);
+            $objeto->set_botaoHistorico(false);
 
-            $objeto->editar($id, TRUE);
+            $objeto->editar($id, true);
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -280,7 +280,7 @@ if ($acesso) {
             $painel->abre();
 
             $plano = new PlanoCargos();
-            $plano->exibeTabela($id, FALSE);
+            $plano->exibeTabela($id, false);
 
             $painel->fecha();
 
@@ -320,9 +320,9 @@ if ($acesso) {
 
             # Verifica se permite edição dos valores
             if (Verifica::acesso($idUsuario, 1)) {   // Somente Administradores
-                $plano->exibeTabela($id, TRUE);
+                $plano->exibeTabela($id, true);
             } else {
-                $plano->exibeTabela($id, FALSE);
+                $plano->exibeTabela($id, false);
             }
 
             $grid->fechaColuna();

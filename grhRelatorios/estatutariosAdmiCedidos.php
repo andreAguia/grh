@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -39,7 +39,7 @@ if ($acesso) {
                WHERE tbservidor.idPerfil = 1
                AND tbtipocargo.tipo = "Adm/Tec"
                  AND situacao = 1 
-                 AND ((tbhistcessao.dtFim is NULL) OR (tbhistcessao.dtFim > CURDATE()))
+                 AND ((tbhistcessao.dtFim is null) OR (tbhistcessao.dtFim > CURDATE()))
              ORDER BY nome';
 
     $result = $servidor->select($select);
@@ -51,9 +51,9 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Órgão', 'Início', 'Término'));
     $relatorio->set_width(array(10, 30, 20, 20, 10, 10));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", "date_to_php"));
-    $relatorio->set_classe(array(NULL, NULL, "Pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_Cargo"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_classe(array(null, null, "Pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_Cargo"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(5);

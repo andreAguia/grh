@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -21,12 +21,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Formação";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -101,7 +101,7 @@ if ($acesso) {
     $objeto->set_label(array("Nível", "Curso", "Instituição", "Ano de Término"));
     #$objeto->set_width(array(15,30,35,10));	
     $objeto->set_align(array("center", "left", "left"));
-    #$objeto->set_function(array (NULL,"date_to_php"));
+    #$objeto->set_function(array (null,"date_to_php"));
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -119,24 +119,24 @@ if ($acesso) {
                                             escolaridade
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
-    array_unshift($result, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($result, array(null, null)); # Adiciona o valor de nulo
     # Pega os dados da datalist curso
     $cursos = $pessoal->select('SELECT distinct habilitacao
                                        FROM tbformacao
                                    ORDER BY habilitacao');
-    array_unshift($cursos, array(NULL)); # Adiciona o valor de nulo
+    array_unshift($cursos, array(null)); # Adiciona o valor de nulo
     # Pega os dados da datalist instEnsino
     $instEnsino = $pessoal->select('SELECT distinct instEnsino
                                        FROM tbformacao
                                    ORDER BY instEnsino');
-    array_unshift($instEnsino, array(NULL)); # Adiciona o valor de nulo
+    array_unshift($instEnsino, array(null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'idEscolaridade',
             'label' => 'Nível:',
             'tipo' => 'combo',
             'array' => $result,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'size' => 20,
             'col' => 4,
             'title' => 'Nível do Curso.',
@@ -145,10 +145,10 @@ if ($acesso) {
             'label' => 'Curso:',
             'tipo' => 'texto',
             'datalist' => $cursos,
-            'plm' => TRUE,
+            'plm' => true,
             'size' => 80,
             'col' => 8,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Nome do curso.',
             'linha' => 1),
         array('nome' => 'instEnsino',
@@ -156,9 +156,9 @@ if ($acesso) {
             'tipo' => 'texto',
             'datalist' => $instEnsino,
             'size' => 80,
-            'plm' => TRUE,
+            'plm' => true,
             'col' => 7,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Nome da Instituição de Ensino.',
             'linha' => 2),
         array('nome' => 'horas',
@@ -189,7 +189,7 @@ if ($acesso) {
             'title' => 'idPessoa',
             'linha' => 5)));
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Formação");

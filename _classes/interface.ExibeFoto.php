@@ -21,39 +21,39 @@ class ExibeFoto {
 
 ######################################################################################################################
 
-    public function set_fotoLargura($fotoLargura = NULL) {
+    public function set_fotoLargura($fotoLargura = null) {
         /**
          * Informa a largura da foto
          * 
          * @syntax $foto->set_fotoLargura($fotoLargura);
          * 
-         * @param $fotoLargura int NULL A largura da foto
+         * @param $fotoLargura int null A largura da foto
          */
         $this->fotoLargura = $fotoLargura;
     }
 
 ######################################################################################################################
 
-    public function set_fotoAltura($fotoAltura = NULL) {
+    public function set_fotoAltura($fotoAltura = null) {
         /**
          * Informa a altura da foto
          * 
          * @syntax $foto->set_fotoAltura($fotoAltura);
          * 
-         * @param $fotoAltura int NULL A altura da foto
+         * @param $fotoAltura int null A altura da foto
          */
         $this->fotoAltura = $fotoAltura;
     }
 
 ######################################################################################################################
 
-    public function set_url($url = NULL) {
+    public function set_url($url = null) {
         /**
          * Informa a url da foto
          * 
          * @syntax $foto->set_url($url);
          * 
-         * @param $url int NULL A url da foto
+         * @param $url int null A url da foto
          */
         $this->url = $url;
     }

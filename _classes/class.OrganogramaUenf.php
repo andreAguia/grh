@@ -7,11 +7,11 @@ class OrganogramaUenf {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $diretoria string NULL A Diretoria do organograma. Se for NULL exibe o organograma de toda a Uenf
-     * @var private $ignore    string NULL ALguma lotação a ser ignorada na exibição
+     * @var private $diretoria string null A Diretoria do organograma. Se for null exibe o organograma de toda a Uenf
+     * @var private $ignore    string null ALguma lotação a ser ignorada na exibição
      */
-    private $diretoria = NULL;
-    private $ignore = NULL;
+    private $diretoria = null;
+    private $ignore = null;
 
 ###########################################################
 
@@ -24,13 +24,13 @@ class OrganogramaUenf {
 
 ###########################################################
 
-    public function set_ignore($ignore = NULL) {
+    public function set_ignore($ignore = null) {
         /**
          * Informa se a lotação será ignorada
          * 
          * @syntax $org->set_ignore($ignore);
          * 
-         * @param $ignore string NULL O nome da lotação a ser ignorada
+         * @param $ignore string null O nome da lotação a ser ignorada
          */
         $this->ignore = $ignore;
     }

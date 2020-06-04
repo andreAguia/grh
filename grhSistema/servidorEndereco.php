@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -60,7 +60,7 @@ if ($acesso) {
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -79,15 +79,15 @@ if ($acesso) {
                                        CONCAT(tbcidade.nome," (",tbestado.uf,")")
                                   FROM tbcidade JOIN tbestado USING (idEstado)
                               ORDER BY proximidade,tbestado.uf,tbcidade.nome');
-    array_unshift($cidade, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($cidade, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 5,
             'nome' => 'endereco',
             'label' => 'Endereço:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
-            'plm' => TRUE,
+            'autofocus' => true,
+            'plm' => true,
             'title' => 'Endereço do Servidor',
             'col' => 12,
             'size' => 150),
@@ -96,7 +96,7 @@ if ($acesso) {
             'label' => 'Bairro:',
             'tipo' => 'texto',
             'title' => 'Bairro',
-            'plm' => TRUE,
+            'plm' => true,
             'col' => 4,
             'size' => 50),
         array('linha' => 6,

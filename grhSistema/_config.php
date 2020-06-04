@@ -25,7 +25,7 @@ define("PASTA_CONCURSO", "../../_arquivos/concurso/");               # Publicaç
 define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");        # Pasta Funcional do Servidor
 # Fontes para PDF
 #define('FPDF_FONTPATH','../../_framework/_pdfFont/');
-# Tags aceitas em campos com htmlTag = TRUE
+# Tags aceitas em campos com htmlTag = true
 define('TAGS', '<p></p><a></a><br/><br><div></div><table></table><tr></tr><td></td><th></th><strong></strong><em></em><u></u><sub></sub><sup></sup><ol></ol><li></li><ul></ul><hr><span></span><h3></h3>');
 
 # Cria array dos meses
@@ -42,7 +42,7 @@ $mes = array(array("1", "Janeiro"),
     array("11", "Novembro"),
     array("12", "Dezembro"));
 
-$nomeMes = array(NULL,
+$nomeMes = array(null,
     "Janeiro",
     "Fevereiro",
     "Março",

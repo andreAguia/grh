@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -21,12 +21,12 @@ if ($acesso) {
     $comissao = new CargoComissao();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de cargo em comissão";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Verifica a fase do programa
@@ -119,7 +119,7 @@ if ($acesso) {
                                   simbolo,
                                   valSal
                              FROM tbtipocomissao
-                            WHERE ativo = TRUE
+                            WHERE ativo = true
                          ORDER BY simbolo, descricao";
             $row = $pessoal->select($select);
 
@@ -181,7 +181,7 @@ if ($acesso) {
             $controle->set_valor($parametroDescricao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_col(9);
             $form->add_item($controle);
 
@@ -219,7 +219,7 @@ if ($acesso) {
             }
 
             if ($parametroStatus == "Vigente") {
-                $select .= " AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                $select .= " AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                         ORDER BY tbpessoa.nome, tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
             } else {
                 $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
@@ -228,9 +228,9 @@ if ($acesso) {
             $result = $pessoal->select($select);
             $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Perfil');
             $align = array("center", "left", "center", "center", "left", "center");
-            $function = array("idMatricula", NULL, "date_to_php", "date_to_php", "descricaoComissao");
-            $classe = array(NULL, NULL, NULL, NULL, NULL, "Pessoal");
-            $metodo = array(NULL, NULL, NULL, NULL, NULL, "get_perfil");
+            $function = array("idMatricula", null, "date_to_php", "date_to_php", "descricaoComissao");
+            $classe = array(null, null, null, null, null, "Pessoal");
+            $metodo = array(null, null, null, null, null, "get_perfil");
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -244,7 +244,7 @@ if ($acesso) {
             $tabela->set_idCampo('idComissao');
             $tabela->set_editar('?fase=editarCargo');
             $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
-                    'valor' => NULL,
+                    'valor' => null,
                     'operador' => '=',
                     'id' => 'vigente')));
             $tabela->show();
@@ -264,7 +264,7 @@ if ($acesso) {
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_col(2);
             $form->add_item($controle);
 
@@ -316,7 +316,7 @@ if ($acesso) {
             $result = $pessoal->select($select);
             $label = array('Tipo', 'Data', 'Publicação', 'Ato Reitor', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
             $align = array("center", "center", "center", "center", "center", "left", "left", "left");
-            $function = array(NULL, "date_to_php", "date_to_php", "date_to_php");
+            $function = array(null, "date_to_php", "date_to_php", "date_to_php");
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -353,7 +353,7 @@ if ($acesso) {
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_col(2);
             $form->add_item($controle);
 
@@ -414,7 +414,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
                 $label = array('Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
                 $align = array("center", "center", "center", "center", "center", "left", "left", "left");
-                $function = array(NULL, "date_to_php", "date_to_php", "date_to_php");
+                $function = array(null, "date_to_php", "date_to_php", "date_to_php");
 
                 # Monta a tabela
                 $tabela = new Tabela();
@@ -473,7 +473,7 @@ if ($acesso) {
               $result = $pessoal->select($select);
               $label = array('Tipo','Publicação','Ato Reitor','Data','Id Funcional','Nome','Cargo','Processo');
               $align = array("center","center","center","center","center","left","left","left");
-              $function = array(NULL,"date_to_php","date_to_php","date_to_php");
+              $function = array(null,"date_to_php","date_to_php","date_to_php");
 
               # Monta a tabela
               $tabela = new Tabela();
@@ -512,7 +512,7 @@ if ($acesso) {
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_col(2);
             $form->add_item($controle);
 
@@ -573,7 +573,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
                 $label = array('Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
                 $align = array("center", "center", "center", "center", "center", "left", "left", "left");
-                $function = array(NULL, "date_to_php", "date_to_php", "date_to_php");
+                $function = array(null, "date_to_php", "date_to_php", "date_to_php");
 
                 # Monta a tabela
                 $tabela = new Tabela();
@@ -633,7 +633,7 @@ if ($acesso) {
               $result = $pessoal->select($select);
               $label = array('Tipo','Publicação','Ato Reitor','Data','Id Funcional','Nome','Cargo','Processo');
               $align = array("center","center","center","center","center","left","left","left");
-              $function = array(NULL,"date_to_php","date_to_php","date_to_php");
+              $function = array(null,"date_to_php","date_to_php","date_to_php");
 
               # Monta a tabela
               $tabela = new Tabela();

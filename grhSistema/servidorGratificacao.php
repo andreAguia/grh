@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de gratificação especial";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -72,7 +72,7 @@ if ($acesso) {
     # Verifica-se se o servidor já recebe alguma gratificação (está em aberto)
     if (is_null($pessoal->get_gratificacaoDtFinal($idServidorPesquisado))) {
         # Retira o botão de incluir
-        $objeto->set_botaoIncluir(FALSE);
+        $objeto->set_botaoIncluir(false);
 
         # Informa o porquê
         $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor ainda está recebendo uma gratificação.<br/>"
@@ -137,8 +137,8 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Data inícial da Gratificação.',
             'linha' => 1),
         array('nome' => 'dtFinal',
@@ -152,7 +152,7 @@ if ($acesso) {
             'label' => 'Valor:',
             'tipo' => 'moeda',
             'size' => 20,
-            'required' => TRUE,
+            'required' => true,
             'col' => 3,
             'title' => 'Valor da Gratificação.',
             'linha' => 1),
@@ -178,7 +178,7 @@ if ($acesso) {
             'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Gratificação Especial");

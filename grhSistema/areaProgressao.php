@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de progressão e enquadramento";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -91,7 +91,7 @@ if ($acesso) {
             $menu1->add_link($botao, "right");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/progressaoporcargo.php");
@@ -120,7 +120,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(6);
             $controle->set_array($result);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             $form->show();
@@ -151,10 +151,10 @@ if ($acesso) {
             $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Salário Atual', 'Data Inicial', 'Análise'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_funcao(array(NULL, NULL, NULL, NULL, "exibeDadosSalarioAtual"));
+            $tabela->set_funcao(array(null, null, null, null, "exibeDadosSalarioAtual"));
 
-            $tabela->set_classe(array(NULL, NULL, "pessoal", "pessoal", NULL, "Progressao", "Progressao"));
-            $tabela->set_metodo(array(NULL, NULL, "get_Cargo", "get_Lotacao", NULL, "get_dtInicialAtual", "analisaServidor"));
+            $tabela->set_classe(array(null, null, "pessoal", "pessoal", null, "Progressao", "Progressao"));
+            $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_dtInicialAtual", "analisaServidor"));
 
             $tabela->set_conteudo($result);
 

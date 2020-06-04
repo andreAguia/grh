@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -21,12 +21,12 @@ if ($acesso) {
     $pessoal = new Pessoal();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de concurso";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Verifica a fase do programa
@@ -94,7 +94,7 @@ if ($acesso) {
                       idConcurso,
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
-                WHERE TRUE';
+                WHERE true';
 
     if (!vazio($parametroAno)) {
         $select .= ' AND anoBase = ' . $parametroAno;
@@ -139,10 +139,10 @@ if ($acesso) {
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_funcao(array(NULL, NULL, 'date_to_php'));
+    $objeto->set_funcao(array(null, null, 'date_to_php'));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, NULL, NULL, "Pessoal", "Pessoal", "Pessoal"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, NULL, NULL, "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"));
+    $objeto->set_classe(array(null, null, null, null, null, null, "Pessoal", "Pessoal", "Pessoal"));
+    $objeto->set_metodo(array(null, null, null, null, null, null, "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"));
 
     $objeto->set_excluirCondicional('?fase=excluir', 0, 8, "==");
 
@@ -173,8 +173,8 @@ if ($acesso) {
             'nome' => 'anobase',
             'label' => 'Ano:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
-            'required' => TRUE,
+            'autofocus' => true,
+            'required' => true,
             'col' => 2,
             'size' => 4,
             'title' => 'Ano base do concurso'),
@@ -197,15 +197,15 @@ if ($acesso) {
             'label' => 'Regime:',
             'tipo' => 'combo',
             'array' => array("CLT", "Estatutário"),
-            'required' => TRUE,
+            'required' => true,
             'col' => 3,
             'size' => 20),
         array('linha' => 3,
             'nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'required' => TRUE,
-            'array' => array(array(NULL, NULL),
+            'required' => true,
+            'array' => array(array(null, null),
                 array(1, "Adm & Tec"),
                 array(2, "Professor")),
             'col' => 3,
@@ -233,8 +233,8 @@ if ($acesso) {
     # idUsuário para o LogLicença sem vencimentosLicença sem vencimentos
     $objeto->set_idUsuario($idUsuario);
 
-    $objeto->set_botaoVoltarLista(FALSE);
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoVoltarLista(false);
+    $objeto->set_botaoIncluir(false);
 
 
     if (!vazio($id)) {
@@ -270,7 +270,7 @@ if ($acesso) {
             $menu1->add_link($botaoInserir, "right");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
@@ -285,7 +285,7 @@ if ($acesso) {
                                           FROM tbconcurso
                                       ORDER BY anoBase');
 
-            array_unshift($result, array(NULL, "Todos"));
+            array_unshift($result, array(null, "Todos"));
 
             # Formulário de Pesquisa
             $form = new Form('?');
@@ -299,7 +299,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(2);
             $controle->set_array($result);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             # Tipo    
@@ -310,7 +310,7 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(3);
-            $controle->set_array(array(array(NULL, "Todos"), array(1, "Adm & Tec"), array(2, "Professor")));
+            $controle->set_array(array(array(null, "Todos"), array(1, "Adm & Tec"), array(2, "Professor")));
             $form->add_item($controle);
 
             $form->show();
@@ -362,7 +362,7 @@ if ($acesso) {
                 $grid->abreColuna(3);
 
                 # Exibe os dados do Concurso
-                $concurso->exibeDadosConcurso($id, TRUE);
+                $concurso->exibeDadosConcurso($id, true);
 
                 $painel = new Callout();
                 $painel->abre();
@@ -411,14 +411,14 @@ if ($acesso) {
                     $tabela->set_conteudo($conteudo);
                     $tabela->set_label(array("Descrição", "Data", "Pag", "Ver", "Upload"));
                     $tabela->set_titulo("Publicações");
-                    $tabela->set_funcao(array(NULL, "date_to_php"));
+                    $tabela->set_funcao(array(null, "date_to_php"));
                     $tabela->set_align(array("left"));
                     $tabela->set_width(array(40, 10, 10, 10, 10));
-                    $tabela->set_numeroOrdem(TRUE);
+                    $tabela->set_numeroOrdem(true);
                     $tabela->set_numeroOrdemTipo('d');
 
-                    $tabela->set_classe(array(NULL, NULL, NULL, "ConcursoPublicacao"));
-                    $tabela->set_metodo(array(NULL, NULL, NULL, "exibePublicacao"));
+                    $tabela->set_classe(array(null, null, null, "ConcursoPublicacao"));
+                    $tabela->set_metodo(array(null, null, null, "exibePublicacao"));
 
                     $tabela->set_editar('cadastroConcursoPublicacao.php?fase=editar&idConcurso=' . $id);
                     $tabela->set_idCampo('idConcursoPublicacao');
@@ -433,7 +433,7 @@ if ($acesso) {
                     $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
 
                     # Coloca o objeto link na tabela			
-                    $tabela->set_link(array(NULL, NULL, NULL, NULL, $botao));
+                    $tabela->set_link(array(null, null, null, null, $botao));
 
                     $tabela->show();
                 } else {
@@ -474,7 +474,7 @@ if ($acesso) {
             $menu1->add_link($botaoInserir, "right");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório de vagas desse concurao");
             $botaoRel->set_url("../grhRelatorios/concurso.vagas.docentes.php?id=" . $id);
@@ -492,7 +492,7 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($id, TRUE);
+            $concurso->exibeDadosConcurso($id, true);
 
             $painel = new Callout();
             $painel->abre();
@@ -548,9 +548,9 @@ if ($acesso) {
                     $tabela->set_align(array("center", "center", "center", "left", "left"));
                     $tabela->set_label(array("Centro", "Laboratório", "Cargo", "Área", "Servidor", "Obs"));
                     $tabela->set_titulo("Vagas de Professores");
-                    $tabela->set_classe(array(NULL, NULL, NULL, NULL, "Vaga"));
-                    $tabela->set_metodo(array(NULL, NULL, NULL, NULL, "get_Nome"));
-                    $tabela->set_numeroOrdem(TRUE);
+                    $tabela->set_classe(array(null, null, null, null, "Vaga"));
+                    $tabela->set_metodo(array(null, null, null, null, "get_Nome"));
+                    $tabela->set_numeroOrdem(true);
 
                     $tabela->set_rowspan(0);
                     $tabela->set_grupoCorColuna(0);
@@ -611,7 +611,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
@@ -629,7 +629,7 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($id, TRUE);
+            $concurso->exibeDadosConcurso($id, true);
 
             $painel = new Callout();
             $painel->abre();
@@ -688,7 +688,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
@@ -706,7 +706,7 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($id, TRUE);
+            $concurso->exibeDadosConcurso($id, true);
 
             $painel = new Callout();
             $painel->abre();
@@ -844,7 +844,7 @@ if ($acesso) {
             $servidor = new Pessoal();
 
             $select = 'SELECT concat(tbconcurso.anobase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
-                             concat(IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao,
+                             concat(IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao,
                              area,
                              idServidor,
                              tbvagahistorico.obs,
@@ -863,9 +863,9 @@ if ($acesso) {
                 $tabela->set_align(array("left", "left", "left", "left", "left"));
                 $tabela->set_label(array("Concurso", "Laboratório", "Área", "Servidor", "Obs"));
                 $tabela->set_titulo($titulo);
-                $tabela->set_classe(array(NULL, NULL, NULL, "Vaga"));
-                $tabela->set_metodo(array(NULL, NULL, NULL, "get_Nome"));
-                $tabela->set_numeroOrdem(TRUE);
+                $tabela->set_classe(array(null, null, null, "Vaga"));
+                $tabela->set_metodo(array(null, null, null, "get_Nome"));
+                $tabela->set_numeroOrdem(true);
                 $tabela->show();
             } else {
                 tituloTable($titulo);
@@ -927,7 +927,7 @@ if ($acesso) {
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
                     $atividade = "Fez o upload de publicação do concurso " . $concurso->get_nomeConcurso($id);
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, $id, 8);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
 
                     # Volta para o menu
                     loadPage("?fase=editar&id=" . $id);

@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -45,13 +45,13 @@ if ($acesso) {
     $relatorio->set_label(array('Cargo', 'Área', 'Função'));
     $relatorio->set_width(array(30, 30, 30));
     $relatorio->set_align(array("center"));
-    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
+    #$relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
+    #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
     $relatorio->set_conteudo($result);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_subTotal(false);
     $relatorio->show();
 
     ######
@@ -75,15 +75,15 @@ if ($acesso) {
     $relatorio->set_label(array('Descrição'));
     $relatorio->set_width(array(100));
     $relatorio->set_align(array("left"));
-    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,NULL,"date_to_php"));
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
+    #$relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
+    #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
     $relatorio->set_conteudo($result);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
     $relatorio->show();
 
     ######
@@ -100,14 +100,14 @@ if ($acesso) {
     $relatorio->set_width(array(100));
     $relatorio->set_align(array("left"));
     #$relatorio->set_funcao(array('htmlentities'));
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
+    #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
     $relatorio->set_conteudo($result);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
     $relatorio->show();
 
     ######
@@ -127,14 +127,14 @@ if ($acesso) {
     $relatorio->set_width(array(100));
     $relatorio->set_align(array("left"));
     $relatorio->set_funcao(array('formataAtribuicao'));
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
+    #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
     $relatorio->set_conteudo($result);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
     $relatorio->show();
 
 

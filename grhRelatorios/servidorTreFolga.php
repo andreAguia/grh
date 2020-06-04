@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -43,9 +43,9 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(false);
     $relatorio->set_label(array('Data Inicial', 'Data Final', 'Dias'));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array("date_to_php", "date_to_php"));

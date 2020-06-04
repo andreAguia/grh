@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -47,29 +47,29 @@ if ($acesso) {
     $result = $pessoal->select($selectLicença);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
 
     # Tiver parâmetro exibe subtitulo
     if (!vazio($parametro)) {
         $relatorio->set_subtitulo($pessoal->get_nomeTipoLicenca($parametro));
     }
 
-    $relatorio->set_subTotal(TRUE);
-    $relatorio->set_numeroOrdem(TRUE);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_label(array("Status", "Tipo", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));
     $relatorio->set_align(array("center", "center", "left", "left", "left"));
 
-    $relatorio->set_classe(array("LicencaSemVencimentos", NULL, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-    $relatorio->set_metodo(array("exibeStatus", NULL, "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
+    $relatorio->set_classe(array("LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
+    $relatorio->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Licenças Sem  Vencimentos");
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();

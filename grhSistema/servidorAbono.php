@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Cadastro de abono permanência";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -85,7 +85,7 @@ if ($acesso) {
     $objeto->set_label(array("Processo", "Publicaçao", "Status", "Data"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL, "date_to_php", NULL, "date_to_php"));
+    $objeto->set_funcao(array(null, "date_to_php", null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -104,8 +104,8 @@ if ($acesso) {
             'label' => 'Processo:',
             'tipo' => 'texto',
             'size' => 30,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'O numero do processo.',
             'col' => 3,
             'linha' => 1),
@@ -114,17 +114,17 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 10,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'A data da publicaçao no DOERJ.',
             'linha' => 1),
         array('nome' => 'status',
             'label' => 'Status:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, ""), array(1, "Deferido"), array(2, "Indeferido")),
+            'array' => array(array(null, ""), array(1, "Deferido"), array(2, "Indeferido")),
             'size' => 20,
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'linha' => 1),
         array('nome' => 'data',
             'label' => 'Data:',

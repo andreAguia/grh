@@ -15,7 +15,7 @@ switch ($resultado) {
 
     # Resultado: nulo - Ainda não saiu o resultado
     # Status: 1 - Em aberto
-    case NULL:
+    case null:
         $campoValor[2] = 1;
         break;
 

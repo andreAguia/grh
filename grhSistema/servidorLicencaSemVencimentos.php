@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -22,12 +22,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de llicenças sem vencimentos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -165,10 +165,10 @@ if ($acesso) {
     $objeto->set_label(array("Status", "Tipo", "Tipo", "Dados", "Período", "Entregou CRP?", "Documentos"));
     $objeto->set_width(array(10, 5, 15, 20, 20, 5, 20));
     $objeto->set_align(array("center", "center", "left", "left", "left"));
-    #$objeto->set_funcao(array(NULL,NULL,NULL,"date_to_php"));
+    #$objeto->set_funcao(array(null,null,null,"date_to_php"));
 
-    $objeto->set_classe(array("LicencaSemVencimentos", NULL, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-    $objeto->set_metodo(array("exibeStatus", NULL, "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp", "exibeBotaoDocumentos"));
+    $objeto->set_classe(array("LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
+    $objeto->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp", "exibeBotaoDocumentos"));
 
     $objeto->set_formatacaoCondicional(array(array('coluna' => 0,
             'valor' => 'Em Aberto',
@@ -209,25 +209,25 @@ if ($acesso) {
                                   FROM tbtipolicenca
                                  WHERE (idTpLicenca = 5) OR (idTpLicenca = 8) OR (idTpLicenca = 16)
                               ORDER BY 2');
-    array_unshift($result, array(NULL, ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
+    array_unshift($result, array(null, ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'idTpLicenca',
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'size' => 50,
             'array' => $result,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Tipo do Adastamento/Licença.',
             'col' => 10,
             'linha' => 1),
         array('nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Inicial"),
                 array(2, "Renovação")),
-            'required' => TRUE,
+            'required' => true,
             'size' => 2,
             'valor' => 0,
             'col' => 2,
@@ -296,8 +296,8 @@ if ($acesso) {
             'title' => 'informa se entregou CRP',
             'label' => 'entregou CRP',
             'tipo' => 'combo',
-            'array' => array(array(FALSE, "Não"),
-                array(TRUE, "Sim")),
+            'array' => array(array(false, "Não"),
+                array(true, "Sim")),
             'size' => 10),
         array('linha' => 5,
             'nome' => 'obs',
@@ -312,7 +312,7 @@ if ($acesso) {
             'linha' => 11)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Formação");
@@ -389,7 +389,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $controle->set_valor($dtRetorno);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data do retorno do servidor.');
             $form->add_item($controle);
 
@@ -399,7 +399,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtPublicacao);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data da publicação no DOERJ.');
             $form->add_item($controle);
 
@@ -409,7 +409,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $controle->set_valor($pgPublicacao);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A pag da publicação no DOERJ.');
             $form->add_item($controle);
 
@@ -419,7 +419,7 @@ if ($acesso) {
             $controle->set_linha(2);
             $controle->set_col(12);
             $controle->set_valor($nomeGerenteDestino);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('O nome da chefia imediata.');
             $form->add_item($controle);
 
@@ -429,7 +429,7 @@ if ($acesso) {
             $controle->set_linha(3);
             $controle->set_col(12);
             $controle->set_valor($gerenciaImediataDescricao);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
 
@@ -478,7 +478,7 @@ if ($acesso) {
             $array = serialize($array);
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica a data de retorno
@@ -506,8 +506,8 @@ if ($acesso) {
 
             if ($erro == 0) {
                 # Verifica se houve alterações
-                $alteracoes = NULL;
-                $atividades = NULL;
+                $alteracoes = null;
+                $atividades = null;
 
                 # Verifica as alterações para o log
                 if ($dtRetorno <> $dtRetornoDigitado) {

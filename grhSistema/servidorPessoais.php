@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados pessoais";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -77,7 +77,7 @@ if ($acesso) {
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -96,28 +96,28 @@ if ($acesso) {
                                        estciv
                                   FROM tbestciv
                               ORDER BY estciv');
-    array_unshift($estadoCivil, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($estadoCivil, array(null, null)); # Adiciona o valor de nulo
     # Pega os dados da combo de nacionalidade
     $nacionalidade = $pessoal->select('SELECT idNacionalidade,
                                        nacionalidade
                                   FROM tbnacionalidade
                               ORDER BY nacionalidade');
-    array_unshift($nacionalidade, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($nacionalidade, array(null, null)); # Adiciona o valor de nulo
     # Pega os dados da combo de país de origem
     $paisOrigem = $pessoal->select('SELECT idPais,
                                        pais
                                   FROM tbpais
                               ORDER BY pais');
-    array_unshift($paisOrigem, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($paisOrigem, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
             'nome' => 'nome',
             'label' => 'Nome:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
-            'plm' => TRUE,
+            'required' => true,
+            'autofocus' => true,
+            'plm' => true,
             'title' => 'Nome do servidor',
             'col' => 6,
             'size' => 50),
@@ -132,9 +132,9 @@ if ($acesso) {
             'nome' => 'sexo',
             'label' => 'Sexo:',
             'tipo' => 'combo',
-            'array' => array(NULL, "Masculino", "Feminino"),
+            'array' => array(null, "Masculino", "Feminino"),
             'title' => 'Sexo do Servidor',
-            'required' => TRUE,
+            'required' => true,
             'col' => 3,
             'size' => 15),
         array('linha' => 2,
@@ -150,7 +150,7 @@ if ($acesso) {
             'label' => 'Conjuge:',
             'tipo' => 'texto',
             'title' => 'Nome do conjuge',
-            'plm' => TRUE,
+            'plm' => true,
             'col' => 6,
             'size' => 50),
         array('linha' => 3,
@@ -188,7 +188,7 @@ if ($acesso) {
             'label' => 'Nome do Pai:',
             'tipo' => 'texto',
             'title' => 'Nome do Pai do Servidor',
-            'plm' => TRUE,
+            'plm' => true,
             'fieldset' => 'Filiação',
             'col' => 6,
             'size' => 50),
@@ -197,7 +197,7 @@ if ($acesso) {
             'label' => 'Nome da Mãe:',
             'tipo' => 'texto',
             'title' => 'Nome da Mãe do Servidor',
-            'plm' => TRUE,
+            'plm' => true,
             'col' => 6,
             'size' => 50)
     ));

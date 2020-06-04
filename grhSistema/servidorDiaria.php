@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de diárias";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -101,7 +101,7 @@ if ($acesso) {
     $objeto->set_label(array("id", "CI", "Origem", "Destino", "Saída", "Chegada", "Valor"));
     #$objeto->set_width(array(4,11,20,20,10,10,8,8));	
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php", "date_to_php", "formataMoeda"));
+    $objeto->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php", "formataMoeda"));
 
     # Link do CI
     $botao = new BotaoGrafico();
@@ -127,22 +127,22 @@ if ($acesso) {
                                  WHERE descricao LIKE "%diaria%"
                               ORDER BY descricao');
 
-    array_push($result, array(NULL, NULL)); # Adiciona o valor de NULL
+    array_push($result, array(null, null)); # Adiciona o valor de null
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'origem',
             'label' => 'Origem:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 50,
             'col' => 6,
             'padrao' => 'Campos dos Goytacazes',
             'title' => 'Local de Origem',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'linha' => 1),
         array('nome' => 'destino',
             'label' => 'Destino:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 50,
             'col' => 6,
             'title' => 'Local de Destino',
@@ -152,7 +152,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data da Saída.',
             'linha' => 2),
         array('nome' => 'dataChegada',
@@ -160,7 +160,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data de Chegada.',
             'linha' => 2),
         array('nome' => 'valor',
@@ -168,11 +168,11 @@ if ($acesso) {
             'tipo' => 'moeda',
             'size' => 10,
             'col' => 4,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Valor da Diária',
             'linha' => 2),
         array('nome' => 'dataCi',
-            'required' => TRUE,
+            'required' => true,
             'label' => 'Data:',
             'tipo' => 'data',
             'col' => 3,
@@ -189,7 +189,7 @@ if ($acesso) {
             'linha' => 3),
         array('nome' => 'assuntoCi',
             'label' => 'Assunto:',
-            'required' => TRUE,
+            'required' => true,
             'tipo' => 'texto',
             'size' => 50,
             'col' => 6,
@@ -212,7 +212,7 @@ if ($acesso) {
             'linha' => 5)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Diárias");
@@ -226,7 +226,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
     ################################################################
@@ -262,7 +262,7 @@ if ($acesso) {
             # Log
             $atividade = "Emitiu CI de Diária de " . $pessoal->get_nome($idServidorPesquisado);
             $data = date("Y-m-d H:i:s");
-            $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 4, $idServidorPesquisado);
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 
             loadPage('?');
             break;

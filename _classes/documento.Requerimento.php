@@ -7,18 +7,18 @@ class Declaracao {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $projeto        integer NULL O id do projeto a ser acessado
+     * @var private $projeto        integer null O id do projeto a ser acessado
      * 
      */
-    private $data = NULL;
-    private $texto = NULL;
-    private $destinatario = NULL;
+    private $data = null;
+    private $texto = null;
+    private $destinatario = null;
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
     private $rodapeTelefone = "(22) 2739-7064";
     private $saltoRodape = 3;
-    private $aviso = NULL;
-    private $carimboCnpj = FALSE;
+    private $aviso = null;
+    private $carimboCnpj = false;
 
     ###########################################################
 
@@ -38,7 +38,7 @@ class Declaracao {
          * 
          * @syntax $form->add_item($objeto);
          * 
-         * @param $controle object NULL Objeto Input a ser inserido no Formulário
+         * @param $controle object null Objeto Input a ser inserido no Formulário
          * 
          */
         $this->texto[] = $texto;
@@ -98,7 +98,7 @@ class Declaracao {
         ## Monta o Relatório 
         # Menu
         $menuRelatorio = new menuRelatorio();
-        $menuRelatorio->set_botaoVoltar(NULL);
+        $menuRelatorio->set_botaoVoltar(null);
         $menuRelatorio->set_aviso($this->aviso);
         $menuRelatorio->show();
 
@@ -132,7 +132,7 @@ class Declaracao {
             $grid->fechaColuna();
             $grid->abreColuna(4);
 
-            $figura = new Imagem(PASTA_FIGURAS . 'carimboCnpj.png', NULL, 200, 120);
+            $figura = new Imagem(PASTA_FIGURAS . 'carimboCnpj.png', null, 200, 120);
             $figura->show();
 
             $grid->fechaColuna();

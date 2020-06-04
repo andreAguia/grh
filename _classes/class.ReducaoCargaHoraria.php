@@ -8,11 +8,11 @@ class ReducaoCargaHoraria {
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
      */
-    private $idServidor = NULL;
+    private $idServidor = null;
 
     ###########################################################
 
-    public function __construct($idServidor = NULL) {
+    public function __construct($idServidor = null) {
 
         /**
          * Inicia a classe e preenche o idServidor
@@ -28,7 +28,7 @@ class ReducaoCargaHoraria {
         /**
          * Informa o idServidor quando não se pode informar no instanciamento da classe
          * 
-         * @param $idServidor string NULL O idServidor
+         * @param $idServidor string null O idServidor
          * 
          * @syntax $input->set_id($id);  
          */
@@ -58,7 +58,7 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row;
@@ -77,8 +77,8 @@ class ReducaoCargaHoraria {
         $pessoal = new Pessoal();
 
         # Inicia as variáveis
-        $idReducaoAnterior = NULL;      // Guarda o idRedução imediatamente anterior
-        $dadosAnterior = NULL;          // Guarda os dados da redução referentes a essa id anterior
+        $idReducaoAnterior = null;      // Guarda o idRedução imediatamente anterior
+        $dadosAnterior = null;          // Guarda os dados da redução referentes a essa id anterior
         # Verifica se foi informado
         if (vazio($idReducao)) {
             alert("É necessário informar o id da Redução.");
@@ -115,7 +115,7 @@ class ReducaoCargaHoraria {
 
     ###########################################################
 
-    function get_numProcesso($idServidor = NULL) {
+    function get_numProcesso($idServidor = null) {
 
         /**
          * Informe o número do processo de solicitação de redução de carga horária de um servidor
@@ -134,7 +134,7 @@ class ReducaoCargaHoraria {
                     WHERE idServidor = ' . $idServidor;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row[0];
@@ -142,7 +142,7 @@ class ReducaoCargaHoraria {
 
     ###########################################################
 
-    function get_numProcessoAntigo($idServidor = NULL) {
+    function get_numProcessoAntigo($idServidor = null) {
 
         /**
          * Informe o número do processo Antigo de solicitação de redução de carga horária de um servidor
@@ -161,7 +161,7 @@ class ReducaoCargaHoraria {
                     WHERE idServidor = ' . $idServidor;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row[0];
@@ -183,7 +183,7 @@ class ReducaoCargaHoraria {
                     WHERE idServidor = ' . $this->idServidor;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->count($select, FALSE);
+        $row = $pessoal->count($select, false);
 
         # Retorno
         return $row[0];
@@ -205,7 +205,7 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return date_to_php($row[0]);
@@ -227,14 +227,14 @@ class ReducaoCargaHoraria {
                     WHERE NOT arquivado AND idServidor = ' . $this->idServidor;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
-        $quantidade = $pessoal->count($select, FALSE);
+        $row = $pessoal->select($select, false);
+        $quantidade = $pessoal->count($select, false);
 
         # Retorno
         if ($quantidade > 0) {
             return $row[0];
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -256,7 +256,7 @@ class ReducaoCargaHoraria {
                   WHERE idReducao = $idReducao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }
@@ -278,7 +278,7 @@ class ReducaoCargaHoraria {
                   WHERE idReducao = $idReducao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }
@@ -296,7 +296,7 @@ class ReducaoCargaHoraria {
                   WHERE idReducao = $idReducao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }
@@ -320,7 +320,7 @@ class ReducaoCargaHoraria {
                   WHERE idReducao = $idReducao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }
@@ -343,7 +343,7 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Trata a data de envio a perícia
         if (vazio($row[0])) {
@@ -395,7 +395,7 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if ($row[3] == 1) {
@@ -425,7 +425,7 @@ class ReducaoCargaHoraria {
                     . "Período: " . $periodo . "<br/>"
                     . "Término: " . $dttermino;
         } else {
-            $retorno = NULL;
+            $retorno = null;
         }
 
         # Verifica se estamos a 90 dias da data Termino
@@ -465,14 +465,14 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if ($row[2] == 1) {
             $retorno = "CI Início  : " . trataNulo($row[0]) . "<br/>"
                     . "CI Término : " . trataNulo($row[1]);
         } else {
-            $retorno = NULL;
+            $retorno = null;
         }
 
         return $retorno;
@@ -499,7 +499,7 @@ class ReducaoCargaHoraria {
         $dtTermino = date_to_php($dados["dtTermino"]);
         $tipo = $dados["tipo"];
 
-        $dias = NULL;
+        $dias = null;
 
         # Calcula os dias
         if (!is_null($dtTermino)) {
@@ -621,7 +621,7 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if ($row[2] == 1) {
@@ -631,7 +631,7 @@ class ReducaoCargaHoraria {
                 $retorno = date_to_php($row[0]) . "<br/>Pag.: " . trataNulo($row[1]);
             }
         } else {
-            $retorno = NULL;
+            $retorno = null;
         }
 
         return $retorno;
@@ -655,14 +655,14 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         $resultado = $row[0];
         $dataCiencia = $row[1];
 
         # Verifica o resultado
         switch ($resultado) {
-            case NULL:
+            case null:
                 $retorno = $resultado;
                 break;
 
@@ -710,8 +710,8 @@ class ReducaoCargaHoraria {
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
-        $retorno = NULL;
+        $row = $pessoal->select($select, false);
+        $retorno = null;
 
         # Verifica o status
         switch ($row[0]) {
@@ -733,7 +733,7 @@ class ReducaoCargaHoraria {
 
     ###########################################################
 
-    function mudaStatus($idServidor = NULL) {
+    function mudaStatus($idServidor = null) {
 
         /**
          * 
@@ -767,14 +767,14 @@ class ReducaoCargaHoraria {
             $periodo = $reducao[3];
             $idReducao = $reducao[4];
 
-            $statusCerto = NULL;
+            $statusCerto = null;
 
             # Preenche o status de acordo com o resultado            
             switch ($resultado) {
 
                 # Resultado: nulo - Ainda não saiu o resultado
                 # Status: 1 - Em aberto
-                case NULL:
+                case null:
                     $statusCerto = 1;
                     break;
 

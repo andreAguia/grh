@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -34,7 +34,7 @@ if ($acesso) {
                       tbpessoa.nome,
                       tbperfil.nome,
                       idServidor,
-                      CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                      CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
                       tblicenca.dtInicial,
                       tblicenca.numDias,
                       ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
@@ -60,19 +60,19 @@ if ($acesso) {
     $relatorio->set_subtitulo('Ordem Decrescente de Data Inicial da Licença');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Perfil', 'Lotaçao', 'Licença', 'Data Inicial', 'Dias', 'Data Final', "Publicação", "Processo", "Obs", "Situação"));
 
-    $relatorio->set_classe(array(NULL, NULL, NULL, "pessoal", NULL, NULL, NULL, NULL, NULL, NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, "get_LotacaoRel", NULL, NULL, NULL, NULL, NULL, NULL, NULL, "get_situacao"));
+    $relatorio->set_classe(array(null, null, null, "pessoal", null, null, null, null, null, null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, null, "get_LotacaoRel", null, null, null, null, null, null, null, "get_situacao"));
 
     $relatorio->set_align(array('center', 'left', 'center', 'left', 'left', 'center', 'center', 'center', 'center', 'left', 'left'));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "date_to_php", NULL, "date_to_php", "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", null, "date_to_php", "date_to_php"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(4);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
 
     # Dados da combo licena
     $licenca = $pessoal->select('SELECT idTpLicenca,
-                                         CONCAT(tbtipolicenca.nome," ",IFNULL(tbtipolicenca.lei,"")) as licenca
+                                         CONCAT(tbtipolicenca.nome," ",IFnull(tbtipolicenca.lei,"")) as licenca
                                     FROM tbtipolicenca
                                     WHERE tbtipolicenca.idTpLicenca = 5
                                        OR tbtipolicenca.idTpLicenca = 8

@@ -53,30 +53,30 @@ if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
 
 # Apaga a alta se nao for licenca medica
 if (($idTpLicenca <> 1) AND ($idTpLicenca <> 30) AND ($idTpLicenca <> 2)) {
-    $campoValor[1] = NULL;
-    $campoValor[2] = NULL;
+    $campoValor[1] = null;
+    $campoValor[2] = null;
 }
 
 # Apaga o periodo aquisitivo quando não precisa
 if ($pessoal->get_licencaPeriodo($idTpLicenca) == "Não") {
-    $campoValor[2] = NULL;
-    $campoValor[3] = NULL;
+    $campoValor[2] = null;
+    $campoValor[3] = null;
 }
 
 # Apaga o processo quando não precisa
 if ($pessoal->get_licencaProcesso($idTpLicenca) == "Não") {
-    $campoValor[6] = NULL;
+    $campoValor[6] = null;
 }
 
 # Apaga a publicação quando não precisa
 if ($pessoal->get_licencaPublicacao($idTpLicenca) == "Não") {
-    $campoValor[7] = NULL;
+    $campoValor[7] = null;
 }
 
 # Apaga a perícia quando não precisa
 if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
-    $campoValor[8] = NULL;
-    $campoValor[9] = NULL;
+    $campoValor[8] = null;
+    $campoValor[9] = null;
 }
 
 # Verifica se a data Inicial é anterior a data de admissão

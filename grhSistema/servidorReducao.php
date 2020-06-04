@@ -7,8 +7,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -22,12 +22,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Controle da redução da carga horária";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Pega o número do processo (Quando tem)
@@ -173,12 +173,12 @@ if ($acesso) {
 
         # Legislação
         $botaoLegis = new Button("Legislação");
-        $botaoLegis->set_disabled(TRUE);
+        $botaoLegis->set_disabled(true);
         $botaoLegis->set_title('Exibe as Legislação pertinente');
         #$botaoLegis->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRfb7P06MCBHAwd15hKm6KWV4-y0I8yBzlac58uAA-xCHeaL9aCbtSGCgGguZzaPQafvXYvGqWhwG0r/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
         #$menu->add_link($botaoLegis,"right");
         # Relatório
-        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
         $botaoRel->set_title("Imprimir Relatório de Histórico de Processo de redução da carga horária");
@@ -187,7 +187,7 @@ if ($acesso) {
         $menu->add_link($botaoRel, "right");
 
         # Fluxograma
-        $imagem = new Imagem(PASTA_FIGURAS . 'fluxograma.png', NULL, 15, 15);
+        $imagem = new Imagem(PASTA_FIGURAS . 'fluxograma.png', null, 15, 15);
         $botaoFluxo = new Button();
         $botaoFluxo->set_imagem($imagem);
         $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo redução da carga horária");
@@ -197,8 +197,8 @@ if ($acesso) {
 
         $menu->show();
 
-        $objeto->set_botaoVoltarLista(FALSE);
-        $objeto->set_botaoIncluir(FALSE);
+        $objeto->set_botaoVoltarLista(false);
+        $objeto->set_botaoIncluir(false);
 
         $grid->fechaColuna();
         $grid->fechaGrid();
@@ -281,13 +281,13 @@ if ($acesso) {
     $objeto->set_label(array("Tipo", "Status", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período", "Documentos"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center", "center", "center", "left", "center", "center", "left", "left"));
-    $objeto->set_funcao(array(NULL, NULL, "date_to_php"));
+    $objeto->set_funcao(array(null, null, "date_to_php"));
 
-    $objeto->set_classe(array(NULL, "ReducaoCargaHoraria", NULL, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-    $objeto->set_metodo(array(NULL, "exibeStatus", NULL, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo", "exibeBotaoDocumentos"));
+    $objeto->set_classe(array(null, "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
+    $objeto->set_metodo(array(null, "exibeStatus", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo", "exibeBotaoDocumentos"));
 
     # Número de Ordem
-    $objeto->set_numeroOrdem(TRUE);
+    $objeto->set_numeroOrdem(true);
     $objeto->set_numeroOrdemTipo("d");
 
     # Classe do banco de dados
@@ -307,20 +307,20 @@ if ($acesso) {
             'label' => 'Solicitado em:',
             'tipo' => 'data',
             'size' => 30,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'A data da Solicitação.',
             'col' => 3,
             'linha' => 1),
         array('nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, NULL),
+            'array' => array(array(null, null),
                 array(1, "Inicial"),
                 array(2, "Renovação")),
             'size' => 2,
             'valor' => 0,
-            'required' => TRUE,
+            'required' => true,
             'col' => 2,
             'title' => 'Se é inicial ou renovação.',
             'linha' => 1),
@@ -331,7 +331,7 @@ if ($acesso) {
             'size' => 2,
             'valor' => 0,
             'col' => 2,
-            'disabled' => TRUE,
+            'disabled' => true,
             'title' => 'Se a solicitação foi arquivada ou não.',
             'linha' => 1),
         array('nome' => 'dtEnvioPericia',
@@ -366,7 +366,7 @@ if ($acesso) {
         array('nome' => 'resultado',
             'label' => 'Resultado:',
             'tipo' => 'combo',
-            'array' => array(array(NULL, ""), array(1, "Deferido"), array(2, "Indeferido"), array(3, "Interrompido")),
+            'array' => array(array(null, ""), array(1, "Deferido"), array(2, "Indeferido"), array(3, "Interrompido")),
             'size' => 20,
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,
@@ -491,7 +491,7 @@ if ($acesso) {
             # Pega os Emails
             $emailPessoal = $pessoal->get_emailPessoal($idServidorPesquisado);
             $emailUenf = $pessoal->get_emailUenf($idServidorPesquisado);
-            $emails = NULL;
+            $emails = null;
 
             # junta os Emails
             if (!vazio($emailPessoal)) {
@@ -611,8 +611,8 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(3);
-            #$controle->set_required(TRUE);
-            $controle->set_autofocus(TRUE);
+            #$controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_valor($numCiInicio);
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
             $form->add_item($controle);
@@ -623,7 +623,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $controle->set_valor($dtCiInicio);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data da CI de inicio.');
             $form->add_item($controle);
 
@@ -632,7 +632,7 @@ if ($acesso) {
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_array(array(array(NULL, NULL),
+            $controle->set_array(array(array(null, null),
                 array(1, "Inicial"),
                 array(2, "Renovação")));
             $controle->set_valor($tipo);
@@ -645,7 +645,7 @@ if ($acesso) {
             $controle->set_linha(2);
             $controle->set_col(12);
             $controle->set_valor($nomeGerenteDestino);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('O nome da chefia imediata.');
             $form->add_item($controle);
 
@@ -655,7 +655,7 @@ if ($acesso) {
             $controle->set_linha(3);
             $controle->set_col(12);
             $controle->set_valor($gerenciaImediataDescricao);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
 
@@ -708,8 +708,8 @@ if ($acesso) {
             $array = serialize($array);
 
             # Verifica se houve alterações
-            $alteracoes = NULL;
-            $atividades = NULL;
+            $alteracoes = null;
+            $atividades = null;
 
             # Verifica as alterações para o log
             if ($numCiInicio <> $numCiInicioDigitados) {
@@ -720,7 +720,7 @@ if ($acesso) {
             }
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica o número da Ci
@@ -825,8 +825,8 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(3);
-            #$controle->set_required(TRUE);
-            $controle->set_autofocus(TRUE);
+            #$controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_valor($numCi90);
             $controle->set_title('Número da Ci informando que em 90 dias o benefício irá terminar.');
             $form->add_item($controle);
@@ -837,7 +837,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $controle->set_valor($dtCi90);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data da CI de 90 dias.');
             $form->add_item($controle);
 
@@ -877,8 +877,8 @@ if ($acesso) {
             $dtCi90Digitado = vazioPraNulo(post("dtCi90"));
 
             # Verifica se houve alterações
-            $alteracoes = NULL;
-            $atividades = NULL;
+            $alteracoes = null;
+            $atividades = null;
 
             # Verifica as alterações para o log
             if ($numCi90 <> $numCi90Digitados) {
@@ -893,7 +893,7 @@ if ($acesso) {
             }
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica se apertou o imprimir
@@ -990,8 +990,8 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(4);
-            #$controle->set_required(TRUE);
-            $controle->set_autofocus(TRUE);
+            #$controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_valor($numCitermino);
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de Término do benefício.');
             $form->add_item($controle);
@@ -1002,7 +1002,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtCitermino);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data da CI de término.');
             $form->add_item($controle);
 
@@ -1012,7 +1012,7 @@ if ($acesso) {
             $controle->set_linha(2);
             $controle->set_col(12);
             $controle->set_valor($nomeGerenteDestino);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('O nome da chefia imediata.');
             $form->add_item($controle);
 
@@ -1022,7 +1022,7 @@ if ($acesso) {
             $controle->set_linha(3);
             $controle->set_col(12);
             $controle->set_valor($gerenciaImediataDescricao);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
 
@@ -1072,8 +1072,8 @@ if ($acesso) {
             $array = serialize($array);
 
             # Verifica se houve alterações
-            $alteracoes = NULL;
-            $atividades = NULL;
+            $alteracoes = null;
+            $atividades = null;
 
             # Verifica as alterações para o log
             if ($numCiTermino <> $numCiTerminoDigitados) {
@@ -1084,7 +1084,7 @@ if ($acesso) {
             }
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica o número da Ci
@@ -1182,7 +1182,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtAtoReitor);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_title('A data do Ato do Reitor.');
             $form->add_item($controle);
 
@@ -1192,7 +1192,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor($dtDespacho);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data do Despacho da Perícia.');
             $form->add_item($controle);
 
@@ -1231,8 +1231,8 @@ if ($acesso) {
             $dtDespachoDigitado = vazioPraNulo(post("dtDespacho"));
 
             # Verifica se houve alterações
-            $alteracoes = NULL;
-            $atividades = NULL;
+            $alteracoes = null;
+            $atividades = null;
 
             # Verifica as alterações para o log
             if ($dtAtoReitor <> $dtAtoReitorDigitados) {
@@ -1245,7 +1245,7 @@ if ($acesso) {
             }
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica o número da Ci
@@ -1324,7 +1324,7 @@ if ($acesso) {
                 $controle->set_size(10);
                 $controle->set_linha(1);
                 $controle->set_col(3);
-                $controle->set_autofocus(TRUE);
+                $controle->set_autofocus(true);
                 $controle->set_title('A página do processo da cópia da publicação.');
                 $form->add_item($controle);
 
@@ -1350,7 +1350,7 @@ if ($acesso) {
             $folha = vazioPraNulo(post("folha"));
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica o número da folha

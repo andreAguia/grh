@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -28,12 +28,12 @@ if ($acesso) {
     $ano = arrayPreenche($anoAtual, $anoInicial, "d");
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de MCF";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -107,8 +107,8 @@ if ($acesso) {
     $objeto->set_align(array("center", "center", "center", "left"));
     $objeto->set_funcao(array(null, null, "get_nomeMes"));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, "Pessoal"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, "exibeMcf"));
+    $objeto->set_classe(array(null, null, null, null, "Pessoal"));
+    $objeto->set_metodo(array(null, null, null, null, "exibeMcf"));
 
     # Botão de Upload
     $botao = new BotaoGrafico();
@@ -117,7 +117,7 @@ if ($acesso) {
     $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array(NULL, NULL, NULL, NULL, NULL, $botao));
+    $objeto->set_link(array(null, null, null, null, null, $botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -138,8 +138,8 @@ if ($acesso) {
             'label' => 'Ano:',
             'tipo' => 'combo',
             'array' => $ano,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 3,
             'size' => 30),
         array('linha' => 1,
@@ -147,7 +147,7 @@ if ($acesso) {
             'label' => 'Mes:',
             'tipo' => 'combo',
             'array' => $mes,
-            'required' => TRUE,
+            'required' => true,
             'col' => 3,
             'size' => 30),
         array('linha' => 1,
@@ -225,7 +225,7 @@ if ($acesso) {
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
                     $atividade = "Fez o upload do mcf";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, $id, 8);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
 
                     # Volta para o menu
                     loadPage("?fase=listar");

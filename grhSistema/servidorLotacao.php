@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -23,12 +23,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de lotação";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # pega o id (se tiver)
@@ -88,8 +88,8 @@ if ($acesso) {
     #$objeto->set_width(array(10,30,50));	
     $objeto->set_align(array("center", "left", "left"));
     $objeto->set_funcao(array("date_to_php"));
-    $objeto->set_classe(array(NULL, "pessoal"));
-    $objeto->set_metodo(array(NULL, "get_nomelotacao"));
+    $objeto->set_classe(array(null, "pessoal"));
+    $objeto->set_metodo(array(null, "get_nomelotacao"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -105,26 +105,26 @@ if ($acesso) {
 
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
-                             concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+                             concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
                         FROM tblotacao ORDER BY ativo desc, lotacao';
 
     $result = $pessoal->select($selectLotacao);
-    array_unshift($result, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_unshift($result, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'data',
             'label' => 'Data:',
             'tipo' => 'data',
             'size' => 20,
             'maxLength' => 20,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 3,
             'title' => 'Data do início da exibição da notícia.',
             'linha' => 1),
         array('nome' => 'lotacao',
             'label' => 'Lotacão:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result,
             'size' => 20,
             'col' => 9,
@@ -152,7 +152,7 @@ if ($acesso) {
             'linha' => 4)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Lotação");

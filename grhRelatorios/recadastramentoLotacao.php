@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -32,7 +32,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                      tbrecadastramento.dataAtualizacao
                 FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor)
                                             JOIN tbpessoa USING (idPessoa)
@@ -61,15 +61,15 @@ if ($acesso) {
     $relatorio->set_subtitulo('Agrupada por Lotaçao - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Atualizado em:'));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_CargoRel"));
+    $relatorio->set_classe(array(null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_CargoRel"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);
     
-    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao

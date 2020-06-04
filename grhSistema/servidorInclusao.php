@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -30,36 +30,36 @@ if ($acesso) {
                     switch(document.novoServidor.perfil.value)
                     {
                         case '1':
-                            document.novoServidor.cargo.disabled = FALSE;
+                            document.novoServidor.cargo.disabled = false;
                             abreDivId('divEstatutarios');
                             fechaDivId('divCedidos');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstagiarios');                        
                             break;
                         case '2':
-                            document.novoServidor.cargo.disabled = TRUE;
+                            document.novoServidor.cargo.disabled = true;
                             abreDivId('divCedidos');
                             fechaDivId('divEstatutarios');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstagiarios'); 
                             break;
                         case '3':
-                            document.novoServidor.cargo.disabled = TRUE;
+                            document.novoServidor.cargo.disabled = true;
                             abreDivId('divConvidados');
                             fechaDivId('divCedidos');
                             fechaDivId('divEstatutarios');
                             fechaDivId('divEstagiarios'); 
                             break;
                         case '4':
-                            document.novoServidor.cargo.disabled = TRUE;
+                            document.novoServidor.cargo.disabled = true;
                             abreDivId('divEstagiarios');
                             fechaDivId('divCedidos');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstatutarios'); 
                             break;
                         default:
-                            document.novoServidor.cargo.disabled = TRUE;
-                            document.novoServidor.salario.disabled = TRUE;
+                            document.novoServidor.cargo.disabled = true;
+                            document.novoServidor.salario.disabled = true;
                             fechaDivId('divCedidos');
                             fechaDivId('divConvidados');
                             fechaDivId('divEstatutarios');
@@ -102,8 +102,8 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(4);
-            #$controle->set_required(TRUE);
-            $controle->set_autofocus(TRUE);
+            #$controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_title('O CPF do Novo Servidor');
             $form->add_item($controle);
 
@@ -132,7 +132,7 @@ if ($acesso) {
 
             # Variáveis para tratamento de erros
             $erro = 0;    // flag de erro: 1 - tem erro; 0 - não tem	
-            $msgErro = NULL;  // repositório de mensagens de erro        
+            $msgErro = null;  // repositório de mensagens de erro        
             # Pega os valores digitados
             $cpf = post('cpf');
 
@@ -181,8 +181,8 @@ if ($acesso) {
             $cpf = get_session('sessionCpf');
 
             # Variaveis de quando o servidor já for cadastrado
-            $nome = NULL;
-            $pis = NULL;
+            $nome = null;
+            $pis = null;
 
             # Verifica se o CPF já está cadastrado
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
@@ -218,9 +218,9 @@ if ($acesso) {
             $controle = new Input('cpf', 'cpf', 'CPF:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_readonly(TRUE);
+            $controle->set_readonly(true);
             $controle->set_valor($cpf);
-            $controle->set_required(TRUE);
+            $controle->set_required(true);
             $controle->set_col(2);
             $controle->set_title('O CPF do Novo Servidor');
             $form->add_item($controle);
@@ -230,12 +230,12 @@ if ($acesso) {
             $controle->set_size(50);
             $controle->set_col(5);
             $controle->set_linha(1);
-            $controle->set_required(TRUE);
+            $controle->set_required(true);
             if (!is_null($nome)) {
                 $controle->set_valor($nome);
-                $controle->set_readonly(TRUE);
+                $controle->set_readonly(true);
             } else {
-                $controle->set_autofocus(TRUE);
+                $controle->set_autofocus(true);
             }
             $controle->set_title('O nome do servidor.');
             $form->add_item($controle);
@@ -244,8 +244,8 @@ if ($acesso) {
             $controle = new Input('sexo', 'combo', 'Sexo:', 1);
             $controle->set_size(15);
             $controle->set_col(2);
-            $controle->set_array(array(NULL, "Masculino", "Feminino"));
-            $controle->set_required(TRUE);
+            $controle->set_array(array(null, "Masculino", "Feminino"));
+            $controle->set_required(true);
             $controle->set_linha(1);
             $controle->set_title('Sexo do Servidor.');
             $form->add_item($controle);
@@ -254,7 +254,7 @@ if ($acesso) {
             $controle = new Input('dtNasc', 'date', 'Data de Nascimento:', 1);
             $controle->set_size(15);
             $controle->set_col(3);
-            $controle->set_required(TRUE);
+            $controle->set_required(true);
             $controle->set_linha(1);
             $controle->set_title('A data de nascimento do servidor.');
             $form->add_item($controle);
@@ -266,12 +266,12 @@ if ($acesso) {
                                              WHERE novoServidor
                                           ORDER BY nome');
 
-            array_unshift($perfil, array(NULL, NULL));
+            array_unshift($perfil, array(null, null));
 
             $controle = new Input('perfil', 'combo', 'Perfil:', 1);
             $controle->set_size(20);
             $controle->set_linha(2);
-            $controle->set_required(TRUE);
+            $controle->set_required(true);
             $controle->set_col(3);
             $controle->set_title('O perfil do Servidor.');
             $controle->set_array($perfil);
@@ -283,18 +283,18 @@ if ($acesso) {
             #$form->add_item($p);
             # Lotação               
             $lotacao = $pessoal->select('SELECT idlotacao, 
-                                                    concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) as lotacao
+                                                    concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
                                                FROM tblotacao
                                               WHERE ativo
                                            ORDER BY tblotacao.DIR,tblotacao.GER');
 
-            array_unshift($lotacao, array(NULL, NULL)); # Adiciona o valor de nulo
+            array_unshift($lotacao, array(null, null)); # Adiciona o valor de nulo
 
             $controle = new Input('lotacao', 'combo', 'Lotação Inicial:', 1);
             $controle->set_size(20);
             $controle->set_linha(2);
             $controle->set_col(6);
-            $controle->set_required(TRUE);
+            $controle->set_required(true);
             $controle->set_title('A Lotação do Servidor.');
             $controle->set_array($lotacao);
             $form->add_item($controle);
@@ -303,7 +303,7 @@ if ($acesso) {
             $controle = new Input('dtAdmissao', 'date', 'Data de Admissão:', 1);
             $controle->set_size(15);
             $controle->set_col(3);
-            $controle->set_required(TRUE);
+            $controle->set_required(true);
             $controle->set_linha(2);
             $controle->set_title('A data de admissão do servidor.');
             $form->add_item($controle);
@@ -314,7 +314,7 @@ if ($acesso) {
                 $controle->set_size(20);
                 $controle->set_linha(3);
                 $controle->set_col(3);
-                $controle->set_required(TRUE);
+                $controle->set_required(true);
                 $controle->set_title('O PIS/Pasep do servidor.');
                 $form->add_item($controle);
             }
@@ -324,7 +324,7 @@ if ($acesso) {
                     . '                  FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)'
                     . '              ORDER BY tbtipocargo.cargo,tbcargo.nome');
 
-            array_unshift($cargo, array(NULL, NULL));
+            array_unshift($cargo, array(null, null));
 
             $controle = new Input('cargo', 'combo', 'Cargo:', 1);
             $controle->set_size(20);
@@ -371,7 +371,7 @@ if ($acesso) {
 
             # Variáveis para tratamento de erros
             $erro = 0;    // flag de erro: 1 - tem erro; 0 - não tem	
-            $msgErro = NULL;  // repositório de mensagens de erro
+            $msgErro = null;  // repositório de mensagens de erro
             # Pega os valores digitados
             $cpf = post('cpf');
             $sexo = post('sexo');
@@ -384,7 +384,7 @@ if ($acesso) {
             $dtAdmissao = post('dtAdmissao');
             $pisPasep = post('pisPasep');
             $cargo = post('cargo');
-            $classe = NULL;
+            $classe = null;
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
             # Verifica se o Nome foi digitado
@@ -508,11 +508,11 @@ if ($acesso) {
                     # dados
                     $campos = array('nome', 'dtNasc', 'sexo');
                     $valor = array($nome, $dtNasc, $sexo);
-                    $idValor = NULL;
+                    $idValor = null;
                     $tabela = 'tbpessoa';
 
                     # gravação
-                    $pessoal->gravar($campos, $valor, $idValor, $tabela, NULL, FALSE);
+                    $pessoal->gravar($campos, $valor, $idValor, $tabela, null, false);
 
                     # pega o id
                     $idPessoa = $pessoal->get_lastId();
@@ -522,11 +522,11 @@ if ($acesso) {
                     # dados
                     $campos = array('CPF', 'pisPasep', 'idPessoa');
                     $valor = array($cpf, $pisPasep, $idPessoa);
-                    $idValor = NULL;
+                    $idValor = null;
                     $tabela = 'tbdocumentacao';
 
                     # gravação
-                    $pessoal->gravar($campos, $valor, $idValor, $tabela, NULL, FALSE);
+                    $pessoal->gravar($campos, $valor, $idValor, $tabela, null, false);
 
                     # pega o id
                     $idDocumentacao = $pessoal->get_lastId();
@@ -536,17 +536,17 @@ if ($acesso) {
                 # Grava na tbservidor
                 # Passa o cargo para null quando for vazio
                 if (vazio($cargo)) {
-                    $cargo = NULL;
+                    $cargo = null;
                 }
 
                 # dados
                 $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional');
                 $valor = array($matricula, $perfil, $idPessoa, $cargo, $dtAdmissao, 1, $idFuncional);
-                $idValor = NULL;
+                $idValor = null;
                 $tabela = 'tbservidor';
 
                 # gravação
-                $pessoal->gravar($campos, $valor, $idValor, $tabela, NULL, FALSE);
+                $pessoal->gravar($campos, $valor, $idValor, $tabela, null, false);
 
                 # pega o id
                 $idServidor = $pessoal->get_lastId();
@@ -571,11 +571,11 @@ if ($acesso) {
                 # dados
                 $campos = array('idServidor', 'lotacao', 'data', 'motivo');
                 $valor = array($idServidor, $lotacao, $dtAdmissao, 'Lotação Inicial');
-                $idValor = NULL;
+                $idValor = null;
                 $tabela = 'tbhistlot';
 
                 # gravação
-                $pessoal->gravar($campos, $valor, $idValor, $tabela, NULL, FALSE);
+                $pessoal->gravar($campos, $valor, $idValor, $tabela, null, false);
 
                 # Grava no Log
                 $atividade = "Lotação Inicial:[lotacao]->" . $lotacao . " [data]->" . $dtAdmissao;
@@ -591,7 +591,7 @@ if ($acesso) {
 
                     $campos = array('idServidor', 'idTpProgressao', 'dtInicial', 'idClasse');
                     $valor = array($idServidor, 1, $dtAdmissao, $classe);
-                    $idValor = NULL;
+                    $idValor = null;
                     $tabela = 'tbprogressao';
 
                     # gravação
@@ -607,7 +607,7 @@ if ($acesso) {
                 if ($perfil == 2) { // somente cedidos
                     $campos = array('idServidor');
                     $valor = array($idServidor);
-                    $idValor = NULL;
+                    $idValor = null;
                     $tabela = 'tbcedido';
 
                     # gravação

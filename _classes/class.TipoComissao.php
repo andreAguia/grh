@@ -28,7 +28,7 @@ class TipoComissao {
                   WHERE idTipoComissao = $idTipoComissao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }

@@ -7,15 +7,15 @@ class Afastamento {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    private $idServidor = NULL;
-    private $ano = NULL;
-    private $mes = NULL;
-    private $lotacao = NULL;
-    private $linkEditar = NULL;
-    private $idFuncional = TRUE;
-    private $nomeSimples = FALSE;
-    private $tipo = FALSE;          // Tipo do afastamento
-    private $formulario = FALSE;
+    private $idServidor = null;
+    private $ano = null;
+    private $mes = null;
+    private $lotacao = null;
+    private $linkEditar = null;
+    private $idFuncional = true;
+    private $nomeSimples = false;
+    private $tipo = false;          // Tipo do afastamento
+    private $formulario = false;
 
     ###########################################################
 
@@ -32,7 +32,7 @@ class Afastamento {
         /**
          * Informa o mês do afastamento
          *
-         * @param $mes string NULL O mês
+         * @param $mes string null O mês
          *
          * @syntax $input->set_mes($mes);
          */
@@ -50,7 +50,7 @@ class Afastamento {
         /**
          * Informa o ano do afastamento
          *
-         * @param $ano string NULL O ano
+         * @param $ano string null O ano
          *
          * @syntax $input->set_ano($ano);
          */
@@ -68,7 +68,7 @@ class Afastamento {
         /**
          * Informa a lotação dos servidores com afastamento
          *
-         * @param $lotacao string NULL A lotacao
+         * @param $lotacao string null A lotacao
          *
          * @syntax $input->set_lotacao($lotacao);
          */
@@ -81,7 +81,7 @@ class Afastamento {
         /**
          * Informa a rotina de edição (se houver)
          *
-         * @param $linkEditar string NULL O link da rotina de edição
+         * @param $linkEditar string null O link da rotina de edição
          *
          * @syntax $input->set_linkEditar($linkEditar);
          */
@@ -94,7 +94,7 @@ class Afastamento {
         /**
          * Informa se terá a coluna de idFuncional ou não. Usado para economizar espaço
          *
-         * @param $idFuncional bool NULL Se terá ou não
+         * @param $idFuncional bool null Se terá ou não
          *
          * @syntax $input->set_idFuncional($idFuncional);
          */
@@ -107,7 +107,7 @@ class Afastamento {
         /**
          * Informa se terá o nome simples ou completo do servidor
          *
-         * @param $nomeSimples bool NULL Se terá ou não
+         * @param $nomeSimples bool null Se terá ou não
          *
          * @syntax $input->set_nomeSimples($nomeSimples);
          */
@@ -120,7 +120,7 @@ class Afastamento {
         /**
          * Informa se terá ou não formulário no relatório
          *
-         * @param $formulario bool FALSE Se terá ou não
+         * @param $formulario bool false Se terá ou não
          *
          * @syntax $input->set_formulario($formulario);
          */
@@ -133,7 +133,7 @@ class Afastamento {
         /**
          * Informa se terá ou não campo mês no formulário no relatório
          *
-         * @param $campoMes bool FALSE Se terá ou não
+         * @param $campoMes bool false Se terá ou não
          *
          * @syntax $input->set_campoMes($campoMes);
          */
@@ -146,7 +146,7 @@ class Afastamento {
         /**
          * Informa se terá ou não campo mês no formulário no relatório
          *
-         * @param $campoAno bool FALSE Se terá ou não
+         * @param $campoAno bool false Se terá ou não
          *
          * @syntax $input->set_campoAno($campoAno);
          */
@@ -159,7 +159,7 @@ class Afastamento {
         /**
          * Informa se será de um servidor ou de todos
          *
-         * @param $idServidor string NULL A id do servidor
+         * @param $idServidor string null A id do servidor
          *
          * @syntax $input->set_idServidor($idServidor);
          */
@@ -172,7 +172,7 @@ class Afastamento {
         /**
          * Informa o tipo do afastamento
          *
-         * @param $tipo string NULL o tipo
+         * @param $tipo string null o tipo
          *
          * @syntax $afastamento->set_tipo($tipo);
          */
@@ -198,7 +198,7 @@ class Afastamento {
 
         # Se for de um só servidor não exibe o idFuncional
         if (!vazio($this->idServidor)) {
-            $this->idFuncional = FALSE;
+            $this->idFuncional = false;
         }
 
         ###############################################################33
@@ -220,7 +220,7 @@ class Afastamento {
         $select .= '       tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                           CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,""),IF(alta=1," - Com Alta"," - Sem Alta")),
+                           CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta"," - Sem Alta")),
                           tbservidor.idServidor
                       FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                            JOIN tbhistlot USING (idServidor)
@@ -235,10 +235,10 @@ class Afastamento {
                 if (($this->tipo <> 6) AND ($this->tipo <> 5) AND ($this->tipo <> 8) AND ($this->tipo <> 16)) {
                     $select .= ' AND idTpLicenca = ' . $this->tipo;
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             } else {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             }
         }
 
@@ -247,7 +247,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tblicenca.dtInicial IS NOT NULL';
+            $select .= ' AND tblicenca.dtInicial IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -286,7 +286,7 @@ class Afastamento {
         $select .= '     tblicencapremio.dtInicial,
                          tblicencapremio.numDias,
                          ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-                         (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                         (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                           tbservidor.idServidor
                     FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                        JOIN tbhistlot USING (idServidor)
@@ -299,12 +299,12 @@ class Afastamento {
         if (!vazio($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 if ($this->tipo == 6) {
-                    $select .= ' AND TRUE';
+                    $select .= ' AND true';
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             } else {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             }
         }
 
@@ -313,7 +313,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tblicencapremio.dtInicial IS NOT NULL';
+            $select .= ' AND tblicencapremio.dtInicial IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -364,12 +364,12 @@ class Afastamento {
         # Tipo de afastamento
         if (!vazio($this->tipo)) {
             if (is_numeric($this->tipo)) {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             } else {
                 if ($this->tipo == 'ferias') {
-                    $select .= ' AND TRUE';
+                    $select .= ' AND true';
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             }
         }
@@ -379,7 +379,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tbferias.dtInicial IS NOT NULL';
+            $select .= ' AND tbferias.dtInicial IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -430,12 +430,12 @@ class Afastamento {
         # Tipo de afastamento
         if (!vazio($this->tipo)) {
             if (is_numeric($this->tipo)) {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             } else {
                 if ($this->tipo == 'faltas') {
-                    $select .= ' AND TRUE';
+                    $select .= ' AND true';
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             }
         }
@@ -445,7 +445,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tbatestado.dtInicio IS NOT NULL';
+            $select .= ' AND tbatestado.dtInicio IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -496,12 +496,12 @@ class Afastamento {
         # Tipo de afastamento
         if (!vazio($this->tipo)) {
             if (is_numeric($this->tipo)) {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             } else {
                 if ($this->tipo == 'TTRE') {
-                    $select .= ' AND TRUE';
+                    $select .= ' AND true';
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             }
         }
@@ -511,7 +511,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tbtrabalhotre.data IS NOT NULL';
+            $select .= ' AND tbtrabalhotre.data IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -562,12 +562,12 @@ class Afastamento {
         # Tipo de afastamento
         if (!vazio($this->tipo)) {
             if (is_numeric($this->tipo)) {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             } else {
                 if ($this->tipo == 'FTRE') {
-                    $select .= ' AND TRUE';
+                    $select .= ' AND true';
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             }
         }
@@ -577,7 +577,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tbfolga.data IS NOT NULL';
+            $select .= ' AND tbfolga.data IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -634,10 +634,10 @@ class Afastamento {
                 if (($this->tipo == 5) OR ($this->tipo == 8) OR ($this->tipo == 16)) {
                     $select .= ' AND idTpLicenca = ' . $this->tipo;
                 } else {
-                    $select .= ' AND FALSE';
+                    $select .= ' AND false';
                 }
             } else {
-                $select .= ' AND FALSE';
+                $select .= ' AND false';
             }
         }
 
@@ -647,7 +647,7 @@ class Afastamento {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
-            $select .= ' AND tblicencasemvencimentos.dtInicial IS NOT NULL';
+            $select .= ' AND tblicencasemvencimentos.dtInicial IS NOT null';
         }
 
         if (!vazio($this->mes)) {
@@ -718,29 +718,29 @@ class Afastamento {
                 $tabela->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
                 $tabela->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
 
-                $tabela->set_classe(array(NULL, NULL, "pessoal"));
-                $tabela->set_metodo(array(NULL, NULL, "get_lotacaoSimples"));
+                $tabela->set_classe(array(null, null, "pessoal"));
+                $tabela->set_metodo(array(null, null, "get_lotacaoSimples"));
 
                 if ($this->nomeSimples) {
-                    $tabela->set_funcao(array(NULL, "get_nomeSimples", NULL, "date_to_php", NULL, "date_to_php"));
+                    $tabela->set_funcao(array(null, "get_nomeSimples", null, "date_to_php", null, "date_to_php"));
                 } else {
-                    $tabela->set_funcao(array(NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
+                    $tabela->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
                 }
 
                 $tabela->set_rowspan(1);
                 $tabela->set_grupoCorColuna(1);
             } else {
 
-                $tabela->set_label(array('Nome', NULL, 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
+                $tabela->set_label(array('Nome', null, 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
                 $tabela->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
 
-                $tabela->set_classe(array(NULL, "pessoal"));
-                $tabela->set_metodo(array(NULL, "get_lotacaoSimples"));
+                $tabela->set_classe(array(null, "pessoal"));
+                $tabela->set_metodo(array(null, "get_lotacaoSimples"));
 
                 if ($this->nomeSimples) {
-                    $tabela->set_funcao(array("get_nomeSimples", NULL, "date_to_php", NULL, "date_to_php"));
+                    $tabela->set_funcao(array("get_nomeSimples", null, "date_to_php", null, "date_to_php"));
                 } else {
-                    $tabela->set_funcao(array(NULL, NULL, "date_to_php", NULL, "date_to_php"));
+                    $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
                 }
 
                 $tabela->set_rowspan(0);
@@ -750,7 +750,7 @@ class Afastamento {
 
             $tabela->set_label(array('Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $tabela->set_align(array('center', 'center', 'center', 'left'));
-            $tabela->set_funcao(array("date_to_php", NULL, "date_to_php"));
+            $tabela->set_funcao(array("date_to_php", null, "date_to_php"));
             $tabela->set_width(array(15, 5, 15, 65));
         }
 
@@ -799,13 +799,13 @@ class Afastamento {
             $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
 
-            $relatorio->set_classe(array(NULL, NULL, "pessoal"));
-            $relatorio->set_metodo(array(NULL, NULL, "get_lotacaoSimples"));
+            $relatorio->set_classe(array(null, null, "pessoal"));
+            $relatorio->set_metodo(array(null, null, "get_lotacaoSimples"));
 
             if ($this->nomeSimples) {
-                $relatorio->set_funcao(array(NULL, "get_nomeSimples", NULL, "date_to_php", NULL, "date_to_php"));
+                $relatorio->set_funcao(array(null, "get_nomeSimples", null, "date_to_php", null, "date_to_php"));
             } else {
-                $relatorio->set_funcao(array(NULL, NULL, NULL, "date_to_php", NULL, "date_to_php"));
+                $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
             }
 
             #$relatorio->set_rowspan(1);
@@ -815,13 +815,13 @@ class Afastamento {
             $relatorio->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
 
-            $relatorio->set_classe(array(NULL, "pessoal"));
-            $relatorio->set_metodo(array(NULL, "get_lotacaoSimples"));
+            $relatorio->set_classe(array(null, "pessoal"));
+            $relatorio->set_metodo(array(null, "get_lotacaoSimples"));
 
             if ($this->nomeSimples) {
-                $relatorio->set_funcao(array("get_nomeSimples", NULL, "date_to_php", NULL, "date_to_php"));
+                $relatorio->set_funcao(array("get_nomeSimples", null, "date_to_php", null, "date_to_php"));
             } else {
-                $relatorio->set_funcao(array(NULL, NULL, "date_to_php", NULL, "date_to_php"));
+                $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
             }
 
             #$relatorio->set_rowspan(0);
@@ -835,7 +835,7 @@ class Afastamento {
 
         if ($this->formulario) {
             # Dados da combo lotacao
-            $lotacao = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $lotacao = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                             FROM tblotacao
                                            WHERE ativo) UNION (SELECT distinct DIR, DIR
                                             FROM tblotacao
@@ -857,8 +857,8 @@ class Afastamento {
                 array("11", "Novembro"),
                 array("12", "Dezembro"));
 
-            #$relatorio->set_bordaInterna(TRUE);
-            #$relatorio->set_cabecalho(FALSE);
+            #$relatorio->set_bordaInterna(true);
+            #$relatorio->set_cabecalho(false);
 
             if ($this->campoMes) {
                 $relatorio->set_formCampos(array(
@@ -949,7 +949,7 @@ class Afastamento {
                           AND (((YEAR(tbferias.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $this->ano)) 
                            OR ((YEAR(tbferias.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $this->ano)))  
                      ORDER BY dtInicial) UNION 
-                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFNULL(tbtipolicenca.lei,'')) as descricao,
+                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFnull(tbtipolicenca.lei,'')) as descricao,
                               dtInicial,
                               numDias,
                               ADDDATE(dtInicial,numDias-1) as dtFinal

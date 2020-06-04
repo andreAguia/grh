@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -24,12 +24,12 @@ if ($acesso) {
     $subFase = get('subFase', 1);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de perfil";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -108,10 +108,10 @@ if ($acesso) {
     $objeto->set_label(array("id", "Perfil", "Tipo", "Servidores<br/>Ativos", "Servidores<br/>Inativos"));
     $objeto->set_width(array(5, 20, 45, 10, 10));
     $objeto->set_align(array("center", "center", "left"));
-    #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
+    #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, "Grh", "Grh"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, "get_numServidoresAtivosPerfil", "get_numServidoresInativosPerfil"));
+    $objeto->set_classe(array(null, null, null, "Grh", "Grh"));
+    $objeto->set_metodo(array(null, null, null, "get_numServidoresAtivosPerfil", "get_numServidoresInativosPerfil"));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -138,22 +138,22 @@ if ($acesso) {
             'title' => 'Nome do Perfil',
             'label' => 'Nome:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'size' => 50),
         array('linha' => 1,
             'nome' => 'tipo',
             'title' => 'Tipo do Perfil',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => array("Concursados", "Não Concursados"),
             'size' => 20),
         array('linha' => 3,
             'nome' => 'progressao',
             'title' => 'informa se esse perfil tem direito a progressão',
             'label' => 'Progressão:',
-            'required' => TRUE,
+            'required' => true,
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
             'size' => 20),
@@ -161,14 +161,14 @@ if ($acesso) {
             'nome' => 'trienio',
             'title' => 'informa se esse perfil tem direito ao triênio',
             'label' => 'Triênio:',
-            'required' => TRUE,
+            'required' => true,
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
             'size' => 20),
         array('linha' => 3,
             'nome' => 'comissao',
             'title' => 'informa se esse perfil tem direito a ter cargo em comissão',
-            'required' => TRUE,
+            'required' => true,
             'label' => 'Comissão:',
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
@@ -177,13 +177,13 @@ if ($acesso) {
             'nome' => 'gratificacao',
             'title' => 'informa se esse perfil tem direito a receber gratificação especial',
             'label' => 'Gratificação:',
-            'required' => TRUE,
+            'required' => true,
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
             'size' => 20),
         array('linha' => 3,
             'nome' => 'ferias',
-            'required' => TRUE,
+            'required' => true,
             'title' => 'informa se esse perfil tem direito as férias',
             'label' => 'Férias:',
             'tipo' => 'combo',
@@ -192,7 +192,7 @@ if ($acesso) {
         array('linha' => 3,
             'nome' => 'licenca',
             'title' => 'informa se esse perfil tem direito a licença',
-            'required' => TRUE,
+            'required' => true,
             'label' => 'Licença:',
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
@@ -214,7 +214,7 @@ if ($acesso) {
         array('linha' => 4,
             'nome' => 'novoServidor',
             'title' => 'Permite que novos servidores sejam cadastrados nesse perfil',
-            'required' => TRUE,
+            'required' => true,
             'label' => 'Habilita Novo Servidor:',
             'tipo' => 'combo',
             'array' => array(array(1, "Sim"), array(0, "Não")),
@@ -230,14 +230,14 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Gráfico
-    $imagem = new Imagem(PASTA_FIGURAS . 'pie.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'pie.png', null, 15, 15);
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
     #$botaoGra->set_accessKey('G');
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir");
@@ -306,7 +306,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
@@ -322,7 +322,7 @@ if ($acesso) {
             $lista = new ListaServidores('Servidores Ativos - Perfil: ' . $pessoal->get_perfilNome($id));
             $lista->set_situacao(1);
             $lista->set_perfil($id);
-            $lista->set_relatorio(TRUE);
+            $lista->set_relatorio(true);
             $lista->showTabela();
 
             $grid->fechaColuna();
@@ -349,7 +349,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
@@ -366,7 +366,7 @@ if ($acesso) {
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
             $lista->set_perfil($id);
-            $lista->set_relatorio(TRUE);
+            $lista->set_relatorio(true);
             $lista->showTabela();
 
             $grid->fechaColuna();

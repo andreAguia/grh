@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -44,24 +44,24 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(TRUE);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->set_numeroOrdem(TRUE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_subtitulo("Licenças Fruídas");
     $relatorio->set_label(array("Publicação", "Início do Período", "Fim do Período", "Inicio", "Dias", "Término"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', NULL, 'date_to_php'));
-    #$relatorio->set_classe(array(NULL,NULL,NULL,'LicencaPremio'));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,'get_publicacao'));
+    $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
+    #$relatorio->set_classe(array(null,null,null,'LicencaPremio'));
+    #$relatorio->set_metodo(array(null,null,null,'get_publicacao'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de $nome");
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
@@ -86,20 +86,20 @@ if ($acesso) {
     $grid->abreColuna(3);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(false);
     $relatorio->set_subtitulo("Dados");
     $relatorio->set_label(array('Descrição', 'Valor'));
     $relatorio->set_align(array('left', 'center'));
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
 
     $relatorio->set_conteudo($tabela);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
-    $relatorio->set_log(FALSE);
+    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $grid->fechaColuna();
@@ -121,26 +121,26 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(TRUE);
-    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_totalRegistro(false);
     $relatorio->set_subtitulo("Publicações");
 
     $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo <br/> Início", "Período Aquisitivo <br/> Fim", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"));
     #$relatorio->set_width(array(15,5,15,15,15,10,10,10));
     $relatorio->set_align(array("center"));
-    $relatorio->set_numeroOrdem(TRUE);
+    $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php'));
-    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, 'LicencaPremio', 'LicencaPremio'));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
+    $relatorio->set_classe(array(null, null, null, null, 'LicencaPremio', 'LicencaPremio'));
+    $relatorio->set_metodo(array(null, null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
 
-    #$relatorio->set_dataImpressao(FALSE);
+    #$relatorio->set_dataImpressao(false);
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
-    $relatorio->set_log(FALSE);
+    $relatorio->set_botaoVoltar(false);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $grid->fechaColuna();

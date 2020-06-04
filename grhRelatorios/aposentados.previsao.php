@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -57,10 +57,10 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Integral', 'Proporcional', 'Compulsória'));
     #$tabela->set_width(array(30,15,15,15,15));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcaoDepoisClasse(array(NULL, NULL, NULL, "marcaSePassou", "marcaSePassou", "marcaSePassou"));
+    $relatorio->set_funcaoDepoisClasse(array(null, null, null, "marcaSePassou", "marcaSePassou", "marcaSePassou"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_CargoSimples", "get_dataAposentadoriaIntegral", "get_dataAposentadoriaProporcional", "get_dataAposentadoriaCompulsoria"));
+    $relatorio->set_classe(array(null, null, "pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"));
+    $relatorio->set_metodo(array(null, null, "get_CargoSimples", "get_dataAposentadoriaIntegral", "get_dataAposentadoriaProporcional", "get_dataAposentadoriaCompulsoria"));
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

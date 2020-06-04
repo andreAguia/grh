@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -32,7 +32,7 @@ if ($acesso) {
 
     ###### 
     # Título & Subtitulo
-    $subTitulo = NULL;
+    $subTitulo = null;
     $titulo = "Servidores com Solicitação de Readaptação";
 
     # Pega os dados
@@ -93,8 +93,8 @@ if ($acesso) {
     $relatorio->set_align(array("center", "left", "center", "center", "center", "center", "center", "left", "center", "center", "left"));
     $relatorio->set_funcao(array("idMatricula"));
 
-    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, "Readaptacao", NULL, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, "exibeStatus", NULL, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
+    $relatorio->set_classe(array(null, null, null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
+    $relatorio->set_metodo(array(null, null, null, null, "exibeStatus", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

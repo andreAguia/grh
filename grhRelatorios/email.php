@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -27,13 +27,13 @@ if ($acesso) {
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao'));
 
-    $subTitulo = NULL;
+    $subTitulo = null;
 
     ######
 
     $select = 'SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")) lotacao,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
                      tbpessoa.emailUenf,
                      tbpessoa.emailPessoal
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
@@ -68,7 +68,7 @@ if ($acesso) {
 
     $relatorio->set_conteudo($result);
 
-    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao

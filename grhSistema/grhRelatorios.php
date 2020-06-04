@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -651,7 +651,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Descrição", "Adm/Tec", "Professores", "Total"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("left", "center"));
             $tabela->set_titulo("Resumo Geral");
             #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);
@@ -685,7 +685,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Descrição", "Nº de Servidores"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("left", "center"));
             $tabela->set_titulo("Sisgen (Ativos)");
             #$tabela->set_rodape("Total de Servidores: ".$totalServidores3);

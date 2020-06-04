@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de atestados para abono de faltas";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -139,7 +139,7 @@ if ($acesso) {
     $objeto->set_label(array("Data Inicial", "Dias", "Data Término", "Médico", "Especialidade", "Tipo", "Parentesco", "Obs"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center", "center", "center", "left", "center", "center", "center", "left"));
-    $objeto->set_funcao(array("date_to_php", NULL, "date_to_php"));
+    $objeto->set_funcao(array("date_to_php", null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -159,14 +159,14 @@ if ($acesso) {
                                      Parentesco
                                 FROM tbparentesco
                             ORDER BY parentesco');
-    array_push($result, array(0, NULL)); # Adiciona o valor de nulo
+    array_push($result, array(0, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'dtInicio',
             'label' => 'Data Inicial:',
             'tipo' => 'data',
             'size' => 20,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Data inícial do atestado.',
             'col' => 3,
             'linha' => 1),
@@ -175,7 +175,7 @@ if ($acesso) {
             'tipo' => 'numero',
             'size' => 5,
             'col' => 2,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Quantidade de dias do atestado.',
             'linha' => 1),
         array('nome' => 'tipo',
@@ -199,7 +199,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'size' => 80,
             'col' => 6,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Nome do Médico.',
             'linha' => 2),
         array('nome' => 'especi_medico',
@@ -207,7 +207,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'size' => 80,
             'col' => 6,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Especialidade do Médico.',
             'linha' => 2),
         array('linha' => 5,
@@ -223,7 +223,7 @@ if ($acesso) {
             'title' => 'Matrícula',
             'linha' => 6)));
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Atestados (Faltas Abonadas)");
@@ -236,7 +236,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
     ################################################################

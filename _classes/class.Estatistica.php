@@ -7,18 +7,18 @@ class Estatistica {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    private $assunto = NULL;        // Qual o assunto da estatistica
-    private $labelTabela = NULL;    // O label da tabela
-    private $labelGrafico = NULL;   // O label do gráfico
-    private $arrayTabela = NULL;    // o array da tabela
-    private $arrayGrafico = NULL;   // o array do gráfico
+    private $assunto = null;        // Qual o assunto da estatistica
+    private $labelTabela = null;    // O label da tabela
+    private $labelGrafico = null;   // O label do gráfico
+    private $arrayTabela = null;    // o array da tabela
+    private $arrayGrafico = null;   // o array do gráfico
 
     ###########################################################
 
     /**
      * Método Construtor
      */
-    public function __construct($assunto = NULL) {
+    public function __construct($assunto = null) {
 
         # insere o assunto
         $this->assunto = $assunto;
@@ -128,7 +128,7 @@ class Estatistica {
         $tabela->set_label($this->labelTabela);
         $tabela->set_width(array(80, 20));
         $tabela->set_align(array("left", "center"));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
@@ -149,7 +149,7 @@ class Estatistica {
         # Gráfico
         $chart = new Chart("Pie", $this->arrayGrafico);
         $chart->set_idDiv("grafico");
-        $chart->set_legend(FALSE);
+        $chart->set_legend(false);
         $chart->set_tamanho($tamanho, $tamanho);
         $chart->show();
     }
@@ -219,7 +219,7 @@ class Estatistica {
         $arrayGrafico = array();
 
         # Valores anteriores
-        $valorAnterior = NULL;
+        $valorAnterior = null;
 
         # inicia as variáveis
         $masc = 0;
@@ -290,7 +290,7 @@ class Estatistica {
         $tabela->set_conteudo($this->arrayTabela);
         $tabela->set_label($this->labelTabela);
         $tabela->set_align(array("left", "center", "center", "center"));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
@@ -314,7 +314,7 @@ class Estatistica {
         $chart->set_label($this->labelGrafico);
         $chart->set_tituloEixoY("Servidores");
         $chart->set_tituloEixoX("Perfil");
-        $chart->set_legend(FALSE);
+        $chart->set_legend(false);
         $chart->show();
     }
 

@@ -27,7 +27,7 @@ $tipo = $campoValor[2];
 $parentesco = $campoValor[3];
 
 if ($tipo == "Próprio") {
-    $campoValor[3] = NULL;
+    $campoValor[3] = null;
 }
 
 # Exige preenchimento parentesto quando campo tipo for acompanhante

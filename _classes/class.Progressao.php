@@ -7,14 +7,14 @@ class Progressao {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    private $idServidor = NULL;
+    private $idServidor = null;
 
     ###########################################################
 
     /**
      * Método Construtor
      */
-    public function __construct($idServidor = NULL) {
+    public function __construct($idServidor = null) {
 
         $this->idServidor = $idServidor;
     }
@@ -32,14 +32,14 @@ class Progressao {
                   WHERE idProgressao = $idProgressao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }
 
     ###########################################################
 
-    function get_IdClasseAtual($idServidor = NULL) {
+    function get_IdClasseAtual($idServidor = null) {
 
         /**
          * Fornece o idClasse atual do servidor
@@ -55,14 +55,14 @@ class Progressao {
                  ORDER BY dtInicial desc";
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         return $row[0];
     }
 
     ###########################################################
 
-    function get_IdPlanoAtual($idServidor = NULL) {
+    function get_IdPlanoAtual($idServidor = null) {
 
         /**
          * Fornece o idPlano atual do servidor
@@ -78,7 +78,7 @@ class Progressao {
                  ORDER BY dtInicial desc";
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         return $row[0];
     }
@@ -101,7 +101,7 @@ class Progressao {
                  ORDER BY dtInicial desc";
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         return date_to_php($row[0]);
     }
@@ -189,7 +189,7 @@ class Progressao {
                   ORDER BY dtInicial DESC";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados[0];
     }

@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -29,7 +29,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
-                     concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
+                     concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
                      tbpessoa.sexo,
@@ -53,10 +53,10 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Sexo'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", NULL, NULL, NULL));
-    $relatorio->set_metodo(array(NULL, NULL, "get_Cargo", NULL, NULL, NULL));
+    $relatorio->set_classe(array(null, null, "pessoal", null, null, null));
+    $relatorio->set_metodo(array(null, null, "get_Cargo", null, null, null));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);

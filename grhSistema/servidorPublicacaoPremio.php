@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -82,9 +82,9 @@ if ($acesso) {
     #$objeto->set_width(array(15,5,15,15,15,10,10,10));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php'));
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, 'LicencaPremio', 'LicencaPremio'));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
-    $objeto->set_exibeTempoPesquisa(FALSE);
+    $objeto->set_classe(array(null, null, null, null, 'LicencaPremio', 'LicencaPremio'));
+    $objeto->set_metodo(array(null, null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
+    $objeto->set_exibeTempoPesquisa(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -108,7 +108,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data da Publicação no DOERJ.',
             'linha' => 1),
         array('nome' => 'dtInicioPeriodo',
@@ -116,7 +116,7 @@ if ($acesso) {
             'tipo' => 'data',
             'col' => 3,
             'size' => 20,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data de início do período aquisitivo',
             'linha' => 1),
         array('nome' => 'dtFimPeriodo',
@@ -124,17 +124,17 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data de término do período aquisitivo',
             'linha' => 1),
         array('nome' => 'numDias',
             'label' => 'Dias:',
             'tipo' => 'numero',
             'padrao' => 90,
-            'readOnly' => TRUE,
+            'readOnly' => true,
             'size' => 5,
             'col' => 2,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Dias de Férias.',
             'linha' => 1),
         array('linha' => 5,
@@ -173,14 +173,14 @@ if ($acesso) {
                 $mensagem1 = "Servidor tem mais dias fruídos de Licença prêmio do que publicados.";
                 $objeto->set_rotinaExtraListar("callout");
                 $objeto->set_rotinaExtraListarParametro($mensagem1);
-                #$objeto->set_botaoIncluir(FALSE);
+                #$objeto->set_botaoIncluir(false);
             }
 
             if ($diasDisponiveis == 0) {
                 $mensagem1 = "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma licença prêmio.";
                 $objeto->set_rotinaExtraListar("callout");
                 $objeto->set_rotinaExtraListarParametro($mensagem1);
-                #$objeto->set_botaoIncluir(FALSE);
+                #$objeto->set_botaoIncluir(false);
             }
 
 

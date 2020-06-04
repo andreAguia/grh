@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -32,7 +32,7 @@ if ($acesso) {
 
     # Trata Lotação
     if ($lotacao == "*") {
-        $lotacao = NULL;
+        $lotacao = null;
     }
 
     # Pega o idServidor da Chefia
@@ -44,7 +44,7 @@ if ($acesso) {
         # Varifica se temos o idChefia
         if (vazio($idChefia)) {
             $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
-            $chefia = NULL;
+            $chefia = null;
         } else {
             $nomeLotacao = $servidor->get_cargoComissaoDescricao($idChefia);
             $chefia = $servidor->get_nome($idChefia);
@@ -163,10 +163,10 @@ if ($acesso) {
     $relatorio->set_label(array('idFuncional', 'Nome'));
     $relatorio->set_width(array(20, 80));
     $relatorio->set_align(array("center", "left"));
-    $relatorio->set_subTotal(FALSE);
-    $relatorio->set_totalRegistro(FALSE);
-    $relatorio->set_dataImpressao(FALSE);
-    $relatorio->set_linhaNomeColuna(FALSE);
+    $relatorio->set_subTotal(false);
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_linhaNomeColuna(false);
     $relatorio->set_conteudo($result);
 
     $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));

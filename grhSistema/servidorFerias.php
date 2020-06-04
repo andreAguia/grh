@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de férias";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -94,10 +94,10 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(array("Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs"));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL, NULL, 'date_to_php', NULL, 'date_to_php', NULL));
+    $objeto->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', null));
     $objeto->set_width(array(10, 10, 15, 10, 15, 10, 20));
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, NULL, "pessoal"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, NULL, "get_feriasPeriodo"));
+    $objeto->set_classe(array(null, null, null, null, null, "pessoal"));
+    $objeto->set_metodo(array(null, null, null, null, null, "get_feriasPeriodo"));
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -124,8 +124,8 @@ if ($acesso) {
             'size' => 7,
             'col' => 2,
             'padrao' => $exercícioDisponivel,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Ano de Exercício das Férias.',
             'linha' => 1),
         array('nome' => 'dtInicial',
@@ -133,16 +133,16 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'col' => 2,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data do início das férias.',
             'linha' => 1),
         array('nome' => 'numDias',
             'label' => 'Dias:',
             'tipo' => 'combo',
-            'array' => array(NULL, 30, 20, 15, 10),
+            'array' => array(null, 30, 20, 15, 10),
             'col' => 2,
             'size' => 5,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Dias de Férias.',
             'linha' => 1),
         array('linha' => 3,
@@ -171,9 +171,9 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Retira os botoes da classe modelo
-    $objeto->set_botaoIncluir(FALSE);
-    $objeto->set_botaoVoltarLista(FALSE);
-    $objeto->set_comGridLista(FALSE);
+    $objeto->set_botaoIncluir(false);
+    $objeto->set_botaoVoltarLista(false);
+    $objeto->set_comGridLista(false);
 
 ################################################################
 
@@ -195,7 +195,7 @@ if ($acesso) {
             $menu1->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir Relatório de Histórico de Férias");
@@ -311,7 +311,7 @@ if ($acesso) {
 
             # Acessa o Banco de dados
             $ferias = new Pessoal();
-            $row = $ferias->select($select, FALSE);
+            $row = $ferias->select($select, false);
             $row = urlencode(serialize($row));  // Prepara para ser enviado por get
             # preenche outro array com o restante dos dados
             $servidor = array($nome, $cargo, $perfil, $lotacao, $idServidorPesquisado);

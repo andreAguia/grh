@@ -28,7 +28,7 @@ class CargoComissao {
                   WHERE idComissao = $idComissao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados;
     }
@@ -46,7 +46,7 @@ class CargoComissao {
                   WHERE idComissao = $idComissao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         return $dados[0];
     }
@@ -67,7 +67,7 @@ class CargoComissao {
                   WHERE tbcomissao.idComissao = $idComissao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         $retorno = $dados[0] . " - " . $dados[1] . "<br/>" . $dados[2];
         return $retorno;
@@ -87,8 +87,8 @@ class CargoComissao {
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
                     WHERE tbcomissao.idTipoComissao = $idTipoCargo
                       AND situacao = 1
-                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
-                      AND (tbcomissao.tipo is NULL OR tbcomissao.tipo = 0 OR tbcomissao.tipo = 1)";  // Curioso bug... tbcomissao.tipo <> 2 não funcionou
+                      AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
+                      AND (tbcomissao.tipo is null OR tbcomissao.tipo = 0 OR tbcomissao.tipo = 1)";  // Curioso bug... tbcomissao.tipo <> 2 não funcionou
         // devido a alguns valores nulos cadastrado no campo tipo
         $pessoal = new Pessoal();
         $dados = $pessoal->count($select);
@@ -109,7 +109,7 @@ class CargoComissao {
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
                     WHERE tbcomissao.idTipoComissao = $idTipoCargo
                       AND situacao = 1
-                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                      AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND tbcomissao.tipo = 2";
 
         $pessoal = new Pessoal();
@@ -131,7 +131,7 @@ class CargoComissao {
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
                     WHERE tbcomissao.idTipoComissao = $idTipoCargo
                       AND situacao = 1
-                      AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                      AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND tbcomissao.tipo = 1";
 
         $pessoal = new Pessoal();
@@ -152,7 +152,7 @@ class CargoComissao {
                     WHERE idTipoComissao = ' . $idTipoCargo;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
         return $row[0];
     }
 
@@ -202,7 +202,7 @@ class CargoComissao {
         $tabela = new Tabela();
         $tabela->set_conteudo($dados);
         $tabela->set_label(array("Cargo", "Símbolo", "Valor", "Vagas", "Nomeados", "Disponíveis", "Pro Tempore", "Designados"));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
         $tabela->set_titulo($nomeCargo);
         $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
@@ -244,7 +244,7 @@ class CargoComissao {
                     WHERE idTipoComissao = ' . $idTipoCargo;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
         return $row[0];
     }
 
@@ -262,7 +262,7 @@ class CargoComissao {
                     WHERE idTipoComissao = ' . $idTipoCargo;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
         return $row[0];
     }
 
@@ -363,7 +363,7 @@ class CargoComissao {
         $result = $pessoal->select($select);
         $label = array('Nome', 'Nomeação', 'Exoneração', 'Descrição');
         $align = array("left", "center", "center", "left");
-        $function = array(NULL, "date_to_php", "date_to_php", "descricaoComissao");
+        $function = array(null, "date_to_php", "date_to_php", "descricaoComissao");
 
         # Monta a tabela
         $tabela = new Tabela();
@@ -375,7 +375,7 @@ class CargoComissao {
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($metodo);
         $tabela->set_formatacaoCondicional(array(array('coluna' => 2,
-                'valor' => NULL,
+                'valor' => null,
                 'operador' => '=',
                 'id' => 'vigente')));
         $tabela->show();

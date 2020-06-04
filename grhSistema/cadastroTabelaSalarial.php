@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -26,12 +26,12 @@ if ($acesso) {
     $pcv = get('pcv');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de tabela salarial";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -110,7 +110,7 @@ if ($acesso) {
     $objeto->set_label(array("id", "Plano", "Nível", "Cargo", "Faixa", "Valor", "Status"));
     #$objeto->set_width(array(5,30,20,10,10,10));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "formataMoeda"));
+    $objeto->set_funcao(array(null, null, null, null, null, "formataMoeda"));
 
     $planoAtual = $pessoal->get_numDecretoPlanoAtual();
 
@@ -135,14 +135,14 @@ if ($acesso) {
                                        cargo
                                   FROM tbtipocargo
                               ORDER BY cargo desc');
-    array_unshift($cargo, array(0, NULL));
+    array_unshift($cargo, array(0, null));
 
     # Pega os dados da combo de Plano e Cargos
     $result = $pessoal->select('SELECT idPlano, 
                                        numDecreto
                                   FROM tbplano
                               ORDER BY dtPublicacao desc');
-    array_unshift($result, array(0, NULL));
+    array_unshift($result, array(0, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -151,34 +151,34 @@ if ($acesso) {
             'label' => 'Plano de Cargos:',
             'tipo' => 'combo',
             'array' => $result,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'size' => 20),
         array('linha' => 1,
             'nome' => 'nivel',
             'label' => 'Nível:',
             'tipo' => 'combo',
-            'array' => array(NULL, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"),
-            'required' => TRUE,
+            'array' => array(null, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"),
+            'required' => true,
             'size' => 20),
         array('linha' => 1,
             'nome' => 'idTipoCargo',
             'label' => 'Cargo:',
             'tipo' => 'combo',
             'array' => $cargo,
-            'required' => TRUE,
+            'required' => true,
             'size' => 20),
         array('linha' => 1,
             'nome' => 'faixa',
             'label' => 'Faixa:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 20),
         array('linha' => 1,
             'nome' => 'valor',
             'label' => 'Valor:',
             'tipo' => 'moeda',
-            'required' => TRUE,
+            'required' => true,
             'size' => 10)));
 
     # idUsuário para o Log
@@ -211,7 +211,7 @@ if ($acesso) {
             $controle = new Input('parametroNivel', 'combo', 'Nivel:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Nivel');
-            $controle->set_array(array(NULL, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"));
+            $controle->set_array(array(null, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"));
             $controle->set_valor($parametroNivel);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);

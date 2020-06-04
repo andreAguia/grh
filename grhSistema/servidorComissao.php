@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -21,12 +21,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico dos cargos em comissão";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -91,7 +91,7 @@ if ($acesso) {
     # Retira o botão de inclusão quando o servidor já tem cargo em comissão em aberto.
     #if(!is_null($pessoal->get_cargoComissao($idServidorPesquisado))){
     #    # Retira o botão de incluir
-    #    $objeto->set_botaoIncluir(FALSE);
+    #    $objeto->set_botaoIncluir(false);
     #    
     #    # Informa o porquê
     #    $mensagem = "O botão de Incluir sumiu! Porque? Esse servidor já tem um cargo em comissão.<br/>"
@@ -140,10 +140,10 @@ if ($acesso) {
     $objeto->set_label(array("Cargo", "Descrição", "Nomeação", "Exoneração", "Documentos"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left", "left", "center"));
-    $objeto->set_funcao(array(NULL, "descricaoComissao", "date_to_php", "date_to_php"));
+    $objeto->set_funcao(array(null, "descricaoComissao", "date_to_php", "date_to_php"));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, "Cargocomissao"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, "exibeBotaoDocumentos"));
+    $objeto->set_classe(array(null, null, null, null, "Cargocomissao"));
+    $objeto->set_metodo(array(null, null, null, null, "exibeBotaoDocumentos"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -163,7 +163,7 @@ if ($acesso) {
                                     FROM tbtipocomissao
                                 ORDER BY ativo desc, simbolo');
 
-    array_unshift($tipoComissao, array(NULL, NULL));
+    array_unshift($tipoComissao, array(null, null));
 
     # Pega os dados da descrição
     if (is_null($id)) {
@@ -181,7 +181,7 @@ if ($acesso) {
                                      ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao,  tbdescricaocomissao.descricao');
     }
 
-    array_unshift($descricao, array(NULL, NULL));
+    array_unshift($descricao, array(null, null));
 
     # Label
     $labelDescricao = 'Descrição do Cargo:';
@@ -190,8 +190,8 @@ if ($acesso) {
     $objeto->set_campos(array(array('nome' => 'idTipoComissao',
             'label' => 'Tipo da Cargo em Comissão:',
             'tipo' => 'combo',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'array' => $tipoComissao,
             'size' => 20,
             'col' => 4,
@@ -208,7 +208,7 @@ if ($acesso) {
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'array' => array(array(0, "Padrão"), array(1, "Pro Tempore"), array(2, "Designado")),
-            'required' => TRUE,
+            'required' => true,
             'size' => 20,
             'col' => 2,
             'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
@@ -218,7 +218,7 @@ if ($acesso) {
             'fieldset' => 'Nomeação',
             'tipo' => 'data',
             'size' => 20,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data da Nomeação.',
             'col' => 3,
             'linha' => 2),
@@ -297,7 +297,7 @@ if ($acesso) {
     $botaoVagas->set_accessKey('a');
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Cargo em Comissão");
@@ -365,7 +365,7 @@ if ($acesso) {
             $comissao = $cargoComissao->get_dados($id);
             $ocupanteAnterior = $comissao['ocupanteAnterior'];
             $dtAtoNom = date_to_php($comissao['dtAtoNom']);
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica se tem ocupante anterior esta preenchido
@@ -430,8 +430,8 @@ if ($acesso) {
             $controle->set_size(200);
             $controle->set_linha(1);
             $controle->set_col(12);
-            #$controle->set_required(TRUE);
-            $controle->set_autofocus(TRUE);
+            #$controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_valor($ocupanteAnterior);
             $controle->set_title('Ocupante Anterior.');
             $form->add_item($controle);
@@ -442,7 +442,7 @@ if ($acesso) {
             $controle->set_linha(2);
             $controle->set_col(3);
             $controle->set_valor($dtAtoNom);
-            #$controle->set_required(TRUE);
+            #$controle->set_required(true);
             $controle->set_title('A data do Ato de Nomeação.');
             $form->add_item($controle);
 
@@ -486,8 +486,8 @@ if ($acesso) {
             $array = serialize($array);
 
             # Verifica se houve alterações
-            $alteracoes = NULL;
-            $atividades = NULL;
+            $alteracoes = null;
+            $atividades = null;
 
             # Verifica as alterações para o log
             if ($ocupanteAnterior <> $ocupanteAnteriorDigitado) {
@@ -498,7 +498,7 @@ if ($acesso) {
             }
 
             # Erro
-            $msgErro = NULL;
+            $msgErro = null;
             $erro = 0;
 
             # Verifica o número da Ci
@@ -551,7 +551,7 @@ if ($acesso) {
             $comissao = $cargoComissao->get_dados($id);
             $publicacao = $comissao['dtPublicNom'];
             $dtAtoNom = $comissao['dtAtoNom'];
-            $msgErro = NULL;
+            $msgErro = null;
 
             # Verifica se tem ocupante anterior esta preenchido
             if (is_null($publicacao)) {
@@ -584,7 +584,7 @@ if ($acesso) {
             $comissao = $cargoComissao->get_dados($id);
             $dtExo = $comissao['dtExo'];
             $dtAtoExo = date_to_php($comissao['dtAtoExo']);
-            $msgErro = NULL;
+            $msgErro = null;
 
             # Verifica se tem ocupante anterior esta preenchido
             if (is_null($dtExo)) {

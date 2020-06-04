@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Resumo financeiro";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Começa uma nova página
@@ -66,7 +66,7 @@ if ($acesso) {
     $label = array("Descrição", "Valor");
     $width = array(60, 40);
     $align = array("left", "right");
-    $function = array(NULL, "formataMoeda");
+    $function = array(null, "formataMoeda");
 
     $formatacaoCondicional = array(array('coluna' => 0,
             'valor' => 'Total',
@@ -84,7 +84,7 @@ if ($acesso) {
     $tabela->set_cabecalho($label, $width, $align);
     $tabela->set_funcao($function);
     #$tabela->set_link($link);
-    $tabela->set_totalRegistro(FALSE);
+    $tabela->set_totalRegistro(false);
     #$tabela->set_idCampo('idServidor');
     $tabela->set_formatacaoCondicional($formatacaoCondicional);
     $tabela->show();

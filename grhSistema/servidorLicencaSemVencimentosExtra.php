@@ -23,8 +23,8 @@ if (vazio($dtTermino)) {
 }
 
 if (vazio($numDias)) {
-    $campoValor[8] = NULL;
-    $campoValor[6] = NULL;
+    $campoValor[8] = null;
+    $campoValor[6] = null;
 }
 
 # Verifica a data de retorno

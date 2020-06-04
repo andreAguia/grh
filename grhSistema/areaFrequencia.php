@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de afastamento";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -96,7 +96,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("?fase=relatorio");
@@ -138,14 +138,14 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                             FROM tblotacao
                                            WHERE ativo) UNION (SELECT distinct DIR, DIR
                                             FROM tblotacao
                                            WHERE ativo)
                                         ORDER BY 2');
 
-            array_unshift($result, array(NULL, "Todos"));
+            array_unshift($result, array(null, "Todos"));
 
             $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
             $controle->set_size(30);
@@ -164,7 +164,7 @@ if ($acesso) {
             $result[] = array("TTRE", "Trabalhando TRE");
             $result[] = array("FTRE", "Folga TRE");
 
-            array_unshift($result, array(NULL, "Todos"));
+            array_unshift($result, array(null, "Todos"));
 
 
             $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);

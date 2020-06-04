@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Controle de folgas do TRE";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -123,7 +123,7 @@ if ($acesso) {
             $tabela->set_titulo('Resumo');
             $tabela->set_conteudo($folgas);
             $tabela->set_cabecalho($label, $width, $align);
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 0,
                     'valor' => 'Folgas Pendentes',
@@ -185,7 +185,7 @@ if ($acesso) {
             $tabela->set_label(array("Início", "Término", "Folgas Fruídas"));
             $tabela->set_width(array(30, 30, 30));
             $tabela->set_align(array("center"));
-            $tabela->set_funcao(array("date_to_php", "date_to_php", NULL));
+            $tabela->set_funcao(array("date_to_php", "date_to_php", null));
             $tabela->show();
             $grid->fechaColuna();
             $grid->fechaGrid();

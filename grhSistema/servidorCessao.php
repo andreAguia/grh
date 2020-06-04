@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -22,12 +22,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Histórico de cessão";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # pega o id (se tiver)
@@ -90,7 +90,7 @@ if ($acesso) {
     $objeto->set_label(array("Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ"));
     $objeto->set_width(array(10, 10, 30, 20, 20));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", "date_to_php", NULL, NULL, "date_to_php"));
+    $objeto->set_funcao(array("date_to_php", "date_to_php", null, null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -109,8 +109,8 @@ if ($acesso) {
             'label' => 'Data Inicial:',
             'tipo' => 'data',
             'size' => 20,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Data do início da cessão.',
             'col' => 3,
             'linha' => 1),
@@ -138,7 +138,7 @@ if ($acesso) {
         array('nome' => 'orgao',
             'label' => 'Órgão Cessionário:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 100,
             'col' => 12,
             'title' => 'O órgão cessionário',
@@ -158,7 +158,7 @@ if ($acesso) {
             'linha' => 3)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Cessão");
@@ -172,7 +172,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Paginação
-    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     #$objeto->set_paginacaoItens(20);
     ################################################################

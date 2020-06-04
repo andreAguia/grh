@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -45,7 +45,7 @@ if ($acesso) {
 
     # Pega os dados
     $select = "SELECT concat(tbconcurso.anoBase,' - Edital: ',DATE_FORMAT(tbconcurso.dtPublicacaoEdital,'%d/%m/%Y')) as concurso,
-                      concat(IFNULL(tblotacao.GER,''),' - ',IFNULL(tblotacao.nome,'')) as lotacao,
+                      concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao,
                       area,
                       idServidor,
                       tbvagahistorico.obs,
@@ -61,18 +61,18 @@ if ($acesso) {
     $relatorio->set_conteudo($resumo);
     $relatorio->set_label(array("Concurso", "Laboratório", "Área", "Servidor", "Obs"));
     $relatorio->set_align(array("left", "left", "left", "left", "left"));
-    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"date_to_php"));
+    #$relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
     #$relatorio->set_width(array(5,5,5,20,5,20,15,15,5));
 
-    $relatorio->set_classe(array(NULL, NULL, NULL, "Vaga"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, "get_Nome"));
+    $relatorio->set_classe(array(null, null, null, "Vaga"));
+    $relatorio->set_metodo(array(null, null, null, "get_Nome"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
 
-    $relatorio->set_numeroOrdem(TRUE);
+    $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo('d');
-    $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->show();
 

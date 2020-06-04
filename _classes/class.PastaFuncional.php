@@ -7,17 +7,17 @@ class PastaFuncional {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $idPasta integer NULL O id do documento da pasta do servidor
+     * @var private $idPasta integer null O id do documento da pasta do servidor
      */
-    private $idPasta = NULL;
+    private $idPasta = null;
 
 ##############################################################
 
-    public function __construct($idPasta = NULL) {
+    public function __construct($idPasta = null) {
         /**
          * Inicia a Classe somente
          * 
-         * @param $idPasta integer NULL O id do documento
+         * @param $idPasta integer null O id do documento
          * 
          * @syntax $pastaFuncional = new PastaFuncional([$idPasta]);
          */
@@ -26,12 +26,12 @@ class PastaFuncional {
 
 ##############################################################
 
-    public function get_dados($idPasta = NULL) {
+    public function get_dados($idPasta = null) {
 
         /**
          * Informa os dados da base de dados
          * 
-         * @param $idPasta integer NULL O id do $idPasta
+         * @param $idPasta integer null O id do $idPasta
          * 
          * @syntax $pastaFuncional->get_dados([$idPasta]);
          */
@@ -55,7 +55,7 @@ class PastaFuncional {
                     WHERE idPasta = ' . $this->idPasta;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row;
@@ -67,7 +67,7 @@ class PastaFuncional {
         /**
          * Exibe um link para a publicação
          * 
-         * @param $idConcursoPublicacao integer NULL O id do Concurso
+         * @param $idConcursoPublicacao integer null O id do Concurso
          * 
          * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
          */
@@ -78,7 +78,7 @@ class PastaFuncional {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(NULL, $arquivo, "Exibe o MCF");
+            $link = new Link(null, $arquivo, "Exibe o MCF");
             $link->set_imagem(PASTA_FIGURAS . "ver.png", 20, 20);
             $link->set_target("_blank");
             $link->show();

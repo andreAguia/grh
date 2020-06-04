@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -46,13 +46,13 @@ if ($acesso) {
     $relatorio->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Escolaridade", "Curso"));
     #$relatorio->set_width(array(10,80));
     $relatorio->set_align(array("center", "left", "left", "left", "left", "left"));
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_CargoRel", "get_LotacaoRel"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_CargoRel", "get_LotacaoRel"));
 
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório Geral de Formação Servidores");
 

@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -21,12 +21,12 @@ if ($acesso) {
     $aposentadoria = new Aposentadoria();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Tempo de serviço averbado";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -106,7 +106,7 @@ if ($acesso) {
 
     $label = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
     $align = array("center", "center", "center", "left");
-    $funcao = array("date_to_php", "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php");
+    $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php");
 
     # Parametros da tabela
     $objeto->set_label($label);
@@ -116,7 +116,7 @@ if ($acesso) {
 
     $objeto->set_colunaSomatorio(2);
     $objeto->set_textoSomatorio("Total de Dias:");
-    $objeto->set_totalRegistro(FALSE);
+    $objeto->set_totalRegistro(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -134,8 +134,8 @@ if ($acesso) {
     $objeto->set_campos(array(array('nome' => 'empresa',
             'label' => 'Empresa:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'size' => 80,
             'title' => 'Nome da Empresa.',
             'col' => 6,
@@ -143,7 +143,7 @@ if ($acesso) {
         array('nome' => 'empresaTipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => Array(Array(1, "Pública"), Array(2, "Privada")),
             'size' => 20,
             'col' => 2,
@@ -152,7 +152,7 @@ if ($acesso) {
         array('nome' => 'dtPublicacao',
             'label' => 'Data da Pub. no DOERJ:',
             'tipo' => 'data',
-            'required' => TRUE,
+            'required' => true,
             'size' => 20,
             'col' => 3,
             'title' => 'Data da Publicação no DOERJ.',
@@ -160,7 +160,7 @@ if ($acesso) {
         array('nome' => 'processo',
             'label' => 'Processo:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'size' => 30,
             'col' => 3,
             'title' => 'Número do Processo',
@@ -168,35 +168,35 @@ if ($acesso) {
         array('nome' => 'dtInicial',
             'label' => 'Data Inicial:',
             'tipo' => 'data',
-            'notNull' => TRUE,
+            'notnull' => true,
             'size' => 20,
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Data inícial do Período.',
             'linha' => 3),
         array('nome' => 'dtFinal',
             'label' => 'Data Final:',
             'tipo' => 'data',
-            'required' => TRUE,
+            'required' => true,
             'size' => 20,
             'col' => 3,
-            'notNull' => TRUE,
+            'notnull' => true,
             'title' => 'Data final do Período.',
             'linha' => 3),
         array('nome' => 'dias',
             'label' => 'Dias:',
             'tipo' => 'numero',
-            'required' => TRUE,
+            'required' => true,
             'size' => 5,
             'col' => 2,
-            'notNull' => TRUE,
+            'notnull' => true,
             'title' => 'Quantidade de Dias Averbado.',
             'linha' => 3),
         array('nome' => 'regime',
             'label' => 'Regime:',
             'tipo' => 'combo',
             'col' => 3,
-            'required' => TRUE,
+            'required' => true,
             'array' => Array(Array(1, "Celetista"), Array(2, "Estatutário"), Array(3, "Próprio")),
             'size' => 20,
             'title' => 'Tipo do Regime',
@@ -222,7 +222,7 @@ if ($acesso) {
             'linha' => 10)));
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Tempo de Serviço Averbado");
@@ -249,13 +249,13 @@ if ($acesso) {
             # Verifica a data de saída
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
             $dtHoje = date("Y-m-d");                                      # Data de hoje
-            $dtFinal = NULL;
+            $dtFinal = null;
 
             # Analisa a data
             if (!vazio($dtSaida)) {           // Se tem saída é a saída
                 $dtFinal = date_to_bd($dtSaida);
-                $disabled = TRUE;
-                $autofocus = FALSE;
+                $disabled = true;
+                $autofocus = false;
             } else {                          // Não tem saída então é hoje
                 $dtFinal = $dtHoje;
             }
@@ -268,13 +268,13 @@ if ($acesso) {
 
             # Acrescenta o tempo de UENF
             $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
-            $resultSobreposicao[] = array($dtAdmissao, $dtFinal, NULL);
+            $resultSobreposicao[] = array($dtAdmissao, $dtFinal, null);
 
             # Inicia a variável que informa se tem sobreposicao
-            $sobreposicao = FALSE;
+            $sobreposicao = false;
 
             # Inicia o array que guarda os períodos problemáticos
-            $idsProblemáticos[] = NULL;
+            $idsProblemáticos[] = null;
 
             # Percorre os registros
             foreach ($resultSobreposicao as $periodo) {
@@ -292,7 +292,7 @@ if ($acesso) {
                     # Evita que seja comparado com ele mesmo
                     if ($idAverbado1 <> $idAverbado2) {
                         if (verificaSobreposicao($dtInicial1, $dtFinal1, $dtInicial2, $dtFinal2)) {
-                            $sobreposicao = TRUE;
+                            $sobreposicao = true;
                             $idsProblemáticos[] = $idAverbado1;
                             $idsProblemáticos[] = $idAverbado2;
                         }

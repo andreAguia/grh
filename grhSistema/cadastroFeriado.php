@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de feriados";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -89,7 +89,7 @@ if ($acesso) {
     $objeto->set_label(array("Tipo", "Data", "Descrição"));
     $objeto->set_width(array(10, 20, 60));
     $objeto->set_align(array("center", "center", "left"));
-    $objeto->set_funcao(array(NULL, "date_to_php"));
+    $objeto->set_funcao(array(null, "date_to_php"));
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -112,8 +112,8 @@ if ($acesso) {
             'label' => 'Data:',
             'tipo' => 'date',
             'size' => 20,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Data do feriado.',
             'col' => 3,
             'linha' => 1),
@@ -121,7 +121,7 @@ if ($acesso) {
             'nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 6,
             'size' => 50),
         array('linha' => 1,

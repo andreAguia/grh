@@ -8,8 +8,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -32,7 +32,7 @@ if ($acesso) {
         # Servidor
         $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
         $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-        $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, FALSE);
+        $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
         $dtAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
         $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
         $idCargo = $pessoal->get_idCargo($idServidorPesquisado);
@@ -43,7 +43,7 @@ if ($acesso) {
 
         # Monta a Declaração
         $dec = new Declaracao();
-        $dec->set_carimboCnpj(TRUE);
+        $dec->set_carimboCnpj(true);
         $dec->set_data(date("d/m/Y"));
 
         if ($idSituacao == 1) {
@@ -84,14 +84,14 @@ if ($acesso) {
 
         $dec->set_texto("Sendo expressão da verdade, subscrevemo-nos.");
 
-        $dec->set_rodapeSoUntimaPag(TRUE);
+        $dec->set_rodapeSoUntimaPag(true);
         $dec->show();
 
         # Grava o log da visualização do relatório
         $data = date("Y-m-d H:i:s");
         $atividades = 'Visualizou a declaração de atribuições do cargo';
         $tipoLog = 4;
-        $intra->registraLog($idUsuario, $data, $atividades, NULL, NULL, $tipoLog, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
     } else {
         br(4);
         p("A Declaração de Atribuições é somente para Servidores Concursados", "f14", "center");

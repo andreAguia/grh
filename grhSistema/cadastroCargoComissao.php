@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -29,12 +29,12 @@ if ($acesso) {
     set_session('parametroComissao', $parametroComissao);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de cargo em comissão";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Verifica tipo de cargo será exibido (1->ativos ou 0->inativos)
@@ -133,9 +133,9 @@ if ($acesso) {
     #$objeto->set_width(array(5,20,10,10,10,10,10,10,10));
     $objeto->set_align(array("center", "left"));
 
-    $objeto->set_funcao(array(NULL, NULL, NULL, "formataMoeda"));
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, NULL, 'CargoComissao', 'CargoComissao'));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, NULL, 'get_numServidoresNomeados', 'get_vagasDisponiveis'));
+    $objeto->set_funcao(array(null, null, null, "formataMoeda"));
+    $objeto->set_classe(array(null, null, null, null, null, 'CargoComissao', 'CargoComissao'));
+    $objeto->set_metodo(array(null, null, null, null, null, 'get_numServidoresNomeados', 'get_vagasDisponiveis'));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -163,7 +163,7 @@ if ($acesso) {
             'nome' => 'descricao',
             'label' => 'Cargo em Comissão:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'size' => 50),
         array('linha' => 1,
             'col' => 3,
@@ -202,7 +202,7 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir");
@@ -274,7 +274,7 @@ if ($acesso) {
             $menu->add_link($link, "right");
 
             # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
@@ -283,7 +283,7 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
@@ -301,7 +301,7 @@ if ($acesso) {
             # select
             $select = 'SELECT distinct tbservidor.idFuncional,
                              tbservidor.matricula,
-                             IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
+                             IF(tbcomissao.ocupanteAnterior IS null, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
                              tbcomissao.dtNom,
                              tbcomissao.dtExo,
                              tbcomissao.idComissao,
@@ -313,15 +313,15 @@ if ($acesso) {
                                         LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                        WHERE tbtipocomissao.idTipoComissao = ' . $id . '
-                         AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                         AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                   ORDER BY 8, tbdescricaocomissao.descricao, 4 desc';
 
             $result = $servidor->select($select);
             $label = array('IdFuncional', 'Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Nome do Cargo', 'Perfil');
             $align = array("center", "center", "left", "center", "center", "left", "center");
-            $function = array(NULL, "dv", NULL, "date_to_php", "date_to_php", "descricaoComissao");
-            $classe = array(NULL, NULL, NULL, NULL, NULL, NULL, "Pessoal");
-            $metodo = array(NULL, NULL, NULL, NULL, NULL, NULL, "get_perfil");
+            $function = array(null, "dv", null, "date_to_php", "date_to_php", "descricaoComissao");
+            $classe = array(null, null, null, null, null, null, "Pessoal");
+            $metodo = array(null, null, null, null, null, null, "get_perfil");
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -335,7 +335,7 @@ if ($acesso) {
             $tabela->set_idCampo('idComissao');
             $tabela->set_editar('?fase=editarCargo1');
             $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
-                    'valor' => NULL,
+                    'valor' => null,
                     'operador' => '=',
                     'id' => 'vigente')));
             $tabela->show();
@@ -368,7 +368,7 @@ if ($acesso) {
             $menu->add_link($link, "right");
 
             # Relatório
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
@@ -385,7 +385,7 @@ if ($acesso) {
             # Descrição do Cargo    
             $controle = new Input('parametroComissao', 'texto', 'Descrição do Cargo ou Nome do Servidor:', 1);
             $controle->set_size(80);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_title('Filtra pela descrição do cargo');
             $controle->set_valor($parametroComissao);
             $controle->set_onChange('formPadrao.submit();');
@@ -404,7 +404,7 @@ if ($acesso) {
             # select
             $select = 'SELECT distinct tbservidor.idFuncional,
                              tbservidor.matricula,
-                             IF(tbcomissao.ocupanteAnterior IS NULL, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
+                             IF(tbcomissao.ocupanteAnterior IS null, tbpessoa.nome,CONCAT(tbpessoa.nome,"<br/><span id=\"orgaoCedido\">(Anterior: ",tbcomissao.ocupanteAnterior,"</span>)")),
                              tbcomissao.dtNom,
                              tbcomissao.dtExo,
                              tbcomissao.idComissao,
@@ -428,9 +428,9 @@ if ($acesso) {
             $result = $servidor->select($select);
             $label = array('IdFuncional', 'Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Nome do Cargo', 'Perfil');
             $align = array("center", "center", "left", "center", "center", "left", "center");
-            $function = array(NULL, "dv", NULL, "date_to_php", "date_to_php", "descricaoComissao");
-            $classe = array(NULL, NULL, NULL, NULL, NULL, NULL, "Pessoal");
-            $metodo = array(NULL, NULL, NULL, NULL, NULL, NULL, "get_perfil");
+            $function = array(null, "dv", null, "date_to_php", "date_to_php", "descricaoComissao");
+            $classe = array(null, null, null, null, null, null, "Pessoal");
+            $metodo = array(null, null, null, null, null, null, "get_perfil");
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -444,7 +444,7 @@ if ($acesso) {
             $tabela->set_idCampo('idComissao');
             $tabela->set_editar('?fase=editarCargo2');
             $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
-                    'valor' => NULL,
+                    'valor' => null,
                     'operador' => '=',
                     'id' => 'vigente')));
             $tabela->show();

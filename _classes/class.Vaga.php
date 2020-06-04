@@ -22,7 +22,7 @@ class Vaga {
 
     ###########################################################
 
-    public function get_dados($idVaga = NULL) { // integer o id da vaga
+    public function get_dados($idVaga = null) { // integer o id da vaga
         /**
          * Retorna todos os dados arquivados na tabela tbvaga
          * 
@@ -38,7 +38,7 @@ class Vaga {
                       WHERE idVaga = $idVaga";
 
             $pessoal = new Pessoal();
-            $dados = $pessoal->select($select, FALSE);
+            $dados = $pessoal->select($select, false);
 
             return $dados;
         }
@@ -147,7 +147,7 @@ class Vaga {
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                         WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
 
-            $dados = $pessoal->select($select, FALSE);
+            $dados = $pessoal->select($select, false);
 
             $idServidor = $dados["idServidor"];
             return $this->get_nome($idServidor);
@@ -177,7 +177,7 @@ class Vaga {
                      FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                     WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
 
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         $idServidor = $dados["idServidor"];
         return $idServidor;
@@ -222,7 +222,7 @@ class Vaga {
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                         WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
 
-            $dado = $pessoal->select($select, FALSE);
+            $dado = $pessoal->select($select, false);
             return $dado[0];
         } else {
             return $idVaga;
@@ -247,7 +247,7 @@ class Vaga {
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                         WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
 
-            $dado = $pessoal->select($select, FALSE);
+            $dado = $pessoal->select($select, false);
             return $dado[0];
         } else {
             return $idVaga;
@@ -272,7 +272,7 @@ class Vaga {
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                         WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
 
-            $dado = $pessoal->select($select, FALSE);
+            $dado = $pessoal->select($select, false);
             return $dado[0];
         } else {
             return $idVaga;
@@ -298,7 +298,7 @@ class Vaga {
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                         WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
 
-            $dado = $pessoal->select($select, FALSE);
+            $dado = $pessoal->select($select, false);
 
             if (!vazio($dado[0])) {
                 # Pega a situação
@@ -335,7 +335,7 @@ class Vaga {
                          FROM tbvaga
                         WHERE idVaga = ' . $idVaga;
 
-            $dado = $pessoal->select($select, FALSE);
+            $dado = $pessoal->select($select, false);
             return $dado[0];
         } else {
             return "---";
@@ -380,8 +380,8 @@ class Vaga {
 
         $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
 
-        p("Laboratório de Origem:", "vagaOrigem", NULL, $title);
-        p($labOrigem, "vagaCargo", NULL, $title);
+        p("Laboratório de Origem:", "vagaOrigem", null, $title);
+        p($labOrigem, "vagaCargo", null, $title);
 
 
 
@@ -432,7 +432,7 @@ class Vaga {
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
-    function get_numVagasDiretoria($dir = NULL) {
+    function get_numVagasDiretoria($dir = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -456,7 +456,7 @@ class Vaga {
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
-    function get_numVagasCargoDiretoria($idCargo, $dir = NULL) {
+    function get_numVagasCargoDiretoria($idCargo, $dir = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -479,7 +479,7 @@ class Vaga {
      * Método get_numVagasCargoDiretoria
      * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
      */
-    function get_numVagasCargoDiretoriaDisponiveis($idCargo = NULL, $dir = NULL) {
+    function get_numVagasCargoDiretoriaDisponiveis($idCargo = null, $dir = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -490,7 +490,7 @@ class Vaga {
         # Pega as vagas desse cargo e desse centro
         $select = "SELECT idVaga
                      FROM tbvaga
-                    WHERE TRUE";
+                    WHERE true";
 
         if (!vazio($idCargo)) {
             $select .= " AND idCargo = $idCargo";
@@ -530,7 +530,7 @@ class Vaga {
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
-    function get_numVagasCargoDiretoriaOcupados($idCargo = NULL, $dir = NULL) {
+    function get_numVagasCargoDiretoriaOcupados($idCargo = null, $dir = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -541,7 +541,7 @@ class Vaga {
         # Pega as vagas desse cargo e desse centro
         $select = "SELECT idVaga
                      FROM tbvaga
-                     WHERE TRUE";
+                     WHERE true";
 
         if (!vazio($idCargo)) {
             $select .= " AND idCargo = $idCargo";
@@ -578,7 +578,7 @@ class Vaga {
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
-    function exibeTotalVagas($centro = NULL, $tipo = NULL) {
+    function exibeTotalVagas($centro = null, $tipo = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -731,7 +731,7 @@ class Vaga {
         $tabela->set_conteudo($resultado);
         $tabela->set_label($label);
         $tabela->set_width(array(25, 25, 25, 25));
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array("left", "center"));
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => "Total",
@@ -757,7 +757,7 @@ class Vaga {
                      FROM tbvagahistorico
                     WHERE idServidor = ' . $idServidor;
 
-        $dado = $pessoal->select($select, FALSE);
+        $dado = $pessoal->select($select, false);
         return $dado[0];
     }
 
@@ -815,7 +815,7 @@ class Vaga {
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
-    function exibeVagasOcupadas($centro = NULL) {
+    function exibeVagasOcupadas($centro = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -842,7 +842,7 @@ class Vaga {
         $tabela->set_conteudo($resultado);
         $tabela->set_label(array("Cargo", "Quantidade"));
         #$tabela->set_width(array());
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array("left", "center"));
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => "Total",
@@ -859,7 +859,7 @@ class Vaga {
      * 
      * @param	string $idVaga O id da vaga do servidor
      */
-    function exibeVagasDisponiveis($centro = NULL) {
+    function exibeVagasDisponiveis($centro = null) {
 
         # Conecta o banco
         $pessoal = new Pessoal();
@@ -886,7 +886,7 @@ class Vaga {
         $tabela->set_conteudo($resultado);
         $tabela->set_label(array("Cargo", "Quantidade"));
         #$tabela->set_width(array());
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->set_align(array("left", "center"));
         $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                 'valor' => "Total",
@@ -913,7 +913,7 @@ class Vaga {
                     WHERE idVaga = $idVaga
                  ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
 
-        $dado = $pessoal->select($select, FALSE);
+        $dado = $pessoal->select($select, false);
 
         return $dado[0];
     }
@@ -937,7 +937,7 @@ class Vaga {
 
         # Pega o nome dessa lotação
         if (vazio($idLotacao)) {
-            $nome = NULL;
+            $nome = null;
         } else {
             $nome = $pessoal->get_lotacaoGerencia($idLotacao);
         }
@@ -957,7 +957,7 @@ class Vaga {
     function verificaProblemaVaga($idVaga) {
 
         # Inicia as variáveis
-        $erro = NULL;
+        $erro = null;
 
         if (vazio($idVaga)) {
             alert("Tem que informar o idVaga");
@@ -1040,8 +1040,8 @@ class Vaga {
 
             foreach ($dados as $rr) {
 
-                $dataAdmissao = NULL;
-                $dataPublicacao = NULL;
+                $dataAdmissao = null;
+                $dataPublicacao = null;
 
                 # Pega a data do concurso
                 if (!vazio($rr[0])) {
@@ -1150,8 +1150,8 @@ class Vaga {
         #tituloTable($item[0]);
         $chart = new Chart("Pie", $arr);
         $chart->set_idDiv('vagas');
-        #$chart->set_legend(FALSE);
-        $chart->set_pieHole(TRUE);
+        #$chart->set_legend(false);
+        $chart->set_pieHole(true);
         $chart->set_tamanho(500, 300);
         $chart->show();
 
@@ -1215,19 +1215,19 @@ class Vaga {
             $chart = new Chart("Pie", $arrayTitular);
             $chart->set_idDiv("vagasO$cc");
             $chart->set_title("Titular");
-            $chart->set_tresd(TRUE);
+            $chart->set_tresd(true);
             $chart->set_cores(array('#1B4F72', '#2980B9'));
             #$chart->set_legend(array("VagasT","tt"));
-            #$chart->set_pieHole(TRUE);
+            #$chart->set_pieHole(true);
             $chart->set_tamanho(400, 300);
             #$chart->show();
             # Chart
             $chart = new Chart("Pie", $arrayAssociado);
             $chart->set_idDiv("vagasD$cc");
             $chart->set_title("Associado");
-            $chart->set_tresd(TRUE);
+            $chart->set_tresd(true);
             $chart->set_cores(array('#e0440e', '#e6693e'));
-            #$chart->set_pieHole(TRUE);
+            #$chart->set_pieHole(true);
             $chart->set_tamanho(400, 300);
             #$chart->show();
             # Tabela
@@ -1241,7 +1241,7 @@ class Vaga {
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $grid2->fechaColuna();

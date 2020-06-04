@@ -8,10 +8,10 @@ class AtoReitor {
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
      */
-    private $data = NULL;
-    private $textoReitor = NULL;
-    private $textoPrincipal = NULL;
-    private $reitor = NULL;
+    private $data = null;
+    private $textoReitor = null;
+    private $textoPrincipal = null;
+    private $reitor = null;
     private $saltoRodape = 3;
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
@@ -93,7 +93,7 @@ class AtoReitor {
         ## Monta o Relatório 
         # Menu
         $menuRelatorio = new menuRelatorio();
-        $menuRelatorio->set_botaoVoltar(NULL);
+        $menuRelatorio->set_botaoVoltar(null);
         $menuRelatorio->show();
 
         # Cabeçalho do Relatório (com o logotipo)

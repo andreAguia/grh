@@ -30,7 +30,7 @@ if ((($campoValor[3] == 2) OR ($campoValor[3] == 8) OR ($campoValor[3] == 9)) AN
     $campoValor[6] = "Não";
 
     # passa os dados do aux para nulo
-    $campoValor[7] = NULL;  # data
-    $campoValor[8] = NULL;  # processo
-    $campoValor[9] = NULL;  # documento
+    $campoValor[7] = null;  # data
+    $campoValor[8] = null;  # processo
+    $campoValor[9] = null;  # documento
 }

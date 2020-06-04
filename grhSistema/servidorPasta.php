@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -23,12 +23,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Pasta Funcional";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # pega o id (se tiver)
@@ -102,8 +102,8 @@ if ($acesso) {
     $objeto->set_width(array(15, 65, 5, 5));
     $objeto->set_align(array("center", "left"));
 
-    $objeto->set_classe(array(NULL, NULL, "PastaFuncional"));
-    $objeto->set_metodo(array(NULL, NULL, "exibePasta"));
+    $objeto->set_classe(array(null, null, "PastaFuncional"));
+    $objeto->set_metodo(array(null, null, "exibePasta"));
 
     # Botão de Upload
     $botao = new BotaoGrafico();
@@ -131,9 +131,9 @@ if ($acesso) {
         array('nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'autofocus' => TRUE,
-            'required' => TRUE,
-            'array' => array(array(NULL, NULL),
+            'autofocus' => true,
+            'required' => true,
+            'array' => array(array(null, null),
                 array(1, 'Documento'),
                 array(2, 'Processo')),
             'size' => 20,
@@ -144,7 +144,7 @@ if ($acesso) {
             'nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 8,
             'size' => 250),
         array('linha' => 3,
@@ -219,7 +219,7 @@ if ($acesso) {
                 $tabela->set_width(array(10, 90));
                 $tabela->set_titulo('Documentos');
                 $tabela->set_funcao(array("exibeDocumentoPasta"));
-                $tabela->set_totalRegistro(FALSE);
+                $tabela->set_totalRegistro(false);
                 $tabela->show();
             } else {
                 tituloTable('Documentos');
@@ -260,7 +260,7 @@ if ($acesso) {
                 $tabela->set_width(array(10, 90));
                 $tabela->set_titulo('Processos');
                 $tabela->set_funcao(array("exibeProcessoPasta"));
-                $tabela->set_totalRegistro(FALSE);
+                $tabela->set_totalRegistro(false);
                 $tabela->show();
             } else {
                 tituloTable('Processos');

@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -40,7 +40,7 @@ if ($acesso) {
                                JOIN tbtipocargo USING (idTipoCargo)
              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                AND tbservidor.situacao = 1
-               AND tbrecadastramento.dataAtualizacao is NULL
+               AND tbrecadastramento.dataAtualizacao is null
                ORDER BY tbtipocargo.nivel asc, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -52,8 +52,8 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Tipo'));
     $relatorio->set_align(array("center", "left", "left", "left"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_CargoRel", "get_Lotacao"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_CargoRel", "get_Lotacao"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(4);

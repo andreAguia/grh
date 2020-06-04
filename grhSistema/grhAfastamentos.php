@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -35,12 +35,12 @@ if ($acesso) {
     set_session('parametroMes', $parametroMes);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de afastamentos da GRH";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Começa uma nova página
@@ -145,7 +145,7 @@ if ($acesso) {
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
             $afast->set_lotacao($parametroLotacao);
-            $afast->set_idFuncional(FALSE);
+            $afast->set_idFuncional(false);
             $afast->exibeTabela();
 
             $grid->fechaColuna();

@@ -8,8 +8,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -59,7 +59,7 @@ if ($acesso) {
     $data = date("Y-m-d H:i:s");
     $atividades = "Visualizou o despacho para chefia - Resultado Setor - Ato de $postAto";
     $tipoLog = 4;
-    $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", NULL, $tipoLog, $idServidorPesquisado);
+    $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
 
     $page->terminaPagina();
 }

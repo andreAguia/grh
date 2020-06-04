@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -24,12 +24,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Elogios e advertências";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Começa uma nova página
@@ -107,15 +107,15 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'maxLength' => 20,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 3,
             'title' => 'Data do Elogio/Advertência.',
             'linha' => 1),
         array('nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => array(array(1, 'Elogio'), array(2, 'Advertência')),
             'size' => 20,
             'title' => 'Qual o tipo de ocorrência',
@@ -126,7 +126,7 @@ if ($acesso) {
             'tipo' => 'textarea',
             'size' => array(80, 5),
             'col' => 12,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Descrição do Elogio ou Advertência.',
             'linha' => 2),
         array('nome' => 'idServidor',

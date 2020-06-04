@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -25,12 +25,12 @@ if ($acesso) {
     $editar = get('editar', 0);
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o controle de atendimento do balcão";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -103,7 +103,7 @@ if ($acesso) {
                 }
 
                 # Relatórios
-                $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+                $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
                 $botaoRel = new Button();
                 $botaoRel->set_imagem($imagem);
                 $botaoRel->set_title("Relatório de Licença");
@@ -127,7 +127,7 @@ if ($acesso) {
                 $controle->set_title('Filtra pelo Ano');
                 $controle->set_array($anosPossiveis);
                 $controle->set_valor($parametroAno);
-                $controle->set_autofocus(TRUE);
+                $controle->set_autofocus(true);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
                 $controle->set_col(2);
@@ -169,8 +169,8 @@ if ($acesso) {
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
             $afast->set_lotacao(66);
-            $afast->set_idFuncional(FALSE);
-            $afast->set_nomeSimples(TRUE);
+            $afast->set_idFuncional(false);
+            $afast->set_nomeSimples(true);
             $afast->exibeTabela();
 
             $painel->fecha();
@@ -270,7 +270,7 @@ if ($acesso) {
                                 . "ORDER BY nome";
 
                         $manha = $intra->select($select1);
-                        array_unshift($manha, array(NULL, NULL)); # Adiciona o valor de nulo
+                        array_unshift($manha, array(null, null)); # Adiciona o valor de nulo
 
                         $select2 = "SELECT idServidor"
                                 . "   FROM tbusuario JOIN uenf_grh.tbservidor USING (idServidor) "
@@ -279,7 +279,7 @@ if ($acesso) {
                                 . "ORDER BY nome";
 
                         $tarde = $intra->select($select2);
-                        array_unshift($tarde, array(NULL, NULL)); # Adiciona o valor de nulo
+                        array_unshift($tarde, array(null, null)); # Adiciona o valor de nulo
                         # Turno da manhã
                         # Verifica se tem atendimento de manhã
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
@@ -405,11 +405,11 @@ if ($acesso) {
 
                 # Limpa os valores
                 if (($vmanha == "?") OR (vazio($vmanha))) {
-                    $vmanha = NULL;
+                    $vmanha = null;
                 }
 
                 if (($vtarde == "?") OR (vazio($vtarde))) {
-                    $vtarde = NULL;
+                    $vtarde = null;
                 }
 
                 # Verifica se já existe esse campo e pega o id para o update
@@ -418,7 +418,7 @@ if ($acesso) {
                 # Grava na tabela
                 $campos = array("ano", "mes", "dia", "idServidorManha", "idServidorTarde");
                 $valor = array($parametroAno, $parametroMes, $contador, $vmanha, $vtarde);
-                $pessoal->gravar($campos, $valor, $idBalcao, "tbbalcao", "idBalcao", FALSE);
+                $pessoal->gravar($campos, $valor, $idBalcao, "tbbalcao", "idBalcao", false);
             }
             loadPage("?");
             break;
@@ -438,7 +438,7 @@ if ($acesso) {
                               idUsuario
                          FROM uenf_areaservidor.tbusuario JOIN uenf_grh.tbservidor USING (idServidor)
                                                      JOIN uenf_grh.tbpessoa USING (idPessoa)
-                        WHERE senha IS NOT NULL
+                        WHERE senha IS NOT null
                      ORDER BY tbpessoa.nome asc';
 
             $lista = $pessoal->select($select);
@@ -449,7 +449,7 @@ if ($acesso) {
             $tabela->set_label(array("Servidor", "Lotação", "Cargo", "Balcão"));
             $tabela->set_align(array("left", "left", "left"));
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            #$tabela->set_funcao(array(NULL,"dv"));
+            #$tabela->set_funcao(array(null,"dv"));
             $tabela->set_classe(array("pessoal", "pessoal", "pessoal"));
             $tabela->set_metodo(array("get_nomeSimples", "get_lotacao", "get_cargo"));
             $tabela->set_titulo("Controle de Servidores da GRH que atendem ao Balcão");
@@ -490,7 +490,7 @@ if ($acesso) {
 
             # Pega o valor atual
             $select = "SELECT balcao FROM tbusuario WHERE idUsuario = $id";
-            $valorAtual = $intra->select($select, FALSE);
+            $valorAtual = $intra->select($select, false);
 
             # Abre o form
             $form = new Form('?fase=validaServidor&id=' . $id);
@@ -505,7 +505,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Cria um array com os valores possiveis
-            $array = array(NULL, "Manhã", "Tarde", "Ambos", "Não Atende");
+            $array = array(null, "Manhã", "Tarde", "Ambos", "Não Atende");
 
             # Balcao
             $controle = new Input('balcao', 'combo', 'Atendimento:', 1);
@@ -513,7 +513,7 @@ if ($acesso) {
             $controle->set_title('Atendimento no Balcão');
             $controle->set_array($array);
             $controle->set_valor($valorAtual[0]);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
@@ -537,7 +537,7 @@ if ($acesso) {
             # Grava na tabela
             $campos = array("balcao");
             $valor = array($balcao);
-            $intra->gravar($campos, $valor, $id, "tbusuario", "idUsuario", FALSE);
+            $intra->gravar($campos, $valor, $id, "tbusuario", "idUsuario", false);
 
             # Volta para o inicio
             loadpage("?fase=servidores");

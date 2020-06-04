@@ -6,7 +6,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -29,18 +29,18 @@ if ($acesso) {
     $parametroLotacao = post('lotacao');
 
     if ($parametroLotacao == "*") {
-        $parametroLotacao = NULL;
+        $parametroLotacao = null;
     }
 
     ######
 
     $afast = new Afastamento();
     $afast->set_ano($parametroAno);
-    $afast->set_mes(NULL);
+    $afast->set_mes(null);
     $afast->set_lotacao($parametroLotacao);
     $afast->set_linkEditar('?fase=editaServidor');
-    $afast->set_formulario(TRUE);
-    $afast->set_campoMes(FALSE);
+    $afast->set_formulario(true);
+    $afast->set_campoMes(false);
     $afast->exibeRelatorio();
 
     $page->terminaPagina();

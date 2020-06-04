@@ -9,12 +9,12 @@ class Pessoal extends Bd
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
      * @var private $servidor string localhost O nome do servidor do banco de dados
-     * @var private $usuario  string NULL      O nome do usuário no banco de dados
-     * @var private $senha    string NULL      A senha de acesso ao banco de dados
+     * @var private $usuario  string null      O nome do usuário no banco de dados
+     * @var private $senha    string null      A senha de acesso ao banco de dados
      * @var private $banco    string pessoal   O nome do banco de dados a ser acessado pela classe
      * @var private $sgdb     string mysql     O nome do SGDB a ser utilizado
-     * @var private $tabela   string NULL      A tabela que está sendo acessada
-     * @var private $idCampo  string NULL      O nome do campo id da tabela    
+     * @var private $tabela   string null      A tabela que está sendo acessada
+     * @var private $idCampo  string null      O nome do campo id da tabela    
      */
     private $servidor = "localhost";
     private $usuario = "intranet";
@@ -58,7 +58,7 @@ class Pessoal extends Bd
     /**
      * Método Gravar
      */
-    public function gravar($campos = NULL, $valor = NULL, $idValor = NULL, $tabela = NULL, $idCampo = NULL, $alerta = FALSE)
+    public function gravar($campos = null, $valor = null, $idValor = null, $tabela = null, $idCampo = null, $alerta = false)
     {
 
         if (is_null($tabela)) {
@@ -76,13 +76,13 @@ class Pessoal extends Bd
     /**
      * Método Excluir
      */
-    public function excluir($idValor = NULL, $tabela = NULL, $idCampo = 'id')
+    public function excluir($idValor = null, $tabela = null, $idCampo = 'id')
     {
 
         # efetua a exclus�o
         parent::excluir($idValor, $this->tabela, $this->idCampo);
 
-        return TRUE;
+        return true;
     }
 
 ###########################################################
@@ -98,9 +98,9 @@ class Pessoal extends Bd
                      FROM tbgratificacao
                     WHERE idServidor = ' . $idServidor . '
                       AND current_date() >= dtInicial 
-                      AND (dtFinal is NULL OR current_date() <= dtFinal)';
+                      AND (dtFinal is null OR current_date() <= dtFinal)';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -118,9 +118,9 @@ class Pessoal extends Bd
                          FROM tbdireitopessoal
                         WHERE idServidor = ' . $idServidor . '
                           AND current_date() >= dtInicial 
-                          AND (dtFinal is NULL OR current_date() <= dtFinal)';
+                          AND (dtFinal is null OR current_date() <= dtFinal)';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -139,17 +139,17 @@ class Pessoal extends Bd
                     WHERE idServidor = ' . $idServidor . '
                     ORDER BY dtInicial desc';
         $numero = parent::count($select);
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
 
-        # For�a como NULL caso seja em branco
+        # For�a como null caso seja em branco
         if ((is_null($row[0])) OR ($row == '')) {
-            $row[0] = NULL;
+            $row[0] = null;
         }
 
         # Verifica se j� tem alguma graificação ou se nunca teve
         if ($numero == 0) {
-            return FALSE; # nunca teve graificação
+            return false; # nunca teve graificação
         }
         else {
             return $row[0]; # Informa se tem graificação em aberto
@@ -174,7 +174,7 @@ class Pessoal extends Bd
          ORDER BY 1 DESC
          LIMIT 1";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         # Informa o status
         if (is_null($row[0])) {
@@ -235,7 +235,7 @@ class Pessoal extends Bd
                        AND tbprogressao.idClasse = tbclasse.idClasse
               ORDER BY valor desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -255,7 +255,7 @@ class Pessoal extends Bd
                     WHERE idServidor = $idServidor
                  ORDER BY dtInicial desc";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -294,7 +294,7 @@ class Pessoal extends Bd
                          FROM tbcedido
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -306,7 +306,7 @@ class Pessoal extends Bd
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_aniversariantes($mes = NULL)
+    public function get_aniversariantes($mes = null)
     {
 
         # Se o mês não for definido pega-se o mês atual
@@ -335,7 +335,7 @@ class Pessoal extends Bd
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_numAniversariantes($mes = NULL)
+    public function get_numAniversariantes($mes = null)
     {
 
         # Se o mês não for definido pega-se o mês atual
@@ -377,15 +377,15 @@ class Pessoal extends Bd
 
 ###########################################################
     /**
-     * Método set_senhaNull
-     * muda a senha de um usu�rio para NULL (bloqueia o mesmo)
+     * Método set_senhanull
+     * muda a senha de um usu�rio para null (bloqueia o mesmo)
      * 
      * @param	string 	$idServidor 	-> idServidor do servidor
      * @param 	string	$senha		-> senha (não criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
      */
-    public function set_senhaNull($matr, $alert = TRUE)
+    public function set_senhanull($matr, $alert = true)
     {
-        $senha = NULL;
+        $senha = null;
         parent::gravar('senha_intra', $senha, $matr, 'tbservidor', 'idServidor', $alert);
     }
 
@@ -405,7 +405,7 @@ class Pessoal extends Bd
                     WHERE idServidor = '$idServidor'";
 
         # Pega o resultado do select
-        $result = parent::select($select, FALSE);
+        $result = parent::select($select, false);
 
         $data_Inicial = $result[0];
 
@@ -431,7 +431,7 @@ class Pessoal extends Bd
                      WHERE tbhistlot.idServidor = ' . $idServidor . '
                      ORDER BY data DESC';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         # Verifica se está cedido para exibir onde o servidor está
         if ($row[3] == 113) {
@@ -466,7 +466,7 @@ class Pessoal extends Bd
                      WHERE tbhistlot.idServidor = ' . $idServidor . '
                      ORDER BY data DESC';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         # Verifica se está cedido para exibir onde o servidor está
         if ($row[3] == 113) {
@@ -497,7 +497,7 @@ class Pessoal extends Bd
                      FROM tblotacao
                     WHERE idLotacao = ' . $idLotacao;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -515,7 +515,7 @@ class Pessoal extends Bd
                      FROM tblotacao
                     WHERE idLotacao = ' . $idLotacao;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -535,7 +535,7 @@ class Pessoal extends Bd
                          WHERE tbhistlot.idServidor = ' . $idServidor . '
                          ORDER BY data DESC';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0] . '-' . $row[1];
     }
@@ -595,7 +595,7 @@ class Pessoal extends Bd
                      WHERE tbhistlot.idServidor = ' . $idServidor . '
                      ORDER BY data DESC';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -616,10 +616,10 @@ class Pessoal extends Bd
      * Método get_cargo
      * Informa o cargo do servidor
      * 
-     * @param string $idServidor    NULL idServidor do servidor
-     * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargo($idServidor, $exibeComissao = TRUE)
+    public function get_cargo($idServidor, $exibeComissao = true)
     {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
@@ -629,17 +629,17 @@ class Pessoal extends Bd
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
-            $tipoCargo = NULL;
+            $tipoCargo = null;
         }
         else {
             $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
-        $retorno = NULL;
+        $retorno = null;
 
         $comissao = $this->get_cargoComissao($idServidor);
         #$descricao = $this->get_cargoComissaoDescricao($idServidor);
@@ -669,10 +669,10 @@ class Pessoal extends Bd
      * Método get_cargo
      * Informa o cargo do servidor
      * 
-     * @param string $idServidor    NULL idServidor do servidor
-     * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargoSimples2($idServidor, $exibeComissao = TRUE)
+    public function get_cargoSimples2($idServidor, $exibeComissao = true)
     {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
@@ -682,17 +682,17 @@ class Pessoal extends Bd
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
-            $tipoCargo = NULL;
+            $tipoCargo = null;
         }
         else {
             $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
-        $retorno = NULL;
+        $retorno = null;
 
         $comissao = $this->get_cargoComissao($idServidor);
         $descricao = $this->get_cargoComissaoDescricao($idServidor);
@@ -722,7 +722,7 @@ class Pessoal extends Bd
      * Método get_cargoSimples
      * Informa o cargo do servidor sem o cargo em comissão
      * 
-     * @param string $idServidor    NULL idServidor do servidor
+     * @param string $idServidor    null idServidor do servidor
      */
     public function get_cargoSimples($idServidor)
     {
@@ -734,17 +734,17 @@ class Pessoal extends Bd
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
-            $tipoCargo = NULL;
+            $tipoCargo = null;
         }
         else {
             $tipoCargo = $row[1];
         }
 
         $nomeCargo = $row[2];
-        $retorno = NULL;
+        $retorno = null;
 
         $descricao = $this->get_cargoComissaoDescricao($idServidor);
 
@@ -769,10 +769,10 @@ class Pessoal extends Bd
      * Método get_cargoCompleto
      * Informa o cargo completo do servidor
      * 
-     * @param string $idServidor    NULL idServidor do servidor
-     * @param bool   $exibeComissao TRUE Se exibe ou não o cargo em comissão quando houver 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargoCompleto($idServidor, $exibeComissao = TRUE)
+    public function get_cargoCompleto($idServidor, $exibeComissao = true)
     {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
@@ -784,11 +784,11 @@ class Pessoal extends Bd
                                      LEFt JOIN tbarea USING (idarea)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
-            $tipoCargo = NULL;
-            $area = NULL;
+            $tipoCargo = null;
+            $area = null;
         }
         else {
             $tipoCargo = $row[1];
@@ -796,7 +796,7 @@ class Pessoal extends Bd
         }
 
         $nomeCargo = $row[3];
-        $retorno = NULL;
+        $retorno = null;
 
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
@@ -846,10 +846,10 @@ class Pessoal extends Bd
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (($row[0] == 1)OR($row[0] == 2)) { // Se é professor
-            $tipoCargo = NULL;
+            $tipoCargo = null;
         }
         else {
             $tipoCargo = $row[1];
@@ -858,7 +858,7 @@ class Pessoal extends Bd
         $nomeCargo = $row[2];
         $comissao = $this->get_cargoComissao($idServidor);
 
-        $retorno = NULL;
+        $retorno = null;
 
         if (!empty($tipoCargo)) {
             $retorno = $tipoCargo;
@@ -894,7 +894,7 @@ class Pessoal extends Bd
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -912,7 +912,7 @@ class Pessoal extends Bd
                      FROM tbservidor JOIN tbperfil USING (idPerfil)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         $retorno = $row[1];
 
@@ -941,7 +941,7 @@ class Pessoal extends Bd
                      FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         $retorno = $row[1];
         return $retorno;
@@ -961,7 +961,7 @@ class Pessoal extends Bd
                      FROM tbcedido
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -980,7 +980,7 @@ class Pessoal extends Bd
                          FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $idcargo = $row[0];
 
         return $idcargo;
@@ -999,7 +999,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
 
-        $id_pessoa = parent::select($select, FALSE);
+        $id_pessoa = parent::select($select, false);
 
         return $id_pessoa[0];
     }
@@ -1017,7 +1017,7 @@ class Pessoal extends Bd
                          FROM tbdocumentacao
                         WHERE cpf = "' . $cpf . '"';
 
-        $idPessoa = parent::select($select, FALSE);
+        $idPessoa = parent::select($select, false);
 
         return $idPessoa[0];
     }
@@ -1035,7 +1035,7 @@ class Pessoal extends Bd
                          FROM tbdocumentacao
                         WHERE pisPasep = "' . $pis . '"';
 
-        $idPessoa = parent::select($select, FALSE);
+        $idPessoa = parent::select($select, false);
 
         return $idPessoa[0];
     }
@@ -1053,7 +1053,7 @@ class Pessoal extends Bd
                                  FROM tbservidor
                                 WHERE idServidor = ' . $idServidor;
 
-        $ano = parent::select($select, FALSE);
+        $ano = parent::select($select, false);
 
         return $ano[0];
     }
@@ -1071,7 +1071,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
 
-        $dt = parent::select($select, FALSE);
+        $dt = parent::select($select, false);
 
         return date_to_php($dt[0]);
     }
@@ -1089,10 +1089,10 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
 
-        $dt = parent::select($select, FALSE);
+        $dt = parent::select($select, false);
 
         if (vazio($dt[0])) {
-            return NULL;
+            return null;
         }
         else {
             return date_to_php($dt[0]);
@@ -1113,7 +1113,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1193,7 +1193,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emFerias($idServidor, $data = NULL)
+    function emFerias($idServidor, $data = null)
     {
 
         # Função que informa se a idServidor esta em férias na data informada
@@ -1214,7 +1214,7 @@ class Pessoal extends Bd
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -1225,7 +1225,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emFeriasExercicio($idServidor, $data = NULL)
+    function emFeriasExercicio($idServidor, $data = null)
     {
 
         # Função que informa o exercicio das ferias na data informada
@@ -1246,13 +1246,13 @@ class Pessoal extends Bd
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
 
     ##########################################################################################
-    function emLicenca($idServidor, $data = NULL)
+    function emLicenca($idServidor, $data = null)
     {
 
 
@@ -1274,7 +1274,7 @@ class Pessoal extends Bd
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -1285,7 +1285,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emLicencaPremio($idServidor, $data = NULL)
+    function emLicencaPremio($idServidor, $data = null)
     {
 
 
@@ -1307,7 +1307,7 @@ class Pessoal extends Bd
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0]))
             return 0;
@@ -1316,7 +1316,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emLicencaSemVencimentos($idServidor, $data = NULL)
+    function emLicencaSemVencimentos($idServidor, $data = null)
     {
 
 
@@ -1338,7 +1338,7 @@ class Pessoal extends Bd
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0]))
             return 0;
@@ -1359,14 +1359,14 @@ class Pessoal extends Bd
                      FROM tbhistcessao
                     WHERE idServidor = '$idServidor'
                       AND current_date() >= dtInicio
-                      AND (isNull(dtFim) OR current_date() <= dtFim)";
+                      AND (isnull(dtFim) OR current_date() <= dtFim)";
 
-        $row = parent::count($select, FALSE);
+        $row = parent::count($select, false);
         if ($row == 0) {
-            return FALSE;
+            return false;
         }
         else {
-            return TRUE;
+            return true;
         }
     }
 
@@ -1383,14 +1383,14 @@ class Pessoal extends Bd
                      FROM tbhistcessao
                     WHERE idServidor = '$idServidor'
                       AND current_date() >= dtInicio
-                      AND (isNull(dtFim) OR current_date() <= dtFim)";
+                      AND (isnull(dtFim) OR current_date() <= dtFim)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
     ##########################################################################################
-    function get_licenca($idServidor, $data = NULL)
+    function get_licenca($idServidor, $data = null)
     {
 
 
@@ -1413,7 +1413,7 @@ class Pessoal extends Bd
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -1427,14 +1427,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select
         $select = 'SELECT dtPeriodo
                      FROM tbtipolicenca
                     WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1449,7 +1449,7 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca)) {
-            return FALSE;
+            return false;
         }
 
         # Monta o select
@@ -1457,7 +1457,7 @@ class Pessoal extends Bd
                          FROM tbtipolicenca
                         WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1472,7 +1472,7 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca)) {
-            return FALSE;
+            return false;
         }
 
         # Monta o select
@@ -1480,7 +1480,7 @@ class Pessoal extends Bd
                          FROM tblicenca
                         WHERE idLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1495,14 +1495,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select
         $select = 'SELECT publicacao
                          FROM tbtipolicenca
                         WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1517,14 +1517,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT pericia
                          FROM tbtipolicenca
                         WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1539,14 +1539,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT nome
                          FROM tbtipolicenca
                         WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1561,14 +1561,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT limite_sexo
                          FROM tbtipolicenca
                         WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1583,14 +1583,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT periodo
                          FROM tbtipolicenca
                         WHERE idTpLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1605,14 +1605,14 @@ class Pessoal extends Bd
         # Parâmetro: id da licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT idTpLicenca
                          FROM tblicenca
                         WHERE idLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1627,14 +1627,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo da licença
         # Valida parametro
         if (is_null($idTpLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT nome
                          FROM tbtipolicenca
                         WHERE idtpLicenca = ' . $idTpLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1649,14 +1649,14 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo da licença
         # Valida parametro
         if (is_null($idTipoCargo))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT cargo
                          FROM tbtipocargo
                         WHERE idTipoCargo = ' . $idTipoCargo;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -1674,7 +1674,7 @@ class Pessoal extends Bd
                      FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                     WHERE idServidor = ' . $idServidor;
 
-        $situacao = parent::select($select, FALSE);
+        $situacao = parent::select($select, false);
 
         return $situacao[0];
     }
@@ -1692,7 +1692,7 @@ class Pessoal extends Bd
                          FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                         WHERE idServidor = ' . $idServidor;
 
-        $situacao = parent::select($select, FALSE);
+        $situacao = parent::select($select, false);
 
         return $situacao[0];
     }
@@ -1710,7 +1710,7 @@ class Pessoal extends Bd
                          FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
                         WHERE idServidor = ' . $idServidor;
 
-        $motivo = parent::select($select, FALSE);
+        $motivo = parent::select($select, false);
 
         return $motivo[0];
     }
@@ -1728,7 +1728,7 @@ class Pessoal extends Bd
                          FROM tbmotivo 
                         WHERE idMotivo = ' . $idMotivo;
 
-        $motivo = parent::select($select, FALSE);
+        $motivo = parent::select($select, false);
 
         return $motivo[0];
     }
@@ -1746,7 +1746,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE situacao = 1 AND idPessoa = ' . $idPessoa;
 
-        $situacao = parent::select($select, FALSE);
+        $situacao = parent::select($select, false);
 
         return $situacao[0];
     }
@@ -1769,7 +1769,7 @@ class Pessoal extends Bd
                 $nome[0] = "";
             }
             else {
-                $nome = parent::select($select, FALSE);
+                $nome = parent::select($select, false);
             }
             return $nome[0];
         }
@@ -1796,7 +1796,7 @@ class Pessoal extends Bd
                 return "----";
             }
             else {
-                $nome = parent::select($select, FALSE);
+                $nome = parent::select($select, false);
 
                 return get_nomeSimples($nome[0]);
             }
@@ -1819,7 +1819,7 @@ class Pessoal extends Bd
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
                     WHERE idServidor = ' . $idServidor;
 
-        $sexo = parent::select($select, FALSE);
+        $sexo = parent::select($select, false);
         return $sexo[0];
     }
 
@@ -1836,7 +1836,7 @@ class Pessoal extends Bd
                          FROM tbpessoa
                         WHERE idPessoa = ' . $idPessoa;
 
-        $nome = parent::select($select, FALSE);
+        $nome = parent::select($select, false);
 
         return $nome[0];
     }
@@ -1858,14 +1858,14 @@ class Pessoal extends Bd
         $select = 'SELECT idComissao, tipo
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                       OR (dtExo is NULL))
+                       OR (dtExo is null))
                     AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $num = parent::count($select);
 
-        $tipo = NULL;
-        $retorno = NULL;
+        $tipo = null;
+        $retorno = null;
         $contador = 1;
 
         # Percorre os cargos
@@ -1892,7 +1892,7 @@ class Pessoal extends Bd
                             JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
                            WHERE idcomissao = ' . $idComissao;
 
-                $row2 = parent::select($select, FALSE);
+                $row2 = parent::select($select, false);
                 $tipoCargo = $row2[0];
 
                 # Pega a descrição do cargo
@@ -1933,7 +1933,7 @@ class Pessoal extends Bd
         $select = 'SELECT idComissao
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                       OR (dtExo is NULL))
+                       OR (dtExo is null))
                     AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
@@ -1941,7 +1941,7 @@ class Pessoal extends Bd
         $contador = 1;
 
         # Inicia a variável de retorno
-        $retorno = NULL;
+        $retorno = null;
 
         foreach ($row as $rr) {
 
@@ -1979,7 +1979,7 @@ class Pessoal extends Bd
                     JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
                    WHERE idcomissao = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return array($row[0], $row[1]);
     }
 
@@ -1995,9 +1995,9 @@ class Pessoal extends Bd
         # Pega o id do cargo em comiss�o (se houver)		 
         $select = 'SELECT idComissao
                          FROM tbcomissao
-                        WHERE dtExo is NULL AND idServidor = ' . $idServidor;
+                        WHERE dtExo is null AND idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $idCargo = $row[0];
 
         # Pega o sal�rio do id do cargo em comiss�o
@@ -2007,7 +2007,7 @@ class Pessoal extends Bd
                                             JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
                                        WHERE idcomissao = ' . $idCargo;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
         }
 
         return $row[0];
@@ -2027,7 +2027,7 @@ class Pessoal extends Bd
                         WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2063,7 +2063,7 @@ class Pessoal extends Bd
                         WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return date_to_php($row[0]);
     }
@@ -2084,14 +2084,14 @@ class Pessoal extends Bd
                         WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (!vazio($row[0])) {
             $dataTrienio = date_to_php($row[0]);
             $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
         }
         else {
-            $dataProximo = NULL;
+            $dataProximo = null;
         }
 
         return $dataProximo;
@@ -2112,7 +2112,7 @@ class Pessoal extends Bd
                         WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return date_to_php($row[0]) . ' - ' . date_to_php($row[1]);
     }
@@ -2131,7 +2131,7 @@ class Pessoal extends Bd
                         WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2150,7 +2150,7 @@ class Pessoal extends Bd
                         WHERE idServidor = ' . $idServidor . '
                              ORDER BY percentual desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return date_to_php($row[0]);
     }
@@ -2173,7 +2173,7 @@ class Pessoal extends Bd
                              FROM tblotacao
                             WHERE idLotacao = ' . $idLotacao;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0] . '-' . $row[1] . '-' . $row[2];
         }
     }
@@ -2196,7 +2196,7 @@ class Pessoal extends Bd
                              FROM tblotacao
                             WHERE idLotacao = ' . $idLotacao;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0] . ' - ' . $row[1] . ' - ' . $row[2];
         }
     }
@@ -2218,7 +2218,7 @@ class Pessoal extends Bd
                              FROM tblotacao
                             WHERE idLotacao = ' . $idLotacao;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0] . ' - ' . $row[1];
         }
     }
@@ -2241,7 +2241,7 @@ class Pessoal extends Bd
                              FROM tblotacao
                             WHERE idLotacao = ' . $id;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0] . ' - ' . $row[1] . '/' . $row[2];
         }
     }
@@ -2310,7 +2310,7 @@ class Pessoal extends Bd
                      FROM tbtipocomissao 
                     WHERE idTipoComissao = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -2326,7 +2326,7 @@ class Pessoal extends Bd
                      FROM tbtipocomissao 
                     WHERE idTipoComissao = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -2352,7 +2352,7 @@ class Pessoal extends Bd
             $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
         }
 
-        $select .= ' WHERE TRUE';
+        $select .= ' WHERE true';
 
         if ($tipo == 1) {
             $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
@@ -2499,7 +2499,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2517,7 +2517,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2535,7 +2535,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2553,7 +2553,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2572,7 +2572,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row;
     }
@@ -2590,7 +2590,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2647,7 +2647,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2666,7 +2666,7 @@ class Pessoal extends Bd
                                      JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2707,11 +2707,11 @@ class Pessoal extends Bd
                          FROM tbdbv
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $count = parent::count($select);
 
         if ($count == 0)
-            return NULL;
+            return null;
         else
             return $row[0];
     }
@@ -2730,11 +2730,11 @@ class Pessoal extends Bd
                      FROM tbdbv
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $count = parent::count($select);
 
         if ($count == 0) {
-            return NULL;
+            return null;
         }
         else {
             return $row[0];
@@ -2755,11 +2755,11 @@ class Pessoal extends Bd
                          FROM tbdbv
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $count = parent::count($select);
 
         if ($count == 0)
-            return NULL;
+            return null;
         else
             return $row[0];
     }
@@ -2773,11 +2773,11 @@ class Pessoal extends Bd
          * 
          * @param	string $idServidor idServidor do servidor
          */
-        $select = 'SELECT IFNULL(sum(dias),0)
+        $select = 'SELECT IFnull(sum(dias),0)
                      FROM tbtrabalhotre
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $count = parent::count($select);
 
         if ($count == 0) {
@@ -2797,11 +2797,11 @@ class Pessoal extends Bd
          * 
          * @param	string $idServidor idServidor do servidor
          */
-        $select = 'SELECT IFNULL(sum(folgas),0)
+        $select = 'SELECT IFnull(sum(folgas),0)
                      FROM tbtrabalhotre
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $count = parent::count($select);
 
         if ($count == 0) {
@@ -2821,11 +2821,11 @@ class Pessoal extends Bd
          * 
          * @param	string $idServidor idServidor do servidor
          */
-        $select = 'SELECT IFNULL(sum(dias), 0)
+        $select = 'SELECT IFnull(sum(dias), 0)
                      FROM tbfolga
                     WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $count = parent::count($select);
 
         if ($count == 0) {
@@ -2852,10 +2852,10 @@ class Pessoal extends Bd
         $count = parent::count($select);
 
         if ($count == 0) {
-            return FALSE;
+            return false;
         }
         else {
-            return TRUE;
+            return true;
         }
     }
 
@@ -2882,7 +2882,7 @@ class Pessoal extends Bd
                           AND matricula < ' . $faixa[1] . '
                      ORDER BY matricula desc';
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             $count = parent::count($select);
 
             # se não tiver nenhum idServidor cadastrada nessa faixa pega-se a matrícula inicial da faixa                
@@ -2923,7 +2923,7 @@ class Pessoal extends Bd
                      FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idCargo = ' . $idCargo;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2940,7 +2940,7 @@ class Pessoal extends Bd
                      FROM tbplano
                  ORDER BY dtPublicacao desc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2958,7 +2958,7 @@ class Pessoal extends Bd
                      FROM tbplano
                     WHERE idPlano = ' . $idPlano;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -2976,7 +2976,7 @@ class Pessoal extends Bd
                      FROM tbplano
                     WHERE idPlano = ' . $idPlano;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3007,7 +3007,7 @@ class Pessoal extends Bd
 
         $select .= ' ORDER BY valor';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3025,7 +3025,7 @@ class Pessoal extends Bd
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
 
-        $idPessoa = parent::select($select, FALSE);
+        $idPessoa = parent::select($select, false);
 
         return $idPessoa[0];
     }
@@ -3043,7 +3043,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3064,7 +3064,7 @@ class Pessoal extends Bd
                              FROM tbcargo
                             WHERE idCargo = ' . $idCargo;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0];
         }
     }
@@ -3086,7 +3086,7 @@ class Pessoal extends Bd
                             FROM tbtipocomissao 
                            WHERE idTipoComissao = ' . $id;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0];
         }
     }
@@ -3107,7 +3107,7 @@ class Pessoal extends Bd
                          FROM tbarea
                         WHERE idArea = ' . $id;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0];
         }
     }
@@ -3131,7 +3131,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numServidoresAtivos($idLotacao = NULL)
+    function get_numServidoresAtivos($idLotacao = null)
     {
 
         /**
@@ -3161,7 +3161,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numEstatutariosAtivosSexo($sexo = NULL)
+    function get_numEstatutariosAtivosSexo($sexo = null)
     {
 
         /**
@@ -3183,7 +3183,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numServidoresAtivosPerfil($idPerfil = NULL)
+    function get_numServidoresAtivosPerfil($idPerfil = null)
     {
 
         /**
@@ -3205,7 +3205,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numServidoresAtivosCargoLotacao($idCargo = NULL, $idLotacao = NULL, $idPerfil = NULL)
+    function get_numServidoresAtivosCargoLotacao($idCargo = null, $idLotacao = null, $idPerfil = null)
     {
 
         /**
@@ -3259,7 +3259,7 @@ class Pessoal extends Bd
         if (is_null($idServidor))
             $data[0] = "1900-01-01";
         else {
-            $data = parent::select($select, FALSE);
+            $data = parent::select($select, false);
         }
 
         return $data[0];
@@ -3278,7 +3278,7 @@ class Pessoal extends Bd
                          FROM tbpessoa JOIN tbservidor ON(tbservidor.idPessoa = tbpessoa.idPessoa)
                         WHERE idServidor = '$idServidor'";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         # Divide a data 
         $data = explode('/', $row[0]);
@@ -3304,7 +3304,7 @@ class Pessoal extends Bd
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
 
-        $idPessoa = parent::select($select, FALSE);
+        $idPessoa = parent::select($select, false);
 
         return $idPessoa[0];
     }
@@ -3323,7 +3323,7 @@ class Pessoal extends Bd
                      FROM tbplano
                     WHERE planoAtual = 1';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $id = $row[0];
 
         return $id;
@@ -3343,7 +3343,7 @@ class Pessoal extends Bd
                      FROM tbplano
                     WHERE planoAtual = 1';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $id = $row[0];
 
         return $id;
@@ -3368,7 +3368,7 @@ class Pessoal extends Bd
                      FROM tbdiaria
                     WHERE idDiaria = '$idDiaria'";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row;
     }
 
@@ -3385,7 +3385,7 @@ class Pessoal extends Bd
                       FROM tbparentesco
                      WHERE idparentesco = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3402,7 +3402,7 @@ class Pessoal extends Bd
         # Parâmetro: id da licença
         # Valida parametro
         if (is_null($idLicenca))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT processo,
@@ -3414,7 +3414,7 @@ class Pessoal extends Bd
                          FROM tblicenca
                         WHERE idLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row;
     }
 
@@ -3431,7 +3431,7 @@ class Pessoal extends Bd
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
 
-        $idPessoa = parent::select($select, FALSE);
+        $idPessoa = parent::select($select, false);
 
         return $idPessoa[0];
     }
@@ -3450,18 +3450,18 @@ class Pessoal extends Bd
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
 
-        $valor = parent::select($select, FALSE);
+        $valor = parent::select($select, false);
 
         return $valor[0];
     }
 
     ###########################################################
-    public function get_feriado($data = NULL)
+    public function get_feriado($data = null)
     {
         /**
          * 
          * Retorna uma string com o nome do feriado
-         * ou NULLo se não tiver feriado nessa data
+         * ou nullo se não tiver feriado nessa data
          * 
          * @param date $data a data (no formato dia/mês/ano) a ser pesquisada, se nulo pega a data atual
          * 
@@ -3472,7 +3472,7 @@ class Pessoal extends Bd
                          FROM tbferiado 
                         WHERE (tipo = "anual" AND MONTH(data) = MONTH(current_date()) AND DAY(data) = DAY(current_date())
                            OR (tipo = "data única" and  data = current_date()))';
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0];
         }
         else {
@@ -3485,14 +3485,14 @@ class Pessoal extends Bd
                             WHERE (tipo = "anual" AND MONTH(data) = MONTH("' . $data . '") AND DAY(data) = DAY("' . $data . '")
                                OR (tipo = "data única" and  data = "' . $data . '"))';
 
-                $row = parent::select($select, FALSE);
+                $row = parent::select($select, false);
                 return $row[0];
             }
         }
     }
 
     ##########################################################################################
-    function emFolgaTre($idServidor, $data = NULL)
+    function emFolgaTre($idServidor, $data = null)
     {
 
         # Função que informa se a idServidor est� folgando (TRE) na data atual
@@ -3513,7 +3513,7 @@ class Pessoal extends Bd
                       AND '$data' >= data 
                       AND '$data' <= ADDDATE(data,dias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -3524,7 +3524,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emAfastamentoTre($idServidor, $data = NULL)
+    function emAfastamentoTre($idServidor, $data = null)
     {
 
         # Função que informa se a idServidor está afastada para o (TRE) na data atual
@@ -3545,7 +3545,7 @@ class Pessoal extends Bd
                       AND '$data' >= data 
                       AND '$data' <= ADDDATE(data,dias-1)";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -3569,7 +3569,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3589,7 +3589,7 @@ class Pessoal extends Bd
                     WHERE idServidor = " . $idServidor;
 
         $pessoal = new Pessoal();
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $padrao = MD5(SENHA_PADRAO);
 
         switch ($row[0]) {
@@ -3599,7 +3599,7 @@ class Pessoal extends Bd
                 break;
 
             # senha bloqueada
-            case NULL :
+            case null :
                 return 2;
                 break;
 
@@ -3625,7 +3625,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE matricula = ' . $matricula;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3645,7 +3645,7 @@ class Pessoal extends Bd
                          FROM tbferias
                         WHERE idFerias = ' . $idFerias;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -3694,7 +3694,7 @@ class Pessoal extends Bd
                          FROM tbtipocargo 
                         WHERE idTipoCargo = ' . $id;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -3742,7 +3742,7 @@ class Pessoal extends Bd
                          FROM tbsituacao
                         WHERE idsituacao = ' . $idsituacao;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -3758,7 +3758,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                         WHERE idperfil = ' . $idperfil;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -3782,7 +3782,7 @@ class Pessoal extends Bd
                                               LEFT JOIN tbarea USING (idarea)
                                 WHERE idCargo = ' . $id;
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
             return $row[0] . " - " . $row[1] . " - " . $row[2];
         }
     }
@@ -3824,7 +3824,7 @@ class Pessoal extends Bd
         $row = parent::select($select);
         $quantos = count($row);
 
-        $novoArray = NULL;
+        $novoArray = null;
 
         # Pega o menor ano cadastrado
         if ($quantos > 0) {
@@ -3868,8 +3868,8 @@ class Pessoal extends Bd
         $anoAtual = date("Y");
 
         # Definr a variável
-        $retorno = NULL;
-        $ultimo = NULL;
+        $retorno = null;
+        $ultimo = null;
 
         # Se não tiver férias cadastradas o ano disponível é o posterior ao da admissão
         if (count($lista) == 0) {
@@ -3904,7 +3904,7 @@ class Pessoal extends Bd
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -3914,7 +3914,7 @@ class Pessoal extends Bd
      * 
      * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
      */
-    public function get_feriasSomaDias($anoExercicio, $idservidor, $id = NULL)
+    public function get_feriasSomaDias($anoExercicio, $idservidor, $id = null)
     {
         $select = 'SELECT anoexercicio, SUM(numDias)                          
                          FROM tbferias
@@ -3930,7 +3930,7 @@ class Pessoal extends Bd
         $select .= ' GROUP BY anoexercicio
                          ORDER BY anoexercicio asc';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[1];
     }
 
@@ -3959,7 +3959,7 @@ class Pessoal extends Bd
         $anoExercicio = $ferias[2];
         $numDias = $ferias[3];
         $status = $ferias[4];
-        $periodo = NULL;
+        $periodo = null;
 
         # Verifica as férias desse servidor nesse periodo
         $select2 = "SELECT idFerias
@@ -4005,7 +4005,7 @@ class Pessoal extends Bd
             alert("$idServidor inválido");
         }
         else {
-            $nome = parent::select($select, FALSE);
+            $nome = parent::select($select, false);
             return date_to_php($nome[0]);
         }
     }
@@ -4024,7 +4024,7 @@ class Pessoal extends Bd
                          FROM tbservidor
                         WHERE idFuncional = ' . $idFuncional;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4041,7 +4041,7 @@ class Pessoal extends Bd
 
         # Verifica o $idPessoa
         if (is_null($idPessoa)) {
-            return NULL;
+            return null;
         }
         else {
 
@@ -4051,7 +4051,7 @@ class Pessoal extends Bd
                             WHERE idPessoa = ' . $idPessoa . '  
                          ORDER BY idPerfil, dtAdmissao desc';
 
-            $row = parent::select($select, FALSE);
+            $row = parent::select($select, false);
 
             return $row[0];
         }
@@ -4095,7 +4095,7 @@ class Pessoal extends Bd
      * @param integer $idServidor O idServidor do servidor em questão
      * @param integer $idHistLot  O id da tabela tbhistlot para certificar que não está comparando o mesno registro.
      */
-    public function temLotacaoNestaData($data, $idServidor, $idHistLot = NULL)
+    public function temLotacaoNestaData($data, $idServidor, $idHistLot = null)
     {
 
         $select = 'SELECT data
@@ -4110,10 +4110,10 @@ class Pessoal extends Bd
         $result = parent::count($select);
 
         if ($result > 0) {
-            return TRUE;
+            return true;
         }
         else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -4131,7 +4131,7 @@ class Pessoal extends Bd
                          FROM tbperfil
                          WHERE idPerfil = ' . $idPerfil;
 
-        $result = parent::select($select, FALSE);
+        $result = parent::select($select, false);
 
         return $result[0];
     }
@@ -4146,7 +4146,7 @@ class Pessoal extends Bd
         # Parâmetro: id do tipo de licença
         # Valida parametro
         if (is_null($idTipoLicenca)) {
-            return FALSE;
+            return false;
         }
 
         # Monta o select		
@@ -4154,7 +4154,7 @@ class Pessoal extends Bd
                              FROM tbtipolicenca
                             WHERE idTpLicenca = ' . $idTipoLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4171,7 +4171,7 @@ class Pessoal extends Bd
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -4188,7 +4188,7 @@ class Pessoal extends Bd
                     FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                    WHERE idservidor = ' . $idServidor;
 
-        $conteudo = parent::select($select, FALSE);
+        $conteudo = parent::select($select, false);
 
         $retorno = "---";
 
@@ -4227,8 +4227,8 @@ class Pessoal extends Bd
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
-        $retorno = NULL;
+        $row = parent::select($select, false);
+        $retorno = null;
 
         if (!vazio($row[1])) {
             $retorno .= "($row[0]) $row[1]<br/>";
@@ -4254,14 +4254,14 @@ class Pessoal extends Bd
     {
         # Valida parametro
         if (is_null($idServidor))
-            return FALSE;
+            return false;
 
         # Monta o select		
         $select = 'SELECT idCedido
                          FROM tbcedido
                         WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4280,7 +4280,7 @@ class Pessoal extends Bd
                     WHERE empresaTipo = 1 AND idServidor = ' . $idServidor . '
                          ORDER BY total';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -4304,7 +4304,7 @@ class Pessoal extends Bd
                     WHERE empresaTipo = 2 AND idServidor = ' . $idServidor . '
                          ORDER BY total';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -4354,7 +4354,7 @@ class Pessoal extends Bd
                     WHERE idTipoLicenca = ' . $idTipoLicenca . ' AND idServidor = ' . $idServidor . '
                          ORDER BY total';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         if (is_null($row[0])) {
             return 0;
@@ -4373,7 +4373,7 @@ class Pessoal extends Bd
         # Parâmetro: id do servidor
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -4387,9 +4387,9 @@ class Pessoal extends Bd
                          FROM tbpessoa JOIN tbcidade USING (idCidade)
                         WHERE idPessoa = ' . $idPessoa;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $numero = parent::count($select);
-        $return = NULL;
+        $return = null;
 
         if ($numero > 0) {
             $return = $row[0] . " - " . $row[1] . " - " . $row[2] . " Cep: " . $row[3];
@@ -4407,7 +4407,7 @@ class Pessoal extends Bd
         # Parâmetro: id do servidor
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -4423,9 +4423,9 @@ class Pessoal extends Bd
                                        JOIN tbestado USING (idEstado)
                         WHERE idPessoa = ' . $idPessoa;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         $numero = parent::count($select);
-        $return = NULL;
+        $return = null;
 
         if ($numero > 0) {
             $return = plm($row[0]) . " - " .
@@ -4446,7 +4446,7 @@ class Pessoal extends Bd
         # Parâmetro: id do servidor
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -4470,7 +4470,7 @@ class Pessoal extends Bd
         # Parâmetro: id do servidor
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -4495,7 +4495,7 @@ class Pessoal extends Bd
         # Parâmetro: id do servidor
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -4520,7 +4520,7 @@ class Pessoal extends Bd
         # Parâmetro: id do servidor
         # Valida parametro
         if (is_null($idServidor)) {
-            return FALSE;
+            return false;
         }
 
         # Pega o idPessoa desse idServidor
@@ -4547,10 +4547,10 @@ class Pessoal extends Bd
                                       LEFT JOIN tbcomissao USING (idServidor)
                                       LEFT JOIN tbtipocomissao USING (idTipoComissao)
                        WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                          OR (dtExo is NULL))                 
+                          OR (dtExo is null))                 
                          AND idTipoComissao = 13';
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row[0];
     }
 
@@ -4577,7 +4577,7 @@ class Pessoal extends Bd
                      FROM tbtipocomissao
                     WHERE idTipoComissao = $idTipoComissao";
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
         return $row;
     }
 
@@ -4600,7 +4600,7 @@ class Pessoal extends Bd
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbcomissao.dtExo is NULL AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
+                     AND tbcomissao.dtExo is null AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = $idLotacao)";
 
         $row = parent::select($select, false);
@@ -4627,7 +4627,7 @@ class Pessoal extends Bd
                                      LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbcomissao.dtExo is NULL 
+                     AND tbcomissao.dtExo is null 
                      AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = $idLotacao)";
 
@@ -4647,7 +4647,7 @@ class Pessoal extends Bd
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
-                    WHERE tbcomissao.dtExo is NULL 
+                    WHERE tbcomissao.dtExo is null 
                      AND tbtipocomissao.idTipoComissao = 13";
 
         $row = parent::select($select, false);
@@ -4678,7 +4678,7 @@ class Pessoal extends Bd
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbcomissao.dtExo is NULL 
+                     AND tbcomissao.dtExo is null 
                      AND tbtipocomissao.idTipoComissao = 16
                      AND (tblotacao.dir = '$diretoria')";
 
@@ -4706,7 +4706,7 @@ class Pessoal extends Bd
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND tbcomissao.dtExo is NULL
+                      AND tbcomissao.dtExo is null
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
                       AND (tblotacao.idlotacao = $idLotacao) 
                  ORDER BY tbtipocomissao.simbolo LIMIT 1";
@@ -4726,7 +4726,7 @@ class Pessoal extends Bd
 
         # Verifica se o servidor é o reitor
         if ($chefia == $idServidor) {
-            $chefia = NULL;
+            $chefia = null;
         }
 
         # Retorna
@@ -4750,7 +4750,7 @@ class Pessoal extends Bd
                                      LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND tbcomissao.dtExo is NULL
+                      AND tbcomissao.dtExo is null
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)";
         # Lotacao
         # Verifica se o que veio é numérico
@@ -4786,7 +4786,7 @@ class Pessoal extends Bd
         # Monta o select
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
-                    WHERE (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                    WHERE (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
 
         $row = parent::select($select, false);
@@ -4811,7 +4811,7 @@ class Pessoal extends Bd
         # Monta o select
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
-                    WHERE (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)
+                    WHERE (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
 
         $row = parent::select($select, false);
@@ -4854,7 +4854,7 @@ class Pessoal extends Bd
                      FROM tbcargo
                     WHERE idcargo = ' . $idCargo;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4872,7 +4872,7 @@ class Pessoal extends Bd
                      FROM tbarea
                     WHERE idarea = ' . $idArea;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4890,7 +4890,7 @@ class Pessoal extends Bd
                      FROM tbcargo
                     WHERE idCargo = ' . $idCargo;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4908,7 +4908,7 @@ class Pessoal extends Bd
                      FROM tbescolaridade
                     WHERE idEscolaridade = ' . $idEscolaridade;
 
-        $retorno = parent::select($select, FALSE);
+        $retorno = parent::select($select, false);
         return $retorno[0];
     }
 
@@ -4952,7 +4952,7 @@ class Pessoal extends Bd
                      FROM tbcargo
                     WHERE idCargo = ' . $idCargo;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4971,7 +4971,7 @@ class Pessoal extends Bd
                      FROM tblicenca
                     WHERE idLicenca = ' . $idLicenca;
 
-        $row = parent::select($select, FALSE);
+        $row = parent::select($select, false);
 
         return $row[0];
     }
@@ -4982,7 +4982,7 @@ class Pessoal extends Bd
         /**
          * Exibe um link para a publicação
          * 
-         * @param $idConcursoPublicacao integer NULL O id do Concurso
+         * @param $idConcursoPublicacao integer null O id do Concurso
          * 
          * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
          */
@@ -4993,7 +4993,7 @@ class Pessoal extends Bd
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(NULL, $arquivo, "Exibe o MCF");
+            $link = new Link(null, $arquivo, "Exibe o MCF");
             $link->set_imagem(PASTA_FIGURAS . "ver.png", 20, 20);
             $link->set_target("_blank");
             $link->show();

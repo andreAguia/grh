@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -90,8 +90,8 @@ if ($acesso) {
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(NULL, NULL, NULL, "Pessoal"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, "get_servidoresArea"));
+    $objeto->set_classe(array(null, null, null, "Pessoal"));
+    $objeto->set_metodo(array(null, null, null, "get_servidoresArea"));
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -119,7 +119,7 @@ if ($acesso) {
                                       cargo
                                   FROM tbtipocargo
                               ORDER BY idTipoCargo desc');
-    array_unshift($result2, array(NULL, NULL));
+    array_unshift($result2, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -128,15 +128,15 @@ if ($acesso) {
             'nome' => 'area',
             'label' => 'Área:',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
-            'required' => TRUE,
+            'autofocus' => true,
+            'required' => true,
             'size' => 50),
         array('linha' => 1,
             'col' => 6,
             'nome' => 'idTipoCargo',
             'label' => 'Cargo:',
             'tipo' => 'combo',
-            'required' => TRUE,
+            'required' => true,
             'array' => $result2,
             'size' => 30),
         array('linha' => 2,
@@ -156,7 +156,7 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Paginação
-    #$objeto->set_paginacao(TRUE);
+    #$objeto->set_paginacao(true);
     #$objeto->set_paginacaoInicial($paginacao);
     ################################################################
     switch ($fase) {

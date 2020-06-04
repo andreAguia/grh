@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -42,9 +42,9 @@ if ($acesso) {
     $relatorio->set_label(array('Nome', 'CPF', 'Nascimento'));
     $relatorio->set_width(array(50, 30, 20));
     $relatorio->set_align(array("left", "center", "center"));
-    $relatorio->set_funcao(array(NULL, NULL, "date_to_php"));
-    #$relatorio->set_classe(array(NULL,NULL,NULL,NULL,NULL,NULL,"Pessoal"));
-    #$relatorio->set_metodo(array(NULL,NULL,NULL,NULL,NULL,NULL,"get_Situacao"));    
+    $relatorio->set_funcao(array(null, null, "date_to_php"));
+    #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
+    #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

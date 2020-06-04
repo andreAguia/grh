@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -52,20 +52,20 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(FALSE);
-    $relatorio->set_menuRelatorio(FALSE);
-    $relatorio->set_subTotal(TRUE);
-    $relatorio->set_totalRegistro(FALSE);
+    $relatorio->set_cabecalhoRelatorio(false);
+    $relatorio->set_menuRelatorio(false);
+    $relatorio->set_subTotal(true);
+    $relatorio->set_totalRegistro(false);
 
     $relatorio->set_label(array("Conclusão", "Resultado", "Data", "Processo", "Instituição", "Cargo", "Matrícula"));
     $relatorio->set_align(array("center", "center", "center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, "date_to_php"));
-    $relatorio->set_classe(array(NULL, "Acumulacao"));
-    $relatorio->set_metodo(array(NULL, "get_resultado"));
+    $relatorio->set_funcao(array(null, null, "date_to_php"));
+    $relatorio->set_classe(array(null, "Acumulacao"));
+    $relatorio->set_metodo(array(null, "get_resultado"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(FALSE);
+    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Acumulação de Cargos Publicos");
     $relatorio->show();

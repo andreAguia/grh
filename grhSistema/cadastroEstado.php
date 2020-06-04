@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de estado";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -127,8 +127,8 @@ if ($acesso) {
             'nome' => 'nome',
             'label' => 'Estado:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 10,
             'size' => 60),
         array('linha' => 1,
@@ -136,7 +136,7 @@ if ($acesso) {
             'title' => 'Unidade da federação',
             'label' => 'UF:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 2,
             'size' => 10)));
 

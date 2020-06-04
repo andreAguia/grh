@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de licenças e afastamentos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -65,7 +65,7 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT idTpLicenca,
-                                      CONCAT(tbtipolicenca.nome,"<br/>",IFNULL(tbtipolicenca.lei,"")),
+                                      CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
                                       periodo,
                                       pericia,
                                       publicacao,
@@ -107,7 +107,7 @@ if ($acesso) {
     $objeto->set_label(array("id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Interrompe TS"));
     #$objeto->set_width(array(5,38,7,10,10,10,10,10));
     $objeto->set_align(array("center", "left"));
-    #$objeto->set_function(array (NULL,NULL,NULL,NULL,NULL,NULL,"get_nome"));
+    #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -127,7 +127,7 @@ if ($acesso) {
             'title' => 'Nome do Afastamento ou Licença',
             'label' => 'Nome do Afastamento ou Licença',
             'tipo' => 'texto',
-            'autofocus' => TRUE,
+            'autofocus' => true,
             'col' => 12,
             'size' => 100),
         array('linha' => 2,
@@ -201,7 +201,7 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_title("Exibe Relatório dos Afastamentos e Licenças");
     $botaoRel->set_url("../grhRelatorios/tiposLicenca.php");

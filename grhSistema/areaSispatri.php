@@ -12,7 +12,7 @@
 #
 #
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -29,12 +29,12 @@ if ($acesso) {
     $fase = get('fase', "resumo");
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de Formação";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -67,7 +67,7 @@ if ($acesso) {
     $menu1->add_link($botaoVoltar, "left");
 
     # Ci
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_title("CI");
     $botaoRel->set_url("../grhRelatorios/ciSispatri.php");
@@ -118,7 +118,7 @@ if ($acesso) {
             titulo("Resumo");
             br();
 
-            $texto1 = Null;
+            $texto1 = null;
 
             if ($parametroLotacao == "Todos") {
                 $numServidores = $pessoal->get_numServidoresAtivos();
@@ -139,7 +139,7 @@ if ($acesso) {
             $tabela->set_conteudo($array);
             $tabela->set_label(array("Descrição", "Servidores"));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
@@ -149,7 +149,7 @@ if ($acesso) {
             # Chart
             $chart = new Chart("Pie", array(array("Fez Sispatri", $numServidores - $numSispatriAtivos), array("Não Fez Sispatri", $numSispatriAtivos)));
             $chart->set_idDiv("sispatri");
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_tamanho($largura = "50%", $altura = "50%");
             $chart->show();
 
@@ -164,7 +164,7 @@ if ($acesso) {
             $tabela->set_conteudo($array);
             $tabela->set_label(array("Descrição", "Servidores"));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $painel->fecha();
@@ -179,7 +179,7 @@ if ($acesso) {
             $form = new Form('?');
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                           FROM tblotacao
                                          WHERE ativo) UNION (SELECT distinct DIR, DIR
                                           FROM tblotacao
@@ -209,9 +209,9 @@ if ($acesso) {
             $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_classe(array(NULL, NULL, "pessoal", "pessoal"));
-            $tabela->set_metodo(array(NULL, NULL, "get_Cargo", "get_Lotacao"));
-            $tabela->set_funcao(array(NULL, NULL, NULL, NULL, "get_situacao"));
+            $tabela->set_classe(array(null, null, "pessoal", "pessoal"));
+            $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao"));
+            $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
@@ -233,8 +233,8 @@ if ($acesso) {
                 $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
                 $tabela->set_conteudo($result);
                 $tabela->set_align(array("center", "left", "left", "left"));
-                $tabela->set_classe(array(NULL, NULL, "pessoal", "pessoal", "pessoal"));
-                $tabela->set_metodo(array(NULL, NULL, "get_Cargo", "get_Lotacao", "get_situacao"));
+                $tabela->set_classe(array(null, null, "pessoal", "pessoal", "pessoal"));
+                $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", "get_situacao"));
 
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
@@ -291,7 +291,7 @@ if ($acesso) {
                 $Objetolog = new Intra();
                 $data = date("Y-m-d H:i:s");
                 $atividade = "Alterou a foto do servidor";
-                $Objetolog->registraLog($idUsuario, $data, $atividade, NULL, NULL, 4);
+                $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4);
 
                 # Volta para o menu
                 loadPage("?fase=importar1");
@@ -356,7 +356,7 @@ if ($acesso) {
                             # Grava na tabela tbsispatri
                             $campos = array("cpf");
                             $valor = array($pp);
-                            $pessoal->gravar($campos, $valor, NULL, "tbsispatri", "idSispatri");
+                            $pessoal->gravar($campos, $valor, null, "tbsispatri", "idSispatri");
                         }
                     }
                 }
@@ -405,7 +405,7 @@ if ($acesso) {
                               FROM tbdocumentacao
                              WHERE CPF = '$cpfFinalizado'";
 
-                $row2 = $pessoal->select($select2, FALSE);
+                $row2 = $pessoal->select($select2, false);
 
                 if (is_null($row2[0])) {
                     $problema++;

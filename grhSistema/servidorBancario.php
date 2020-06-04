@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -20,12 +20,12 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Dados bancários";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -70,7 +70,7 @@ if ($acesso) {
     $objeto->set_voltarForm('servidorMenu.php');
 
     # retira o botão incluir
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -87,7 +87,7 @@ if ($acesso) {
     # Pega os dados da combo parentesco
     $bancos = new Pessoal();
     $result = $bancos->select('SELECT idBanco, banco FROM tbbanco order by banco');
-    array_push($result, array(NULL, NULL)); # Adiciona o valor de nulo
+    array_push($result, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -95,8 +95,8 @@ if ($acesso) {
             'label' => 'Banco:',
             'tipo' => 'combo',
             'array' => $result,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 4,
             'title' => 'Nome do Banco do Servidor',
             'size' => 20),
@@ -104,7 +104,7 @@ if ($acesso) {
             'nome' => 'agencia',
             'label' => 'Agência:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 4,
             'title' => 'Número da Agência',
             'size' => 10),
@@ -113,7 +113,7 @@ if ($acesso) {
             'label' => 'Conta Corrente:',
             'tipo' => 'texto',
             'col' => 4,
-            'required' => TRUE,
+            'required' => true,
             'title' => 'Número da conta corrente do servidor',
             'size' => 20),
         array('linha' => 4,

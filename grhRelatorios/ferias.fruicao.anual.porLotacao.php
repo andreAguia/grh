@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -31,19 +31,19 @@ if ($acesso) {
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
-        $parametroLotacao = NULL;
+        $parametroLotacao = null;
     }
 
     # Transforma em nulo a máscara *
     if ($parametroStatus == "Todos") {
-        $parametroStatus = NULL;
+        $parametroStatus = null;
     }
 
     ######
 
     $select = "SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.DIR,''),' - ',IFNULL(tblotacao.GER,''),' - ',IFNULL(tblotacao.nome,'')) lotacao,
+                     concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
                      tbferias.anoExercicio,
                      tbferias.dtInicial,
                      tbferias.numDias,
@@ -91,9 +91,9 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Situação'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
-    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, NULL, NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, NULL, NULL, NULL, "get_feriasPeriodo"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+    $relatorio->set_classe(array(null, null, null, null, null, null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, null, null, null, null, null, "get_feriasPeriodo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);

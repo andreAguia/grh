@@ -22,7 +22,7 @@ if ($origem == 2) {
 
         # Resultado: nulo - Ainda não saiu o resultado
         # Status: 1 - Em aberto
-        case NULL:
+        case null:
             $campoValor[2] = 1;
             break;
 
@@ -55,7 +55,7 @@ if ($origem == 2) {
     # Verifica se já está cadastrada a data de início e o período
     if ((is_null($dtInicio)) OR (is_null($periodo))) {
         $campoValor[2] = 1;
-        $campoValor[9] = NULL;
+        $campoValor[9] = null;
     } else {
         $dtTermino = addMeses($dtInicio, $periodo);
         $campoValor[9] = 1;

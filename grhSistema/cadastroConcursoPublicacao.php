@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -24,12 +24,12 @@ if ($acesso) {
     $idConcurso = get('idConcurso');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de bancos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -114,7 +114,7 @@ if ($acesso) {
             'nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 12,
             'size' => 250),
         array('linha' => 2,
@@ -122,7 +122,7 @@ if ($acesso) {
             'label' => 'Data:',
             'tipo' => 'data',
             'title' => 'Data da Publicação',
-            'required' => TRUE,
+            'required' => true,
             'col' => 3,
             'size' => 20),
         array('linha' => 2,

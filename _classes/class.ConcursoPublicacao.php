@@ -7,17 +7,17 @@ class ConcursoPublicacao {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      * 
-     * @var private $idConcursoPublicacao integer NULL O id da publicação
+     * @var private $idConcursoPublicacao integer null O id da publicação
      */
-    private $idConcursoPublicacao = NULL;
+    private $idConcursoPublicacao = null;
 
 ##############################################################
 
-    public function __construct($idConcursoPublicacao = NULL) {
+    public function __construct($idConcursoPublicacao = null) {
         /**
          * Inicia a Classe somente
          * 
-         * @param $idConcursoPublicacao integer NULL O id do concurso
+         * @param $idConcursoPublicacao integer null O id do concurso
          * 
          * @syntax $ConcursoPublicacao = new ConcursoPublicacao([$idConcursoPublicacao]);
          */
@@ -26,12 +26,12 @@ class ConcursoPublicacao {
 
 ##############################################################
 
-    public function get_dados($idConcursoPublicacao = NULL) {
+    public function get_dados($idConcursoPublicacao = null) {
 
         /**
          * Informa os dados da base de dados
          * 
-         * @param $idConcursoPublicacao integer NULL O id do concurso
+         * @param $idConcursoPublicacao integer null O id do concurso
          * 
          * @syntax $ConcursoPublicacao->get_dados([$idConcursoPublicacao]);
          */
@@ -55,7 +55,7 @@ class ConcursoPublicacao {
                     WHERE idConcursoPublicacao = ' . $this->idConcursoPublicacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row;
@@ -67,7 +67,7 @@ class ConcursoPublicacao {
         /**
          * Exibe um link para a publicação
          * 
-         * @param $idConcursoPublicacao integer NULL O id do Concurso
+         * @param $idConcursoPublicacao integer null O id do Concurso
          * 
          * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
          */
@@ -78,7 +78,7 @@ class ConcursoPublicacao {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(NULL, $arquivo, "Exibe a Publicação");
+            $link = new Link(null, $arquivo, "Exibe a Publicação");
             $link->set_imagem(PASTA_FIGURAS . "ver.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
@@ -93,7 +93,7 @@ class ConcursoPublicacao {
         /**
          * Exibe um link para exibir o edital
          * 
-         * @param $idconcurso integer NULL O id do plano
+         * @param $idconcurso integer null O id do plano
          * 
          * @syntax $plano->exibeLei($idPlano);
          */
@@ -101,7 +101,7 @@ class ConcursoPublicacao {
         $dados = $this->get_dados($idConcursoPublicacao);
         $idConcurso = $dados["idConcurso"];
 
-        $link = new Link(NULL, "?fase=uploadPublicacao&id=$idConcurso&idConcursoPublicacao=$idConcursoPublicacao", "Upload a Publicação");
+        $link = new Link(null, "?fase=uploadPublicacao&id=$idConcurso&idConcursoPublicacao=$idConcursoPublicacao", "Upload a Publicação");
         $link->set_imagem(PASTA_FIGURAS . "upload.png", 20, 20);
         #$link->set_target("_blank");
         $link->show();

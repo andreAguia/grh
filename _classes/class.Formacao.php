@@ -28,9 +28,9 @@ class Formacao {
                   WHERE idFormacao = $idFormacao";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
-        $retorno = NULL;
+        $retorno = null;
 
         # Escolaridade
         #$retorno = '<span title="Nível do Curso" id="orgaoCedido">['.$pessoal->get_escolaridade($dados['idEscolaridade']).']</span><br/>';
@@ -52,7 +52,7 @@ class Formacao {
          * Fornece a escolaridade de um servidor seja pelo cargo, seja pelo cadastro de formação. o que tiver maior escolaridade
          */
         # inicia as variáveis
-        $idEscolaridade = NULL;
+        $idEscolaridade = null;
         $valores = array();
 
         # Conecta ao banco de dados
@@ -106,7 +106,7 @@ class Formacao {
 
         # Pega a escolaridade da tabela formação
         $select = "SELECT idEscolaridade FROM tbformacao WHERE idEscolaridade <> 12 AND idPessoa = $idPessoa ORDER BY idEscolaridade desc LIMIT 1";
-        $dados = $pessoal->select($select, FALSE);
+        $dados = $pessoal->select($select, false);
 
         # Joga o segundo valor no array de comparação
         $valores[] = $dados[0];

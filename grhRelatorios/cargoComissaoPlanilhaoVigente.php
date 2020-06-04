@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -37,17 +37,17 @@ if ($acesso) {
                                LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                     JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                                     JOIN tbdescricaocomissao  USING (idDescricaoComissao)    
-           WHERE tbtipocomissao.ativo IS TRUE
-             AND (tbcomissao.dtExo IS NULL OR CURDATE() < tbcomissao.dtExo)                    
+           WHERE tbtipocomissao.ativo IS true
+             AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)                    
            ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
     $result = $pessoal->select($select);
 
     $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Publicação', 'Nome do Cargo', 'Perfil', 'Cargo');
     $align = array("center", "left", "center", "center", "left", "center");
-    $function = array("idMatricula", NULL, "date_to_php", "date_to_php", "descricaoComissao");
-    $classe = array(NULL, NULL, NULL, NULL, NULL, "Pessoal");
-    $metodo = array(NULL, NULL, NULL, NULL, NULL, "get_perfil");
+    $function = array("idMatricula", null, "date_to_php", "date_to_php", "descricaoComissao");
+    $classe = array(null, null, null, null, null, "Pessoal");
+    $metodo = array(null, null, null, null, null, "get_perfil");
 
     # Monta a tabela
     $relatorio = new Relatorio();

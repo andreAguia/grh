@@ -8,7 +8,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -25,17 +25,17 @@ if ($acesso) {
     $fase = get('fase');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de férias";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    set_session('areaFerias', FALSE);
+    set_session('areaFerias', false);
 
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
@@ -103,7 +103,7 @@ if ($acesso) {
     $form->add_item($controle);
 
     # Lotação    
-    $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao
@@ -220,7 +220,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Exercício", "Solicitações"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
             $tabela->set_align(array("center"));
             #$tabela->set_funcao(array("exibeDescricaoStatus"));
@@ -269,7 +269,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Mês", "Solicitações"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
             $tabela->set_align(array("center"));
             $tabela->set_funcao(array("get_nomeMes"));
@@ -314,7 +314,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Status", "Solicitações"));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
             $tabela->set_align(array("center"));
             $tabela->set_funcao(array("exibeDescricaoStatus"));
@@ -369,9 +369,9 @@ if ($acesso) {
             $tabela->set_titulo("Ano de Fruição: " . $parametroAno . " (Data Inicial)");
             $tabela->set_label(array('Nome', 'Lotação', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação'));
             $tabela->set_align(array("left", "left"));
-            $tabela->set_funcao(array(NULL, NULL, NULL, "date_to_php", NULL, NULL, NULL, NULL));
-            $tabela->set_classe(array(NULL, "pessoal", NULL, NULL, NULL, NULL, "pessoal"));
-            $tabela->set_metodo(array(NULL, "get_lotacaoSimples", NULL, NULL, NULL, NULL, "get_feriasPeriodo"));
+            $tabela->set_funcao(array(null, null, null, "date_to_php", null, null, null, null));
+            $tabela->set_classe(array(null, "pessoal", null, null, null, null, "pessoal"));
+            $tabela->set_metodo(array(null, "get_lotacaoSimples", null, null, null, null, "get_feriasPeriodo"));
             $tabela->set_conteudo($result);
 
             $tabela->set_editar('?fase=editaServidorFerias&id=');

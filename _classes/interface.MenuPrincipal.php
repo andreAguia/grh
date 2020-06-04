@@ -7,7 +7,7 @@ class MenuPrincipal {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    private $idUsuario = NULL;
+    private $idUsuario = null;
 
 ######################################################################################################################    
 
@@ -177,7 +177,7 @@ class MenuPrincipal {
      * 
      * Exibe os servidores que atendem o balcão
      */
-    private function moduloBalcao($idUsuario = NULL) {
+    private function moduloBalcao($idUsuario = null) {
 
         # Banco de dados
         $pessoal = new Pessoal();
@@ -207,7 +207,7 @@ class MenuPrincipal {
         titulo('Hoje no Balcão');
         br();
 
-        if (is_NULL($sortudos)) {
+        if (is_null($sortudos)) {
             p("Não Haverá Atendimento Hoje.");
         } else {
             echo "<table class='tabelaPadrao'>";
@@ -745,7 +745,7 @@ class MenuPrincipal {
         $tabela->set_width(array(30, 70));
         $tabela->set_align(array("center", "left"));
         $tabela->set_rodape("Para Transferir clica em OK e no ramal desejado");
-        $tabela->set_totalRegistro(FALSE);
+        $tabela->set_totalRegistro(false);
         $tabela->show();
     }
 

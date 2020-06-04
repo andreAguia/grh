@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -99,7 +99,7 @@ if ($acesso) {
             $menu->add_link($linkArea, "right");
 
             # Relatórios
-            $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_url("grhRelatorios.php");
             $botaoRel->set_title("Relatórios dos Sistema");
@@ -130,7 +130,7 @@ if ($acesso) {
             if ($intra->get_variavel('dataVerificaFeriasSolicitada') <> date("d/m/Y")) {
                 $pessoal->mudaStatusFeriasSolicitadaFruida();                       // muda as férias solicitadas na data de hoje para fruídas
                 $intra->set_variavel('dataVerificaFeriasSolicitada', date("d/m/Y")); // muda a variável para hoje
-                $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de verificação de férias executada.', NULL, NULL, 6);
+                $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de verificação de férias executada.', null, null, 6);
             }
 
             ########
@@ -203,12 +203,12 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Verifica se veio menu grh e registra o acesso no log
-            $grh = get('grh', FALSE);
+            $grh = get('grh', false);
             if ($grh) {
                 # Grava no log a atividade
                 $atividade = "Visualizou os alertas do sistema";
                 $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+                $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             }
 
             br();
@@ -235,7 +235,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $checkup = New Checkup(FALSE);
+            $checkup = New Checkup(false);
 
             echo "<ul class='checkupResumo'>";
             $checkup->get_all();
@@ -273,7 +273,7 @@ if ($acesso) {
             # Grava no log a atividade
             $data = date("Y-m-d H:i:s");
             $atividade = 'Visualizou o método: ' . $alerta . ' da classe Checkup.';
-            $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -287,7 +287,7 @@ if ($acesso) {
             # Grava no log a atividade
             $atividade = "Visualizou os anivesariantes de " . get_nomeMes($parametroMes);
             $data = date("Y-m-d H:i:s");
-            $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
 
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -310,7 +310,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                           FROM tblotacao
                                          WHERE ativo) UNION (SELECT distinct DIR, DIR
                                           FROM tblotacao
@@ -330,7 +330,7 @@ if ($acesso) {
             $form->show();
 
             if ($parametroLotacao == "*") {
-                $parametroLotacao = NULL;
+                $parametroLotacao = null;
             }
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -355,7 +355,7 @@ if ($acesso) {
             $tabela->set_titulo("Resumo");
             $tabela->set_label(array("", ""));
             $tabela->set_width(array(70, 30));
-            $tabela->set_totalRegistro(FALSE);
+            $tabela->set_totalRegistro(false);
             $tabela->set_align(array("left", "center"));
             $tabela->show();
 
@@ -400,8 +400,8 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Dia", "Nome", "Lotação", "Cargo", "Perfil"));
             $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_classe(array(NULL, NULL, 'Pessoal', 'Pessoal', 'Pessoal'));
-            $tabela->set_metodo(array(NULL, NULL, 'get_lotacao', 'get_cargo', 'get_perfilSimples'));
+            $tabela->set_classe(array(null, null, 'Pessoal', 'Pessoal', 'Pessoal'));
+            $tabela->set_metodo(array(null, null, 'get_lotacao', 'get_cargo', 'get_perfilSimples'));
             $tabela->set_titulo($titulo);
             if (date("m") == $parametroMes) {
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 0, 'valor' => date("d"), 'operador' => '=', 'id' => 'aniversariante')));
@@ -423,12 +423,12 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Verifica se veio menu grh e registra o acesso no log
-            $grh = get('grh', FALSE);
+            $grh = get('grh', false);
             if ($grh) {
                 # Grava no log a atividade
                 $atividade = "Visualizou a area de atualizações do sistema";
                 $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+                $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             }
 
             # botão voltar

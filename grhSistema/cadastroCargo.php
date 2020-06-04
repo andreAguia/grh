@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de cargos efetivos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -110,8 +110,8 @@ if ($acesso) {
     $objeto->set_label(["Id", "Tipo", "Cargo", "Sigla", "Nível", "Vagas<br/>Publicadas", "Servidores<br/>Ativos", "Vagas<br/>Disponíveis", "Servidores<br/>Inativos"]);
     $objeto->set_align(["center", "center", "left"]);
 
-    $objeto->set_classe([NULL, NULL, NULL, NULL, NULL, NULL, 'Grh', 'Pessoal', 'Grh']);
-    $objeto->set_metodo([NULL, NULL, NULL, NULL, NULL, NULL, 'get_numServidoresAtivosTipoCargo', 'get_tipoCargoVagasDisponiveis', 'get_numServidoresInativosTipoCargo']);
+    $objeto->set_classe([null, null, null, null, null, null, 'Grh', 'Pessoal', 'Grh']);
+    $objeto->set_metodo([null, null, null, null, null, null, 'get_numServidoresAtivosTipoCargo', 'get_tipoCargoVagasDisponiveis', 'get_numServidoresInativosTipoCargo']);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -134,16 +134,16 @@ if ($acesso) {
             'nome' => 'cargo',
             'label' => 'Cargo:',
             'tipo' => 'texto',
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'col' => 3,
             'size' => 50),
         array('linha' => 1,
             'nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'required' => TRUE,
-            'array' => array(NULL, "Adm/Tec", "Professor"),
+            'required' => true,
+            'array' => array(null, "Adm/Tec", "Professor"),
             'col' => 2,
             'size' => 50),
         array('linha' => 1,
@@ -156,8 +156,8 @@ if ($acesso) {
             'nome' => 'nivel',
             'label' => 'Nível do Cargo:',
             'tipo' => 'combo',
-            'required' => TRUE,
-            'array' => array(NULL, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"),
+            'required' => true,
+            'array' => array(null, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"),
             'col' => 3,
             'size' => 30),
         array('linha' => 1,
@@ -177,7 +177,7 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     # Gráfico
-    $imagem = new Imagem(PASTA_FIGURAS . 'pie.png', NULL, 15, 15);
+    $imagem = new Imagem(PASTA_FIGURAS . 'pie.png', null, 15, 15);
     $botaoGra = new Button();
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
@@ -226,7 +226,7 @@ if ($acesso) {
             $menu->add_link($btnVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
@@ -282,7 +282,7 @@ if ($acesso) {
             $menu->add_link($btnVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");

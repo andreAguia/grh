@@ -57,8 +57,8 @@ if ($acesso) {
     # Inicia o Relatorio
     $ato = new Relatorio();
     $ato->set_titulo("ATO DO REITOR");
-    $ato->set_totalRegistro(FALSE);
-    $ato->set_dataImpressao(FALSE);
+    $ato->set_totalRegistro(false);
+    $ato->set_dataImpressao(false);
     #$ato->set_logServidor($idFicha);
     #$ato->set_logDetalhe("Visualizou a Ficha Cadastral");
     $ato->show();

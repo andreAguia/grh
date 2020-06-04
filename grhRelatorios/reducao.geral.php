@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -30,7 +30,7 @@ if ($acesso) {
 
     ######   
     # Título & Subtitulo
-    $subTitulo = NULL;
+    $subTitulo = null;
     $titulo = "Servidores com Solicitação de Redução de Carga Horária";
 
     # Pega os dados
@@ -74,10 +74,10 @@ if ($acesso) {
     $relatorio->set_conteudo($resumo);
     $relatorio->set_label(array("Id/Matrícula", "Nome", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
     $relatorio->set_align(array("center", "left", "center", "center", "center", "center", "left", "center", "center", "left"));
-    $relatorio->set_funcao(array("idMatricula", NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array("idMatricula", null, null, null, null, "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, NULL, "ReducaoCargaHoraria", "ReducaoCargaHoraria", NULL, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, "exibeStatus", "get_numProcesso", NULL, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
+    $relatorio->set_classe(array(null, null, null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
+    $relatorio->set_metodo(array(null, null, null, "exibeStatus", "get_numProcesso", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

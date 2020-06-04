@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a area de telefones";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -92,16 +92,16 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $objeto->set_botaoIncluir(FALSE);
+    $objeto->set_botaoIncluir(false);
 
     # Parametros da tabela
     $objeto->set_label(array("Diretoria", "Gerência", "Nome", "Telefones", "Email", "Servidores"));
     $objeto->set_align(array("center", "center", "left", "left", "left", "center"));
     #$objeto->set_width(array(10,10,15,20,20,15));
-    $objeto->set_funcao(array(NULL, NULL, NULL, "nl2br"));
+    $objeto->set_funcao(array(null, null, null, "nl2br"));
 
-    $objeto->set_classe(array(NULL, NULL, NULL, NULL, NULL, "Grh"));
-    $objeto->set_metodo(array(NULL, NULL, NULL, NULL, NULL, "get_numServidoresAtivosLotacao"));
+    $objeto->set_classe(array(null, null, null, null, null, "Grh"));
+    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao"));
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -126,8 +126,8 @@ if ($acesso) {
             'label' => 'Ramais:',
             'title' => 'Número dos telefones/ramais/faxes da lotação',
             'tipo' => 'textarea',
-            'tagHtml' => TRUE,
-            'autofocus' => TRUE,
+            'tagHtml' => true,
+            'autofocus' => true,
             'size' => array(80, 4)),
         array('linha' => 2,
             'col' => 12,
@@ -175,7 +175,7 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");

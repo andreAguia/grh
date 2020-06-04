@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -28,7 +28,7 @@ if ($acesso) {
 
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                      tbdocumentacao.CPF,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -52,12 +52,12 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Servidores com Endereço, Cpf, Emails e Telefones');
     $relatorio->set_subtitulo('Agrupado por Lotaçao e Ordenado pelo nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'CPF', 'Cargo', 'Endereço', 'E-mail', 'Telefones', 'Perfil'));
-    $relatorio->set_bordaInterna(TRUE);
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_align(array("center", "left", "left", "left", "left", "left", "left"));
-    #$relatorio->set_funcao(array(NULL,NULL,NULL,NULL,"plm"));
+    #$relatorio->set_funcao(array(null,null,null,null,"plm"));
 
-    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, "pessoal", "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, "get_cargo", "get_enderecoRel", "get_emails", "get_telefones"));
+    $relatorio->set_classe(array(null, null, null, null, "pessoal", "pessoal", "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, null, null, "get_cargo", "get_enderecoRel", "get_emails", "get_telefones"));
     $relatorio->set_numGrupo(2);
     $relatorio->set_conteudo($result);
     $relatorio->show();

@@ -6,8 +6,8 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
-$idServidorPesquisado = NULL; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;              # Servidor logado
+$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
 
@@ -21,12 +21,12 @@ if ($acesso) {
     $aposentadoria = new Aposentadoria();
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Aposentadoria";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
 
@@ -45,13 +45,13 @@ if ($acesso) {
     # Verifica a data de saída
     $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
     $dtHoje = date("Y-m-d");                                      # Data de hoje
-    $dtFinal = NULL;
+    $dtFinal = null;
 
     # Analisa a data
     if (!vazio($dtSaida)) {           // Se tem saída é a saída
         $dtFinal = date_to_bd($dtSaida);
-        $disabled = TRUE;
-        $autofocus = FALSE;
+        $disabled = true;
+        $autofocus = false;
     } else {                          // Não tem saída então é hoje
         $dtFinal = $dtHoje;
     }
@@ -68,7 +68,7 @@ if ($acesso) {
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar, "left");
 
-    $imagem1 = new Imagem(PASTA_FIGURAS . 'ajuda.png', NULL, 15, 15);
+    $imagem1 = new Imagem(PASTA_FIGURAS . 'ajuda.png', null, 15, 15);
     $botaoHelp = new Button();
     $botaoHelp->set_imagem($imagem1);
     $botaoHelp->set_title("Ajuda");
@@ -76,7 +76,7 @@ if ($acesso) {
     $botaoHelp->set_target("_blank");
     #$menu->add_link($botaoHelp,"right");
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+    $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem2);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
@@ -158,7 +158,7 @@ if ($acesso) {
 
     $label = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
     $align = array("center", "center", "center", "left");
-    $funcao = array("date_to_php", "date_to_php", NULL, NULL, NULL, NULL, NULL, "date_to_php");
+    $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php");
 
     $array = $pessoal->select($select);
 

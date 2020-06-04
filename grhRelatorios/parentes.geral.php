@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = NULL;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -27,7 +27,7 @@ if ($acesso) {
 
     ######   
     # Título & Subtitulo
-    $subTitulo = NULL;
+    $subTitulo = null;
     $titulo = "Servidores com Acumulação de Cargo Público";
 
     # Pega os dados
@@ -54,8 +54,8 @@ if ($acesso) {
 
     $relatorio->set_label(array("Parente", "Idade", "Parentesco", "Servidor", "Cargo", "Lotação"));
     $relatorio->set_align(array("left", "center", "center", "left", "left", "left"));
-    $relatorio->set_classe(array(NULL, NULL, NULL, NULL, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, NULL, NULL, "get_Cargo", "get_Lotacao"));
+    $relatorio->set_classe(array(null, null, null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, null, null, "get_Cargo", "get_Lotacao"));
     $relatorio->show();
 
     $page->terminaPagina();

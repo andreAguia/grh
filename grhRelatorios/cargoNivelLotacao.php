@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -62,7 +62,7 @@ if ($acesso) {
 
     # Trata o parametro do perfil transformanto * em nulo
     if ($parametroPerfil == "*") {
-        $idPerfil = NULL;
+        $idPerfil = null;
     } else {
         $idPerfil = $parametroPerfil;
     }

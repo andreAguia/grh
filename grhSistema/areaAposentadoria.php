@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -28,12 +28,12 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de aposentadoria";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # Começa uma nova página
@@ -70,7 +70,7 @@ if ($acesso) {
 
     if (($fase == "previsaoM") OR ($fase == "previsaoM1")) {
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório");
         $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
@@ -81,7 +81,7 @@ if ($acesso) {
         set_session('parametroSexo', "Masculino");
     } elseif (($fase == "previsaoF") OR ($fase == "previsaoF1")) {
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório");
         $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
@@ -92,7 +92,7 @@ if ($acesso) {
         set_session('parametroSexo', "Feminino");
     } elseif (($fase == "") OR ($fase == "porAno")) {
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório de Aposentados por Ano de Saída");
         $botaoRel->set_url("../grhRelatorios/aposentados.porAno.php");
@@ -101,7 +101,7 @@ if ($acesso) {
         $menu->add_link($botaoRel, "right");
     } elseif ($fase == "motivo") {
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', NULL, 15, 15);
+        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório de Aposentados por Tipo");
         $botaoRel->set_url("../grhRelatorios/aposentados.porTipo.php");
@@ -148,7 +148,7 @@ if ($acesso) {
             $controle->set_title('Filtra por Ano exercício');
             $controle->set_valor(date("Y"));
             $controle->set_valor($parametroAno);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(2);
@@ -200,7 +200,7 @@ if ($acesso) {
             $controle->set_valor(date("Y"));
             $controle->set_valor($parametroMotivo);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_linha(1);
             $controle->set_col(6);
             $form->add_item($controle);
@@ -289,7 +289,7 @@ if ($acesso) {
             $controle->set_size(100);
             $controle->set_title('Filtra por Nome');
             $controle->set_valor($parametroNome);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(12);
@@ -356,7 +356,7 @@ if ($acesso) {
             $controle->set_size(100);
             $controle->set_title('Filtra por Nome');
             $controle->set_valor($parametroNome);
-            $controle->set_autofocus(TRUE);
+            $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(12);
@@ -424,7 +424,7 @@ if ($acesso) {
 
             $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv("cargo");
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_tamanho($largura = 300, $altura = 300);
             $chart->show();
 
@@ -484,7 +484,7 @@ if ($acesso) {
             # Gráfico
             $chart = new Chart("ColumnChart", $servidores);
             $chart->set_idDiv("perfil");
-            $chart->set_legend(FALSE);
+            $chart->set_legend(false);
             $chart->set_label(array("Ano", "Nº de Servidores"));
             #$chart->set_tamanho($largura = 1000,$altura = 500);
             $chart->show();

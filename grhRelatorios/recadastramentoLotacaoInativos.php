@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -29,7 +29,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
-                     concat(IFNULL(tblotacao.UADM,"")," - ",IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                      tbservidor.idServidor,
                      tbrecadastramento.dataAtualizacao
                 FROM tbrecadastramento LEFT JOIN tbservidor USING (idServidor)
@@ -48,10 +48,10 @@ if ($acesso) {
     $relatorio->set_subtitulo('Agrupada por Lotaçao - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situacao', 'Atualizado em:'));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, NULL, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal", NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_CargoRel", NULL, "get_situacao"));
+    $relatorio->set_classe(array(null, null, "pessoal", null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_CargoRel", null, "get_situacao"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);

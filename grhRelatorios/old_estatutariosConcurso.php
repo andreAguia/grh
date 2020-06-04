@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -40,7 +40,7 @@ if ($acesso) {
                                    LEFT JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
                 WHERE tbservidor.situacao = 1 AND tbservidor.idPerfil = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND tbconcurso.anoBase IS NOT NULL
+                  AND tbconcurso.anoBase IS NOT null
              ORDER BY tbconcurso.anoBase, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -52,9 +52,9 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Admissão', ''));
     $relatorio->set_width(array(10, 30, 20, 30, 10));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(NULL, NULL, NULL, NULL, "date_to_php"));
-    $relatorio->set_classe(array(NULL, NULL, "Pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_cargo"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+    $relatorio->set_classe(array(null, null, "Pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);

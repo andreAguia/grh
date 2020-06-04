@@ -7,11 +7,11 @@ class Readaptacao {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    private $idServidor = NULL;
+    private $idServidor = null;
 
     ###########################################################
 
-    public function __construct($idServidor = NULL) {
+    public function __construct($idServidor = null) {
 
         /**
          * Inicia a classe e preenche o idServidor
@@ -27,7 +27,7 @@ class Readaptacao {
         /**
          * Informa o idServidor quando não se pode informar no instanciamento da classe
          *
-         * @param $idServidor string NULL O idServidor
+         * @param $idServidor string null O idServidor
          *
          * @syntax $input->set_id($id);
          */
@@ -57,7 +57,7 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         return $row;
@@ -81,8 +81,8 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
-        $retorno = NULL;
+        $row = $pessoal->select($select, false);
+        $retorno = null;
 
         # Verifica o status
         switch ($row[0]) {
@@ -118,7 +118,7 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Verifica se é solicitado
         if ($row[1] == 2) {
@@ -148,7 +148,7 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Verifica se é solicitado
         if ($row[3] == 2) {
@@ -203,14 +203,14 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         $resultado = $row[0];
         $dataCiencia = $row[1];
 
         # Verifica o resultado
         switch ($resultado) {
-            case NULL:
+            case null:
                 $retorno = $resultado;
                 break;
 
@@ -254,7 +254,7 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if ($row[2] == 1) {
@@ -264,7 +264,7 @@ class Readaptacao {
                 $retorno = date_to_php($row[0]) . "<br/>Pag.: " . trataNulo($row[1]);
             }
         } else {
-            $retorno = NULL;
+            $retorno = null;
         }
 
         return $retorno;
@@ -288,7 +288,7 @@ class Readaptacao {
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
         $pessoal = new Pessoal();
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Retorno
         if ($row[3] == 1) {
@@ -318,7 +318,7 @@ class Readaptacao {
                     . "Período: " . $periodo . "<br/>"
                     . "Término: " . $dttermino;
         } else {
-            $retorno = NULL;
+            $retorno = null;
         }
 
         # Verifica se estamos a 90 dias da data Termino
@@ -362,7 +362,7 @@ class Readaptacao {
                      FROM tbreadaptacao
                     WHERE idReadaptacao = ' . $idReadaptacao;
 
-        $row = $pessoal->select($select, FALSE);
+        $row = $pessoal->select($select, false);
 
         # Pega os dados
         $resultado = $row[0];
@@ -372,7 +372,7 @@ class Readaptacao {
         $dtTermino = date_to_php($row[4]);
         $dtInicio = date_to_php($row[5]);
 
-        $dias = NULL;
+        $dias = null;
 
         # Calcula os dias
         if (!is_null($dtTermino)) {
@@ -471,8 +471,8 @@ class Readaptacao {
         $pessoal = new Pessoal();
 
         # Inicia as variáveis
-        $idReadaptacaoAnterior = NULL;  // Guarda o idRedução imediatamente anterior
-        $dadosAnterior = NULL;          // Guarda os dados da redução referentes a essa id anterior
+        $idReadaptacaoAnterior = null;  // Guarda o idRedução imediatamente anterior
+        $dadosAnterior = null;          // Guarda os dados da redução referentes a essa id anterior
         # Verifica se foi informado
         if (vazio($idReadaptacao)) {
             alert("É necessário informar o id da readaptacao.");

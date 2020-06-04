@@ -8,7 +8,7 @@
  * By Alat
  */
 # Servidor logado 
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
@@ -28,10 +28,10 @@ if ($acesso) {
     $lotacao = get('lotacao', post('lotacao'));
 
     if ($lotacao == "*") {
-        $lotacao = NULL;
+        $lotacao = null;
     }
 
-    $subTitulo = NULL;
+    $subTitulo = null;
 
     ######
 
@@ -40,10 +40,10 @@ if ($acesso) {
                      tbservidor.idServidor,
                      tbnacionalidade.nacionalidade,
                      tbdocumentacao.cpf,
-                     CONCAT(IFNULL(tbdocumentacao.identidade,"")," / ",IFNULL(tbdocumentacao.orgaoId,"")),
-                     CONCAT("(",IFNULL(telResidencialDDD,"--"),") ",IFNULL(telResidencial,"---")),
-                     CONCAT("(",IFNULL(telCelularDDD,"--"),") ",IFNULL(telCelular,"---")),
-                     CONCAT("(",IFNULL(telRecadosDDD,"--"),") ",IFNULL(telRecados,"---"))
+                     CONCAT(IFnull(tbdocumentacao.identidade,"")," / ",IFnull(tbdocumentacao.orgaoId,"")),
+                     CONCAT("(",IFnull(telResidencialDDD,"--"),") ",IFnull(telResidencial,"---")),
+                     CONCAT("(",IFnull(telCelularDDD,"--"),") ",IFnull(telCelular,"---")),
+                     CONCAT("(",IFnull(telRecadosDDD,"--"),") ",IFnull(telRecados,"---"))
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
                                 JOIN tbnacionalidade ON (tbnacionalidade.idNacionalidade = tbpessoa.nacionalidade)
                                 JOIN tbdocumentacao USING (idPessoa)
@@ -75,12 +75,12 @@ if ($acesso) {
     #$relatorio->set_width(array(10,40,50));
     $relatorio->set_align(array("center", "left", "left", "center", "center", "center", "left", "left", "left"));
 
-    $relatorio->set_classe(array(NULL, NULL, "pessoal"));
-    $relatorio->set_metodo(array(NULL, NULL, "get_cargoSimples"));
+    $relatorio->set_classe(array(null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargoSimples"));
 
     $relatorio->set_conteudo($result);
 
-    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFNULL(tblotacao.DIR,"")," - ",IFNULL(tblotacao.GER,"")," - ",IFNULL(tblotacao.nome,"")) lotacao
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao

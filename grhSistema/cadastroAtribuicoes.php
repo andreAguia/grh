@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = NULL;
+$idUsuario = null;
 
 # Configuração
 include ("_config.php");
@@ -23,12 +23,12 @@ if ($acesso) {
     $fase = get('fase', 'listar');
 
     # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', FALSE);
+    $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de atribuiçoes";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, NULL, NULL, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
     # pega o id (se tiver)
@@ -107,7 +107,7 @@ if ($acesso) {
         $objeto->set_linkEditar('?fase=editar');
         $objeto->set_linkExcluir('?fase=excluir');
     } else {
-        $objeto->set_botaoIncluir(FALSE);
+        $objeto->set_botaoIncluir(false);
     }
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
@@ -135,8 +135,8 @@ if ($acesso) {
             'label' => 'Tarefa:',
             'tipo' => 'texto',
             'size' => 200,
-            'required' => TRUE,
-            'autofocus' => TRUE,
+            'required' => true,
+            'autofocus' => true,
             'title' => 'Descriçao da Tarefa',
             'col' => 12,
             'linha' => 1),
@@ -144,7 +144,7 @@ if ($acesso) {
             'nome' => 'encarregado1',
             'label' => 'Encarregado Principal:',
             'tipo' => 'texto',
-            'required' => TRUE,
+            'required' => true,
             'col' => 4,
             'size' => 50),
         array('linha' => 2,

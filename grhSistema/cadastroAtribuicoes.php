@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cadastro de Feriados
+ * Cadastro de Atricuições
  *  
  * By Alat
  */

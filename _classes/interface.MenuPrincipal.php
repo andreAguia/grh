@@ -1,6 +1,7 @@
 <?php
 
-class MenuPrincipal {
+class MenuPrincipal
+{
 
     /**
      * Gera o Menu Principal do Sistema
@@ -9,9 +10,10 @@ class MenuPrincipal {
      */
     private $idUsuario = null;
 
-######################################################################################################################    
+    ######################################################################################################################    
 
-    public function __construct($idUsuario) {
+    public function __construct($idUsuario)
+    {
         /**
          * Inicia a classe
          */
@@ -26,6 +28,7 @@ class MenuPrincipal {
 
         # Módulos
         $this->moduloServidores();
+        $this->moduloSei();
         $this->moduloSigrh();
         $this->moduloLegislacao();
         $this->moduloTabelasSecundarias();
@@ -79,14 +82,15 @@ class MenuPrincipal {
         $grid->fechaGrid();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloServidores
      * 
      * Exibe o menu do cadastro de Servidore
      */
-    private function moduloServidores() {
+    private function moduloServidores()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -110,14 +114,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
-     * Método moduloServidores
+     * Método moduloSigrh
      * 
      * Exibe o menu do cadastro de Servidore
      */
-    private function moduloSigrh() {
+    private function moduloSigrh()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -141,14 +146,45 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
+
+    /**
+     * Método moduloSei
+     * 
+     * Exibe o menu Sei
+     */
+    private function moduloSei()
+    {
+
+        $painel = new Callout();
+        $painel->abre();
+
+        # Servidores
+        titulo('Sei');
+        br();
+
+        $menu = new MenuGrafico(1);
+
+        $botao = new BotaoGrafico();
+        $botao->set_title('Sistema Eletrônico de informações');
+        $botao->set_imagem(PASTA_FIGURAS . "sei.png", 220, 72);
+        $botao->set_url("https://sei.fazenda.rj.gov.br/sip/login.php?sigla_orgao_sistema=ERJ&sigla_sistema=SEI&infra_url=L3NlaS8=");
+        $botao->set_target("_blank");
+        $menu->add_item($botao);
+
+        $menu->show();
+        $painel->fecha();
+    }
+
+    ######################################################################################################################
 
     /**
      * Método moduloLegislacao
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloLegislacao() {
+    private function moduloLegislacao()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -170,14 +206,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloBalcao
      * 
      * Exibe os servidores que atendem o balcão
      */
-    private function moduloBalcao($idUsuario = null) {
+    private function moduloBalcao($idUsuario = null)
+    {
 
         # Banco de dados
         $pessoal = new Pessoal();
@@ -191,7 +228,7 @@ class MenuPrincipal {
         $idServidor = $intra->get_idServidor($idUsuario);
 
         # Caso seja exibe uma mensagem
-        if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1])) {
+        if (($idServidor == $sortudos[0]) or ($idServidor == $sortudos[1])) {
             $painel2 = new Callout("warning");
             $painel2->abre();
 
@@ -219,14 +256,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloGrh
      * 
      * Exibe o menu de assuntos pertinentes aos servidores da grh
      */
-    private function moduloGrh() {
+    private function moduloGrh()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -280,14 +318,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloTabelaAuxiliares
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloTabelaAuxiliares() {
+    private function moduloTabelaAuxiliares()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -372,14 +411,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloAreaEspecial
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloAreaEspecial() {
+    private function moduloAreaEspecial()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -534,14 +574,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloAlertas
      * 
      * Exibe os Alertas
      */
-    private function moduloAlertas() {
+    private function moduloAlertas()
+    {
 
         $painel = new Callout("warning");
         $painel->abre();
@@ -556,14 +597,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloAniversariantes
      * 
      * Exibe os Aniversariantes
      */
-    private function moduloAniversariantes() {
+    private function moduloAniversariantes()
+    {
 
         $painel = new Callout("success");
         $painel->abre();
@@ -590,14 +632,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloLinksExternos
      * 
      * Exibe os Links Externos
      */
-    private function moduloLinksExternos() {
+    private function moduloLinksExternos()
+    {
 
         $painel = new Callout("secondary");
         $painel->abre();
@@ -617,25 +660,6 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_title('Sistema Eletrônico de informações');
-        $botao->set_imagem(PASTA_FIGURAS . "sei.png", 200, 60);
-        $botao->set_url("https://sei.fazenda.rj.gov.br/sip/login.php?sigla_orgao_sistema=ERJ&sigla_sistema=SEI&infra_url=L3NlaS8=");
-        $botao->set_target("_blank");
-        $menu->add_item($botao);
-
-        $menu->show();
-
-        br();
-
-        $menu = new MenuGrafico(2);
-
-        $botao = new BotaoGrafico();
-        $botao->set_title('Escola Nacional de Administração Pública');
-        $botao->set_imagem(PASTA_FIGURAS . "enap.png", $largura, $altura);
-        $botao->set_url("https://www.enap.gov.br");
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
         $botao->set_label("");
         $botao->set_imagem(PASTA_FIGURAS . "do.png", 200, 70);
         $botao->set_url("http://www.imprensaoficial.rj.gov.br/portal/modules/profile/user.php?xoops_redirect=/portal/modules/content/index.php?id=21");
@@ -649,9 +673,9 @@ class MenuPrincipal {
         $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
-        $botao->set_title('Portal do Processo Digital');
-        $botao->set_imagem(PASTA_FIGURAS . "processoDigital.png", $largura, $altura);
-        $botao->set_url("https://www.processodigital.rj.gov.br/");
+        $botao->set_title('Escola Nacional de Administração Pública');
+        $botao->set_imagem(PASTA_FIGURAS . "enap.png", $largura, $altura);
+        $botao->set_url("https://www.enap.gov.br");
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -668,11 +692,23 @@ class MenuPrincipal {
         $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
+        $botao->set_title('Portal do Processo Digital');
+        $botao->set_imagem(PASTA_FIGURAS . "processoDigital.png", $largura, $altura);
+        $botao->set_url("https://www.processodigital.rj.gov.br/");
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
         $botao->set_title('Site da GRH');
         $botao->set_imagem(PASTA_FIGURAS . "GRH.png", $largura, $altura);
         $botao->set_url("http://uenf.br/dga/grh/");
         $menu->add_item($botao);
+
+        $menu->show();
+
+        br();
+
+        $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
         $botao->set_label("Sistema do Almoxarifado");
@@ -686,14 +722,15 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloTabelasSecundarias
      * 
      * Exibe as Tabelas Secundária
      */
-    private function moduloTabelasSecundarias() {
+    private function moduloTabelasSecundarias()
+    {
 
         $painel = new Callout();
         $painel->abre();
@@ -724,23 +761,26 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloRamais
      * 
      * Exibe os Ramais da GRH
      */
-    private function moduloRamais() {
+    private function moduloRamais()
+    {
 
         # tabela
         $tabela = new Tabela();
         $tabela->set_titulo("Ramais da GRH");
-        $tabela->set_conteudo(array(array("86006", "Ana Terezinha, Chris e Rafaela"),
+        $tabela->set_conteudo(array(
+            array("86006", "Ana Terezinha, Chris e Rafaela"),
             array("86007", "Francisco, Rose e Cláudia"),
             array("86008", "Sandra e Simone"),
             array("86009", "Ana Paula e Rosângela"),
-            array("97064", "Débora e Edilene")));
+            array("97064", "Débora e Edilene")
+        ));
         $tabela->set_label(array("Ramal", "Servidor"));
         $tabela->set_width(array(30, 70));
         $tabela->set_align(array("center", "left"));
@@ -749,5 +789,5 @@ class MenuPrincipal {
         $tabela->show();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 }

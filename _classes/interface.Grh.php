@@ -1045,14 +1045,14 @@ class Grh
         $intra = new Intra();
         $grid = new Grid();
         $grid->abreColuna(4);
-        $texto = 'Usuário: ' . $intra->get_usuario($idUsuario);
+        $texto = "Usuário: {$intra->get_usuario($idUsuario)}";
 
         if (!is_null($idServidor)) {
-            $texto .= " - Servidor: " . $idServidor;
+            $texto .= " - Servidor: {$idServidor}";
         }
 
         if (!is_null($idPessoa)) {
-            $texto .= " - Pessoa: " . $idPessoa;
+            $texto .= " - Pessoa: {$idPessoa}";
         }
 
         p($texto, 'usuarioLogado');

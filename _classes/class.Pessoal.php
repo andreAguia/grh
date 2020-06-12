@@ -23,7 +23,7 @@ class Pessoal extends Bd
     private $sgdb = "mysql";
     private $tabela;
     private $idCampo;
-###########################################################
+    ###########################################################
     /**
      * Faz uma conexão
      */
@@ -32,7 +32,7 @@ class Pessoal extends Bd
         parent::__construct($this->servidor, $this->usuario, $this->senha, $this->banco, $this->sgdb);
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método set_tabela
      * 
@@ -43,7 +43,7 @@ class Pessoal extends Bd
         $this->tabela = $nomeTabela;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método set_idCampo
      * 
@@ -54,7 +54,7 @@ class Pessoal extends Bd
         $this->idCampo = $idCampo;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método Gravar
      */
@@ -72,7 +72,7 @@ class Pessoal extends Bd
         parent::gravar($campos, $valor, $idValor, $tabela, $idCampo, $alerta);
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método Excluir
      */
@@ -85,7 +85,7 @@ class Pessoal extends Bd
         return true;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_gratificacao
      * informa graificação de uma matrícula(se houver)
@@ -105,7 +105,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_direitoPessoal
      * informa direito pessoal de um servidor(se houver)
@@ -125,7 +125,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_gratificacaoDtFinal
      * informa a data de t�rmino da graificação de uma matrícula(se houver)
@@ -143,20 +143,19 @@ class Pessoal extends Bd
 
 
         # For�a como null caso seja em branco
-        if ((is_null($row[0])) OR ($row == '')) {
+        if ((is_null($row[0])) or ($row == '')) {
             $row[0] = null;
         }
 
         # Verifica se j� tem alguma graificação ou se nunca teve
         if ($numero == 0) {
             return false; # nunca teve graificação
-        }
-        else {
+        } else {
             return $row[0]; # Informa se tem graificação em aberto
         }
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_periodoDisponivel
      * informa o período disponível de férias de um servidor
@@ -179,8 +178,7 @@ class Pessoal extends Bd
         # Informa o status
         if (is_null($row[0])) {
             $primeira = 1;
-        }
-        else {
+        } else {
             $primeira = 0;
         }
 
@@ -188,8 +186,7 @@ class Pessoal extends Bd
         if ($row[1] < 30) {
             $dias = (30 - $row[1]);
             $ano = $row[0];
-        }
-        else {
+        } else {
             $dias = 30;
             $ano = ($row[0] + 1);
         }
@@ -197,7 +194,7 @@ class Pessoal extends Bd
         return array($ano, $dias, $primeira);
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_ramais
      * Retorna um array com os setores e os ramais
@@ -219,7 +216,7 @@ class Pessoal extends Bd
         return $result;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_salarioBase
      * informa o salario base de uma matrícula
@@ -240,7 +237,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_idClasseServidor
      * informa o idClasse do salário atual de um servidor
@@ -260,7 +257,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_salarioTotal
      * informa o sal�rio Total de uma matrícula
@@ -299,7 +296,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_aniversariantes
      * Exibe os aniversariantes de um determinado mês
@@ -328,7 +325,7 @@ class Pessoal extends Bd
         return $result;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_numAniversariantes
      * Exibe os aniversariantes de um determinado mês
@@ -355,7 +352,7 @@ class Pessoal extends Bd
         return $result;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_numAniversariantesHoje
      * Exibe os aniversariantes de hoje
@@ -375,7 +372,7 @@ class Pessoal extends Bd
         return $result;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método set_senhanull
      * muda a senha de um usu�rio para null (bloqueia o mesmo)
@@ -389,7 +386,7 @@ class Pessoal extends Bd
         parent::gravar('senha_intra', $senha, $matr, 'tbservidor', 'idServidor', $alert);
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_diasAusentes
      * Informa, em dias, o per�odo entre a data atual
@@ -414,7 +411,7 @@ class Pessoal extends Bd
         return $diferenca;
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_lotacao
      * Informa a lotaçao atual do servidor
@@ -441,15 +438,14 @@ class Pessoal extends Bd
             }
             #$retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
             $retorno = "Cedido para<br/><span id='orgaoCedido'>$orgao</span>";
-        }
-        else {
+        } else {
             $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
         }
 
         return $retorno;
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_lotacaoRel
      * Informa a lotaçao atual do servidor para um relatorio
@@ -476,15 +472,14 @@ class Pessoal extends Bd
             }
             $retorno = "Cedido para <span id='orgaoCedido'>$orgao</span>";
             #$retorno = $row[0].'-'.$row[1].'-'.$row[2].' ('.$orgao.')</span>';
-        }
-        else {
+        } else {
             $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
         }
 
         return $retorno;
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_lotacaoDiretoria
      * Informa a diretoria de uma lotaçao
@@ -502,7 +497,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_lotacaoGerencia
      * Informa a gerência / laboratório de uma lotaçao
@@ -520,7 +515,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_lotacao
      * Informa a lotação atual do servidor sem o UADM e sem informação de cessão
@@ -540,7 +535,7 @@ class Pessoal extends Bd
         return $row[0] . '-' . $row[1];
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_servidoresAtivosLotacao
      * Informa o número de servidores ativos nessa lotação
@@ -560,7 +555,7 @@ class Pessoal extends Bd
         return $numero;
     }
 
-######################################################################################
+    ######################################################################################
     /**
      * Método get_servidoresInativosLotacao
      * Informa o número de servidores inativos nessa lotação
@@ -581,7 +576,7 @@ class Pessoal extends Bd
         return $numero;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_idLotacao
      * Informa o id da lotação atual do servidor
@@ -631,10 +626,9 @@ class Pessoal extends Bd
 
         $row = parent::select($select, false);
 
-        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
+        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
             $tipoCargo = null;
-        }
-        else {
+        } else {
             $tipoCargo = $row[1];
         }
 
@@ -651,13 +645,12 @@ class Pessoal extends Bd
         if (!empty($nomeCargo)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $nomeCargo;
-            }
-            else {
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if ((!empty($comissao)) AND ($exibeComissao)) {
+        if ((!empty($comissao)) and ($exibeComissao)) {
             $retorno .= '<br/>' . $comissao;
         }
 
@@ -684,10 +677,9 @@ class Pessoal extends Bd
 
         $row = parent::select($select, false);
 
-        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
+        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
             $tipoCargo = null;
-        }
-        else {
+        } else {
             $tipoCargo = $row[1];
         }
 
@@ -704,13 +696,12 @@ class Pessoal extends Bd
         if (!empty($nomeCargo)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $nomeCargo;
-            }
-            else {
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if ((!empty($comissao)) AND ($exibeComissao)) {
+        if ((!empty($comissao)) and ($exibeComissao)) {
             $retorno .= '<br/><span title="' . $descricao . '" id="orgaoCedido">[' . $descricao . ']</span>';
         }
 
@@ -736,10 +727,9 @@ class Pessoal extends Bd
 
         $row = parent::select($select, false);
 
-        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
+        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
             $tipoCargo = null;
-        }
-        else {
+        } else {
             $tipoCargo = $row[1];
         }
 
@@ -755,8 +745,7 @@ class Pessoal extends Bd
         if (!empty($nomeCargo)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $nomeCargo;
-            }
-            else {
+            } else {
                 $retorno = $nomeCargo;
             }
         }
@@ -786,11 +775,10 @@ class Pessoal extends Bd
 
         $row = parent::select($select, false);
 
-        if (($row[0] == 1) OR ($row[0] == 2)) { // Se é professor
+        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
             $tipoCargo = null;
             $area = null;
-        }
-        else {
+        } else {
             $tipoCargo = $row[1];
             $area = $row[2];
         }
@@ -807,8 +795,7 @@ class Pessoal extends Bd
         if (!empty($area)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $area;
-            }
-            else {
+            } else {
                 $retorno = $area;
             }
         }
@@ -816,13 +803,12 @@ class Pessoal extends Bd
         if (!empty($nomeCargo)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $nomeCargo;
-            }
-            else {
+            } else {
                 $retorno = $nomeCargo;
             }
         }
 
-        if ((!empty($comissao)) AND ($exibeComissao)) {
+        if ((!empty($comissao)) and ($exibeComissao)) {
             $retorno .= '<br/><span id="orgaoCedido">(' . $comissao . ')</span)';
         }
 
@@ -848,10 +834,9 @@ class Pessoal extends Bd
 
         $row = parent::select($select, false);
 
-        if (($row[0] == 1)OR($row[0] == 2)) { // Se é professor
+        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
             $tipoCargo = null;
-        }
-        else {
+        } else {
             $tipoCargo = $row[1];
         }
 
@@ -867,8 +852,7 @@ class Pessoal extends Bd
         if (!empty($nomeCargo)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $nomeCargo;
-            }
-            else {
+            } else {
                 $retorno = $nomeCargo;
             }
         }
@@ -898,7 +882,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_perfil
      * Informa o perfil do servidor
@@ -927,7 +911,7 @@ class Pessoal extends Bd
         return $retorno;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_perfilSimples
      * Informa o perfil do servidor sem informar o rogao de origem do cedido
@@ -947,7 +931,7 @@ class Pessoal extends Bd
         return $retorno;
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_orgaoOrigem
      * Informa o orgao de origem de um servidor cedido de fora da uenf
@@ -966,7 +950,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_idCargo
      * Informa o id do cargo do servidor
@@ -1093,8 +1077,7 @@ class Pessoal extends Bd
 
         if (vazio($dt[0])) {
             return null;
-        }
-        else {
+        } else {
             return date_to_php($dt[0]);
         }
     }
@@ -1146,8 +1129,7 @@ class Pessoal extends Bd
         $npos = $npos * 2;
         if ($npos < 10) {
             $ndig = $ndig + $npos;
-        }
-        else {
+        } else {
             $ndig = $ndig + 1 + ($npos - 10);
         }
 
@@ -1159,8 +1141,7 @@ class Pessoal extends Bd
 
         if ($npos < 10) {
             $ndig = $ndig + $npos;
-        }
-        else {
+        } else {
             $ndig = $ndig + 1 + ($npos - 10);
         }
 
@@ -1172,8 +1153,7 @@ class Pessoal extends Bd
 
         if ($npos < 10) {
             $ndig = $ndig + $npos;
-        }
-        else {
+        } else {
             $ndig = $ndig + 1 + ($npos - 10);
         }
 
@@ -1184,8 +1164,7 @@ class Pessoal extends Bd
 
         if ($mod == 0) {
             $ndig = 0;
-        }
-        else {
+        } else {
             $ndig = 10 - $mod;
         }
 
@@ -1202,8 +1181,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1218,8 +1196,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -1234,8 +1211,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1262,8 +1238,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1278,8 +1253,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -1295,8 +1269,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1326,8 +1299,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1364,8 +1336,7 @@ class Pessoal extends Bd
         $row = parent::count($select, false);
         if ($row == 0) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -1401,8 +1372,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -1767,13 +1737,11 @@ class Pessoal extends Bd
 
             if ($idServidor == 0) {
                 $nome[0] = "";
-            }
-            else {
+            } else {
                 $nome = parent::select($select, false);
             }
             return $nome[0];
-        }
-        else {
+        } else {
             return $idServidor;
         }
     }
@@ -1794,14 +1762,12 @@ class Pessoal extends Bd
 
             if ($idServidor == 0) {
                 return "----";
-            }
-            else {
+            } else {
                 $nome = parent::select($select, false);
 
                 return get_nomeSimples($nome[0]);
             }
-        }
-        else {
+        } else {
             return "----";
         }
     }
@@ -2089,8 +2055,7 @@ class Pessoal extends Bd
         if (!vazio($row[0])) {
             $dataTrienio = date_to_php($row[0]);
             $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
-        }
-        else {
+        } else {
             $dataProximo = null;
         }
 
@@ -2356,8 +2321,7 @@ class Pessoal extends Bd
 
         if ($tipo == 1) {
             $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
-        }
-        else {
+        } else {
             $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
         }
 
@@ -2391,8 +2355,7 @@ class Pessoal extends Bd
 
         if ($tipo == 1) {
             $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
-        }
-        else {
+        } else {
             $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
         }
 
@@ -2426,8 +2389,7 @@ class Pessoal extends Bd
 
         if ($tipo == 1) {
             $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
-        }
-        else {
+        } else {
             $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
         }
 
@@ -2735,8 +2697,7 @@ class Pessoal extends Bd
 
         if ($count == 0) {
             return null;
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -2782,8 +2743,7 @@ class Pessoal extends Bd
 
         if ($count == 0) {
             return '0';
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -2806,8 +2766,7 @@ class Pessoal extends Bd
 
         if ($count == 0) {
             return '0';
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -2830,8 +2789,7 @@ class Pessoal extends Bd
 
         if ($count == 0) {
             return '0';
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -2853,8 +2811,7 @@ class Pessoal extends Bd
 
         if ($count == 0) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -2872,8 +2829,7 @@ class Pessoal extends Bd
         $faixa = $this->get_perfilMatricula($perfil);
         if (is_null($faixa[0])) {
             return "-";
-        }
-        else {
+        } else {
 
             # pega a última matrícula utilizada nessa faixa
             $select = 'SELECT matricula
@@ -2893,13 +2849,11 @@ class Pessoal extends Bd
                     # Já ocupado o último valor dessa faixa
                     alert("Não há mais matrículas vagas para esse perfil./nAumente o número de matrículas no cadastro de perfil.");
                     back(1);
-                }
-                else {
+                } else {
                     # Faixa vazia então pega-se o primeiro valor
                     $novaMatricula = $faixa[0];
                 }
-            }
-            else {
+            } else {
                 # pega a última matrícula
                 $ultimaMatricula = $row[0];
                 $novaMatricula = $ultimaMatricula + 1;
@@ -3000,8 +2954,7 @@ class Pessoal extends Bd
         # Verifica qual professor (quando é docente)
         if ($cargo == 128) {           // Prof Associado
             $select .= ' AND idTipoCargo = 2';
-        }
-        elseif ($cargo == 129) {      // Prof Titular
+        } elseif ($cargo == 129) {      // Prof Titular
             $select .= ' AND idTipoCargo = 1';
         }
 
@@ -3080,8 +3033,7 @@ class Pessoal extends Bd
     {
         if (!is_numeric($id)) {
             return $id;
-        }
-        else {
+        } else {
             $select = 'SELECT tbtipocomissao.descricao 
                             FROM tbtipocomissao 
                            WHERE idTipoComissao = ' . $id;
@@ -3147,11 +3099,10 @@ class Pessoal extends Bd
                       AND situacao = 1 AND idPerfil <> 10';
 
         # Lotação
-        if ((!is_null($idLotacao)) AND ($idLotacao <> "*")) {
+        if ((!is_null($idLotacao)) and ($idLotacao <> "*")) {
             if (is_numeric($idLotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $idLotacao . '")';
-            }
-            else { # senão é uma diretoria genérica
+            } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
             }
         }
@@ -3196,7 +3147,7 @@ class Pessoal extends Bd
                     WHERE situacao = 1';
 
         # Lotação
-        if ((!is_null($idPerfil)) AND ($idPerfil <> "*")) {
+        if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
             $select .= ' AND idPerfil = ' . $idPerfil;
         }
 
@@ -3233,8 +3184,7 @@ class Pessoal extends Bd
         # Verifica se é numérico
         if (is_numeric($idLotacao)) {
             $select .= ' AND tblotacao.idlotacao = "' . $idLotacao . '"';
-        }
-        else { # senão é uma diretoria genérica
+        } else { # senão é uma diretoria genérica
             $select .= ' AND tblotacao.DIR = "' . $idLotacao . '"';
         }
 
@@ -3285,7 +3235,7 @@ class Pessoal extends Bd
         $d = $data[0];   // dia
         $m = $data[1];   // mês
         # Verifica se � hoje o anivers�rio
-        if ((intval(date('d')) == intval($d)) AND (intval(date('m')) == intval($m)))
+        if ((intval(date('d')) == intval($d)) and (intval(date('m')) == intval($m)))
             return 1;
         else
             return 0;
@@ -3461,7 +3411,7 @@ class Pessoal extends Bd
         /**
          * 
          * Retorna uma string com o nome do feriado
-         * ou nullo se não tiver feriado nessa data
+         * ou nulo se não tiver feriado nessa data
          * 
          * @param date $data a data (no formato dia/mês/ano) a ser pesquisada, se nulo pega a data atual
          * 
@@ -3473,9 +3423,11 @@ class Pessoal extends Bd
                         WHERE (tipo = "anual" AND MONTH(data) = MONTH(current_date()) AND DAY(data) = DAY(current_date())
                            OR (tipo = "data única" and  data = current_date()))';
             $row = parent::select($select, false);
-            return $row[0];
-        }
-        else {
+
+            if(!empty($row["descricao"])){
+                return $row["descricao"];
+            }
+        } else {
             if (validaData($data)) {
                 $data = date_to_bd($data);
 
@@ -3486,7 +3438,9 @@ class Pessoal extends Bd
                                OR (tipo = "data única" and  data = "' . $data . '"))';
 
                 $row = parent::select($select, false);
-                return $row[0];
+                if(!empty($row["descricao"])){
+                    return $row["descricao"];
+                }
             }
         }
     }
@@ -3501,8 +3455,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -3517,8 +3470,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -3533,8 +3485,7 @@ class Pessoal extends Bd
         # Verifica a data
         if (is_null($data)) {
             $data = date("Y-m-d");
-        }
-        else {
+        } else {
             $data = date_to_bd($data);
         }
 
@@ -3549,8 +3500,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -3574,7 +3524,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-###########################################################
+    ###########################################################
     /**
      * Método get_tipoSenha
      * Informa o tipo da senha (padrão/bloqueada/Ok) 
@@ -3593,17 +3543,17 @@ class Pessoal extends Bd
         $padrao = MD5(SENHA_PADRAO);
 
         switch ($row[0]) {
-            # senha padrão
-            case $padrao :
+                # senha padrão
+            case $padrao:
                 return 1;
                 break;
 
-            # senha bloqueada
-            case null :
+                # senha bloqueada
+            case null:
                 return 2;
                 break;
 
-            # senha ok
+                # senha ok
             default:
                 return 3;
                 break;
@@ -3773,8 +3723,7 @@ class Pessoal extends Bd
     {
         if (!is_numeric($id)) {
             return $id;
-        }
-        else {
+        } else {
             $select = 'SELECT tbtipocargo.cargo,
                                       tbarea.area,
                                       tbcargo.nome
@@ -3838,8 +3787,7 @@ class Pessoal extends Bd
             for ($i = $maiorAno; $i >= $menorAno; $i--) {
                 if (array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
                     $novoArray[] = array($i, 0, 30);               // Acrescenta o ano com valor 0
-                }
-                else {
+                } else {
                     $dias = $this->get_feriasSomaDias($i, $idservidor);
                     $novoArray[] = array($i, $dias, 30 - $dias);  // Acrescenta o ano com valor 0
                 }
@@ -3874,8 +3822,7 @@ class Pessoal extends Bd
         # Se não tiver férias cadastradas o ano disponível é o posterior ao da admissão
         if (count($lista) == 0) {
             $retorno = $anoAdmissao + 1;
-        }
-        else {
+        } else {
             # Se houver verifica se alguma das férias tem menos de 30 dias 
             foreach ($lista as $value) {
                 if ($value[1] < 30) {
@@ -4003,8 +3950,7 @@ class Pessoal extends Bd
 
         if ($idServidor == 0) {
             alert("$idServidor inválido");
-        }
-        else {
+        } else {
             $nome = parent::select($select, false);
             return date_to_php($nome[0]);
         }
@@ -4042,8 +3988,7 @@ class Pessoal extends Bd
         # Verifica o $idPessoa
         if (is_null($idPessoa)) {
             return null;
-        }
-        else {
+        } else {
 
             # Pega o cargo do servidor
             $select = 'SELECT idServidor
@@ -4111,8 +4056,7 @@ class Pessoal extends Bd
 
         if ($result > 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -4193,17 +4137,16 @@ class Pessoal extends Bd
         $retorno = "---";
 
         # Verifica se tem somente um email
-        if ((empty($conteudo["emailPessoal"])) XOR (empty($conteudo["emailUenf"]))) {
+        if ((empty($conteudo["emailPessoal"])) xor (empty($conteudo["emailUenf"]))) {
             if (empty($conteudo["emailPessoal"])) {
                 $retorno = $conteudo["emailUenf"];
-            }
-            else {
+            } else {
                 $retorno = $conteudo["emailPessoal"];
             }
         }
 
         # Verifica se tem os dois
-        if ((!empty($conteudo["emailPessoal"])) AND (!empty($conteudo["emailUenf"]))) {
+        if ((!empty($conteudo["emailPessoal"])) and (!empty($conteudo["emailUenf"]))) {
             $retorno = "{$conteudo["emailUenf"]} <br/> {$conteudo["emailPessoal"]}";
         }
 
@@ -4284,8 +4227,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -4308,8 +4250,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -4358,8 +4299,7 @@ class Pessoal extends Bd
 
         if (is_null($row[0])) {
             return 0;
-        }
-        else {
+        } else {
             return $row[0];
         }
     }
@@ -4429,9 +4369,9 @@ class Pessoal extends Bd
 
         if ($numero > 0) {
             $return = plm($row[0]) . " - " .
-                    plm($row[1]) . "<br/> " .
-                    plm($row[2]) . " - " .
-                    strtoupper($row[3]) . " Cep: " . $row[4];
+                plm($row[1]) . "<br/> " .
+                plm($row[2]) . " - " .
+                strtoupper($row[3]) . " Cep: " . $row[4];
         }
 
         return $return;
@@ -4715,12 +4655,12 @@ class Pessoal extends Bd
         $chefia = $row[0];
 
         # Verifica se o servidor é o cargo em comissão e procura o diretor
-        if (($chefia == $idServidor) OR (is_null($chefia))) {
+        if (($chefia == $idServidor) or (is_null($chefia))) {
             $chefia = $this->get_diretor($idLotacao);
         }
 
         # Verifica se o servidor é diretorr
-        if (($chefia == $idServidor) OR (is_null($chefia))) {
+        if (($chefia == $idServidor) or (is_null($chefia))) {
             $chefia = $this->get_reitor();
         }
 
@@ -4756,8 +4696,7 @@ class Pessoal extends Bd
         # Verifica se o que veio é numérico
         if (is_numeric($idLotacao)) {
             $select .= " AND (tblotacao.idlotacao = $idLotacao)";
-        }
-        else { # senão é uma diretoria genérica
+        } else { # senão é uma diretoria genérica
             $select .= " AND (tblotacao.DIR = '$idLotacao')";
         }
 
@@ -4859,7 +4798,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-#####################################################################################
+    #####################################################################################
     /**
      * Método get_areaDescricao
      * Informa as descrições / atribuições de uma área
@@ -4877,7 +4816,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-#####################################################################################
+    #####################################################################################
     /**
      * Método get_idAreaCargo
      * Informa a idArea de um cargo
@@ -4895,7 +4834,7 @@ class Pessoal extends Bd
         return $row[0];
     }
 
-##########################################################
+    ##########################################################
     /**
      * Método get_escolaridade
      * informa a escolaridade a partir da idEscolaridade
@@ -4912,7 +4851,7 @@ class Pessoal extends Bd
         return $retorno[0];
     }
 
-##########################################################
+    ##########################################################
     /**
      * Método get_dataIdade
      * informa a data em que o servidor terá a idade informada
@@ -4997,11 +4936,10 @@ class Pessoal extends Bd
             $link->set_imagem(PASTA_FIGURAS . "ver.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
-        }
-        else {
+        } else {
             echo "-";
         }
     }
 
-###########################################################
+    ###########################################################
 }

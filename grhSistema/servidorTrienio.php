@@ -2,14 +2,14 @@
 
 /**
  * Histórico de Triênios
- *  
+ *
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
+$idUsuario = null; # Servidor logado
 $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
-include ("_config.php");
+include "_config.php";
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -122,7 +122,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("a partir de", "%", "P.Aq.Início", "P.Aq.Fim", "Processo", "DOERJ", "Documento"));
-    #$objeto->set_width(array(10,5,10,10,20,15,20));	
+    #$objeto->set_width(array(10,5,10,10,20,15,20));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array("date_to_php", null, "date_to_php", "date_to_php", null, "date_to_php"));
 
@@ -148,7 +148,7 @@ if ($acesso) {
             $percentuais = array();
             $indice = array_search($ultimoPercentual, $percentuaisPossiveis);
 
-            if ($ultimoPercentual <> "60") {
+            if ($ultimoPercentual != "60") {
                 array_push($percentuais, $percentuaisPossiveis[$indice + 1]);
             }
         }
@@ -157,7 +157,9 @@ if ($acesso) {
     }
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'percentual',
+    $objeto->set_campos(array(
+        array(
+            'nome' => 'percentual',
             'label' => 'Percentual:',
             'tipo' => 'combo',
             'required' => true,
@@ -167,7 +169,8 @@ if ($acesso) {
             'col' => 2,
             'title' => 'período de férias',
             'linha' => 1),
-        array('nome' => 'dtInicial',
+        array(
+            'nome' => 'dtInicial',
             'label' => 'Data Inicial:',
             'tipo' => 'data',
             'size' => 20,
@@ -246,7 +249,7 @@ if ($acesso) {
     ################################################################
 
     switch ($fase) {
-        case "editar" :
+        case "editar":
             # Informa da porcentagem do triênio
             if (is_null($id)) { // se for inclusão
                 if (!is_null($ultimoPercentual)) {
@@ -259,8 +262,8 @@ if ($acesso) {
             $objeto->editar($id);
             break;
 
-        case "" :
-        case "listar" :
+        case "":
+        case "listar":
 
             if ($ultimoPercentual == "60") {
                 $mensagem2 = 'Servidor já alcançou o teto do triênio: 60%';
@@ -274,7 +277,8 @@ if ($acesso) {
 
             ####
 
-            function teste($idServidor) {
+            function teste($idServidor)
+        {
 
                 # Monta a tabela de tempo averbado
                 $select = 'SELECT dtInicial,
@@ -325,11 +329,11 @@ if ($acesso) {
             $objeto->listar($id);
             break;
 
-        case "excluir" :
+        case "excluir":
             $objeto->$fase($id);
             break;
 
-        case "gravar" :
+        case "gravar":
             $objeto->gravar($id, "servidorTrienioExtra.php");
             break;
     }

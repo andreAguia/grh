@@ -2,14 +2,14 @@
 
 /**
  * Área de Férias
- *  
+ *
  * By Alat
  */
 # Reservado para o servidor logado
 $idUsuario = null;
 
 # Configuração
-include ("_config.php");
+include "_config.php";
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -39,7 +39,7 @@ if ($acesso) {
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
 
-    # Joga os parâmetros par as sessions    
+    # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
 
@@ -99,7 +99,7 @@ if ($acesso) {
     $controle->set_col(3);
     $form->add_item($controle);
 
-    # Lotação    
+    # Lotação
     $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
@@ -123,7 +123,7 @@ if ($acesso) {
 ################################################################
 
     switch ($fase) {
-        case "" :
+        case "":
             br(4);
             aguarde();
             br();
@@ -140,7 +140,7 @@ if ($acesso) {
 
 ################################################################
 
-        case "exibeLista" :
+        case "exibeLista":
 
             $grid2 = new Grid();
 
@@ -175,7 +175,7 @@ if ($acesso) {
             $lista1->showResumoPorDia();
 
             #######################################
-            # Área Principal            
+            # Área Principal
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 
@@ -187,7 +187,7 @@ if ($acesso) {
 
 ################################################################
         # Chama o menu do Servidor que se quer editar
-        case "editaServidorFerias" :
+        case "editaServidorFerias":
             set_session('idServidorPesquisado', $id);
             set_session('areaFerias', "exercicio");
             loadPage('servidorFerias.php');

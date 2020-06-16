@@ -4189,6 +4189,35 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
+    public function get_foto($idServidor,$largura = 75,$altura = 100)
+    {
+
+        # Função que retorna a foto do servidor
+        #
+        # Parâmetro: id do servidor
+
+        $idPessoa = $this->get_idPessoa($idServidor);
+
+        $foto = new ExibeFoto();
+        $foto->set_fotoLargura($largura);
+        $foto->set_fotoAltura($altura);
+        #$foto->set_url('?');
+        $foto->show($idPessoa);
+    }
+
+    ##########################################################################################
+    public function get_contatos($idServidor)
+    {
+
+        # Função que retorna os emails pessoal e Uenf do servidor cadastrado no sistema
+        #
+        # Parâmetro: id do servidor
+
+        echo $this->get_telefones($idServidor);
+        echo $this->get_emails($idServidor);
+    }
+
+    ##########################################################################################
     public function get_idCedido($idServidor)
 
     /**

@@ -1,14 +1,15 @@
 <?php
 
-class Declaracao {
+class Declaracao
+{
 
     /**
      * Monta uma Ci
-     * 
+     *
      * @author André Águia (Alat) - alataguia@gmail.com
-     * 
+     *
      * @var private $projeto        integer null O id do projeto a ser acessado
-     * 
+     *
      */
     private $data = null;
     private $texto = null;
@@ -23,10 +24,12 @@ class Declaracao {
     private $aviso = null;
     private $carimboCnpj = false;
     private $rodapeSoUntimaPag = false;
+    private $assinatura = false;
 
     ###########################################################
 
-    public function __construct() {
+    public function __construct()
+    {
         /**
          * Inicia a Ci e preenche oas variáveis com valores padrão
          */
@@ -48,14 +51,15 @@ class Declaracao {
 
     ###########################################################
 
-    public function set_texto($texto) {
+    public function set_texto($texto)
+    {
         /**
          * Inclui um objeto Input ao formulário
-         * 
+         *
          * @syntax $form->add_item($objeto);
-         * 
+         *
          * @param $controle object null Objeto Input a ser inserido no Formulário
-         * 
+         *
          */
         $this->texto[] = $texto;
     }
@@ -63,19 +67,20 @@ class Declaracao {
     ###########################################################
 
     /**
-     * Métodos get e set construídos de forma automática pelo 
+     * Métodos get e set construídos de forma automática pelo
      * metodo mágico __call.
      * Esse método cria um set e um get para todas as propriedades da classe.
      * Um método existente tem prioridade sobre os métodos criados pelo __call.
-     * 
+     *
      * O formato dos métodos devem ser:
-     * 	set_propriedade
-     * 	get_propriedade
-     * 
-     * @param 	$metodo		O nome do metodo
-     * @param 	$parametros	Os parâmetros inseridos  
+     *     set_propriedade
+     *     get_propriedade
+     *
+     * @param     $metodo        O nome do metodo
+     * @param     $parametros    Os parâmetros inseridos
      */
-    public function __call($metodo, $parametros) {
+    public function __call($metodo, $parametros)
+    {
         ## Se for set, atribui um valor para a propriedade
         if (substr($metodo, 0, 3) == 'set') {
             $var = substr($metodo, 4);
@@ -94,21 +99,22 @@ class Declaracao {
 
     /**
      * Método rodape
-     * 
+     *
      * Exibe o rodapé
      */
-    private function rodape() {
+    private function rodape()
+    {
 
         if ($this->rodapeSoUntimaPag) {
             br($this->saltoRodape);
             hr();
-            p('<b>' . $this->rodapeNome . '</b><br/>' . $this->rodapeEndereco . '<br/>Telefone: ' . $this->rodapeTelefone, 'pCiRodape');
+            p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>Telefone: {$this->rodapeTelefone}", "pCiRodape");
         } else {
             $div = new Div('rodape');
             $div->abre();
 
             hr();
-            p('<b>' . $this->rodapeNome . '</b><br/>' . $this->rodapeEndereco . '<br/>Telefone: ' . $this->rodapeTelefone, 'pCiRodape');
+            p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>Telefone: {$this->rodapeTelefone}","pCiRodape");
 
             $div->fecha();
         }
@@ -116,13 +122,14 @@ class Declaracao {
 
     ###########################################################
 
-    public function show() {
+    public function show()
+    {
         /**
          * Exibe a Ci
-         * 
+         *
          * @syntax $ci->show();
          */
-        ## Monta o Relatório 
+        ## Monta o Relatório
         # Menu
         $menuRelatorio = new menuRelatorio();
         $menuRelatorio->set_botaoVoltar(null);
@@ -172,7 +179,17 @@ class Declaracao {
         br(2);
 
         # Assinatura
-        #p('____________________________________________________','pCiAssinatura');
+        if ($this->assinatura) {
+            $grid = new Grid("center");
+            $grid->abreColuna(4);
+
+            $figura = new Imagem(PASTA_FIGURAS . 'assinatura.png', null, 150, 150);
+            $figura->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+        }
+
         p($this->origemNome . '<br/>' . $this->origemDescricao . '<br/>Id Funcional n° ' . $this->origemIdFuncional, 'pCiAssinatura');
 
         $grid->fechaColuna();

@@ -40,14 +40,18 @@ if ($acesso) {
     # Monta a Declaração
     $dec = new Declaracao();
     $dec->set_carimboCnpj(true);
+    $dec->set_assinatura(true);
+    
     $dec->set_data(date("d/m/Y"));
-    $dec->set_texto("Declaro para os devidos fins, que $texto1 <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº $idFuncional, $cargoEfetivo, não está respondendo a inquérito administrativo por"
+
+    $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
+            . " ID funcional nº {$idFuncional}, {$cargoEfetivo}, não está respondendo a inquérito administrativo por"
             . " comunicação de faltas nesta Universidade Estadual do Norte Fluminense Darcy Ribeiro.");
 
     $dec->set_saltoRodape(10);
     $dec->set_aviso("IMPORTANTE !! O sistema emite essa declaração mas NÃO faz nenhuma verificação a respeito!!<br/>"
             . "A GRH deverá se certificar realmente se $texto1 $nomeServidor não responde a inquérito administrativo por comunicação de faltas.");
+    
     $dec->show();
 
     # Grava o log da visualização do relatório

@@ -4139,18 +4139,34 @@ class Pessoal extends Bd
         # Verifica se tem somente um email
         if ((empty($conteudo["emailPessoal"])) xor (empty($conteudo["emailUenf"]))) {
             if (empty($conteudo["emailPessoal"])) {
-                $retorno = $conteudo["emailUenf"];
-            } else {
-                $retorno = $conteudo["emailPessoal"];
+                #$retorno = "<a target='_blank' href='mailto:{$conteudo["emailUenf"]}'>{$conteudo["emailUenf"]}</a>";
+                $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
+                $link->set_target("_blank");
+                $link->set_id("aContatos");
+                $link->show();
+
+            } else {               
+                #$retorno = "<a target='_blank' href='mailto:{$conteudo["emailPessoal"]}'>{$conteudo["emailPessoal"]}</a>";
+                $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
+                $link->set_target("_blank");
+                $link->set_id("aContatos");
+                $link->show();
             }
         }
 
         # Verifica se tem os dois
         if ((!empty($conteudo["emailPessoal"])) and (!empty($conteudo["emailUenf"]))) {
-            $retorno = "{$conteudo["emailUenf"]} <br/> {$conteudo["emailPessoal"]}";
+            $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
+            $link->set_target("_blank");
+            $link->set_id("aContatos");
+            $link->show();
+            br();
+            
+            $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
+            $link->set_target("_blank");
+            $link->set_id("aContatos");
+            $link->show();
         }
-
-        return $retorno;
     }
 
     ##########################################################################################

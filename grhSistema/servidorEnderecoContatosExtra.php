@@ -8,7 +8,7 @@
 # Email da Uenf
 if (!is_null($campoValor[10])) {
     $campoValor[10] = strtolower($campoValor[10]);
-
+    
     # Verifica se email Uenf é válido
     if (!filter_var($campoValor[10], FILTER_VALIDATE_EMAIL)) {
         $msgErro .= 'Email Uenf inválido!\n';
@@ -19,7 +19,7 @@ if (!is_null($campoValor[10])) {
 
         # se tem @uenf
         if ($pos === false) {
-            $msgErro .= 'O e-mail institucional nao é @uenf!\n';
+            $msgErro .= 'O e-mail institucional não é @uenf!\n';
             $erro = 1;
         }
     }

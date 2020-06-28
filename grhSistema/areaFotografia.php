@@ -16,14 +16,14 @@ $acesso = Verifica::acesso($idUsuario, 2);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
-    $intra = new Intra();
+    $intra   = new Intra();
     $pessoal = new Pessoal();
 
     # Verifica a fase do programa
     $fase = get('fase');
 
     # Pega o id
-    $idPessoa = get('idPessoa');
+    $idPessoa   = get('idPessoa');
     $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
 
     # Verifica se veio menu grh e registra o acesso no log
@@ -31,7 +31,7 @@ if ($acesso) {
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de fotografia";
-        $data = date("Y-m-d H:i:s");
+        $data      = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
@@ -101,7 +101,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $imagem   = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
@@ -166,7 +166,7 @@ if ($acesso) {
 
             # Pega o time final
             $time_end = microtime(true);
-            $time = $time_end - $time_start;
+            $time     = $time_end - $time_start;
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
             break;
 
@@ -232,13 +232,18 @@ if ($acesso) {
 
             $pasta = PASTA_FOTOS;
 
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
+
             # Extensões possíveis
             $extensoes = array("jpg");
 
             # Pega os valores do php.ini
-            $postMax = limpa_numero(ini_get('post_max_size'));
+            $postMax   = limpa_numero(ini_get('post_max_size'));
             $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
-            $limite = menorValor(array($postMax, $uploadMax));
+            $limite    = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
 
@@ -257,7 +262,7 @@ if ($acesso) {
                 if ($upload->salvar()) {
                     # Registra log
                     $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
+                    $data      = date("Y-m-d H:i:s");
                     $atividade = "Alterou a foto do servidor $nome";
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $idPessoa);
 

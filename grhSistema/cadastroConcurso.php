@@ -55,7 +55,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    if (($fase == "uploadEdital") OR ($fase == "uploadPublicacao")) {
+    if ($fase == "uploadPublicacao") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -897,6 +897,11 @@ if ($acesso) {
                     </form>";
 
             $pasta = PASTA_CONCURSO;
+            
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
 
             # Extensões possíveis
             $extensoes = array("pdf");

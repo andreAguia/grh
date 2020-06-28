@@ -6,18 +6,16 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              // Servidor logado
+$idUsuario            = null;              // Servidor logado
 $idServidorPesquisado = null;   // Servidor Editado na pesquisa do sistema do GRH
-
 # Configuração
 include ("_config.php");
 
 # Zera session usadas
 set_session('sessionParametro'); // Zera a session do parâmetro de pesquisa da classe modelo1
 set_session('sessionPaginacao'); // Zera a session de paginação da classe modelo1
-
 # Verifica a origem 
-$origem = get_session("origem");
+$origem   = get_session("origem");
 $origemId = get_session("origemId");
 
 # Verifica se veio dos alertas
@@ -32,7 +30,7 @@ $acesso = Verifica::acesso($idUsuario, 2);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-    $intra = new Intra();
+    $intra   = new Intra();
 
     # Verifica a fase do programa
     $fase = get('fase', 'menu');
@@ -70,7 +68,7 @@ if ($acesso) {
         # Registra no log  
         if ($grh) {
             $atividade = "Cadastro do servidor - Menu";
-            $data = date("Y-m-d H:i:s");
+            $data      = date("Y-m-d H:i:s");
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
         }
 
@@ -166,8 +164,8 @@ if ($acesso) {
 
             # Cria um array com os anos possíveis
             $anoInicial = 1999;
-            $anoAtual = date('Y');
-            $anos = arrayPreenche($anoInicial, $anoAtual + 2);
+            $anoAtual   = date('Y');
+            $anos       = arrayPreenche($anoInicial, $anoAtual + 2);
 
             $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(8);
@@ -237,10 +235,10 @@ if ($acesso) {
                          FROM tblicencapremio) order by 2";
 
             # Acessa o banco
-            $pessoal = new Pessoal();
-            $atividades1 = $pessoal->select($select1);
+            $pessoal       = new Pessoal();
+            $atividades1   = $pessoal->select($select1);
             $numAtividades = $pessoal->count($select1);
-            $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
+            $contador      = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
 
             tituloTable("Afastamentos de $parametroAno");
 
@@ -361,7 +359,7 @@ if ($acesso) {
             $grid->abreColuna(6);
 
             $fotoLargura = 300;
-            $fotoAltura = 400;
+            $fotoAltura  = 400;
 
             # Define a pasta
             $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -420,13 +418,18 @@ if ($acesso) {
 
             $pasta = PASTA_FOTOS;
 
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
+
             # Extensões possíveis
             $extensoes = array("jpg");
 
             # Pega os valores do php.ini
-            $postMax = limpa_numero(ini_get('post_max_size'));
+            $postMax   = limpa_numero(ini_get('post_max_size'));
             $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
-            $limite = menorValor(array($postMax, $uploadMax));
+            $limite    = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
 
@@ -448,7 +451,7 @@ if ($acesso) {
 
                     # Registra log
                     $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
+                    $data      = date("Y-m-d H:i:s");
                     $atividade = "Alterou a foto do servidor " . $pessoal->get_nome($idServidorPesquisado);
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $idServidorPesquisado);
 
@@ -509,8 +512,8 @@ if ($acesso) {
             br(3);
 
             # Pega os valores
-            $idServidorChefia = $pessoal->get_chefiaImediata($idServidorPesquisado);
-            $nomeChefia = $pessoal->get_nome($idServidorChefia);
+            $idServidorChefia        = $pessoal->get_chefiaImediata($idServidorPesquisado);
+            $nomeChefia              = $pessoal->get_nome($idServidorChefia);
             $chefiaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
 
             # Título
@@ -568,7 +571,7 @@ if ($acesso) {
             # Registra no log  
             if ($grh) {
                 $atividade = "Cadastro do servidor - Afastamento geral";
-                $data = date("Y-m-d H:i:s");
+                $data      = date("Y-m-d H:i:s");
                 $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
             }
 
@@ -580,8 +583,8 @@ if ($acesso) {
 
             # Cria um array com os anos possíveis
             $anoInicial = 1999;
-            $anoAtual = date('Y');
-            $anos = arrayPreenche($anoInicial, $anoAtual + 2);
+            $anoAtual   = date('Y');
+            $anos       = arrayPreenche($anoInicial, $anoAtual + 2);
 
             $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(8);

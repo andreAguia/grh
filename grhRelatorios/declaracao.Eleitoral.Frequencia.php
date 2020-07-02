@@ -47,7 +47,7 @@ if ($acesso) {
     $dec->set_texto("Declaro para fins de afastamento eleitoral, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
             . " ID funcional nº {$idFuncional}, {$cargoEfetivo}, teve sua frequência INTEGRAL no período de 02/01/2020 até a presente data.");
 
-    $dec->set_saltoAssinatura(6);      
+    $dec->set_saltoAssinatura(2);      
     $dec->show();
 
     # Grava o log da visualização do relatório

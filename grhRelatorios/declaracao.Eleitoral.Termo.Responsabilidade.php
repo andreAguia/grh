@@ -39,6 +39,7 @@ if ($acesso) {
 
     # Monta a Declaração
     $dec = new Declaracao();
+    $dec->set_declaracaoNome("DECLARAÇÃO DE RESPONSABILIDADE");
     #$dec->set_carimboCnpj(true);
     #$dec->set_assinatura(true);
     
@@ -50,22 +51,22 @@ if ($acesso) {
     $dec->set_data(null);
 
     $dec->set_texto("<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional}, ocupante do cargo de {$cargoEfetivo}, "
-            . "<b>declara</b> para os devidos fins, especialmente para fins de afastamento eleitoral ora requerido, na forma do "
-            . "disposto no parágrafo 3º do art. 2º da Resolução SEPLAG nº 1436 de 04/02/2016, estar ciente da obrigatoriedade"
-            . " de fornecer a Certidão de Registro da Candidatura (Item 5 anexo I), ao órgão/setorial de Recursos Humanos,"
-            . " tão logo seja expedida pela Justiça Eleitoral.");
-    
-    $dec->set_texto("Declaro ainda, estar ciente que em caso de não apresentação da Certidão, o pedido de afastamento será considerado"
-            . " irregular, e o servidor incorrerá em faltas e abandono de cargo, devendo, ainda, ressarcir a Fazenda estadual pelas"
-            . " remunerações recebidas durante aquele período, na forma da legislação em vigor, ressalvadas, as hipóteses de indeferimento"
-            . " do registro e de desistência.");
+            . "<b>declaro(a)</b> para os devidos fins, especialmente para fins de afastamento eleitoral ora requerido, na forma do "
+            . "disposto no inciso IV, do art. 74, do Decreto nº 2.479, de 08 de março de 1979, c/c a Lei Complementar nº 64, de 18 de"
+            . " maio de 1990, que se responsabiliza perante a Administração Pública estadual pela indicação do lapso temporal correspondente "
+            . "ao período de afastamento do exercício funcional (cargo) que lhe seja aplicável, prazo que está em consonância com o que "
+            . "preceitua a legislação eleitoral, consideradas suas circunstâncias funcionais. Do mesmo modo, afirma ter ciência de que "
+            . "a cessação do afastamento eleitoral ocorre de forma automática na hipótese de indeferimento do pedido de registro da candidatura, "
+            . "exigindo-se, portanto, o retorno imediato do servidor para o exercício de suas funções, sob pena de aplicação de falta e caracterização "
+            . "de abandono de cargo. Declara, igualmente, ter conhecimento de que a ulterior identificação de qualquer irregularidade nas informações ora "
+            . "prestadas ensejará a adoção das medidas administrativas necessárias à apuração dos fatos e eventual cominação das sanções disciplinares cabíveis.");
 
     $dec->set_saltoAssinatura(6);    
     $dec->show();
 
     # Grava o log da visualização do relatório
     $data       = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a declaração eleitoral de comprometimento';
+    $atividades = 'Visualizou a declaração eleitoral de responsabilidade (termo)';
     $tipoLog    = 4;
     $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 

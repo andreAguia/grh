@@ -39,6 +39,7 @@ if ($acesso) {
 
     # Monta a Declaração
     $dec = new Declaracao();
+    $dec->set_declaracaoNome("DECLARAÇÃO DE RESPONSABILIZAÇÃO DE ENTREGA DA CERTIDÃO DE REGISTRO DA CANDIDATURA");
     #$dec->set_carimboCnpj(true);
     #$dec->set_assinatura(true);
     

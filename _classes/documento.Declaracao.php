@@ -27,8 +27,7 @@ class Declaracao
     private $rodapeSoUntimaPag = false;
     private $assinatura = false;
     
-    private $assinaturaGerencia = true;
-    private $assinaturaServidor = false;
+    private $declaracaoNome = "DECLARAÇÃO";
 
     ###########################################################
 
@@ -151,7 +150,7 @@ class Declaracao
         br();
 
         # Declaração
-        p('DECLARAÇÃO', 'pDeclaracaoTitulo');
+        p($this->declaracaoNome, 'pDeclaracaoTitulo');
         br();
 
         # Texto

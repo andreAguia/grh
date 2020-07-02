@@ -49,7 +49,7 @@ if ($acesso) {
 
     $dec->set_data(null);
 
-    $dec->set_texto("<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional}, ocupente do cargo de {$cargoEfetivo}, "
+    $dec->set_texto("<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional}, ocupante do cargo de {$cargoEfetivo}, "
             . "<b>declara</b> para os devidos fins, especialmente para fins de afastamento eleitoral ora requerido, na forma do "
             . "disposto no parágrafo 3º do art. 2º da Resolução SEPLAG nº 1436 de 04/02/2016, estar ciente da obrigatoriedade"
             . " de fornecer a Certidão de Registro da Candidatura (Item 5 anexo I), ao órgão/setorial de Recursos Humanos,"

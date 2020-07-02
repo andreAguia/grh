@@ -39,10 +39,9 @@ if ($acesso) {
     $origem = get_session("origem");
 
     $jscript = '// Pega os valores da pendêencia
-                var pendencia = $("#pendencia").val();
                 
                 // Verifica o valor da pendência quando o form é carregado
-                if(pendencia == 1){
+                if($("#pendencia").is(":checked")){
                     $("#dadosPendencia").show();
                     $("#dtEnvioPendencia").show();
                     $("#div11").show();
@@ -108,10 +107,9 @@ if ($acesso) {
                 }
         
                 // Verifica o valor da pendência quando se muda o valor do campo
-                $("#pendencia").change(function(){
-                    var pendencia = $("#pendencia").val();
+                $("#pendencia").click(function(){
                     
-                    if(pendencia == 1){
+                    if($("#pendencia").is(":checked")){
                         $("#dadosPendencia").show();
                         $("#dtEnvioPendencia").show();
                         $("#div11").show();

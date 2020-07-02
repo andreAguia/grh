@@ -51,22 +51,22 @@ if ($acesso) {
     $dec->set_data(null);
 
     $dec->set_texto("<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional}, ocupente do cargo de {$cargoEfetivo}, "
-            . "<b>declara</b> para os devidos fins, especialmente para fins de afastamento eleitoral ora requerido, na forma do "
-            . "disposto no parágrafo 3º do art. 2º da Resolução SEPLAG nº 1436 de 04/02/2016, estar ciente da obrigatoriedade"
-            . " de fornecer a Certidão de Registro da Candidatura (Item 5 anexo I), ao órgão/setorial de Recursos Humanos,"
-            . " tão logo seja expedida pela Justiça Eleitoral.");
-    
-    $dec->set_texto("Declaro ainda, estar ciente que em caso de não apresentação da Certidão, o pedido de afastamento será considerado"
-            . " irregular, e o servidor incorrerá em faltas e abandono de cargo, devendo, ainda, ressarcir a Fazenda estadual pelas"
-            . " remunerações recebidas durante aquele período, na forma da legislação em vigor, ressalvadas, as hipóteses de indeferimento"
-            . " do registro e de desistência.");
+            . "<b>declaro(a)</b> para o fim de afastamento eleitoral ora requerido, na forma do disposto no inciso IV,"
+            . " do art. 74, do Decreto no 2.479, de 08 de março de 1979, c/c a Lei Complementar no 64, de 18 de maio de 1990,"
+            . " e em observância ao <b>§3o do artigo 2o da Resolução SEPLAG No 1436 de 04 de fevereiro de 2016</b>, que me responsabilizo perante"
+            . " a Administração Pública estadual em fornecer ao setor de Recursos Humanos competente, a devida Certidão de Registro de Candidatura,"
+            . " tão logo a mesma esteja disponibilizada para o servidor. Do mesmo modo, afirmo ter ciência de que a não apresentação da referida"
+            . " Certidão de Registro de Candidatura pode acarretar em irregularidade do afastamento e possível configuração de abandono de cargo,"
+            . " conforme incisos V, VI e §1o do artigo 52 do Decreto Lei 220 de 1975, e incisos V, VI e §1o do artigo 298 do Decreto 2.479 de 1979,"
+            . " sem prejuízo do ressarcimento à Fazenda Pública estadual pelas remunerações percebidas durante o período de afastamento, nos termos"
+            . " do <b>§4o do art. 2o da Resolução SEPLAG no 1436 de 04 de fevereiro de 2016</b>.");
 
     $dec->set_saltoAssinatura(6);    
     $dec->show();
 
     # Grava o log da visualização do relatório
     $data       = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a declaração eleitoral de frequência';
+    $atividades = 'Visualizou a declaração eleitoral de responsabilização';
     $tipoLog    = 4;
     $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 

@@ -479,7 +479,7 @@ class MenuServidor {
         $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
         $menu->add_item('linkWindow', 'Declaração de Frequência', '../grhRelatorios/declaracao.Eleitoral.Frequencia.php');
         $menu->add_item('linkWindow', 'Declaração de Comprometimento', '../grhRelatorios/declaracao.Eleitoral.Comprometimento.php');
-        $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilidade.php');
+        $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilizacao.php');
         
         #$menu->add_item('link','Declaração para o INSS','#');
         #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");

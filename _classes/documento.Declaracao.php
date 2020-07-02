@@ -21,10 +21,14 @@ class Declaracao
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
     private $rodapeTelefone = "(22) 2739-7064";
     private $saltoRodape = 3;
+    private $saltoAssinatura = 3;
     private $aviso = null;
     private $carimboCnpj = false;
     private $rodapeSoUntimaPag = false;
     private $assinatura = false;
+    
+    private $assinaturaGerencia = true;
+    private $assinaturaServidor = false;
 
     ###########################################################
 
@@ -161,7 +165,11 @@ class Declaracao
 
             # Data
             br(2);
-            p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+            if(empty($this->data)){
+                p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
+            }else{
+                p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+            }
 
             $grid->fechaColuna();
             $grid->abreColuna(4);
@@ -174,9 +182,13 @@ class Declaracao
         } else {
             # Data
             br(2);
-            p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+            if(empty($this->data)){
+                p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
+            }else{
+                p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+            }
         }
-        br(2);
+        br($this->saltoAssinatura);
 
         # Assinatura
         if ($this->assinatura) {
@@ -189,8 +201,18 @@ class Declaracao
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
-
-        p($this->origemNome . '<br/>' . $this->origemDescricao . '<br/>Id Funcional n° ' . $this->origemIdFuncional, 'pCiAssinatura');
+                
+        $textoAssinatura = "{$this->origemNome}<br/>";
+        
+        if(!empty($this->origemDescricao)){
+            $textoAssinatura .= "{$this->origemDescricao}<br/>";
+        }
+        
+        if(!empty($this->origemIdFuncional)){
+            $textoAssinatura .= "Id Funcional n° {$this->origemIdFuncional}<br/>";
+        }
+                 
+        p($textoAssinatura, 'pCiAssinatura');
 
         $grid->fechaColuna();
         $grid->fechaGrid();

@@ -475,6 +475,12 @@ class MenuServidor {
 
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
+        
+        $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
+        $menu->add_item('linkWindow', 'Declaração de Frequência', '../grhRelatorios/declaracao.Eleitoral.Frequencia.php');
+        $menu->add_item('linkWindow', 'Declaração de Comprometimento', '../grhRelatorios/declaracao.Eleitoral.Comprometimento.php');
+        $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilidade.php');
+        
         #$menu->add_item('link','Declaração para o INSS','#');
         #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
         #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");

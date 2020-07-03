@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
+$idUsuario            = null;              # Servidor logado
 $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
@@ -16,8 +16,8 @@ $acesso = Verifica::acesso($idUsuario, 2);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
-    $intra = new Intra();
-    $pessoal = new Pessoal();
+    $intra         = new Intra();
+    $pessoal       = new Pessoal();
     $aposentadoria = new Aposentadoria();
 
     # Verifica se veio menu grh e registra o acesso no log
@@ -25,7 +25,7 @@ if ($acesso) {
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Aposentadoria";
-        $data = date("Y-m-d H:i:s");
+        $data      = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
@@ -44,13 +44,13 @@ if ($acesso) {
 
     # Verifica a data de saída
     $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
-    $dtHoje = date("Y-m-d");                                      # Data de hoje
+    $dtHoje  = date("Y-m-d");                                      # Data de hoje
     $dtFinal = null;
 
     # Analisa a data
     if (!vazio($dtSaida)) {           // Se tem saída é a saída
-        $dtFinal = date_to_bd($dtSaida);
-        $disabled = true;
+        $dtFinal   = date_to_bd($dtSaida);
+        $disabled  = true;
         $autofocus = false;
     } else {                          // Não tem saída então é hoje
         $dtFinal = $dtHoje;
@@ -68,7 +68,7 @@ if ($acesso) {
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar, "left");
 
-    $imagem1 = new Imagem(PASTA_FIGURAS . 'ajuda.png', null, 15, 15);
+    $imagem1   = new Imagem(PASTA_FIGURAS . 'ajuda.png', null, 15, 15);
     $botaoHelp = new Button();
     $botaoHelp->set_imagem($imagem1);
     $botaoHelp->set_title("Ajuda");
@@ -76,8 +76,8 @@ if ($acesso) {
     $botaoHelp->set_target("_blank");
     #$menu->add_link($botaoHelp,"right");
     # Relatório
-    $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel = new Button();
+    $imagem2   = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+    $botaoRel  = new Button();
     $botaoRel->set_imagem($imagem2);
     $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
     $botaoRel->set_url("../grhRelatorios/servidorAposentadoria.php");
@@ -115,17 +115,6 @@ if ($acesso) {
     echo '</div>';
 
 ##############################################################################################################################################
-#   Previsão de Aposentadoria
-##############################################################################################################################################
-
-    $painel = new Callout("secondary");
-    $painel->abre();
-
-    $aposentadoria->exibePrevisao($idServidorPesquisado);
-
-    $painel->fecha();
-
-##############################################################################################################################################
 #   Tempo de Serviço
 ##############################################################################################################################################
 
@@ -156,8 +145,8 @@ if ($acesso) {
                 WHERE idServidor = ' . $idServidorPesquisado . '
              ORDER BY dtInicial desc';
 
-    $label = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
-    $align = array("center", "center", "center", "left");
+    $label  = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
+    $align  = array("center", "center", "center", "left");
     $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php");
 
     $array = $pessoal->select($select);
@@ -172,6 +161,17 @@ if ($acesso) {
 
     $painel->fecha();
     echo '</div>';
+
+##############################################################################################################################################
+#   Previsão de Aposentadoria
+##############################################################################################################################################
+
+    $painel = new Callout("secondary");
+    $painel->abre();
+
+    $aposentadoria->exibePrevisao($idServidorPesquisado);
+
+    $painel->fecha();
 
 
     $page->terminaPagina();

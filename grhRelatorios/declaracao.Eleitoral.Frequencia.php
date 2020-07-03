@@ -76,6 +76,8 @@ if ($acesso) {
 
     if (!empty($ultimaFalta)) {
         $dec->set_aviso("Consta {$numDiasFaltas} dias de falta(s) cadastrada(s) no sistema. Sendo a última em {$ultimaFalta}.<br/>Mas, apesar disso, a declaração que o servidor teve frequencia integral desde {$dataInicial} poderá ser emitida.");
+    }else{
+        $dec->set_aviso("Não existe nenhuma falta cadastrada no sistema para este servidor.");
     }
 
     $dec->set_data(date("d/m/Y"));

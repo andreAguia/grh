@@ -54,7 +54,7 @@ if ($acesso) {
             . "<b>declaro(a)</b> para os devidos fins, especialmente para fins de afastamento eleitoral ora requerido, na forma do "
             . "disposto no inciso IV, do art. 74, do Decreto nº 2.479, de 08 de março de 1979, c/c a Lei Complementar nº 64, de 18 de"
             . " maio de 1990, que se responsabiliza perante a Administração Pública estadual pela indicação do lapso temporal correspondente "
-            . "ao período de afastamento do exercício funcional (cargo) que lhe seja aplicável, prazo que está em consonância com o que "
+            . "ao período de afastamento do exercício funcional ({$cargoEfetivo}) que lhe seja aplicável, prazo que está em consonância com o que "
             . "preceitua a legislação eleitoral, consideradas suas circunstâncias funcionais. Do mesmo modo, afirma ter ciência de que "
             . "a cessação do afastamento eleitoral ocorre de forma automática na hipótese de indeferimento do pedido de registro da candidatura, "
             . "exigindo-se, portanto, o retorno imediato do servidor para o exercício de suas funções, sob pena de aplicação de falta e caracterização "

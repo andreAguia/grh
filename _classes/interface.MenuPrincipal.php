@@ -661,7 +661,7 @@ class MenuPrincipal
 
         $botao = new BotaoGrafico();
         $botao->set_label("");
-        $botao->set_imagem(PASTA_FIGURAS . "do.png", 200, 70);
+        $botao->set_imagem(PASTA_FIGURAS . "do.png", 150, 70);
         $botao->set_url("http://www.imprensaoficial.rj.gov.br/portal/modules/profile/user.php?xoops_redirect=/portal/modules/content/index.php?id=21");
         $botao->set_title("Imprensa Oficial do Estado do Rio de Janeiro");
         $menu->add_item($botao);
@@ -681,7 +681,7 @@ class MenuPrincipal
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
         $botao->set_title('Site da UENF');
-        $botao->set_imagem(PASTA_FIGURAS . "uenf.png", 190, 50);
+        $botao->set_imagem(PASTA_FIGURAS . "uenf.png", 120, 50);
         $botao->set_url("http://www.uenf.br/portal/index.php/br/");
         $menu->add_item($botao);
 
@@ -700,7 +700,7 @@ class MenuPrincipal
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
         $botao->set_title('Site da GRH');
-        $botao->set_imagem(PASTA_FIGURAS . "GRH.png", $largura, $altura);
+        $botao->set_imagem(PASTA_FIGURAS . "GRH.png", 120, 50);
         $botao->set_url("http://uenf.br/dga/grh/");
         $menu->add_item($botao);
 

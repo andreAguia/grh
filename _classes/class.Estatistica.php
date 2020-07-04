@@ -38,7 +38,6 @@ class Estatistica {
                 $select = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as grupo
                          FROM tbservidor LEFT JOIN tbperfil USING(idPerfil)
                         WHERE tbservidor.situacao = 1 
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1
                      ORDER BY 2 DESC ';
 
@@ -55,7 +54,6 @@ class Estatistica {
                          FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
                                              JOIN tbservidor USING (idPessoa)
                         WHERE tbservidor.situacao = 1 
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1
                      ORDER BY 2 DESC ';
 
@@ -73,7 +71,6 @@ class Estatistica {
                                        JOIN tbcidade USING (idCidade)
                                        JOIN tbestado USING (idEstado)
                         WHERE tbservidor.situacao = 1 
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1
                      ORDER BY 2 DESC ';
 
@@ -90,7 +87,6 @@ class Estatistica {
                          FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
                                               JOIN tbservidor USING (idPessoa)
                         WHERE tbservidor.situacao = 1 
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1
                      ORDER BY 2 DESC ';
 
@@ -171,7 +167,6 @@ class Estatistica {
                          FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                        JOIN tbperfil USING (idPerfil)
                         WHERE tbservidor.situacao = 1
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1, tbpessoa.sexo
                      ORDER BY grupo desc';
 
@@ -186,12 +181,11 @@ class Estatistica {
                          FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
                                              JOIN tbservidor USING (idPessoa)
                         WHERE tbservidor.situacao = 1
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1, tbpessoa.sexo
-                     ORDER BY grupo desc';
+                     ORDER BY tbestciv.estciv';
 
-                $this->labelTabela = array("Perfil", "Feminino", "Masculino", "Total");
-                $this->labelGrafico = array("Perfil", "Feminino", "Masculino");
+                $this->labelTabela = array("Estado Civil", "Feminino", "Masculino", "Total");
+                $this->labelGrafico = array("Estado Civil", "Feminino", "Masculino");
                 break;
 
             case "nacionalidade" :
@@ -201,12 +195,11 @@ class Estatistica {
                          FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
                                               JOIN tbservidor USING (idPessoa)
                         WHERE tbservidor.situacao = 1
-                          AND tbservidor.idPerfil <> 10
                      GROUP BY 1, tbpessoa.sexo
-                     ORDER BY grupo desc';
+                     ORDER BY tbnacionalidade.nacionalidade';
 
-                $this->labelTabela = array("Perfil", "Feminino", "Masculino", "Total");
-                $this->labelGrafico = array("Perfil", "Feminino", "Masculino");
+                $this->labelTabela = array("Nacionalidade", "Feminino", "Masculino", "Total");
+                $this->labelGrafico = array("Nacionalidade", "Feminino", "Masculino");
                 break;
         }
 

@@ -1,7 +1,6 @@
 <?php
 
-class Pessoal extends Bd
-{
+class Pessoal extends Bd {
 
     /**
      * Classe de acesso ao Banco de Dados Pessoal
@@ -23,43 +22,44 @@ class Pessoal extends Bd
     private $sgdb = "mysql";
     private $tabela;
     private $idCampo;
+
     ###########################################################
+
     /**
      * Faz uma conexão
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct($this->servidor, $this->usuario, $this->senha, $this->banco, $this->sgdb);
     }
 
     ###########################################################
+
     /**
      * Método set_tabela
      * 
      * @param  	$nomeTabela	-> Nome da tabela do banco de dados intra que será utilizada
      */
-    public function set_tabela($nomeTabela)
-    {
+    public function set_tabela($nomeTabela) {
         $this->tabela = $nomeTabela;
     }
 
     ###########################################################
+
     /**
      * Método set_idCampo
      * 
      * @param  	$idCampo)	-> Nome do campo chave da tabela
      */
-    public function set_idCampo($idCampo)
-    {
+    public function set_idCampo($idCampo) {
         $this->idCampo = $idCampo;
     }
 
     ###########################################################
+
     /**
      * Método Gravar
      */
-    public function gravar($campos = null, $valor = null, $idValor = null, $tabela = null, $idCampo = null, $alerta = false)
-    {
+    public function gravar($campos = null, $valor = null, $idValor = null, $tabela = null, $idCampo = null, $alerta = false) {
 
         if (is_null($tabela)) {
             $tabela = $this->tabela;
@@ -73,11 +73,11 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método Excluir
      */
-    public function excluir($idValor = null, $tabela = null, $idCampo = 'id')
-    {
+    public function excluir($idValor = null, $tabela = null, $idCampo = 'id') {
 
         # efetua a exclus�o
         parent::excluir($idValor, $this->tabela, $this->idCampo);
@@ -86,14 +86,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_gratificacao
      * informa graificação de uma matrícula(se houver)
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_gratificacao($idServidor)
-    {
+    public function get_gratificacao($idServidor) {
         $select = 'SELECT valor
                      FROM tbgratificacao
                     WHERE idServidor = ' . $idServidor . '
@@ -106,14 +106,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_direitoPessoal
      * informa direito pessoal de um servidor(se houver)
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_direitoPessoal($idServidor)
-    {
+    public function get_direitoPessoal($idServidor) {
         $select = 'SELECT valor
                          FROM tbdireitopessoal
                         WHERE idServidor = ' . $idServidor . '
@@ -126,14 +126,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_gratificacaoDtFinal
      * informa a data de t�rmino da graificação de uma matrícula(se houver)
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_gratificacaoDtFinal($idServidor)
-    {
+    public function get_gratificacaoDtFinal($idServidor) {
         $select = 'SELECT dtFinal
                      FROM tbgratificacao
                     WHERE idServidor = ' . $idServidor . '
@@ -156,14 +156,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_periodoDisponivel
      * informa o período disponível de férias de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_periodoDisponivel($idServidor)
-    {
+    public function get_periodoDisponivel($idServidor) {
         $select = "SELECT anoExercicio,
                       sum(numDias) as dias,
                       status
@@ -195,12 +195,12 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_ramais
      * Retorna um array com os setores e os ramais
      */
-    public function get_ramais()
-    {
+    public function get_ramais() {
 
         $select = ' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
                       ramais
@@ -217,14 +217,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_salarioBase
      * informa o salario base de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_salarioBase($idServidor)
-    {
+    public function get_salarioBase($idServidor) {
 
         $select = 'SELECT tbclasse.valor
                      FROM tbprogressao, tbclasse
@@ -238,14 +238,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idClasseServidor
      * informa o idClasse do salário atual de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_idClasseServidor($idServidor)
-    {
+    public function get_idClasseServidor($idServidor) {
 
         $select = "SELECT idClasse
                      FROM tbprogressao
@@ -258,14 +258,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_salarioTotal
      * informa o sal�rio Total de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_salarioTotal($idServidor)
-    {
+    public function get_salarioTotal($idServidor) {
 
         # Resumo financeira
         $salario = $this->get_salarioBase($idServidor);
@@ -279,14 +279,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_salarioCessao
      * informa o sal�rio recebido pelo �rg�o de origem de um cedido
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_salarioCessao($idServidor)
-    {
+    public function get_salarioCessao($idServidor) {
         $select = 'SELECT salario
                          FROM tbcedido
                         WHERE idServidor = ' . $idServidor;
@@ -297,14 +297,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_aniversariantes
      * Exibe os aniversariantes de um determinado mês
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_aniversariantes($mes = null)
-    {
+    public function get_aniversariantes($mes = null) {
 
         # Se o mês não for definido pega-se o mês atual
         if (is_null($mes)) {
@@ -326,14 +326,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_numAniversariantes
      * Exibe os aniversariantes de um determinado mês
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_numAniversariantes($mes = null)
-    {
+    public function get_numAniversariantes($mes = null) {
 
         # Se o mês não for definido pega-se o mês atual
         if (is_null($mes)) {
@@ -353,12 +353,12 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_numAniversariantesHoje
      * Exibe os aniversariantes de hoje
      */
-    public function get_numAniversariantesHoje()
-    {
+    public function get_numAniversariantesHoje() {
 
         # Monta o select
         $select = 'SELECT idPessoa
@@ -373,6 +373,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método set_senhanull
      * muda a senha de um usu�rio para null (bloqueia o mesmo)
@@ -380,13 +381,13 @@ class Pessoal extends Bd
      * @param	string 	$idServidor 	-> idServidor do servidor
      * @param 	string	$senha		-> senha (não criptofrafada) a ser gravada (se nulo grava-se a senha padr�o)
      */
-    public function set_senhanull($matr, $alert = true)
-    {
+    public function set_senhanull($matr, $alert = true) {
         $senha = null;
         parent::gravar('senha_intra', $senha, $matr, 'tbservidor', 'idServidor', $alert);
     }
 
     ###########################################################
+
     /**
      * Método get_diasAusentes
      * Informa, em dias, o per�odo entre a data atual
@@ -394,8 +395,7 @@ class Pessoal extends Bd
      *
      * @param	string $idServidor	idServidor do servidor
      */
-    public function get_diasAusentes($idServidor)
-    {
+    public function get_diasAusentes($idServidor) {
 
         $select = "SELECT date_format(ult_acesso,'%d/%m/%Y')		  
                                      FROM tbservidor
@@ -412,14 +412,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_lotacao
      * Informa a lotaçao atual do servidor
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_lotacao($idServidor)
-    {
+    public function get_lotacao($idServidor) {
         $select = 'SELECT UADM,
                           DIR,
                           GER,
@@ -446,14 +446,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_lotacaoRel
      * Informa a lotaçao atual do servidor para um relatorio
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_lotacaoRel($idServidor)
-    {
+    public function get_lotacaoRel($idServidor) {
         $select = 'SELECT UADM,
                           DIR,
                           GER,
@@ -480,14 +480,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_lotacaoDiretoria
      * Informa a diretoria de uma lotaçao
      * 
      * @param	string $idLotacao  o id da lotaçao
      */
-    public function get_lotacaoDiretoria($idLotacao)
-    {
+    public function get_lotacaoDiretoria($idLotacao) {
         $select = 'SELECT DIR
                      FROM tblotacao
                     WHERE idLotacao = ' . $idLotacao;
@@ -498,14 +498,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_lotacaoGerencia
      * Informa a gerência / laboratório de uma lotaçao
      * 
      * @param	string $idLotacao  o id da lotaçao
      */
-    public function get_lotacaoGerencia($idLotacao)
-    {
+    public function get_lotacaoGerencia($idLotacao) {
         $select = 'SELECT GER
                      FROM tblotacao
                     WHERE idLotacao = ' . $idLotacao;
@@ -516,14 +516,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_lotacao
      * Informa a lotação atual do servidor sem o UADM e sem informação de cessão
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_lotacaoSimples($idServidor)
-    {
+    public function get_lotacaoSimples($idServidor) {
         $select = 'SELECT  tblotacao.DIR,
                                tblotacao.GER
                           FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
@@ -536,14 +536,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_servidoresAtivosLotacao
      * Informa o número de servidores ativos nessa lotação
      * 
      * @param	integer $idLotacao  id da lotação
      */
-    public function get_servidoresAtivosLotacao($idLotacao)
-    {
+    public function get_servidoresAtivosLotacao($idLotacao) {
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
@@ -556,14 +556,14 @@ class Pessoal extends Bd
     }
 
     ######################################################################################
+
     /**
      * Método get_servidoresInativosLotacao
      * Informa o número de servidores inativos nessa lotação
      * 
      * @param	integer $idLotacao  id da lotação
      */
-    public function get_servidoresInativosLotacao($idLotacao)
-    {
+    public function get_servidoresInativosLotacao($idLotacao) {
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
@@ -577,14 +577,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idLotacao
      * Informa o id da lotação atual do servidor
      *
      * @param	string $idServidor  id do servidor
      */
-    public function get_idLotacao($idServidor)
-    {
+    public function get_idLotacao($idServidor) {
         $select = 'SELECT  tblotacao.idlotacao
                       FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
                      WHERE tbhistlot.idServidor = ' . $idServidor . '
@@ -595,18 +595,19 @@ class Pessoal extends Bd
     }
 
     ##########################################################
+
     /**
      * Método get_idLotacao
      * Informa o id da lotação atual do servidor
      *
      * @param	string $idServidor  id do servidor
      */
-    public function get_cargoLotacao($idServidor)
-    {
+    public function get_cargoLotacao($idServidor) {
         return $this->get_cargo($idServidor) . "<br/>" . $this->get_lotacao($idServidor);
     }
 
     ###########################################################
+
     /**
      * Método get_cargo
      * Informa o cargo do servidor
@@ -614,8 +615,7 @@ class Pessoal extends Bd
      * @param string $idServidor    null idServidor do servidor
      * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargo($idServidor, $exibeComissao = true)
-    {
+    public function get_cargo($idServidor, $exibeComissao = true) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
@@ -658,6 +658,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargo
      * Informa o cargo do servidor
@@ -665,8 +666,7 @@ class Pessoal extends Bd
      * @param string $idServidor    null idServidor do servidor
      * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargoSimples2($idServidor, $exibeComissao = true)
-    {
+    public function get_cargoSimples2($idServidor, $exibeComissao = true) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
@@ -709,14 +709,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoSimples
      * Informa o cargo do servidor sem o cargo em comissão
      * 
      * @param string $idServidor    null idServidor do servidor
      */
-    public function get_cargoSimples($idServidor)
-    {
+    public function get_cargoSimples($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
@@ -754,6 +754,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoCompleto
      * Informa o cargo completo do servidor
@@ -761,8 +762,7 @@ class Pessoal extends Bd
      * @param string $idServidor    null idServidor do servidor
      * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargoCompleto($idServidor, $exibeComissao = true)
-    {
+    public function get_cargoCompleto($idServidor, $exibeComissao = true) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.cargo,
@@ -816,14 +816,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoRel
      * Informa o cargo do servidor versao para impressao
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_cargoRel($idServidor)
-    {
+    public function get_cargoRel($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
@@ -864,14 +864,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargo
      * Informa o tipo do cargo do servidor (Professor ou Adm/Tec)
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_cargoTipo($idServidor)
-    {
+    public function get_cargoTipo($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.tipo
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
@@ -883,14 +883,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfil
      * Informa o perfil do servidor
      * 
      * @param   string $idServidor  idServidor do servidor
      */
-    public function get_perfil($idServidor)
-    {
+    public function get_perfil($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
                      FROM tbservidor JOIN tbperfil USING (idPerfil)
@@ -912,14 +912,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilSimples
      * Informa o perfil do servidor sem informar o rogao de origem do cedido
      * 
      * @param   string $idServidor  idServidor do servidor
      */
-    public function get_perfilSimples($idServidor)
-    {
+    public function get_perfilSimples($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
                      FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil=tbperfil.idPerfil)
@@ -932,14 +932,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_orgaoOrigem
      * Informa o orgao de origem de um servidor cedido de fora da uenf
      * 
      * @param   string $idServidor  idServidor do servidor
      */
-    public function get_orgaoOrigem($idServidor)
-    {
+    public function get_orgaoOrigem($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT orgaoOrigem
                      FROM tbcedido
@@ -951,14 +951,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idCargo
      * Informa o id do cargo do servidor
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_idCargo($idServidor)
-    {
+    public function get_idCargo($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbcargo.idCargo
                          FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
@@ -971,14 +971,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idpessoa
      * fornece o id_pessoa de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_idPessoa($idServidor)
-    {
+    public function get_idPessoa($idServidor) {
         $select = 'SELECT idPessoa
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
@@ -989,14 +989,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idpessoaCPF
      * fornece o id_pessoa de um CPF
      * 
      * @param	string $cpf cpf do servidor
      */
-    public function get_idPessoaCPF($cpf)
-    {
+    public function get_idPessoaCPF($cpf) {
         $select = 'SELECT idPessoa
                          FROM tbdocumentacao
                         WHERE cpf = "' . $cpf . '"';
@@ -1007,14 +1007,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idPessoaPis
      * fornece o id_pessoa de um PisF
      * 
      * @param	string $pis do servidor
      */
-    public function get_idPessoaPis($pis)
-    {
+    public function get_idPessoaPis($pis) {
         $select = 'SELECT idPessoa
                          FROM tbdocumentacao
                         WHERE pisPasep = "' . $pis . '"';
@@ -1025,14 +1025,14 @@ class Pessoal extends Bd
     }
 
     ##########################################################
+
     /**
      * Método get_anoAdmissao
      * informa o ano de admiss�o de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_anoAdmissao($idServidor)
-    {
+    function get_anoAdmissao($idServidor) {
         $select = 'SELECT YEAR(dtAdmissao)
                                  FROM tbservidor
                                 WHERE idServidor = ' . $idServidor;
@@ -1043,14 +1043,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_dtAdmissao
      * informa o ano de admiss�o de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_dtAdmissao($idServidor)
-    {
+    function get_dtAdmissao($idServidor) {
         $select = 'SELECT dtAdmissao
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
@@ -1061,14 +1061,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_dtSaida
      * informa a data de saída do servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_dtSaida($idServidor)
-    {
+    function get_dtSaida($idServidor) {
         $select = 'SELECT dtDemissao
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
@@ -1083,6 +1083,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_idPerfil($idServidor)
 
     /**
@@ -1090,8 +1091,7 @@ class Pessoal extends Bd
      * informa o id do perfil do servidor
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-    {
+     */ {
         $select = 'SELECT idPerfil
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
@@ -1102,8 +1102,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_digito($idServidor)
-    {
+
+    function get_digito($idServidor) {
 
         /**
          * Método get_digito
@@ -1172,8 +1172,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emFerias($idServidor, $data = null)
-    {
+
+    function emFerias($idServidor, $data = null) {
 
         # Função que informa se a idServidor esta em férias na data informada
         #
@@ -1202,8 +1202,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emFeriasExercicio($idServidor, $data = null)
-    {
+
+    function emFeriasExercicio($idServidor, $data = null) {
 
         # Função que informa o exercicio das ferias na data informada
         #
@@ -1228,8 +1228,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emLicenca($idServidor, $data = null)
-    {
+
+    function emLicenca($idServidor, $data = null) {
 
 
         # Função que informa se a idServidor está em licenca na data informada
@@ -1259,8 +1259,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emLicencaPremio($idServidor, $data = null)
-    {
+
+    function emLicencaPremio($idServidor, $data = null) {
 
 
         # Função que informa se a idServidor está em licanca Prêmio na data atual
@@ -1289,8 +1289,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emLicencaSemVencimentos($idServidor, $data = null)
-    {
+
+    function emLicencaSemVencimentos($idServidor, $data = null) {
 
 
         # Função que informa se a idServidor está em licanca Sem Vencimentos na data atual
@@ -1319,8 +1319,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emCessao($idServidor)
-    {
+
+    function emCessao($idServidor) {
 
 
         # Função que informa se o servidor está cedido para outro órgão
@@ -1342,8 +1342,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_orgaoCedido($idServidor)
-    {
+
+    function get_orgaoCedido($idServidor) {
 
 
         # Função que informa o órgão onde o servidor da uenf está cedido
@@ -1361,8 +1361,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licenca($idServidor, $data = null)
-    {
+
+    function get_licenca($idServidor, $data = null) {
 
 
         # Função que informa licenca de uma matrícula
@@ -1388,8 +1388,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaPeriodo($idLicenca)
-    {
+
+    function get_licencaPeriodo($idLicenca) {
 
 
         # Função que informa se a licença tem per�odo aquisitivo
@@ -1410,8 +1410,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaProcesso($idLicenca)
-    {
+
+    function get_licencaProcesso($idLicenca) {
 
 
         # Função que informa se a licença necessita um processo administrativo
@@ -1433,8 +1433,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaNumeroProcesso($idLicenca)
-    {
+
+    function get_licencaNumeroProcesso($idLicenca) {
 
 
         # Função que informa o Número do processo de uma licença
@@ -1456,8 +1456,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaPublicacao($idLicenca)
-    {
+
+    function get_licencaPublicacao($idLicenca) {
 
 
         # Função que informa se a licença necessita de publicação no DOERJ
@@ -1478,8 +1478,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaPericia($idLicenca)
-    {
+
+    function get_licencaPericia($idLicenca) {
 
 
         # Função que informa se esse tipo de licença necessita de perícia (licença m�dica)
@@ -1500,8 +1500,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaNome($idLicenca)
-    {
+
+    function get_licencaNome($idLicenca) {
 
 
         # Função que informa o nome do tipo de licença
@@ -1522,8 +1522,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaSexo($idLicenca)
-    {
+
+    function get_licencaSexo($idLicenca) {
 
 
         # Função que informa limitação por genero (sexo) do tipo de licença
@@ -1544,8 +1544,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_licencaDias($idLicenca)
-    {
+
+    function get_licencaDias($idLicenca) {
 
 
         # Função que informa a quantidade de dias fixos para esse tipo de licença
@@ -1566,8 +1566,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_tipoLicenca($idLicenca)
-    {
+
+    function get_tipoLicenca($idLicenca) {
 
 
         # Função que informa o tipo da licença de uma licença de um servidor
@@ -1588,8 +1588,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_nomeTipoLicenca($idTpLicenca)
-    {
+
+    function get_nomeTipoLicenca($idTpLicenca) {
 
 
         # Função que informa o nome de um tipo da licença
@@ -1610,8 +1610,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_nomeTipoCargo($idTipoCargo)
-    {
+
+    function get_nomeTipoCargo($idTipoCargo) {
 
 
         # Função que informa o nome de um tipo da licença
@@ -1632,14 +1632,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_situacao
      * informa a situação de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_situacao($idServidor)
-    {
+    function get_situacao($idServidor) {
         $select = 'SELECT tbsituacao.situacao
                      FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                     WHERE idServidor = ' . $idServidor;
@@ -1650,14 +1650,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idSituacao
      * informa a idsituacao de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_idSituacao($idServidor)
-    {
+    function get_idSituacao($idServidor) {
         $select = 'SELECT idsituacao
                          FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                         WHERE idServidor = ' . $idServidor;
@@ -1668,14 +1668,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_motivo
      * informa o motivo de saída de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_motivo($idServidor)
-    {
+    function get_motivo($idServidor) {
         $select = 'SELECT tbmotivo.motivo
                          FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
                         WHERE idServidor = ' . $idServidor;
@@ -1686,14 +1686,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_motivoAposentadoria
      * informa o motivo de saída de um servidor pelo idMotivo
      * 
      * @param	string $idMotivo idMotivo
      */
-    function get_motivoAposentadoria($idMotivo)
-    {
+    function get_motivoAposentadoria($idMotivo) {
         $select = 'SELECT tbmotivo.motivo
                          FROM tbmotivo 
                         WHERE idMotivo = ' . $idMotivo;
@@ -1704,14 +1704,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idPessoaAtiva
      * informa se a pessoa tem alguma matrícula ativa
      * 
      * @param	integer $idPessoa   idPessoa do servidor
      */
-    function get_idPessoaAtiva($idPessoa)
-    {
+    function get_idPessoaAtiva($idPessoa) {
         $select = 'SELECT idServidor
                          FROM tbservidor
                         WHERE situacao = 1 AND idPessoa = ' . $idPessoa;
@@ -1722,14 +1722,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nome
      * fornece o nome de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_nome($idServidor)
-    {
+    function get_nome($idServidor) {
         if (is_numeric($idServidor)) {
             $select = 'SELECT tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -1747,14 +1747,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeSimples
      * fornece o primeiro nome de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_nomeSimples($idServidor)
-    {
+    function get_nomeSimples($idServidor) {
         if (is_numeric($idServidor)) {
             $select = 'SELECT tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -1773,14 +1773,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_sexo
      * informa o sexo de uma idServidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_sexo($idServidor)
-    {
+    function get_sexo($idServidor) {
         $select = 'SELECT tbpessoa.sexo
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
                     WHERE idServidor = ' . $idServidor;
@@ -1790,14 +1790,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeidPessoa
      * fornece o nome de um idPessoa
      * 
      * @param   integer $idPessoa    idPessoa do servidor
      */
-    function get_nomeidPessoa($idPessoa)
-    {
+    function get_nomeidPessoa($idPessoa) {
         $select = 'SELECT tbpessoa.nome
                          FROM tbpessoa
                         WHERE idPessoa = ' . $idPessoa;
@@ -1808,14 +1808,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoComissao
      * Informa o cargo em Comiss�o do Servidor (se tiver)
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    function get_cargoComissao($idServidor)
-    {
+    function get_cargoComissao($idServidor) {
 
         # Classe CargoComissão
         $cargoComissao = new CargoComissao();
@@ -1883,14 +1883,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoComissaoDescricao
      * Informa o cargo em Comiss�o do Servidor (se tiver)
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    function get_cargoComissaoDescricao($idServidor)
-    {
+    function get_cargoComissaoDescricao($idServidor) {
 
         # Inicia a classe de Cargo em comissão
         $comissao = new CargoComissao();
@@ -1929,6 +1929,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoComissaoPorId
      * Informa o id e o nome do cargo em Comiss�o do Servidor (se tiver)
@@ -1936,8 +1937,7 @@ class Pessoal extends Bd
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    function get_cargoComissaoPorId($id)
-    {
+    function get_cargoComissaoPorId($id) {
         # Pega o nome do id do cargo em comiss�o
         $select = 'SELECT tbtipocomissao.idTipoComissao,
                          CONCAT(tbtipocomissao.descricao," - ",tbtipocomissao.simbolo)
@@ -1950,14 +1950,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_salarioCargoComissao
      * Informa o sal�rio de um cargo em Comiss�o do Servidor (se tiver)
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    function get_salarioCargoComissao($idServidor)
-    {
+    function get_salarioCargoComissao($idServidor) {
         # Pega o id do cargo em comiss�o (se houver)		 
         $select = 'SELECT idComissao
                          FROM tbcomissao
@@ -1980,14 +1980,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioPercentual
      * informa o percentual atual do trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioPercentual($idServidor)
-    {
+    function get_trienioPercentual($idServidor) {
         $select = 'SELECT percentual
                          FROM tbtrienio
                         WHERE idServidor = ' . $idServidor . '
@@ -1999,14 +1999,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioValor
      * informa o valor atual do trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioValor($idServidor)
-    {
+    function get_trienioValor($idServidor) {
         $salario = $this->get_salarioBase($idServidor);
         $percentual = $this->get_trienioPercentual($idServidor);
 
@@ -2016,14 +2016,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioDataInicial
      * informa a data Inicial de um trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioDataInicial($idServidor)
-    {
+    function get_trienioDataInicial($idServidor) {
         $select = 'SELECT dtInicial
                          FROM tbtrienio
                         WHERE idServidor = ' . $idServidor . '
@@ -2035,6 +2035,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioDataProximoTrienio
      * informa a data do próximo triênio a contar dda última data de triênio recebido
@@ -2043,8 +2044,7 @@ class Pessoal extends Bd
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioDataProximoTrienio($idServidor)
-    {
+    function get_trienioDataProximoTrienio($idServidor) {
         $select = 'SELECT dtInicial
                          FROM tbtrienio
                         WHERE idServidor = ' . $idServidor . '
@@ -2063,14 +2063,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioPer�odoAquisitivo
      * informa a per�odo Aquisitivo de um trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioPeriodoAquisitivo($idServidor)
-    {
+    function get_trienioPeriodoAquisitivo($idServidor) {
         $select = 'SELECT dtInicioPeriodo,
                               dtFimPeriodo
                          FROM tbtrienio
@@ -2083,14 +2083,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioNumProcesso
      * informa a n� do processo de um trienio de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioNumProcesso($idServidor)
-    {
+    function get_trienioNumProcesso($idServidor) {
         $select = 'SELECT numProcesso
                          FROM tbtrienio
                         WHERE idServidor = ' . $idServidor . '
@@ -2102,14 +2102,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_trienioPublicacao
      * informa data da publicação no DOERJ do triênio vigente (último)
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_trienioPublicacao($idServidor)
-    {
+    function get_trienioPublicacao($idServidor) {
         $select = 'SELECT dtPublicacao
                          FROM tbtrienio
                         WHERE idServidor = ' . $idServidor . '
@@ -2121,14 +2121,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomelotacao
      * Informa o nome da lota��o a partir do id
      *
      * @param	string $id  id da lota��o
      */
-    public function get_nomeLotacao($idLotacao)
-    {
+    public function get_nomeLotacao($idLotacao) {
         if (!is_numeric($idLotacao))
             return $idLotacao;
         else {
@@ -2144,14 +2144,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomelotacao2
      * Informa o nome da lotação a partir do id
      *
      * @param	string $id  id da lotação
      */
-    public function get_nomeLotacao2($idLotacao)
-    {
+    public function get_nomeLotacao2($idLotacao) {
         if (!is_numeric($idLotacao))
             return $idLotacao;
         else {
@@ -2167,14 +2167,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomelotacao3
      * Informa o nome da lotação a partir do id
      *
      * @param	string $id  id da lotação
      */
-    public function get_nomeLotacao3($idLotacao)
-    {
+    public function get_nomeLotacao3($idLotacao) {
         if (!is_numeric($idLotacao))
             return $idLotacao;
         else {
@@ -2189,14 +2189,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeCOmpletolotacao
      * Informa o nome da COmpleto lota��o a partir do id
      *
      * @param	string $id  id da lota��o
      */
-    public function get_nomeCompletoLotacao($id)
-    {
+    public function get_nomeCompletoLotacao($id) {
         if (!is_numeric($id))
             return $id;
         else {
@@ -2212,13 +2212,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresCargo
      * 
      * Exibe o n�mero de servidores ativos em um determinado cargo
      */
-    public function get_servidoresCargo($id)
-    {
+    public function get_servidoresCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
@@ -2229,13 +2229,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresAtivosTipoCargo
      * 
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
-    public function get_servidoresAtivosTipoCargo($id)
-    {
+    public function get_servidoresAtivosTipoCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao = 1 
@@ -2247,13 +2247,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresTipoCargo
      * 
      * Exibe o número de servidores inativos em um determinado tipo de cargo
      */
-    public function get_servidoresInativosTipoCargo($id)
-    {
+    public function get_servidoresInativosTipoCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao <> 1 AND 
@@ -2264,13 +2264,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoComissaoVagas
      * 
      * Exibe o símbolo de um determinado cargo em comissao
      */
-    public function get_cargoComissaoSimbolo($id)
-    {
+    public function get_cargoComissaoSimbolo($id) {
         $select = 'SELECT simbolo                             
                      FROM tbtipocomissao 
                     WHERE idTipoComissao = ' . $id;
@@ -2280,13 +2280,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cargoComissaoVagas
      * 
      * Exibe o n�mero de vagas em um determinado cargo em comissao
      */
-    public function get_cargoComissaoVagas($id)
-    {
+    public function get_cargoComissaoVagas($id) {
         $select = 'SELECT vagas                             
                      FROM tbtipocomissao 
                     WHERE idTipoComissao = ' . $id;
@@ -2296,13 +2296,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresConcurso
      * 
      * Exibe o número de servidores ativos e Inativos em um determinado concurso
      */
-    public function get_servidoresConcurso($idConcurso)
-    {
+    public function get_servidoresConcurso($idConcurso) {
 
         # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
@@ -2330,13 +2330,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresAtivosConcurso
      * 
      * Exibe o número de servidores ativos em um determinado concurso
      */
-    public function get_servidoresAtivosConcurso($idConcurso)
-    {
+    public function get_servidoresAtivosConcurso($idConcurso) {
 
         # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
@@ -2364,13 +2364,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresInativosConcurso
      * 
      * Exibe o n�mero de servidores inativos em um determinado concurso
      */
-    public function get_servidoresInativosConcurso($idConcurso)
-    {
+    public function get_servidoresInativosConcurso($idConcurso) {
 
         # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
@@ -2398,13 +2398,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresAtivosPerfil
      * 
      * Exibe o número de servidores ativos 
      */
-    public function get_servidoresAtivosPerfil($id)
-    {
+    public function get_servidoresAtivosPerfil($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
@@ -2415,13 +2415,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresAtivosPerfil
      * 
      * Exibe o número de servidores inativos 
      */
-    public function get_servidoresInativosPerfil($id)
-    {
+    public function get_servidoresInativosPerfil($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao <> 1 AND 
@@ -2432,13 +2432,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoressituacaouacao
      * 
      * Exibe o n�mero de servidores ativos em um determinado concurso
      */
-    public function get_servidoresSituacao($id)
-    {
+    public function get_servidoresSituacao($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE idPerfil <> 10
@@ -2449,14 +2449,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilLicenca
      * informa se o perfil é permitido tirar licença
      * 
      * @param   integer $id id do Perfil
      */
-    function get_perfilLicenca($id)
-    {
+    function get_perfilLicenca($id) {
         $select = 'SELECT licenca
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -2467,14 +2467,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilProgressao
      * informa se o perfil � permitido ter progressao
      * 
      * @param   integer $id id do Perfil
      */
-    function get_perfilProgressao($id)
-    {
+    function get_perfilProgressao($id) {
         $select = 'SELECT progressao
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -2485,14 +2485,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilTrienio
      * informa se o perfil � permitido ter Tri�nios
      * 
      * @param   integer $id id do Perfil
      */
-    function get_perfilTrienio($id)
-    {
+    function get_perfilTrienio($id) {
         $select = 'SELECT trienio
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -2503,14 +2503,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilComissao
      * informa se o perfil � permitido ter Cargo em Comiss�o
      * 
      * @param   integer $id id do Perfil
      */
-    function get_perfilComissao($id)
-    {
+    function get_perfilComissao($id) {
         $select = 'SELECT comissao
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -2521,14 +2521,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilMatricula
      * informa a matrícula inicial e final permitida a um perfil
      * 
      * @param   integer $id id do Perfil
      */
-    function get_perfilMatricula($id)
-    {
+    function get_perfilMatricula($id) {
         $select = 'SELECT matIni,
                               matFim
                          FROM tbperfil
@@ -2540,14 +2540,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilGratificacao
      * informa se o perfil � permitido ter Gratifica��o Especial
      * 
      * @param   integer $id id do Perfil
      */
-    public function get_perfilGratificacao($id)
-    {
+    public function get_perfilGratificacao($id) {
         $select = 'SELECT gratificacao
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -2558,14 +2558,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilQuantidade
      * informa se o numero de servidores ativos nesse perfil
      * 
      * @param   integer $id id do Perfil
      */
-    public function get_perfilQuantidade($id)
-    {
+    public function get_perfilQuantidade($id) {
         $select = 'SELECT idServidor
                          FROM tbservidor
                         WHERE situacao = 1
@@ -2577,14 +2577,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilComServidores
      * informa os nomes de perfil que tem servidores ativos
      * 
      * @nota usada na rotina de estatistica por cargo
      */
-    public function get_perfilComServidores()
-    {
+    public function get_perfilComServidores() {
         $select = 'SELECT tbperfil.idPErfil, tbperfil.nome
                          FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                         WHERE tbservidor.situacao = 1 
@@ -2597,14 +2597,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilFerias
      * informa se o perfil � permitido ter F�rias
      * 
      * @param   integer $id id do Perfil
      */
-    public function get_perfilFerias($id)
-    {
+    public function get_perfilFerias($id) {
         $select = 'SELECT ferias
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -2615,14 +2615,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nivelCargo
      * Informa o n�vel de escolaridade do cargo de uma matrícula
      * 
      * @param   string $idServidor do servidor
      */
-    public function get_nivelCargo($idServidor)
-    {
+    public function get_nivelCargo($idServidor) {
         $select = 'SELECT tbtipocargo.nivel
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
@@ -2634,8 +2634,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function mudaStatusFeriasSolicitadaFruida()
-    {
+
+    public function mudaStatusFeriasSolicitadaFruida() {
 
         /** 	
          * Função acerta o status das férias de acordo com a data atual. 
@@ -2656,6 +2656,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_idDbv($idServidor)
 
     /**
@@ -2663,8 +2664,7 @@ class Pessoal extends Bd
      * informa o id da tabela tddbv
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-    {
+     */ {
         $select = 'SELECT idDbv
                          FROM tbdbv
                         WHERE idServidor = ' . $idServidor;
@@ -2679,6 +2679,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_dbvAcumulacao($idServidor)
 
     /**
@@ -2686,8 +2687,7 @@ class Pessoal extends Bd
      * informa se o servidor tem ou não cargo acumulado
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-    {
+     */ {
         $select = 'SELECT acumulacao
                      FROM tbdbv
                     WHERE idServidor = ' . $idServidor;
@@ -2703,6 +2703,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_dbvAnoBase($idServidor)
 
     /**
@@ -2710,8 +2711,7 @@ class Pessoal extends Bd
      * informa o ano base da dbv
      * 
      * @param	string $idServidor idServidor do servidor
-     */
-    {
+     */ {
         $select = 'SELECT anoBase
                          FROM tbdbv
                         WHERE idServidor = ' . $idServidor;
@@ -2726,8 +2726,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_treDiasTrabalhados($idServidor)
-    {
+
+    function get_treDiasTrabalhados($idServidor) {
 
         /**
          * informa a quantidade de dias trabalhados no TRE
@@ -2749,8 +2749,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_treFolgasConcedidas($idServidor)
-    {
+
+    function get_treFolgasConcedidas($idServidor) {
 
         /**
          * informa a quantidade de dias de folga que o servidor tem direito
@@ -2772,8 +2772,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_treFolgasFruidas($idServidor)
-    {
+
+    function get_treFolgasFruidas($idServidor) {
 
         /**
          * informa a quantidade de folga que o servidor fruiu (tirou)
@@ -2795,14 +2795,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_existeMatricula($matricula)
 
     /**
      * informa se a idServidor informada existe no cadastro
      * 
      * @param	string $matricula A matrícula do servidor
-     */
-    {
+     */ {
         $select = 'SELECT idServidor
                      FROM tbservidor
                     WHERE matricula = ' . $matricula;
@@ -2817,14 +2817,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_novaMatricula($perfil)
 
     /**
      * informa uma matrícula nova (gera nova matrícula)
      * 
      * @param	string $perfil perfil para saber a faixa da matrícula
-     */
-    {
+     */ {
         # pega a faixa da matrícula para esse perfil
         $faixa = $this->get_perfilMatricula($perfil);
         if (is_null($faixa[0])) {
@@ -2864,14 +2864,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nivelCargoCargo
      * Informa o nível de escolaridade do cargo de um idCargo
      * 
      * @param   string $idCargo
      */
-    public function get_nivelCargoCargo($idCargo)
-    {
+    public function get_nivelCargoCargo($idCargo) {
 
         $select = 'SELECT tbtipocargo.nivel
                      FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
@@ -2883,13 +2883,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_planoCargosAtual
      * Informa o id do Plano de CArgos Atual (com a data de publicação mais recente)
      * 	 
      */
-    public function get_planoCargosAtual()
-    {
+    public function get_planoCargosAtual() {
         $select = 'SELECT idPlano
                      FROM tbplano
                  ORDER BY dtPublicacao desc';
@@ -2900,14 +2900,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomePlanoCargos
      * Informa o nome do Plano de Cargos solicitado
      * 
      * @param   string $idPlano	 
      */
-    public function get_nomePlanoCargos($idPlano)
-    {
+    public function get_nomePlanoCargos($idPlano) {
         $select = 'SELECT numdecreto
                      FROM tbplano
                     WHERE idPlano = ' . $idPlano;
@@ -2918,14 +2918,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_planoLink
      * Informa o link com o texto da lei solicitada
      * 
      * @param   string $idPlano	 
      */
-    public function get_planoLink($idPlano)
-    {
+    public function get_planoLink($idPlano) {
         $select = 'SELECT link
                      FROM tbplano
                     WHERE idPlano = ' . $idPlano;
@@ -2936,6 +2936,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_classeInicial
      * Informa o idClasse inicial (salário Inicial)
@@ -2944,8 +2945,7 @@ class Pessoal extends Bd
      * @param   string $nivel 
      * 	 
      */
-    public function get_classeInicial($plano, $nivel, $cargo)
-    {
+    public function get_classeInicial($plano, $nivel, $cargo) {
         $select = 'SELECT idClasse
                      FROM tbclasse
                     WHERE idPlano = ' . $plano . '
@@ -2966,14 +2966,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_Pis
      * fornece o Pis de um id_pessoa
      * 
      * @param	string $idPessoa do servidor
      */
-    public function get_Pis($idPessoa)
-    {
+    public function get_Pis($idPessoa) {
         $select = 'SELECT pisPasep
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
@@ -2984,14 +2984,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_perfilNome
      * informa o nome do perfil
      * 
      * @param   integer $id id do Perfil
      */
-    public function get_perfilNome($id)
-    {
+    public function get_perfilNome($id) {
         $select = 'SELECT nome
                          FROM tbperfil
                         WHERE idPerfil = ' . $id;
@@ -3002,14 +3002,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeCargo
      * Informa o nome do cargo a partir do id
      *
      * @param	string $id  id do cargo
      */
-    public function get_nomeCargo($idCargo)
-    {
+    public function get_nomeCargo($idCargo) {
         if (!is_numeric($idCargo))
             return $idCargo;
         else {
@@ -3023,14 +3023,14 @@ class Pessoal extends Bd
     }
 
     ##########################################################
+
     /**
      * Método get_nomeCargoComissao
      * Informa o nome do cargo em comissao a partir do id
      *
      * @param	string $id  id do cargo
      */
-    public function get_nomeCargoComissao($id)
-    {
+    public function get_nomeCargoComissao($id) {
         if (!is_numeric($id)) {
             return $id;
         } else {
@@ -3044,14 +3044,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeArea
      * Informa o nome da área a partir do id
      *
      * @param	string $id  id do cargo
      */
-    public function get_nomeArea($id)
-    {
+    public function get_nomeArea($id) {
         if (!is_numeric($id))
             return $id;
         else {
@@ -3065,14 +3065,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     function get_numDependentes($idPessoa)
 
     /**
      * informa o n�mero de dependentes de um idPessoa
      * 
      * @param	string $idPessoa do servidor
-     */
-    {
+     */ {
         $select = 'SELECT idDependente
                          FROM tbdependente
                         WHERE idPessoa = ' . $idPessoa;
@@ -3083,8 +3083,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numServidoresAtivos($idLotacao = null)
-    {
+
+    function get_numServidoresAtivos($idLotacao = null) {
 
         /**
          * informa o número de Servidores Ativos
@@ -3112,8 +3112,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numEstatutariosAtivosSexo($sexo = null)
-    {
+
+    function get_numEstatutariosAtivosSexo($sexo = null) {
 
         /**
          * informa o número de Servidores Ativos
@@ -3134,8 +3134,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numServidoresAtivosPerfil($idPerfil = null)
-    {
+
+    function get_numServidoresAtivosPerfil($idPerfil = null) {
 
         /**
          * informa o número de Servidores Ativos por perfil
@@ -3156,8 +3156,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numServidoresAtivosCargoLotacao($idCargo = null, $idLotacao = null, $idPerfil = null)
-    {
+
+    function get_numServidoresAtivosCargoLotacao($idCargo = null, $idLotacao = null, $idPerfil = null) {
 
         /**
          * informa o número de Servidores Ativos por cargo em uma determinada lotaçao
@@ -3193,14 +3193,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_ultimoAcesso
      * informa a data do �ltimo acesso a �rea do servidor de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_ultimoAcesso($idServidor)
-    {
+    function get_ultimoAcesso($idServidor) {
         $select = 'SELECT date(ult_acesso)
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;
@@ -3216,8 +3216,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function aniversariante($idServidor)
-    {
+
+    function aniversariante($idServidor) {
 
 
         # Função que informa se a idServidor est� fazendo anivers�rio na data atual
@@ -3242,14 +3242,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     public function get_dataVencimentoCarteiraMotorista($idPessoa)
 
     /** 	 
      * fornece a data de vencimento da carteira de Motorista de um idPessoa
      * 
      * @param	string $idPessoa do servidor
-     */
-    {
+     */ {
         $select = 'SELECT date_format(dtVencMotorista,"%d/%m/%Y")
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
@@ -3260,14 +3260,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     public function get_idPlanoAtual()
 
     /**
      * 
      * Informa o id do plano que est� ativo na tabela tbplano
      * 
-     */
-    {
+     */ {
         # Pega o cargo do servidor
         $select = 'SELECT idPlano
                      FROM tbplano
@@ -3280,14 +3280,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     public function get_numDecretoPlanoAtual()
 
     /**
      * 
      * Informa o id do plano que est� ativo na tabela tbplano
      * 
-     */
-    {
+     */ {
         # Pega o cargo do servidor
         $select = 'SELECT numDecreto
                      FROM tbplano
@@ -3300,6 +3300,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
+
     function get_dadosDiaria($idDiaria)
 
     /**
@@ -3308,8 +3309,7 @@ class Pessoal extends Bd
      * 
      * @param $iddiaria integer o id da diaria
      * 
-     */
-    {
+     */ {
         # Monta o select
         $select = "SELECT date_format(dataCi,'%d/%m/%Y'),
                           numeroCi,
@@ -3323,14 +3323,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_parentesco
      * Informa o parentesco
      * 
      * @param	string $id  id do parentesco
      */
-    public function get_parentesco($id)
-    {
+    public function get_parentesco($id) {
         $select = 'SELECT  parentesco
                       FROM tbparentesco
                      WHERE idparentesco = ' . $id;
@@ -3341,8 +3341,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_licencaDados($idLicenca)
-    {
+
+    function get_licencaDados($idLicenca) {
 
 
         # Função que informa varios dados de uma licença
@@ -3369,14 +3369,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_cpf
      * fornece o CPF de um id_pessoa
      * 
      * @param	string $idPessoa do servidor
      */
-    public function get_cpf($idPessoa)
-    {
+    public function get_cpf($idPessoa) {
         $select = 'SELECT cpf
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
@@ -3387,6 +3387,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_identidade
      * fornece o n�mero, org�o e data de emiss�o da
@@ -3394,8 +3395,7 @@ class Pessoal extends Bd
      * 
      * @param	string $idPessoa do servidor
      */
-    public function get_identidade($idPessoa)
-    {
+    public function get_identidade($idPessoa) {
         $select = 'SELECT CONCAT(identidade," - ",orgaoId," - ",DATE_FORMAT(dtId,"%d/%m/%Y"))
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
@@ -3406,8 +3406,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    public function get_feriado($data = null)
-    {
+
+    public function get_feriado($data = null) {
         /**
          * 
          * Retorna uma string com o nome do feriado
@@ -3424,7 +3424,7 @@ class Pessoal extends Bd
                            OR (tipo = "data única" and  data = current_date()))';
             $row = parent::select($select, false);
 
-            if(!empty($row["descricao"])){
+            if (!empty($row["descricao"])) {
                 return $row["descricao"];
             }
         } else {
@@ -3438,7 +3438,7 @@ class Pessoal extends Bd
                                OR (tipo = "data única" and  data = "' . $data . '"))';
 
                 $row = parent::select($select, false);
-                if(!empty($row["descricao"])){
+                if (!empty($row["descricao"])) {
                     return $row["descricao"];
                 }
             }
@@ -3446,8 +3446,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emFolgaTre($idServidor, $data = null)
-    {
+
+    function emFolgaTre($idServidor, $data = null) {
 
         # Função que informa se a idServidor est� folgando (TRE) na data atual
         #
@@ -3476,8 +3476,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function emAfastamentoTre($idServidor, $data = null)
-    {
+
+    function emAfastamentoTre($idServidor, $data = null) {
 
         # Função que informa se a idServidor está afastada para o (TRE) na data atual
         #
@@ -3506,14 +3506,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idFuncional
      * Informa a idFuncional de um servidor
      * 
      * @param	string $idServidor  idServidor do servidor
      */
-    public function get_idFuncional($idServidor)
-    {
+    public function get_idFuncional($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT idFuncional
                          FROM tbservidor
@@ -3525,14 +3525,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_tipoSenha
      * Informa o tipo da senha (padrão/bloqueada/Ok) 
      * 
      * @param	string $idServidor	idServidor do servidor
      */
-    function get_tipoSenha($idServidor)
-    {
+    function get_tipoSenha($idServidor) {
 
         $select = "SELECT senha_intra		  
                      FROM tbservidor
@@ -3543,17 +3543,17 @@ class Pessoal extends Bd
         $padrao = MD5(SENHA_PADRAO);
 
         switch ($row[0]) {
-                # senha padrão
+            # senha padrão
             case $padrao:
                 return 1;
                 break;
 
-                # senha bloqueada
+            # senha bloqueada
             case null:
                 return 2;
                 break;
 
-                # senha ok
+            # senha ok
             default:
                 return 3;
                 break;
@@ -3561,14 +3561,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idServidor
      * Informa a idServidor de uma matrícula
      * 
      * @param	string $matricula  matricula do servidor
      */
-    public function get_idServidor($matricula)
-    {
+    public function get_idServidor($matricula) {
 
         # Pega o cargo do servidor
         $select = 'SELECT idServidor
@@ -3581,14 +3581,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idServidorFerias
      * Informa o id servidor de um pedido de férias
      * 
      * @param	string $idFerias  matricula do servidor
      */
-    public function get_idServidorFerias($idFerias)
-    {
+    public function get_idServidorFerias($idFerias) {
 
         # Pega o cargo do servidor
         $select = 'SELECT idServidor
@@ -3601,8 +3601,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numCargoComissaoAtivo()
-    {
+
+    function get_numCargoComissaoAtivo() {
 
         /**
          * informa o número de Lotações ativas
@@ -3617,8 +3617,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    function get_numLotacaoAtiva()
-    {
+
+    function get_numLotacaoAtiva() {
 
         /**
          * informa o número de Lotações ativas
@@ -3633,13 +3633,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_TipoCargoVagas
      * 
      * Exibe o n�mero de vagas em um determinado cargo em comissao
      */
-    public function get_TipoCargoVagas($id)
-    {
+    public function get_TipoCargoVagas($id) {
         $select = 'SELECT vagas                             
                          FROM tbtipocargo 
                         WHERE idTipoCargo = ' . $id;
@@ -3649,13 +3649,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_tipoCargoVagasDisponiveis
      * 
      * Exibe o número de vagas não ocupadas em um determinado cargo em comissao
      */
-    public function get_tipoCargoVagasDisponiveis($id)
-    {
+    public function get_tipoCargoVagasDisponiveis($id) {
         $vagas = $this->get_TipoCargoVagas($id);
         $ocupadas = $this->get_servidoresAtivosTipoCargo($id);
         $disponiveis = $vagas - $ocupadas;
@@ -3664,13 +3664,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_servidoresArea
      * 
      * Exibe o número de servidores ativos em uma determinada area
      */
-    public function get_servidoresArea($id)
-    {
+    public function get_servidoresArea($id) {
         $select = 'SELECT idServidor                             
                          FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                         WHERE situacao = 1 AND 
@@ -3681,13 +3681,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeSituacao
      * 
      * Informa o nome de um idsituacao
      */
-    public function get_nomeSituacao($idsituacao)
-    {
+    public function get_nomeSituacao($idsituacao) {
         $select = 'SELECT situacao                            
                          FROM tbsituacao
                         WHERE idsituacao = ' . $idsituacao;
@@ -3697,13 +3697,13 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomePerfil
      * 
      * Informa o nome de um idperfil
      */
-    public function get_nomePerfil($idperfil)
-    {
+    public function get_nomePerfil($idperfil) {
         $select = 'SELECT nome                            
                          FROM tbperfil
                         WHERE idperfil = ' . $idperfil;
@@ -3713,14 +3713,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_nomeCompletoCargo
      * Informa o nome do cargo a partir do id
      *
      * @param	string $id  id do cargo
      */
-    public function get_nomeCompletoCargo($id)
-    {
+    public function get_nomeCompletoCargo($id) {
         if (!is_numeric($id)) {
             return $id;
         } else {
@@ -3737,14 +3737,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_numIdservidor
      * fornece o número de idservidores de um idpessoa
      * 
      * @param	string $idPessoa idPessoa do servidor
      */
-    public function get_numIdservidor($idPessoa)
-    {
+    public function get_numIdservidor($idPessoa) {
         $select = 'SELECT idservidor
                              FROM tbservidor
                             WHERE idpessoa = ' . $idPessoa;
@@ -3755,13 +3755,13 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_feriasResumo
      * 
      * Fornece um array com a lista de totais de dias fruidos/solicitados por ano de exercicio
      */
-    public function get_feriasResumo($idservidor)
-    {
+    public function get_feriasResumo($idservidor) {
 
         $select = 'SELECT anoexercicio, SUM(numDias) as total                        
                          FROM tbferias
@@ -3798,13 +3798,13 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_exercicioDisponivel
      * 
      * Informa o ano exercício das férias disponivel para fruir
      */
-    public function get_feriasExercicioDisponivel($idservidor)
-    {
+    public function get_feriasExercicioDisponivel($idservidor) {
 
         # Pega as férias cadastradas no sistema
         $lista = $this->get_feriasResumo($idservidor);
@@ -3840,13 +3840,13 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_emailUenf(idServidor)
      * 
      * Informa se o servidor tem email principal e qual seria
      */
-    public function get_emailUenf($idServidor)
-    {
+    public function get_emailUenf($idServidor) {
         $select = 'SELECT emailUenf
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = ' . $idServidor;
@@ -3856,13 +3856,13 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_feriasSomaDias
      * 
      * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
      */
-    public function get_feriasSomaDias($anoExercicio, $idservidor, $id = null)
-    {
+    public function get_feriasSomaDias($anoExercicio, $idservidor, $id = null) {
         $select = 'SELECT anoexercicio, SUM(numDias)                          
                          FROM tbferias
                         WHERE idservidor = ' . $idservidor . '
@@ -3882,13 +3882,13 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_feriasQuantidadesPeriodos
      * 
      * Informa os períodos solicitados por um servidor em um anoexercicio
      */
-    public function get_feriasPeriodo($idFerias)
-    {
+    public function get_feriasPeriodo($idFerias) {
         # Pega os dados dessas ferias
         $select1 = "SELECT idServidor,
                               dtInicial,
@@ -3936,14 +3936,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_dataNascimento
      * informa a data de nascimento de um idServidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    function get_dataNascimento($idServidor)
-    {
+    function get_dataNascimento($idServidor) {
         $select = 'SELECT tbpessoa.dtNasc
                          FROM tbpessoa JOIN tbservidor USING(idPessoa)
                         WHERE tbservidor.idServidor = ' . $idServidor;
@@ -3957,14 +3957,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idServidoridFuncional
      * Informa a idServidor de um idFuncional
      * 
      * @param	string $idFuncional  idFuncional do servidor
      */
-    public function get_idServidoridFuncional($idFuncional)
-    {
+    public function get_idServidoridFuncional($idFuncional) {
         # Pega o cargo do servidor
         $select = 'SELECT idServidor
                          FROM tbservidor
@@ -3976,14 +3976,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idServidoridPessoa
      * Informa a idServidor de um idPessoa
      * 
      * @param	string $idFuncional  idFuncional do servidor
      */
-    public function get_idServidoridPessoa($idPessoa)
-    {
+    public function get_idServidoridPessoa($idPessoa) {
 
         # Verifica o $idPessoa
         if (is_null($idPessoa)) {
@@ -4003,14 +4003,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idade
      * Informa a idade do servidor
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function get_idade($idServidor)
-    {
+    public function get_idade($idServidor) {
 
         # Pega a data de nascimento do servidor
         $dataNascimento = $this->get_dataNascimento($idServidor);
@@ -4032,6 +4032,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método temLotacaoNestaData
      * Verifica se servidor já tem lotação na data informada. Evita problema de duplicidade de servidor quando tem 2 ou mais lotações começando na mesma data.
@@ -4040,8 +4041,7 @@ class Pessoal extends Bd
      * @param integer $idServidor O idServidor do servidor em questão
      * @param integer $idHistLot  O id da tabela tbhistlot para certificar que não está comparando o mesno registro.
      */
-    public function temLotacaoNestaData($data, $idServidor, $idHistLot = null)
-    {
+    public function temLotacaoNestaData($data, $idServidor, $idHistLot = null) {
 
         $select = 'SELECT data
                          FROM tbhistlot
@@ -4062,14 +4062,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método podeNovoServidor
      * Verifica se é permitido incluir novos servidores nesse perfil.
      *
      * @param integer $idPerfil O idPerfil do servidor a ser incluído
      */
-    public function podeNovoServidor($idPerfil)
-    {
+    public function podeNovoServidor($idPerfil) {
 
         $select = 'SELECT novoServidor
                          FROM tbperfil
@@ -4081,8 +4081,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_licencaLei($idTipoLicenca)
-    {
+
+    public function get_licencaLei($idTipoLicenca) {
 
 
         # Função que informa o nome do tipo de licença
@@ -4104,8 +4104,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_emailPessoal($idServidor)
-    {
+
+    public function get_emailPessoal($idServidor) {
 
         # Função que retorna o email pessoal do servidor cadastrado no sistema
         #
@@ -4120,8 +4120,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_emails($idServidor)
-    {
+
+    public function get_emails($idServidor, $br = true, $link = true) {
 
         # Função que retorna os emails pessoal e Uenf do servidor cadastrado no sistema
         #
@@ -4139,39 +4139,57 @@ class Pessoal extends Bd
         # Verifica se tem somente um email
         if ((empty($conteudo["emailPessoal"])) xor (empty($conteudo["emailUenf"]))) {
             if (empty($conteudo["emailPessoal"])) {
-                #$retorno = "<a target='_blank' href='mailto:{$conteudo["emailUenf"]}'>{$conteudo["emailUenf"]}</a>";
-                $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
-                $link->set_target("_blank");
-                $link->set_id("aContatos");
-                $link->show();
-
-            } else {               
-                #$retorno = "<a target='_blank' href='mailto:{$conteudo["emailPessoal"]}'>{$conteudo["emailPessoal"]}</a>";
-                $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
-                $link->set_target("_blank");
-                $link->set_id("aContatos");
-                $link->show();
+                if ($link) {
+                    $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
+                    $link->set_target("_blank");
+                    $link->set_id("aContatos");
+                    $link->show();
+                } else {
+                    echo $conteudo["emailUenf"];
+                }
+            } else {
+                if ($link) {
+                    $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
+                    $link->set_target("_blank");
+                    $link->set_id("aContatos");
+                    $link->show();
+                } else {
+                    echo $conteudo["emailPessoal"];
+                }
             }
         }
 
         # Verifica se tem os dois
         if ((!empty($conteudo["emailPessoal"])) and (!empty($conteudo["emailUenf"]))) {
-            $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
-            $link->set_target("_blank");
-            $link->set_id("aContatos");
-            $link->show();
-            br();
-            
-            $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
-            $link->set_target("_blank");
-            $link->set_id("aContatos");
-            $link->show();
+            if ($link) {
+                $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
+                $link->set_target("_blank");
+                $link->set_id("aContatos");
+                $link->show();
+            } else {
+                echo $conteudo["emailUenf"];
+            }
+
+            if ($br) {
+                br();
+            } else {
+                echo " | ";
+            }
+
+            if ($link) {
+                $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
+                $link->set_target("_blank");
+                $link->set_id("aContatos");
+                $link->show();
+            } else {
+                echo $conteudo["emailPessoal"];
+            }
         }
     }
 
     ##########################################################################################
-    public function get_telefones($idServidor)
-    {
+
+    public function get_telefones($idServidor) {
 
         # Função que retorna os telefones do servidor cadastrado no sistema
         #
@@ -4205,8 +4223,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_foto($idServidor,$largura = 75,$altura = 100)
-    {
+
+    public function get_foto($idServidor, $largura = 75, $altura = 100) {
 
         # Função que retorna a foto do servidor
         #
@@ -4222,8 +4240,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_contatos($idServidor)
-    {
+
+    public function get_contatos($idServidor) {
 
         # Função que retorna os emails pessoal e Uenf do servidor cadastrado no sistema
         #
@@ -4234,12 +4252,12 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
+
     public function get_idCedido($idServidor)
 
     /**
      * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
-     */
-    {
+     */ {
         # Valida parametro
         if (is_null($idServidor))
             return false;
@@ -4255,14 +4273,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_totalAverbadoPublico
      * informa o total de dias de tempo averbado em empresa Pública
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_totalAverbadoPublico($idServidor)
-    {
+    public function get_totalAverbadoPublico($idServidor) {
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
                     WHERE empresaTipo = 1 AND idServidor = ' . $idServidor . '
@@ -4278,14 +4296,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_totalAverbadoPrivado
      * informa o total de dias de tempo averbado em empresa privada
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_totalAverbadoPrivado($idServidor)
-    {
+    public function get_totalAverbadoPrivado($idServidor) {
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
                     WHERE empresaTipo = 2 AND idServidor = ' . $idServidor . '
@@ -4301,6 +4319,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_tempoServicoUenf
      * informa o total de dias corridos de tempo de serviço dentro da uenf
@@ -4308,8 +4327,7 @@ class Pessoal extends Bd
      * @param string $idServidor idServidor do servidor
      * @param date   $dtFinal    Data até quando vai ser feito o calculo. 
      */
-    public function get_tempoServicoUenf($idServidor, $dtFinal)
-    {
+    public function get_tempoServicoUenf($idServidor, $dtFinal) {
 
         # Data de admissão
         $dtAdmissao = $this->get_dtAdmissao($idServidor);   # Data de entrada na UENF
@@ -4326,6 +4344,7 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_totalDiasLicencaAfastamento
      * informa o total de dias de Um afastamento ou licença
@@ -4333,8 +4352,7 @@ class Pessoal extends Bd
      * @param string  $idServidor    idServidor do servidor
      * @param integer $idtipoLicenca o id do tipo de licença
      */
-    public function get_totalDiasLicencaAfastamento($idServidor, $idTipoLicenca)
-    {
+    public function get_totalDiasLicencaAfastamento($idServidor, $idTipoLicenca) {
         $select = 'SELECT SUM(dias) as total
                      FROM tblicenca
                     WHERE idTipoLicenca = ' . $idTipoLicenca . ' AND idServidor = ' . $idServidor . '
@@ -4350,8 +4368,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_endereco($idServidor)
-    {
+
+    public function get_endereco($idServidor) {
 
         # Função que retorna string com o endereço cadastrado do servidor
         #
@@ -4384,8 +4402,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    public function get_enderecoRel($idServidor)
-    {
+
+    public function get_enderecoRel($idServidor) {
 
         # Função que retorna string com o endereço cadastrado do servidor para relatorio. Unica diferença e o salto de pagina antes da cidade.
         #
@@ -4414,17 +4432,17 @@ class Pessoal extends Bd
 
         if ($numero > 0) {
             $return = plm($row[0]) . " - " .
-                plm($row[1]) . "<br/> " .
-                plm($row[2]) . " - " .
-                strtoupper($row[3]) . " Cep: " . $row[4];
+                    plm($row[1]) . "<br/> " .
+                    plm($row[2]) . " - " .
+                    strtoupper($row[3]) . " Cep: " . $row[4];
         }
 
         return $return;
     }
 
     ##########################################################################################
-    public function get_numVinculos($idServidor)
-    {
+
+    public function get_numVinculos($idServidor) {
 
         # Função que retorna quantos vinculos esse servidor teve com a uenf.
         #
@@ -4447,8 +4465,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_numVinculosAtivos($idServidor)
-    {
+
+    function get_numVinculosAtivos($idServidor) {
 
         # Função que retorna quantos vinculos ativos esse servidor tem com a uenf
         #
@@ -4472,8 +4490,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_numVinculosNaoAtivos($idServidor)
-    {
+
+    function get_numVinculosNaoAtivos($idServidor) {
 
         # Função que retorna quantos vinculos nao ativos esse servidor tem com a uenf
         #
@@ -4497,8 +4515,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_vinculos($idServidor)
-    {
+
+    function get_vinculos($idServidor) {
 
         # Função que retorna o idServidor de cada vinculos esse servidor teve com a uenf.
         #
@@ -4522,8 +4540,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_nomeReitor()
-    {
+
+    function get_nomeReitor() {
 
         # Função que retorna o nome do reitor atual
         # Monta o select		
@@ -4540,8 +4558,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_dadosTipoComissao($idTipoComissao)
-    {
+
+    function get_dadosTipoComissao($idTipoComissao) {
 
         /**
          * 
@@ -4567,8 +4585,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_gerente($idLotacao)
-    {
+
+    function get_gerente($idLotacao) {
 
         /**
          * 
@@ -4593,8 +4611,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_gerenciaDescricao($idLotacao)
-    {
+
+    function get_gerenciaDescricao($idLotacao) {
 
         /**
          * 
@@ -4621,8 +4639,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_reitor()
-    {
+
+    function get_reitor() {
 
         /**
          * Retorna o idServidor do reitor da Universidade
@@ -4640,8 +4658,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_diretor($idLotacao)
-    {
+
+    function get_diretor($idLotacao) {
 
         /**
          * 
@@ -4672,8 +4690,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_chefiaImediata($idServidor)
-    {
+
+    function get_chefiaImediata($idServidor) {
 
         /**
          * Retorna o idServidor da chefia imediata de um servidor específico
@@ -4719,8 +4737,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_chefiaImediataIdLotacao($idLotacao)
-    {
+
+    function get_chefiaImediataIdLotacao($idLotacao) {
 
         /**
          * Retorna o idServidor da chefia imediata de uma lotação
@@ -4755,8 +4773,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_chefiaImediataDescricao($idServidor)
-    {
+
+    function get_chefiaImediataDescricao($idServidor) {
 
         /**
          * Retorna a descrição do cargo em comissão do servidor indcado
@@ -4780,8 +4798,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_chefiaImediataDescricaoIdLotacao($idLotacao)
-    {
+
+    function get_chefiaImediataDescricaoIdLotacao($idLotacao) {
 
         /**
          * Retorna a descrição do cargo em comissão da lotação indcado
@@ -4805,8 +4823,8 @@ class Pessoal extends Bd
     }
 
     ##########################################################################################
-    function get_diretorServidor($idServidor)
-    {
+
+    function get_diretorServidor($idServidor) {
 
         /**
          * 
@@ -4826,14 +4844,14 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_cargoAtribuicoes
      * Informa as atribuições de um cargo
      * 
      * @param	string $idCargo  o id do cargo
      */
-    public function get_cargoAtribuicoes($idCargo)
-    {
+    public function get_cargoAtribuicoes($idCargo) {
         $select = 'SELECT atribuicoes
                      FROM tbcargo
                     WHERE idcargo = ' . $idCargo;
@@ -4844,14 +4862,14 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_areaDescricao
      * Informa as descrições / atribuições de uma área
      * 
      * @param	string $idArea o id da area
      */
-    public function get_areaDescricao($idArea)
-    {
+    public function get_areaDescricao($idArea) {
         $select = 'SELECT descricao
                      FROM tbarea
                     WHERE idarea = ' . $idArea;
@@ -4862,14 +4880,14 @@ class Pessoal extends Bd
     }
 
     #####################################################################################
+
     /**
      * Método get_idAreaCargo
      * Informa a idArea de um cargo
      * 
      * @param	string $idCargo o id da area
      */
-    public function get_idAreaCargo($idCargo)
-    {
+    public function get_idAreaCargo($idCargo) {
         $select = 'SELECT idArea
                      FROM tbcargo
                     WHERE idCargo = ' . $idCargo;
@@ -4880,14 +4898,14 @@ class Pessoal extends Bd
     }
 
     ##########################################################
+
     /**
      * Método get_escolaridade
      * informa a escolaridade a partir da idEscolaridade
      * 
      * @param	integer $idEscolaridade id da escolaridadeservidor
      */
-    function get_escolaridade($idEscolaridade)
-    {
+    function get_escolaridade($idEscolaridade) {
         $select = 'SELECT escolaridade
                      FROM tbescolaridade
                     WHERE idEscolaridade = ' . $idEscolaridade;
@@ -4897,6 +4915,7 @@ class Pessoal extends Bd
     }
 
     ##########################################################
+
     /**
      * Método get_dataIdade
      * informa a data em que o servidor terá a idade informada
@@ -4906,8 +4925,7 @@ class Pessoal extends Bd
      * @param integer $idServidor id do servidor
      * @param integer $idade      a idade
      */
-    function get_dataIdade($idServidor, $idade)
-    {
+    function get_dataIdade($idServidor, $idade) {
 
         # Pega a data de nascimento
         $dtNasc = $this->get_dataNascimento($idServidor);
@@ -4923,14 +4941,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idTipoCargo
      * Informa o id do Tipo CArgo do servidor
      * 
      * @param   string $idCargo
      */
-    public function get_idTipoCargo($idCargo)
-    {
+    public function get_idTipoCargo($idCargo) {
 
         $select = 'SELECT idTipoCargo
                      FROM tbcargo
@@ -4942,14 +4960,14 @@ class Pessoal extends Bd
     }
 
     ###########################################################
+
     /**
      * Método get_idTipoLicenca
      * Informa o id do Tipo de uma licenca
      * 
      * @param   string $idLicenca
      */
-    public function get_idTipoLicenca($idLicenca)
-    {
+    public function get_idTipoLicenca($idLicenca) {
 
         $select = 'SELECT idTpLicenca
                      FROM tblicenca
@@ -4961,8 +4979,8 @@ class Pessoal extends Bd
     }
 
     ###########################################################
-    public function exibeMcf($id)
-    {
+
+    public function exibeMcf($id) {
         /**
          * Exibe um link para a publicação
          * 

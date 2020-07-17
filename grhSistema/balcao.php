@@ -438,8 +438,12 @@ if ($acesso) {
                               balcao,
                               idUsuario
                          FROM uenf_areaservidor.tbusuario JOIN uenf_grh.tbservidor USING (idServidor)
-                                                     JOIN uenf_grh.tbpessoa USING (idPessoa)
+                                                          JOIN uenf_grh.tbpessoa USING (idPessoa)
+                                                          JOIN tbhistlot USING (idServidor)
+                                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE senha IS NOT null
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
                      ORDER BY tbpessoa.nome asc';
 
             $lista = $pessoal->select($select);

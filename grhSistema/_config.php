@@ -57,7 +57,9 @@ $nomeMes = array(null,
     "Dezembro");
 
 # Inicia a Session
-session_start();
+session_start([
+    'cookie_lifetime' => 60 * 60 * 8,   // Vida do cookie que armazena a sessao (8h)
+]);
 
 # Funçõess gerais	
 include_once (PASTA_FUNCOES_GERAIS . "funcoes.gerais.php");

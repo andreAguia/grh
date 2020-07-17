@@ -253,6 +253,15 @@ class MenuPrincipal
             echo "<tr><td>Tarde:</td><td>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
             echo "</table>";
         }
+        
+        $div = new Div("divAniversariante");
+        $div->abre();
+        $link = new Link("Veja todos", "../grhRelatorios/balcao.php");
+        $link->set_target('_blank');
+        $link->set_id('linkAniversariante');
+        $link->set_title('Aniversarintes do mês');
+        $link->show();
+        $div->fecha();
         $painel->fecha();
     }
 

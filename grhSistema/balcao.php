@@ -264,20 +264,29 @@ if ($acesso) {
                     if ($editar == 1) {
                         # Monta os array de servidores para cada turno
                         # Manhã
-                        $select1 = "SELECT idServidor"
-                                . "   FROM tbusuario JOIN uenf_grh.tbservidor USING (idServidor) "
-                                . "                  JOIN uenf_grh.tbpessoa USING (idPessoa) "
-                                . "   WHERE balcao = 'Manhã' OR  balcao = 'Ambos'"
-                                . "ORDER BY nome";
-
+                        $select1 = "SELECT idServidor
+                                      FROM uenf_areaservidor.tbusuario JOIN uenf_grh.tbservidor USING (idServidor)
+                                                                       JOIN uenf_grh.tbpessoa USING (idPessoa) 
+                                                                       JOIN uenf_grh.tbhistlot USING (idServidor)
+                                                                       JOIN uenf_grh.tblotacao ON (uenf_grh.tbhistlot.lotacao=uenf_grh.tblotacao.idLotacao)
+                                    WHERE (balcao = 'Manhã' OR  balcao = 'Ambos')
+                                      AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
+                                      AND uenf_grh.tbhistlot.lotacao = 66
+                                 ORDER BY uenf_grh.tbpessoa.nome";
+                       
                         $manha = $intra->select($select1);
                         array_unshift($manha, array(null, null)); # Adiciona o valor de nulo
-
-                        $select2 = "SELECT idServidor"
-                                . "   FROM tbusuario JOIN uenf_grh.tbservidor USING (idServidor) "
-                                . "                  JOIN uenf_grh.tbpessoa USING (idPessoa) "
-                                . "   WHERE balcao = 'Tarde' OR  balcao = 'Ambos'"
-                                . "ORDER BY nome";
+                        
+                        # Tarde
+                        $select2 = "SELECT idServidor
+                                      FROM uenf_areaservidor.tbusuario JOIN uenf_grh.tbservidor USING (idServidor)
+                                                                       JOIN uenf_grh.tbpessoa USING (idPessoa) 
+                                                                       JOIN uenf_grh.tbhistlot USING (idServidor)
+                                                                       JOIN uenf_grh.tblotacao ON (uenf_grh.tbhistlot.lotacao=uenf_grh.tblotacao.idLotacao)
+                                    WHERE (balcao = 'Tarde' OR  balcao = 'Ambos')
+                                      AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
+                                      AND uenf_grh.tbhistlot.lotacao = 66
+                                 ORDER BY uenf_grh.tbpessoa.nome";
 
                         $tarde = $intra->select($select2);
                         array_unshift($tarde, array(null, null)); # Adiciona o valor de nulo

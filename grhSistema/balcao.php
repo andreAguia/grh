@@ -195,7 +195,7 @@ if ($acesso) {
             echo '<tr>';
             echo '<th>DIA</th>';
             echo '<th>Dia da Semana</th>';
-            echo '<th>Manha</th>';
+            echo '<th>Manhã</th>';
             echo '<th>Tarde</th>';
             echo '</tr>';
 

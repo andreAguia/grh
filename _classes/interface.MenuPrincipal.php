@@ -414,7 +414,13 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
         $botao->set_accesskey('b');
-        #$menu->add_item($botao);        
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Professor Visitante');
+        $botao->set_url('cadastroVisitante.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'professorVisitante.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Professores Visitantes (bolsistas)');
+        $menu->add_item($botao);        
 
         $menu->show();
         $painel->fecha();

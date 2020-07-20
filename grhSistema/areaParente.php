@@ -14,7 +14,8 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
 
-if ($acesso) {
+if ($acesso)
+{
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -24,7 +25,8 @@ if ($acesso) {
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
-    if ($grh) {
+    if ($grh)
+    {
         # Grava no log a atividade
         $atividade = "Visualizou a área de parentes";
         $data = date("Y-m-d H:i:s");
@@ -45,13 +47,15 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio")
+    {
         AreaServidor::cabecalho();
     }
 
 ################################################################
 
-    switch ($fase) {
+    switch ($fase)
+    {
         case "" :
             br(4);
             aguarde();
@@ -125,7 +129,8 @@ if ($acesso) {
                                           JOIN tbparentesco ON (tbdependente.parentesco = tbparentesco.idParentesco)
                        WHERE situacao = 1';
 
-            if (!vazio($parametroNome)) {
+            if (!vazio($parametroNome))
+            {
                 $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
             }
 
@@ -147,7 +152,8 @@ if ($acesso) {
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 
-            if (!vazio($parametroNome)) {
+            if (!vazio($parametroNome))
+            {
                 $tabela->set_textoRessaltado($parametroNome);
             }
 
@@ -194,17 +200,20 @@ if ($acesso) {
                      WHERE situacao = 1
                        AND idPerfil = 1';
 
-            if ($parametroNivel <> "Todos") {
+            if ($parametroNivel <> "Todos")
+            {
                 $select .= ' AND tbtipocargo.nivel = "' . $parametroNivel . '"';
                 $subTitulo .= 'Cargo Efetivo de Nível ' . $parametroNivel . '<br/>';
             }
 
-            if ($parametroEscolaridade <> "*") {
+            if ($parametroEscolaridade <> "*")
+            {
                 $select .= ' AND tbformacao.idEscolaridade = ' . $parametroEscolaridade;
                 $subTitulo .= 'Curso de Nível ' . $pessoal->get_escolaridade($parametroEscolaridade) . '<br/>';
             }
 
-            if (!vazio($parametroCurso)) {
+            if (!vazio($parametroCurso))
+            {
                 $select .= ' AND tbformacao.habilitacao like "%' . $parametroCurso . '%"';
                 $subTitulo .= 'Filtro : ' . $parametroCurso . '<br/>';
             }
@@ -215,7 +224,8 @@ if ($acesso) {
             $relatorio = new Relatorio();
             $relatorio->set_titulo('Relatório Geral de Formação Servidores');
 
-            if (!is_null($subTitulo)) {
+            if (!is_null($subTitulo))
+            {
                 $relatorio->set_subtitulo($subTitulo);
             }
 
@@ -231,7 +241,8 @@ if ($acesso) {
     }
 
     $page->terminaPagina();
-} else {
+} else
+{
     loadPage("../../areaServidor/sistema/login.php");
 }
 

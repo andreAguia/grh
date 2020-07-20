@@ -148,7 +148,7 @@ if ($acesso) {
     $objeto->set_campos(array(
         array('linha' => 1,
             'nome' => 'nome',
-            'label' => 'Nome do bolsista:',
+            'label' => 'Nome do Professor Visitante:',
             'tipo' => 'texto',
             'required' => true,
             'autofocus' => true,

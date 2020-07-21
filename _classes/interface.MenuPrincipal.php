@@ -256,8 +256,7 @@ class MenuPrincipal
         
         $div = new Div("divAniversariante");
         $div->abre();
-        $link = new Link("Veja todos", "../grhRelatorios/balcao.php");
-        $link->set_target('_blank');
+        $link = new Link("Veja todos", "balcao.php");
         $link->set_id('linkAniversariante');
         $link->set_title('Aniversarintes do mês');
         $link->show();
@@ -282,7 +281,7 @@ class MenuPrincipal
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(3);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Afastamentos');
@@ -306,7 +305,7 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'balcao.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Atendimento do Balcão');
         #$botao->set_accesskey('S');
-        $menu->add_item($botao);
+        #$menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Feriados');
@@ -344,7 +343,7 @@ class MenuPrincipal
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(3);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
@@ -443,7 +442,7 @@ class MenuPrincipal
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(3);
         $botao = new BotaoGrafico();
 
         $botao = new BotaoGrafico();

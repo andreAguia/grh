@@ -35,6 +35,8 @@ $postAverbacao = post('averbacao');
 $postDiaria = post('diaria');
 $postAbono = post('abono');
 $postDireito = post('direito');
+$postPenalidade = post('penalidade');
+$postElogio = post('elogio');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -209,6 +211,24 @@ if ($acesso) {
             'size' => 1,
             'title' => 'Exibe Informaçoes do direito pessoal do servidor',
             'valor' => $postDireito,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 3),
+        array('nome' => 'penalidade',
+            'label' => 'Penalidades',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe se o servidor teve alguma penalidade',
+            'valor' => $postPenalidade,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 3),
+        array('nome' => 'elogio',
+            'label' => 'Elogios',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe se o servidor teve algum elogio',
+            'valor' => $postElogio,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 3)
@@ -1133,6 +1153,75 @@ if ($acesso) {
         $relatorio->set_menuRelatorio(false);
         #$relatorio->set_linhaNomeColuna(false);
         $relatorio->set_log(false);
+        $relatorio->show();
+    }
+
+
+    /*
+     * Penalidades
+     */
+
+    if ($postPenalidade) {
+        tituloRelatorio('Penalidades');
+
+        $select = "SELECT data,
+                          penalidade,
+                          processo,
+                          dtPublicacao,
+                          pgPublicacao,
+                          descricao
+                     FROM tbpenalidade JOIN tbtipopenalidade USING (idTipoPenalidade)
+                    WHERE idServidor={$idFicha}
+                 ORDER BY data desc";
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(array("Data", "Tipo", "Processo", "Publicação", "Pag", "Descrição"));
+        $relatorio->set_width(array(10, 10, 15, 15, 5, 35));
+        $relatorio->set_align(array("center", "center", "center", "center", "center", "left"));
+        $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existem penalidades para esse servidor !");
+        $relatorio->show();
+    }
+
+    /*
+     * Elogios
+     */
+
+    if ($postElogio) {
+        tituloRelatorio('Elogios');
+
+        $select = "SELECT data,
+                          descricao
+                     FROM tbelogio
+                    WHERE idServidor={$idFicha}
+                 ORDER BY data desc";
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(array("Data", "Descrição"));
+        $relatorio->set_width(array(15, 85));
+        $relatorio->set_align(array("center", "left"));
+        $relatorio->set_funcao(array("date_to_php"));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existem elogios para esse servidor !");
         $relatorio->show();
     }
 

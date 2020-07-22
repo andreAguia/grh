@@ -44,6 +44,7 @@ if ($acesso) {
         # Monta a Declaração
         $dec = new Declaracao();
         $dec->set_carimboCnpj(true);
+        $dec->set_assinatura(true);
         $dec->set_data(date("d/m/Y"));
 
         if ($idSituacao == 1) {

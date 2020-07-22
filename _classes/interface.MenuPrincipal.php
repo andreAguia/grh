@@ -770,6 +770,7 @@ class MenuPrincipal
         $menu->add_item('link', 'País', 'cadastroPais.php?grh=1', 'Acessa o Cadastro de Pais');
         $menu->add_item('link', 'Estado', 'cadastroEstado.php?grh=1', 'Acessa o Cadastro de Estados');
         $menu->add_item('link', 'Cidades', 'cadastroCidade.php?grh=1', 'Acessa o Cadastro de Cidades');
+        $menu->add_item('link', 'Tipos de Penalidades', 'cadastroTipoPenalidades.php?grh=1', 'Acessa o Cadastro de Tipos de penalidades');
 
         $menu->show();
         $painel->fecha();

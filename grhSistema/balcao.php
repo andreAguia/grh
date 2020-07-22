@@ -151,7 +151,7 @@ if ($acesso) {
 
             ###########################################################################################################
             $grid1 = new Grid();
-            $grid1->abreColuna(5);
+            $grid1->abreColuna(6);
 
             $painel = new Callout();
             $painel->abre();
@@ -179,7 +179,7 @@ if ($acesso) {
 
             ###########################################################################################################
 
-            $grid1->abreColuna(7);
+            $grid1->abreColuna(6);
 
             # Cabeçalho
             echo '<table class="tabelaPadrao">';

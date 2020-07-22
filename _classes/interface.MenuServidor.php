@@ -252,11 +252,19 @@ class MenuServidor {
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
 
-        # Elogios e Advertências
+        # Elogios
         $botao = new BotaoGrafico();
-        $botao->set_label('Elogios & Advertências');
-        $botao->set_url('servidorElogiosAdvertencias.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'ocorrencia.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_label('Elogios');
+        $botao->set_url('servidorElogios.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'elogios.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
+        $menu->add_item($botao);
+        
+        # Advertências
+        $botao = new BotaoGrafico();
+        $botao->set_label('Penalidades');
+        $botao->set_url('servidorPenalidades.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
         $menu->add_item($botao);
 

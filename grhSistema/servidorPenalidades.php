@@ -27,7 +27,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Elogios e advertências";
+        $atividade = "Cadastro do servidor - Penalidades";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -48,30 +48,33 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Elogios e Advertências do Servidor');
+    $objeto->set_nome('Cadastro de Penalidades');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
     $objeto->set_selectLista('SELECT data,
-                                     CASE tipo
-                                        WHEN "1" THEN "Elogio"
-                                        WHEN "2" THEN "Advertência"
-                                     end,                                 
+                                     penalidade,
+                                     processo,
+                                     dtPublicacao,
+                                     pgPublicacao,
                                      descricao,                           
-                                     idElogio
-                                FROM tbelogio
+                                     idPenalidade
+                                FROM tbpenalidade JOIN tbtipopenalidade USING (idTipoPenalidade)
                           WHERE idServidor=' . $idServidorPesquisado . '
                        ORDER BY data desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT data,
-                                     tipo,
+                                     idTipoPenalidade,
+                                     processo,
+                                     dtPublicacao,
+                                     pgPublicacao,
                                      descricao,
                                      idServidor
-                                FROM tbelogio
-                               WHERE idElogio = ' . $id);
+                                FROM tbpenalidade
+                               WHERE idPenalidade = ' . $id);
 
     # ordem da lista
     #$objeto->set_orderCampo($orderCampo);
@@ -84,22 +87,30 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data", "Tipo", "Descrição"));
-    $objeto->set_width(array(10, 10, 70));
-    $objeto->set_align(array("center", "center", "left"));
-    $objeto->set_funcao(array("date_to_php"));
+    $objeto->set_label(array("Data", "Tipo", "Processo","Publicação","Pag","Descrição"));
+    $objeto->set_width(array(10, 10, 15,15,5,35));
+    $objeto->set_align(array("center", "center","center","center","center", "left"));
+    $objeto->set_funcao(array("date_to_php",null,null,"date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbelogio');
+    $objeto->set_tabela('tbpenalidade');
 
     # Nome do campo id
-    $objeto->set_idCampo('idElogio');
+    $objeto->set_idCampo('idPenalidade');
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
+    
+    # Pega os dados da combo tipo de penalidade
+    $parentesco = new Pessoal();
+    $result = $parentesco->select('SELECT idTipoPenalidade, 
+                                          penalidade
+                                     FROM tbtipopenalidade
+                                 ORDER BY penalidade');
+    array_push($result, array(null, null)); # Adiciona o valor de nulo
 
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'data',
@@ -110,17 +121,38 @@ if ($acesso) {
             'required' => true,
             'autofocus' => true,
             'col' => 3,
-            'title' => 'Data do Elogio/Advertência.',
+            'title' => 'Data da Penalidade.',
             'linha' => 1),
-        array('nome' => 'tipo',
+        array('nome' => 'idTipoPenalidade',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'required' => true,
-            'array' => array(array(1, 'Elogio'), array(2, 'Advertência')),
+            'array' => $result,
+            'required' => true,            
             'size' => 20,
-            'title' => 'Qual o tipo de ocorrência',
+            'title' => 'Qual o tipo de penalidade',
             'col' => 4,
             'linha' => 1),
+        array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'col' => 3,
+            'title' => 'Número do Processo',
+            'linha' => 2),
+        array('nome' => 'dtPublicacao',
+            'label' => 'Data da Publicação:',
+            'tipo' => 'data',
+            'size' => 10,
+            'col' => 3,
+            'title' => 'A Data da Publicação.',
+            'linha' => 2),
+        array('nome' => 'pgPublicacao',
+            'label' => 'Página:',
+            'tipo' => 'texto',
+            'size' => 5,
+            'col' => 2,
+            'title' => 'A página da Publicação no DOERJ.',
+            'linha' => 2),
         array('nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'textarea',
@@ -128,7 +160,7 @@ if ($acesso) {
             'col' => 12,
             'required' => true,
             'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',
@@ -152,7 +184,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($id, 'servidorElogiosAdvertenciasExtra.php');
+            $objeto->gravar($id, 'servidorPenalidadeExtra.php');
             break;
     }
 

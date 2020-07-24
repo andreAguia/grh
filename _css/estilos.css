@@ -4,7 +4,6 @@
 p#grhTitulo{
     font-size: 25px;
     text-align: center;
-    font-family: tahoma;
     color: #02548b;
     padding: 0px;
     margin: 0px;
@@ -19,6 +18,12 @@ p#versao{
 }
 
 p#ip{
+    font-size: 11px;
+    text-align: right;
+    color: #02548b;
+}
+
+p#pauthor{
     font-size: 11px;
     text-align: right;
     color: #02548b;

@@ -1033,7 +1033,7 @@ class Grh
      */
     public static function rodape($idUsuario, $idServidor = null, $idPessoa = null)
     {
-
+{
         # Exibe faixa azul
         $grid = new Grid();
         $grid->abreColuna(12);
@@ -1044,26 +1044,14 @@ class Grh
         # Exibe a versão do sistema
         $intra = new Intra();
         $grid = new Grid();
-        $grid->abreColuna(4);
-        $texto = "Usuário: {$intra->get_usuario($idUsuario)}";
-
-        if (!is_null($idServidor)) {
-            $texto .= " - Servidor: {$idServidor}";
-        }
-
-        if (!is_null($idPessoa)) {
-            $texto .= " - Pessoa: {$idPessoa}";
-        }
-
-        p($texto, 'usuarioLogado');
+        $grid->abreColuna(6);
+        p('Usuário : ' . $intra->get_usuario($idUsuario), 'usuarioLogado');
         $grid->fechaColuna();
-        $grid->abreColuna(4);
-        p('Versão: ' . VERSAO, 'versao');
-        $grid->fechaColuna();
-        $grid->abreColuna(4);
-        p(BROWSER_NAME . " - " . IP, 'ip');
+        $grid->abreColuna(6);
+        p("Desenvolvido por André Águia", 'pauthor');
         $grid->fechaColuna();
         $grid->fechaGrid();
+    }
     }
 
 ######################################################################################################################

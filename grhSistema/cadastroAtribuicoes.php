@@ -142,6 +142,7 @@ if ($acesso) {
     $servGrh = $pessoal->select($select);
     
     # Inicia o array da combo
+    $comboServidores[] = null;
     $comboServidores[] = "Todos";
     
     # Adapta o array a combo

@@ -128,6 +128,26 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Cria combo de servidores da GRH
+    $select = "SELECT tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+    
+    $servGrh = $pessoal->select($select);
+    
+    # Inicia o array da combo
+    $comboServidores[] = "Todos";
+    
+    # Adapta o array a combo
+    foreach($servGrh as $item){
+        $comboServidores[] = get_nomeSimples($item["nome"]);
+    }
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -143,20 +163,23 @@ if ($acesso) {
         array('linha' => 2,
             'nome' => 'encarregado1',
             'label' => 'Encarregado Principal:',
-            'tipo' => 'texto',
+            'tipo' => 'combo',
+            'array' => $comboServidores,
             'required' => true,
             'col' => 4,
             'size' => 50),
         array('linha' => 2,
             'nome' => 'encarregado2',
             'label' => 'Vice-Encarregado:',
-            'tipo' => 'texto',
+            'tipo' => 'combo',
+            'array' => $comboServidores,
             'col' => 4,
             'size' => 50),
         array('linha' => 2,
             'nome' => 'encarregado3',
             'label' => 'Sub-Vice-Encarregado:',
-            'tipo' => 'texto',
+            'tipo' => 'combo',
+            'array' => $comboServidores,
             'col' => 4,
             'size' => 50)));
 

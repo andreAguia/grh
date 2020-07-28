@@ -219,7 +219,11 @@ if ($acesso) {
                 array('coluna' => 4,
                     'valor' => 'Vigente',
                     'operador' => '=',
-                    'id' => 'vigenteReducao')
+                    'id' => 'vigenteReducao'),
+                 array('coluna' => 4,
+                    'valor' => 'Aguardando Publicação',
+                    'operador' => '=',
+                    'id' => 'aguardando')
             ));
 
             $tabela->show();

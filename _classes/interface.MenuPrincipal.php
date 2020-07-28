@@ -419,7 +419,14 @@ class MenuPrincipal
         $botao->set_url('cadastroVisitante.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'professorVisitante.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Professores Visitantes (bolsistas)');
-        $menu->add_item($botao);        
+        $menu->add_item($botao);  
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('RPA');
+        $botao->set_url('rpa.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de RPAs');
+        #$menu->add_item($botao);  
 
         $menu->show();
         $painel->fecha();

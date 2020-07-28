@@ -68,9 +68,12 @@ if ($acesso) {
     set_session('sessionPaginacao'); # Zera a session de paginação da classe modelo
     set_session('sessionLicenca');      # Zera a session do tipo de licença
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
-##################################################################
-    # Menu
-    switch ($fase) {
+
+    /*
+     *  Menu
+     */
+    switch ($fase)
+    {
         # Exibe o Menu Inicial
         case "menu" :
 
@@ -125,16 +128,39 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
 
-            ########
-            # Atualiza status das férias
+
+            /*
+             *  Faz as alterações de férias
+             */
             if ($intra->get_variavel('dataVerificaFeriasSolicitada') <> date("d/m/Y")) {
-                $pessoal->mudaStatusFeriasSolicitadaFruida();                       // muda as férias solicitadas na data de hoje para fruídas
-                $intra->set_variavel('dataVerificaFeriasSolicitada', date("d/m/Y")); // muda a variável para hoje
+                # muda as férias solicitadas na data de hoje para fruídas
+                $pessoal->mudaStatusFeriasSolicitadaFruida();
+
+                # muda a variável para hoje
+                $intra->set_variavel('dataVerificaFeriasSolicitada', date("d/m/Y"));
+
+                # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de verificação de férias executada.', null, null, 6);
             }
 
-            ########
-            # Faz o backup de hora em hora
+            /*
+             *  Faz as alterações de readaptação
+             */
+            if ($intra->get_variavel('dataVerificaStatusReadaptacao') <> date("d/m/Y")) {
+                # muda os status de acordo com as regras
+                $readaptacao = new Readaptacao();
+                $readaptacao->mudaStatus();
+
+                # muda a variável para hoje
+                $intra->set_variavel('dataVerificaStatusReadaptacao', date("d/m/Y"));
+
+                # registra o log
+                $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de alteração do status de readaptação executada.', null, null, 6);
+            }
+
+            /*
+             *  Faz o backup de hora em hora
+             */
             # Verifica se o backup automático está habilitado
             if ($intra->get_variavel("backupAutomatico")) {
 
@@ -447,7 +473,8 @@ if ($acesso) {
             $atualizacoes = $intra->get_atualizacoes();
 
             # Percorre os dados
-            foreach ($atualizacoes as $valor) {
+            foreach ($atualizacoes as $valor)
+            {
                 $grid2 = new Grid("center");
                 $grid2->abreColuna(6);
                 p("Versão: " . $valor[0], "patualizacaoL");

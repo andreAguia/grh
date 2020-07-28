@@ -520,6 +520,10 @@ tr#emAberto{
     background-color:#cdf3d3;
 }
 
+tr#aguardando{
+    background-color:khaki;
+}
+
 p#processoAntigoReducao{
     text-align: center;
     font-size: 12px;

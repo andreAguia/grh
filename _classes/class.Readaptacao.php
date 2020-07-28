@@ -1,6 +1,7 @@
 <?php
 
-class Readaptacao {
+class Readaptacao
+{
 
     /**
      * Exibe as informações sobre a Readaptação de servidor
@@ -11,7 +12,8 @@ class Readaptacao {
 
     ###########################################################
 
-    public function __construct($idServidor = null) {
+    public function __construct($idServidor = null)
+    {
 
         /**
          * Inicia a classe e preenche o idServidor
@@ -23,7 +25,8 @@ class Readaptacao {
 
     ###########################################################
 
-    public function set_idServidor($idServidor) {
+    public function set_idServidor($idServidor)
+    {
         /**
          * Informa o idServidor quando não se pode informar no instanciamento da classe
          *
@@ -36,7 +39,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function get_dados($idReadaptacao) {
+    function get_dados($idReadaptacao)
+    {
 
         /**
          * Informe o número do processo de solicitação de redução de carga horária de um servidor
@@ -65,7 +69,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibeStatus($idReadaptacao) {
+    function exibeStatus($idReadaptacao)
+    {
 
         /**
          * Informe o status de uma solicitação de redução de carga horária específica
@@ -85,7 +90,8 @@ class Readaptacao {
         $retorno = null;
 
         # Verifica o status
-        switch ($row[0]) {
+        switch ($row[0])
+        {
             case 1:
                 $retorno = "Em Aberto";
                 break;
@@ -97,6 +103,10 @@ class Readaptacao {
             case 3:
                 $retorno = "Arquivado";
                 break;
+            
+            case 4:
+                $retorno = "Aguardando Publicação";
+                break;
         }
 
         return $retorno;
@@ -104,7 +114,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibeSolicitacao($idReadaptacao) {
+    function exibeSolicitacao($idReadaptacao)
+    {
 
         /**
          * Informe a data da solicitação
@@ -132,7 +143,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibeDadosPericia($idReadaptacao) {
+    function exibeDadosPericia($idReadaptacao)
+    {
 
         /**
          * Informe os dados da perícia de uma solicitação de redução de carga horária específica
@@ -187,7 +199,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibeResultado($idReadaptacao) {
+    function exibeResultado($idReadaptacao)
+    {
 
         /**
          * Informe os dados do resultado de uma solicitação de redução de carga horária específica
@@ -209,7 +222,8 @@ class Readaptacao {
         $dataCiencia = $row[1];
 
         # Verifica o resultado
-        switch ($resultado) {
+        switch ($resultado)
+        {
             case null:
                 $retorno = $resultado;
                 break;
@@ -238,7 +252,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibePublicacao($idReadaptacao) {
+    function exibePublicacao($idReadaptacao)
+    {
 
         /**
          * Informe os dados da Publicação de uma solicitação de redução de carga horária específica
@@ -272,7 +287,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibePeriodo($idReadaptacao) {
+    function exibePeriodo($idReadaptacao)
+    {
 
         /**
          * Informe os dados da período de uma solicitação de redução de carga horária específica
@@ -342,7 +358,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibeBotaoDocumentos($idReadaptacao) {
+    function exibeBotaoDocumentos($idReadaptacao)
+    {
 
         /**
          * Exibe o botão de imprimir os documentos de uma solicitação de redução de carga horária específica
@@ -460,7 +477,8 @@ class Readaptacao {
 
     ###########################################################
 
-    function get_dadosAnterior($idReadaptacao) {
+    function get_dadosAnterior($idReadaptacao)
+    {
 
         /**
          * Informe os dados de uma Readaptacao imediatamente anterior cronológicamente
@@ -492,7 +510,8 @@ class Readaptacao {
         $row = $pessoal->select($select);
 
         # Percorre o array para encontrar o anterior
-        foreach ($row as $redux) {
+        foreach ($row as $redux)
+        {
             if ($idReadaptacao == $redux[0]) {    // Verifica se é a atual
                 break;                          // Se for sai do loop 
             } else {
@@ -505,6 +524,109 @@ class Readaptacao {
 
         # Retorno
         return $dadosAnterior;
+    }
+
+    ##########################################################################################
+
+    public function mudaStatus()
+    {
+
+        /** 	
+         * Função que altera o status de acordo com o resultado
+         * 
+         * Caso 
+         * origem = 2 (solicitado)
+         * resultado: null          -> status: 1 (Em aberto)
+         * resultado: 1 (deferido) e data final não passou-> status: 2 (Vigente)
+         * resultado: 1 (deferido) e data final já passou -> status: 3 (Arquivado)
+         * resultado: 2 (indeferido) -> status: 3 (Arquivado)
+         * 
+         * origem = 1 (Ex-ofício)  Não tem resultado
+         * Se data de inicio e período é null -> status: 1 (Em aberto)
+         * data final não passou-> status: 2 (Vigente)
+         * data final já passou -> status: 3 (Arquivado)
+         */
+        
+        /*
+         * Conecta ao banco de dados
+         */
+        $pessoal = new Pessoal();
+
+        /*
+         * origem = 2(solicitado) e resultado: null -> status: 1 (Em aberto)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 1
+                 WHERE origem = 2
+                   AND resultado IS NULL';
+
+        $pessoal->update($sql);
+
+        /*
+         * origem = 2(solicitado) e resultado: 1 (deferido) e data final não passou-> status: 2 (Vigente)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 2
+                 WHERE origem = 2
+                   AND resultado = 1
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
+
+        $pessoal->update($sql);
+
+        /*
+         * origem = 2(solicitado) e resultado: 1 (deferido) e data final já passou -> status: 3 (Arquivado)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 3
+                 WHERE origem = 2
+                   AND resultado = 1
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
+
+        $pessoal->update($sql);
+
+        /*
+         * origem = 2(solicitado) e resultado: 2 (indeferido) -> status: 3 (Arquivado)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 3
+                 WHERE origem = 2
+                   AND resultado = 2';
+
+        $pessoal->update($sql);
+
+        /*
+         * origem = 1(ex-oficio) e Se data de inicio e período é null -> status: 1 (Em aberto)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 1
+                 WHERE origem = 1
+                   AND dtInicio is NULL
+                   AND periodo is NULL';
+
+        $pessoal->update($sql);
+
+        /*
+         * origem = 1(ex-oficio) e Se data final não passou-> status: 2 (Vigente)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 2
+                 WHERE origem = 1
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
+
+        $pessoal->update($sql);
+
+        /*
+         * origem = 1(ex-oficio) e Se data final já passou -> status: 3 (Arquivado)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 3
+                 WHERE origem = 1
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
+
+        $pessoal->update($sql);
+        
+        /*
+         * Regra excepcional devido a pandemia. Temporária
+         * Se data final já for depois de 01/05/2020 até hoje -> status: 4 (Aguardando Publicação)
+         */
+        $sql = 'UPDATE tbreadaptacao SET status = 4
+                 WHERE ADDDATE(dtInicio,INTERVAL periodo MONTH) > "2020-03-31"
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
+
+        $pessoal->update($sql);
     }
 
     ###########################################################

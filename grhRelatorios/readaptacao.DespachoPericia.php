@@ -44,7 +44,7 @@ if ($acesso) {
     }
 
     # do Servidor
-    $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
+    $nomeServidor = strtoupper($pessoal->get_nome($idServidorPesquisado));
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
 
@@ -58,22 +58,22 @@ if ($acesso) {
     } else {
         $detalhe = "da servidora";
     }
-
-    # Tipo
-    if ($tipo == 2) {
-        $texto[] = "Encaminhamos a solicitação de Renovação da Readaptação $detalhe <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID nº $idFuncional, $cargoEfetivo, por motivo de saúde.";
-        $texto[] = "Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em $dtTermino, conforme publicação no DOERJ de $dtPublicacao, anexada às fls. $folha do p.p.";
-        $texto[] = "Desta forma, encaminhamos o presente para providências cabíveis.";
-    } else {
-        $texto[] = "Encaminhamos a solicitação de Readaptação $detalhe <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID nº $idFuncional, $cargoEfetivo, por motivo de saúde.";
-    }
-
+    
     # despacho
     $despacho = new Despacho();
     $despacho->set_destino($destino);
     $despacho->set_data($data);
+
+    # Tipo
+    if ($tipo == 2) {
+        $despacho->set_texto("Encaminhamos a solicitação de Renovação da Readaptação {$detalhe} <b>{$nomeServidor}</b>, ID nº {$idFuncional}, {$cargoEfetivo}, por motivo de saúde.");
+        $despacho->set_texto("Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em {$dtTermino}, conforme publicação no DOERJ de {$dtPublicacao}, anexada às fls. {$folha} do p.p.");
+        $despacho->set_texto("Desta forma, encaminhamos o presente para providências cabíveis.");
+    } else {
+        $despacho->set_texto("Encaminhamos a solicitação de Readaptação {$detalhe} <b>{$nomeServidor}</b>, ID nº {$idFuncional}, {$cargoEfetivo}, por motivo de saúde.");
+    }
+
+    
     $despacho->set_texto($texto);
 
     # Pega o idServidor do gerente GRH

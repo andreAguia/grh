@@ -27,6 +27,9 @@ if ($acesso) {
         $atividade = "Cadastro do servidor - Controle de readaptação";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+    } else {
+        # Aproveita para rodar a rotina de alteração de status
+        $readaptacao->mudaStatus();
     }
 
     # Verifica a fase do programa
@@ -311,7 +314,8 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $objeto->set_formatacaoCondicional(array(array('coluna' => 2,
+    $objeto->set_formatacaoCondicional(array(
+        array('coluna' => 2,
             'valor' => 'Em Aberto',
             'operador' => '=',
             'id' => 'emAberto'),
@@ -322,7 +326,11 @@ if ($acesso) {
         array('coluna' => 2,
             'valor' => 'Vigente',
             'operador' => '=',
-            'id' => 'vigenteReducao')
+            'id' => 'vigenteReducao'),
+        array('coluna' => 2,
+            'valor' => 'Aguardando Publicação',
+            'operador' => '=',
+            'id' => 'aguardando')
     ));
 
     # Parametros da tabela
@@ -351,7 +359,8 @@ if ($acesso) {
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'origem',
+    $objeto->set_campos(array(
+        array('nome' => 'origem',
             'label' => 'Origem:',
             'tipo' => 'combo',
             'array' => array(array(1, "Ex-Ofício"), array(2, "Solicitada")),
@@ -376,10 +385,10 @@ if ($acesso) {
         array('nome' => 'status',
             'label' => 'Status:',
             'tipo' => 'combo',
-            'array' => array(array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado")),
+            'array' => array(array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado"), array(4, "Aguardando Publicação")),
             'size' => 2,
             'valor' => 0,
-            'col' => 2,
+            'col' => 3,
             'disabled' => true,
             'title' => 'Se a solicitação foi arquivada ou não.',
             'linha' => 1),
@@ -507,7 +516,8 @@ if ($acesso) {
 
     ################################################################
 
-    switch ($fase) {
+    switch ($fase)
+    {
         case "" :
         case "listar" :
             # Divide a página em 2 colunas

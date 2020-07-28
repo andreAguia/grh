@@ -5,21 +5,27 @@
  * 
  */
 
-
+/*
+ * Pega os valores
+ */
 $origem = $campoValor[0];
 $status = $campoValor[2];
 $resultado = $campoValor[9];
 $dtInicio = date_to_php($campoValor[15]);
 $periodo = $campoValor[16];
 
-# Passa o parecer para caixa baixa
+/*
+ *  Passa o parecer para caixa baixa
+ */
 $campoValor[17] = mb_strtolower($campoValor[17]);
 
-# Somente se for origem solicitado
+/*
+ *  Somente se for origem solicitado
+ */
 if ($origem == 2) {
     # Preenche o status de acordo com o resultado
-    switch ($resultado) {
-
+    switch ($resultado)
+    {
         # Resultado: nulo - Ainda não saiu o resultado
         # Status: 1 - Em aberto
         case null:
@@ -51,7 +57,10 @@ if ($origem == 2) {
             $campoValor[2] = 3;
             break;
     }
-} else { ## origem EX-ofício
+} else {
+    /*
+     *  origem EX-ofício
+     */
     # Verifica se já está cadastrada a data de início e o período
     if ((is_null($dtInicio)) OR (is_null($periodo))) {
         $campoValor[2] = 1;
@@ -67,3 +76,5 @@ if ($origem == 2) {
         }
     }
 }
+
+

@@ -18,10 +18,6 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
-    # Roda a rotina que verifica os status
-    $reducao = new ReducaoCargaHoraria($idServidorPesquisado);
-    $reducao->mudaStatus();
-
     # Verifica a fase do programa
     $fase = get('fase', 'editar');
 

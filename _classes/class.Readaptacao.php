@@ -103,7 +103,7 @@ class Readaptacao
             case 3:
                 $retorno = "Arquivado";
                 break;
-            
+
             case 4:
                 $retorno = "Aguardando Publicação";
                 break;
@@ -547,9 +547,7 @@ class Readaptacao
          * data final já passou -> status: 3 (Arquivado)
          */
         
-        /*
-         * Conecta ao banco de dados
-         */
+        # Conecta
         $pessoal = new Pessoal();
 
         /*
@@ -617,7 +615,7 @@ class Readaptacao
                    AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
         $pessoal->update($sql);
-        
+
         /*
          * Regra excepcional devido a pandemia. Temporária
          * Se data final já for depois de 01/05/2020 até hoje -> status: 4 (Aguardando Publicação)

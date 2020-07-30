@@ -726,93 +726,74 @@ class ReducaoCargaHoraria {
             case 3:
                 $retorno = "Arquivado";
                 break;
+
+            case 4:
+                $retorno = "Aguardando Publicação";
+                break;
         }
 
         return $retorno;
     }
 
     ###########################################################
+    function mudaStatus() {
 
-    function mudaStatus($idServidor = null) {
-
-        /**
+         /** 	
+         * Função que altera o status de acordo com o resultado
          * 
-         * Percorre a tabela de redução de carga horária alterando o status
-         * 
+         * Caso
+         * resultado: null                                  -> status: 1 (Em aberto)
+         * resultado: 1 (deferido) e data final não passou  -> status: 2 (Vigente)
+         * resultado: 1 (deferido) e data final já passou   -> status: 3 (Arquivado)
+         * resultado: 2 (indeferido)                        -> status: 3 (Arquivado)
          */
-        # Conecta ao Banco de Dados
+        
+         # Conecta
         $pessoal = new Pessoal();
 
-        # Pega os dias publicados
-        $select = 'SELECT resultado, 
-                          status,
-                          dtInicio,
-                          periodo,
-                          idReducao
-                     FROM tbreducao';
+        /*
+         * resultado: null -> status: 1 (Em aberto)
+         */
+        $sql = 'UPDATE tbreducao SET status = 1
+                 WHERE resultado IS NULL';
 
-        if (!is_null($idServidor)) {
-            $select .= ' WHERE idServidor = "' . $idServidor . '"';
-        }
+        $pessoal->update($sql);
+        
+        /*
+         * resultado: 1 (deferido) e data final não passou-> status: 2 (Vigente)
+         */
+        $sql = 'UPDATE tbreducao SET status = 2
+                 WHERE resultado = 1
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
 
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select);
+        $pessoal->update($sql);
+        
+         /*
+         * origem = 2(solicitado) e resultado: 1 (deferido) e data final já passou -> status: 3 (Arquivado)
+         */
+        $sql = 'UPDATE tbreducao SET status = 3
+                 WHERE resultado = 1
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
-        # Percorre o array
-        foreach ($row as $reducao) {
+        $pessoal->update($sql);
+        
+         /*
+         * resultado: 2 (indeferido) -> status: 3 (Arquivado)
+         */
+        $sql = 'UPDATE tbreducao SET status = 3
+                 WHERE resultado = 2';
 
-            $resultado = $reducao[0];
-            $status = $reducao[1];
-            $dtInicio = date_to_php($reducao[2]);
-            $periodo = $reducao[3];
-            $idReducao = $reducao[4];
+        $pessoal->update($sql);
+        
+         /*
+         * Regra excepcional devido a pandemia. Temporária
+         * Se data final já for depois de 01/05/2020 até hoje -> status: 4 (Aguardando Publicação)
+         */
+        $sql = 'UPDATE tbreducao SET status = 4
+                 WHERE ADDDATE(dtInicio,INTERVAL periodo MONTH) > "2020-03-31"
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
-            $statusCerto = null;
-
-            # Preenche o status de acordo com o resultado            
-            switch ($resultado) {
-
-                # Resultado: nulo - Ainda não saiu o resultado
-                # Status: 1 - Em aberto
-                case null:
-                    $statusCerto = 1;
-                    break;
-
-                # Resultado: 1 - Deferido
-                # Status:    2 - Vigente até o término do benefício, após essa data passa para 3 - Arquivado
-                case 1:
-
-                    # Verifica se já está cadastrada a data de início e o período
-                    if ((is_null($dtInicio)) OR (is_null($periodo))) {
-                        $statusCerto = 2;
-                    } else {
-                        $dtTermino = addMeses($dtInicio, $periodo);
-
-                        # Verifica se a data de término já passou
-                        if (jaPassou($dtTermino)) {
-                            $statusCerto = 3; // Arquivado
-                        } else {
-                            $statusCerto = 2; // Vigente
-                        }
-                    }
-                    break;
-
-                # Resultado: 2 - Indeferido
-                # Status:    3 - Arquivado
-                case 2:
-                case 3:
-                    $statusCerto = 3;
-                    break;
-            }
-
-            # Verifica se o status está correto, senão grava o correto
-            if ($status <> $statusCerto) {
-                # Define a tabela 
-                $pessoal->set_tabela("tbreducao");
-                $pessoal->set_idCampo("idReducao");
-                $pessoal->gravar("status", $statusCerto, $idReducao);
-            }
-        }
+        $pessoal->update($sql);
     }
 
     ###########################################################

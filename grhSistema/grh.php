@@ -157,6 +157,21 @@ if ($acesso) {
                 # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de alteração do status de readaptação executada.', null, null, 6);
             }
+            
+             /*
+             *  Faz as alterações de redução de carga horária
+             */
+            if ($intra->get_variavel('dataVerificaStatusReducao') <> date("d/m/Y")) {
+                # muda os status de acordo com as regras
+                $reducao = new ReducaoCargaHoraria();
+                $reducao->mudaStatus();
+
+                # muda a variável para hoje
+                $intra->set_variavel('dataVerificaStatusReducao', date("d/m/Y"));
+
+                # registra o log
+                $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de alteração do status de redução de carga horária executada.', null, null, 6);
+            }
 
             /*
              *  Faz o backup de hora em hora

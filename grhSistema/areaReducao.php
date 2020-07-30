@@ -19,10 +19,6 @@ if ($acesso) {
     $intra = new Intra();
     $pessoal = new Pessoal();
 
-    # Roda a rotina que verifica os status
-    $reducao = new ReducaoCargaHoraria();
-    $reducao->mudaStatus();
-
     # Verifica a fase do programa
     $fase = get('fase');
 
@@ -60,13 +56,19 @@ if ($acesso) {
         AreaServidor::cabecalho();
     }
 
-    # Variáveis
-    $statusPossiveis = array(array(0, "-- Todos --"), array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado"));
-    $origemsPossiveis = array(array(0, "-- Todos --"), array(1, "Ex-Ofício"), array(2, "Solicitada"));
+    # Status
+    $statusPossiveis = array(
+        array(0, "-- Todos --"),
+        array(1, "Em Aberto"),
+        array(2, "Vigente"),
+        array(3, "Arquivado"),
+        array(4, "Aguardando Publicação")
+    );
 
 ################################################################
 
-    switch ($fase) {
+    switch ($fase)
+    {
 
         case "":
         case "listaReducao" :
@@ -188,7 +190,8 @@ if ($acesso) {
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 3,
                     'valor' => 'Em Aberto',
                     'operador' => '=',
                     'id' => 'emAberto'),
@@ -199,9 +202,12 @@ if ($acesso) {
                 array('coluna' => 3,
                     'valor' => 'Vigente',
                     'operador' => '=',
-                    'id' => 'vigenteReducao')
+                    'id' => 'vigenteReducao'),
+                array('coluna' => 3,
+                    'valor' => 'Aguardando Publicação',
+                    'operador' => '=',
+                    'id' => 'aguardando')
             ));
-
             $tabela->show();
 
             # Pega o time final

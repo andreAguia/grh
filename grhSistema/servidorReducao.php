@@ -271,7 +271,11 @@ if ($acesso) {
         array('coluna' => 1,
             'valor' => 'Vigente',
             'operador' => '=',
-            'id' => 'vigenteReducao')
+            'id' => 'vigenteReducao'),
+        array('coluna' => 1,
+            'valor' => 'Aguardando Publicação',
+            'operador' => '=',
+            'id' => 'aguardando')
     ));
 
     # Parametros da tabela
@@ -324,7 +328,7 @@ if ($acesso) {
         array('nome' => 'status',
             'label' => 'Status:',
             'tipo' => 'combo',
-            'array' => array(array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado")),
+            'array' => array(array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado"), array(4, "Aguardando Publicação")),
             'size' => 2,
             'valor' => 0,
             'col' => 2,
@@ -440,7 +444,8 @@ if ($acesso) {
 
     ################################################################
 
-    switch ($fase) {
+    switch ($fase)
+    {
         case "" :
         case "listar" :
             # Divide a página em 3 colunas

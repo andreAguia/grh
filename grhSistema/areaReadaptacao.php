@@ -57,13 +57,26 @@ if ($acesso) {
         AreaServidor::cabecalho();
     }
 
-    # Variáveis
-    $statusPossiveis = array(array(0, "-- Todos --"), array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado"));
-    $origemsPossiveis = array(array(0, "-- Todos --"), array(1, "Ex-Ofício"), array(2, "Solicitada"));
+    # Status
+    $statusPossiveis = array(
+        array(0, "-- Todos --"),
+        array(1, "Em Aberto"),
+        array(2, "Vigente"),
+        array(3, "Arquivado"),
+        array(4, "Aguardando Publicação")
+    );
+
+    # Origem
+    $origensPossiveis = array(
+        array(0, "-- Todos --"),
+        array(1, "Ex-Ofício"),
+        array(2, "Solicitada")
+    );
 
 ################################################################
 
-    switch ($fase) {
+    switch ($fase)
+    {
 
         case "" :
         case "listaReadaptacao" :
@@ -121,7 +134,7 @@ if ($acesso) {
             $controle = new Input('parametroOrigem', 'combo', 'Origem:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Origem');
-            $controle->set_array($origemsPossiveis);
+            $controle->set_array($origensPossiveis);
             $controle->set_valor($parametroOrigem);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -220,7 +233,7 @@ if ($acesso) {
                     'valor' => 'Vigente',
                     'operador' => '=',
                     'id' => 'vigenteReducao'),
-                 array('coluna' => 4,
+                array('coluna' => 4,
                     'valor' => 'Aguardando Publicação',
                     'operador' => '=',
                     'id' => 'aguardando')

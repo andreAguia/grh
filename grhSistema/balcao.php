@@ -165,7 +165,7 @@ if ($acesso) {
             $painel->abre();
 
             # Exibe a tabela de Servidores afastados
-            $afast = new Afastamento();
+            $afast = new ListaAfastamentos();
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
             $afast->set_lotacao(66);

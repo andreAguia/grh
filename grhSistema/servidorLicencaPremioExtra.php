@@ -9,6 +9,7 @@
 $pessoal = new Pessoal();
 
 $dtInicial = $campoValor[0];
+$numDias = $campoValor[1];
 $idServidor = $campoValor[4];
 
 # Verifica se a data Inicial é anterior a data de admissão
@@ -29,4 +30,15 @@ if (!is_null($dtSaida)) {
         $erro = 1;
         $msgErro .= 'O servidor não pode pedir licença DEPOIS gggde sair da UENF!' . $idServidor . '\n';
     }
+}
+
+# Verifica se já tem outro afastamento nesse período
+$dtFinal = addDias(date_to_php($dtInicial), $numDias);
+
+$verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
+$verifica->setIsento("tblicencapremio", $id);
+$outro = $verifica->verifica();
+if (!empty($outro)) {
+    $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
+    $erro = 1;
 }

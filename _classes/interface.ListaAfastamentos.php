@@ -1,6 +1,6 @@
 <?php
 
-class Afastamento {
+class ListaAfastamentos {
 
     /**
      * Abriga as várias rotina referentes ao afastamento do servidor
@@ -37,7 +37,7 @@ class Afastamento {
          * @syntax $input->set_mes($mes);
          */
         # Se vier vazio coloca o mês atual
-        if (vazio($mes)) {
+        if (empty($mes)) {
             $this->mes = date('m');
         } else {
             $this->mes = $mes;
@@ -55,7 +55,7 @@ class Afastamento {
          * @syntax $input->set_ano($ano);
          */
         # Se vier vazio coloca o ano atual
-        if (vazio($ano)) {
+        if (empty($ano)) {
             $this->ano = date('Y');
         } else {
             $this->ano = $ano;
@@ -190,14 +190,14 @@ class Afastamento {
          */
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
-
+        
         # Constroi a data
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $data = $this->ano . '-' . $this->mes . '-01';
         }
 
         # Se for de um só servidor não exibe o idFuncional
-        if (!vazio($this->idServidor)) {
+        if (!empty($this->idServidor)) {
             $this->idFuncional = false;
         }
 
@@ -210,7 +210,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                          tbservidor.idServidor,';
         }
@@ -220,7 +220,7 @@ class Afastamento {
         $select .= '       tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                           CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta"," - Sem Alta")),
+                           CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta","")),
                           tbservidor.idServidor
                       FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                            JOIN tbhistlot USING (idServidor)
@@ -230,7 +230,7 @@ class Afastamento {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 if (($this->tipo <> 6) AND ($this->tipo <> 5) AND ($this->tipo <> 8) AND ($this->tipo <> 16)) {
                     $select .= ' AND idTpLicenca = ' . $this->tipo;
@@ -243,18 +243,18 @@ class Afastamento {
         }
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tblicenca.dtInicial IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= ' AND (("' . $data . '" BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                           OR  (LAST_DAY("' . $data . '") BETWEEN tblicenca.dtInicial AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))
                           OR  ("' . $data . '" < tblicenca.dtInicial AND LAST_DAY("' . $data . '") > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)))';
-        } elseif (!vazio($this->ano)) {
+        } elseif (!empty($this->ano)) {
             $select .= ' AND (((YEAR(tblicenca.dtInicial) = ' . $this->ano . ') OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = ' . $this->ano . ')) 
                           OR ((YEAR(tblicenca.dtInicial) < ' . $this->ano . ') AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > ' . $this->ano . ')))';
         }
@@ -278,7 +278,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                           tbservidor.idServidor,';
         }
@@ -296,7 +296,7 @@ class Afastamento {
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 if ($this->tipo == 6) {
                     $select .= ' AND true';
@@ -309,19 +309,19 @@ class Afastamento {
         }
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tblicencapremio.dtInicial IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= '       
                       AND (("' . $data . '" BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                        OR  (LAST_DAY("' . $data . '") BETWEEN tblicencapremio.dtInicial AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1))
                        OR  ("' . $data . '" < tblicencapremio.dtInicial AND LAST_DAY("' . $data . '") > ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)))';
-        } elseif (!vazio($this->ano)) {
+        } elseif (!empty($this->ano)) {
             $select .= ' AND (((YEAR(tblicencapremio.dtInicial) = ' . $this->ano . ') OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = ' . $this->ano . ')) 
                          OR ((YEAR(tblicencapremio.dtInicial) < ' . $this->ano . ') AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > ' . $this->ano . ')))';
         }
@@ -345,7 +345,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                           tbservidor.idServidor,';
         }
@@ -362,7 +362,7 @@ class Afastamento {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 $select .= ' AND false';
             } else {
@@ -375,19 +375,19 @@ class Afastamento {
         }
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tbferias.dtInicial IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= '       
                       AND (("' . $data . '" BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                        OR  (LAST_DAY("' . $data . '") BETWEEN tbferias.dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                        OR  ("' . $data . '" < tbferias.dtInicial AND LAST_DAY("' . $data . '") > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))';
-        } elseif (!vazio($this->ano)) {
+        } elseif (!empty($this->ano)) {
             $select .= ' AND (((YEAR(tbferias.dtInicial) = ' . $this->ano . ') OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = ' . $this->ano . ')) 
                          OR ((YEAR(tbferias.dtInicial) < ' . $this->ano . ') AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > ' . $this->ano . ')))';
         }
@@ -411,7 +411,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                           tbservidor.idServidor,';
         }
@@ -428,7 +428,7 @@ class Afastamento {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 $select .= ' AND false';
             } else {
@@ -441,19 +441,19 @@ class Afastamento {
         }
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tbatestado.dtInicio IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= '       
                       AND (("' . $data . '" BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
                        OR  (LAST_DAY("' . $data . '") BETWEEN tbatestado.dtInicio AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1))
                        OR  ("' . $data . '" < tbatestado.dtInicio AND LAST_DAY("' . $data . '") > ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)))';
-        } elseif (!vazio($this->ano)) {
+        } elseif (!empty($this->ano)) {
             $select .= ' AND (((YEAR(tbatestado.dtInicio) = ' . $this->ano . ') OR (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) = ' . $this->ano . ')) 
                          OR ((YEAR(tbatestado.dtInicio) < ' . $this->ano . ') AND (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) > ' . $this->ano . ')))';
         }
@@ -477,7 +477,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                           tbservidor.idServidor,';
         }
@@ -494,7 +494,7 @@ class Afastamento {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 $select .= ' AND false';
             } else {
@@ -507,19 +507,19 @@ class Afastamento {
         }
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tbtrabalhotre.data IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= '       
                       AND (("' . $data . '" BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
                        OR  (LAST_DAY("' . $data . '") BETWEEN tbtrabalhotre.data AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1))
                        OR  ("' . $data . '" < tbtrabalhotre.data AND LAST_DAY("' . $data . '") > ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)))';
-        } elseif (!vazio($this->ano)) {
+        } elseif (!empty($this->ano)) {
             $select .= ' AND (((YEAR(tbtrabalhotre.data) = ' . $this->ano . ') OR (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) = ' . $this->ano . ')) 
                          OR ((YEAR(tbtrabalhotre.data) < ' . $this->ano . ') AND (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) > ' . $this->ano . ')))';
         }
@@ -543,7 +543,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                           tbservidor.idServidor,';
         }
@@ -560,7 +560,7 @@ class Afastamento {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 $select .= ' AND false';
             } else {
@@ -573,19 +573,19 @@ class Afastamento {
         }
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tbfolga.data IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= '       
                       AND (("' . $data . '" BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
                        OR  (LAST_DAY("' . $data . '") BETWEEN tbfolga.data AND ADDDATE(tbfolga.data,tbfolga.dias-1))
                        OR  ("' . $data . '" < tbfolga.data AND LAST_DAY("' . $data . '") > ADDDATE(tbfolga.data,tbfolga.dias-1)))';
-        } elseif (!vazio($this->ano)) {
+        } elseif (!empty($this->ano)) {
             $select .= ' AND (((YEAR(tbfolga.data) = ' . $this->ano . ') OR (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) = ' . $this->ano . ')) 
                          OR ((YEAR(tbfolga.data) < ' . $this->ano . ') AND (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) > ' . $this->ano . ')))';
         }
@@ -609,7 +609,7 @@ class Afastamento {
             $select .= 'tbservidor.idfuncional,';
         }
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' tbpessoa.nome,
                           tbservidor.idServidor,';
         }
@@ -629,7 +629,7 @@ class Afastamento {
                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
-        if (!vazio($this->tipo)) {
+        if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 if (($this->tipo == 5) OR ($this->tipo == 8) OR ($this->tipo == 16)) {
                     $select .= ' AND idTpLicenca = ' . $this->tipo;
@@ -643,14 +643,14 @@ class Afastamento {
 
 
         # Verifica se é somente de um servidor
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $select .= ' AND tbservidor.situacao = 1';
         } else {
             $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
             $select .= ' AND tblicencasemvencimentos.dtInicial IS NOT null';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $select .= '       
                                AND (("' . $data . '" BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
                                 OR  (LAST_DAY("' . $data . '") BETWEEN tblicencasemvencimentos.dtInicial AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))
@@ -697,13 +697,13 @@ class Afastamento {
         $cont = $pessoal->count($select);
 
         $tabela = new Tabela();
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
             $titulo = 'Servidores com Afastamentos';
         } else {
             $titulo = 'Afastamentos';
         }
 
-        if (!vazio($this->mes)) {
+        if (!empty($this->mes)) {
             $titulo .= " " . get_nomeMes($this->mes) . "/" . $this->ano;
         } elseif ($this->ano) {
             $titulo .= " " . $this->ano;
@@ -711,7 +711,7 @@ class Afastamento {
 
         $tabela->set_titulo($titulo);
 
-        if (vazio($this->idServidor)) {
+        if (empty($this->idServidor)) {
 
             if ($this->idFuncional) {
 
@@ -754,7 +754,7 @@ class Afastamento {
             $tabela->set_width(array(15, 5, 15, 65));
         }
 
-        if (!vazio($this->linkEditar)) {
+        if (!empty($this->linkEditar)) {
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar($this->linkEditar);
         }

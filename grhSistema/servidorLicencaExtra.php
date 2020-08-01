@@ -21,33 +21,50 @@ $num_Bim = $campoValor[9];
 $obs = $campoValor[10];
 $idServidor = $campoValor[11];
 
-# Pega o sexo do servidor
-$sexo = $pessoal->get_sexo($idServidor);
+# Verifica se o tipo de licença foi informado
+if ($idTpLicenca == "Inicial") {
+    $msgErro .= 'Tem que informar o tipo da licença!\n';
+    $erro = 1;
+} else {
+    # Verifica se já tem outro afastamento nesse período
+    $dtFinal = addDias(date_to_php($dtInicial), $numDias);
 
-# Verifica restrição de genero para esse afastamento
-$restricao = $pessoal->get_licencaSexo($idTpLicenca);
-
-# Feminino
-if ($restricao == "Feminino") {
-    if ($sexo <> "Feminino") {
-        $msgErro .= 'Esse tipo de licença só é permitido para servidores do sexo feminino!\n';
+    $verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
+    $verifica->setIsento("tblicenca", $id);
+    $outro = $verifica->verifica();
+    if (!empty($outro)) {
+        $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
         $erro = 1;
     }
-}
 
-# Masculino
-if ($restricao == "Masculino") {
-    if ($sexo <> "Masculino") {
-        $msgErro .= 'Esse tipo de licença só é permitido para servidores do sexo masculino!\n';
-        $erro = 1;
+    # Pega o sexo do servidor
+    $sexo = $pessoal->get_sexo($idServidor);
+
+    # Verifica restrição de genero para esse afastamento
+    $restricao = $pessoal->get_licencaSexo($idTpLicenca);
+
+    # Feminino
+    if ($restricao == "Feminino") {
+        if ($sexo <> "Feminino") {
+            $msgErro .= 'Esse tipo de licença só é permitido para servidores do sexo feminino!\n';
+            $erro = 1;
+        }
     }
-}
 
-# Verifica se nas licenças 110 e 111 tem a alta digitada
-if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
-    if (is_null($alta)) {
-        $msgErro .= 'E necessario informar se teve ou não alta!\n';
-        $erro = 1;
+    # Masculino
+    if ($restricao == "Masculino") {
+        if ($sexo <> "Masculino") {
+            $msgErro .= 'Esse tipo de licença só é permitido para servidores do sexo masculino!\n';
+            $erro = 1;
+        }
+    }
+
+    # Verifica se nas licenças 110 e 111 tem a alta digitada
+    if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
+        if (is_null($alta)) {
+            $msgErro .= 'E necessario informar se teve ou não alta!\n';
+            $erro = 1;
+        }
     }
 }
 
@@ -79,9 +96,11 @@ if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
     $campoValor[9] = null;
 }
 
+
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 $dtAdmissao = date_to_bd($dtAdmissao);
+
 if ($dtInicial < $dtAdmissao) {
     $erro = 1;
     $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';

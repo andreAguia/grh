@@ -6,6 +6,7 @@
  */
 
 $dtInicial = $campoValor[0];
+$numDias = $campoValor[1];
 $idServidor = $campoValor[5];
 
 $pessoal = new Pessoal();
@@ -28,4 +29,15 @@ if (!is_null($dtSaida)) {
         $erro = 1;
         $msgErro .= 'A data Inicial não pode ser DEPOIS da saida da UENF!\n';
     }
+}
+
+# Verifica se já tem outro afastamento nesse período
+$dtFinal = addDias(date_to_php($dtInicial), $numDias);
+
+$verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
+$verifica->setIsento("tbtrabalhotre", $id);
+$outro = $verifica->verifica();
+if (!empty($outro)) {
+    $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
+    $erro = 1;
 }

@@ -11,14 +11,16 @@
 # Parâmetro: a matrícula
 # Retorno: a matrícula mais o dígito
 
-Function dv($matricula) {
+Function dv($matricula)
+{
     if (vazio($matricula)) {
         return $matricula;
     } else {
         $ndig = 0;
         $npos = 0;
 
-        switch (strlen($matricula)) {
+        switch (strlen($matricula))
+        {
             case 4:
                 $matricula = "0" . $matricula;
                 break;
@@ -93,7 +95,8 @@ Function dv($matricula) {
  * Obs esta função só existe para ser usada na classe modelo
  */
 
-function get_DadosServidor($idServidor) {
+function get_DadosServidor($idServidor)
+{
     Grh::listaDadosServidor($idServidor);
 }
 
@@ -103,14 +106,16 @@ function get_DadosServidor($idServidor) {
  * 
  */
 
-function formataAtribuicao($texto) {
+function formataAtribuicao($texto)
+{
     $novoTexto = str_replace(";", ";<br/>", $texto);
     return $novoTexto;
 }
 
 ###########################################################
 
-function exibeDescricaoStatus($status) {
+function exibeDescricaoStatus($status)
+{
     /**
      * Retorna a descrição de um status de férias no on mouse over
      * 
@@ -121,7 +126,8 @@ function exibeDescricaoStatus($status) {
      * @param $status string null o status das férias
      */
     $texto = "";
-    switch ($status) {
+    switch ($status)
+    {
         case "solicitada" :
             $texto = "Férias solicitadas pelo Servidor";
             break;
@@ -135,7 +141,8 @@ function exibeDescricaoStatus($status) {
 
 ##################################################################
 
-function descricaoComissao($idComissao) {
+function descricaoComissao($idComissao)
+{
     /**
      * Exibe informações sobre a Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria	
      * 
@@ -156,7 +163,8 @@ function descricaoComissao($idComissao) {
     $retorno = $descricao;
 
     # Informa o tipo
-    switch ($tipo) {
+    switch ($tipo)
+    {
 
         case 1:
             $retorno .= " <span id='orgaoCedido'>(Pro Tempore)</span>";
@@ -176,7 +184,8 @@ function descricaoComissao($idComissao) {
  * 
  */
 
-function tituloRelatorio($texto) {
+function tituloRelatorio($texto)
+{
     $div = new Div("tituloFichaCadastral");
     $div->abre();
     echo $texto;
@@ -189,7 +198,8 @@ function tituloRelatorio($texto) {
  * 
  */
 
-function textoEscalaFerias() {
+function textoEscalaFerias()
+{
 
     $intra = new Intra();
     $dataDev = $intra->get_variavel("dataDevolucaoGrh");
@@ -213,7 +223,8 @@ function textoEscalaFerias() {
 
 ##########################################################
 
-function exibeProcesso($texto) {
+function exibeProcesso($texto)
+{
     /**
      * Função que exibe os processo das licença de diversas tabelas
      * 
@@ -234,7 +245,8 @@ function exibeProcesso($texto) {
     $processo = null;
 
     # Execute uma rotina específica para cada tipo de licença
-    switch ($tipo) {
+    switch ($tipo)
+    {
 
         # Licença Prêmio
         case 6 :
@@ -274,7 +286,8 @@ function exibeProcesso($texto) {
 
 ##########################################################
 
-function acertaDataFerias($texto) {
+function acertaDataFerias($texto)
+{
     /**
      * Função que acerta o nome do mês e exibe junto do ano
      * 
@@ -293,7 +306,8 @@ function acertaDataFerias($texto) {
 
 ##########################################################
 
-function exibeDiasLicencaPremio($idServidor) {
+function exibeDiasLicencaPremio($idServidor)
+{
     /**
      * Função exibe os dias Publicados, Fruídos e Disponíveis de licença premio
      * 
@@ -332,7 +346,8 @@ function exibeDiasLicencaPremio($idServidor) {
         # Pega o array dos vinculos
         $vinculos = $licenca->get_vinculosPremio($idServidor);
 
-        foreach ($vinculos as $tt) {
+        foreach ($vinculos as $tt)
+        {
             if ($tt[0] <> $idServidor) {
                 $diasPublicados = $licenca->get_numDiasPublicados($tt[0]);
                 $diasFruidos = $licenca->get_numDiasFruidos($tt[0]);
@@ -366,7 +381,8 @@ function exibeDiasLicencaPremio($idServidor) {
 
 ##########################################################
 
-function exibeNumPublicacoesLicencaPremio($idServidor) {
+function exibeNumPublicacoesLicencaPremio($idServidor)
+{
     /**
      * Função exibe o número de publicações de licença premio Reais, Possiveis e Faltantes
      * 
@@ -405,7 +421,8 @@ function exibeNumPublicacoesLicencaPremio($idServidor) {
         # Pega o array dos vinculos
         $vinculos = $licenca->get_vinculosPremio($idServidor);
 
-        foreach ($vinculos as $tt) {
+        foreach ($vinculos as $tt)
+        {
             if ($tt[0] <> $idServidor) {
                 $numPublicacao = $licenca->get_numPublicacoes($tt[0]);
                 $numPublicacaoPossivel = $licenca->get_numPublicacoesPossiveis($tt[0]);
@@ -439,7 +456,8 @@ function exibeNumPublicacoesLicencaPremio($idServidor) {
 
 ##########################################################
 
-function exibePrazoParaGozoEscalaFerias($texto) {
+function exibePrazoParaGozoEscalaFerias($texto)
+{
     /**
      * Função que exibe o prazo para gozo ou fruição de uma determinada férias do servidor
      * 
@@ -496,7 +514,8 @@ function exibePrazoParaGozoEscalaFerias($texto) {
 
 ##########################################################
 
-function exibeFeriasPendentes($texto) {
+function exibeFeriasPendentes($texto)
+{
     /**
      * Função o numero de dias de ferias pendentes de um servidor
      * 
@@ -527,7 +546,8 @@ function exibeFeriasPendentes($texto) {
     $feriasCadastradas = 2016;
 
     # Monta o retorno
-    for ($i = $anoAdmissao + 1; $i <= $anoPesquisado; $i++) {
+    for ($i = $anoAdmissao + 1; $i <= $anoPesquisado; $i++)
+    {
         if ($i >= $feriasCadastradas) {
             $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
 
@@ -568,7 +588,8 @@ function exibeFeriasPendentes($texto) {
 
 ##########################################################
 
-function consertaUf($uf) {
+function consertaUf($uf)
+{
 
     /*
      * Funçao que conserta um campo de unidade federal que esta na forma de 
@@ -595,7 +616,8 @@ function consertaUf($uf) {
  * Obs esta função só existe para ser usada na classe modelo
  */
 
-function get_situacao($idServidor) {
+function get_situacao($idServidor)
+{
     $pessoal = new Pessoal();
     $situacao = $pessoal->get_situacao($idServidor);
     $especial = null;
@@ -662,7 +684,8 @@ function get_situacao($idServidor) {
  * Obs esta função só existe para ser usada na classe modelo
  */
 
-function get_situacaoRel($idServidor) {
+function get_situacaoRel($idServidor)
+{
     $pessoal = new Pessoal();
     $situacao = $pessoal->get_situacao($idServidor);
 
@@ -675,7 +698,8 @@ function get_situacaoRel($idServidor) {
  * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão
  */
 
-function get_servidorBalcao($ano, $mes, $dia, $turno) {
+function get_servidorBalcao($ano, $mes, $dia, $turno)
+{
     $pessoal = new Pessoal();
 
     $select = 'SELECT idServidorManha,
@@ -713,7 +737,8 @@ function get_servidorBalcao($ano, $mes, $dia, $turno) {
  * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão
  */
 
-function get_idBalcao($ano, $mes, $dia) {
+function get_idBalcao($ano, $mes, $dia)
+{
     $pessoal = new Pessoal();
 
     $select = 'SELECT idBalcao
@@ -732,7 +757,8 @@ function get_idBalcao($ano, $mes, $dia) {
  * Obs esta função só existe para ser usada na rotina de controle do atendimento do balcão e chama a classe homonima
  */
 
-function get_nomeSimples($nome) {
+function get_nomeSimples($nome)
+{
 
     # trata o nome para pegar somente o primeiro nome
     $parte = explode(" ", $nome);
@@ -752,7 +778,8 @@ function get_nomeSimples($nome) {
 
 ##################################################################
 
-function statusReducao($arquivado) {
+function statusReducao($arquivado)
+{
     /**
      * Exibe na tabela de redução de carga horária imagem se está arquivado ou não
      * 
@@ -772,7 +799,8 @@ function statusReducao($arquivado) {
 
 ##########################################################
 
-function idMatricula($idServidor) {
+function idMatricula($idServidor)
+{
     /**
      * Função exibe o id e a matrícula de um servidor
      * 
@@ -799,7 +827,8 @@ function idMatricula($idServidor) {
 
 ##########################################################
 
-function marcaSePassou($data) {
+function marcaSePassou($data)
+{
     /**
      * Função exibe a data com uma marca se a data já passou
      * 
@@ -814,7 +843,8 @@ function marcaSePassou($data) {
 
 ##########################################################
 
-function exibeLicencaPremio($idServidor) {
+function exibeLicencaPremio($idServidor)
+{
     /**
      * Função exibe as licenças preomio de um servidor
      * 
@@ -826,7 +856,8 @@ function exibeLicencaPremio($idServidor) {
 
 ##########################################################
 
-function exibeFoto($idPessoa) {
+function exibeFoto($idPessoa)
+{
     /**
      * Função exibe a foto do servidor 
      * 
@@ -841,7 +872,8 @@ function exibeFoto($idPessoa) {
 
 ##########################################################
 
-function linkExibeVaga($idConcurso) {
+function linkExibeVaga($idConcurso)
+{
     /**
      * Exibe um link para as vagas de um concurso
      * 
@@ -873,7 +905,8 @@ function linkExibeVaga($idConcurso) {
 
 ##########################################################
 
-function exibeDadosSalarioAtual($idServidor) {
+function exibeDadosSalarioAtual($idServidor)
+{
     /**
      * Função exibe dados do salario atual do servidor
      * 
@@ -905,7 +938,8 @@ function exibeDadosSalarioAtual($idServidor) {
 
 ###########################################################
 
-function exibeDocumentacaoLicenca($idTipoLicenca) {
+function exibeDocumentacaoLicenca($idTipoLicenca)
+{
     /**
      * Exibe um quadro com a documentação e a observação desse tipo de licença
      * 
@@ -955,7 +989,8 @@ function exibeDocumentacaoLicenca($idTipoLicenca) {
 
 ###########################################################
 
-function exibeBotaoDocumentacaoLicenca($idTipoLicenca) {
+function exibeBotaoDocumentacaoLicenca($idTipoLicenca)
+{
     /**
      * Exibe um quadro com a documentação e a observação desse tipo de licença
      * 
@@ -991,7 +1026,8 @@ function exibeBotaoDocumentacaoLicenca($idTipoLicenca) {
 
 ###########################################################
 
-function exibeRegraStatusLSV() {
+function exibeRegraStatusLSV()
+{
     /**
      * Exibe um quadro com a regras da mudança de status de uma lSV
      * 
@@ -1026,7 +1062,8 @@ function exibeRegraStatusLSV() {
 
 ###########################################################
 
-function exibeDocumentoPasta($idPasta) {
+function exibeDocumentoPasta($idPasta)
+{
     /**
      * Exibe umbotão que leva a um documento ou processo n a pasta funcional
      * 
@@ -1062,7 +1099,8 @@ function exibeDocumentoPasta($idPasta) {
 
 ###########################################################
 
-function exibeProcessoPasta($idPasta) {
+function exibeProcessoPasta($idPasta)
+{
     /**
      * Exibe umbotão que leva a um documento ou processo n a pasta funcional
      * 

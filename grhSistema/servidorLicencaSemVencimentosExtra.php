@@ -12,7 +12,7 @@ $dtInicial = date_to_php($campoValor[6]);
 $numDias = $campoValor[7];
 $dtTermino = $campoValor[8];
 $dtRetorno = $campoValor[9];
-
+$idServidor = $campoValor[12];
 
 # Preenche a data de término quando for nula
 if (vazio($dtTermino)) {
@@ -37,6 +37,19 @@ if (!vazio($dtRetorno)) {
     # Verifica a data de retorno é anterior a data de termino
     if ($dm == $dtRetorno) {
         $msgErro .= 'A data de retorno não pode ser posterior a data prevista de termino!\n';
+        $erro = 1;
+    }
+}
+
+if (!vazio($dtInicial) AND!vazio($numDias)) {
+# Verifica se já tem outro afastamento nesse período
+    $dtFinal = addDias($dtInicial, $numDias);
+
+    $verifica = new VerificaAfastamentos($idServidor, $dtInicial, $dtFinal);
+    $verifica->setIsento("tblicencasemvencimentos", $id);
+    $outro = $verifica->verifica();
+    if (!empty($outro)) {
+        $msgErro .= 'Já existe um(a) ' . $outro . ' nesse período!\n';
         $erro = 1;
     }
 }

@@ -577,7 +577,7 @@ class MenuServidor {
 
             $botao = new BotaoGrafico();
             $botao->set_label('Afastamento Geral');
-            $botao->set_url('?fase=afastamentoGeral&grh=1');
+            $botao->set_url('servidorAfastamentos.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'afastamento.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Todos os afastamentos do servidor');
             #$botao->set_accessKey('i');

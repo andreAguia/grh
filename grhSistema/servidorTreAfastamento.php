@@ -47,7 +47,7 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorTre.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT data,
+    $objeto->set_selectLista("SELECT data,
                                      ADDDATE(data,dias-1),
                                      dias,
                                      folgas,
@@ -55,18 +55,18 @@ if ($acesso) {
                                      documento,
                                      idTrabalhoTre
                                 FROM tbtrabalhotre
-                          WHERE idServidor=' . $idServidorPesquisado . '
-                       ORDER BY data desc');
+                          WHERE idServidor = {$idServidorPesquisado}
+                       ORDER BY data desc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT data,
+    $objeto->set_selectEdita("SELECT data,
                                      dias,
                                      folgas,
                                      documento,
                                      descricao,
                                      idServidor
                                 FROM tbtrabalhotre
-                               WHERE idTrabalhoTre = ' . $id);
+                               WHERE idTrabalhoTre = {$id}");
 
     # ordem da lista
     #$objeto->set_orderCampo($orderCampo);

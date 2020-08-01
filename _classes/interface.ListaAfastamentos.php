@@ -292,7 +292,7 @@ class ListaAfastamentos {
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                                   LEFT JOIN tblicencapremio USING (idServidor)
-                    WHERE tbtipolicenca.idTpLicenca = 6 AND tbservidor.situacao = 1
+                    WHERE tbtipolicenca.idTpLicenca = 6 
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento

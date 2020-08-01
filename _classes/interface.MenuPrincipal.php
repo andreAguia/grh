@@ -531,7 +531,7 @@ class MenuPrincipal
 
         $botao = new BotaoGrafico();
         $botao->set_label('Afastamentos');
-        $botao->set_url('areaFrequencia.php?grh=1');
+        $botao->set_url('areaAfastamentos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'afastamento.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Informa todo o tipo de Afastamento de Servidor');
         $menu->add_item($botao);

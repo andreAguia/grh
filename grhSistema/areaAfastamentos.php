@@ -203,7 +203,7 @@ if ($acesso) {
             set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', 'areaFrequencia.php');
+            set_session('origem', 'areaAfastamentos.php');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');

@@ -111,7 +111,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label($label);
-    #$objeto->set_width(array(10,10,5,25,5,5,8,10,12));	
+    $objeto->set_width(array(10,10,5,5,20,5,5,8,10,12));	
     $objeto->set_align($align);
     $objeto->set_funcao($funcao);
 

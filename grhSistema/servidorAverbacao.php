@@ -62,6 +62,7 @@ if ($acesso) {
     $select = 'SELECT dtInicial,
                       dtFinal,
                       dias,
+                      idAverbacao,
                       empresa,
                       CASE empresaTipo
                          WHEN 1 THEN "Pública"
@@ -90,7 +91,7 @@ if ($acesso) {
                                      processo,
                                      dtInicial,
                                      dtFinal,
-                                     dias,                                                                 
+                                     dias,
                                      regime,
                                      cargo,
                                      obs,
@@ -104,9 +105,9 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $label = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
-    $align = array("center", "center", "center", "left");
-    $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php");
+    $label = array("Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
+    $align = array("center", "center", "center", "center", "left");
+    $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, null, "date_to_php");
 
     # Parametros da tabela
     $objeto->set_label($label);
@@ -117,6 +118,9 @@ if ($acesso) {
     $objeto->set_colunaSomatorio(2);
     $objeto->set_textoSomatorio("Total de Dias:");
     $objeto->set_totalRegistro(false);
+
+    $objeto->set_classe(array(null, null, null, "Averbacao"));
+    $objeto->set_metodo(array(null, null, null, "getNumDias"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -235,9 +239,17 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
+    # Rotina extra na listagem
+    $mensagem = "Atenção: Nem a data final nem o número de dias são calculados pelo sistema. Estão conforme foram digitados pelo usuário, para refletir ao que foi publicado.<br/>
+                 O problema consiste em que nem sempre o que se publica é fruto de um cálculo perfeito.<br/>
+                 Dessa forma, para verificar possíveis equívocos, a tabela abaixo informa, além dos dias digitados, o cálculo desses dias considerando a data Inicial e a data Final.";
+    $objeto->set_rotinaExtraListar("callout");
+    $objeto->set_rotinaExtraListarParametro($mensagem);
+
     ################################################################
 
-    switch ($fase) {
+    switch ($fase)
+    {
         case "" :
         case "listar" :
             $objeto->listar();
@@ -277,13 +289,15 @@ if ($acesso) {
             $idsProblemáticos[] = null;
 
             # Percorre os registros
-            foreach ($resultSobreposicao as $periodo) {
+            foreach ($resultSobreposicao as $periodo)
+            {
                 $dtInicial1 = date_to_php($periodo[0]);
                 $dtFinal1 = date_to_php($periodo[1]);
                 $idAverbado1 = $periodo[2];
 
                 # Percorre a mesma listagem novamente
-                foreach ($resultSobreposicao as $periodoVerificado) {
+                foreach ($resultSobreposicao as $periodoVerificado)
+                {
 
                     $dtInicial2 = date_to_php($periodoVerificado[0]);
                     $dtFinal2 = date_to_php($periodoVerificado[1]);
@@ -357,7 +371,8 @@ if ($acesso) {
                     echo ",";
                 }
 
-                foreach ($atividades1 as $row) {
+                foreach ($atividades1 as $row)
+                {
 
                     # Trata as datas
                     $dt1 = explode($separador, $row['dtInicial']);

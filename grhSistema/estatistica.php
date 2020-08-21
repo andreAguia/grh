@@ -43,7 +43,7 @@ if ($acesso) {
     # Joga os parâmetros par as sessions    
     set_session('parametroPerfil', $parametroPerfil);
     set_session('parametroLotacao', $parametroLotacao);
-    
+
     # Verifica se e relatorio
     $rel = get("rel");
 
@@ -51,25 +51,14 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
-    if(!$rel){
-        # Cabeçalho da Página
-        AreaServidor::cabecalho();
-}else{
-     $relatorio = new Relatorio();
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_titulo('Estatística de Servidores');
-    $relatorio->show();
-
-}
-
+    # Cabeçalho da Página
+    AreaServidor::cabecalho();
 
     # Limita o tamanho da tela
     $grid1 = new Grid();
     $grid1->abreColuna(12);
-    
-    if(!$rel){
+
+    if (!$rel) {
         # Cria um menu
         $menu1 = new MenuBar();
 
@@ -80,7 +69,7 @@ if ($acesso) {
         $linkVoltar->set_accessKey('V');
         $menu1->add_link($linkVoltar, "left");
 
-        if($fase == "faixaEtaria"){
+        if ($fase == "faixaEtaria") {
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -92,11 +81,16 @@ if ($acesso) {
         }
 
         $menu1->show();
+        
+    }else{
+        br();
+    }
 
         titulo("Estatística de Servidores");
         br();
-            
-        
+
+    
+    if (!$rel) {
         $grid = new Grid();
 
         ## Coluna do menu            
@@ -105,34 +99,34 @@ if ($acesso) {
         # Número de Servidores
         $painel = new Callout();
         $painel->abre();
-        
+
         # Numero Geral
         $numServidores = $pessoal->get_numServidoresAtivos();
         p($numServidores, "estatisticaNumero");
         p("Servidores Ativos", "estatisticaTexto");
-        
+
         $selectPerfil = "SELECT DISTINCT idPerfil, tbperfil.nome
                            FROM tbservidor JOIN tbperfil USING (idPerfil)
                            WHERE situacao = 1
                         ORDER BY idPerfil";
-        
+
         $numPerfil = $pessoal->select($selectPerfil);
         br();
         # Tabela
         $tabela = new Tabela();
-        $tabela->set_conteudo($numPerfil);           
-        $tabela->set_label(array("",""));
+        $tabela->set_conteudo($numPerfil);
+        $tabela->set_label(array("", ""));
         #$tabela->set_width(array(50, 50));
         $tabela->set_align(array("right", "left"));
         $tabela->set_totalRegistro(false);
-        
+
         $tabela->set_classe(array("Pessoal"));
         $tabela->set_metodo(array("get_numServidoresAtivosPerfil"));
-        
+
         $tabela->show();
-        
-        
-        
+
+
+
         $painel->fecha();
 
         ###############################
@@ -227,7 +221,7 @@ if ($acesso) {
 
             # Tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($dados);           
+            $tabela->set_conteudo($dados);
             $tabela->set_label(array("Descrição", "Idade"));
             $tabela->set_width(array(50, 50));
             $tabela->set_align(array("left", "center"));
@@ -335,14 +329,14 @@ if ($acesso) {
 
             ########
 
-            $grid3 = new Grid();           
+            $grid3 = new Grid();
 
             #######################################################
             # Faixa Etária Geral
             #######################################################
-            
+
             $grid3->abreColuna(12);
-            
+
             $select = '  
             SELECT CASE 
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "até 19"
@@ -451,13 +445,13 @@ if ($acesso) {
                     'id' => 'estatisticaTotal')));
 
             $tabela->show();
-            
+
             $grid3->fechaColuna();
             #############################
             # Adm/Tec
             #############################
             $grid3->abreColuna(6);
-            
+
             $select = '  
             SELECT CASE 
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "até 19"
@@ -557,13 +551,13 @@ if ($acesso) {
                     'id' => 'estatisticaTotal')));
 
             $tabela->show();
-            
+
             $grid3->fechaColuna();
             #############################
             # Professor
             #############################
             $grid3->abreColuna(6);
-            
+
             $select = '  
             SELECT CASE 
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "até 19"
@@ -663,9 +657,9 @@ if ($acesso) {
                     'id' => 'estatisticaTotal')));
 
             $tabela->show();
-            
+
             ####################################
-            
+
             $grid3->fechaColuna();
             $grid3->fechaGrid();
             $painel->fecha();
@@ -2107,9 +2101,9 @@ if ($acesso) {
     }
 
     # Fecha o grid
-    if(!$rel){
-    $grid1->fechaColuna();
-    $grid1->fechaGrid();
+    if (!$rel) {
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
     }
 
     $page->terminaPagina();

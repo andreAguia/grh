@@ -105,9 +105,34 @@ if ($acesso) {
         # Número de Servidores
         $painel = new Callout();
         $painel->abre();
+        
+        # Numero Geral
         $numServidores = $pessoal->get_numServidoresAtivos();
         p($numServidores, "estatisticaNumero");
         p("Servidores Ativos", "estatisticaTexto");
+        
+        $selectPerfil = "SELECT DISTINCT idPerfil, tbperfil.nome
+                           FROM tbservidor JOIN tbperfil USING (idPerfil)
+                           WHERE situacao = 1
+                        ORDER BY idPerfil";
+        
+        $numPerfil = $pessoal->select($selectPerfil);
+        br();
+        # Tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($numPerfil);           
+        $tabela->set_label(array("",""));
+        #$tabela->set_width(array(50, 50));
+        $tabela->set_align(array("right", "left"));
+        $tabela->set_totalRegistro(false);
+        
+        $tabela->set_classe(array("Pessoal"));
+        $tabela->set_metodo(array("get_numServidoresAtivosPerfil"));
+        
+        $tabela->show();
+        
+        
+        
         $painel->fecha();
 
         ###############################

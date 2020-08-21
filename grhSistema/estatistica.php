@@ -264,10 +264,10 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Perfil
-            $result = $pessoal->select('SELECT DISTINCT idPerfil, nome
-                                          FROM tbperfil
-                                          WHERE idPerfil <> 10
-                                      ORDER BY nome');
+            $result = $pessoal->select('SELECT DISTINCT idPerfil, tbperfil.nome
+                                          FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                          WHERE situacao = 1
+                                      ORDER BY tbperfil.nome');
             array_unshift($result, array("*", 'Todos'));
 
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
@@ -284,26 +284,29 @@ if ($acesso) {
 
             ########
 
-            $grid3 = new Grid();
-            $grid3->abreColuna(12);
+            $grid3 = new Grid();           
 
+            #######################################################
             # Faixa Etária Geral
+            #######################################################
+            
+            $grid3->abreColuna(12);
+            
             $select = '  
             SELECT CASE 
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 20 THEN "até 20"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 21 AND 30 THEN "21 a 30"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 31 AND 40 THEN "31 a 40"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 41 AND 50 THEN "41 a 50"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 51 AND 60 THEN "51 a 60"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 61 AND 70 THEN "61 a 70"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 71 AND 80 THEN "71 a 80"
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 81 AND 90 THEN "81 a 90"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "até 19"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 20 AND 29 THEN "20 a 29"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 30 AND 39 THEN "30 a 39"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 40 AND 49 THEN "40 a 49"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 50 AND 59 THEN "50 a 59"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 60 AND 69 THEN "60 a 69"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 70 AND 79 THEN "70 a 79"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 80 AND 89 THEN "80 a 89"
                    END,
                    tbpessoa.sexo, count(tbservidor.idServidor) as jj
               FROM tbpessoa JOIN tbservidor USING (idPessoa)
                             LEFT JOIN tbhistlot USING (idServidor)
-                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                            
+                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                            
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.idPerfil <> 10
                      AND situacao = 1';
@@ -397,7 +400,221 @@ if ($acesso) {
                     'id' => 'estatisticaTotal')));
 
             $tabela->show();
+            
+            $grid3->fechaColuna();
+            #############################
+            # Adm/Tec
+            #############################
+            $grid3->abreColuna(6);
+            
+            $select = '  
+            SELECT CASE 
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "até 19"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 20 AND 29 THEN "20 a 29"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 30 AND 39 THEN "30 a 39"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 40 AND 49 THEN "40 a 49"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 50 AND 59 THEN "50 a 59"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 60 AND 69 THEN "60 a 69"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 70 AND 79 THEN "70 a 79"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 80 AND 89 THEN "80 a 89"
+                   END,
+                   tbpessoa.sexo, count(tbservidor.idServidor) as jj
+              FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                            JOIN tbcargo USING (idCargo)
+                            JOIN tbtipocargo USING (idTipoCargo)
+                            LEFT JOIN tbhistlot USING (idServidor)
+                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                            
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbtipocargo.tipo = "Adm/Tec"
+                     AND situacao = 1';
 
+            if ($parametroLotacao <> '*') {
+                $select .= ' AND tblotacao.dir="' . $parametroLotacao . '"';
+            }
+
+            if ($parametroPerfil <> '*') {
+                $select .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $select .= ' GROUP BY 1, tbpessoa.sexo ORDER BY 1';
+
+            $servidores = $pessoal->select($select);
+
+            # Novo array 
+            $arrayResultado = array();
+            $arrayGrafico = array();
+
+            # Valores anteriores
+            $escolaridadeAnterior = null;
+
+            # inicia as variáveis
+            $masc = 0;
+            $femi = 0;
+            $totalMasc = 0;
+            $totalFemi = 0;
+            $total = 0;
+
+            # Modelar o novo array
+            foreach ($servidores as $value) {
+                # Carrega as variáveis
+                $escolaridade = $value[0];
+                $sexo = $value[1];
+                $contagem = $value[2];
+
+                # Verifica se mudou de escolaridade
+                if ($escolaridade <> $escolaridadeAnterior) {
+                    if (is_null($escolaridadeAnterior)) {
+                        $escolaridadeAnterior = $escolaridade;
+                    } else {
+                        $arrayResultado[] = array($escolaridadeAnterior, $femi, $masc, $femi + $masc);
+                        $arrayGrafico[] = array($escolaridadeAnterior, $femi, $masc);
+                        $masc = 0;
+                        $femi = 0;
+                        $escolaridadeAnterior = $escolaridade;
+                        $total += ($femi + $masc);
+                    }
+                }
+
+                if ($sexo == 'Masculino') {
+                    $masc = $contagem;
+                    $totalMasc += $masc;
+                } else {
+                    $femi = $contagem;
+                    $totalFemi += $femi;
+                }
+            }
+
+            $arrayResultado[] = array($escolaridadeAnterior, $femi, $masc, $femi + $masc);
+            $arrayGrafico[] = array($escolaridadeAnterior, $femi, $masc);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            $arrayResultado[] = array("Total", $totalFemi, $totalMasc, $total);
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($arrayResultado);
+            $tabela->set_titulo("Administrativos e Tecnicos");
+            $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
+            $tabela->set_width(array(55, 15, 15, 15));
+            $tabela->set_align(array("left", "center"));
+            $tabela->set_totalRegistro(false);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                    'valor' => "Total",
+                    'operador' => '=',
+                    'id' => 'estatisticaTotal')));
+
+            $tabela->show();
+            
+            $grid3->fechaColuna();
+            #############################
+            # Professor
+            #############################
+            $grid3->abreColuna(6);
+            
+            $select = '  
+            SELECT CASE 
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "até 19"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 20 AND 29 THEN "20 a 29"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 30 AND 39 THEN "30 a 39"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 40 AND 49 THEN "40 a 49"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 50 AND 59 THEN "50 a 59"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 60 AND 69 THEN "60 a 69"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 70 AND 79 THEN "70 a 79"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 80 AND 89 THEN "80 a 89"
+                   END,
+                   tbpessoa.sexo, count(tbservidor.idServidor) as jj
+              FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                            JOIN tbcargo USING (idCargo)
+                            JOIN tbtipocargo USING (idTipoCargo)
+                            LEFT JOIN tbhistlot USING (idServidor)
+                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                            
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbtipocargo.tipo = "Professor"
+                     AND situacao = 1';
+
+            if ($parametroLotacao <> '*') {
+                $select .= ' AND tblotacao.dir="' . $parametroLotacao . '"';
+            }
+
+            if ($parametroPerfil <> '*') {
+                $select .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $select .= ' GROUP BY 1, tbpessoa.sexo ORDER BY 1';
+
+            $servidores = $pessoal->select($select);
+
+            # Novo array 
+            $arrayResultado = array();
+            $arrayGrafico = array();
+
+            # Valores anteriores
+            $escolaridadeAnterior = null;
+
+            # inicia as variáveis
+            $masc = 0;
+            $femi = 0;
+            $totalMasc = 0;
+            $totalFemi = 0;
+            $total = 0;
+
+            # Modelar o novo array
+            foreach ($servidores as $value) {
+                # Carrega as variáveis
+                $escolaridade = $value[0];
+                $sexo = $value[1];
+                $contagem = $value[2];
+
+                # Verifica se mudou de escolaridade
+                if ($escolaridade <> $escolaridadeAnterior) {
+                    if (is_null($escolaridadeAnterior)) {
+                        $escolaridadeAnterior = $escolaridade;
+                    } else {
+                        $arrayResultado[] = array($escolaridadeAnterior, $femi, $masc, $femi + $masc);
+                        $arrayGrafico[] = array($escolaridadeAnterior, $femi, $masc);
+                        $masc = 0;
+                        $femi = 0;
+                        $escolaridadeAnterior = $escolaridade;
+                        $total += ($femi + $masc);
+                    }
+                }
+
+                if ($sexo == 'Masculino') {
+                    $masc = $contagem;
+                    $totalMasc += $masc;
+                } else {
+                    $femi = $contagem;
+                    $totalFemi += $femi;
+                }
+            }
+
+            $arrayResultado[] = array($escolaridadeAnterior, $femi, $masc, $femi + $masc);
+            $arrayGrafico[] = array($escolaridadeAnterior, $femi, $masc);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            $arrayResultado[] = array("Total", $totalFemi, $totalMasc, $total);
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($arrayResultado);
+            $tabela->set_titulo("Docentes");
+            $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
+            $tabela->set_width(array(55, 15, 15, 15));
+            $tabela->set_align(array("left", "center"));
+            $tabela->set_totalRegistro(false);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                    'valor' => "Total",
+                    'operador' => '=',
+                    'id' => 'estatisticaTotal')));
+
+            $tabela->show();
+            
+            ####################################
+            
             $grid3->fechaColuna();
             $grid3->fechaGrid();
             $painel->fecha();

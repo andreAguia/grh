@@ -43,91 +43,118 @@ if ($acesso) {
     # Joga os parâmetros par as sessions    
     set_session('parametroPerfil', $parametroPerfil);
     set_session('parametroLotacao', $parametroLotacao);
+    
+    # Verifica se e relatorio
+    $rel = get("rel");
 
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
-    # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if(!$rel){
+        # Cabeçalho da Página
+        AreaServidor::cabecalho();
+}else{
+     $relatorio = new Relatorio();
+    $relatorio->set_totalRegistro(false);
+    $relatorio->set_dataImpressao(false);
+    $relatorio->set_logServidor($idServidorPesquisado);
+    $relatorio->set_titulo('Estatística de Servidores');
+    $relatorio->show();
+
+}
+
 
     # Limita o tamanho da tela
     $grid1 = new Grid();
     $grid1->abreColuna(12);
+    
+    if(!$rel){
+        # Cria um menu
+        $menu1 = new MenuBar();
 
-    # Cria um menu
-    $menu1 = new MenuBar();
+        # Voltar
+        $linkVoltar = new Link("Voltar", "grh.php");
+        $linkVoltar->set_class('button');
+        $linkVoltar->set_title('Voltar para página anterior');
+        $linkVoltar->set_accessKey('V');
+        $menu1->add_link($linkVoltar, "left");
 
-    # Voltar
-    $linkVoltar = new Link("Voltar", "grh.php");
-    $linkVoltar->set_class('button');
-    $linkVoltar->set_title('Voltar para página anterior');
-    $linkVoltar->set_accessKey('V');
-    $menu1->add_link($linkVoltar, "left");
-
-    $menu1->show();
-
-    titulo("Estatística");
-    br();
-
-    $grid = new Grid();
-
-    ## Coluna do menu            
-    $grid->abreColuna(12, 3);
-
-    # Número de Servidores
-    $painel = new Callout();
-    $painel->abre();
-    $numServidores = $pessoal->get_numServidoresAtivos();
-    p($numServidores, "estatisticaNumero");
-    p("Servidores Ativos", "estatisticaTexto");
-    $painel->fecha();
-
-    ###############################
-    # Menu de tipos
-    $painel = new Callout();
-    $painel->abre();
-
-    titulo("Menu Principal");
-    br();
-
-    $itens = array(
-        array('Por Perfil', 'perfil'),
-        array('Por Cargo - Geral', 'cargo'),
-        array('Por Cargo - Adm/Tec', 'cargoAdm'),
-        array('Por Lotação x Cargo', 'cargoGerencia'),
-        array('Por Diretoria', 'diretoria'),
-        array('Por Gerência', 'gerencia'),
-        array('Por Idade', 'idade'),
-        array('Por Faixa Etária', 'faixaEtaria'),
-        array('Por Escolaridade', 'escolaridade'),
-        array('Por Nacionalidade', 'nacionalidade'),
-        array('Por Estado Civil', 'estadoCivil'),
-        array('Por Cidade de Moradia', 'cidade')
-    );
-
-    $menu = new Menu();
-    #$menu->add_item('titulo','Detalhada');
-
-    foreach ($itens as $ii) {
-        if ($fase == $ii[1]) {
-            $menu->add_item('link', '<b>' . $ii[0] . '</b>', '?fase=' . $ii[1]);
-        } else {
-            $menu->add_item('link', $ii[0], '?fase=' . $ii[1]);
+        if($fase == "faixaEtaria"){
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("?fase=faixaEtaria&rel=1");
+            $botaoRel->set_target("_blank");
+            $menu1->add_link($botaoRel, "right");
         }
+
+        $menu1->show();
+
+        titulo("Estatística de Servidores");
+        br();
+            
+        
+        $grid = new Grid();
+
+        ## Coluna do menu            
+        $grid->abreColuna(12, 3);
+
+        # Número de Servidores
+        $painel = new Callout();
+        $painel->abre();
+        $numServidores = $pessoal->get_numServidoresAtivos();
+        p($numServidores, "estatisticaNumero");
+        p("Servidores Ativos", "estatisticaTexto");
+        $painel->fecha();
+
+        ###############################
+        # Menu de tipos
+        $painel = new Callout();
+        $painel->abre();
+
+        titulo("Menu Principal");
+        br();
+
+        $itens = array(
+            array('Por Perfil', 'perfil'),
+            array('Por Cargo - Geral', 'cargo'),
+            array('Por Cargo - Adm/Tec', 'cargoAdm'),
+            array('Por Lotação x Cargo', 'cargoGerencia'),
+            array('Por Diretoria', 'diretoria'),
+            array('Por Gerência', 'gerencia'),
+            array('Por Idade', 'idade'),
+            array('Por Faixa Etária', 'faixaEtaria'),
+            array('Por Escolaridade', 'escolaridade'),
+            array('Por Nacionalidade', 'nacionalidade'),
+            array('Por Estado Civil', 'estadoCivil'),
+            array('Por Cidade de Moradia', 'cidade')
+        );
+
+        $menu = new Menu();
+        #$menu->add_item('titulo','Detalhada');
+
+        foreach ($itens as $ii) {
+            if ($fase == $ii[1]) {
+                $menu->add_item('link', '<b>' . $ii[0] . '</b>', '?fase=' . $ii[1]);
+            } else {
+                $menu->add_item('link', $ii[0], '?fase=' . $ii[1]);
+            }
+        }
+
+        #$menu->add_item('link','Temporal','?fase=temporalCargo');  # Retirado por imprecisão
+        $menu->show();
+
+        $painel->fecha();
+
+        $grid->fechaColuna();
+
+        ################################################################
+        # Coluna de Conteúdo
+        $grid->abreColuna(12, 9);
     }
-
-    #$menu->add_item('link','Temporal','?fase=temporalCargo');  # Retirado por imprecisão
-    $menu->show();
-
-    $painel->fecha();
-
-    $grid->fechaColuna();
-
-    ################################################################
-    # Coluna de Conteúdo
-    $grid->abreColuna(12, 9);
-
     switch ($fase) {
         case "inicial":
 
@@ -175,8 +202,7 @@ if ($acesso) {
 
             # Tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($dados);
-            #$tabela->set_titulo("por Idade");
+            $tabela->set_conteudo($dados);           
             $tabela->set_label(array("Descrição", "Idade"));
             $tabela->set_width(array(50, 50));
             $tabela->set_align(array("left", "center"));
@@ -389,7 +415,7 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayResultado);
-            #$tabela->set_titulo("Professor");
+            $tabela->set_titulo("Todos os Cargos");
             $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
             $tabela->set_width(array(55, 15, 15, 15));
             $tabela->set_align(array("left", "center"));
@@ -2056,8 +2082,10 @@ if ($acesso) {
     }
 
     # Fecha o grid
+    if(!$rel){
     $grid1->fechaColuna();
     $grid1->fechaGrid();
+    }
 
     $page->terminaPagina();
 } else {

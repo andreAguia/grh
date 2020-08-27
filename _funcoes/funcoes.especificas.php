@@ -100,6 +100,20 @@ function get_DadosServidor($idServidor)
     Grh::listaDadosServidor($idServidor);
 }
 
+###########################################################
+
+function get_DadosFrequencia($idHistCessao)
+{
+    $cessao = new Cessao();
+    $dados = $cessao->getDados($idHistCessao);
+    
+    # Dados do Servidor
+    Grh::listaDadosServidor($dados['idServidor']);
+    
+    # Dados da Cessão
+    $cessao->exibeDados($idHistCessao);
+}
+
 ##########################################################
 /**
  * Função que formata as atribuições de um cargo

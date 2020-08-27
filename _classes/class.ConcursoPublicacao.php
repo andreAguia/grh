@@ -108,4 +108,21 @@ class ConcursoPublicacao {
     }
 
     ###########################################################
+
+    public function exibeDescricao($idConcursoPublicacao) {
+        
+        # Pega os dados
+        $dados = $this->get_dados($idConcursoPublicacao);
+
+        # Exibe o objeto
+        echo $dados["descricao"];
+
+        # Verifica se tem observação, se tiver exibe uma figura com mouseover
+        if (!empty($dados["obs"])) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+            toolTip("(Obs)", $dados["obs"]);
+        }
+    }
+
+###########################################################
 }

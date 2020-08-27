@@ -81,15 +81,14 @@ if ($acesso) {
         }
 
         $menu1->show();
-        
-    }else{
+    } else {
         br();
     }
 
-        titulo("Estatística de Servidores");
-        br();
+    titulo("Estatística de Servidores");
+    br();
 
-    
+
     if (!$rel) {
         $grid = new Grid();
 

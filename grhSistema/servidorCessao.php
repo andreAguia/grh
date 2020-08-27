@@ -6,10 +6,14 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
+
+# Zera a sessão da frequencia de cedido
+set_session('idHistCessao');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -55,18 +59,21 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT dtInicio,
+    $objeto->set_selectLista("SELECT idHistCessao,
+                                     dtInicio,
                                      dtFim,
                                      orgao,
                                      processo,
                                      dtPublicacao,
+                                     obs,
+                                     idHistCessao,
                                      idHistCessao
                                 FROM tbhistcessao
-                          WHERE idServidor=' . $idServidorPesquisado . '
-                       ORDER BY dtInicio desc');
+                          WHERE idServidor = {$idServidorPesquisado}
+                       ORDER BY dtInicio desc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT dtInicio,
+    $objeto->set_selectEdita("SELECT dtInicio,
                                      dtFim,
                                      processo,                                 
                                      dtPublicacao,
@@ -74,12 +81,8 @@ if ($acesso) {
                                      obs,
                                      idServidor
                                 FROM tbhistcessao
-                               WHERE idHistCessao = ' . $id);
+                               WHERE idHistCessao = {$id}");
 
-    # ordem da lista
-    #$objeto->set_orderCampo($orderCampo);
-    #$objeto->set_orderTipo($orderTipo);
-    #$objeto->set_orderChamador('?fase=listar');
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -87,10 +90,32 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ"));
-    $objeto->set_width(array(10, 10, 30, 20, 20));
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", "date_to_php", null, null, "date_to_php"));
+    $objeto->set_label(array("Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ", "Obs", "Frequência"));
+    $objeto->set_width(array(10, 10, 10, 15, 15, 10, 20, 5));
+    $objeto->set_align(array("center", "center", "center", "left", "left", "center", "left"));
+    $objeto->set_funcao(array(null, "date_to_php", "date_to_php", null, null, "date_to_php"));
+    $objeto->set_classe(array("Cessao"));
+    $objeto->set_metodo(array("getStatus"));
+
+    $objeto->set_formatacaoCondicional(array(
+        array('coluna' => 0,
+            'valor' => "Vigente",
+            'operador' => '=',
+            'id' => 'cessaoVigente'),
+        array('coluna' => 0,
+            'valor' => "Terminada",
+            'operador' => '=',
+            'id' => 'cessaoTerminada')
+    ));
+
+    # Botão de controle de frequência
+    $botao = new BotaoGrafico();
+    $botao->set_title('Controle de Frequência');
+    $botao->set_url("servidorFrequencia.php?idHistCessao={$id}");
+    $botao->set_imagem(PASTA_FIGURAS . 'frequencia.png', 20, 20);
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(null, null, null, null, null, null, null, $botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -171,10 +196,6 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
     ################################################################
 
     switch ($fase) {

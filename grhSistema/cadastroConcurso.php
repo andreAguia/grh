@@ -391,7 +391,7 @@ if ($acesso) {
 
                 # Exibe as Publicações
 
-                $select = "SELECT descricao,
+                $select = "SELECT idConcursoPublicacao,
                                  data,
                                  pag,
                                  idConcursoPublicacao,
@@ -417,8 +417,8 @@ if ($acesso) {
                     $tabela->set_numeroOrdem(true);
                     $tabela->set_numeroOrdemTipo('d');
 
-                    $tabela->set_classe(array(null, null, null, "ConcursoPublicacao"));
-                    $tabela->set_metodo(array(null, null, null, "exibePublicacao"));
+                    $tabela->set_classe(array("ConcursoPublicacao", null, null, "ConcursoPublicacao"));
+                    $tabela->set_metodo(array("exibeDescricao", null, null, "exibePublicacao"));
 
                     $tabela->set_editar('cadastroConcursoPublicacao.php?fase=editar&idConcurso=' . $id);
                     $tabela->set_idCampo('idConcursoPublicacao');

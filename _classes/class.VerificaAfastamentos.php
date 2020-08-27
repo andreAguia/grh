@@ -51,7 +51,7 @@ class VerificaAfastamentos
     {
         # Férias
         $pessoal = new Pessoal();
-        $select = "SELECT idFerias
+        $select = "SELECT idFerias,dtInicial,ADDDATE(dtInicial,numDias-1)
                  FROM tbferias
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
@@ -70,7 +70,7 @@ class VerificaAfastamentos
                         $retorno = "Férias";
                     }
                 } else {
-                    $retorno = "Férias";
+                    $retorno = ["Férias",$evento[1],$evento[2]];
                 }
             }
         }

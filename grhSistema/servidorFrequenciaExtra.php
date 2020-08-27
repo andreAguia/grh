@@ -9,15 +9,14 @@
 $pessoal = new Pessoal();
 
 $dtInicial = $campoValor[0];
-$numDias = $campoValor[1];
-$idServidor = $campoValor[4];
+$dtFinal = $campoValor[1];
+$idServidor = $campoValor[5];
 
 # Verifica se a data Inicial é anterior a data de admissão
-$dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-$dtAdmissao = date_to_bd($dtAdmissao);
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 if ($dtInicial < $dtAdmissao) {
     $erro = 1;
-    $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';
+    $msgErro .= 'O servidor não pode ter frequência ANTES de ser admitido!\n';
 }
 
 # Verifica se a data Inicial é posterior a data de saida
@@ -28,15 +27,11 @@ if (!is_null($dtSaida)) {
     $dtSaida = date_to_bd($dtSaida);
     if ($dtInicial > $dtSaida) {
         $erro = 1;
-        $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
+        $msgErro .= 'O servidor não pode ter frequência DEPOIS de sair da UENF!\n';
     }
 }
 
-# Verifica se já tem outro afastamento nesse período
-$dtFinal = addDias(date_to_php($dtInicial), $numDias);
-
-$verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
-$verifica->setIsento("tblicencapremio", $id);
+$verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), date_to_php($dtFinal));
 $outro = $verifica->verifica();
 if (!empty($outro)) {
     $msgErro .= 'Já existe um(a) '.$outro[0].' nesse período!\n';

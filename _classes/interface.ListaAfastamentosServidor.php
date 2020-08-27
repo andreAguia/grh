@@ -53,7 +53,7 @@ class ListaAfastamentosServidor
                          tblicencapremio.dtInicial,
                          tblicencapremio.numDias,
                          ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-                         'Licença Pêmio'
+                         'Licença Prêmio'
                     FROM tblicencapremio JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";

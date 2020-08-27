@@ -444,8 +444,7 @@ if ($acesso) {
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             # Divide a página em 3 colunas
@@ -1164,6 +1163,7 @@ if ($acesso) {
             # Da Redução
             $dtAtoReitor = $dados["dtAtoReitor"];
             $dtDespacho = $dados["dtDespacho"];
+            $necessidade = null;
 
             # Limita a tela
             $grid = new Grid("center");
@@ -1182,7 +1182,7 @@ if ($acesso) {
             $controle = new Input('dtAtoReitor', 'data', 'Data do Ato do Reitor:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_valor($dtAtoReitor);
             $controle->set_autofocus(true);
             $controle->set_title('A data do Ato do Reitor.');
@@ -1192,10 +1192,21 @@ if ($acesso) {
             $controle = new Input('dtDespacho', 'data', 'Data do Despacho da Perícia:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_valor($dtDespacho);
             #$controle->set_required(true);
             $controle->set_title('A data do Despacho da Perícia.');
+            $form->add_item($controle);
+
+            # necessidade
+            $controle = new Input('necessidade', 'combo', 'Necessidade:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_array(array(null, "Permanente", "Eventual"));
+            $controle->set_valor($necessidade);
+            #$controle->set_required(true);
+            $controle->set_title('Como a necessidade foi caracterizada.');
             $form->add_item($controle);
 
             # submit
@@ -1231,6 +1242,7 @@ if ($acesso) {
             $botaoEscolhido = get_post_action("salvar", "imprimir");
             $dtAtoReitorDigitados = vazioPraNulo(post("dtAtoReitor"));
             $dtDespachoDigitado = vazioPraNulo(post("dtDespacho"));
+            $necessidade = vazioPraNulo(post("necessidade"));
 
             # Verifica se houve alterações
             $alteracoes = null;
@@ -1249,6 +1261,14 @@ if ($acesso) {
             # Erro
             $msgErro = null;
             $erro = 0;
+
+            if ($botaoEscolhido == "imprimir") {
+                # Verifica a necessidade
+                if (vazio($necessidade)) {
+                    $msgErro .= 'A necessidade deve ser informada!\n';
+                    $erro = 1;
+                }
+            }
 
             # Verifica o número da Ci
             if (vazio($dtAtoReitorDigitados)) {
@@ -1280,7 +1300,7 @@ if ($acesso) {
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if ($botaoEscolhido == "imprimir") {
                 if ($erro == 0) {
-                    loadPage('../grhRelatorios/reducaoAtoReitor.php?id=' . $id, "_blank");
+                    loadPage("../grhRelatorios/reducaoAtoReitor.php?necessidade={$necessidade}&id={$id}", "_blank");
                     loadPage("?");
                 } else {
                     alert($msgErro);

@@ -531,6 +531,28 @@ p#processoAntigoReducao{
 }
 
 /*******************************************
+ * Cessao de Servidor
+ *******************************************/
+tr#cessaoVigente{
+    background-color:#bbd0de;
+}
+
+tr#cessaoTerminada{
+    background-color:#e6e6e6;
+}
+
+/*******************************************
+ * Frequencia do servidor
+ *******************************************/
+tr#frequencia{
+    background-color:#ccc;
+}
+
+tr#naoFrequencia{
+   background-color:#b9b9b9;
+}
+
+/*******************************************
  * Cadastro de Cargo Efetivo
  *******************************************/
 

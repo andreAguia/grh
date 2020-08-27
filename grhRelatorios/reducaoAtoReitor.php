@@ -34,6 +34,7 @@ if ($acesso) {
     $dtAtoReitor = date_to_php($dados["dtAtoReitor"]);
     $dtDespacho = date_to_php($dados["dtDespacho"]);
     $periodo = $dados["periodo"];
+    $necessidade = get('necessidade');    
 
     # do Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -58,11 +59,11 @@ if ($acesso) {
     $textoReitor = "O <b>REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO – UENF</b>,"
             . " tendo em vista as suas atribuições estabelecidas no Decreto nº 30.672, de 18/02/2002 e o que consta no Processo nº $processo,";
 
-    $textoPrincipal = "Reduz em 50% a carga horária de trabalho $texto1 <b>" . strtoupper($nomeServidor) . "</b>, $cargoEfetivo, ID nº $idFuncional, $texto2 na $lotacao,"
-            . " pelo prazo de $periodo (" . numero_to_letra($periodo) . ") meses ou enquanto responsável legal por pessoa portadora de necessidade caracterizada como permanente,"
-            . " que requeira atenção do responsável, conforme artigo 6º do decreto nº 14.870/90, regulamentado pela Resolução SARE nº 3.004 de 20/05/2003"
-            . " e o despacho da Coordenadoria Geral da Superintendência de Perícias Médicas e Saúde Ocupacional – SPMSO, da Secretaria de Estado de Saúde – SES,"
-            . " datado de $dtDespacho, constante do presente processo.";
+    $textoPrincipal = "Reduz em 50% a carga horária de trabalho $texto1 <b>".strtoupper($nomeServidor)."</b>, {$cargoEfetivo}, ID nº {$idFuncional}, {$texto2} na {$lotacao},
+                       pelo prazo de {$periodo} (" . numero_to_letra($periodo) . ") meses ou enquanto responsável legal por pessoa portadora de necessidade caracterizada como ".strtolower($necessidade).",
+                       que requeira atenção do responsável, conforme artigo 6º do decreto nº 14.870/90, regulamentado pela Resolução SARE nº 3.004 de 20/05/2003
+                       e o despacho da Coordenadoria Geral da Superintendência de Perícias Médicas e Saúde Ocupacional – SPMSO, da Secretaria de Estado de Saúde – SES,
+                       datado de {$dtDespacho}, constante do presente processo.";
 
     # Ato do Reitor
     $ato = new AtoReitor();

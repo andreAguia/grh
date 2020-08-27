@@ -48,8 +48,10 @@ if ($acesso) {
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
 
-    $destino = "À SE/SPM,";
-    $data = date("d/m/Y");
+    # despacho
+    $despacho = new Despacho();
+    $despacho->set_destino("À SE/SPM,");
+    $despacho->set_data(date("d/m/Y"));
 
     # Sexo
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
@@ -61,22 +63,12 @@ if ($acesso) {
 
     # Tipo
     if ($tipo == 2) {
-
-        $texto[] = "Encaminhamos a solicitação de Renovação da Redução de Carga Horária $detalhe <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
-        $texto[] = "Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em $dtTermino, conforme publicação no DOERJ de $dtPublicacao, anexada às fls. $folha do p.p.";
-        $texto[] = "Desta forma, encaminhamos o presente para providências cabíveis.";
+        $despacho->set_texto("Encaminhamos a solicitação de Renovação da Redução de Carga Horária $detalhe <b>" . strtoupper($nomeServidor) . "</b>, ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.");
+        $despacho->set_texto("Ressaltamos a devida antecedência do pedido, uma vez que a concessão do benefício finda em $dtTermino, conforme publicação no DOERJ de $dtPublicacao, anexada às fls. $folha do p.p.");
+        $despacho->set_texto("Desta forma, encaminhamos o presente para providências cabíveis.");
     } else {
-
-        $texto[] = "Encaminhamos a solicitação da Redução de Carga Horária $detalhe <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.";
+        $despacho->set_texto("Encaminhamos a solicitação da Redução de Carga Horária $detalhe <b>" . strtoupper($nomeServidor) . "</b>, ID nº $idFuncional, $cargoEfetivo, enquanto responsável por pessoa portadora de necessidades especiais com base na Resolução n° 3.004 de 20/05/2003.");
     }
-
-    # despacho
-    $despacho = new Despacho();
-    $despacho->set_destino($destino);
-    $despacho->set_data($data);
-    $despacho->set_texto($texto);
 
     # Pega o idServidor do gerente GRH
     $idGerente = $pessoal->get_gerente(66);

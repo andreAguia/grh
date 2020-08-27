@@ -74,6 +74,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Categorias de Relatórios');
             $menu->add_item('linkAjax', 'Abono Permanencia', '?fase=abono', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Aposentados', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
@@ -144,6 +145,16 @@ if ($acesso) {
             #$menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios com Abono Permanencia Deferido', '../grhRelatorios/geralAbonoDeferido.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios com Abono Permanencia Indeferido', '../grhRelatorios/geralAbonoIndeferido.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "aposentados";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Aposentados');
+            $menu->add_item('linkWindow','Relatório de Servidores Aposentados Com Tempo de Serviço Publico Averbado','../grhRelatorios/aposentados.tempo.publico.averbado.php');
 
             $menu->show();
             break;

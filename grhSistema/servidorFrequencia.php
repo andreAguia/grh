@@ -93,13 +93,16 @@ if ($acesso) {
                        CONCAT ('Ferias - Exercicio: ',anoExercicio),
                        ''
                   FROM tbferias
-                 WHERE idServidor = {$idServidorPesquisado}
-                   AND dtInicial >= '{$dtInicialCessao}'";
-
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(dtInicial,numDias-1) <= '{$dtTerminoCessao}'";
+                 WHERE idServidor = {$idServidorPesquisado}";
+    
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
     }
-
+    
     # Licenças
     $select .= ") UNION (
                 SELECT YEAR(tblicenca.dtInicial),
@@ -112,11 +115,14 @@ if ($acesso) {
                        ''
                       FROM tblicenca JOIN tbservidor USING (idServidor)
                                      JOIN tbtipolicenca USING (idTpLicenca)
-                    WHERE tbservidor.idServidor = {$idServidorPesquisado}
-                      AND tblicenca.dtInicial >= '{$dtInicialCessao}'";
-
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1) <= '{$dtTerminoCessao}'";
+                    WHERE tbservidor.idServidor = {$idServidorPesquisado}";
+    
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
     }
 
     # Licença Premio
@@ -130,11 +136,14 @@ if ($acesso) {
                        'Licença Prêmio',
                        ''
                   FROM tblicencapremio JOIN tbservidor USING (idServidor)
-                 WHERE tbservidor.idServidor = {$idServidorPesquisado}
-                   AND tblicencapremio.dtInicial >= '{$dtInicialCessao}'";
+                 WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1) <= '{$dtTerminoCessao}'";
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
     }
 
     # Faltas Abonadas
@@ -148,11 +157,14 @@ if ($acesso) {
                        'Falta Abonada',
                        ''
                      FROM tbatestado JOIN tbservidor USING (idServidor)
-                    WHERE tbservidor.idServidor = {$idServidorPesquisado}
-                      AND tbatestado.dtInicio >= '{$dtInicialCessao}'";
-
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1) <= '{$dtTerminoCessao}'";
+                    WHERE tbservidor.idServidor = {$idServidorPesquisado}";
+    
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (dtInicio >= '{$dtInicialCessao}' OR ADDDATE(dtInicio,numDias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((dtInicio BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(dtInicio,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (dtInicio < '{$dtInicialCessao}' AND ADDDATE(dtInicio,numDias-1) > '{$dtTerminoCessao}'))";
     }
 
     # Licença sem vencimentos
@@ -167,11 +179,14 @@ if ($acesso) {
                        ''
                   FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                JOIN tbtipolicenca USING (idTpLicenca)
-                 WHERE tbservidor.idServidor = {$idServidorPesquisado}
-                   AND tblicencasemvencimentos.dtInicial >= '{$dtInicialCessao}'";
+                 WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1) <= '{$dtTerminoCessao}'";
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
     }
 
     # Trabalhando TRE
@@ -185,11 +200,14 @@ if ($acesso) {
                        'Trabalhando no TRE',
                        ''
                      FROM tbtrabalhotre JOIN tbservidor USING (idServidor)
-                     WHERE tbservidor.idServidor = {$idServidorPesquisado}
-                   AND tbtrabalhotre.data >= '{$dtInicialCessao}'";
+                     WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1) <= '{$dtTerminoCessao}'";
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (data >= '{$dtInicialCessao}' OR ADDDATE(data,dias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((data BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(data,dias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (data < '{$dtInicialCessao}' AND ADDDATE(data,dias-1) > '{$dtTerminoCessao}'))";
     }
 
     # Folga TRE
@@ -203,11 +221,14 @@ if ($acesso) {
                           'Folga TRE',                         
                           ''
                      FROM tbfolga JOIN tbservidor USING (idServidor)
-                     WHERE tbservidor.idServidor = {$idServidorPesquisado}
-                   AND tbfolga.data >= '{$dtInicialCessao}'";
+                     WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if (!empty($dtTerminoCessao)) {
-        $select .= " AND ADDDATE(tbfolga.data,tbfolga.dias-1) <= '{$dtTerminoCessao}'";
+    if(empty($dtTerminoCessao)){
+        $select .= " AND (data >= '{$dtInicialCessao}' OR ADDDATE(data,dias-1) >= '{$dtInicialCessao}')";
+    }else{
+        $select .= " AND ((data BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (ADDDATE(data,dias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
+                      OR (data < '{$dtInicialCessao}' AND ADDDATE(data,dias-1) > '{$dtTerminoCessao}'))";
     }
 
 
@@ -217,11 +238,11 @@ if ($acesso) {
     if ($afastamento == 1) {
         $afastamento = 2;
         $selectEscolhido = $select1;
-        $botao = "primary";
+        $botao = "secondary";
     } else {
         $afastamento = 1;
         $selectEscolhido = $select;
-        $botao = "warning";
+        $botao = "primary";
     }
 
     # select da lista

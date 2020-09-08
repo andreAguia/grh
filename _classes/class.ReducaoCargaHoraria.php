@@ -433,7 +433,7 @@ class ReducaoCargaHoraria {
             $hoje = date("d/m/Y");
             $dias = dataDif($hoje, $dttermino);
 
-            if (($dias > 0) AND ($dias < 90)) {
+            if (($dias > 0) AND ($dias < 31)) {
                 if ($dias == 1) {
                     $retorno .= "<br/><span title='Falta apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Falta apenas $dias dia</span>";
                 } else {
@@ -726,10 +726,6 @@ class ReducaoCargaHoraria {
             case 3:
                 $retorno = "Arquivado";
                 break;
-
-            case 4:
-                $retorno = "Aguardando Publicação";
-                break;
         }
 
         return $retorno;
@@ -784,16 +780,6 @@ class ReducaoCargaHoraria {
                  WHERE resultado = 2';
 
         $pessoal->update($sql);
-        
-         /*
-         * Regra excepcional devido a pandemia. Temporária
-         * Se data final já for depois de 01/04/2020 até hoje -> status: 4 (Aguardando Publicação)
-         */
-        #$sql = 'UPDATE tbreducao SET status = 4
-        #         WHERE ADDDATE(dtInicio,INTERVAL periodo MONTH) > "2020-03-31"
-        #           AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
-        #
-        #$pessoal->update($sql);
     }
 
     ###########################################################

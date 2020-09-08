@@ -103,10 +103,6 @@ class Readaptacao
             case 3:
                 $retorno = "Arquivado";
                 break;
-
-            case 4:
-                $retorno = "Aguardando Publicação";
-                break;
         }
 
         return $retorno;
@@ -342,7 +338,7 @@ class Readaptacao
             $hoje = date("d/m/Y");
             $dias = dataDif($hoje, $dttermino);
 
-            if (($dias > 0) AND ($dias < 90)) {
+            if (($dias > 0) AND ($dias < 31)) {
                 if ($dias == 1) {
                     $retorno .= "<br/><span title='Falta Apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
                 } else {
@@ -612,16 +608,6 @@ class Readaptacao
          */
         $sql = 'UPDATE tbreadaptacao SET status = 3
                  WHERE origem = 1
-                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
-
-        $pessoal->update($sql);
-
-        /*
-         * Regra excepcional devido a pandemia. Temporária
-         * Se data final já for depois de 01/05/2020 até hoje -> status: 4 (Aguardando Publicação)
-         */
-        $sql = 'UPDATE tbreadaptacao SET status = 4
-                 WHERE ADDDATE(dtInicio,INTERVAL periodo MONTH) > "2020-03-31"
                    AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
         $pessoal->update($sql);

@@ -277,17 +277,7 @@ if ($acesso) {
     # Editar e excluir condicional
     $objeto->set_editarCondicional('?fase=editar', '<span class=\'label primary\'>Frequência</span>', 5, "=");
     $objeto->set_excluirCondicional('?fase=excluir', '<span class=\'label primary\'>Frequência</span>', 5, "=");
-
-//    $objeto->set_formatacaoCondicional(array(
-//        array('coluna' => 2,
-//            'valor' => "Frequência",
-//            'operador' => '<>',
-//            'id' => 'naoFrequencia'),
-//        array('coluna' => 2,
-//            'valor' => "Frequência",
-//            'operador' => '=',
-//            'id' => "frequencia")
-//    ));
+    
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 

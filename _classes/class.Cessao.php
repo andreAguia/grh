@@ -98,29 +98,34 @@ class Cessao {
         $dataEscolhida = null;
 
         # Pega os Dados das Frequencias cadastradas desta Cessao
-        $select = "SELECT dtFinal FROM tbfrequencia WHERE idHistCessao = {$idHistCessao} ORDER BY dtFinal DESC";
+        $select = "SELECT dtFinal, idServidor FROM tbfrequencia WHERE idHistCessao = {$idHistCessao} ORDER BY dtFinal DESC";
         $dados = $servidor->select($select, false);
 
         # Verifica as frequencias
         if (empty($dados)) {
             # Nao tem nenhuma frequencia pega a data inicial da cessao
             $dadosCessao = $this->getDados($idHistCessao);
+            $idServidor = $dadosCessao["idServidor"];
             $dataEscolhida = addDias(date_to_php($dadosCessao["dtInicio"]), 1, false);
         } else {
             $dataEscolhida = addDias(date_to_php($dados[0]), 1, false);
+            $idServidor = $dados[1];
         }
 
         /*
-        # Verifica os afastamentos neste mes
-        $verifica = new VerificaAfastamentos($dadosCessao["idServidor"], $dataEscolhida, ultimoDiaMes($dataEscolhida));
-        $outro = $verifica->verifica();
-        if (!empty($outro)) {
-            ### PAREI AQUI #####
-            ### Tenho que analisar o que vem no array para gerar uma data inicial 
-            ### Considerando o afastamento !!!
-        }
+         *  Verifica os afastamentos neste mes
          * 
          */
+        #$verifica = new VerificaDadosAfastamentos($idServidor, $dataEscolhida, ultimoDiaMes($dataEscolhida));
+        #$outro = $verifica->verifica();
+        
+        #echo count($outro);
+        
+        #if (!empty($outro)) {
+        #    var_dump($outr0);
+        #}
+        
+        #echo "oi";
 
         return $dataEscolhida;
     }

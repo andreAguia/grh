@@ -34,10 +34,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    $idVaga = get_session('idVaga');
-    
-    echo $idVaga;
-    
+    $idVaga = get_session('idVaga');    
 
     # Pega os dados dessa vaga    
     $vagaDados = $vaga->get_dados($idVaga);

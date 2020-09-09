@@ -305,7 +305,7 @@ class Vaga {
                 $idSituacao = $pessoal->get_idSituacao($dado[0]);
 
                 if ($idSituacao == 1) {
-                    return 'Ocupado';
+                    return 'Ocupada';
                 } else {
                     return 'Disponível';
                 }
@@ -346,7 +346,7 @@ class Vaga {
 
     /**
      * Método exibeDadosVaga
-     * fornece os dados de uma vaga em forma de tabela
+     * fornece os dados de uma vaga 
      * 
      * @param	string $idVaga O id da vaga
      */
@@ -356,6 +356,14 @@ class Vaga {
         $servidor = new Pessoal();
 
         $conteudo = $this->get_dados($idVaga);
+        
+        $painel = new Callout("secondary");
+        $painel->abre();
+        
+        p("Vaga nº:","vagaIdLabel");
+        p($idVaga, "vagaId");
+        
+        $painel->fecha();
 
         $painel = new Callout("primary");
         $painel->abre();
@@ -374,7 +382,6 @@ class Vaga {
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = $this->get_status($idVaga);
 
-        p($idVaga, "vagaId");
         p($centro, "vagaCentro");
         p($cargo, "vagaCargo");
 
@@ -382,9 +389,7 @@ class Vaga {
 
         p("Laboratório de Origem:", "vagaOrigem", null, $title);
         p($labOrigem, "vagaCargo", null, $title);
-
-
-
+        
         $painel->fecha();
 
         $painel = new Callout();
@@ -401,6 +406,29 @@ class Vaga {
         }
 
         $painel->fecha();
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeDadosVagaRelatorio
+     * fornece os dados de uma vaga 
+     * 
+     * @param	string $idVaga O id da vaga
+     */
+    function exibeDadosVagaRelatorio($idVaga) {
+
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        $conteudo = $this->get_dados($idVaga);
+        $centro = $conteudo["centro"];
+        $labOrigem = $servidor->get_nomeLotacao3($this->get_laboratorioOrigem($idVaga));
+        $idCargo = $conteudo["idCargo"];
+        $cargo = $servidor->get_nomeCargo($idCargo);
+        $status = "Vaga {$this->get_status($idVaga)}";
+        
+        return "Vaga: {$idVaga}<br/>{$centro}<br/>{$cargo}<br/>{$labOrigem}<br/>{$status}";
     }
 
     ###########################################################
@@ -917,6 +945,22 @@ class Vaga {
 
         return $dado[0];
     }
+    
+    ###########################################################
+
+    /**
+     * Método get_laboratorioOrigem
+     * fornece o primeiro laboratório de uma vaga. o laborató ao qual a vaga foi criada,
+     * 
+     * @param	integer $idVaga O id da vaga
+     */
+    function exibeLaboratorioOrigem($idVaga) {
+        
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+
+        return $pessoal->get_nomeLotacao3($this->get_laboratorioOrigem($idVaga));
+    }
 
     ###########################################################
 
@@ -1205,10 +1249,10 @@ class Vaga {
                 array("Professor Associado", $associaDisp, $associaOcup, $associaTotal),
                 array("Total", $diponiTotal, $ocupadoTotal, $ocupadoTotal + $diponiTotal));
 
-            $arrayTitular = array(array("Ocupado", $titularOcup),
+            $arrayTitular = array(array("Ocupada", $titularOcup),
                 array("Disponível", $titularDisp));
 
-            $arrayAssociado = array(array("Ocupado", $associaOcup),
+            $arrayAssociado = array(array("Ocupada", $associaOcup),
                 array("Disponível", $associaDisp));
 
             # Chart
@@ -1294,6 +1338,13 @@ class Vaga {
         if (!vazio($parametroCentro)) {
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', "Vagas por Laboratório ($parametroCentro)", "../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=" . $parametroCentro);
+        }else{
+            $menu->add_item('titulo', 'Relatórios');
+            $menu->add_item('linkWindow', 'Docentes Ativos com Vaga', '../grhRelatorios/vagas.professores.ativos.php');
+            $menu->add_item('linkWindow', 'Docentes Inativos com Vaga', '../grhRelatorios/vagas.professores.inativos.php');
+            $menu->add_item('linkWindow', 'Vagas Geral', '../grhRelatorios/vagas.geral.php');
+            $menu->add_item('linkWindow', 'Vagas Resumo', '../grhRelatorios/vagas.resumo.php');
+            $menu->add_item('linkWindow', 'Vagas Resumo Por Lotação', '../grhRelatorios/vagas.resumo.lotacao.php');
         }
 
         $menu->show();

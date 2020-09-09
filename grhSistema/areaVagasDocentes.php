@@ -21,8 +21,6 @@ if ($acesso) {
     $vaga = new Vaga();
     $concurso = new Concurso();
 
-    # Centros Possíveis
-    #$centros = array("Todos","CCT","CCTA","CCH","CBB");
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
 
@@ -41,6 +39,7 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroCentro = get('parametroCentro', get_session('parametroCentro'));
     $parametroStatus = get('parametroStatus', get_session('parametroStatus'));
+    $parametroNumero = soNumeros(post('parametroNumero'));
 
     if ($parametroCentro == "Todos") {
         $parametroCentro = null;
@@ -227,6 +226,19 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(3);
 
+            # Campo de Pesquisa
+            $form = new Form('?fase=editarVagaPorNumero');
+
+            $controle = new Input("parametroNumero", "texto");
+            $controle->set_size(10);
+            $controle->set_placeholder("Número da Vaga");
+            $controle->set_autofocus(true);
+            #$controle->set_valor($parametroNumero);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+
             $vaga->menu($parametroCentro);
 
             if (!vazio($parametroCentro)) {
@@ -303,7 +315,7 @@ if ($acesso) {
                 $tabela->set_titulo($titulo . " - Disponíveis");
                 $tabela->set_conteudo($arrayDisponível);
 
-                $tabela->set_label(array("Id", "Centro", "Cargo", "Status", "Lab.Origem", "Problemas", "Último Ocupante", "Obs", "Num. de Concursos", "Editar"));
+                $tabela->set_label(array("Vaga", "Centro", "Cargo", "Status", "Lab.Origem", "Problemas", "Último Ocupante", "Obs", "Num. de Concursos", "Editar"));
                 #$tabela->set_width(array(5,10,20,10,30,25));
                 $tabela->set_align(array("center"));
 
@@ -315,7 +327,7 @@ if ($acesso) {
                         'operador' => '=',
                         'id' => 'emAberto'),
                     array('coluna' => 3,
-                        'valor' => 'Ocupado',
+                        'valor' => 'Ocupada',
                         'operador' => '=',
                         'id' => 'alerta')
                 ));
@@ -355,7 +367,7 @@ if ($acesso) {
                 $tabela->set_titulo($titulo . " - Ocupadas");
                 $tabela->set_conteudo($arrayOcupado);
 
-                $tabela->set_label(array("Id", "Centro", "Cargo", "Status", "Lab.Origem", "Problemas", "Último Ocupante", "Obs", "Num. de Concursos", "Editar"));
+                $tabela->set_label(array("Vaga", "Centro", "Cargo", "Status", "Lab.Origem", "Problemas", "Último Ocupante", "Obs", "Num. de Concursos", "Editar"));
                 #$tabela->set_width(array(5,10,20,10,30,25));
                 $tabela->set_align(array("center"));
 
@@ -367,7 +379,7 @@ if ($acesso) {
                         'operador' => '=',
                         'id' => 'emAberto'),
                     array('coluna' => 3,
-                        'valor' => 'Ocupado',
+                        'valor' => 'Ocupada',
                         'operador' => '=',
                         'id' => 'alerta')
                 ));
@@ -400,6 +412,11 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+            
+        case "editarVagaPorNumero" :
+            set_session('idVaga', $parametroNumero);
+            loadPage("cadastroVagaHistorico.php");
+            break;    
 
         case "editarConcurso" :
             set_session('idVaga', $id);

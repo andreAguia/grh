@@ -39,9 +39,6 @@ if ($acesso) {
     $status = $vaga->get_status($idVaga);
 
     ######
-    # Título & Subtitulo
-    $subTitulo = "$idVaga - $centro - $cargo<br/>Origem: $labOrigem<br/>Vaga $status";
-    $titulo = "Histórico de Concursos Desta Vaga";
 
     # Pega os dados
     $select = "SELECT concat(tbconcurso.anoBase,' - Edital: ',DATE_FORMAT(tbconcurso.dtPublicacaoEdital,'%d/%m/%Y')) as concurso,
@@ -67,8 +64,8 @@ if ($acesso) {
     $relatorio->set_classe(array(null, null, null, "Vaga"));
     $relatorio->set_metodo(array(null, null, null, "get_Nome"));
 
-    $relatorio->set_titulo($titulo);
-    $relatorio->set_subtitulo($subTitulo);
+    $relatorio->set_titulo("Histórico de Concursos<br/>Vaga {$idVaga}");
+    $relatorio->set_subtitulo("{$centro} - {$cargo}<br/>Origem: {$labOrigem}<br/>Vaga {$status}");
 
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo('d');

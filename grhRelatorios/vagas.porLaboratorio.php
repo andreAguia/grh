@@ -57,7 +57,7 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
 
-    $relatorio->set_label(array("Id", "Cargo", "Status", "Último Ocupante", "Obs", "Num. de Concursos", "Origem"));
+    $relatorio->set_label(array("Vaga", "Cargo", "Status", "Último Ocupante", "Obs", "Num. de Concursos", "Origem"));
     $relatorio->set_width(array(5, 20, 10, 30, 25));
     $relatorio->set_align(array("center"));
 

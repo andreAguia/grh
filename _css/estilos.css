@@ -298,12 +298,19 @@ p#vagaCargo{
     margin: 0px;
 }
 
-p#vagaId{
-    font-size: 12px;    
+p#vagaIdLabel{
+    font-size: 11px;    
     padding: 0px;
-    margin: -10px;
-    color:#8a8a8a;
-    float: right;
+    margin: 0px;
+    text-align: left;
+}
+
+p#vagaId{
+    font-size: 48px;    
+    padding: 0px;
+    margin: 0px;
+    color:#02548b;
+    text-align: center;
 }
 
 p#vagaOrigem{

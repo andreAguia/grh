@@ -465,6 +465,7 @@ if ($acesso) {
     #$relatorio->set_linhaNomeColuna(false);
     $relatorio->set_log(false);
     $relatorio->show();
+    br();
 
     ##
 
@@ -497,6 +498,7 @@ if ($acesso) {
     #$relatorio->set_linhaNomeColuna(false);
     $relatorio->set_log(false);
     $relatorio->show();
+    br();
 
     ##
 
@@ -564,7 +566,7 @@ if ($acesso) {
     #$relatorio->set_linhaNomeColuna(false);
     $relatorio->set_log(false);
     $relatorio->show();
-
+    
     /*
      * Contatos
      */
@@ -989,17 +991,6 @@ if ($acesso) {
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = ' . $idFicha . ')
-                               UNION
-                                (SELECT tbtipolicenca.nome,
-                                        "",
-                                        tblicencasemvencimentos.dtInicial,
-                                        tblicencasemvencimentos.numDias,
-                                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
-                                        CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencasemvencimentos),
-                                        tblicencasemvencimentos.dtPublicacao,
-                                        idLicencasemvencimentos
-                                   FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
-                                   WHERE tblicencasemvencimentos.idServidor = ' . $idFicha . ')
                               ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
@@ -1022,6 +1013,42 @@ if ($acesso) {
         $relatorio->set_menuRelatorio(false);
         #$relatorio->set_linhaNomeColuna(false);
         $relatorio->set_log(false);
+        $relatorio->show();
+    }
+    
+    /*
+     * Histórico de Licença Sem Vencimentos 
+     */
+
+    if ($postLicenca) {
+        tituloRelatorio('Histórico de Licença Sem Vencimentos');
+
+        $select = 'SELECT SUBSTRING(tbtipolicenca.nome,27),
+                            tblicencasemvencimentos.dtInicial,
+                            tblicencasemvencimentos.numDias,
+                            ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                            CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencasemvencimentos),
+                            tblicencasemvencimentos.dtPublicacao,
+                            idLicencasemvencimentos
+                       FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
+                       WHERE tblicencasemvencimentos.idServidor = ' . $idFicha . '
+                  ORDER BY 3 desc';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(array("Tipo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
+        $relatorio->set_funcao(array(null, 'date_to_php', null,'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $relatorio->set_align(array('left', 'center', 'center', 'center', 'left'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não constam licenças sem vencimentos para o servidor");
         $relatorio->show();
     }
 
@@ -1071,6 +1098,7 @@ if ($acesso) {
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
         $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não consta nenhum tempo averbado para o servidor");
         $relatorio->show();
     }
 
@@ -1115,6 +1143,7 @@ if ($acesso) {
         $relatorio->set_menuRelatorio(false);
         #$relatorio->set_linhaNomeColuna(false);
         $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não constam diárias para o servidor");
         $relatorio->show();
     }
 

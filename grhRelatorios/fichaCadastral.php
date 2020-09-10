@@ -248,7 +248,7 @@ if ($acesso) {
 
     $select = 'SELECT tbservidor.dtAdmissao,
                       tbservidor.idServidor,
-                      CONCAT(tbconcurso.anobase," - ",tbconcurso.orgExecutor) as concurso,
+                      concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
                       tbservidor.dtDemissao,
                       tbmotivo.motivo
                  FROM tbservidor LEFT OUTER JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
@@ -278,6 +278,49 @@ if ($acesso) {
     #$relatorio->set_linhaNomeColuna(false);
     $relatorio->set_log(false);
     $relatorio->show();
+
+    /*
+     * Transformação de Regime
+     */
+
+    # Pega o perfil do Servidor    
+    $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
+
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+        # Verifica o regime do servidor
+        $conc = new Concurso();
+        $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
+        $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
+        $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
+
+        if ($regime == "CLT") {
+            $mensagem = "Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+
+            # Verifica se foi transformado
+            if (!empty($dtTranfRegime)) {
+                $mensagem .= "Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
+            }
+
+            br();
+            $relatorio = new Relatorio('relatorioFichaCadastral');
+            #$relatorio->set_titulo(null);
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_label(array('Transformação do Regime'));
+            $relatorio->set_align(array('left'));
+            $relatorio->set_conteudo(array(array($mensagem)));
+            #$relatorio->set_numGrupo(0);
+            $relatorio->set_botaoVoltar(false);
+            #$relatorio->set_bordaInterna(true);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            #$relatorio->set_linhaNomeColuna(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        }
+    }
 
     /*
      * Dados Financeiros
@@ -566,7 +609,7 @@ if ($acesso) {
     #$relatorio->set_linhaNomeColuna(false);
     $relatorio->set_log(false);
     $relatorio->show();
-    
+
     /*
      * Contatos
      */
@@ -1015,7 +1058,7 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
-    
+
     /*
      * Histórico de Licença Sem Vencimentos 
      */
@@ -1038,7 +1081,7 @@ if ($acesso) {
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         $relatorio->set_label(array("Tipo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-        $relatorio->set_funcao(array(null, 'date_to_php', null,'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
         $relatorio->set_align(array('left', 'center', 'center', 'center', 'left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_botaoVoltar(false);

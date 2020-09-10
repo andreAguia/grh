@@ -973,6 +973,23 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_idConcurso
+     * Informa o id do concurso do servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_idConcurso($idServidor) {
+        
+        # Pega o cargo do servidor
+        $select = "SELECT idConcurso FROM tbservidor WHERE idServidor = {$idServidor}";
+
+        $row = parent::select($select, false);
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
      * Método get_idpessoa
      * fornece o id_pessoa de uma idServidor
      * 
@@ -1057,6 +1074,23 @@ class Pessoal extends Bd {
 
         $dt = parent::select($select, false);
 
+        return date_to_php($dt[0]);
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_dtTranfRegime
+     * informa a data da transformação do regime de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_dtTranfRegime($idServidor) {
+        $select = 'SELECT dttransfRegime
+                     FROM tbservidor
+                    WHERE idServidor = ' . $idServidor;
+
+        $dt = parent::select($select, false);
         return date_to_php($dt[0]);
     }
 

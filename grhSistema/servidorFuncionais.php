@@ -52,22 +52,33 @@ if ($acesso) {
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+        # Verifica o regime do servidor
+        $conc = new Concurso();
+        $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
+    }
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Dados Funcionais');
 
     # select do edita
     $selectEdita = 'SELECT idFuncional,
                            matricula,
-                           idPerfil,';
+                           idPerfil,
+                           situacao,';
 
-    # Somente se for estatutário
+    # Somente se for estatutário ou Celetista
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         $selectEdita .= 'idConcurso,';
+
+        # Se houve transformação de regime
+        if ($regime == "CLT") {
+            $selectEdita .= 'dtTransfRegime,';
+        }
     }
 
     # os demais
     $selectEdita .= 'idCargo,
-                    situacao,
                     dtAdmissao,
                     processoAdm,
                     dtPublicAdm,
@@ -82,6 +93,7 @@ if ($acesso) {
             FROM tbservidor
             WHERE idServidor = ' . $idServidorPesquisado;
 
+    #echo $selectEdita;
 
     $objeto->set_selectEdita($selectEdita);
 
@@ -175,6 +187,8 @@ if ($acesso) {
 
     array_unshift($motivo, array(null, null));
 
+    $colunaCargo = 12;
+
     # Campos para o formulario
     $campos = array(array('linha' => 1,
             'nome' => 'idFuncional',
@@ -201,40 +215,54 @@ if ($acesso) {
             'array' => $perfil,
             'title' => 'Perfil do servidor',
             'col' => 3,
+            'size' => 15),
+        array('linha' => 1,
+            'nome' => 'situacao',
+            'label' => 'Situação:',
+            'tipo' => 'combo',
+            'array' => $situacao,
+            'col' => 2,
+            'title' => 'Situação',
             'size' => 15));
 
     # Somente se for estatutário ou celetista
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
-        array_push($campos, array('linha' => 1,
-            'nome' => 'idConcurso',
-            'label' => 'Concurso:',
-            'tipo' => 'combo',
-            'array' => $concurso,
-            'title' => 'Concurso',
-            'padrao' => $idConcurso,
-            'col' => 3,
-            'size' => 15));
+        array_push($campos,
+                array('linha' => 1,
+                    'nome' => 'idConcurso',
+                    'label' => 'Concurso:',
+                    'tipo' => 'combo',
+                    'array' => $concurso,
+                    'title' => 'Concurso',
+                    'padrao' => $idConcurso,
+                    'col' => 3,
+                    'size' => 15));
+
+        if ($regime == "CLT") {
+
+            array_push($campos,
+                    array('linha' => 2,
+                        'nome' => 'dtTransfRegime',
+                        'label' => 'Data da Transformação do Regime:',
+                        'tipo' => 'data',
+                        'size' => 20,
+                        'col' => 3,
+                        'title' => 'Data da Transformação do regime de Celetista para estatutário'));
+            $colunaCargo = 9;
+        }
     }
 
-    # Situação
-    array_push($campos, array('linha' => 1,
-        'nome' => 'situacao',
-        'label' => 'Situação:',
-        'tipo' => 'combo',
-        'array' => $situacao,
-        'col' => 2,
-        'title' => 'Situação',
-        'size' => 15));
 
     # os demais
-    array_push($campos, array('linha' => 2,
-        'nome' => 'idCargo',
-        'label' => 'Cargo / Área / Função:',
-        'tipo' => 'combo',
-        'array' => $cargo,
-        'title' => 'Cargo',
-        'col' => 12,
-        'size' => 15),
+    array_push($campos,
+            array('linha' => 2,
+                'nome' => 'idCargo',
+                'label' => 'Cargo / Área / Função:',
+                'tipo' => 'combo',
+                'array' => $cargo,
+                'title' => 'Cargo',
+                'col' => $colunaCargo,
+                'size' => 15),
             array('linha' => 3,
                 'nome' => 'dtAdmissao',
                 'label' => 'Data de Admissão:',
@@ -324,12 +352,26 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
     ################################################################
 
     switch ($fase) {
         case "ver" :
         case "editar" :
+            
+            $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
+            $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
+
+            if ($regime == "CLT") {
+                $mensagem = "Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+                
+                # Verifica se foi transformado
+                if (!empty($dtTranfRegime)) {
+                    $mensagem .= "Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
+                }
+                $objeto->set_rotinaExtraEditar(array("callout"));
+                $objeto->set_rotinaExtraEditarParametro(array($mensagem));
+            }
+
             $objeto->$fase($idServidorPesquisado);
             break;
 

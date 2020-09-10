@@ -265,7 +265,7 @@ class Vaga {
             p($pessoal->get_dtAdmissao($idServidor) . "  -  " . $pessoal->get_dtSaida($idServidor), $css);
             p($pessoal->get_lotacaoSimples($idServidor), $css);
             if (!vazio($pessoal->get_cargoComissao($idServidor))) {
-                p("$pessoal->get_cargoComissao($idServidor)", $css);
+                p($pessoal->get_cargoComissao($idServidor), $css);
             }
         } else {
             return $idServidor;

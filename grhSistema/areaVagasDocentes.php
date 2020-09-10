@@ -15,6 +15,7 @@ include ("_config.php");
 $acesso = Verifica::acesso($idUsuario, 2);
 
 if ($acesso) {
+
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -22,7 +23,10 @@ if ($acesso) {
     $concurso = new Concurso();
 
     # Verifica a fase do programa
-    $fase = get('fase', 'listar');
+    $fase = get('fase');
+
+    # pega o id (se tiver)
+    $id = soNumeros(get('id'));
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -33,21 +37,19 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
-    # pega o id (se tiver)
-    $id = soNumeros(get('id'));
-
     # Pega os parâmetros
-    $parametroCentro = get('parametroCentro', get_session('parametroCentro'));
-    $parametroStatus = get('parametroStatus', get_session('parametroStatus'));
-    $parametroNumero = soNumeros(post('parametroNumero'));
+    $parametroCentro = post('parametroCentro', get_session('parametroCentro', "CCT"));
+    $parametroLab = post('parametroLab', get_session('parametroLab', "*"));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', "Disponível"));
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo', 128));
+    $parametroNome = post('parametroNome', get_session('parametroNome'));
 
-    if ($parametroCentro == "Todos") {
-        $parametroCentro = null;
-    }
-
-    # Joga os parâmetros par as sessions    
+    # Joga os parâmetros par as sessions
     set_session('parametroCentro', $parametroCentro);
-    set_session('parametroStatus', $parametroStatus);
+    set_session('parametroLab', $parametroLab);
+    set_session('parametroSituacao', $parametroSituacao);
+    set_session('parametroCargo', $parametroCargo);
+    set_session('parametroNome', $parametroNome);
 
     # Começa uma nova página
     $page = new Page();
@@ -56,446 +58,256 @@ if ($acesso) {
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
-    # Abre um novo objeto Modelo
-    $objeto = new Modelo();
-
-    ################################################################
-    # Nome do Modelo
-
-    if (!vazio($parametroCentro)) {
-        $objeto->set_nome("Vagas de Docentes do $parametroCentro");
-    } else {
-        $objeto->set_nome("Vagas de Docentes");
-    }
-
-    # select do edita
-    $objeto->set_selectEdita('SELECT centro,
-                                     idCargo
-                                FROM tbvaga
-                               WHERE idVaga = ' . $id);
-
-    # Caminhos
-    #$objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?fase=listar');
-    #$objeto->set_linkExcluir('?fase=excluir');
-    # Classe do banco de dados
-    $objeto->set_classBd('Pessoal');
-
-    # Nome da tabela
-    $objeto->set_tabela('tbvaga');
-
-    # Nome do campo id
-    $objeto->set_idCampo('idVaga');
-
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
-    # Pega os dados da combo cargo
-    $cargo = $pessoal->select('SELECT idcargo,nome
-                                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                              LEFT JOIN tbarea USING (idarea)
-                                WHERE idCargo = 128 OR idCargo = 129              
-                             ORDER BY tbtipocargo.cargo,tbarea.area,nome');
-
-    array_unshift($cargo, array(0, null));
-
-    # Campos para o formulario
-    $objeto->set_campos(array(
-        array('linha' => 1,
-            'col' => 2,
-            'nome' => 'centro',
-            'label' => 'Centro:',
-            'tipo' => 'combo',
-            'array' => array(null, "CCT", "CCTA", "CCH", "CBB"),
-            'required' => true,
-            'autofocus' => true,
-            'size' => 30),
-        array('linha' => 1,
-            'col' => 4,
-            'nome' => 'idCargo',
-            'label' => 'Cargo:',
-            'tipo' => 'combo',
-            'array' => $cargo,
-            'required' => true,
-            'size' => 30)));
-
-    # idUsuário para o Log
-    $objeto->set_idUsuario($idUsuario);
-
-    $objeto->set_botaoVoltarLista(false);
-    $objeto->set_botaoIncluir(false);
-
-    ################################################################
+    $grid = new Grid();
+    $grid->abreColuna(12);
 
     switch ($fase) {
-        case "" :
-        case "listar" :
-
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Cria um menu
-            $menu1 = new MenuBar();
+        case "":
+            /*
+             * Menu
+             */
+            $menu = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
+            $botao = new Link("Voltar", "grh.php");
+            $botao->set_class('button');
+            $botao->set_title('Voltar a página anterior');
+            $botao->set_accessKey('V');
+            $menu->add_link($botao, "left");
+            # Por nome
+            $botao = new Link("por Nome", "?fase=porNome");
+            $botao->set_class('button');
+            $botao->set_title('Pesquisar por Nome do Professor');
+            $menu->add_link($botao, "right");
 
-            # Incluir
-            $botaoInserir = new Button("Incluir Nova Vaga", "?fase=incluir");
-            $botaoInserir->set_title("Incluir");
-            $menu1->add_link($botaoInserir, "right");
+            # Dados Gerais
+            $botao = new Link("Dados Gerais", "?fase=geral");
+            $botao->set_class('button');
+            $botao->set_title('ResumoGeral');
+            $menu->add_link($botao, "right");
 
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
 
-            $menu1->show();
-
-            ###
-
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
-
-            $vaga->menu($parametroCentro);
+            $menu->show();
 
             $grid->fechaColuna();
             $grid->abreColuna(9);
 
-            br(5);
-            aguarde();
+            /*
+             *  Formulário de Pesquisa
+             */
+
+            tituloTable("Pesquisar");
             br();
-            p("Aguarde...", "center");
+            $form = new Form('?');
 
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+            # Centros Possíveis
+            $centros = array("CCT", "CCTA", "CCH", "CBB");
 
-            loadPage('?fase=exibeLista');
-            break;
-
-################################################################
-
-        case "exibeLista" :
-
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
-
-            # Incluir
-            $botaoInserir = new Button("Incluir Nova Vaga", "?fase=incluir");
-            $botaoInserir->set_title("Incluir");
-            $menu1->add_link($botaoInserir, "right");
-
-            # Total de Vagas
-            $botaoInserir = new Button("Exibe Total de Vagas", "?fase=exibeTotal");
-            $botaoInserir->set_title("Incluir");
-            #$menu1->add_link($botaoInserir,"right");
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
-
-            $menu1->show();
-
-            ###
-
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
-
-            # Campo de Pesquisa
-            $form = new Form('?fase=editarVagaPorNumero');
-
-            $controle = new Input("parametroNumero", "texto");
-            $controle->set_size(10);
-            $controle->set_placeholder("Número da Vaga");
-            $controle->set_autofocus(true);
-            #$controle->set_valor($parametroNumero);
+            $controle = new Input('parametroCentro', 'combo', 'Centro:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Centro');
+            $controle->set_array($centros);
+            $controle->set_valor($parametroCentro);
             $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_autofocus(true);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Situação
+            $situacao = array("Disponível", "Ocupada");
+
+            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array($situacao);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Cargo
+            $cargos = array(
+                array(128, "Professor Associado"),
+                array(129, "Professor Titular"),
+            );
+
+            $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por CArgo');
+            $controle->set_array($cargos);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+
+
+            # Laboratório
+            $result = $pessoal->select("SELECT idlotacao, concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
+                                                      FROM tblotacao
+                                                     WHERE ativo
+                                                     AND tblotacao.DIR = '{$parametroCentro}' 
+                                                  ORDER BY 2");
+            array_unshift($result, array("*", 'Todos'));
+
+            $controle = new Input('parametroLab', 'combo', 'Laboratório de Origem:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Laboratório');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLab);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
             $controle->set_col(12);
             $form->add_item($controle);
+
             $form->show();
 
-            $vaga->menu($parametroCentro);
+            $grid->fechaColuna();
 
-            if (!vazio($parametroCentro)) {
+            $grid->abreColuna(3);
+            if ($parametroSituacao == "Disponível") {
                 $vaga->exibeVagasDisponiveis($parametroCentro);
+            } else {
                 $vaga->exibeVagasOcupadas($parametroCentro);
             }
-
             $grid->fechaColuna();
-            $grid->abreColuna(9);
+            $grid->abreColuna(12);
 
-            #$objeto->listar();
-            # Só exibe se tiver sido escolhido um centro
-            if (!vazio($parametroCentro)) {
-
-                # Exibe as tabs
-                echo '<ul class="tabs" data-tabs id="example-tabs">';
-                echo '<li class="tabs-title is-active"><a href="#disponiveis" aria-selected="true">Disponíveis</a></li>';
-                echo '<li class="tabs-title"><a data-tabs-target="ocupadas" href="#ocupadas">Ocupadas</a></li>';
-
-                echo '</ul>';
-
-                $select = "SELECT idVaga,
-                                  centro,
-                                  tbcargo.nome,
-                                  idVaga,
-                                  idVaga,
-                                  idVaga,
-                                  idVaga,
-                                  idVaga,
-                                  idVaga,
-                                  idVaga,
-                                  idVaga
-                             FROM tbvaga LEFT JOIN tbcargo USING (idCargo)
-                            WHERE true 
-                              AND centro = '$parametroCentro' 
-                         ORDER BY centro,idCargo desc";
-
-                $result = $pessoal->select($select);
-
-                # Inicia o array para a tabela
-                $arrayDisponível = array();
-                $arrayOcupado = array();
-
-                # Percorre o array retirando as vagas ocupadas
-                foreach ($result as $rr) {
-
-                    # Pega o status da vaga
-                    $status = $vaga->get_status($rr[3]);
-
-                    if ($status == "Disponível") {
-                        $arrayDisponível[] = $rr;
-                    } else {
-                        $arrayOcupado[] = $rr;
-                    }
-                }
-
-                #####
-
-                echo '<div class="tabs-content" data-tabs-content="example-tabs">';
-
-                # Vagas Disponíveis
-                $div1 = new Div('disponiveis', 'tabs-panel is-active');
-                $div1->abre();
-
-                $tabela = new Tabela();
-
-                # Titulo
-                if (!vazio($parametroCentro)) {
-                    $titulo = "Vagas de Docentes do $parametroCentro";
-                } else {
-                    $titulo = "Vagas de Docentes";
-                }
-
-                $tabela->set_titulo($titulo . " - Disponíveis");
-                $tabela->set_conteudo($arrayDisponível);
-
-                $tabela->set_label(array("Vaga", "Centro", "Cargo", "Status", "Lab.Origem", "Problemas", "Último Ocupante", "Obs", "Num. de Concursos", "Editar"));
-                #$tabela->set_width(array(5,10,20,10,30,25));
-                $tabela->set_align(array("center"));
-
-                $tabela->set_classe(array(null, null, null, "Vaga", "Vaga", "Vaga", "Vaga", "Vaga", "Vaga"));
-                $tabela->set_metodo(array(null, null, null, "get_status", "get_nomeLaboratorioOrigem", "temProblema", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga"));
-
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
-                        'valor' => 'Disponível',
-                        'operador' => '=',
-                        'id' => 'emAberto'),
-                    array('coluna' => 3,
-                        'valor' => 'Ocupada',
-                        'operador' => '=',
-                        'id' => 'alerta')
-                ));
-
-                $tabela->set_excluirCondicional('?fase=excluir', 0, 8, "==");
-
-                # Botão de Editar concursos
-                $botao1 = new BotaoGrafico();
-                $botao1->set_label('');
-                $botao1->set_title('Editar o Concurso');
-                $botao1->set_url("?fase=editarConcurso&id=");
-                $botao1->set_imagem(PASTA_FIGURAS . 'ver.png', 20, 20);
-
-                # Coloca o objeto link na tabela			
-                $tabela->set_link(array(null, null, null, null, null, null, null, null, null, $botao1));
-
-                #$tabela->set_numeroOrdem(true);
-                $tabela->set_idCampo('idVaga');
-                $tabela->show();
-
-                $div1->fecha();
-
-                #####
-                # Vagas Ocupadas
-                $div2 = new Div('ocupadas', 'tabs-panel');
-                $div2->abre();
-
-                $tabela = new Tabela();
-
-                # Titulo
-                if (!vazio($parametroCentro)) {
-                    $titulo = "Vagas de Docentes do $parametroCentro";
-                } else {
-                    $titulo = "Vagas de Docentes";
-                }
-
-                $tabela->set_titulo($titulo . " - Ocupadas");
-                $tabela->set_conteudo($arrayOcupado);
-
-                $tabela->set_label(array("Vaga", "Centro", "Cargo", "Status", "Lab.Origem", "Problemas", "Último Ocupante", "Obs", "Num. de Concursos", "Editar"));
-                #$tabela->set_width(array(5,10,20,10,30,25));
-                $tabela->set_align(array("center"));
-
-                $tabela->set_classe(array(null, null, null, "Vaga", "Vaga", "Vaga", "Vaga", "Vaga", "Vaga"));
-                $tabela->set_metodo(array(null, null, null, "get_status", "get_nomeLaboratorioOrigem", "temProblema", "get_servidorOcupante", "get_obsOcupante", "get_numConcursoVaga"));
-
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
-                        'valor' => 'Disponível',
-                        'operador' => '=',
-                        'id' => 'emAberto'),
-                    array('coluna' => 3,
-                        'valor' => 'Ocupada',
-                        'operador' => '=',
-                        'id' => 'alerta')
-                ));
-
-                $tabela->set_excluirCondicional('?fase=excluir', 0, 8, "==");
-
-                # Botão de Editar concursos
-                $botao1 = new BotaoGrafico();
-                $botao1->set_label('');
-                $botao1->set_title('Editar o Concurso');
-                $botao1->set_url("?fase=editarConcurso&id=");
-                $botao1->set_imagem(PASTA_FIGURAS . 'ver.png', 20, 20);
-
-                # Coloca o objeto link na tabela			
-                $tabela->set_link(array(null, null, null, null, null, null, null, null, null, $botao1));
-
-                #$tabela->set_numeroOrdem(true);            
-                $tabela->set_idCampo('idVaga');
-                $tabela->show();
-
-                $div2->fecha();
-
-                echo '</div>';
-            } else {
-                $vaga->exibeDashboard();
-            }
-
-            #####
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+            $vagaDocente = new VagaDocentes();
+            $vagaDocente->setCargo($parametroCargo);
+            $vagaDocente->setCentro($parametroCentro);
+            $vagaDocente->setLaboratorio($parametroLab);
+            $vagaDocente->setSituacao($parametroSituacao);
+            $vagaDocente->show();
             break;
-            
-        case "editarVagaPorNumero" :
-            set_session('idVaga', $parametroNumero);
-            loadPage("cadastroVagaHistorico.php");
-            break;    
 
         case "editarConcurso" :
             set_session('idVaga', $id);
             loadPage("cadastroVagaHistorico.php");
             break;
 
-        case "editar" :
-            #$objeto->set_linkListar("?fase=editarConcurso&id=".$id);
-            $objeto->set_voltarForm("?fase=editarConcurso&id=" . $id);
-            $objeto->editar($id);
-            break;
+        case "geral":
 
-        case "incluir" :
-            $objeto->editar();
-            break;
+            /*
+             * Geral
+             */
 
-        case "excluir" :
-        case "gravar" :
-            $objeto->$fase($id);
-            break;
-
-        #############################################################
-        ## DEPRECATED
-        ############################################333333333333
-
-        case "exibeTotal" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Cria um menu
-            $menu1 = new MenuBar();
+            # Menu
+            $menu = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "?");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
+            $botao = new Link("Voltar", "?");
+            $botao->set_class('button');
+            $botao->set_title('Voltar a página anterior');
+            $botao->set_accessKey('V');
+            $menu->add_link($botao, "left");
 
-            $menu1->show();
+            $menu->show();
 
-            ###
-
-            tituloTable("Total de Vagas");
+            titulotable("Dados Gerais");
             br();
 
-            ###
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
+
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo', 'Relatórios');
+            $menu->add_item('linkWindow', 'Docentes Ativos com Vaga', '../grhRelatorios/vagas.professores.ativos.php');
+            $menu->add_item('linkWindow', 'Docentes Inativos com Vaga', '../grhRelatorios/vagas.professores.inativos.php');
+            $menu->add_item('linkWindow', 'Vagas Geral', '../grhRelatorios/vagas.geral.php');
+            $menu->add_item('linkWindow', 'Vagas Resumo', '../grhRelatorios/vagas.resumo.php');
+            $menu->add_item('linkWindow', 'Vagas Resumo Por Lotação', '../grhRelatorios/vagas.resumo.lotacao.php');
+            $menu->show();
 
             $grid->fechaColuna();
-            $grid->abreColuna(4);
+            $grid->abreColuna(9);
+            $vaga->exibeDashboard();
+            break;
 
-            $vaga->exibeTotalVagas($parametroCentro, "o");
+        case "porNome":
 
-            $grid->fechaColuna();
-            $grid->abreColuna(4);
+            # Menu
+            $menu = new MenuBar();
 
-            $vaga->exibeTotalVagas($parametroCentro, "d");
+            # Voltar
+            $botao = new Link("Voltar", "?");
+            $botao->set_class('button');
+            $botao->set_title('Voltar a página anterior');
+            $botao->set_accessKey('V');
+            $menu->add_link($botao, "left");
 
-            $grid->fechaColuna();
-            $grid->abreColuna(4);
+            $menu->show();
 
-            $vaga->exibeTotalVagas($parametroCentro);
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
+            tituloTable("Pesquisa Docentes por Nome");
             br();
 
-            $grid = new Grid("center");
-            $grid->abreColuna(6);
+            $form = new Form('?fase=porNome');
 
-            $concurso->exibeQuadroDocentesSemConcurso();
+            $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Nome do Professor');
+            $controle->set_valor($parametroNome);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_autofocus(true);
+            $controle->set_col(6);
+            $form->add_item($controle);
 
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            hr();
+            $form->show();
+
+            $select = 'SELECT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
+                              tbperfil.nome,
+                              tbservidor.dtAdmissao,
+                              tbservidor.dtDemissao,
+                              tbvaga.idVaga,
+                              tbvaga.idVaga
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                         LEFT JOIN tbvagahistorico USING (idServidor)
+                                              JOIN tbvaga USING (idVaga)
+                        WHERE tbpessoa.nome like "%' . $parametroNome . '%" 
+                          AND (tbservidor.idCargo = 128 OR tbservidor.idCargo = 129)
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     ORDER BY tbpessoa.nome';
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Docentes Encontrados');
+            $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Vaga', 'Editar'));
+            #$tabela->set_width(array(10,30,30,0,10,10,10));
+            $tabela->set_align(array("center", "left", "left", "left"));
+            $tabela->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
+
+            $tabela->set_classe(array(null, null, "pessoal"));
+            $tabela->set_metodo(array(null, null, "get_Cargo"));
+
+            # Botão de Editar concursos
+            $botao1 = new BotaoGrafico();
+            $botao1->set_label('');
+            $botao1->set_title('Editar o Concurso');
+            $botao1->set_url("?fase=editarConcurso&id=");
+            $botao1->set_imagem(PASTA_FIGURAS . 'ver.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link(array(null, null, null, null, null, null, null, null, $botao1));
+            $tabela->set_idCampo('idVaga');
+
+            $tabela->set_conteudo($result);
+            $tabela->show();
             break;
     }
+
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
     $page->terminaPagina();
 } else {

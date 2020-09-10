@@ -9,19 +9,6 @@ class Vaga {
      */
     ###########################################################
 
-    public function __construct() {
-        /**
-         * Inicia a classe somente
-         * 
-         * @note Se o mês não for informado, é exibido o mês atual.
-         * @note Se o ano não for informado, é exibido o ano atual.
-         * 
-         * @syntax $calendario = new Calendario([$mes], [$ano]);
-         */
-    }
-
-    ###########################################################
-
     public function get_dados($idVaga = null) { // integer o id da vaga
         /**
          * Retorna todos os dados arquivados na tabela tbvaga
@@ -38,12 +25,221 @@ class Vaga {
                       WHERE idVaga = $idVaga";
 
             $pessoal = new Pessoal();
-            $dados = $pessoal->select($select, false);
-
-            return $dados;
+            return $pessoal->select($select, false);
         }
     }
 
+    ###########################################################
+
+    /**
+     * Método exibeVagasOcupadas
+     */
+    function exibeVagasOcupadas($centro = null) {
+
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Inicia as variáveis
+        $resultado = array();
+
+        # Faz os cálculos
+        $ocupadoTitular = $this->get_numVagasCargoDiretoriaOcupados(129, $centro);
+        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaOcupados(128, $centro);
+
+        $resultado[] = array("Professor Titular", $ocupadoTitular);
+        $resultado[] = array("Professor Associado", $ocupadoAssociado);
+        $resultado[] = array("Total", $ocupadoAssociado + $ocupadoTitular);
+
+        $titulo = "Vagas Ocupadas";
+
+        if (!vazio($centro)) {
+            $titulo .= " do $centro";
+        }
+
+        $tabela = new Tabela();
+        $tabela->set_titulo($titulo);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_label(array("Cargo", "Quantidade"));
+        #$tabela->set_width(array());
+        $tabela->set_totalRegistro(false);
+        $tabela->set_align(array("left", "center"));
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                'valor' => "Total",
+                'operador' => '=',
+                'id' => 'totalVagas')));
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeVagasDisponiveis
+     */
+    function exibeVagasDisponiveis($centro = null) {
+
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Inicia as variáveis
+        $resultado = array();
+
+        # Faz os cálculos
+        $ocupadoTitular = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
+        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
+
+        $resultado[] = array("Professor Titular", $ocupadoTitular);
+        $resultado[] = array("Professor Associado", $ocupadoAssociado);
+        $resultado[] = array("Total", $ocupadoAssociado + $ocupadoTitular);
+
+        $titulo = "Vagas Disponíveis";
+
+        if (!vazio($centro)) {
+            $titulo .= " do $centro";
+        }
+
+        $tabela = new Tabela();
+        $tabela->set_titulo($titulo);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_label(array("Cargo", "Quantidade"));
+        #$tabela->set_width(array());
+        $tabela->set_totalRegistro(false);
+        $tabela->set_align(array("left", "center"));
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                'valor' => "Total",
+                'operador' => '=',
+                'id' => 'totalVagas')));
+        $tabela->show();
+    }
+    
+    ###########################################################
+
+    /**
+     * Método get_numVagasCargoDiretoria
+     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
+     */
+    function get_numVagasCargoDiretoriaDisponiveis($idCargo = null, $dir = null) {
+
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Inicia o contador
+        $disponivel = 0;
+
+        # Pega as vagas desse cargo e desse centro
+        $select = "SELECT idVaga
+                     FROM tbvaga
+                    WHERE true";
+
+        if (!vazio($idCargo)) {
+            $select .= " AND idCargo = $idCargo";
+        }
+
+        if (!vazio($dir)) {
+            $select .= " AND centro = '$dir'";
+        }
+
+
+        $dado = $pessoal->select($select);
+
+        # Percorre os resultados
+        foreach ($dado as $dd) {
+            $idServidor = $this->get_idServidorOcupante($dd[0]);
+
+            # Se não tiver nenhum candidato
+            if (is_null($idServidor)) {
+                $disponivel++;
+            } else {
+                $situacao = $pessoal->get_situacao($idServidor);
+
+                # Compara de é inativo
+                if ($situacao <> "Ativo") {
+                    $disponivel++;
+                }
+            }
+        }
+        return $disponivel;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numVagasCargoDiretoria
+     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+    function get_numVagasCargoDiretoriaOcupados($idCargo = null, $dir = null) {
+
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Inicia o contador
+        $ocupado = 0;
+
+        # Pega as vagas desse cargo e desse centro
+        $select = "SELECT idVaga
+                     FROM tbvaga
+                     WHERE true";
+
+        if (!vazio($idCargo)) {
+            $select .= " AND idCargo = $idCargo";
+        }
+
+        if (!vazio($dir)) {
+            $select .= " AND centro = '$dir'";
+        }
+
+        $dado = $pessoal->select($select);
+
+        # Percorre os resultados
+        foreach ($dado as $dd) {
+            $idServidor = $this->get_idServidorOcupante($dd[0]);
+
+            # Se não tiver nenhum candidato
+            if (!is_null($idServidor)) {
+                $situacao = $pessoal->get_situacao($idServidor);
+
+                # Compara se está ocupado
+                if ($situacao == "Ativo") {
+                    $ocupado++;
+                }
+            }
+        }
+        return $ocupado;
+    }
+    
+    ###########################################################
+    
+    /**
+     * Método get_servidorOcupante
+     * fornece o nome do servidor ocupante da último edital para esta vaga
+     * 
+     * @param	string $idVaga O id da vaga do servidor
+     */
+    function get_servidorOcupante($idVaga) {
+
+        if (is_numeric($idVaga)) {
+
+            # Pega os dados
+            $pessoal = new Pessoal();
+
+            $select = 'SELECT idServidor,
+                              idConcurso,
+                              idLotacao,
+                              area,
+                              tbvagahistorico.obs
+                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                        WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+
+            $dados = $pessoal->select($select, false);
+
+            $idServidor = $dados["idServidor"];
+            return $this->get_nome($idServidor);
+        } else {
+            return $idVaga;
+        }
+    }
+    
     ###########################################################
 
     /**
@@ -59,25 +255,17 @@ class Vaga {
             # Conecta o banco
             $pessoal = new Pessoal();
 
-            # Pega os dados
-            $nome = $pessoal->get_nome($idServidor);
-            $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-            $idSiituacao = $pessoal->get_idSituacao($idServidor);
-            $dtSaida = $pessoal->get_dtSaida($idServidor);
-            $lotacao = $pessoal->get_lotacaoSimples($idServidor);
-            $comissao = $pessoal->get_cargoComissao($idServidor);
-
-            if ($idSiituacao == 1) {
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
                 $css = 'vagasAtivo';
             } else {
                 $css = 'vagasInativo';
             }
 
-            p($nome, $css);
-            p($dtAdmissao . "  -  " . $dtSaida, $css);
-            p($lotacao, $css);
-            if (!vazio($comissao)) {
-                p("$comissao", $css);
+            p($pessoal->get_nome($idServidor), $css);
+            p($pessoal->get_dtAdmissao($idServidor) . "  -  " . $pessoal->get_dtSaida($idServidor), $css);
+            p($pessoal->get_lotacaoSimples($idServidor), $css);
+            if (!vazio($pessoal->get_cargoComissao($idServidor))) {
+                p("$pessoal->get_cargoComissao($idServidor)", $css);
             }
         } else {
             return $idServidor;
@@ -121,38 +309,6 @@ class Vaga {
             if (!vazio($comissao)) {
                 echo "$comissao";
             }
-        }
-    }
-
-    ###########################################################
-
-    /**
-     * Método get_servidorOcupante
-     * fornece o nome do servidor ocupante da último edital para esta vaga
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-    function get_servidorOcupante($idVaga) {
-
-        if (is_numeric($idVaga)) {
-
-            # Pega os dados
-            $pessoal = new Pessoal();
-
-            $select = 'SELECT idServidor,
-                              idConcurso,
-                              idLotacao,
-                              area,
-                              tbvagahistorico.obs
-                         FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                        WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
-
-            $dados = $pessoal->select($select, false);
-
-            $idServidor = $dados["idServidor"];
-            return $this->get_nome($idServidor);
-        } else {
-            return $idVaga;
         }
     }
 
@@ -501,103 +657,7 @@ class Vaga {
         return $dado;
     }
 
-    ###########################################################
-
-    /**
-     * Método get_numVagasCargoDiretoria
-     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
-     */
-    function get_numVagasCargoDiretoriaDisponiveis($idCargo = null, $dir = null) {
-
-        # Conecta o banco
-        $pessoal = new Pessoal();
-
-        # Inicia o contador
-        $disponivel = 0;
-
-        # Pega as vagas desse cargo e desse centro
-        $select = "SELECT idVaga
-                     FROM tbvaga
-                    WHERE true";
-
-        if (!vazio($idCargo)) {
-            $select .= " AND idCargo = $idCargo";
-        }
-
-        if (!vazio($dir)) {
-            $select .= " AND centro = '$dir'";
-        }
-
-
-        $dado = $pessoal->select($select);
-
-        # Percorre os resultados
-        foreach ($dado as $dd) {
-            $idServidor = $this->get_idServidorOcupante($dd[0]);
-
-            # Se não tiver nenhum candidato
-            if (is_null($idServidor)) {
-                $disponivel++;
-            } else {
-                $situacao = $pessoal->get_situacao($idServidor);
-
-                # Compara de é inativo
-                if ($situacao <> "Ativo") {
-                    $disponivel++;
-                }
-            }
-        }
-        return $disponivel;
-    }
-
-    ###########################################################
-
-    /**
-     * Método get_numVagasCargoDiretoria
-     * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-    function get_numVagasCargoDiretoriaOcupados($idCargo = null, $dir = null) {
-
-        # Conecta o banco
-        $pessoal = new Pessoal();
-
-        # Inicia o contador
-        $ocupado = 0;
-
-        # Pega as vagas desse cargo e desse centro
-        $select = "SELECT idVaga
-                     FROM tbvaga
-                     WHERE true";
-
-        if (!vazio($idCargo)) {
-            $select .= " AND idCargo = $idCargo";
-        }
-
-        if (!vazio($dir)) {
-            $select .= " AND centro = '$dir'";
-        }
-
-        $dado = $pessoal->select($select);
-
-        # Percorre os resultados
-        foreach ($dado as $dd) {
-            $idServidor = $this->get_idServidorOcupante($dd[0]);
-
-            # Se não tiver nenhum candidato
-            if (!is_null($idServidor)) {
-                $situacao = $pessoal->get_situacao($idServidor);
-
-                # Compara se está ocupado
-                if ($situacao == "Ativo") {
-                    $ocupado++;
-                }
-            }
-        }
-        return $ocupado;
-    }
-
+    
     ###########################################################
 
     /**
@@ -835,93 +895,6 @@ class Vaga {
         $tabela->show();
     }
 
-    ###########################################################
-
-    /**
-     * Método exibeVagasOcupadas
-     * fornece o status da vaga
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-    function exibeVagasOcupadas($centro = null) {
-
-        # Conecta o banco
-        $pessoal = new Pessoal();
-
-        # Inicia as variáveis
-        $resultado = array();
-
-        # Faz os cálculos
-        $ocupadoTitular = $this->get_numVagasCargoDiretoriaOcupados(129, $centro);
-        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaOcupados(128, $centro);
-
-        $resultado[] = array("Professor Titular", $ocupadoTitular);
-        $resultado[] = array("Professor Associado", $ocupadoAssociado);
-        $resultado[] = array("Total", $ocupadoAssociado + $ocupadoTitular);
-
-        $titulo = "Vagas Ocupadas";
-
-        if (!vazio($centro)) {
-            $titulo .= " do $centro";
-        }
-
-        $tabela = new Tabela();
-        $tabela->set_titulo($titulo);
-        $tabela->set_conteudo($resultado);
-        $tabela->set_label(array("Cargo", "Quantidade"));
-        #$tabela->set_width(array());
-        $tabela->set_totalRegistro(false);
-        $tabela->set_align(array("left", "center"));
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                'valor' => "Total",
-                'operador' => '=',
-                'id' => 'totalVagas')));
-        $tabela->show();
-    }
-
-    ###########################################################
-
-    /**
-     * Método exibeVagasOcupadas
-     * fornece o status da vaga
-     * 
-     * @param	string $idVaga O id da vaga do servidor
-     */
-    function exibeVagasDisponiveis($centro = null) {
-
-        # Conecta o banco
-        $pessoal = new Pessoal();
-
-        # Inicia as variáveis
-        $resultado = array();
-
-        # Faz os cálculos
-        $ocupadoTitular = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
-        $ocupadoAssociado = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
-
-        $resultado[] = array("Professor Titular", $ocupadoTitular);
-        $resultado[] = array("Professor Associado", $ocupadoAssociado);
-        $resultado[] = array("Total", $ocupadoAssociado + $ocupadoTitular);
-
-        $titulo = "Vagas Disponíveis";
-
-        if (!vazio($centro)) {
-            $titulo .= " do $centro";
-        }
-
-        $tabela = new Tabela();
-        $tabela->set_titulo($titulo);
-        $tabela->set_conteudo($resultado);
-        $tabela->set_label(array("Cargo", "Quantidade"));
-        #$tabela->set_width(array());
-        $tabela->set_totalRegistro(false);
-        $tabela->set_align(array("left", "center"));
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                'valor' => "Total",
-                'operador' => '=',
-                'id' => 'totalVagas')));
-        $tabela->show();
-    }
 
     ###########################################################
 

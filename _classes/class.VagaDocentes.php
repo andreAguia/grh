@@ -63,7 +63,12 @@ class VagaDocentes {
         $result = $pessoal->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo("Vagas {$this->situacao}");
+        if($this->situacao == "Disponível"){
+            $tabela->set_titulo("Vagas Disponíveis");
+        }else{
+            $tabela->set_titulo("Vagas Ocupadas");
+        }
+        
         $tabela->set_conteudo($result);
 
         $tabela->set_label(array("Vaga", "Situação", "Cargo", "Centro", "Laboratório de Origem", "Último Ocupante", "Obs", "Num. de Concursos", "Problemas", "Editar"));

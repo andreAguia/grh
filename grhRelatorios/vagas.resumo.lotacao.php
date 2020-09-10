@@ -31,11 +31,11 @@ if ($acesso) {
 
     $select = 'SELECT idVaga,
                       centro,
-                      idVaga,
+                      (SELECT idLotacao FROM tbvagahistorico l JOIN tbconcurso USING(idConcurso) WHERE l.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1),
                       idCargo,
                       idVaga
-                 FROM tbvaga
-             ORDER BY centro';
+                 FROM tbvaga p
+             ORDER BY centro, 3';
 
     $result = $servidor->select($select);
 
@@ -46,8 +46,8 @@ if ($acesso) {
     $relatorio->set_label(array("Vaga", "Centro", "Laboratório de Origem","Cargo", "Status"));
     $relatorio->set_funcao(array(null, null, null));
     $relatorio->set_align(array("center","center","left"));
-    $relatorio->set_classe(array(null, null, "Vaga","Pessoal","Vaga"));
-    $relatorio->set_metodo(array(null, null, "exibeLaboratorioOrigem","get_nomeCargo","get_status"));
+    $relatorio->set_classe(array(null, null, "Pessoal","Pessoal","Vaga"));
+    $relatorio->set_metodo(array(null, null, "get_nomeLotacao3","get_nomeCargo","get_status"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(1);

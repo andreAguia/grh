@@ -101,8 +101,12 @@ class Pessoal extends Bd {
                       AND (dtFinal is null OR current_date() <= dtFinal)';
 
         $row = parent::select($select, false);
-
-        return $row[0];
+        
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -122,7 +126,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -176,7 +184,7 @@ class Pessoal extends Bd {
         $row = parent::select($select, false);
 
         # Informa o status
-        if (is_null($row[0])) {
+        if (empty($row[0])) {
             $primeira = 1;
         } else {
             $primeira = 0;
@@ -234,7 +242,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -254,7 +266,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -293,7 +309,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -494,7 +514,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ######################################################################################
@@ -512,7 +536,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ######################################################################################
@@ -591,7 +619,11 @@ class Pessoal extends Bd {
                      ORDER BY data DESC';
 
         $row = parent::select($select, false);
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        }else{
+            return $row[0];
+        }
     }
 
     ##########################################################
@@ -979,7 +1011,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     public function get_idConcurso($idServidor) {
-        
+
         # Pega o cargo do servidor
         $select = "SELECT idConcurso FROM tbservidor WHERE idServidor = {$idServidor}";
 
@@ -1222,13 +1254,13 @@ class Pessoal extends Bd {
         # Monta o select
         $select = "SELECT idFerias 
                      FROM tbferias
-                    WHERE idServidor = '$idServidor'
-                      AND '$data' >= dtInicial 
-                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
+                    WHERE idServidor = {$idServidor}
+                      AND '{$data}' >= dtInicial 
+                      AND '{$data}' <= ADDDATE(dtInicial,numDias-1)";
 
         $row = parent::select($select, false);
 
-        if (is_null($row[0])) {
+        if (empty($row[0])) {
             return 0;
         } else {
             return 1;
@@ -1285,7 +1317,7 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (is_null($row[0])) {
+        if (empty($row[0])) {
             return 0;
         } else {
             return 1;
@@ -1316,10 +1348,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (is_null($row[0]))
+        if (empty($row[0])) {
             return 0;
-        else
+        } else {
             return 1;
+        }
     }
 
     ##########################################################################################
@@ -1346,10 +1379,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (is_null($row[0]))
+        if (empty($row[0])) {
             return 0;
-        else
+        } else {
             return 1;
+        }
     }
 
     ##########################################################################################
@@ -1391,7 +1425,11 @@ class Pessoal extends Bd {
                       AND (isnull(dtFim) OR current_date() <= dtFim)";
 
         $row = parent::select($select, false);
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1987,30 +2025,26 @@ class Pessoal extends Bd {
 
     /**
      * Método get_salarioCargoComissao
-     * Informa o sal�rio de um cargo em Comiss�o do Servidor (se tiver)
+     * Informa o salário de um cargo em Comissão do Servidor (se tiver)
      * 
      * @param	string $idServidor  idServidor do servidor
      */
     function get_salarioCargoComissao($idServidor) {
-        # Pega o id do cargo em comiss�o (se houver)		 
-        $select = 'SELECT idComissao
-                         FROM tbcomissao
-                        WHERE dtExo is null AND idServidor = ' . $idServidor;
-
-        $row = parent::select($select, false);
-        $idCargo = $row[0];
-
-        # Pega o sal�rio do id do cargo em comiss�o
-        if (!is_null($idCargo)) {
-            $select = 'SELECT tbtipocomissao.valsal 
-                                            FROM tbcomissao 
-                                            JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                                       WHERE idcomissao = ' . $idCargo;
-
-            $row = parent::select($select, false);
+        # Pega o id do cargo em comissão (se houver)
+        $row1 = parent::select("SELECT idComissao
+                                  FROM tbcomissao 
+                                 WHERE dtExo is null 
+                                   AND idServidor = {$idServidor}", false);
+        
+        # Retorna o valor
+        if(empty($row1[0])){
+            return null;
+        }else{
+            $row2 = parent::select("SELECT tbtipocomissao.valsal 
+                                      FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                                     WHERE idcomissao = {$idCargo}", false);
+            return $row2[0];
         }
-
-        return $row[0];
     }
 
     ###########################################################
@@ -3502,7 +3536,7 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (is_null($row[0])) {
+        if (empty($row[0])) {
             return 0;
         } else {
             return 1;
@@ -3532,7 +3566,7 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (is_null($row[0])) {
+        if (empty($row[0])) {
             return 0;
         } else {
             return 1;

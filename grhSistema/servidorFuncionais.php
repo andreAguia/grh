@@ -145,6 +145,8 @@ if ($acesso) {
         # Professor
 
         $vaga = new Vaga();
+        # Preenche com o valor da tabela tbvagahistórico
+        # Que é onde fica cadastrado o concurso dos docentes
         $idConcurso = $vaga->get_idConcursoProfessor($idServidorPesquisado);
 
         if (!vazio($idConcurso)) {

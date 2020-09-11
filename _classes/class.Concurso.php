@@ -327,4 +327,49 @@ class Concurso {
     }
 
     #####################################################################################
+
+    /**
+     * Método sincronizaIdConcurso
+     * 
+     * Sincroniza idConcurso da tbServidor com idConcurso da tbvagahistorico
+     */
+    public function sincronizaIdConcurso() {
+
+        # Joga o valor informado para a variável da classe
+        if (!vazio($idConcurso)) {
+            $this->idConcurso = $idConcurso;
+        }
+
+        # Monta o select            
+        $select = "SELECT idServidor
+                     FROM tbservidor JOIN tbvagahistorico USING (idServidor)
+                    WHERE (idCargo = 128 OR idCargo = 129)
+                      AND (idPerfil = 1 OR idPerfil = 4)
+                      AND (tbservidor.idConcurso IS NULL OR tbservidor.idConcurso <> tbvagahistorico.idConcurso)
+                 ORDER BY tbvagahistorico.idConcurso;";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+        $count = $pessoal->count($select);
+        
+        $vaga = new Vaga();
+
+        if ($count > 0) {
+            foreach($row as $tt){
+                
+                $novoIdConcurso = $vaga->get_idConcursoProfessor($tt[0]);
+                
+                # Grava na tabela
+                $campos = array("idConcurso");
+                $valor = array($novoIdConcurso);
+                $pessoal->gravar($campos, $valor, $tt[0], "tbservidor", "idServidor", false);
+                
+            }
+        }
+
+        return $count;
+    }
+
+    #####################################################################################
 }

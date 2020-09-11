@@ -133,7 +133,7 @@ if (!is_null($motivo)) {
             # 07 - Rescisão de contrato à pedido
             # 08 - Término de contrato
             # 09 - Demissão com justa causa
-            # 10 - Demissã
+            # 10 - Demissão
             # 11 - Abandono de emprego
             # 12 - Fim da cessão
             # 13 - Outros

@@ -172,6 +172,21 @@ if ($acesso) {
                 # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de alteração do status de redução de carga horária executada.', null, null, 6);
             }
+            
+             /*
+             *  Sincroniza tbvagahistorico com idservidor
+             */
+            if ($intra->get_variavel('dataSincronizaIdConcurso') <> date("d/m/Y")) {
+                # Faz a sincronização
+                $concursoClasse = new Concurso();
+                $qdade = $concursoClasse->sincronizaIdConcurso();
+
+                # muda a variável para hoje
+                $intra->set_variavel('dataSincronizaIdConcurso', date("d/m/Y"));
+
+                # registra o log
+                $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $qdade . ' registros sincronizados da tbvagahistorico com idservidor.', null, null, 6);
+            }
 
             /*
              *  Faz o backup de hora em hora

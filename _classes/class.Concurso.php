@@ -335,11 +335,6 @@ class Concurso {
      */
     public function sincronizaIdConcurso() {
 
-        # Joga o valor informado para a variável da classe
-        if (!vazio($idConcurso)) {
-            $this->idConcurso = $idConcurso;
-        }
-
         # Monta o select            
         $select = "SELECT idServidor
                      FROM tbservidor JOIN tbvagahistorico USING (idServidor)

@@ -115,7 +115,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Situação
-            $situacao = array("Disponível", "Ocupada");
+            $situacao = array("Todas","Disponível", "Ocupada");
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
             $controle->set_size(8);

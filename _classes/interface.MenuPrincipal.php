@@ -39,10 +39,9 @@ class MenuPrincipal
         # Área Central 
         $grid->abreColuna(12, 8, 5);
 
-        # Módulos
+        # Módulos      
         $this->moduloTabelaAuxiliares();
-        $this->moduloGrh();
-        $this->moduloAreaEspecial();
+        $this->moduloAreaEspecial();        
         $this->moduloLinksExternos();
 
         $grid->fechaColuna();
@@ -61,6 +60,7 @@ class MenuPrincipal
         $grid1->abreColuna(12, 6, 12);
 
         $this->moduloAniversariantes();
+        $this->moduloGrh();
         #$this->moduloAlertas();
 
         $grid1->fechaColuna();
@@ -72,7 +72,7 @@ class MenuPrincipal
 
         $grid1->fechaColuna();
         $grid1->abreColuna(12, 6, 12);
-
+        
         $this->moduloRamais();
 
         $grid1->fechaColuna();
@@ -343,7 +343,7 @@ class MenuPrincipal
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(4);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');
@@ -375,21 +375,6 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'usuarios.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Cargos em Comissão');
         $botao->set_accesskey('g');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Concurso');
-        $botao->set_url('cadastroConcurso.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Cadastro de Concursos');
-        $botao->set_accesskey('o');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vagas de Docentes');
-        $botao->set_url('areaVagasDocentes.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vaga.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Área de controle de Vagas de Professores');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -449,7 +434,8 @@ class MenuPrincipal
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(4);
+        $menu->set_espacoEntreLink(true);
         $botao = new BotaoGrafico();
 
         $botao = new BotaoGrafico();
@@ -507,7 +493,29 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'semVencimento.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
         $menu->add_item($botao);
+                
+        $botao = new BotaoGrafico();
+        $botao->set_label('Concurso');
+        $botao->set_url('cadastroConcurso.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Concursos');
+        $botao->set_accesskey('o');
+        $menu->add_item($botao);
 
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vagas de Docentes');
+        $botao->set_url('areaVagasDocentes.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vaga.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Área de controle de Vagas de Professores');
+        $menu->add_item($botao);
+              
+        $botao = new BotaoGrafico();
+        $botao->set_label('Controle de Frequência');
+        $botao->set_url('areaFrequencia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'frequencia.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Frequência de cedidos da Uenf para outros Órgãos');
+        $menu->add_item($botao);
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Formação');
         $botao->set_url('areaFormacao.php?grh=1');

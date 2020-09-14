@@ -207,7 +207,7 @@ if ($acesso) {
             $menu1->add_link($botao, "left");
 
             # Incluir
-            $botaoInserir = new Button("Incluir Nova Vaga", "?fase=incluir");
+            $botaoInserir = new Button("Incluir Nova Vaga", "?fase=editar");
             $botaoInserir->set_title("Incluir");
             $menu1->add_link($botaoInserir, "right");
 

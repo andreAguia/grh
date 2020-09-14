@@ -101,10 +101,10 @@ class Pessoal extends Bd {
                       AND (dtFinal is null OR current_date() <= dtFinal)';
 
         $row = parent::select($select, false);
-        
+
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -128,7 +128,7 @@ class Pessoal extends Bd {
 
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -244,7 +244,7 @@ class Pessoal extends Bd {
 
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -268,7 +268,7 @@ class Pessoal extends Bd {
 
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -311,7 +311,7 @@ class Pessoal extends Bd {
 
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -516,7 +516,7 @@ class Pessoal extends Bd {
 
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -530,16 +530,21 @@ class Pessoal extends Bd {
      * @param	string $idLotacao  o id da lotaçao
      */
     public function get_lotacaoGerencia($idLotacao) {
-        $select = 'SELECT GER
+
+        if (empty($idLotacao)) {
+            return null;
+        } else {
+            $select = 'SELECT GER
                      FROM tblotacao
                     WHERE idLotacao = ' . $idLotacao;
 
-        $row = parent::select($select, false);
+            $row = parent::select($select, false);
 
-        if (empty($row[0])) {
-            return null;
-        }else{
-            return $row[0];
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return $row[0];
+            }
         }
     }
 
@@ -621,7 +626,7 @@ class Pessoal extends Bd {
         $row = parent::select($select, false);
         if (empty($row[0])) {
             return null;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -2035,11 +2040,11 @@ class Pessoal extends Bd {
                                   FROM tbcomissao 
                                  WHERE dtExo is null 
                                    AND idServidor = {$idServidor}", false);
-        
+
         # Retorna o valor
-        if(empty($row1[0])){
+        if (empty($row1[0])) {
             return null;
-        }else{
+        } else {
             $row2 = parent::select("SELECT tbtipocomissao.valsal 
                                       FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
                                      WHERE idcomissao = {$idCargo}", false);

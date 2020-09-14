@@ -143,7 +143,7 @@ class Vaga {
 
         $arrayAssociado = array(array("Ocupada", $associaOcup),
             array("Disponível", $associaDisp));
-        
+
         # Tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($arrayResult);
@@ -281,8 +281,11 @@ class Vaga {
 
             $dados = $pessoal->select($select, false);
 
-            $idServidor = $dados["idServidor"];
-            return $this->get_nome($idServidor);
+            if (empty($dados)) {
+                return null;
+            } else {
+                return $this->get_nome($dados["idServidor"]);
+            }
         } else {
             return $idVaga;
         }
@@ -383,8 +386,11 @@ class Vaga {
 
         $dados = $pessoal->select($select, false);
 
-        $idServidor = $dados["idServidor"];
-        return $idServidor;
+        if (empty($dados["idServidor"])) {
+            return null;
+        } else {
+            return $dados["idServidor"];
+        }
     }
 
     ##########################################################
@@ -504,7 +510,9 @@ class Vaga {
 
             $dado = $pessoal->select($select, false);
 
-            if (!vazio($dado[0])) {
+            if (empty($dado[0])) {
+                return 'Disponível';
+            }else{
                 # Pega a situação
                 $idSituacao = $pessoal->get_idSituacao($dado[0]);
 
@@ -513,8 +521,6 @@ class Vaga {
                 } else {
                     return 'Disponível';
                 }
-            } else {
-                return 'Disponível';
             }
         } else {
             return 'Disponível';
@@ -961,8 +967,12 @@ class Vaga {
                  ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
 
         $dado = $pessoal->select($select, false);
-
-        return $dado[0];
+        
+        if(empty($dados[0])){
+            return null;
+        }else{
+            return $dado[0];
+        }
     }
 
     ###########################################################

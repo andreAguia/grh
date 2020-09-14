@@ -89,7 +89,7 @@ class VagaDocentes {
                 'id' => 'alerta')
         ));
 
-        $tabela->set_excluirCondicional('?fase=excluir', 0, 7, "==");
+        $tabela->set_excluirCondicional('cadastroVagas.php?fase=excluir', 0, 7, "==");
 
         # Botão de Editar concursos
         $botao1 = new BotaoGrafico();

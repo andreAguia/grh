@@ -74,6 +74,12 @@ if ($acesso) {
             $botao->set_title('Voltar a página anterior');
             $botao->set_accessKey('V');
             $menu->add_link($botao, "left");
+            
+            # Incluir
+            $botaoInserir = new Button("Incluir Nova Vaga", "cadastroVagas.php?fase=editar");
+            $botaoInserir->set_title("Incluir");
+            $menu->add_link($botaoInserir, "right");
+            
             # Por nome
             $botao = new Link("por Nome", "?fase=porNome");
             $botao->set_class('button');

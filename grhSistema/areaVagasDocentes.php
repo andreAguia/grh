@@ -90,7 +90,7 @@ if ($acesso) {
             $menu->show();
 
             $grid->fechaColuna();
-            $grid->abreColuna(9);
+            $grid->abreColuna(8);
 
             /*
              *  Formulário de Pesquisa
@@ -167,12 +167,8 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            $grid->abreColuna(3);
-            if ($parametroSituacao == "Disponível") {
-                $vaga->exibeVagasDisponiveis($parametroCentro);
-            } else {
-                $vaga->exibeVagasOcupadas($parametroCentro);
-            }
+            $grid->abreColuna(4);
+            $vaga->exibeVagasGerais($parametroCentro);
             $grid->fechaColuna();
             $grid->abreColuna(12);
 

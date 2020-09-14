@@ -110,7 +110,55 @@ class Vaga {
                 'id' => 'totalVagas')));
         $tabela->show();
     }
-    
+
+    ###########################################################
+
+    /**
+     * Método exibeVagasGerais
+     */
+    function exibeVagasGerais($centro = null) {
+
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        tituloTable($centro);
+
+        $titularDisp = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
+        $titularOcup = $this->get_numVagasCargoDiretoriaOcupados(129, $centro);
+        $titularTotal = $titularDisp + $titularOcup;
+
+        $associaDisp = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
+        $associaOcup = $this->get_numVagasCargoDiretoriaOcupados(128, $centro);
+        $associaTotal = $associaDisp + $associaOcup;
+
+        $diponiTotal = $associaDisp + $titularDisp;
+        $ocupadoTotal = $associaOcup + $titularOcup;
+
+        $arrayResult = array(array("Professor Titular", $titularDisp, $titularOcup, $titularTotal),
+            array("Professor Associado", $associaDisp, $associaOcup, $associaTotal),
+            array("Total", $diponiTotal, $ocupadoTotal, $ocupadoTotal + $diponiTotal));
+
+        $arrayTitular = array(array("Ocupada", $titularOcup),
+            array("Disponível", $titularDisp));
+
+        $arrayAssociado = array(array("Ocupada", $associaOcup),
+            array("Disponível", $associaDisp));
+        
+        # Tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($arrayResult);
+        #$tabela->set_titulo($cc);
+        $tabela->set_label(array("Cargo", "Disponíveis", "Ocupadas", "Total"));
+        $tabela->set_width(array(40, 20, 20, 20));
+        $tabela->set_align(array("left"));
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                'valor' => "Total",
+                'operador' => '=',
+                'id' => 'estatisticaTotal')));
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
     ###########################################################
 
     /**
@@ -207,9 +255,9 @@ class Vaga {
         }
         return $ocupado;
     }
-    
+
     ###########################################################
-    
+
     /**
      * Método get_servidorOcupante
      * fornece o nome do servidor ocupante da último edital para esta vaga
@@ -239,7 +287,7 @@ class Vaga {
             return $idVaga;
         }
     }
-    
+
     ###########################################################
 
     /**
@@ -512,13 +560,13 @@ class Vaga {
         $servidor = new Pessoal();
 
         $conteudo = $this->get_dados($idVaga);
-        
+
         $painel = new Callout("secondary");
         $painel->abre();
-        
-        p("Vaga nº:","vagaIdLabel");
+
+        p("Vaga nº:", "vagaIdLabel");
         p($idVaga, "vagaId");
-        
+
         $painel->fecha();
 
         $painel = new Callout("primary");
@@ -545,7 +593,7 @@ class Vaga {
 
         p("Laboratório de Origem:", "vagaOrigem", null, $title);
         p($labOrigem, "vagaCargo", null, $title);
-        
+
         $painel->fecha();
 
         $painel = new Callout();
@@ -583,7 +631,7 @@ class Vaga {
         $idCargo = $conteudo["idCargo"];
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = "Vaga {$this->get_status($idVaga)}";
-        
+
         return "Vaga: {$idVaga}<br/>{$centro}<br/>{$cargo}<br/>{$labOrigem}<br/>{$status}";
     }
 
@@ -657,7 +705,6 @@ class Vaga {
         return $dado;
     }
 
-    
     ###########################################################
 
     /**
@@ -895,7 +942,6 @@ class Vaga {
         $tabela->show();
     }
 
-
     ###########################################################
 
     /**
@@ -918,7 +964,7 @@ class Vaga {
 
         return $dado[0];
     }
-    
+
     ###########################################################
 
     /**
@@ -928,7 +974,7 @@ class Vaga {
      * @param	integer $idVaga O id da vaga
      */
     function exibeLaboratorioOrigem($idVaga) {
-        
+
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
@@ -1189,84 +1235,84 @@ class Vaga {
 
         $painel->fecha();
 
-        $painel = new Callout();
-        $painel->abre();
-
-        tituloTable("Vagas Por Centro");
-        br();
-
-        $grid2 = new Grid();
-
-
-        # Centros Possíveis
-        $centros = array("CCT", "CCTA", "CCH", "CBB");
-
-        foreach ($centros as $cc) {
-
-            $grid2->abreColuna(6);
-
-            tituloTable($cc);
-
-            $titularDisp = $this->get_numVagasCargoDiretoriaDisponiveis(129, $cc);
-            $titularOcup = $this->get_numVagasCargoDiretoriaOcupados(129, $cc);
-            $titularTotal = $titularDisp + $titularOcup;
-
-            $associaDisp = $this->get_numVagasCargoDiretoriaDisponiveis(128, $cc);
-            $associaOcup = $this->get_numVagasCargoDiretoriaOcupados(128, $cc);
-            $associaTotal = $associaDisp + $associaOcup;
-
-            $diponiTotal = $associaDisp + $titularDisp;
-            $ocupadoTotal = $associaOcup + $titularOcup;
-
-            $arrayResult = array(array("Professor Titular", $titularDisp, $titularOcup, $titularTotal),
-                array("Professor Associado", $associaDisp, $associaOcup, $associaTotal),
-                array("Total", $diponiTotal, $ocupadoTotal, $ocupadoTotal + $diponiTotal));
-
-            $arrayTitular = array(array("Ocupada", $titularOcup),
-                array("Disponível", $titularDisp));
-
-            $arrayAssociado = array(array("Ocupada", $associaOcup),
-                array("Disponível", $associaDisp));
-
-            # Chart
-            $chart = new Chart("Pie", $arrayTitular);
-            $chart->set_idDiv("vagasO$cc");
-            $chart->set_title("Titular");
-            $chart->set_tresd(true);
-            $chart->set_cores(array('#1B4F72', '#2980B9'));
-            #$chart->set_legend(array("VagasT","tt"));
-            #$chart->set_pieHole(true);
-            $chart->set_tamanho(400, 300);
-            #$chart->show();
-            # Chart
-            $chart = new Chart("Pie", $arrayAssociado);
-            $chart->set_idDiv("vagasD$cc");
-            $chart->set_title("Associado");
-            $chart->set_tresd(true);
-            $chart->set_cores(array('#e0440e', '#e6693e'));
-            #$chart->set_pieHole(true);
-            $chart->set_tamanho(400, 300);
-            #$chart->show();
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($arrayResult);
-            #$tabela->set_titulo($cc);
-            $tabela->set_label(array("Cargo", "Disponíveis", "Ocupadas", "Total"));
-            $tabela->set_width(array(40, 20, 20, 20));
-            $tabela->set_align(array("left"));
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                    'valor' => "Total",
-                    'operador' => '=',
-                    'id' => 'estatisticaTotal')));
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
-
-            $grid2->fechaColuna();
-        }
-
-        $grid2->fechaGrid();
-
-        $painel->fecha();
+//        $painel = new Callout();
+//        $painel->abre();
+//
+//        tituloTable("Vagas Por Centro");
+//        br();
+//
+//        $grid2 = new Grid();
+//
+//
+//        # Centros Possíveis
+//        $centros = array("CCT", "CCTA", "CCH", "CBB");
+//
+//        foreach ($centros as $cc) {
+//
+//            $grid2->abreColuna(6);
+//
+//            tituloTable($cc);
+//
+//            $titularDisp = $this->get_numVagasCargoDiretoriaDisponiveis(129, $cc);
+//            $titularOcup = $this->get_numVagasCargoDiretoriaOcupados(129, $cc);
+//            $titularTotal = $titularDisp + $titularOcup;
+//
+//            $associaDisp = $this->get_numVagasCargoDiretoriaDisponiveis(128, $cc);
+//            $associaOcup = $this->get_numVagasCargoDiretoriaOcupados(128, $cc);
+//            $associaTotal = $associaDisp + $associaOcup;
+//
+//            $diponiTotal = $associaDisp + $titularDisp;
+//            $ocupadoTotal = $associaOcup + $titularOcup;
+//
+//            $arrayResult = array(array("Professor Titular", $titularDisp, $titularOcup, $titularTotal),
+//                array("Professor Associado", $associaDisp, $associaOcup, $associaTotal),
+//                array("Total", $diponiTotal, $ocupadoTotal, $ocupadoTotal + $diponiTotal));
+//
+//            $arrayTitular = array(array("Ocupada", $titularOcup),
+//                array("Disponível", $titularDisp));
+//
+//            $arrayAssociado = array(array("Ocupada", $associaOcup),
+//                array("Disponível", $associaDisp));
+//
+//            # Chart
+//            $chart = new Chart("Pie", $arrayTitular);
+//            $chart->set_idDiv("vagasO$cc");
+//            $chart->set_title("Titular");
+//            $chart->set_tresd(true);
+//            $chart->set_cores(array('#1B4F72', '#2980B9'));
+//            #$chart->set_legend(array("VagasT","tt"));
+//            #$chart->set_pieHole(true);
+//            $chart->set_tamanho(400, 300);
+//            #$chart->show();
+//            # Chart
+//            $chart = new Chart("Pie", $arrayAssociado);
+//            $chart->set_idDiv("vagasD$cc");
+//            $chart->set_title("Associado");
+//            $chart->set_tresd(true);
+//            $chart->set_cores(array('#e0440e', '#e6693e'));
+//            #$chart->set_pieHole(true);
+//            $chart->set_tamanho(400, 300);
+//            #$chart->show();
+//            # Tabela
+//            $tabela = new Tabela();
+//            $tabela->set_conteudo($arrayResult);
+//            #$tabela->set_titulo($cc);
+//            $tabela->set_label(array("Cargo", "Disponíveis", "Ocupadas", "Total"));
+//            $tabela->set_width(array(40, 20, 20, 20));
+//            $tabela->set_align(array("left"));
+//            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+//                    'valor' => "Total",
+//                    'operador' => '=',
+//                    'id' => 'estatisticaTotal')));
+//            $tabela->set_totalRegistro(false);
+//            $tabela->show();
+//
+//            $grid2->fechaColuna();
+//        }
+//
+//        $grid2->fechaGrid();
+//
+//        $painel->fecha();
     }
 
     ###########################################################
@@ -1311,7 +1357,7 @@ class Vaga {
         if (!vazio($parametroCentro)) {
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', "Vagas por Laboratório ($parametroCentro)", "../grhRelatorios/vagas.porLaboratorio.php?parametroCentro=" . $parametroCentro);
-        }else{
+        } else {
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', 'Docentes Ativos com Vaga', '../grhRelatorios/vagas.professores.ativos.php');
             $menu->add_item('linkWindow', 'Docentes Inativos com Vaga', '../grhRelatorios/vagas.professores.inativos.php');

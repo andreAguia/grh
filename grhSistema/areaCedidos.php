@@ -85,6 +85,10 @@ if ($acesso)
 
             $grid->fechaColuna();
             $grid->abreColuna(3, 2);
+            
+            /*
+             * Menu lateral
+             */
 
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Relatórios');
@@ -105,7 +109,9 @@ if ($acesso)
             $grid->fechaColuna();
             $grid->abreColuna(9, 10);
 
-            ##############
+            /*
+             * Formulário de Pesquisa
+             */
 
             $form = new Form('?');
 
@@ -160,6 +166,41 @@ if ($acesso)
                 $tabela->set_classe([null, null, null, null, null, "Pessoal"]);
                 $tabela->set_metodo([null, null, null, null, null, "get_lotacao"]);
                 $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+                $tabela->set_editar('?fase=editaServidor');
+                $tabela->set_idCampo('idServidor');
+
+                if ($count > 0)
+                {
+                    $tabela->show();
+                }
+                
+                /*
+                 * Exibe Servidores com mais de um lançamento de cessão vigente
+                 */
+
+                $select = 'SELECT DISTINCT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbhistcessao.dtInicio,
+                              tbhistcessao.dtFim,
+                              tbhistcessao.orgao,
+                              idServidor
+                         FROM tbhistcessao LEFT JOIN tbservidor USING (idServidor)
+                                                JOIN tbpessoa USING (idPessoa)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                          AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
+                     GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1';
+
+                $result = $pessoal->select($select);
+                $count = $pessoal->count($select);
+
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($result);
+                $tabela->set_label(['IdFuncional', 'Nome', 'Início', 'Término', 'Órgão']);
+                $tabela->set_align(['center', 'left', 'center', 'center', 'left']);
+                $tabela->set_titulo('Servidor(es) Com Mais de uma Cessão Vigente Cadastrada');
+                $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->set_idCampo('idServidor');
 

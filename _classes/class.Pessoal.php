@@ -1467,6 +1467,28 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
+    function get_obs($idServidor) {
+
+
+        # Função que retorna as observações de um servidor
+        #
+        # Parâmetro: id do Servidor
+        
+        # Monta o select		
+        $select = "SELECT obs 
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $row = parent::select($select, false);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ##########################################################################################
+
     function get_licenca($idServidor, $data = null) {
 
 

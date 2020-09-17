@@ -116,16 +116,16 @@ class Cessao {
          * Verifica se tem algum afastamento este mês
          */
         
-        $ultimoDia = ultimoDiaMes($dataEscolhida);
-        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
-        $verifica = $verificaDados->verifica();
-                
-        if(!empty($verifica[0][1])){
-            
-            if($dataEscolhida) {
-            $dataEscolhida = addDias(date_to_php($verifica[0][1]), 1, false);
-            }
-        }
+//        $ultimoDia = ultimoDiaMes($dataEscolhida);
+//        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
+//        $verifica = $verificaDados->verifica();
+//                
+//        if(!empty($verifica[0][1])){
+//            
+//            if($dataEscolhida) {
+//            $dataEscolhida = addDias(date_to_php($verifica[0][1]), 1, false);
+//            }
+//        }
         
         return $dataEscolhida;
     }
@@ -158,13 +158,13 @@ class Cessao {
          * Verifica se tem algum afastamento este mês
          */
         
-        $verificaDados = new VerificaDadosAfastamento($dados["idServidor"], $primeiroDia, $ultimoDia);
-        $verifica = $verificaDados->verifica();
-                
-        if(!empty($verifica[0][0])){
-            
-            $ultimoDia = addDias(date_to_php($verifica[0][0]), -1, false);
-        }
+//        $verificaDados = new VerificaDadosAfastamento($dados["idServidor"], $primeiroDia, $ultimoDia);
+//        $verifica = $verificaDados->verifica();
+//                
+//        if(!empty($verifica[0][0])){
+//            
+//            $ultimoDia = addDias(date_to_php($verifica[0][0]), -1, false);
+//        }
         
         # retorna o ultimo dia
         return $ultimoDia;

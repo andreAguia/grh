@@ -344,7 +344,7 @@ if ($acesso) {
     # Botao extra de Obs para digitaçao
     $botao1 = new Button("Obs");
     $botao1->set_title("Acessa as observaçoes do servidor");
-    $botao1->set_url('servidorObs.php');
+    $botao1->set_url('?fase=exibeObs');
     $botao1->set_target("_blank");
 
     $botao2 = new Button("Afastamentos");
@@ -369,6 +369,18 @@ if ($acesso) {
 
         case "gravar" :
             $objeto->gravar($id, "servidorFrequenciaExtra.php");
+            break;
+        
+        case "exibeObs" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            br();
+            tituloTable("Observações");
+            echo "<pre>{$pessoal->get_obs($idServidorPesquisado)}</pre>";
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
     }
     $page->terminaPagina();

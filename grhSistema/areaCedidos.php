@@ -85,7 +85,7 @@ if ($acesso)
 
             $grid->fechaColuna();
             $grid->abreColuna(3, 2);
-            
+
             /*
              * Menu lateral
              */
@@ -162,7 +162,7 @@ if ($acesso)
                 $tabela->set_conteudo($result);
                 $tabela->set_label(['IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Lotação']);
                 $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'left']);
-                $tabela->set_titulo('Servidor(es) que já terminaram o período de cessão mas ainda estão lotados na Reitoria - Cedidos');
+                $tabela->set_titulo("Servidor(es) que já terminaram o período de cessão mas ainda estão lotados na Reitoria - Cedidos");
                 $tabela->set_classe([null, null, null, null, null, "Pessoal"]);
                 $tabela->set_metodo([null, null, null, null, null, "get_lotacao"]);
                 $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
@@ -170,10 +170,11 @@ if ($acesso)
                 $tabela->set_idCampo('idServidor');
 
                 if ($count > 0)
-                {
+                {   
+                    label("Problema Encontrado","alert");
                     $tabela->show();
                 }
-                
+
                 /*
                  * Exibe Servidores com mais de um lançamento de cessão vigente
                  */
@@ -199,13 +200,14 @@ if ($acesso)
                 $tabela->set_conteudo($result);
                 $tabela->set_label(['IdFuncional', 'Nome', 'Início', 'Término', 'Órgão']);
                 $tabela->set_align(['center', 'left', 'center', 'center', 'left']);
-                $tabela->set_titulo('Servidor(es) Com Mais de uma Cessão Vigente Cadastrada');
+                $tabela->set_titulo("Servidor(es) Com Mais de uma Cessão Vigente Cadastrada");
                 $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->set_idCampo('idServidor');
 
                 if ($count > 0)
                 {
+                    label("Problema Encontrado","alert");
                     $tabela->show();
                 }
 

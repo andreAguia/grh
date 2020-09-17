@@ -968,11 +968,7 @@ class Vaga {
 
         $dado = $pessoal->select($select, false);
         
-        if(empty($dados[0])){
-            return null;
-        }else{
-            return $dado[0];
-        }
+        return $dado[0];
     }
 
     ###########################################################

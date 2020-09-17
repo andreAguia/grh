@@ -33,30 +33,27 @@ if ($acesso) {
                      tbhistcessao.dtInicio,
                      tbhistcessao.dtFim
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                               RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
-                                LEFT JOIN tbcargo USING (idCargo)
-                                     JOIN tbtipocargo USING (idTipoCargo) 
+                                   RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
                WHERE tbservidor.idPerfil = 1
-               AND tbtipocargo.tipo = "Professor"
                  AND situacao = 1 
-                 AND ((tbhistcessao.dtFim is null) OR (tbhistcessao.dtFim > CURDATE()))
+                 AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
              ORDER BY nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Estatutários Professores Cedidos');
-    $relatorio->set_subtitulo('Ordenados por Nome');
+    $relatorio->set_titulo('Relatório de Estatutários Atualmente Cedidos');
+    $relatorio->set_subtitulo('Ordenado Alfabeticamente');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Órgão', 'Início', 'Término'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação Anterior', 'Órgão', 'Início', 'Término'));
     $relatorio->set_width(array(10, 30, 20, 20, 10, 10));
     $relatorio->set_align(array("center", "left", "left", "left"));
     $relatorio->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php"));
     $relatorio->set_classe(array(null, null, "Pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_Cargo"));
+    $relatorio->set_metodo(array(null, null, "get_lotacaoAnterior"));
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(5);
+    #$relatorio->set_numGrupo(6);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 

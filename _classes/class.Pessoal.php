@@ -468,6 +468,34 @@ class Pessoal extends Bd {
     ######################################################################################
 
     /**
+     * Método get_lotacaoAnterior
+     * Informa a lotaçao anterior de um servidor cedido
+     * (Afinal o servidor cedido está SEMPRE na lotação da reitoria cedidos)
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_lotacaoAnterior($idServidor) {
+        $select = "SELECT UADM,
+                          DIR,
+                          GER,
+                          idLotacao 
+                      FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
+                     WHERE tbhistlot.idServidor = {$idServidor}
+                       AND idLotacao <> 113 
+                       AND idLotacao <> 40
+                     ORDER BY data DESC";
+
+        $row = parent::select($select, false);
+        if(empty($row[3])){
+            return null;
+        }else{
+            return $row[0] . '-' . $row[1] . '-' . $row[2];
+        }
+    }
+
+    ######################################################################################
+
+    /**
      * Método get_lotacaoRel
      * Informa a lotaçao atual do servidor para um relatorio
      * 

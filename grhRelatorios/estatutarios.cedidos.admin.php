@@ -39,13 +39,13 @@ if ($acesso) {
                WHERE tbservidor.idPerfil = 1
                AND tbtipocargo.tipo = "Adm/Tec"
                  AND situacao = 1 
-                 AND ((tbhistcessao.dtFim is null) OR (tbhistcessao.dtFim > CURDATE()))
+                 AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
              ORDER BY nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Estatutários Administrativos e Técnicos Cedidos');
+    $relatorio->set_titulo('Relatório de Administrativos e Técnicos Atualmente Cedidos');
     $relatorio->set_subtitulo('Ordenados por Nome');
 
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Órgão', 'Início', 'Término'));

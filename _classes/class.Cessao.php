@@ -7,26 +7,26 @@ class Cessao {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-    ##############################################################
+##############################################################
 
     public function getDados($idHistCessao = null) {
-        # Verifica se foi informado
+# Verifica se foi informado
         if (vazio($idHistCessao)) {
             alert("É necessário informar o id.");
             return;
         }
 
-        # Conecta com o banco de dados
+# Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        # Pega os dados
+# Pega os dados
         $select = "SELECT *
                      FROM tbhistcessao
                     WHERE idHistCessao = {$idHistCessao}";
 
         $row = $servidor->select($select, false);
 
-        # Retorno
+# Retorno
         return $row;
     }
 
@@ -34,11 +34,11 @@ class Cessao {
 
     public function exibeDados($idHistCessao) {
 
-        # Limita o tamanho da tela
+# Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
 
-        # Conecta com o banco de dados
+# Conecta com o banco de dados
         $servidor = new Pessoal();
 
         $select = "SELECT idHistCessao,
@@ -51,19 +51,19 @@ class Cessao {
                      FROM tbhistcessao
                     WHERE idHistCessao = {$idHistCessao}";
 
-        # Monta a tabela
+# Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidor->select($select, true));
         $tabela->set_titulo("Dados da Cessão");
-        $tabela->set_label(array("Status", "Data Inicial", "Data Final", "Órgão Cessionário", "Processo", "Data de Publicação", "Obs"));
-        $tabela->set_funcao(array(null, "date_to_php", "date_to_php", null, null, "date_to_php"));
-        $tabela->set_width(array(10, 10, 10, 25, 15, 10, 30));
-        $tabela->set_align(array("center", "center", "center", "left", "left", "center", "left"));
+        $tabela->set_label(["Status", "Data Inicial", "Data Final", "Órgão Cessionário", "Processo", "Data de Publicação", "Obs"]);
+        $tabela->set_funcao([null, "date_to_php", "date_to_php", null, null, "date_to_php"]);
+        $tabela->set_width([8, 8, 8, 10, 15, 8, 53]);
+        $tabela->set_align(["center", "center", "center", "center", "center", "center", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_classe(array("Cessao"));
-        $tabela->set_metodo(array("getStatus"));
+        $tabela->set_classe(["Cessao"]);
+        $tabela->set_metodo(["getStatus"]);
 
-        # Pinta a tabela de cor diferente
+# Pinta a tabela de cor diferente
         $dados = $this->getDados($idHistCessao);
 
         $tabela->set_formatacaoCondicional(array(
@@ -106,27 +106,27 @@ class Cessao {
             # Nao tem nenhuma frequencia pega a data inicial da cessao
             $dadosCessao = $this->getDados($idHistCessao);
             $idServidor = $dadosCessao["idServidor"];
-            $dataEscolhida = addDias(date_to_php($dadosCessao["dtInicio"]), 1, false);
+            $dataEscolhida = date_to_php($dadosCessao["dtInicio"]);
         } else {
             $dataEscolhida = addDias(date_to_php($dados[0]), 1, false);
             $idServidor = $dados[1];
         }
-
+        
         /*
-         *  Verifica os afastamentos neste mes
-         * 
+         * Verifica se tem algum afastamento este mês
          */
-        #$verifica = new VerificaDadosAfastamentos($idServidor, $dataEscolhida, ultimoDiaMes($dataEscolhida));
-        #$outro = $verifica->verifica();
         
-        #echo count($outro);
+        $ultimoDia = ultimoDiaMes($dataEscolhida);
+        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
+        $verifica = $verificaDados->verifica();
+                
+        if(!empty($verifica[0][1])){
+            
+            if($dataEscolhida) {
+            $dataEscolhida = addDias(date_to_php($verifica[0][1]), 1, false);
+            }
+        }
         
-        #if (!empty($outro)) {
-        #    var_dump($outr0);
-        #}
-        
-        #echo "oi";
-
         return $dataEscolhida;
     }
 
@@ -138,14 +138,39 @@ class Cessao {
          * Para o sistema sugerir no formulário de cadastro de frequência
          */
 
-        # Pega o primeiro dia
+        # Pega o primeiro dia disponível
         $primeiroDia = $this->getDataInicialFrequencia($idHistCessao);
+        $ultimoDia = ultimoDiaMes($primeiroDia);
 
+        /*
+         *  Verifica se é esse o mês do término
+         */
+        $dados = $this->getDados($idHistCessao);
+
+        if ((!empty($dados["dtFim"]))
+                AND (month($primeiroDia) == month(date_to_php($dados["dtFim"])))
+                AND (year($primeiroDia) == year(date_to_php($dados["dtFim"])))) {
+
+            $ultimoDia = date_to_php($dados["dtFim"]);
+        }
+        
+        /*
+         * Verifica se tem algum afastamento este mês
+         */
+        
+        $verificaDados = new VerificaDadosAfastamento($dados["idServidor"], $primeiroDia, $ultimoDia);
+        $verifica = $verificaDados->verifica();
+                
+        if(!empty($verifica[0][0])){
+            
+            $ultimoDia = addDias(date_to_php($verifica[0][0]), -1, false);
+        }
+        
         # retorna o ultimo dia
-        return ultimoDiaMes($primeiroDia);
+        return $ultimoDia;
     }
 
-###################################################################################################################################################################
+######################################################################################################################
 
     public function getStatus($idHistCessao) {
         /*
@@ -153,7 +178,7 @@ class Cessao {
          *       Terminada - quando a cessao ja terminou
          */
 
-        # Pega a data de termino da cessao
+# Pega a data de termino da cessao
         $dados = $this->getDados($idHistCessao);
         $dtFim = $dados["dtFim"];
 
@@ -170,5 +195,22 @@ class Cessao {
         }
     }
 
-###############################################################################################################################################################################################
+######################################################################################################################
+
+    public function lotacaoCorreta($idServidor) {
+        /*
+         * Verifica se o Servidor cedido está na lotaçãop correta
+         */
+
+# Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        if ($servidor->get_idLotacao($idServidor) == 113) {
+            return "Sim";
+        } else {
+            return '<span class=\'label alert\'>Não</span>';
+        }
+    }
+
+######################################################################################################################
 }

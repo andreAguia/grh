@@ -10,6 +10,7 @@ class Checkup {
      * By Alat
      */
     private $lista = true;       // Informa se será listagem ou somente contagem dos registros
+    private $linkEditar = 'servidor.php?fase=editar&id=';
 
     ###########################################################
 
@@ -20,6 +21,12 @@ class Checkup {
      */
     public function __construct($lista = true) {
         $this->lista = $lista;
+    }
+
+    ###########################################################
+
+    public function set_linkEditar($linkEditar) {
+        $this->linkEditar = $linkEditar;
     }
 
     ###########################################################
@@ -117,7 +124,6 @@ class Checkup {
         $label = ['IdFuncional', 'Nome', 'Perfil', 'Licença', 'Data Inicial', 'Dias', 'Data Final'];
         $funcao = [null, null, null, null, "date_to_php", null, "date_to_php"];
         $align = ['center', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -126,7 +132,7 @@ class Checkup {
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -190,7 +196,6 @@ class Checkup {
       $label = ['IdFuncional','Nome','Perfil','Data Inicial','Dias','Data Final'];
       $funcao = [null,null,null,"date_to_php",null,"date_to_php"];
       $align = ['center','left'];
-      $linkEditar = 'servidor.php?fase=editar&id=';
 
       # Exibe a tabela
       $tabela = new Tabela();
@@ -199,7 +204,7 @@ class Checkup {
       $tabela->set_align($align);
       $tabela->set_titulo($titulo);
       $tabela->set_funcao($funcao);
-      $tabela->set_editar($linkEditar);
+      $tabela->set_editar($this->linkEditar);
       $tabela->set_idCampo('idServidor');
 
       if ($count > 0){
@@ -286,7 +291,6 @@ class Checkup {
         $align = ['center', 'left'];
         $titulo = 'Servidor(es) com triênio vencendo em ' . date('Y');
         $funcao = [null, null, "date_to_php", null, "date_to_php", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -295,7 +299,7 @@ class Checkup {
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -380,7 +384,6 @@ class Checkup {
         $align = ['center', 'left'];
         $titulo = 'Servidor(es) com triênio vencido antes de ' . date('Y');
         $funcao = [null, null, "date_to_php", null, "date_to_php", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -389,7 +392,7 @@ class Checkup {
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -452,7 +455,7 @@ class Checkup {
         $label = ["IdFuncional", "Servidor", "Dependente", "Nascimento", "Término do Aux.", "CI Exclusão", "Processo"];
         $funcao = [null, null, null, "date_to_php", "date_to_php"];
         $align = ['center', 'left', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -461,7 +464,7 @@ class Checkup {
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -527,7 +530,7 @@ class Checkup {
         $funcao = [null, "dv", null, null, "date_to_php"];
         $classe = [null, null, null, null, null, "Pessoal"];
         $rotina = [null, null, null, null, null, "get_cargo"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -538,7 +541,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -603,7 +606,7 @@ class Checkup {
         $funcao = [null, "dv", null, null, "date_to_php"];
         $classe = [null, null, null, null, null, "Pessoal"];
         $rotina = [null, null, null, null, null, "get_cargo"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -614,7 +617,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -678,7 +681,7 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal");
         $rotina = array(null, null, null, null, "get_cargo");
         $funcao = array(null, "dv");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -689,7 +692,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -752,7 +755,7 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         $funcao = array(null, null, "date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -763,7 +766,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -826,7 +829,7 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         $funcao = array(null, null, "date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -837,7 +840,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -907,8 +910,6 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -918,7 +919,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -984,8 +985,6 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -995,7 +994,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1061,8 +1060,6 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -1072,7 +1069,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1142,7 +1139,7 @@ class Checkup {
         $classe = [null, null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, null, "get_lotacao", "get_cargo"];
         $funcao = [null, "dv", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1153,7 +1150,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1223,7 +1220,7 @@ class Checkup {
         $classe = [null, null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, null, "get_lotacao", "get_cargo"];
         $funcao = [null, "dv", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1234,7 +1231,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1304,7 +1301,7 @@ class Checkup {
         $classe = [null, null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, null, "get_lotacao", "get_cargo"];
         $funcao = [null, "dv", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1315,7 +1312,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1382,7 +1379,7 @@ class Checkup {
         $classe = array(null, null, null, null, null, null, null, null, "CargoComisso");
         $rotina = array(null, null, null, null, null, null, null, null, "get_descricaoCargo");
         $funcao = array(null, "dv", null, "date_to_php", "date_to_php", "descricaoComissao");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1393,7 +1390,7 @@ class Checkup {
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1461,8 +1458,6 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -1472,7 +1467,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1533,8 +1528,6 @@ class Checkup {
         $classe = array(null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, "get_lotacao", "get_cargo");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -1544,7 +1537,7 @@ class Checkup {
         $tabela->set_classe($classe);
         #$tabela->set_funcao($funcao);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1613,7 +1606,7 @@ class Checkup {
         $classe = array(null, null, null, null, null, "Pessoal");
         $rotina = array(null, null, null, null, null, "get_lotacao");
         $funcao = array(null, null, null, "date_to_php", "date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1624,7 +1617,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_funcao($funcao);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1693,7 +1686,7 @@ class Checkup {
         $classe = array(null, null, null, null, null, "Pessoal");
         $rotina = array(null, null, null, null, null, "get_lotacao");
         $funcao = array(null, null, null, "date_to_php", "date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1704,7 +1697,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_funcao($funcao);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1770,7 +1763,7 @@ class Checkup {
         $classe = [null, null, null, "Pessoal", null, "Pessoal"];
         $rotina = [null, null, null, "get_lotacao", null, "get_cargo"];
         $funcao = [null, "dv"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1781,7 +1774,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1848,7 +1841,7 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         $funcao = array(null, "dv");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1859,7 +1852,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -1923,8 +1916,6 @@ class Checkup {
         $classe = array(null, null, null, "Pessoal");
         $rotina = array(null, null, null, "get_lotacao");
         #$funcao = array(null,null,null,"date_to_php","date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -1934,7 +1925,7 @@ class Checkup {
         $tabela->set_classe($classe);
         #$tabela->set_funcao($funcao);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2000,7 +1991,7 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
         $funcao = array(null, "dv");
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2011,7 +2002,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2077,7 +2068,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2088,7 +2079,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2154,7 +2145,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2165,7 +2156,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2233,8 +2224,6 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal");
         $rotina = array(null, null, null, null, "get_lotacao");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -2244,7 +2233,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2307,8 +2296,6 @@ class Checkup {
         $classe = array(null, null, null, "Pessoal", "Pessoal", "Pessoal");
         $rotina = array(null, null, null, "get_perfil", "get_cargo", "get_situacao");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -2318,7 +2305,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2382,8 +2369,6 @@ class Checkup {
         $classe = array(null, null, null, null, "Pessoal", "Pessoal", "Pessoal");
         $rotina = array(null, null, null, null, "get_perfil", "get_cargo", "get_situacao");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -2393,7 +2378,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2458,8 +2443,6 @@ class Checkup {
         $classe = array(null, null, null, "Pessoal", "Pessoal", "Pessoal");
         $rotina = array(null, null, null, "get_perfil", "get_cargo", "get_situacao");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -2469,7 +2452,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2533,7 +2516,7 @@ class Checkup {
         $label = ['IdFuncional', 'Nome', 'Perfil', 'Ano Exercicio', 'Data Inicial', 'Dias', 'Admissão'];
         $funcao = [null, null, null, null, "date_to_php", null, "date_to_php"];
         $align = ['center', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2542,7 +2525,7 @@ class Checkup {
         $tabela->set_align($align);
         $tabela->set_titulo($titulo);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2606,7 +2589,7 @@ class Checkup {
         $classe = array(null, null, "Pessoal", "Pessoal");
         $rotina = array(null, null, "get_cargo", "get_lotacao");
         $align = ['center', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2616,7 +2599,7 @@ class Checkup {
         $tabela->set_titulo($titulo);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2685,8 +2668,6 @@ class Checkup {
         #$classe = array(null,null,null,"Pessoal","Pessoal","Pessoal");
         #$rotina = array(null,null,null,"get_perfil","get_cargo","get_situacao");
         #$funcao = array(null,null,"date_to_php");
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -2696,7 +2677,7 @@ class Checkup {
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2759,7 +2740,7 @@ class Checkup {
         $classe = [null, null, null, "Pessoal", "Pessoal", "Pessoal"];
         $rotina = [null, null, null, "get_lotacao", "get_treFolgasConcedidas", "get_treFolgasFruidas"];
         $align = ['center', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2770,7 +2751,7 @@ class Checkup {
         $tabela->set_funcao($funcao);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2833,7 +2814,7 @@ class Checkup {
         $classe = [null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, "get_lotacao", "get_situacao"];
         $align = ['center', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2844,7 +2825,7 @@ class Checkup {
         $tabela->set_funcao($funcao);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2907,7 +2888,7 @@ class Checkup {
         $classe = [null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, "get_lotacao", "get_situacao"];
         $align = ['center', 'left'];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2918,7 +2899,7 @@ class Checkup {
         $tabela->set_funcao($funcao);
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -2980,7 +2961,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -2991,7 +2972,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3054,7 +3035,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3065,7 +3046,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3128,7 +3109,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3139,7 +3120,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3205,7 +3186,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv", null, null, null, null, "date_to_php", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3216,7 +3197,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3282,7 +3263,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
         $funcao = [null, "dv", null, null, null, null, "date_to_php", "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3293,7 +3274,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3365,7 +3346,7 @@ class Checkup {
       $classe = [null,null,null,null,"Pessoal","Pessoal"];
       $rotina = [null,null,null,null,"get_cargo","get_situacao"];
       $funcao = [null,"dv",null,null,null,null,"date_to_php","date_to_php"];
-      $linkEditar = 'servidor.php?fase=editar&id=';
+
 
       # Exibe a tabela
       $tabela = new Tabela();
@@ -3376,7 +3357,7 @@ class Checkup {
       $tabela->set_classe($classe);
       $tabela->set_metodo($rotina);
       $tabela->set_funcao($funcao);
-      $tabela->set_editar($linkEditar);
+      $tabela->set_editar($this->linkEditar);
       $tabela->set_idCampo('idServidor');
 
       if($count > 0){
@@ -3440,8 +3421,6 @@ class Checkup {
         #$classe = [null,null,null,null,"Pessoal","Pessoal"];
         #$rotina = [null,null,null,null,"get_cargo","get_situacao"];
         #$funcao = [null,"dv",null,null,null,null,"date_to_php","date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
-
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -3451,7 +3430,7 @@ class Checkup {
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($rotina);
         #$tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3519,7 +3498,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_lotacao"];
         $funcao = [null, "dv", null, null, null, null, "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3530,7 +3509,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3598,7 +3577,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_lotacao"];
         $funcao = [null, "dv", null, null, null, null, "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3609,7 +3588,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
@@ -3680,7 +3659,7 @@ class Checkup {
         $classe = [null, null, null, null, "Pessoal", "Pessoal"];
         $rotina = [null, null, null, null, "get_cargo", "get_lotacao"];
         $funcao = [null, "dv", null, null, null, null, null, "date_to_php"];
-        $linkEditar = 'servidor.php?fase=editar&id=';
+
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -3691,7 +3670,7 @@ class Checkup {
         $tabela->set_classe($classe);
         $tabela->set_metodo($rotina);
         $tabela->set_funcao($funcao);
-        $tabela->set_editar($linkEditar);
+        $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {

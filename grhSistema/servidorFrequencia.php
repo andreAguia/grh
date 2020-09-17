@@ -342,17 +342,17 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Botao extra de Obs para digitaçao
-    $botaoObs = new Button("Obs");
-    $botaoObs->set_title("Acessa as observaçoes do servidor");
-    $botaoObs->set_url('servidorObs.php');
-    $botaoObs->set_target("_blank");
+    $botao1 = new Button("Obs");
+    $botao1->set_title("Acessa as observaçoes do servidor");
+    $botao1->set_url('servidorObs.php');
+    $botao1->set_target("_blank");
 
-    $botaoObs = new Button("Afastamentos");
-    $botaoObs->set_title("Exibe ou nao os afastamentos do periodo");
-    $botaoObs->set_url('?afastamento=' . $afastamento);
-    $botaoObs->set_class("{$botao} button");
+    $botao2 = new Button("Afastamentos");
+    $botao2->set_title("Exibe ou nao os afastamentos do periodo");
+    $botao2->set_url('?afastamento=' . $afastamento);
+    $botao2->set_class("{$botao} button");
 
-    $objeto->set_botaoListarExtra([$botaoObs]);
+    $objeto->set_botaoListarExtra([$botao2,$botao1]);
 
     ################################################################
 

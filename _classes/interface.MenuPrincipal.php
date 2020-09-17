@@ -169,7 +169,7 @@ class MenuPrincipal
         $botao->set_title('Sistema Eletrônico de informações');
         $botao->set_imagem(PASTA_FIGURAS . "sei.png", 220, 72);
         $botao->set_url("https://sei.fazenda.rj.gov.br/sip/login.php?sigla_orgao_sistema=ERJ&sigla_sistema=SEI&infra_url=L3NlaS8=");
-        $botao->set_target("_blank");
+        $botao->set_target("_aba");
         $menu->add_item($botao);
 
         $menu->show();
@@ -510,10 +510,10 @@ class MenuPrincipal
         $menu->add_item($botao);
               
         $botao = new BotaoGrafico();
-        $botao->set_label('Controle de Frequência');
-        $botao->set_url('areaFrequencia.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'frequencia.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Frequência de cedidos da Uenf para outros Órgãos');
+        $botao->set_label('Cedidos da Uenf');
+        $botao->set_url('areaCedidos.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'exit.jpg', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
         $menu->add_item($botao);
         
         $botao = new BotaoGrafico();

@@ -1,6 +1,6 @@
 <?php
 
-class VerificaDadosAfastamentos {
+class VerificaDadosAfastamento{
 
     private $idServidor;
     private $dtInicial;
@@ -36,6 +36,9 @@ class VerificaDadosAfastamentos {
     ###########################################################
 
     public function verifica() {
+        
+        $retorno = null;
+        
         /*
          *  Férias
          */
@@ -46,7 +49,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
@@ -66,7 +69,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
@@ -86,7 +89,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
@@ -106,7 +109,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
@@ -126,7 +129,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicio AND ADDDATE(dtInicio,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicio AND ADDDATE(dtInicio,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicio AND '{$this->dtFinal}' >= ADDDATE(dtInicio,numDias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
@@ -146,7 +149,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
@@ -166,7 +169,7 @@ class VerificaDadosAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))
-        ";
+             ORDER BY 1";
 
         $afast = $pessoal->select($select);
         if (!empty($afast)) {

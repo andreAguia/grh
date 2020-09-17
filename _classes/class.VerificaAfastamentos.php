@@ -1,7 +1,6 @@
 <?php
 
-class VerificaAfastamentos
-{
+class VerificaAfastamentos {
 
     private $idServidor;
     private $dtInicial;
@@ -12,8 +11,7 @@ class VerificaAfastamentos
     /**
      * Método Construtor
      */
-    public function __construct($idServidor, $dtInicial, $dtFinal)
-    {
+    public function __construct($idServidor, $dtInicial, $dtFinal) {
         # Verifica se informou o $idServidor
         if (empty($idServidor)) {
             alert("É necessário informar o idServidor.");
@@ -39,16 +37,20 @@ class VerificaAfastamentos
 
     ###########################################################
 
-    public function setIsento($tabela, $id)
-    {
+    public function setIsento($tabela, $id) {
         $this->tabela = $tabela;
         $this->id = $id;
     }
 
     ###########################################################
 
-    public function verifica()
-    {
+    public function verifica() {
+        
+        /*
+         * Inicia a variável de retorno
+         */
+        $retorno = null;        
+        
         /*
          *  Férias
          */
@@ -64,8 +66,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tbferias") {
                     if ($this->id <> $evento[0]) {
@@ -92,8 +93,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tblicenca") {
                     if ($this->id <> $evento[0]) {
@@ -120,8 +120,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tblicencapremio") {
                     if ($this->id <> $evento[0]) {
@@ -148,8 +147,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tblicencasemvencimentos") {
                     if ($this->id <> $evento[0]) {
@@ -176,8 +174,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tbatestado") {
                     if ($this->id <> $evento[0]) {
@@ -204,8 +201,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tbtrabalhotre") {
                     if ($this->id <> $evento[0]) {
@@ -232,8 +228,7 @@ class VerificaAfastamentos
         $afast = $pessoal->select($select);
         if (!empty($afast)) {
             # Percorre os registros de $afast
-            foreach ($afast as $evento)
-            {
+            foreach ($afast as $evento) {
                 # Verifica se tem registro Isento
                 if ($this->tabela == "tbfolga") {
                     if ($this->id <> $evento[0]) {

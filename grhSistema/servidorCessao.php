@@ -49,7 +49,7 @@ if ($acesso) {
 
     ################################################################
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
+    $objeto->set_rotinaExtra("get_DadosServidorCessao");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
@@ -90,12 +90,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ", "Obs", "Frequência"));
-    $objeto->set_width(array(10, 10, 10, 15, 15, 10, 20, 5));
-    $objeto->set_align(array("center", "center", "center", "left", "left", "center", "left"));
-    $objeto->set_funcao(array(null, "date_to_php", "date_to_php", null, null, "date_to_php"));
-    $objeto->set_classe(array("Cessao"));
-    $objeto->set_metodo(array("getStatus"));
+    $objeto->set_label(["Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ", "Obs", "Frequência"]);
+    $objeto->set_width([8, 8, 8, 10, 15, 8, 30, 5]);    
+    $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
+    $objeto->set_funcao([null, "date_to_php", "date_to_php", null, null, "date_to_php"]);
+    $objeto->set_classe(["Cessao"]);
+    $objeto->set_metodo(["getStatus"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 0,
@@ -112,7 +112,7 @@ if ($acesso) {
     $botao = new BotaoGrafico();
     $botao->set_title('Controle de Frequência');
     $botao->set_url("servidorFrequencia.php?idHistCessao={$id}");
-    $botao->set_imagem(PASTA_FIGURAS . 'frequencia.png', 20, 20);
+    $botao->set_imagem(PASTA_FIGURAS . 'frequencia.jpg', 23, 23);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array(null, null, null, null, null, null, null, $botao));

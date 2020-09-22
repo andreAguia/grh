@@ -56,7 +56,7 @@ if ($acesso) {
     $cessao = new Cessao();
     if ($cessao->getNumCessaoVigente($idServidorPesquisado) > 1) {
         $objeto->set_rotinaExtraListar("callout");
-        $objeto->set_rotinaExtraListarParametro("Servidor com mais de 1 cessão vigente !!!");
+        $objeto->set_rotinaExtraListarParametro("<span class='label alert' title='Problema Encontrado !!'>Problema</span>&nbsp;&nbsp;&nbsp;&nbsp;Servidor com mais de 1 cessão vigente!");
     }
 
 

@@ -2091,6 +2091,10 @@ if ($acesso) {
             #$tabela->set_width(array(80,20));
             $tabela->set_align(array("left", "left"));
             $tabela->set_rodape("Total de Servidores: " . $total);
+            
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+    
             $tabela->show();
 
             $painel->fecha();

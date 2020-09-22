@@ -72,8 +72,8 @@ if ($acesso) {
                                      dtFim,
                                      orgao,
                                      processo,
-                                     dtPublicacao,
                                      obs,
+                                     idHistCessao,
                                      idHistCessao,
                                      idHistCessao
                                 FROM tbhistcessao
@@ -98,12 +98,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ", "Obs", "Frequência"]);
-    $objeto->set_width([8, 8, 8, 10, 15, 8, 30, 5]);
-    $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
-    $objeto->set_funcao([null, "date_to_php", "date_to_php", null, null, "date_to_php"]);
-    $objeto->set_classe(["Cessao"]);
-    $objeto->set_metodo(["getStatus"]);
+    $objeto->set_label(["Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Obs", "Frequência"]);
+    $objeto->set_width([8, 8, 8, 10, 15, 38, 5]);
+    $objeto->set_align(["center", "center", "center", "center",  "center", "left"]);
+    $objeto->set_funcao([null, "date_to_php", "date_to_php"]);
+    $objeto->set_classe(["Cessao",null,null,null,null,null,"Cessao"]);
+    $objeto->set_metodo(["getStatus",null,null,null,null,null,"getNumLancamentosFrequencia"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 0,
@@ -115,15 +115,6 @@ if ($acesso) {
             'operador' => '=',
             'id' => 'cessaoTerminada')
     ));
-
-    # Botão de controle de frequência
-    $botao = new BotaoGrafico();
-    $botao->set_title('Controle de Frequência');
-    $botao->set_url("servidorFrequencia.php?idHistCessao={$id}");
-    $botao->set_imagem(PASTA_FIGURAS . 'frequencia.jpg', 23, 23);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, null, null, null, $botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

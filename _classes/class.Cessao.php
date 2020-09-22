@@ -242,9 +242,9 @@ class Cessao
 
     public function lotacaoCorreta($idServidor)
     {
-    /*
-     * Verifica se o Servidor cedido está na lotaçãop correta
-     */
+        /*
+         * Verifica se o Servidor cedido está na lotaçãop correta
+         */
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -267,13 +267,39 @@ class Cessao
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();
-        
+
         $select = "SELECT idHistCessao
                      FROM tbhistcessao
                     WHERE idServidor = {$idServidor}
                      AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
-                    
+
         return $servidor->count($select);
+    }
+
+######################################################################################################################
+
+    public function getNumLancamentosFrequencia($idHistCessao)
+    {
+        /*
+         * Retorna o número de lançamento de frequencia nesta cessão
+         */
+
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        $select = "SELECT idFrequencia
+                     FROM tbfrequencia
+                    WHERE idHistCessao = {$idHistCessao}";
+
+        $num = $servidor->count($select);
+
+        # Botão de controle de frequência
+        $botao = new BotaoGrafico();
+        $botao->set_title("{$num} Lançamentos de Frequência");-
+        $botao->set_label($num);
+        $botao->set_url("servidorFrequencia.php?idHistCessao={$idHistCessao}");
+        $botao->set_imagem(PASTA_FIGURAS . 'frequencia.jpg', 23, 23);
+        $botao->show();
     }
 
 ######################################################################################################################

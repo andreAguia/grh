@@ -52,6 +52,14 @@ if ($acesso) {
     $objeto->set_rotinaExtra("get_DadosServidorCessao");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
+    # Verifica se tem mais de uma cessão vigente
+    $cessao = new Cessao();
+    if ($cessao->getNumCessaoVigente($idServidorPesquisado) > 1) {
+        $objeto->set_rotinaExtraListar("callout");
+        $objeto->set_rotinaExtraListarParametro("Servidor com mais de 1 cessão vigente !!!");
+    }
+
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Cessão');
 
@@ -91,7 +99,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Publicação no DOERJ", "Obs", "Frequência"]);
-    $objeto->set_width([8, 8, 8, 10, 15, 8, 30, 5]);    
+    $objeto->set_width([8, 8, 8, 10, 15, 8, 30, 5]);
     $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php", null, null, "date_to_php"]);
     $objeto->set_classe(["Cessao"]);

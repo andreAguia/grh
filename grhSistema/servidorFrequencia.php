@@ -232,7 +232,7 @@ if ($acesso) {
     }
 
 
-    $select .= ")ORDER BY 3";
+    $select .= ")ORDER BY 3 DESC";
 
     # Escolhe o select
     if ($afastamento == 1) {

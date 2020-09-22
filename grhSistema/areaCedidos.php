@@ -179,7 +179,7 @@ if ($acesso)
                  * Exibe Servidores com mais de um lançamento de cessão vigente
                  */
 
-                $select = 'SELECT DISTINCT tbservidor.idFuncional,
+                $select = "SELECT DISTINCT tbservidor.idFuncional,
                               tbpessoa.nome,
                               tbhistcessao.dtInicio,
                               tbhistcessao.dtFim,
@@ -190,7 +190,7 @@ if ($acesso)
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1
                           AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
-                     GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1';
+                     GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1";
 
                 $result = $pessoal->select($select);
                 $count = $pessoal->count($select);

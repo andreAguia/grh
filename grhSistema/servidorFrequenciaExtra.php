@@ -34,6 +34,6 @@ if (!is_null($dtSaida)) {
 $verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), date_to_php($dtFinal));
 $outro = $verifica->verifica();
 if (!empty($outro)) {
-    $msgErro .= 'Já existe um(a) '.$outro[0].' nesse período!\n';
+    $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
     $erro = 1;
 }

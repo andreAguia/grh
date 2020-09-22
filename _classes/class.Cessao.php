@@ -1,6 +1,7 @@
 <?php
 
-class Cessao {
+class Cessao
+{
 
     /**
      * Abriga as várias rotina referentes a cessão de servidor da Uenf para outro órgão
@@ -9,7 +10,8 @@ class Cessao {
      */
 ##############################################################
 
-    public function getDados($idHistCessao = null) {
+    public function getDados($idHistCessao = null)
+    {
 # Verifica se foi informado
         if (vazio($idHistCessao)) {
             alert("É necessário informar o id.");
@@ -32,7 +34,8 @@ class Cessao {
 
 ######################################################################################################################
 
-    public function exibeDados($idHistCessao) {
+    public function exibeDados($idHistCessao)
+    {
 
 # Limita o tamanho da tela
         $grid = new Grid();
@@ -85,94 +88,134 @@ class Cessao {
 
 ######################################################################################################################
 
-    public function getDataInicialFrequencia($idHistCessao) {
+    public function getDataInicialFrequencia($idHistCessao)
+    {
         /*
          * Exibe o primeiro dia do mês da frequencia de cessão que ainda não foi atestada
          * Para o sistema sugerir no formulário de cadastro de frequência
          */
 
-        # Conecta com o banco de dados
-        $servidor = new Pessoal();
-
         # Reserva uma variavel para a data escolhida
         $dataEscolhida = null;
 
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        # Pega os dados desta Cessão
+        $dadosCessao = $this->getDados($idHistCessao);
+        $idServidor = $dadosCessao["idServidor"];
+        $dtInicial = date_to_php($dadosCessao["dtInicio"]);
+        $dtFinal = date_to_php($dadosCessao["dtFim"]);
+
         # Pega os Dados das Frequencias cadastradas desta Cessao
         $select = "SELECT dtFinal, idServidor FROM tbfrequencia WHERE idHistCessao = {$idHistCessao} ORDER BY dtFinal DESC";
-        $dados = $servidor->select($select, false);
+        $dadosFrequencia = $servidor->select($select, false);
 
         # Verifica as frequencias
-        if (empty($dados)) {
-            # Nao tem nenhuma frequencia pega a data inicial da cessao
-            $dadosCessao = $this->getDados($idHistCessao);
-            $idServidor = $dadosCessao["idServidor"];
-            $dataEscolhida = date_to_php($dadosCessao["dtInicio"]);
+        if (empty($dadosFrequencia)) {
+            # Nao tem nenhuma frequência pega a data inicial da cessao
+            $dataEscolhida = $dtInicial;
         } else {
-            $dataEscolhida = addDias(date_to_php($dados[0]), 1, false);
-            $idServidor = $dados[1];
+            # Se tiver frequência pega a data posterior a última frequência cadastrada
+            $dataEscolhida = addDias(date_to_php($dadosFrequencia[0]), 1, false);
         }
-        
-        /*
-         * Verifica se tem algum afastamento este mês
-         */
-        
-//        $ultimoDia = ultimoDiaMes($dataEscolhida);
-//        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
-//        $verifica = $verificaDados->verifica();
-//                
-//        if(!empty($verifica[0][1])){
-//            
-//            if($dataEscolhida) {
-//            $dataEscolhida = addDias(date_to_php($verifica[0][1]), 1, false);
-//            }
-//        }
-        
+
+        # Pega o ultimo dia do mês
+        $ultimoDia = ultimoDiaMes($dataEscolhida);
+
+        # Quando tiver data final...
+        if (!empty($dtFinal)) {
+
+            # Verifica se a data escolhida é posterior ao término da cessão
+            if ($dataEscolhida == dataMaior($dataEscolhida, $dtFinal)) {
+                # Retorna nulo pois não tem mais datas disponíveis
+                return null;
+            }
+
+            # Verifica se o ultimo dia do mês é posterior ao ultimo dia da cessão
+            if ($ultimoDia == dataMaior($dtFinal, $ultimoDia)) {
+                # Se for o último dia do mês passa a ser o último dia da cessão
+                $ultimoDia = $dtFinal;
+            }
+        }
+
+        # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
+        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
+        $verifica = $verificaDados->verifica();
+
+        # Se tiver afastamento Temos que avaliar as datas deste afastamento
+        if (!empty($verifica)) {
+            # Pega as datas do afastamento
+            $dtInicialAfast = date_to_php($verifica["dtInicial"]);
+            $dtFinalAfast = date_to_php($verifica["dtFinal"]);
+
+            # Verifica se a data escolhida está dentro do afastamanto
+            if ($dataEscolhida == $dtInicialAfast OR $dataEscolhida == dataMaior($dataEscolhida, $dtInicialAfast)) {
+                # Então o primeiro dia é o dia após este afastamnento
+                $dataEscolhida = addDias($dtFinalAfast, 1, false);
+            }
+        }
+
         return $dataEscolhida;
     }
 
 ######################################################################################################################
 
-    public function getDataFinalFrequencia($idHistCessao) {
+    public function getDataFinalFrequencia($idHistCessao)
+    {
         /*
          * Exibe o ultimo dia do mês da frequencia de cessão que ainda não foi atestada
          * Para o sistema sugerir no formulário de cadastro de frequência
          */
 
+        # Pega os dados desta Cessão
+        $dadosCessao = $this->getDados($idHistCessao);
+        $idServidor = $dadosCessao["idServidor"];
+        $dtInicial = date_to_php($dadosCessao["dtInicio"]);
+        $dtFinal = date_to_php($dadosCessao["dtFim"]);
+
         # Pega o primeiro dia disponível
         $primeiroDia = $this->getDataInicialFrequencia($idHistCessao);
-        $ultimoDia = ultimoDiaMes($primeiroDia);
 
-        /*
-         *  Verifica se é esse o mês do término
-         */
-        $dados = $this->getDados($idHistCessao);
+        # Verifica se o primeiro dia é alcançável. Se não for o ultimo tb não será e retorna nulo
+        if (!empty($primeiroDia)) {
 
-        if ((!empty($dados["dtFim"]))
-                AND (month($primeiroDia) == month(date_to_php($dados["dtFim"])))
-                AND (year($primeiroDia) == year(date_to_php($dados["dtFim"])))) {
+            # Pega o último dia do mês
+            $ultimoDia = ultimoDiaMes($primeiroDia);
 
-            $ultimoDia = date_to_php($dados["dtFim"]);
+            # Verifica se é esse o mês do término
+            if (!empty($dtFinal) AND month($primeiroDia) == month($dtFinal) AND year($primeiroDia) == year($dtFinal)) {
+                # Se for o ultimo dia do mês é o último dia da cessão
+                $ultimoDia = $dtFinal;
+            }
+
+            # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
+            $verificaDados = new VerificaDadosAfastamento($idServidor, $primeiroDia, $ultimoDia);
+            $verifica = $verificaDados->verifica();
+
+            # Se tiver afastamento Temos que avaliar as datas deste afastamento
+            if (!empty($verifica)) {
+
+                var_dump($verifica);
+
+                # Pega as datas do afastamento
+                $dtInicialAfast = date_to_php($verifica["dtInicial"]);
+                $dtFinalAfast = date_to_php($verifica["dtFinal"]);
+
+                $ultimoDia = addDias($dtInicialAfast, -1, false);
+            }
+
+            # retorna o ultimo dia
+            return $ultimoDia;
+        } else {
+            return null;
         }
-        
-        /*
-         * Verifica se tem algum afastamento este mês
-         */
-        
-//        $verificaDados = new VerificaDadosAfastamento($dados["idServidor"], $primeiroDia, $ultimoDia);
-//        $verifica = $verificaDados->verifica();
-//                
-//        if(!empty($verifica[0][0])){
-//            
-//            $ultimoDia = addDias(date_to_php($verifica[0][0]), -1, false);
-//        }
-        
-        # retorna o ultimo dia
-        return $ultimoDia;
     }
 
 ######################################################################################################################
 
-    public function getStatus($idHistCessao) {
+    public function getStatus($idHistCessao)
+    {
         /*
          * Exibe Vigente   - quando a cessao ainda esta vigente e
          *       Terminada - quando a cessao ja terminou
@@ -197,12 +240,13 @@ class Cessao {
 
 ######################################################################################################################
 
-    public function lotacaoCorreta($idServidor) {
-        /*
-         * Verifica se o Servidor cedido está na lotaçãop correta
-         */
+    public function lotacaoCorreta($idServidor)
+    {
+    /*
+     * Verifica se o Servidor cedido está na lotaçãop correta
+     */
 
-# Conecta com o banco de dados
+        # Conecta com o banco de dados
         $servidor = new Pessoal();
 
         if ($servidor->get_idLotacao($idServidor) == 113) {
@@ -210,6 +254,26 @@ class Cessao {
         } else {
             return '<span class=\'label alert\'>Não</span>';
         }
+    }
+
+######################################################################################################################
+
+    public function getNumCessaoVigente($idServidor)
+    {
+        /*
+         * Retorna o número de cessões vigentes
+         * Objetivo é encontrar problemas de servidor com mais de 1 cessão vigente
+         */
+
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+        
+        $select = "SELECT idHistCessao
+                     FROM tbhistcessao
+                    WHERE idServidor = {$idServidor}
+                     AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
+                    
+        return $servidor->count($select);
     }
 
 ######################################################################################################################

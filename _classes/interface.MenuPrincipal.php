@@ -512,7 +512,7 @@ class MenuPrincipal
         $botao = new BotaoGrafico();
         $botao->set_label('Cedidos da Uenf');
         $botao->set_url('areaCedidos.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'exit.jpg', $tamanhoImage, $tamanhoImage);
+        $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
         $menu->add_item($botao);
         

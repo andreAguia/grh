@@ -522,6 +522,13 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'diploma.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Formação Escolar dos Servidores');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('RPA');
+        $botao->set_url('cadastroRpa.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Emissão de RPA');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Área de Fotografia');

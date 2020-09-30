@@ -41,15 +41,19 @@ if (!vazio($dtRetorno)) {
     }
 }
 
-if (!vazio($dtInicial) AND!vazio($numDias)) {
-# Verifica se já tem outro afastamento nesse período
-    $dtFinal = addDias($dtInicial, $numDias);
-
-    $verifica = new VerificaAfastamentos($idServidor, $dtInicial, $dtFinal);
+/*
+ *  Verifica se já tem outro afastamento nesse período
+ */
+if (!empty($dtInicial) AND!empty($numDias)) {
+    $verifica = new VerificaAfastamentos($idServidor);
+    $verifica->setPeriodo($dtInicial, addDias($dtInicial, $numDias));
     $verifica->setIsento("tblicencasemvencimentos", $id);
-    $outro = $verifica->verifica();
-    if (!empty($outro)) {
-        $msgErro .= 'Já existe um(a) ' . $outro . ' nesse período!\n';
+
+    if ($verifica->verifica()) {
         $erro = 1;
+        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
     }
 }
+
+
+

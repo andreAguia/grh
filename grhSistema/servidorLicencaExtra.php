@@ -21,26 +21,30 @@ $num_Bim = $campoValor[9];
 $obs = $campoValor[10];
 $idServidor = $campoValor[11];
 
-# Verifica se o tipo de licença foi informado
+/*
+ *  Verifica se o tipo de licença foi informado
+ */
 if ($idTpLicenca == "Inicial") {
     $msgErro .= 'Tem que informar o tipo da licença!\n';
     $erro = 1;
 } else {
-    # Verifica se já tem outro afastamento nesse período
-    $dtFinal = addDias(date_to_php($dtInicial), $numDias);
+    /*
+     *  Verifica se já tem outro afastamento nesse período
+     */
 
-    $verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
+    $verifica = new VerificaAfastamentos($idServidor);
+    $verifica->setPeriodo(date_to_php($dtInicial), addDias(date_to_php($dtInicial), $numDias));
     $verifica->setIsento("tblicenca", $id);
-    $outro = $verifica->verifica();
-    if (!empty($outro)) {
-        $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
+
+    if ($verifica->verifica()) {
         $erro = 1;
+        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
     }
 
-    # Pega o sexo do servidor
+    /*
+     *  Verifica restrição de genero para esse afastamento
+     */
     $sexo = $pessoal->get_sexo($idServidor);
-
-    # Verifica restrição de genero para esse afastamento
     $restricao = $pessoal->get_licencaSexo($idTpLicenca);
 
     # Feminino
@@ -59,7 +63,9 @@ if ($idTpLicenca == "Inicial") {
         }
     }
 
-    # Verifica se nas licenças 110 e 111 tem a alta digitada
+    /*
+     * Verifica se nas licenças 110 e 111 tem a alta digitada
+     */
     if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
         if (is_null($alta)) {
             $msgErro .= 'E necessario informar se teve ou não alta!\n';
@@ -68,36 +74,47 @@ if ($idTpLicenca == "Inicial") {
     }
 }
 
-# Apaga a alta se nao for licenca medica
+/*
+ *  Apaga a alta se nao for licenca medica
+ */
 if (($idTpLicenca <> 1) AND ($idTpLicenca <> 30) AND ($idTpLicenca <> 2)) {
     $campoValor[1] = null;
     $campoValor[2] = null;
 }
 
-# Apaga o periodo aquisitivo quando não precisa
+/*
+ *  Apaga o periodo aquisitivo quando não precisa
+ */
 if ($pessoal->get_licencaPeriodo($idTpLicenca) == "Não") {
     $campoValor[2] = null;
     $campoValor[3] = null;
 }
 
-# Apaga o processo quando não precisa
+/*
+ *  Apaga o processo quando não precisa
+ */
 if ($pessoal->get_licencaProcesso($idTpLicenca) == "Não") {
     $campoValor[6] = null;
 }
 
-# Apaga a publicação quando não precisa
+/*
+ *  Apaga a publicação quando não precisa
+ */
 if ($pessoal->get_licencaPublicacao($idTpLicenca) == "Não") {
     $campoValor[7] = null;
 }
 
-# Apaga a perícia quando não precisa
+/*
+ *  Apaga a perícia quando não precisa
+ */
 if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
     $campoValor[8] = null;
     $campoValor[9] = null;
 }
 
-
-# Verifica se a data Inicial é anterior a data de admissão
+/*
+ *  Verifica se a data Inicial é anterior a data de admissão
+ */
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 $dtAdmissao = date_to_bd($dtAdmissao);
 
@@ -106,7 +123,9 @@ if ($dtInicial < $dtAdmissao) {
     $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';
 }
 
-# Verifica se a data Inicial é posterior a data de saida
+/*
+ *  Verifica se a data Inicial é posterior a data de saida
+ */
 $dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida

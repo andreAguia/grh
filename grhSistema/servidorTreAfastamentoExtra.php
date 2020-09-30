@@ -11,7 +11,9 @@ $idServidor = $campoValor[5];
 
 $pessoal = new Pessoal();
 
-# Verifica se a data Inicial é anterior a data de admissão
+/*
+ *  Verifica se a data Inicial é anterior a data de admissão
+ */
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 $dtAdmissao = date_to_bd($dtAdmissao);
 if ($dtInicial < $dtAdmissao) {
@@ -19,7 +21,9 @@ if ($dtInicial < $dtAdmissao) {
     $msgErro .= 'A data Inicial não pode ser antes de ser admitido!\n A data está errada!';
 }
 
-# Verifica se a data Inicial é posterior a data de saida
+/*
+ *  Verifica se a data Inicial é posterior a data de saida
+ */
 $dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida
@@ -31,13 +35,16 @@ if (!is_null($dtSaida)) {
     }
 }
 
-# Verifica se já tem outro afastamento nesse período
-$dtFinal = addDias(date_to_php($dtInicial), $numDias);
+/*
+ *  Verifica se já tem outro afastamento nesse período
+ */
+if (!empty($dtInicial) AND!empty($numDias)) {
+    $verifica = new VerificaAfastamentos($idServidor);
+    $verifica->setPeriodo(date_to_php($dtInicial), addDias(date_to_php($dtInicial), $numDias));
+    $verifica->setIsento("tbtrabalhotre", $id);
 
-$verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
-$verifica->setIsento("tbtrabalhotre", $id);
-$outro = $verifica->verifica();
-if (!empty($outro)) {
-    $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
-    $erro = 1;
+    if ($verifica->verifica()) {        
+        $erro = 1;
+        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
+    }
 }

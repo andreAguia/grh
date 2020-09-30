@@ -170,7 +170,7 @@ class ListaFerias {
             $tabela->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
             $tabela->set_classe(array(null, null, "pessoal", "pessoal"));
             $tabela->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
-            $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
+            $tabela->set_funcao(array(null, null, null, null, "date_to_php",null, "get_situacao"));
             $tabela->set_align(array("center", "left", "left"));
             $tabela->set_idCampo('idServidor');
             $tabela->set_formatacaoCondicional(array(
@@ -300,12 +300,11 @@ class ListaFerias {
                             tbservidor.idServidor,
                             tbservidor.dtAdmissao,
                             sum(numDias) as soma,
-                            tbsituacao.situacao
+                            tbservidor.idServidor
                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                      LEFT JOIN tbferias USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                         JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        ";
 
@@ -347,11 +346,10 @@ class ListaFerias {
                            tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-',
-                           tbsituacao.situacao
+                           tbservidor.idServidor
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                         JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND YEAR(tbservidor.dtAdmissao) < $this->anoExercicio
                       ";

@@ -6,7 +6,7 @@
  */
 
 $exercicio = $campoValor[0];    // Ano exercício
-$dias = $campoValor[2];         // Dias solicitado
+$numDias = $campoValor[2];         // Dias solicitado
 $idServidor = $campoValor[4];   // idServidor
 $dtInicial = $campoValor[1];  // dataInicial 
 # Define a data de hoje
@@ -53,34 +53,36 @@ switch ($diasFerias) {
         break;
 
     case 20:
-        if ($dias > 10) {
+        if ($numDias > 10) {
             $erro = 1;
             $msgErro .= 'O servidor não pode tirar mais de 30 dias de férias em um mesmo exercício!\n';
         }
         break;
 
     case 15:
-        if ($dias <> 15) {
+        if ($numDias <> 15) {
             $erro = 1;
             $msgErro .= 'O servidor só poderá tirar 15 dias nesse exercício!\n';
         }
         break;
 
     case 10:
-        if (($dias <> 10) AND ($dias <> 20)) {
+        if (($numDias <> 10) AND ($numDias <> 20)) {
             $erro = 1;
             $msgErro .= 'O servidor já tem 10 dias de férias, só poderá pedir mais 20 ou 10 dias nesse exercício\n';
         }
         break;
 }
 
-# Verifica se já tem outro afastamento nesse período
-$dtFinal = addDias(date_to_php($dtInicial), $dias);
+/*
+ *  Verifica se já tem outro afastamento nesse período
+ */
 
-$verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
+$verifica = new VerificaAfastamentos($idServidor);
+$verifica->setPeriodo(date_to_php($dtInicial), addDias(date_to_php($dtInicial), $numDias));
 $verifica->setIsento("tbferias", $id);
-$outro = $verifica->verifica();
-if (!empty($outro)) {
-    $msgErro .= 'Já existe um(a) '.$outro.' nesse período!\n';
+
+if ($verifica->verifica()) {
     $erro = 1;
+    $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
 }

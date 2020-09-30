@@ -132,7 +132,7 @@ if ($acesso) {
             'label' => 'Data Inicial:',
             'tipo' => 'data',
             'size' => 20,
-            'col' => 2,
+            'col' => 3,
             'required' => true,
             'title' => 'Data do início das férias.',
             'linha' => 1),

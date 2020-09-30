@@ -39,6 +39,19 @@ $verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFi
 $verifica->setIsento("tblicencapremio", $id);
 $outro = $verifica->verifica();
 if (!empty($outro)) {
-    $msgErro .= 'Já existe um(a) '.$outro[0].' nesse período!\n';
+    $msgErro .= 'Já existe um(a) ' . $outro[0] . ' nesse período!\n';
     $erro = 1;
+}
+
+/*
+ *  Verifica se já tem outro afastamento nesse período
+ */
+
+$verifica = new VerificaAfastamentos($idServidor);
+$verifica->setPeriodo(date_to_php($dtInicial), addDias(date_to_php($dtInicial), $numDias));
+$verifica->setIsento("tblicencapremio", $id);
+
+if ($verifica->verifica()) {
+    $erro = 1;
+    $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
 }

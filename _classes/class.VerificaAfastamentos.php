@@ -1,17 +1,37 @@
 <?php
 
 class VerificaAfastamentos {
+    /*
+     * Classe qie informa o afastamento de um servidor específico
+     */
 
     private $idServidor;
+
+    /*
+     * do período
+     */
     private $dtInicial;
     private $dtFinal;
+
+    /*
+     * da isenção
+     */
     private $tabela;
     private $id;
 
+    /*
+     * do retorno
+     */
+    private $afastamento = false;
+    private $detalhe = null;
+
+    ###########################################################
+
     /**
      * Método Construtor
+     * Aproveita para informar o id do servidor
      */
-    public function __construct($idServidor, $dtInicial, $dtFinal) {
+    public function __construct($idServidor) {
         # Verifica se informou o $idServidor
         if (empty($idServidor)) {
             alert("É necessário informar o idServidor.");
@@ -19,7 +39,16 @@ class VerificaAfastamentos {
         } else {
             $this->idServidor = $idServidor;
         }
+    }
 
+    ##########################################################
+
+    /*
+     * Informa o período a ser procurado se o servidor tem afastamantos
+     * Se não for informado será considerada a data de hoje
+     */
+
+    function setPeriodo($dtInicial, $dtFinal) {
         if (empty($dtInicial)) {
             alert("É necessário informar a data inicial.");
             return;
@@ -36,6 +65,10 @@ class VerificaAfastamentos {
     }
 
     ###########################################################
+    /*
+     * Se tem que retiirar ou isentar algum registro e tabela da busca
+     * Usado em rotinas de cadastro de afastamento para não achar a si mesma
+     */
 
     public function setIsento($tabela, $id) {
         $this->tabela = $tabela;
@@ -43,204 +76,214 @@ class VerificaAfastamentos {
     }
 
     ###########################################################
+    /*
+     * Pega os valores de retorno
+     */
+
+    function getAfastamento() {
+        return $this->afastamento;
+    }
+
+    function getDetalhe() {
+        return $this->detalhe;
+    }
+
+    ###########################################################
 
     public function verifica() {
-        
+
         /*
          * Inicia a variável de retorno
          */
-        $retorno = null;        
-        
+        $retorno = null;
+
+        /*
+         * Conecta com o banco
+         */
+        $pessoal = new Pessoal();
+
+        # Altera para hoje quando o período está em branco
+        if (empty($this->dtInicial)) {
+            $this->dtInicial = date("Y-m-d");
+            $this->dtFinal = date("Y-m-d");
+        }
+
         /*
          *  Férias
          */
-        $pessoal = new Pessoal();
-        $select = "SELECT idFerias
+        $select = "SELECT idFerias, anoExercicio
                  FROM tbferias
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
-        $afast = $pessoal->select($select);
+        // se tiver isenção
+        if ($this->tabela == "tbferias") {
+            $select .= " AND idFerias <> {$this->id}";
+        }
+
+        $select .= " ORDER BY dtInicial";
+
+        $afast = $pessoal->select($select, false);
+
         if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tbferias") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = "Férias";
-                    }
-                } else {
-                    $retorno = "Férias";
-                }
-            }
+            $this->afastamento = "Férias";
+            $this->detalhe = "Exercício {$afast['anoExercicio']}";
+            return true;
         }
 
         /*
          *  Licenças e Afastamentos gerais
          */
-        $pessoal = new Pessoal();
-        $select = "SELECT idLicenca, idTpLicenca
-                 FROM tblicenca
+        $select = "SELECT idLicenca, tbtipolicenca.nome
+                 FROM tblicenca JOIN tbtipolicenca USING (idTpLicenca)
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
-        $afast = $pessoal->select($select);
+        // se tiver isenção
+        if ($this->tabela == "tblicenca") {
+            $select .= " AND idLicenca <> {$this->id}";
+        }
+
+        $select .= " ORDER BY dtInicial";
+
+        $afast = $pessoal->select($select, false);
+
         if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tblicenca") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = $pessoal->get_nomeTipoLicenca($evento[1]);
-                    }
-                } else {
-                    $retorno = $pessoal->get_nomeTipoLicenca($evento[1]);
-                }
-            }
+            $this->afastamento = "Licença";
+            $this->detalhe = $afast['nome'];
+            return true;
         }
 
         /*
          *  Licenças prêmio
          */
-        $pessoal = new Pessoal();
         $select = "SELECT idLicencaPremio
                  FROM tblicencapremio
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
-        $afast = $pessoal->select($select);
+        // se tiver isenção
+        if ($this->tabela == "tblicencapremio") {
+            $select .= " AND idLicencaPremio <> {$this->id}";
+        }
+
+        $select .= " ORDER BY dtInicial";
+
+        $afast = $pessoal->select($select, false);
+
         if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tblicencapremio") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = "Licença Prêmio";
-                    }
-                } else {
-                    $retorno = "Licença Prêmio";
-                }
-            }
+            $this->afastamento = "Licença";
+            $this->detalhe = "Licença Prêmio";
+            return true;
         }
 
         /*
          *  Licenças sem vencimentos
          */
-        $pessoal = new Pessoal();
-        $select = "SELECT idLicencaSemVencimentos
-                 FROM tblicencasemvencimentos
+        $select = "SELECT idLicencaSemVencimentos, tbtipolicenca.nome
+                 FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
-        $afast = $pessoal->select($select);
+        // se tiver isenção
+        if ($this->tabela == "tblicencasemvencimentos") {
+            $select .= " AND idLicencaSemVencimentos <> {$this->id}";
+        }
+
+        $select .= " ORDER BY dtInicial";
+
+        $afast = $pessoal->select($select, false);
+
         if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tblicencasemvencimentos") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = "Licença Sem Vencimentos";
-                    }
-                } else {
-                    $retorno = "Licença Sem Vencimentos";
-                }
-            }
+            $this->afastamento = "Licença";
+            $this->detalhe = $afast['nome'];
+            return true;
         }
 
         /*
          *  Faltas Abonadas por atestado
          */
-        $pessoal = new Pessoal();
         $select = "SELECT idAtestado
                  FROM tbatestado
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicio AND ADDDATE(dtInicio,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicio AND ADDDATE(dtInicio,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicio AND '{$this->dtFinal}' >= ADDDATE(dtInicio,numDias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= dtInicio AND '{$this->dtFinal}' >= ADDDATE(dtInicio,numDias-1)))";
 
-        $afast = $pessoal->select($select);
+        // se tiver isenção
+        if ($this->tabela == "tbatestado") {
+            $select .= " AND idAtestado <> {$this->id}";
+        }
+
+        $select .= " ORDER BY dtInicio";
+
+        $afast = $pessoal->select($select, false);
+
         if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tbatestado") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = "Falta Abonada";
-                    }
-                } else {
-                    $retorno = "Falta Abonada";
-                }
-            }
+            $this->afastamento = "Falta Abonada";
+            $this->detalhe = "Atestado Médico";
+            return true;
         }
 
         /*
          *  Trabalho TRE
          */
-        $pessoal = new Pessoal();
         $select = "SELECT idTrabalhoTre
                  FROM tbtrabalhotre
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN data AND ADDDATE(data,dias-1)) 
-                     OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
-        $afast = $pessoal->select($select);
+        // se tiver isenção
+        if ($this->tabela == "tbtrabalhotre") {
+            $select .= " AND idTrabalhoTre <> {$this->id}";
+        }
+
+        $select .= " ORDER BY data";
+
+        $afast = $pessoal->select($select, false);
+
         if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tbtrabalhotre") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = "Trabalho no TRE";
-                    }
-                } else {
-                    $retorno = "Trabalho no TRE";
-                }
-            }
+            $this->afastamento = "TRE";
+            $this->detalhe = "Trabalhando no TRE";
+            return true;
         }
 
         /*
          *  Folgas TRE
          */
-        $pessoal = new Pessoal();
         $select = "SELECT idFolga
                  FROM tbfolga
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN data AND ADDDATE(data,dias-1)) 
-                     OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))
-        ";
+                     OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
-        $afast = $pessoal->select($select);
-        if (!empty($afast)) {
-            # Percorre os registros de $afast
-            foreach ($afast as $evento) {
-                # Verifica se tem registro Isento
-                if ($this->tabela == "tbfolga") {
-                    if ($this->id <> $evento[0]) {
-                        $retorno = "Folga pelo TRE";
-                    }
-                } else {
-                    $retorno = "Folga pelo TRE";
-                }
-            }
+        // se tiver isenção
+        if ($this->tabela == "tbfolga") {
+            $select .= " AND idFolga <> {$this->id}";
         }
 
-        return $retorno;
+        $select .= " ORDER BY data";
+
+        $afast = $pessoal->select($select, false);
+
+        if (!empty($afast)) {
+            $this->afastamento = "Folga";
+            $this->detalhe = "Em folga do TRE";
+            return true;
+        }
+
+        return false;
     }
 
     ###########################################################

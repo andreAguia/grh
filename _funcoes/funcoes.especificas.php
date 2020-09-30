@@ -604,68 +604,28 @@ function consertaUf($uf) {
 
 ###########################################################
 /**
- * Função que retorna a situaçao do servidor mais informaçoes de ferias, licença, etc
+ * Função que retorna a situaçao do servidor e os afastamentos
  * Obs esta função só existe para ser usada na classe modelo
  */
 
 function get_situacao($idServidor) {
     $pessoal = new Pessoal();
-    $situacao = $pessoal->get_situacao($idServidor);
-    $especial = null;
-    $title = null;
-
-    # Pega as situações
-    $ferias = $pessoal->emFerias($idServidor);
-    $licenca = $pessoal->emLicenca($idServidor);
-    $licencaPremio = $pessoal->emLicencaPremio($idServidor);
-    $folgaTre = $pessoal->emFolgaTre($idServidor);
-    $afastadoTre = $pessoal->emAfastamentoTre($idServidor);
-    $cedido = $pessoal->emCessao($idServidor);
-    $orgaoCedido = null;
-
-    # Férias
-    if ($ferias) {
-        $especial = 'Férias';
-        $title = 'Exercicio ' . $pessoal->emFeriasExercicio($idServidor);
+    
+    # Preenche retorno com a situação
+    $retorno = $pessoal->get_situacao($idServidor);
+    
+    # Verifica se está cedido
+    if ($pessoal->emCessao($idServidor)) {
+        $retorno .= "<br/><span title='{$pessoal->get_orgaoCedido($idServidor)}' class='primary label'>Cedido</span>";
     }
 
-    # Licenca
-    if ($licenca) {
-        $title = $pessoal->get_licenca($idServidor);
-        $especial = 'Licença';
-    }
+    # Pega os afastamentos
+    $verifica = new VerificaAfastamentos($idServidor);
 
-    # Licenca Prêmio
-    if ($licencaPremio) {
-        $title = $pessoal->get_licencaNome(6);
-        $especial = 'Licença';
+    if ($verifica->verifica()) {
+        $retorno .= "<br/><span title='{$verifica->getDetalhe()}' class='warning label'>{$verifica->getAfastamento()}</span>";
     }
-
-    # Folga TRE
-    if ($folgaTre) {
-        $especial = 'Folga TRE';
-        $title = 'Em folga do TRE';
-    }
-
-    # Afastamento TRE
-    if ($afastadoTre) {
-        $especial = 'TRE';
-        $title = 'Trabalhando no TRE';
-    }
-
-    # Cedido
-    if ($cedido) {
-        $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
-        $especial = 'Cedido';
-        $title = $orgaoCedido;
-    }
-
-    # Monta variavel de retorno    
-    if (is_null($especial)) {
-        $retorno = $situacao;
-    } else {
-        $retorno = $situacao . '<br/><span title="' . $title . '" class="warning label">' . $especial . '</span>';
-    }
+    
     return $retorno;
 }
 
@@ -1127,16 +1087,16 @@ function get_DadosServidorCessao($idServidor) {
             $texto[] = $ocorrencia->$nomeMetodo($idServidor);
         }
     }
-    
+
     # Verifica se não está vazio
-    if(!empty(array_filter($texto))){
+    if (!empty(array_filter($texto))) {
 
         $painel = new Callout("warning");
         $painel->abre();
 
         # Percorre o array 
         foreach ($texto as $mm) {
-            if(!empty($mm)){
+            if (!empty($mm)) {
                 p("- " . $mm, "exibeOcorrencia");
             }
         }

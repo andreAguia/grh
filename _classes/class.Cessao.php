@@ -195,13 +195,9 @@ class Cessao
 
             # Se tiver afastamento Temos que avaliar as datas deste afastamento
             if (!empty($verifica)) {
-
-                var_dump($verifica);
-
                 # Pega as datas do afastamento
                 $dtInicialAfast = date_to_php($verifica["dtInicial"]);
                 $dtFinalAfast = date_to_php($verifica["dtFinal"]);
-
                 $ultimoDia = addDias($dtInicialAfast, -1, false);
             }
 

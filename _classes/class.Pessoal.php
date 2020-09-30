@@ -1398,10 +1398,42 @@ class Pessoal extends Bd
         } else {
             $data = date_to_bd($data);
         }
-
+        
         # Monta o select
         $select = "SELECT idLicenca 
                      FROM tblicenca
+                    WHERE idServidor = '$idServidor'
+                      AND '$data' >= dtInicial 
+                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
+
+        $row = parent::select($select, false);
+
+        if (empty($row[0])) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    ##########################################################################################
+
+    function emLicencaSemVencimento($idServidor, $data = null)
+    {
+
+
+        # Função que informa se a idServidor está em licenca sem vencim,ento na data informada
+        #
+        # Parâmetro: a matrícula a ser pesquisada
+        # Verifica a data
+        if (is_null($data)) {
+            $data = date("Y-m-d");
+        } else {
+            $data = date_to_bd($data);
+        }
+        
+        # Monta o select
+        $select = "SELECT idLicencaSemVencimentos 
+                     FROM tblicencasemvencimentos
                     WHERE idServidor = '$idServidor'
                       AND '$data' >= dtInicial 
                       AND '$data' <= ADDDATE(dtInicial,numDias-1)";

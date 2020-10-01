@@ -12,24 +12,20 @@ class Cessao
 
     public function getDados($idHistCessao = null)
     {
-# Verifica se foi informado
+        # Verifica se o id foi informado
         if (vazio($idHistCessao)) {
             alert("É necessário informar o id.");
             return;
         }
 
-# Conecta com o banco de dados
+        # Pega os dados
         $servidor = new Pessoal();
-
-# Pega os dados
         $select = "SELECT *
                      FROM tbhistcessao
                     WHERE idHistCessao = {$idHistCessao}";
 
-        $row = $servidor->select($select, false);
-
-# Retorno
-        return $row;
+        # Retorno
+        return $servidor->select($select, false);
     }
 
 ######################################################################################################################
@@ -37,11 +33,11 @@ class Cessao
     public function exibeDados($idHistCessao)
     {
 
-# Limita o tamanho da tela
+        # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
 
-# Conecta com o banco de dados
+        # Conecta com o banco de dados
         $servidor = new Pessoal();
 
         $select = "SELECT idHistCessao,
@@ -54,7 +50,7 @@ class Cessao
                      FROM tbhistcessao
                     WHERE idHistCessao = {$idHistCessao}";
 
-# Monta a tabela
+        # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidor->select($select, true));
         $tabela->set_titulo("Dados da Cessão");
@@ -66,7 +62,7 @@ class Cessao
         $tabela->set_classe(["Cessao"]);
         $tabela->set_metodo(["getStatus"]);
 
-# Pinta a tabela de cor diferente
+        # Pinta a tabela de cor diferente
         $dados = $this->getDados($idHistCessao);
 
         $tabela->set_formatacaoCondicional(array(
@@ -217,7 +213,7 @@ class Cessao
          *       Terminada - quando a cessao ja terminou
          */
 
-# Pega a data de termino da cessao
+        # Pega a data de termino da cessao
         $dados = $this->getDados($idHistCessao);
         $dtFim = $dados["dtFim"];
 
@@ -291,8 +287,9 @@ class Cessao
 
         # Botão de controle de frequência
         $botao = new BotaoGrafico();
-        $botao->set_title("{$num} Lançamentos de Frequência");-
-        $botao->set_label($num);
+        $botao->set_title("{$num} Lançamentos de Frequência");
+        -
+                $botao->set_label($num);
         $botao->set_url("servidorFrequencia.php?idHistCessao={$idHistCessao}");
         $botao->set_imagem(PASTA_FIGURAS . 'frequencia.jpg', 23, 23);
         $botao->show();

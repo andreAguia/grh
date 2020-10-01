@@ -1,7 +1,6 @@
 <?php
 
-class MenuPrincipal
-{
+class MenuPrincipal {
 
     /**
      * Gera o Menu Principal do Sistema
@@ -12,8 +11,7 @@ class MenuPrincipal
 
     ######################################################################################################################    
 
-    public function __construct($idUsuario)
-    {
+    public function __construct($idUsuario) {
         /**
          * Inicia a classe
          */
@@ -41,7 +39,7 @@ class MenuPrincipal
 
         # Módulos      
         $this->moduloTabelaAuxiliares();
-        $this->moduloAreaEspecial();        
+        $this->moduloAreaEspecial();
         $this->moduloLinksExternos();
 
         $grid->fechaColuna();
@@ -72,7 +70,7 @@ class MenuPrincipal
 
         $grid1->fechaColuna();
         $grid1->abreColuna(12, 6, 12);
-        
+
         $this->moduloRamais();
 
         $grid1->fechaColuna();
@@ -89,8 +87,7 @@ class MenuPrincipal
      * 
      * Exibe o menu do cadastro de Servidore
      */
-    private function moduloServidores()
-    {
+    private function moduloServidores() {
 
         $painel = new Callout();
         $painel->abre();
@@ -121,8 +118,7 @@ class MenuPrincipal
      * 
      * Exibe o menu do cadastro de Servidore
      */
-    private function moduloSigrh()
-    {
+    private function moduloSigrh() {
 
         $painel = new Callout();
         $painel->abre();
@@ -153,8 +149,7 @@ class MenuPrincipal
      * 
      * Exibe o menu Sei
      */
-    private function moduloSei()
-    {
+    private function moduloSei() {
 
         $painel = new Callout();
         $painel->abre();
@@ -183,8 +178,7 @@ class MenuPrincipal
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloLegislacao()
-    {
+    private function moduloLegislacao() {
 
         $painel = new Callout();
         $painel->abre();
@@ -213,28 +207,36 @@ class MenuPrincipal
      * 
      * Exibe os servidores que atendem o balcão
      */
-    private function moduloBalcao($idUsuario = null)
-    {
+    private function moduloBalcao($idUsuario = null) {
 
         # Banco de dados
         $pessoal = new Pessoal();
         $intra = new Intra();
 
         # Pega os sortudos
-        $select = "SELECT idServidorManha, idServidorTarde FROM tbbalcao WHERE month(curdate()) = mes AND day(curdate()) = dia AND year(curdate()) = ano";
-        $sortudos = $pessoal->select($select, false);
+        $select = "SELECT idServidorManha, idServidorTarde
+                     FROM tbbalcao 
+                    WHERE month(curdate()) = mes 
+                      AND day(curdate()) = dia 
+                      AND year(curdate()) = ano";
+        $sortudos = $pessoal->select($select,false);
 
         # Verifica se o usuário logado é um sortudo
         $idServidor = $intra->get_idServidor($idUsuario);
 
         # Caso seja exibe uma mensagem
-        if (($idServidor == $sortudos[0]) or ($idServidor == $sortudos[1])) {
-            $painel2 = new Callout("warning");
-            $painel2->abre();
+        if (!empty($sortudos)) {
+            if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1])) {
+                $painel2 = new Callout("warning");
+                $painel2->abre();
 
-            p("Parabéns servidor!!<br/>Hoje é seu dia de balcão!!", "center");
+                p("Parabéns servidor!!<br/>Hoje é seu dia de balcão!!", "center");
 
-            $painel2->fecha();
+                $painel2->fecha();
+            }
+        }else{
+            $sortudos[0] = "";
+            $sortudos[1] = "";
         }
 
         # Inicia painel
@@ -253,7 +255,7 @@ class MenuPrincipal
             echo "<tr><td>Tarde:</td><td>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
             echo "</table>";
         }
-        
+
         $div = new Div("divAniversariante");
         $div->abre();
         $link = new Link("Veja todos", "balcao.php");
@@ -271,8 +273,7 @@ class MenuPrincipal
      * 
      * Exibe o menu de assuntos pertinentes aos servidores da grh
      */
-    private function moduloGrh()
-    {
+    private function moduloGrh() {
 
         $painel = new Callout();
         $painel->abre();
@@ -333,8 +334,7 @@ class MenuPrincipal
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloTabelaAuxiliares()
-    {
+    private function moduloTabelaAuxiliares() {
 
         $painel = new Callout();
         $painel->abre();
@@ -398,14 +398,14 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Tipos de Licenças');
         $botao->set_accesskey('b');
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Professor Visitante');
         $botao->set_url('cadastroVisitante.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'professorVisitante.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Professores Visitantes (bolsistas)');
-        $menu->add_item($botao);  
-        
+        $menu->add_item($botao);
+
         $botao = new BotaoGrafico();
         $botao->set_label('RPA');
         $botao->set_url('rpa.php?grh=1');
@@ -424,8 +424,7 @@ class MenuPrincipal
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloAreaEspecial()
-    {
+    private function moduloAreaEspecial() {
 
         $painel = new Callout();
         $painel->abre();
@@ -493,7 +492,7 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'semVencimento.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
         $menu->add_item($botao);
-                
+
         $botao = new BotaoGrafico();
         $botao->set_label('Concurso');
         $botao->set_url('cadastroConcurso.php?grh=1');
@@ -508,21 +507,21 @@ class MenuPrincipal
         $botao->set_imagem(PASTA_FIGURAS . 'vaga.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área de controle de Vagas de Professores');
         $menu->add_item($botao);
-              
+
         $botao = new BotaoGrafico();
         $botao->set_label('Cedidos da Uenf');
         $botao->set_url('areaCedidos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Formação');
         $botao->set_url('areaFormacao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'diploma.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Formação Escolar dos Servidores');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('RPA');
         $botao->set_url('cadastroRpa.php?grh=1');
@@ -617,8 +616,7 @@ class MenuPrincipal
      * 
      * Exibe os Alertas
      */
-    private function moduloAlertas()
-    {
+    private function moduloAlertas() {
 
         $painel = new Callout("warning");
         $painel->abre();
@@ -640,8 +638,7 @@ class MenuPrincipal
      * 
      * Exibe os Aniversariantes
      */
-    private function moduloAniversariantes()
-    {
+    private function moduloAniversariantes() {
 
         $painel = new Callout("success");
         $painel->abre();
@@ -675,8 +672,7 @@ class MenuPrincipal
      * 
      * Exibe os Links Externos
      */
-    private function moduloLinksExternos()
-    {
+    private function moduloLinksExternos() {
 
         $painel = new Callout("secondary");
         $painel->abre();
@@ -765,8 +761,7 @@ class MenuPrincipal
      * 
      * Exibe as Tabelas Secundária
      */
-    private function moduloTabelasSecundarias()
-    {
+    private function moduloTabelasSecundarias() {
 
         $painel = new Callout();
         $painel->abre();
@@ -805,8 +800,7 @@ class MenuPrincipal
      * 
      * Exibe os Ramais da GRH
      */
-    private function moduloRamais()
-    {
+    private function moduloRamais() {
 
         # tabela
         $tabela = new Tabela();

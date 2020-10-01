@@ -43,7 +43,7 @@ if ($acesso) {
                            tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-',
-                           tbsituacao.situacao
+                           tbservidor.idServidor
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -103,9 +103,11 @@ if ($acesso) {
 
     $relatorio->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+//    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php",null, "get_situacaoRel"));
     $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
 
 
@@ -120,7 +122,7 @@ if ($acesso) {
                         tbservidor.idServidor,
                         tbservidor.dtAdmissao,
                         sum(numDias) as soma,
-                        tbsituacao.situacao
+                        tbservidor.idServidor
                    FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                  LEFT JOIN tbferias USING (idServidor)
                                      JOIN tbhistlot USING (idServidor)
@@ -150,11 +152,12 @@ if ($acesso) {
 
     $relatorio->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php",null, "get_situacaoRel"));
     $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
     $relatorio->set_numGrupo(5);
     $relatorio->set_conteudo($result);
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_dataImpressao(false);
     $relatorio->show();

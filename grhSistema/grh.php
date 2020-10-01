@@ -72,13 +72,12 @@ if ($acesso) {
     /*
      *  Menu
      */
-    switch ($fase)
-    {
+    switch ($fase) {
         # Exibe o Menu Inicial
         case "menu" :
 
             p(SISTEMA, 'grhTitulo');
-            p("Versão: " . VERSAO, "versao");
+            p("Versão: " . VERSAO . " de " . ATUALIZACAO, "versao");
 
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -157,8 +156,8 @@ if ($acesso) {
                 # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de alteração do status de readaptação executada.', null, null, 6);
             }
-            
-             /*
+
+            /*
              *  Faz as alterações de redução de carga horária
              */
             if ($intra->get_variavel('dataVerificaStatusReducao') <> date("d/m/Y")) {
@@ -172,8 +171,8 @@ if ($acesso) {
                 # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), 'Rotina de alteração do status de redução de carga horária executada.', null, null, 6);
             }
-            
-             /*
+
+            /*
              *  Sincroniza tbvagahistorico com idservidor
              */
             if ($intra->get_variavel('dataSincronizaIdConcurso') <> date("d/m/Y")) {
@@ -503,8 +502,7 @@ if ($acesso) {
             $atualizacoes = $intra->get_atualizacoes();
 
             # Percorre os dados
-            foreach ($atualizacoes as $valor)
-            {
+            foreach ($atualizacoes as $valor) {
                 $grid2 = new Grid("center");
                 $grid2->abreColuna(6);
                 p("Versão: " . $valor[0], "patualizacaoL");

@@ -4040,7 +4040,11 @@ class Pessoal extends Bd {
                          ORDER BY anoexercicio asc';
 
         $row = parent::select($select, false);
-        return $row[1];
+        if(empty($row[1])){
+            return 0;
+        }else{
+            return $row[1];
+        }
     }
 
     #####################################################################################

@@ -119,7 +119,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbferias") {
+        if ($this->tabela == "tbferias" AND !empty($this->id)) {
             $select .= " AND idFerias <> {$this->id}";
         }
 
@@ -144,7 +144,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicenca") {
+        if ($this->tabela == "tblicenca" AND !empty($this->id)) {
             $select .= " AND idLicenca <> {$this->id}";
         }
 
@@ -169,7 +169,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicencapremio") {
+        if ($this->tabela == "tblicencapremio" AND !empty($this->id)) {
             $select .= " AND idLicencaPremio <> {$this->id}";
         }
 
@@ -194,7 +194,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicencasemvencimentos") {
+        if ($this->tabela == "tblicencasemvencimentos" AND !empty($this->id)) {
             $select .= " AND idLicencaSemVencimentos <> {$this->id}";
         }
 
@@ -219,7 +219,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicio AND '{$this->dtFinal}' >= ADDDATE(dtInicio,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbatestado") {
+        if ($this->tabela == "tbatestado" AND !empty($this->id)) {
             $select .= " AND idAtestado <> {$this->id}";
         }
 
@@ -244,7 +244,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbtrabalhotre") {
+        if ($this->tabela == "tbtrabalhotre" AND !empty($this->id)) {
             $select .= " AND idTrabalhoTre <> {$this->id}";
         }
 
@@ -269,7 +269,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbfolga") {
+        if ($this->tabela == "tbfolga" AND !empty($this->id)) {
             $select .= " AND idFolga <> {$this->id}";
         }
 

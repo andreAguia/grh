@@ -65,7 +65,7 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT idTpLicenca,
-                                      CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
+                                     idTpLicenca,
                                       periodo,
                                       pericia,
                                       publicacao,
@@ -105,9 +105,10 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Interrompe TS"));
-    #$objeto->set_width(array(5,38,7,10,10,10,10,10));
-    $objeto->set_align(array("center", "left"));
-    #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
+    $objeto->set_align(array("center", "left"));    
+    $objeto->set_classe(array(null,"Licenca"));
+    $objeto->set_metodo(array(null,"exibeNome"));
+    
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 

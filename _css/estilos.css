@@ -769,6 +769,23 @@ p#patualizacaoL{
 }
 
 /*******************************************
+ * Classe Licença
+ *******************************************/
+
+p#pTipoLicenca{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+}
+
+p#pLeiLicenca{
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;    
+    color:#076cba;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

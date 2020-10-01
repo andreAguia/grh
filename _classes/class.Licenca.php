@@ -23,9 +23,10 @@ class Licenca
         $select = "SELECT nome, lei
                      FROM tbtipolicenca
                     WHERE idTpLicenca = {$idTpLicenca}";
-
-        # Retorno
-        return $servidor->select($select, false);
+                    
+        $licenca = $servidor->select($select, false);
+        p($licenca[0],"pTipoLicenca");
+        p($licenca[1],"pLeiLicenca");
     }
 
 ##############################################################

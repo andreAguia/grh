@@ -273,7 +273,7 @@ if ($acesso) {
         }
 
         # select da lista
-        $selectLicença = '(SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
+        $selectLicença = '(SELECT tblicenca.idTpLicenca,
                                   tblicenca.idTpLicenca,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
@@ -292,7 +292,7 @@ if ($acesso) {
         } else {
             $selectLicença .= ')
                                UNION
-                               (SELECT (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                               (SELECT 6,
                                        6,"",
                                        dtInicial,
                                        tblicencapremio.numdias,
@@ -303,7 +303,7 @@ if ($acesso) {
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
                                      UNION
-                               (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
+                               (SELECT tblicencasemvencimentos.idTpLicenca,
                                        tblicencasemvencimentos.idTpLicenca,"",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
@@ -337,6 +337,7 @@ if ($acesso) {
         $objeto->set_orderTipo($orderTipo);
         $objeto->set_orderChamador('?fase=listar');
 
+
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
         #$objeto->set_linkExcluir('?fase=excluir');
@@ -361,6 +362,8 @@ if ($acesso) {
         $objeto->set_width(array(30, 5, 5, 10, 5, 10, 15, 5));
         $objeto->set_align(array("left"));
         $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $objeto->set_classe(array("Licenca"));
+        $objeto->set_metodo(array("exibeNome"));
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
 

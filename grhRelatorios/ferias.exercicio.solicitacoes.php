@@ -46,7 +46,7 @@ if ($acesso) {
                      date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y") as dtf,
                      idFerias,
                      CONCAT(month(tbferias.dtInicial),"/",year(tbferias.dtInicial)),
-                     tbsituacao.situacao
+                     tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
                                      JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -82,7 +82,7 @@ if ($acesso) {
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Mês', 'Situação'));
     #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, null, null, "acertaDataFerias"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, null, null, "acertaDataFerias","get_situacaoRel"));
     $relatorio->set_classe(array(null, null, "pessoal", null, null, null, null, "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", null, null, null, null, "get_feriasPeriodo"));
 

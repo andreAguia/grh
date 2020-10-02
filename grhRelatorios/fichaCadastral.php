@@ -1009,7 +1009,7 @@ if ($acesso) {
     if ($postLicenca) {
         tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
-        $select = '(SELECT CONCAT(tbtipolicenca.nome," - ",IFnull(tbtipolicenca.lei,"")),
+        $select = '(SELECT tbtipolicenca.nome,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
@@ -1020,10 +1020,10 @@ if ($acesso) {
                                      CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
                                      dtPublicacao,
                                      idLicenca
-                                FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                                FROM tblicenca LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                WHERE idServidor=' . $idFicha . ')
                                UNION
-                               (SELECT (SELECT CONCAT(tbtipolicenca.nome," - ",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                               (SELECT (SELECT tbtipolicenca.nome FROM tbtipolicenca WHERE idTpLicenca = 6),
                                        "",
                                        dtInicial,
                                        tblicencapremio.numdias,
@@ -1033,7 +1033,7 @@ if ($acesso) {
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = ' . $idFicha . ')
-                              ORDER BY 3 desc';
+                               ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
 

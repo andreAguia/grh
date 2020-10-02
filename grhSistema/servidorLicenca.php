@@ -251,12 +251,13 @@ if ($acesso) {
         # botão de voltar da lista
         $objeto->set_voltarLista($voltar);
 
-        # Pega os dados da combo licenca
+        # Pega os dados da combo licenca da pesquisa
         $result = $pessoal->select('SELECT distinct tblicenca.idTpLicenca, tbtipolicenca.nome
                                       FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                      WHERE idServidor=' . $idServidorPesquisado . '                                         
                                   ORDER BY 2');
-        array_unshift($result, array(null, '-- Todos --')); # Adiciona o valor de nulo
+        array_unshift($result, array(null, '-- Todos --'));
+        
         # controle de pesquisa
         $objeto->set_parametroLabel('Pesquisar');
         $objeto->set_parametroValue($parametro);
@@ -379,8 +380,8 @@ if ($acesso) {
         # Tipo de label do formulário
         $objeto->set_formLabelTipo(1);
 
-        # Pega os dados da combo licenca
-        $result = $pessoal->select('SELECT idTpLicenca, CONCAT(IFnull(tbtipolicenca.lei,"")," ",tbtipolicenca.nome)
+        # Pega os dados da combo licenca do formulário
+        $result = $pessoal->select('SELECT idTpLicenca, tbtipolicenca.nome
                                       FROM tbtipolicenca
                                      WHERE idTpLicenca <> 6
                                        AND idTpLicenca <> 5

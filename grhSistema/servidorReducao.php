@@ -405,7 +405,7 @@ if ($acesso) {
         array('nome' => 'pgPublicacao',
             'label' => 'Página:',
             'tipo' => 'texto',
-            'size' => 5,
+            'size' => 10,
             'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 6),

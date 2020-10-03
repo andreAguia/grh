@@ -70,7 +70,8 @@ if ($acesso) {
                        obs,
                        idFrequencia
                   FROM tbfrequencia
-                 WHERE idHistCessao = {$idHistCessao}";
+                 WHERE idHistCessao = {$idHistCessao}
+                     ORDER BY 3 DESC";
 
     # Frequencias e ferias
     $select = "(SELECT YEAR(dtInicial),

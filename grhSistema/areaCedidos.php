@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
 
-if ($acesso)
-{
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -25,8 +24,7 @@ if ($acesso)
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
-    if ($grh)
-    {
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de controle de frequência de cedidos da Uenf para outros órgãos";
         $data = date("Y-m-d H:i:s");
@@ -35,9 +33,11 @@ if ($acesso)
 
     # Pega os parâmetros
     $parametroAgora = post('parametroAgora', get_session('parametroAgora', "Atualmente Cedidos"));
+    $parametroNome = post('parametroNome', get_session('parametroNome'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAgora', $parametroAgora);
+    set_session('parametroNome', $parametroNome);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -51,8 +51,7 @@ if ($acesso)
 
 ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
             $grid = new Grid();
             $grid->abreColuna(12);
@@ -115,6 +114,17 @@ if ($acesso)
 
             $form = new Form('?');
 
+            # Servidor
+            $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
+            $controle->set_size(100);
+            $controle->set_title('Nome do servidor');
+            $controle->set_valor($parametroNome);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(9);
+            $controle->set_autofocus(true);
+            $form->add_item($controle);
+
             $controle = new Input('parametroAgora', 'combo', 'Cedidos:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Centro');
@@ -122,7 +132,6 @@ if ($acesso)
             $controle->set_valor($parametroAgora);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_autofocus(true);
             $controle->set_col(3);
             $form->add_item($controle);
 
@@ -130,14 +139,13 @@ if ($acesso)
 
             ##############
 
-            if ($parametroAgora == "Atualmente Cedidos")
-            {
+            if ($parametroAgora == "Atualmente Cedidos") {
 
                 /*
                  * Exibe Servidores que terminaram a cessão mas ainda estão erradamente lotados na Reitoria Cedidos
                  */
 
-                $select = 'SELECT tbservidor.idFuncional,  
+                $select = "SELECT tbservidor.idFuncional,  
                           tbpessoa.nome,
                           tbhistcessao.orgao,
                           tbhistcessao.dtInicio,
@@ -152,8 +160,15 @@ if ($acesso)
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbhistcessao.dtInicio = (select max(dtInicio) from tbhistcessao where tbhistcessao.idServidor = tbservidor.idServidor)
                       AND situacao = 1
-                      AND tbhistlot.lotacao = 113 ORDER BY tbpessoa.nome';
-
+                      AND tbhistlot.lotacao = 113";
+                
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
+                                
+                $select .= " ORDER BY tbpessoa.nome";
+                
                 $result = $pessoal->select($select);
                 $count = $pessoal->count($select);
 
@@ -169,9 +184,8 @@ if ($acesso)
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->set_idCampo('idServidor');
 
-                if ($count > 0)
-                {   
-                    label("Problema Encontrado","alert");
+                if ($count > 0) {
+                    label("Problema Encontrado", "alert");
                     $tabela->show();
                 }
 
@@ -189,8 +203,14 @@ if ($acesso)
                                                 JOIN tbpessoa USING (idPessoa)
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1
-                          AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
-                     GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1";
+                          AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
+                
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
+                
+                $select .= " GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1";
 
                 $result = $pessoal->select($select);
                 $count = $pessoal->count($select);
@@ -205,9 +225,8 @@ if ($acesso)
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->set_idCampo('idServidor');
 
-                if ($count > 0)
-                {
-                    label("Problema Encontrado","alert");
+                if ($count > 0) {
+                    label("Problema Encontrado", "alert");
                     $tabela->show();
                 }
 
@@ -227,8 +246,14 @@ if ($acesso)
                                                 JOIN tbpessoa USING (idPessoa)
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1
-                          AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
-                     ORDER BY dtInicio desc";
+                          AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
+                
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
+
+                $select .= " ORDER BY dtInicio desc";
 
                 $result = $pessoal->select($select);
 
@@ -250,8 +275,7 @@ if ($acesso)
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->show();
-            } else
-            {
+            } else {
 
                 /*
                  * Exibe o histórico de servidores cedidos da Uenf
@@ -267,9 +291,15 @@ if ($acesso)
                          FROM tbhistcessao LEFT JOIN tbservidor USING (idServidor)
                                                 JOIN tbpessoa USING (idPessoa)
                         WHERE tbservidor.situacao = 1
-                          AND idPerfil = 1
-                     ORDER BY dtInicio desc";
+                          AND idPerfil = 1";
+                
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
 
+                $select .= " ORDER BY dtInicio desc";
+                
                 $result = $pessoal->select($select);
 
                 # Monta a tabela
@@ -313,8 +343,7 @@ if ($acesso)
     }
 
     $page->terminaPagina();
-} else
-{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }
 

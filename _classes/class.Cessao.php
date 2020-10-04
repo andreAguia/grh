@@ -135,6 +135,7 @@ class Cessao
             }
         }
 
+        # Primeira Verificação       
         # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
         $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
         $verifica = $verificaDados->verifica();
@@ -152,7 +153,33 @@ class Cessao
             }
         }
 
-        return $dataEscolhida;
+        # Pega o ultimo dia do mês
+        $ultimoDia = ultimoDiaMes($dataEscolhida);
+
+        # Segunda Verificação
+        # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
+        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
+        $verifica = $verificaDados->verifica();
+
+        # Se tiver afastamento Temos que avaliar as datas deste afastamento
+        if (!empty($verifica)) {
+            # Pega as datas do afastamento
+            $dtInicialAfast = date_to_php($verifica["dtInicial"]);
+            $dtFinalAfast = date_to_php($verifica["dtFinal"]);
+
+            # Verifica se a data escolhida está dentro do afastamanto
+            if ($dataEscolhida == $dtInicialAfast OR $dataEscolhida == dataMaior($dataEscolhida, $dtInicialAfast)) {
+                # Então o primeiro dia é o dia após este afastamnento
+                $dataEscolhida = addDias($dtFinalAfast, 1, false);
+            }
+        }
+
+        # Verifica se a data escolhida posterior a hoje
+        if (dataMaior($dataEscolhida, date("d/m/Y")) == $dataEscolhida) {
+            return null;
+        } else {
+            return $dataEscolhida;
+        }
     }
 
 ######################################################################################################################

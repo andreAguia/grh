@@ -24,45 +24,52 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
-    # Pega o ano exercicio
-    $parametroAno = get("parametroAno", date('Y'));
-
-    # Pega a lotação
-    $parametroLotacao = get("parametroLotacao");
+    # Pega os parametros
+    $parametroAno = get_session("parametroAno", date('Y'));
+    $parametroLotacao = get_session("parametroLotacao");
+    $parametroSituacao = get_session("parametroSituacao");
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
         $parametroLotacao = null;
     }
 
+    if ($parametroSituacao == "*") {
+        $parametroSituacao = null;
+    }
+
     ######
 
-    $select = 'SELECT tbservidor.idfuncional,        
+    $select = "SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
                      tbservidor.idServidor,
                      tbferias.anoExercicio,
                      tbferias.dtInicial,
                      tbferias.numDias,
-                     date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),"%d/%m/%Y") as dtf,
+                     date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
                      idFerias,
-                     CONCAT(month(tbferias.dtInicial),"/",year(tbferias.dtInicial)),
+                     CONCAT(month(tbferias.dtInicial),'/',year(tbferias.dtInicial)),
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa=tbpessoa.idPessoa)
                                      JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                                     JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
-               WHERE anoExercicio = ' . $parametroAno . '
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+               WHERE anoExercicio = {$parametroAno}
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-    if (!is_null($parametroLotacao)) {
-
+    # Verifica se tem filtro por lotação
+    if (!is_null($parametroLotacao)) {  // senão verifica o da classe
         # Verifica se o que veio é numérico
         if (is_numeric($parametroLotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
         }
+    }
+
+    # Verifica se tem filtro por situação
+    if (!is_null($parametroSituacao)) {
+        $select .= " AND situacao = {$parametroSituacao}";
     }
 
     $select .= ' ORDER BY year(tbferias.dtInicial), month(tbferias.dtInicial), tbferias.dtInicial';
@@ -73,16 +80,29 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Anual de Férias');
     $relatorio->set_tituloLinha2("Ano Exercício: " . $parametroAno);
 
+    $linha3 = null;
+
     if (!is_null($parametroLotacao)) {
-        $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($parametroLotacao));
+        $linha3 .= $servidor->get_nomeLotacao($parametroLotacao);
+    }
+
+    if (!is_null($parametroSituacao)) {
+        if (is_null($linha3)) {
+            $linha3 .= $servidor->get_nomeSituacao($parametroSituacao);
+        }else{
+            $linha3 .= "<br/>{$servidor->get_nomeSituacao($parametroSituacao)}";
+        }
+    }
+
+    if (!is_null($linha3)) {
+        $relatorio->set_tituloLinha3($linha3);
     }
 
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados pela Data Inicial');
-
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Mês', 'Situação'));
-    #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
     $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, null, null, "acertaDataFerias","get_situacaoRel"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, null, null, "acertaDataFerias", "get_situacaoRel"));
     $relatorio->set_classe(array(null, null, "pessoal", null, null, null, null, "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", null, null, null, null, "get_feriasPeriodo"));
 

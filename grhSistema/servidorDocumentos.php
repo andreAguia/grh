@@ -109,7 +109,8 @@ if ($acesso) {
                               ORDER BY 2');
     array_unshift($estado, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
-    $campos = array(array('linha' => 1,
+    $campos = array(
+        array('linha' => 1,
             'col' => 3,
             'nome' => 'cpf',
             'label' => 'CPF:',

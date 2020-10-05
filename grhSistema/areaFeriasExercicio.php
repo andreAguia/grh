@@ -38,10 +38,12 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
-
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
+    
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroSituacao', $parametroSituacao);
 
     # Começa uma nova página
     $page = new Page();
@@ -115,7 +117,23 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(9);
+    $controle->set_col(7);
+    $form->add_item($controle);
+
+    # Situação
+    $result = $pessoal->select('SELECT idsituacao, situacao
+                                              FROM tbsituacao                                
+                                          ORDER BY 1');
+    array_unshift($result, array('*', '-- Todos --'));
+
+    $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Situação');
+    $controle->set_array($result);
+    $controle->set_valor($parametroSituacao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
     $form->add_item($controle);
 
     $form->show();
@@ -157,9 +175,9 @@ if ($acesso) {
             $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
             $menu->add_item('titulo', 'Relatórios');
-            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
-            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
-            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
+            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
             $menu->show();
 
             #######################################
@@ -167,6 +185,7 @@ if ($acesso) {
             # Informa a classe com os parâmetros
             $lista1 = new ListaFerias($parametroAno);
             $lista1->set_lotacao($parametroLotacao);
+            $lista1->set_situacao($parametroSituacao);
 
             # resumo geral
             $lista1->showResumoGeral();

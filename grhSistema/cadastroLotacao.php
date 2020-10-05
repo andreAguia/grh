@@ -252,7 +252,7 @@ if ($acesso) {
     $botaoOrga->set_title("Exibe o Organograma2 da UENF");
     $botaoOrga->set_imagem($imagem3);
     $botaoOrga->set_url("?fase=organograma");
-    #$botaoOrg->set_accessKey('O');
+    
     # Cargos Ativos
     $botaoAtivo = new Button("Lotações Ativas", "?tipo=1");
     $botaoAtivo->set_title("Exibe os Cargos Ativos");

@@ -92,7 +92,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Geral', '?fase=geral', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=sigFis', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Outros', '?fase=outros', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Parentes', '?fase=parentes', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Professores', '?fase=professores', '', '', 'divMenuRelatorioGrh');
@@ -399,18 +399,27 @@ if ($acesso) {
 
         ######################################
 
-        case "sigFis";
+        case "movimentacao";
             $menu = new Menu();
             $menu->add_item('titulo', 'Movimentação de Pessoal');
 
-            $menu->add_item('titulo1', 'SigFis');
-            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Admitidos', '../grhRelatorios/sigFisAnualAdmitidos.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Demitidos e Exonerados', '../grhRelatorios/sigFisAnualDemitidos.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Nomeados', '../grhRelatorios/sigFisAnualNomeados.php');
+            $menu->add_item('titulo1', 'Todos os Servidores (Com CPF - Para o SigFis)');
+            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Admitidos', '../grhRelatorios/movimentacao.anual.geral.admitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.geral.demitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.nomeados.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Servidores Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.exonerados.php');
 
-            $menu->add_item('titulo1', 'Vagas de Docentes');
-            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos', '../grhRelatorios/docentes.AnualAdmitidos.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos e Exonerados', '../grhRelatorios/docentes.AnualDemitidos.php');
+            $menu->add_item('titulo1', 'Somente os Docentes');
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos', '../grhRelatorios/movimentacao.anual.docentes.admitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');            
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.nomeados.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.exonerados.php');
+            
+            $menu->add_item('titulo1', 'Somente os Técnicos & Administrativos');
+            $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Admitidos', '../grhRelatorios/movimentacao.anual.administrativos.admitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.administrativos.demitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.nomeados.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.exonerados.php');
             $menu->show();
             break;
 

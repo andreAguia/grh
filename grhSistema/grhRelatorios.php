@@ -281,19 +281,12 @@ if ($acesso) {
         case "ferias";
             $menu = new Menu();
             $menu->add_item('titulo', 'Férias');
+            $menu->add_item('titulo1', 'Novos Relatórios');
+            $menu->add_item('linkWindow', 'Relatório de Servidores por Diretoria para Solicitação de Férias', '../grhRelatorios/ferias.anual.porDiretoria.php');
+            $menu->add_item('titulo1', 'Antigas Escalas');
             $menu->add_item('linkWindow', 'Escala Anual de Férias de Servidores Tecnicos Estatutarios', '../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
             $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao', '../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
             $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Com Regencia de Turma', '../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
-
-            #$menu->add_item('linkWindow','Escala Anual de Férias de Servidores Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
-            #$menu->add_item('linkWindow','Escala Mensal Geral de Férias','../grhRelatorios/escalaMensalFeriasGeral.php');
-            #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação','../grhRelatorios/escalaMensalFeriasGeralPorLotacao.php');
-            #$menu->add_item('linkWindow','Escala Mensal Geral de Férias Agrupados por Lotação - Assinatura','../grhRelatorios/escalaMensalFeriasGeralPorLotacaoComAssinatura.php');
-            #$menu->add_item('linkWindow','Escala Semestral de Férias (Fevereiro - Agosto)','../grhRelatorios/escalaSemestralFeriasGeralFevereiroAgosto.php');
-            #$menu->add_item('linkWindow','Escala Semestral de Férias (Setembro - Janeiro)','../grhRelatorios/escalaSemestralFeriasGeralSetembroJaneiro.php');
-            #$menu->add_item('linkWindow','Total de Férias por Ano do Exercício','../grhRelatorios/totalFeriasAnual.php');
-            #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Férias','../grhRelatorios/servidorEmFerias.php');
-            #$menu->add_item('linkWindow','Servidores Em Férias Por Ano de Fruição','../grhRelatorios/ferias.fruicao.anual.porMes.emFerias.php');
 
             $menu->show();
 
@@ -563,7 +556,6 @@ if ($acesso) {
         ######################################
 
         case "recad2018";
-
             $menu = new Menu();
             $menu->add_item('titulo', 'Recadastramento 2018');
             $menu->add_item('titulo1', 'por Lotaçao');

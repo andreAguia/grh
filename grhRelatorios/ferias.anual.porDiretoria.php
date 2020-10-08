@@ -53,7 +53,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Anual de Férias');
-    $relatorio->set_tituloLinha2($parametroAno);
+    $relatorio->set_tituloLinha2("Exercício: {$parametroAno}");
     $relatorio->set_tituloLinha3($parametroLotacao);
 
     $relatorio->set_label(['Id', 'Nome', 'Lotação','Cargo', 'Admissão', 'Observação']);

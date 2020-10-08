@@ -69,7 +69,7 @@ if ($acesso) {
     $listaLotacao = $servidor->select('SELECT distinct DIR, DIR
                                               FROM tblotacao
                                              WHERE ativo');
-    array_unshift($listaLotacao, array('*', 'Todos'));
+    array_unshift($listaLotacao, array('*', 'Escolha a Lotação'));
 
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
@@ -95,7 +95,7 @@ if ($acesso) {
             'padrao' => $parametroLotacao,
             'onChange' => 'formPadrao.submit();',
             'title' => 'Mês',
-            'col' => 3,
+            'col' => 4,
             'linha' => 1),
     ));
 

@@ -43,7 +43,7 @@ if ($acesso) {
                                       JOIN tbhistlot USING (idServidor)
                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE tbservidor.situacao = 1
-                  AND (idPerfil = 1 OR idPerfil = 2 OR idPerfil = 4)
+                  AND (idPerfil = 1 OR idPerfil = 2 OR idPerfil = 4 OR idPerfil = 3)
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND tblotacao.DIR = '{$parametroLotacao}'
                   AND idLotacao <> 113    

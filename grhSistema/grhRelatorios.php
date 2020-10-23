@@ -395,6 +395,9 @@ if ($acesso) {
         case "movimentacao";
             $menu = new Menu();
             $menu->add_item('titulo', 'Movimentação de Pessoal');
+            $menu->add_item('titulo1', 'Movimentação de Lotação');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.mensal.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.anual.lotacao.php');
 
             $menu->add_item('titulo1', 'Todos os Servidores (Com CPF - Para o SigFis)');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Admitidos', '../grhRelatorios/movimentacao.anual.geral.admitidos.php');

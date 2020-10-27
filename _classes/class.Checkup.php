@@ -25,8 +25,10 @@ class Checkup {
 
     ###########################################################
 
-    public function set_linkEditar($linkEditar) {
-        $this->linkEditar = $linkEditar;
+    public function set_linkEditar($linkEditar = null) {
+        if (!empty($linkEditar)) {
+            $this->linkEditar = $linkEditar;
+        }
     }
 
     ###########################################################
@@ -45,9 +47,11 @@ class Checkup {
 
         # Percorre todos os métodos da classe e guarda no array seu retorno
         foreach ($api->getMethods() as $method) {
-            if (($method->getName() <> 'get_all') AND ($method->getName() <> '__construct')) {
+            if (($method->getName() <> 'get_all') AND ($method->getName() <> '__construct') AND ($method->getName() <> 'set_linkEditar')) {
                 $metodo = $method->getName();
-                $metodoRetorno[] = $this->$metodo();
+                if (!empty($this->$metodo())) {
+                    $metodoRetorno[] = $this->$metodo();
+                }
             }
         }
 

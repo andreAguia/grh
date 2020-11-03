@@ -126,7 +126,7 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-####################################################################################
+        ####################################################################################
         # Valida o CPF e verifica se tem servidor cadastrado com esse CPF    
         case "validaCPF" :
 

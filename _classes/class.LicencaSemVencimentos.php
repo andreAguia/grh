@@ -1,6 +1,7 @@
 <?php
 
-class LicencaSemVencimentos {
+class LicencaSemVencimentos
+{
 
     /**
      * Abriga as várias rotina referentes ao afastamento do servidor
@@ -12,16 +13,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    /**
-     * Método Construtor
-     */
-    public function __construct() {
-        
-    }
-
-    ###########################################################
-
-    function get_dados($idLicencaSemVencimentos) {
+    function get_dados($idLicencaSemVencimentos)
+    {
 
         /**
          * Informe o número do processo de solicitação de redução de carga horária de um servidor
@@ -48,7 +41,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    function exibeStatus($idLicencaSemVencimentos) {
+    function exibeStatus($idLicencaSemVencimentos)
+    {
 
         /**
          * Informe o status de uma solicitação de redução de carga horária específica
@@ -125,7 +119,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    function exibePeriodo($idLicencaSemVencimentos) {
+    function exibePeriodo($idLicencaSemVencimentos)
+    {
 
         /**
          * Informe os dados da período de uma solicitação de redução de carga horária específica
@@ -189,7 +184,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    function exibeProcessoPublicacao($idLicencaSemVencimentos) {
+    function exibeProcessoPublicacao($idLicencaSemVencimentos)
+    {
 
         /**
          * Informe o número do processo e a data da publicação de uma licença sem vencimentos
@@ -228,7 +224,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    function exibeCrp($idLicencaSemVencimentos) {
+    function exibeCrp($idLicencaSemVencimentos)
+    {
 
         /**
          * Informe se o servidor entregou o CRp e o prazo de entrega
@@ -314,7 +311,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    public function set_linkEditar($linkEditar) {
+    public function set_linkEditar($linkEditar)
+    {
         /**
          * Informa a rotina de edição (se houver)
          *
@@ -327,7 +325,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    public function get_nomeLicenca($idTpLicenca) {
+    public function get_nomeLicenca($idTpLicenca)
+    {
         /**
          * Informa o nome da licença de forma compacta para ser exibida na tabela
          *
@@ -352,7 +351,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    public function exibeLista() {
+    public function exibeLista()
+    {
 
         /**
          * Exibe uma tabela com a relação dos servidores comafastamento
@@ -424,7 +424,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    public function exibeRelatorio() {
+    public function exibeRelatorio()
+    {
 
         /**
          * Exibe uma tabela com a relação dos servidores comafastamento
@@ -474,7 +475,8 @@ class LicencaSemVencimentos {
 
     ###########################################################
 
-    function exibeBotaoDocumentos($idLicencaSemVencimentos) {
+    function exibeBotaoDocumentos($idLicencaSemVencimentos)
+    {
 
         /**
          * Exibe o botão de imprimir os documentos

@@ -68,6 +68,10 @@ if ($acesso) {
     set_session('sessionPaginacao'); # Zera a session de paginação da classe modelo
     set_session('sessionLicenca');      # Zera a session do tipo de licença
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
+    
+    # RPA
+    set_session('sessionidPrestador');
+    set_session('sessionCpfPrestador');
 
     /*
      *  Menu

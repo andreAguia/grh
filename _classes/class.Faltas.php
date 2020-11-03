@@ -8,17 +8,6 @@ class Faltas
      * @author André Águia (Alat) - alataguia@gmail.com
      */
     ###########################################################
-
-    /**
-     * Método Construtor
-     */
-    public function __construct()
-    {
-        
-    }
-
-    ###########################################################
-
     function getFaltasServidor($idServidor)
     {
 

@@ -1,23 +1,17 @@
 <?php
 
-class Formacao {
+class Formacao
+{
+
     /**
      * Abriga as várias rotina do Cadastro de Formação Escolar do servidor
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
     ###########################################################
-
-    /**
-     * Método Construtor
-     */
-    public function __construct() {
-        
-    }
-
-    ###########################################################
-
-    function get_curso($idFormacao) {
+    
+    function get_curso($idFormacao)
+    {
 
         /**
          * fornece Detalhes do curso
@@ -47,7 +41,8 @@ class Formacao {
 
     ###########################################################
 
-    function get_escolaridade($idServidor) {
+    function get_escolaridade($idServidor)
+    {
         /**
          * Fornece a escolaridade de um servidor seja pelo cargo, seja pelo cadastro de formação. o que tiver maior escolaridade
          */

@@ -51,6 +51,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
+    if($fase <> "relatorioInativo" AND $fase <> "relatorioAtivo")
     AreaServidor::cabecalho();
 
     # Abre um novo objeto Modelo

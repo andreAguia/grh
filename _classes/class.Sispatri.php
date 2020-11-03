@@ -13,15 +13,6 @@ class Sispatri {
 ###########################################################
 
     /**
-     * Método Construtor
-     */
-    public function __construct() {
-        
-    }
-
-###########################################################
-
-    /**
      * Método set_lotacao
      * 
      * @param $lotacao 

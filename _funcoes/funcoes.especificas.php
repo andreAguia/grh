@@ -1150,5 +1150,3 @@ function get_DadosServidorCessao($idServidor)
 }
 
 ##########################################################
-
-    

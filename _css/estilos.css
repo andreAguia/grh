@@ -556,7 +556,7 @@ tr#frequencia{
 }
 
 tr#naoFrequencia{
-   background-color:#b9b9b9;
+    background-color:#b9b9b9;
 }
 
 /*******************************************
@@ -786,6 +786,23 @@ p#pLeiLicenca{
 }
 
 /*******************************************
+ * Classes Rpa, RpaInss, RpaIr
+ *******************************************/
+
+p#pvalor{
+    font-size: 12px;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#paliquota{
+    font-size: 10px;
+    padding: 0px;
+    margin: 0px;
+    color:#076cba;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 
@@ -893,6 +910,184 @@ p#pDeclaracaoData{
     text-align: left;
     font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/*******************************************
+ * RPA
+ *******************************************/
+
+p#pRpaTitulo{
+    text-align: center;
+    font-size: 14px;
+    font-weight: bolder;
+    margin: 1%;
+}
+
+div#divRpaTituloRecibo{
+    margin: 1%;
+    float: left;
+    width: 70%;
+    position: relative;
+}
+
+div#divRpaNumeroRecibo{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 20%;    
+}
+
+div#divRpaNomeUniversidade{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 50%;    
+}
+
+div#divRpaCnpjUniversidade{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 23%;    
+}
+
+div#divRpaTexto{
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 98%;    
+}
+
+div#divRpaDadosContribuinte{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 48%;    
+}
+
+div#divRpaValores{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 30%;
+}
+
+div#divRpaDemonstrativo{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 48%;    
+}
+
+div#divRpaDemonstrativo{
+    border: 1px solid #000;
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 48%;    
+}
+
+div#divRpaAssinatura{
+    margin: 1%;
+    float: left;
+    position: relative;
+    width: 48%;    
+}
+
+hr#rpa{
+    padding: 0px;
+    margin: 0px;
+    border: 1px solid #000;
+}
+
+hr#picote{
+    padding: 0px;
+    margin: 0px;
+    border: 1px #000000 dashed;
+}
+
+p#pRpaLabel{
+    text-align: center;
+    font-size: 10px;
+    padding: 3px;
+    margin: 0px;
+}
+
+p#pRpaNumero{
+    text-align: center;
+    font-size: 16px;
+    padding: 3px;
+    margin: 0px;
+}
+
+p#pRpaDados{
+    text-align: left;
+    font-size: 12px;
+    padding: 3px 3px 3px 7px;
+    margin: 0px;
+}
+
+p#pRpaDadosContribuinte{
+    text-align: left;
+    font-size: 12px;
+    padding: 0px 0px 0px 7px;
+    margin: 0px;
+}
+
+p#pRpaDadosCentro{
+    text-align: center;
+    font-size: 12px;
+    padding: 3px;
+    margin: 0px;
+}
+
+p#pRpaValorLiquido{ 
+    text-align: right;
+    font-size: 12px;
+    padding: 3px;
+    margin: 0px;
+}
+
+table.tabelaRpa{
+    border-collapse: separate;
+    border-spacing: 0pt;
+    border-color: #007095;    
+    font-size: 12px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+table.tabelaRpa tr, table.tabelaRpa td, table.tabelaRpa th{
+    padding: 0px 5px 0px 5px;
+    margin: 0px;
+}
+
+table.tabelaRpa th{
+    text-align: center;
+    font-weight: normal;
+    font-size: 10px;
+}
+
+p#pRpa{
+    text-align: justify;
+    font-size: 12px;
+    padding: 0px 5px 0px 5px;
+}
+
+tr#trRpaBlue{
+    color: blue;
+}
+
+tr#trRpaRed{
+    color: red;
 }
 
 /*******************************************

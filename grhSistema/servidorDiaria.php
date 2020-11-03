@@ -108,6 +108,7 @@ if ($acesso) {
     $botao->set_url('?fase=diaria&id=');
     $botao->set_imagem(PASTA_FIGURAS . 'printer.png', 20, 20);
     #$objeto->set_link(array("","","","","","","",$botao));
+    
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 

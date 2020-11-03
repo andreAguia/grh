@@ -34,10 +34,11 @@ class LicencaPremio {
         $row = $pessoal->select($select, false);
 
         # Retorno
-        if (is_null($row[0]))
+        if (is_null($row[0])){
             return 0;
-        else
+        }else{
             return $row[0];
+        }
     }
 
     ########################################################### 

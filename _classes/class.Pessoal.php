@@ -1349,9 +1349,9 @@ class Pessoal extends Bd {
         # Monta o select
         $select = "SELECT idLicenca 
                      FROM tblicenca
-                    WHERE idServidor = '$idServidor'
-                      AND '$data' >= dtInicial 
-                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
+                    WHERE idServidor = {$idServidor}
+                      AND '{$data}' >= dtInicial 
+                      AND ('{$data}' <= ADDDATE(dtInicial,numDias-1) OR (numDias IS NULL))";
 
         $row = parent::select($select, false);
 
@@ -1541,9 +1541,9 @@ class Pessoal extends Bd {
         # Monta o select		
         $select = "SELECT tbtipolicenca.nome 
                      FROM tblicenca JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                    WHERE idServidor = '$idServidor'
-                      AND '$data' >= dtInicial 
-                      AND '$data' <= ADDDATE(dtInicial,numDias-1)";
+                   WHERE idServidor = {$idServidor}
+                      AND '{$data}' >= dtInicial 
+                      AND ('{$data}' <= ADDDATE(dtInicial,numDias-1) OR (numDias IS NULL))";
 
         $row = parent::select($select, false);
         return $row[0];

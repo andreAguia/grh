@@ -436,7 +436,6 @@ if ($acesso) {
                 'label' => 'Dias:',
                 'tipo' => 'numero',
                 'size' => 5,
-                'required' => true,
                 'title' => 'Número de dias.',
                 'col' => 2,
                 'linha' => 4),

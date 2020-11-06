@@ -68,7 +68,6 @@ if ($acesso) {
     set_session('sessionPaginacao'); # Zera a session de paginação da classe modelo
     set_session('sessionLicenca');      # Zera a session do tipo de licença
     set_session('matriculaGrh');        # Zera a session da pesquisa do sistema grh
-    
     # RPA
     set_session('sessionidPrestador');
     set_session('sessionCpfPrestador');
@@ -491,7 +490,7 @@ if ($acesso) {
             }
 
             # botão voltar
-            botaoVoltar("../../grh/grhSistema/grh.php", "Voltar", "Volta ao Menu principal");
+            botaoVoltar("?", "Voltar", "Volta ao Menu principal");
 
             # Título
             titulo("Detalhes das Atualizações");
@@ -507,6 +506,9 @@ if ($acesso) {
 
             # Percorre os dados
             foreach ($atualizacoes as $valor) {
+                $painel = new Callout();
+                $painel->abre();
+
                 $grid2 = new Grid("center");
                 $grid2->abreColuna(6);
                 p("Versão: " . $valor[0], "patualizacaoL");
@@ -515,12 +517,82 @@ if ($acesso) {
                 p(date_to_php($valor[1]), "patualizacaoR");
                 $grid2->fechaColuna();
                 $grid2->fechaGrid();
+                hr("rpa");
 
-                p("<pre>" . $valor[2] . "</pre>");
+                p(str_replace('-', '<br/>-', $valor[2]), "f14");
+                $painel->fecha();
             }
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+##################################################################
+
+        case "acumulacao" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # botão voltar
+            botaoVoltar("?", "Voltar", "Volta ao Menu principal");
+
+            # Título
+            titulo("Área de Acumulação de Cargos");
+            br(2);
+            $tamanhoImage = 60;
+            
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+            
+            callout("É dever do servidor ou empregado público informar à GRH
+                quanto a eventual acumulação de cargos, empregos ou funções
+                públicas (Art. 282 e 283 do Decreto nº 2.479/79), inclusive
+                quando da nomeação para o segundo vínculo (Art. 10 do Decreto
+                nº 2.479/79) e nos casos de acumulações já analisadas e
+                publicadas em Diário Oficial pela SEPLAG, quando ocorrer
+                alguma alteração.<br/><br/>
+                
+                A omissão de tais informações ou a prestação de informação
+                inverídica configura falta funcional, tanto pelo servidor
+                ou empregado público que acumula os vínculos quanto por outro
+                agente público que, tendo ciência da situação de acúmulo
+                irregular, não o comunique à autoridade competente (Art. 37,
+                Parágrafo Único, do Decreto-Lei nº 220/75 RS nº 109).<br/><br/>
+                
+                Para atender ao que determina a legislação, todos os servidores
+                ativos da UENF, deverão, anualmente, preencher e encaminhar
+                à GRH, via SEI, assinado eletrônicamente, a declaração
+                Anual de Acumulação de Cargo.");
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            br(2);
+
+            $menu = new MenuGrafico(2);
+            $menu->set_espacoEntreLink(true);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Servidores que Acumulam Cargos Públicos');
+            $botao->set_url('areaAcumulacao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle de Acumulação de Cargo Público');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Controle da Entrega da Declaração Anual<br/><br/><span class="label primary">EM BREVE</span>');
+            #$botao->set_url('cadastroEntregaDeclaracaoAcumulacao.php?grh=1');
+            $botao->set_url('#');
+            $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
+            $menu->add_item($botao);
+
+            $menu->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

@@ -435,7 +435,6 @@ class MenuPrincipal {
         $tamanhoImage = 60;
         $menu = new MenuGrafico(4);
         $menu->set_espacoEntreLink(true);
-        $botao = new BotaoGrafico();
 
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
@@ -481,7 +480,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('Acumulação de Cargos Públicos');
-        $botao->set_url('areaAcumulacao.php?grh=1');
+        $botao->set_url('?fase=acumulacao');
         $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Acumulação de Cargo Público');
         $menu->add_item($botao);

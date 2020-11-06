@@ -57,7 +57,7 @@ class VerificaAfastamentos {
         }
 
         if (empty($dtFinal)) {
-            alert("É necessário informar o data Finalr.");
+            alert("É necessário informar o data Final.");
             return;
         } else {
             $this->dtFinal = date_to_bd($dtFinal);
@@ -140,8 +140,10 @@ class VerificaAfastamentos {
                  FROM tblicenca JOIN tbtipolicenca USING (idTpLicenca)
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
+                   OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
+                   OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1))
+                   OR (dtInicial <= '{$this->dtFinal}' AND numDias IS NULL)
+)";
 
         // se tiver isenção
         if ($this->tabela == "tblicenca" AND !empty($this->id)) {
@@ -151,9 +153,16 @@ class VerificaAfastamentos {
         $select .= " ORDER BY dtInicial";
 
         $afast = $pessoal->select($select, false);
-
+        
+        
+        
         if (!empty($afast)) {
-            $this->afastamento = "Licença";
+            # Verifica se é Licença ou afastamento
+            if(mb_stripos($afast['nome'], 'Afastamento') === false){
+                $this->afastamento = "Licença";
+            }else{
+                $this->afastamento = "Afastamento";
+            }            
             $this->detalhe = $afast['nome'];
             return true;
         }

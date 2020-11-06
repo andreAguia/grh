@@ -66,7 +66,7 @@ if ($acesso) {
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
+            $botaoVoltar = new Link("Voltar", "grh.php?fase=acumulacao");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');

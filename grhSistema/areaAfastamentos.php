@@ -115,7 +115,7 @@ if ($acesso) {
             $anoAtual = date('Y');
             $anoExercicio = arrayPreenche($anoInicial, $anoAtual);
 
-            $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
+            $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Ano exercício');
             $controle->set_array($anoExercicio);

@@ -154,7 +154,7 @@ if ($acesso) {
         case "aposentados";
             $menu = new Menu();
             $menu->add_item('titulo', 'Aposentados');
-            $menu->add_item('linkWindow','Relatório de Servidores Aposentados Com Tempo de Serviço Publico Averbado','../grhRelatorios/aposentados.tempo.publico.averbado.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
 
             $menu->show();
             break;
@@ -315,6 +315,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoLotacaoSexo.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoCpf.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geralServidoresAtivoCpf_1.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geralServidoresAtivosAssinatura.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geralServidoresAtivosAssinaturaCpf.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf.php');
@@ -407,10 +408,10 @@ if ($acesso) {
 
             $menu->add_item('titulo1', 'Somente os Docentes');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos', '../grhRelatorios/movimentacao.anual.docentes.admitidos.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');            
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.exonerados.php');
-            
+
             $menu->add_item('titulo1', 'Somente os Técnicos & Administrativos');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Admitidos', '../grhRelatorios/movimentacao.anual.administrativos.admitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.administrativos.demitidos.php');
@@ -494,7 +495,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Lotaçao', '../grhRelatorios/professorporLotacao.php');
             $menu->add_item('linkWindow', 'Relatório da Professores Ativos - A pedido da PROPPG', '../grhRelatorios/professoresPROPPG.php');
             $menu->add_item('linkWindow', 'Relatório da Professores Não-Ativos - A pedido da PROPPG', '../grhRelatorios/professoresPROPPGInativos.php');
-            $menu->add_item('linkWindow', 'Relatório da Professores - Censo Anual', '../grhRelatorios/professoresCensoAnual.php');            
+            $menu->add_item('linkWindow', 'Relatório da Professores - Censo Anual', '../grhRelatorios/professoresCensoAnual.php');
 
             $menu->show();
             break;

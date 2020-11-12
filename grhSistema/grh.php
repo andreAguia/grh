@@ -56,6 +56,7 @@ if ($acesso) {
     set_session('parametroPaginacao');
     set_session('parametroOrdenacao');
     set_session('parametroDescricao');
+    set_session('parametroEntrega');
     set_session('sessionSelect');                      // Select para gerar relatório
     set_session('sessionTítulo');                      // Título do relatório
     set_session('sessionSubTítulo');                   // SubTítulo do relatório
@@ -585,9 +586,9 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_label('Controle da Entrega da Declaração Anual<br/><br/><span class="label primary">EM BREVE</span>');
-            #$botao->set_url('cadastroEntregaDeclaracaoAcumulacao.php?grh=1');
-            $botao->set_url('#');
+            #$botao->set_bloqueado("Em Construção");
+            $botao->set_label('Controle da Entrega da Declaração Anual');
+            $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');            
             $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
             $menu->add_item($botao);

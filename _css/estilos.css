@@ -803,6 +803,30 @@ p#paliquota{
 }
 
 /*******************************************
+ * Classe Pessoal - Método get_nomeECargo
+ *******************************************/
+
+p#pgetNome{
+    font-size: 12px;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#pgetCargo{
+    font-size: 10px;
+    padding: 0px;
+    margin: 0px;
+    color: blue;
+}
+
+p#pgetPerfil{
+    font-size: 10px;
+    padding: 0px;
+    margin: 0px;
+    color: green;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

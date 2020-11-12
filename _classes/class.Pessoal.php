@@ -1912,6 +1912,41 @@ class Pessoal extends Bd {
         }
     }
 
+     ###########################################################
+
+    /**
+     * Método get_nomeECargo
+     * fornece o nome e o cargo de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargo($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            p($this->get_nome($idServidor),"pgetNome");
+            p($this->get_cargo($idServidor),"pgetCargo");
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoEPerfil
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoEPerfil($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            p($this->get_nome($idServidor),"pgetNome");
+            p($this->get_cargo($idServidor),"pgetCargo");
+            p($this->get_perfil($idServidor),"pgetPerfil");
+        }
+    }
+
     ###########################################################
 
     /**
@@ -3258,7 +3293,7 @@ class Pessoal extends Bd {
                      JOIN tbhistlot USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND situacao = 1 AND idPerfil <> 10';
+                      AND situacao = 1';
 
         # Lotação
         if ((!is_null($idLotacao)) and ($idLotacao <> "*")) {

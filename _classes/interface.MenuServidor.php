@@ -235,6 +235,14 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle de Acumulação de Cargo Público');
         $menu->add_item($botao);
+        
+        # Declaração de Acumulação
+        $botao = new BotaoGrafico();
+        $botao->set_label('Declaração de Acumulação');
+        $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
+        $menu->add_item($botao);
 
         # Obs
         $botao = new BotaoGrafico();

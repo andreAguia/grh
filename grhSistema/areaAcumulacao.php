@@ -123,6 +123,7 @@ if ($acesso) {
                                 ELSE '--'
                               END,
                               idAcumulacao,
+                              dtPublicacao,
                               idFuncional,
                               tbpessoa.nome,
                               dtProcesso,
@@ -147,24 +148,24 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Conclusão", "Resultado", "idFuncional", "Nome", "Data", "Processo", "Instituição", "Cargo", "Matrícula"));
-            $tabela->set_align(array("center", "center", "center", "left", "center", "center", "left", "left"));
-            $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
-            $tabela->set_width(array(5, 5, 5, 20, 5, 20, 15, 15, 5));
+            $tabela->set_label(array("Conclusão", "Resultado", "Data da<br/>Publicação", "idFuncional", "Nome", "Data do<br/>Processo", "Processo", "Instituição", "Cargo", "Matrícula"));
+            $tabela->set_align(array("center", "center", "center", "center", "left", "center", "center", "left", "left"));
+            $tabela->set_funcao(array(null, null, "date_to_php", null, null, "date_to_php"));
+            #$tabela->set_width(array(5, 5, 5, 20, 5, 20, 15, 15, 5));
 
             $tabela->set_classe(array(null, "Acumulacao"));
             $tabela->set_metodo(array(null, "get_resultado"));
 
             $tabela->set_titulo("Área de Acumulação");
 
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                    'valor' => 'Resolvido',
+            $tabela->set_formatacaoCondicional(array(array('coluna'   => 0,
+                    'valor'    => 'Resolvido',
                     'operador' => '=',
-                    'id' => 'emAberto'),
-                array('coluna' => 0,
-                    'valor' => 'Pendente',
+                    'id'       => 'emAberto'),
+                array('coluna'   => 0,
+                    'valor'    => 'Pendente',
                     'operador' => '=',
-                    'id' => 'alerta')
+                    'id'       => 'alerta')
             ));
 
             $tabela->set_idCampo('idServidor');

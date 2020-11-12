@@ -69,7 +69,8 @@ if ($acesso) {
                                         WHEN 2 THEN "Resolvido"
                                         ELSE "--"
                                       END,
-                                     idAcumulacao,
+                                     idAcumulacao,                                     
+                                     dtPublicacao,
                                      dtProcesso,
                                      processo,
                                      instituicao,
@@ -122,9 +123,9 @@ if ($acesso) {
     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Conclusão", "Resultado", "Data", "Processo", "Instituição", "Cargo", "Matrícula"));
-    $objeto->set_align(array("center", "center", "center", "left", "left", "left"));
-    $objeto->set_funcao(array(null, null, "date_to_php"));
+    $objeto->set_label(array("Conclusão", "Resultado", "Data da<br/>Publicação","Data do<br/>Processo", "Processo", "Instituição", "Cargo", "Matrícula"));
+    $objeto->set_align(array("center", "center", "center", "center","left", "left", "left"));
+    $objeto->set_funcao(array(null, null, "date_to_php", "date_to_php"));
     $objeto->set_classe(array(null, "Acumulacao"));
     $objeto->set_metodo(array(null, "get_resultado"));
 

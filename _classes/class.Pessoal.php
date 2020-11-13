@@ -1861,8 +1861,12 @@ class Pessoal extends Bd {
                         WHERE idServidor = ' . $idServidor;
 
         $motivo = parent::select($select, false);
-
-        return $motivo[0];
+        
+        if(empty($motivo[0])){
+            return null;
+        }else{
+            return $motivo[0];
+        }
     }
 
     ###########################################################
@@ -2119,6 +2123,31 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_cargoComissao
+     * Informa o cargo em Comiss�o do Servidor (se tiver)
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    function get_cargoComissaoDados($idServidor) {
+
+        # Classe CargoComissão
+        $cargoComissao = new CargoComissao();
+
+        # Pega o id do cargo em comissão (se houver)		 
+        $select = 'SELECT *
+                     FROM tbcomissao
+                    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+                       OR (dtExo is null))
+                    AND idServidor = ' . $idServidor;
+
+        $row = parent::select($select,false);
+        return $row;
+    }
+
+    ###########################################################
+
 
     /**
      * Método get_cargoComissaoDescricao

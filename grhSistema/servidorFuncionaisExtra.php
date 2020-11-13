@@ -5,6 +5,9 @@
  * 
  */
 
+$pessoal = new Pessoal();
+$idServidorPesquisado = get_session('idServidorPesquisado'); 
+
 # Verifica quantos campos tem no formulário. 
 # Necessário pois a quantidade varia de acordo com o perfil do servidor
 $quantidade = count($campoNome);
@@ -45,7 +48,7 @@ for ($i = 0; $i < $quantidade; $i++) {
 }
 
 # Verifica se a exoneração é posterior a admissão
-if (($dtSaida < $dtAdmissao) AND (!is_null($dtSaida))) {
+if ((strtotime($dtSaida) < strtotime($dtAdmissao)) AND (!is_null($dtSaida))) {
     $msgErro .= 'O servidor não pode ser exonerado antes de ser admitido!\nA data está errada!\n';
     $erro = 1;
 }
@@ -83,7 +86,19 @@ if (($situacao == 1) AND ((!is_null($dtSaida)) OR (!is_null($motivo)))) {
 # Verifica se um servidor com situacao <> 1 tiver a data de saida ou motivo em branco
 if (($situacao <> 1) AND ((is_null($dtSaida)) OR (is_null($motivo)))) {
     $erro = 1;
-    $msgErro .= 'Esse servidor não está ativo no sistema. Deverá ter a data de saída e o motivo de saída preenchidos!\n';
+    $msgErro .= 'A data de saída e o motivo devem ser preenchidos para todo servidor inativo!\n';
+}
+
+# Verifica se o servidor está sendo exonerado / demitido mas ainda possui cargo em comissão
+if (($situacao <> 1) AND (!empty($pessoal->get_cargoComissao($idServidorPesquisado)))) {
+    # Pega os dados do cargo em comissão
+    
+    $dados = $pessoal->get_cargoComissaoDados($idServidorPesquisado);
+    
+    if((empty($dados["dtExo"])) OR (strtotime($dados["dtExo"]) > strtotime($dtSaida))){
+        $erro = 1;
+        $msgErro .= 'O servidor precisa ser exonerado do cargo em comissão antes de sair da instituição!\n';
+    }    
 }
 
 # Verifica se o motivo pode para esse perfil

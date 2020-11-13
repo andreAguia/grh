@@ -3699,4 +3699,85 @@ class Checkup {
     }
 
     ##########################################################
+
+    /**
+     * Método get_servidorInativoComCargoEmComissao
+     * 
+     * Servidor Inativo com cargo em comissao
+     */
+    public function get_servidorInativoComCargoEmComissao($idServidor = null) {
+        # Define a prioridade (1, 2 ou 3)
+        $prioridade = 3;
+
+        $servidor = new Pessoal();
+        $metodo = explode(":", __METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbcomissao.dtNom,
+                          tbcomissao.dtExo,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                      JOIN tbcomissao USING (idServidor)
+                    WHERE tbservidor.situacao <> 1
+                      AND ((CURRENT_DATE BETWEEN tbcomissao.dtNom AND tbcomissao.dtExo)
+                       OR (tbcomissao.dtExo is null))';
+
+        if (!is_null($idServidor)) {
+            $select .= ' AND idServidor = "' . $idServidor . '"';
+        }
+        $select .= ' ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+
+        # Cabeçalho da tabela
+        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Nomeação', 'Exoneração', 'Situação');
+        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
+        $titulo = 'Servidor(es) inativo(s) com cargo em comissao ainda vigente';
+        $funcao = array(null, "dv", null, null, null, null, "date_to_php", "date_to_php");
+        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
+        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($rotina);
+        $tabela->set_funcao($funcao);
+        $tabela->set_editar($this->linkEditar);
+        $tabela->set_idCampo('idServidor');
+
+        if ($count > 0) {
+            if (!is_null($idServidor)) {
+                return $titulo;
+            } elseif ($this->lista) {
+                callout("Deve-se exonerar o servidor do cargo em comissão antes de aposentar, demitir, exonerá-lo");
+                $tabela->show();
+                set_session('alerta', $metodo[2]);
+            } else {
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                return $retorna;
+            }
+        } elseif ($this->lista) {
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+            p('Nenhum item encontrado !!', 'center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
 }

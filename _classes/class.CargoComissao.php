@@ -48,7 +48,11 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
 
-        return $dados[0];
+        if (empty($dados[0])) {
+            return null;
+        } else {
+            return $dados[0];
+        }
     }
 
     ###########################################################
@@ -205,18 +209,18 @@ class CargoComissao {
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
         $tabela->set_titulo($nomeCargo);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
-                'valor' => 0,
+        $tabela->set_formatacaoCondicional(array(array('coluna'   => 5,
+                'valor'    => 0,
                 'operador' => '<',
-                'id' => "comissaoVagasNegativas"),
-            array('coluna' => 5,
-                'valor' => 0,
+                'id'       => "comissaoVagasNegativas"),
+            array('coluna'   => 5,
+                'valor'    => 0,
                 'operador' => '=',
-                'id' => "comissaoSemVagas"),
-            array('coluna' => 5,
-                'valor' => 0,
+                'id'       => "comissaoSemVagas"),
+            array('coluna'   => 5,
+                'valor'    => 0,
                 'operador' => '>',
-                'id' => "comissaoSemVagas")));
+                'id'       => "comissaoSemVagas")));
         $tabela->show();
 
         # Exibe alerta de nomeação a maios que vagas
@@ -374,10 +378,10 @@ class CargoComissao {
         $tabela->set_funcao($function);
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($metodo);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 2,
-                'valor' => null,
+        $tabela->set_formatacaoCondicional(array(array('coluna'   => 2,
+                'valor'    => null,
                 'operador' => '=',
-                'id' => 'vigente')));
+                'id'       => 'vigente')));
         $tabela->show();
     }
 

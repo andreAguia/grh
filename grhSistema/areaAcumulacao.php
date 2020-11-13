@@ -126,6 +126,7 @@ if ($acesso) {
                               dtPublicacao,
                               tbservidor.idServidor,
                               idAcumulacao,
+                              tbservidor.idServidor,
                               idAcumulacao,                         
                               tbservidor.idServidor
                          FROM tbacumulacao JOIN tbservidor USING (idServidor)
@@ -144,13 +145,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Dados do Cargo"));
-            $tabela->set_align(array("center", "center", "center", "left", "center", "left"));
+            $tabela->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculo da Uenf", "Outro Vínculo"));
+            $tabela->set_align(array("center", "center", "center", "left", "center", "left", "left"));
             $tabela->set_funcao(array(null, null, "date_to_php"));
-            #$tabela->set_width(array(5, 5, 5, 20, 5, 20, 15, 15, 5));
-
-            $tabela->set_classe(array(null, "Acumulacao", null, "Pessoal", "Acumulacao", "Acumulacao"));
-            $tabela->set_metodo(array(null, "get_resultado", null, "get_nomeEidFuncional", "exibeProcesso", "exibeDadosCargo"));
+            $tabela->set_classe(array(null, "Acumulacao", null, "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"));
+            $tabela->set_metodo(array(null, "get_resultado", null, "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"));
 
             $tabela->set_titulo("Área de Acumulação");
 

@@ -125,7 +125,7 @@ if ($acesso) {
     $objeto->set_align(array("center", "center", "center", "center", "left"));
     $objeto->set_funcao(array(null, null, "date_to_php"));
     $objeto->set_classe(array(null, "Acumulacao", null, "Acumulacao","Acumulacao"));
-    $objeto->set_metodo(array(null, "get_resultado", null, "exibeProcesso","exibeDadosCargo"));
+    $objeto->set_metodo(array(null, "get_resultado", null, "exibeProcesso","exibeDadosOutroVinculo"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

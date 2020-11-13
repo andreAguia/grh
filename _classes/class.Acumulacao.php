@@ -197,7 +197,7 @@ class Acumulacao {
 
 ##############################################################
 
-    public function exibeDadosCargo($idAcumulacao) {
+    public function exibeDadosOutroVinculo($idAcumulacao) {
 
         /**
          * Informe os dados do processo de uma solicitação de Acumulação
@@ -230,6 +230,28 @@ class Acumulacao {
         p($row["cargo"], "pgetCargo");
         if (!empty($row["instituicao"])) {
             p("Matrícula: {$row['matricula']} / Admissão: " . date_to_php($row['dtAdmissao']), "pgetPerfil");
+        }
+    }
+
+##############################################################
+
+    public function exibeDadosUenf($idServidor) {
+
+        /**
+         * Informe os dados do Servidor
+         * 
+         * @param $idServidor integer null O $idServidor
+         * 
+         * @syntax $acumulacao->exibeDadosUenf([$idAcumulacao]);
+         */
+        # Joga o valor informado para a variável da classe
+        if (vazio($idServidor)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+            p($pessoal->get_lotacao($idServidor), "pgetNome");
+            p($pessoal->get_cargo($idServidor), "pgetCargo");
+            p("Matrícula: {$pessoal->get_matricula($idServidor)} / Admissão: {$pessoal->get_dtAdmissao($idServidor)}", "pgetPerfil");
         }
     }
 

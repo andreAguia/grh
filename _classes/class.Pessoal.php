@@ -1043,6 +1043,24 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_matricula
+     * Informa a matricula do servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_matricula($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT matricula
+                         FROM tbservidor
+                        WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+        return dv($row[0]);
+    }
+
+    ###########################################################
+
+    /**
      * Método get_idConcurso
      * Informa o id do concurso do servidor
      * 

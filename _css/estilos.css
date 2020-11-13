@@ -813,14 +813,14 @@ p#pgetNome{
 }
 
 p#pgetCargo{
-    font-size: 10px;
+    font-size: 11px;
     padding: 0px;
     margin: 0px;
     color: blue;
 }
 
 p#pgetPerfil{
-    font-size: 10px;
+    font-size: 11px;
     padding: 0px;
     margin: 0px;
     color: green;

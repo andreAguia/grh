@@ -159,4 +159,79 @@ class Acumulacao {
     }
 
 ##############################################################
+
+    public function exibeProcesso($idAcumulacao) {
+
+        /**
+         * Informe os dados do processo de uma solicitação de Acumulação
+         * 
+         * @param $idAcumulacao integer null O id da acumulação
+         * 
+         * @syntax $acumulacao->exibeProcesso([$idAcumulacao]);
+         */
+        # Joga o valor informado para a variável da classe
+        if (!vazio($idAcumulacao)) {
+            $this->idAcumulacao = $idAcumulacao;
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = 'SELECT processo, dtProcesso
+                     FROM tbacumulacao
+                    WHERE idAcumulacao = ' . $this->idAcumulacao;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        # Retorno
+        if (is_null($row[0])) {
+            $retorno = trataNulo($row[0]);
+        } else {
+            $retorno = $row["processo"] . "<br/>" . date_to_php($row["dtProcesso"]);
+        }
+
+        return $retorno;
+    }
+
+##############################################################
+
+    public function exibeDadosCargo($idAcumulacao) {
+
+        /**
+         * Informe os dados do processo de uma solicitação de Acumulação
+         * 
+         * @param $idAcumulacao integer null O id da acumulação
+         * 
+         * @syntax $acumulacao->exibeProcesso([$idAcumulacao]);
+         */
+        # Joga o valor informado para a variável da classe
+        if (!vazio($idAcumulacao)) {
+            $this->idAcumulacao = $idAcumulacao;
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = 'SELECT instituicao,
+                          cargo,                                     
+                          matricula,
+                          dtAdmissao
+                     FROM tbacumulacao
+                    WHERE idAcumulacao = ' . $this->idAcumulacao;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        # Retorno
+        p($row["instituicao"], "pgetNome");
+        p($row["cargo"], "pgetCargo");
+        if (!empty($row["instituicao"])) {
+            p("Matrícula: {$row['matricula']} / Admissão: " . date_to_php($row['dtAdmissao']), "pgetPerfil");
+        }
+    }
+
+##############################################################
 }

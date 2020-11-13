@@ -124,13 +124,9 @@ if ($acesso) {
                               END,
                               idAcumulacao,
                               dtPublicacao,
-                              idFuncional,
-                              tbpessoa.nome,
-                              dtProcesso,
-                              processo,
-                              instituicao,
-                              cargo,
-                              tbacumulacao.matricula,                              
+                              tbservidor.idServidor,
+                              idAcumulacao,
+                              idAcumulacao,                         
                               tbservidor.idServidor
                          FROM tbacumulacao JOIN tbservidor USING (idServidor)
                                            JOIN tbpessoa USING (idPessoa)
@@ -148,13 +144,13 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Conclusão", "Resultado", "Data da<br/>Publicação", "idFuncional", "Nome", "Data do<br/>Processo", "Processo", "Instituição", "Cargo", "Matrícula"));
-            $tabela->set_align(array("center", "center", "center", "center", "left", "center", "center", "left", "left"));
-            $tabela->set_funcao(array(null, null, "date_to_php", null, null, "date_to_php"));
+            $tabela->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Dados do Cargo"));
+            $tabela->set_align(array("center", "center", "center", "left", "center", "left"));
+            $tabela->set_funcao(array(null, null, "date_to_php"));
             #$tabela->set_width(array(5, 5, 5, 20, 5, 20, 15, 15, 5));
 
-            $tabela->set_classe(array(null, "Acumulacao"));
-            $tabela->set_metodo(array(null, "get_resultado"));
+            $tabela->set_classe(array(null, "Acumulacao", null, "Pessoal", "Acumulacao", "Acumulacao"));
+            $tabela->set_metodo(array(null, "get_resultado", null, "get_nomeEidFuncional", "exibeProcesso", "exibeDadosCargo"));
 
             $tabela->set_titulo("Área de Acumulação");
 

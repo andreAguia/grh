@@ -65,11 +65,17 @@ if ($acesso) {
 
     $relatorio->set_metodo([null, "get_nome", "get_cargo"]);
     $relatorio->set_classe([null, "Pessoal", "Pessoal"]);
-
-    $relatorio->set_titulo("Servidores Ativos que Entregaram a Declaração Anual de Acumulação");
-    $relatorio->set_tituloLinha2($parametroAno);
-    $relatorio->set_subtitulo("Ordenado pelo Nome do Servidor");
     $relatorio->set_numGrupo(3);
+    
+    if ($parametroLotacao <> "*") {
+        $relatorio->set_titulo("Relatório de Servidores Ativos");
+        $relatorio->set_tituloLinha2("da Lotação: {$pessoal->get_nomeLotacao($parametroLotacao)}");
+    }else{
+        $relatorio->set_titulo("Relatório Geral de Servidores Ativos");
+    }
+    
+    $relatorio->set_tituloLinha3("que Entregaram a Declaração Anual de Acumulação - {$parametroAno}");
+    $relatorio->set_subtitulo("Ordenado pelo Nome do Servidor");
     $relatorio->show();
 
     $page->terminaPagina();

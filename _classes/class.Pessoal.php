@@ -1932,6 +1932,23 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_nomeECargo
+     * fornece o nome e o cargo de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeEidFuncional($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            p($this->get_nome($idServidor),"pgetNome");
+            p("IdFuncional: ".$this->get_idFuncional($idServidor),"pgetCargo");
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_nomeECargoEPerfil
      * fornece o nome, cargo e perfil de um servidor
      * 

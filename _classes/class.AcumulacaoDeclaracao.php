@@ -9,7 +9,7 @@ class AcumulacaoDeclaracao {
      */
 ##############################################################
 
-    public function getNumDecEntregues($ano = null, $idLotacao = null) {
+    public function getNumDecEntregues($ano = null, $idLotacao = null, $parametroNome = null) {
 
         /**
          * Informa o número de declarações entregues em um determinado ano de referência
@@ -25,10 +25,17 @@ class AcumulacaoDeclaracao {
 
         # slq
         $select = "SELECT COUNT(idAcumulacaoDeclaracao)
-                     FROM tbacumulacaodeclaracao LEFT JOIN tbhistlot USING (idServidor)
-                                                 LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
+                                             LEFT JOIN tbpessoa USING (idPessoa)
+                                             LEFT JOIN tbhistlot USING (idServidor)
+                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbacumulacaodeclaracao.idServidor)
                       AND anoReferencia = '{$ano}'";
+
+        # nome
+        if (!empty($parametroNome)) {
+            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        }
 
         # lotacao
         if (!empty($idLotacao) AND $idLotacao <> "*") {
@@ -46,7 +53,7 @@ class AcumulacaoDeclaracao {
 
 ##############################################################
 
-    public function getNumAcumula($ano = null, $idLotacao = null) {
+    public function getNumAcumula($ano = null, $idLotacao = null, $parametroNome = null) {
 
         /**
          * Informa o número de declarações que acumulam eum um determinado ano de referência
@@ -62,11 +69,18 @@ class AcumulacaoDeclaracao {
 
         # slq
         $select = "SELECT COUNT(idAcumulacaoDeclaracao)
-                     FROM tbacumulacaodeclaracao LEFT JOIN tbhistlot USING (idServidor)
-                                                 LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
+                                             LEFT JOIN tbpessoa USING (idPessoa)
+                                             LEFT JOIN tbhistlot USING (idServidor)
+                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbacumulacaodeclaracao.idServidor)
                       AND acumula
                       AND anoReferencia = '{$ano}'";
+
+        # nome
+        if (!empty($parametroNome)) {
+            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        }
 
         # lotacao
         if (!empty($idLotacao) AND $idLotacao <> "*") {
@@ -82,9 +96,9 @@ class AcumulacaoDeclaracao {
         return $num[0];
     }
 
-###########################################################
+##############################################################
 
-    public function showResumoGeral($ano = null, $idLotacao = null) {
+    public function showResumoGeral($ano = null, $idLotacao = null, $parametroNome = null) {
 
         /**
          * Informa os totais de servidores do setor com ou sem entrega
@@ -98,16 +112,16 @@ class AcumulacaoDeclaracao {
             $ano = date("Y");
         }
 
-        $entregaram = $this->getNumDecEntregues($ano, $idLotacao);
-        $pessoal = new Pessoal();
-        $servidores = $pessoal->get_numServidoresAtivos($idLotacao);
+        $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
+        $servidores = $this->getnumServidoresAtivos($idLotacao, $parametroNome);
 
         $array[] = array("Entregaram", $entregaram);
         $array[] = array("NÃO Entregaram", $servidores - $entregaram);
-        
+
         if (!empty($idLotacao) AND $idLotacao <> "*") {
-            $titulo = $pessoal->get_nomeLotacao($idLotacao);            
-        }else{
+            $pessoal = new Pessoal();
+            $titulo = $pessoal->get_nomeLotacao($idLotacao);
+        } else {
             $titulo = "Resumo Geral";
         }
 
@@ -124,7 +138,7 @@ class AcumulacaoDeclaracao {
 
     ###########################################################
 
-    public function showResumoAcumula($ano = null, $idLotacao = null) {
+    public function showResumoAcumula($ano = null, $idLotacao = null, $parametroNome = null) {
 
         /**
          * Informa os totais de servidores do setor com ou sem entrega
@@ -138,16 +152,16 @@ class AcumulacaoDeclaracao {
             $ano = date("Y");
         }
 
-        $acumulam = $this->getNumAcumula($ano, $idLotacao);
-        $entregaram = $this->getNumDecEntregues($ano, $idLotacao);
+        $acumulam = $this->getNumAcumula($ano, $idLotacao, $parametroNome);
+        $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
         $pessoal = new Pessoal();
 
         $array[] = array("Acumulam", $acumulam);
         $array[] = array("NÃO Acumulam", $entregaram - $acumulam);
-        
+
         if (!empty($idLotacao) AND $idLotacao <> "*") {
-            $titulo = "Declaração - ".$pessoal->get_nomeLotacao($idLotacao);            
-        }else{
+            $titulo = "Declaração - " . $pessoal->get_nomeLotacao($idLotacao);
+        } else {
             $titulo = "Declaração";
         }
 
@@ -164,7 +178,6 @@ class AcumulacaoDeclaracao {
 
     ###########################################################
 
-
     public function getProximoAnoReferencia($idServidor = null) {
 
         # Verifica o $idServidor
@@ -178,13 +191,47 @@ class AcumulacaoDeclaracao {
             if (empty($anoref[0])) {
                 return date("Y");
             } else {
-                if($anoref[0] == date("Y")){
+                if ($anoref[0] == date("Y")) {
                     return null;
-                }else{
+                } else {
                     return $anoref[0] + 1;
                 }
             }
         }
+    }
+
+    ###########################################################
+
+    function getnumServidoresAtivos($idLotacao = null, $parametroNome = null) {
+
+        /**
+         * informa o número de Servidores Ativos
+         * 
+         * @param integer $idPessoa do servidor
+         */
+        $select = 'SELECT idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                             LEFT JOIN tbhistlot USING (idServidor)
+                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND situacao = 1';
+        # nome
+        if (!empty($parametroNome)) {
+            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        }
+
+        # Lotação
+        if ((!is_null($idLotacao)) and ($idLotacao <> "*")) {
+            if (is_numeric($idLotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $idLotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
+            }
+        }
+        
+        $pessoal = new Pessoal();
+        $count = $pessoal->count($select);
+        return $count;
     }
 
     ###########################################################

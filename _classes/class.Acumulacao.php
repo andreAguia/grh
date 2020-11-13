@@ -111,9 +111,9 @@ class Acumulacao {
 
         # Trata o retorno
         if ($retorno == 1) {
-            $retorno = "Lícito";
+            $retorno = "<span class='label success'>Lícito</span>";
         } elseif ($retorno == 2) {
-            $retorno = "Ilícito";
+            $retorno = "<span class='label alert'>Ilícito</span>";
         } else {
             $retorno = "---";
         }

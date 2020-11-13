@@ -37,17 +37,14 @@ if ($acesso) {
                                 ELSE '--'
                               END,
                               idAcumulacao,
-                              idFuncional,
-                              tbpessoa.nome,
-                              dtProcesso,
-                              processo,
-                              instituicao,
-                              cargo,
-                              tbacumulacao.matricula,
+                              dtPublicacao,
+                              tbservidor.idServidor,
+                              idAcumulacao,
+                              idAcumulacao,                         
                               tbservidor.idServidor
                          FROM tbacumulacao JOIN tbservidor USING (idServidor)
                                            JOIN tbpessoa USING (idPessoa)
-                        WHERE tbservidor.idPerfil <> 10";
+                        WHERE true";
 
     # nome
     if (!is_null($parametroNomeMat)) {
@@ -61,14 +58,12 @@ if ($acesso) {
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-    $relatorio->set_label(array("Conclusão", "Resultado", "idFuncional", "Nome", "Data", "Processo", "Instituição", "Cargo", "Matrícula"));
-    $relatorio->set_align(array("center", "center", "center", "left", "center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
-    $relatorio->set_width(array(5, 5, 5, 20, 5, 20, 15, 15, 5));
 
-    $relatorio->set_classe(array(null, "Acumulacao"));
-    $relatorio->set_metodo(array(null, "get_resultado"));
-
+    $relatorio->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Dados do Cargo"));
+    $relatorio->set_align(array("center", "center", "center", "left", "center", "left"));
+    $relatorio->set_funcao(array(null, null, "date_to_php"));
+    $relatorio->set_classe(array(null, "Acumulacao", null, "Pessoal", "Acumulacao", "Acumulacao"));
+    $relatorio->set_metodo(array(null, "get_resultado", null, "get_nomeEidFuncional", "exibeProcesso", "exibeDadosCargo"));
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
     $relatorio->show();

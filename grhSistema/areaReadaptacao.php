@@ -75,8 +75,7 @@ if ($acesso) {
 
 ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
 
         case "" :
         case "listaReadaptacao" :
@@ -159,9 +158,7 @@ if ($acesso) {
             $time_start = microtime(true);
 
             # Pega os dados
-            $select = "SELECT idFuncional,
-                              tbpessoa.nome,
-                              CASE origem
+            $select = "SELECT CASE origem
                                 WHEN 1 THEN 'Ex-Ofício'
                                 WHEN 2 THEN 'Solicitada'
                                 ELSE '--'
@@ -172,6 +169,7 @@ if ($acesso) {
                                 ELSE '--'
                               END,
                               idReadaptacao,
+                              idServidor,
                               processo,
                               idReadaptacao,
                               idReadaptacao,
@@ -209,34 +207,34 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("idFuncional", "Nome", "Origem", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-            $tabela->set_align(array("center", "left", "center", "center", "center", "center", "center", "left", "center", "center", "left"));
-            #$tabela->set_funcao(array("idMatricula"));
-
-            $tabela->set_classe(array(null, null, null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-            $tabela->set_metodo(array(null, null, null, null, "exibeStatus", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
+            $tabela->set_label(array("Origem", "Tipo", "Status", "Servidor", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
+            $tabela->set_align(array("center", "center", "center", "left", "center", "center", "left", "center", "center", "left"));
+            
+            $tabela->set_classe(array(null, null, "Readaptacao", "Pessoal", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
+            $tabela->set_metodo(array(null, null, "exibeStatus", "get_nomeEidFuncional", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
             $tabela->set_titulo("Readaptação");
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 4,
-                    'valor' => 'Em Aberto',
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna'   => 2,
+                    'valor'    => 'Em Aberto',
                     'operador' => '=',
-                    'id' => 'emAberto'),
-                array('coluna' => 4,
-                    'valor' => 'Arquivado',
+                    'id'       => 'emAberto'),
+                array('coluna'   => 2,
+                    'valor'    => 'Arquivado',
                     'operador' => '=',
-                    'id' => 'arquivado'),
-                array('coluna' => 4,
-                    'valor' => 'Vigente',
+                    'id'       => 'arquivado'),
+                array('coluna'   => 2,
+                    'valor'    => 'Vigente',
                     'operador' => '=',
-                    'id' => 'vigenteReducao'),
-                array('coluna' => 4,
-                    'valor' => 'Aguardando Publicação',
+                    'id'       => 'vigenteReducao'),
+                array('coluna'   => 2,
+                    'valor'    => 'Aguardando Publicação',
                     'operador' => '=',
-                    'id' => 'aguardando')
+                    'id'       => 'aguardando')
             ));
 
             $tabela->show();

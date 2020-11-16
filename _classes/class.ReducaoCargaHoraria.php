@@ -626,15 +626,14 @@ class ReducaoCargaHoraria {
         # Retorno
         if ($row[2] == 1) {
             if (is_null($row[0])) {
-                $retorno = trataNulo($row[0]);
+                p("---", "pgetNome");
             } else {
-                $retorno = date_to_php($row[0]) . "<br/>Pag.: " . trataNulo($row[1]);
+                p(date_to_php($row[0]), "pgetNome");
+                p("pag: " . trataNulo($row[1]), "pgetCargo");          
             }
         } else {
-            $retorno = null;
+            return null;
         }
-
-        return $retorno;
     }
 
     ###########################################################

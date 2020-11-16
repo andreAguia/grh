@@ -14,12 +14,13 @@ $dtInicioPeriodo = $campoValor[2];
 $dtFimPeriodo = $campoValor[3];
 $dtInicial = $campoValor[4];
 $numDias = $campoValor[5];
-$processo = $campoValor[6];
-$dtPublicacao = $campoValor[7];
-$dtPericia = $campoValor[8];
-$num_Bim = $campoValor[9];
-$obs = $campoValor[10];
-$idServidor = $campoValor[11];
+$dtTermino = $campoValor[6];
+$processo = $campoValor[7];
+$dtPublicacao = $campoValor[8];
+$dtPericia = $campoValor[9];
+$num_Bim = $campoValor[10];
+$obs = $campoValor[11];
+$idServidor = $campoValor[12];
 
 /*
  *  Verifica se o tipo de licença foi informado
@@ -94,22 +95,22 @@ if ($pessoal->get_licencaPeriodo($idTpLicenca) == "Não") {
  *  Apaga o processo quando não precisa
  */
 if ($pessoal->get_licencaProcesso($idTpLicenca) == "Não") {
-    $campoValor[6] = null;
+    $campoValor[7] = null;
 }
 
 /*
  *  Apaga a publicação quando não precisa
  */
 if ($pessoal->get_licencaPublicacao($idTpLicenca) == "Não") {
-    $campoValor[7] = null;
+    $campoValor[8] = null;
 }
 
 /*
  *  Apaga a perícia quando não precisa
  */
 if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
-    $campoValor[8] = null;
     $campoValor[9] = null;
+    $campoValor[10] = null;
 }
 
 /*
@@ -134,5 +135,13 @@ if (!is_null($dtSaida)) {
     if ($dtInicial > $dtSaida) {
         $erro = 1;
         $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
+    }
+}
+
+# Preenche a data de término quando for nula
+if (vazio($dtTermino)) {
+    if (!vazio($dtInicial)) {
+        $campoValor[6] = date_to_bd(addDias($dtInicial, $numDias));
+        $dtTermino = $campoValor[6];
     }
 }

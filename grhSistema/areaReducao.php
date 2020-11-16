@@ -67,8 +67,7 @@ if ($acesso) {
 
 ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
 
         case "":
         case "listaReducao" :
@@ -140,14 +139,13 @@ if ($acesso) {
             $time_start = microtime(true);
 
             # Pega os dados
-            $select = "SELECT idFuncional,
-                              tbpessoa.nome,
-                              CASE tipo
+            $select = "SELECT CASE tipo
                                 WHEN 1 THEN 'Inicial'
                                 WHEN 2 THEN 'Renovação'
                                 ELSE '--'
                               END,                              
                               idReducao,
+                              tbservidor.idServidor,                              
                               idServidor,
                               dtSolicitacao,
                               idReducao,
@@ -178,12 +176,12 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("IdFuncional", "Nome", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-            $tabela->set_align(array("center", "left", "center", "center", "center", "center", "left", "center", "center", "left"));
-            $tabela->set_funcao(array(null, null, null, null, null, "date_to_php"));
+            $tabela->set_label(array("Tipo", "Status", "Servidor", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
+            $tabela->set_align(array("center", "center", "left", "center", "center", "left", "center", "center", "left"));
+            $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
 
-            $tabela->set_classe(array(null, null, null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-            $tabela->set_metodo(array(null, null, null, "exibeStatus", "get_numProcesso", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
+            $tabela->set_classe(array(null, "ReducaoCargaHoraria", "Pessoal", "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
+            $tabela->set_metodo(array(null, "exibeStatus", "get_nomeEidFuncional", "get_numProcesso", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
             $tabela->set_titulo("Redução de Carga Horária");
 
@@ -191,22 +189,22 @@ if ($acesso) {
             $tabela->set_editar('?fase=editaServidor');
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 3,
-                    'valor' => 'Em Aberto',
+                array('coluna'   => 1,
+                    'valor'    => 'Em Aberto',
                     'operador' => '=',
-                    'id' => 'emAberto'),
-                array('coluna' => 3,
-                    'valor' => 'Arquivado',
+                    'id'       => 'emAberto'),
+                array('coluna'   => 1,
+                    'valor'    => 'Arquivado',
                     'operador' => '=',
-                    'id' => 'arquivado'),
-                array('coluna' => 3,
-                    'valor' => 'Vigente',
+                    'id'       => 'arquivado'),
+                array('coluna'   => 1,
+                    'valor'    => 'Vigente',
                     'operador' => '=',
-                    'id' => 'vigenteReducao'),
-                array('coluna' => 3,
-                    'valor' => 'Aguardando Publicação',
+                    'id'       => 'vigenteReducao'),
+                array('coluna'   => 1,
+                    'valor'    => 'Aguardando Publicação',
                     'operador' => '=',
-                    'id' => 'aguardando')
+                    'id'       => 'aguardando')
             ));
             $tabela->show();
 

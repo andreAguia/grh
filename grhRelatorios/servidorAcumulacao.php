@@ -40,11 +40,9 @@ if ($acesso) {
                         ELSE '--'
                       END,
                       idAcumulacao,
-                      dtProcesso,
-                      processo,
-                      instituicao,
-                      cargo,                                    
-                      matricula
+                      idAcumulacao,
+                      idAcumulacao,
+                      idAcumulacao
                  FROM tbacumulacao
                 WHERE idServidor = $idServidorPesquisado
              ORDER BY dtProcesso";
@@ -57,11 +55,11 @@ if ($acesso) {
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
 
-    $relatorio->set_label(array("Conclusão", "Resultado", "Data", "Processo", "Instituição", "Cargo", "Matrícula"));
+    $relatorio->set_label(array("Conclusão", "Resultado", "Publicação", "Processo", "Outro Vínculo"));
     $relatorio->set_align(array("center", "center", "center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, "Acumulacao"));
-    $relatorio->set_metodo(array(null, "get_resultado"));
+    #$relatorio->set_funcao(array(null, null, "date_to_php"));
+    $relatorio->set_classe(array(null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"));
+    $relatorio->set_metodo(array(null, "get_resultado","exibePublicacao","exibeProcesso", "exibeDadosOutroVinculo"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

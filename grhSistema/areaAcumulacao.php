@@ -123,7 +123,7 @@ if ($acesso) {
                                 ELSE '--'
                               END,
                               idAcumulacao,
-                              dtPublicacao,
+                              idAcumulacao,
                               tbservidor.idServidor,
                               idAcumulacao,
                               tbservidor.idServidor,
@@ -147,9 +147,9 @@ if ($acesso) {
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculo da Uenf", "Outro Vínculo"));
             $tabela->set_align(array("center", "center", "center", "left", "center", "left", "left"));
-            $tabela->set_funcao(array(null, null, "date_to_php"));
-            $tabela->set_classe(array(null, "Acumulacao", null, "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"));
-            $tabela->set_metodo(array(null, "get_resultado", null, "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"));
+            #$tabela->set_funcao(array(null, null, "date_to_php"));
+            $tabela->set_classe(array(null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"));
+            $tabela->set_metodo(array(null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"));
 
             $tabela->set_titulo("Área de Acumulação");
 

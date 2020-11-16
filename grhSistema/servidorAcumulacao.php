@@ -70,7 +70,7 @@ if ($acesso) {
                                         ELSE "--"
                                       END,
                                      idAcumulacao,                                     
-                                     dtPublicacao,
+                                     idAcumulacao,
                                      idAcumulacao,    
                                      idAcumulacao
                                 FROM tbacumulacao
@@ -123,9 +123,9 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(array("Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Cargo Acumulado"));
     $objeto->set_align(array("center", "center", "center", "center", "left"));
-    $objeto->set_funcao(array(null, null, "date_to_php"));
-    $objeto->set_classe(array(null, "Acumulacao", null, "Acumulacao","Acumulacao"));
-    $objeto->set_metodo(array(null, "get_resultado", null, "exibeProcesso","exibeDadosOutroVinculo"));
+    #$objeto->set_funcao(array(null, null, "date_to_php"));
+    $objeto->set_classe(array(null, "Acumulacao", "Acumulacao", "Acumulacao","Acumulacao"));
+    $objeto->set_metodo(array(null, "get_resultado", "exibePublicacao", "exibeProcesso","exibeDadosOutroVinculo"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

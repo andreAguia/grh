@@ -9,21 +9,6 @@ class Acumulacao {
      * 
      * @var private $idAcumulacao integer null O id da acumulação
      */
-    private $idAcumulacao = null;
-
-##############################################################
-
-    public function __construct($idAcumulacao = null) {
-        /**
-         * Inicia a Classe somente
-         * 
-         * @param $idAcumulacao integer null O id da acumulação
-         * 
-         * @syntax $acumulacao = new Aculumacao([$idAcumulacao]);
-         */
-        $this->idAcumulacao = $idAcumulacao;
-    }
-
 ##############################################################
 
     public function get_dados($idAcumulacao) {
@@ -35,24 +20,19 @@ class Acumulacao {
          * 
          * @syntax $acumulacao->get_dados([$idAcumulacao]);
          */
-        # Joga o valor informado para a variável da classe
-        if (!vazio($idAcumulacao)) {
-            $this->idAcumulacao = $idAcumulacao;
-        }
-
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
         # Verifica se foi informado
-        if (vazio($this->idAcumulacao)) {
+        if (vazio($idAcumulacao)) {
             alert("É necessário informar o id da Acumulação.");
             return;
         }
 
         # Pega os dados
-        $select = 'SELECT * 
+        $select = "SELECT * 
                      FROM tbacumulacao
-                    WHERE idAcumulacao = ' . $this->idAcumulacao;
+                    WHERE idAcumulacao = {$idAcumulacao}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -72,16 +52,12 @@ class Acumulacao {
          * 
          * @syntax $acumulacao->get_resultado([$idAcumulacao]);
          */
-        # Joga o valor informado para a variável da classe
-        if (!vazio($idAcumulacao)) {
-            $this->idAcumulacao = $idAcumulacao;
-        }
-
         # Inicia a variável de retorno
         $retorno = null;
+        $recurso = null;
 
         # Pega os dados
-        $dados = $this->get_dados($this->idAcumulacao);
+        $dados = $this->get_dados($idAcumulacao);
 
         # Joga os resultados nas variáveis
         $resultado = $dados["resultado"];
@@ -97,16 +73,19 @@ class Acumulacao {
         # Verifica o primeiro recurso
         if (!vazio($resultado1)) {
             $retorno = $resultado1;
+            $recurso = "(1° recurso)";
         }
 
         # Verifica o segundo recurso
         if (!vazio($resultado2)) {
             $retorno = $resultado2;
+            $recurso = "(2° recurso)";
         }
 
         # Verifica o último recurso
         if (!vazio($resultado3)) {
             $retorno = $resultado3;
+            $recurso = "(3° recurso)";
         }
 
         # Trata o retorno
@@ -118,7 +97,8 @@ class Acumulacao {
             $retorno = "---";
         }
 
-        return $retorno;
+        echo $retorno;
+        p($recurso, "pgetCargo");
     }
 
 ##############################################################
@@ -126,36 +106,56 @@ class Acumulacao {
     public function exibePublicacao($idAcumulacao) {
 
         /**
-         * Informe os dados da Publicação de uma solicitação de Acumulação
+         * Informe os dados da Publicação do resultado FINAL
          * 
          * @param $idAcumulacao integer null O id da acumulação
          * 
          * @syntax $acumulacao->exibePublicacao([$idAcumulacao]);
          */
-        # Joga o valor informado para a variável da classe
-        if (!vazio($idAcumulacao)) {
-            $this->idAcumulacao = $idAcumulacao;
+        # Pega os dados
+        $dados = $this->get_dados($idAcumulacao);
+
+        # Inicia a variável de retorno
+        $publicacao = null;
+        $pagina = null;
+        $recurso = null;
+
+        # Inicial
+        $publicacao = $dados["dtPublicacao"];
+        $pagina = trataNulo($dados["pgPublicacao"]);
+
+        # Verifica o primeiro recurso
+        if (!vazio($dados["resultado1"])) {
+            $publicacao = $dados["dtPublicacao1"];
+            $pagina = trataNulo($dados["pgPublicacao1"]);
+            $recurso = "(1° recurso)";
         }
 
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
+        # Verifica o segundo recurso
+        if (!vazio($dados["resultado2"])) {
+            $publicacao = $dados["dtPublicacao2"];
+            $pagina = trataNulo($dados["pgPublicacao2"]);
+            $recurso = "(2° recurso)";
+        }
 
-        # Pega os dias publicados
-        $select = 'SELECT dtPublicacao, pgPublicacao
-                     FROM tbacumulacao
-                    WHERE idAcumulacao = ' . $this->idAcumulacao;
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
+        # Verifica o último recurso
+        if (!vazio($dados["resultado3"])) {
+            $publicacao = $dados["dtPublicacao3"];
+            $pagina = trataNulo($dados["pgPublicacao3"]);
+            $recurso = "(3° recurso)";
+        }
 
         # Retorno
-        if (is_null($row[0])) {
-            $retorno = trataNulo($row[0]);
+        if (is_null($publicacao)) {
+            p("---", "pgetNome");
         } else {
-            $retorno = date_to_php($row[0]) . "<br/>Pag.: " . trataNulo($row[1]);
+            p(date_to_php($publicacao), "pgetNome");
+            p("pag: " . trataNulo($pagina), "pgetCargo");            
         }
-
-        return $retorno;
+        
+        if(!empty($recurso)){
+             p($recurso, "pgetCargo");
+        }
     }
 
 ##############################################################
@@ -169,30 +169,32 @@ class Acumulacao {
          * 
          * @syntax $acumulacao->exibeProcesso([$idAcumulacao]);
          */
-        # Joga o valor informado para a variável da classe
-        if (!vazio($idAcumulacao)) {
-            $this->idAcumulacao = $idAcumulacao;
-        }
-
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT processo, dtProcesso
+        $select = "SELECT processo, 
+                          dtProcesso
                      FROM tbacumulacao
-                    WHERE idAcumulacao = ' . $this->idAcumulacao;
+                    WHERE idAcumulacao = {$idAcumulacao}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
 
         # Retorno
-        if (is_null($row[0])) {
+        if (empty($row[0])) {
             $retorno = trataNulo($row[0]);
         } else {
             $retorno = $row["processo"] . "<br/>" . date_to_php($row["dtProcesso"]);
         }
 
-        return $retorno;
+        # Retorno
+        if (is_null($row["processo"])) {
+            p(trataNulo($row["processo"]), "pgetNome");
+        } else {
+            p($row["processo"], "pgetNome");
+            p(date_to_php($row["dtProcesso"]), "pgetCargo");
+        }
     }
 
 ##############################################################
@@ -206,21 +208,16 @@ class Acumulacao {
          * 
          * @syntax $acumulacao->exibeProcesso([$idAcumulacao]);
          */
-        # Joga o valor informado para a variável da classe
-        if (!vazio($idAcumulacao)) {
-            $this->idAcumulacao = $idAcumulacao;
-        }
-
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT instituicao,
+        $select = "SELECT instituicao,
                           cargo,                                     
                           matricula,
                           dtAdmissao
                      FROM tbacumulacao
-                    WHERE idAcumulacao = ' . $this->idAcumulacao;
+                    WHERE idAcumulacao = {$idAcumulacao}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);

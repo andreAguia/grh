@@ -216,19 +216,17 @@ if ($acesso) {
             ##############
             # Pega os dados
             $select = "SELECT tbservidor.idfuncional,
-                      tbservidor.idServidor,
-                      tbescolaridade.escolaridade,
-                      idFormacao,
-                      instEnsino
-                 FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbservidor USING (idPessoa)
-                                 LEFT JOIN tbescolaridade USING (idEscolaridade)
-                                 JOIN tbhistlot USING (idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                 
-                                 LEFT JOIN tbcargo USING (idCargo)
-                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
-                 WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                              tbservidor.idServidor,
+                              tbescolaridade.escolaridade,
+                              idFormacao
+                         FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbservidor USING (idPessoa)
+                                         LEFT JOIN tbescolaridade USING (idEscolaridade)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
+                                         LEFT JOIN tbcargo USING (idCargo)
+                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             if ($parametroSituacao <> "Todos") {
                 $select .= " AND situacao = {$parametroSituacao}";
@@ -271,11 +269,11 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional", "Servidor", "Escolaridade", "Curso", "Instituição"));
+            $tabela->set_label(array("IdFuncional", "Servidor", "Escolaridade", "Curso"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center", "left", "center", "left", "left"));
+            $tabela->set_align(array("center", "left", "center", "left"));
             $tabela->set_classe(array(null, "pessoal", null, "Formacao"));
-            $tabela->set_metodo(array(null, "get_nomeECargo", null, "get_curso"));
+            $tabela->set_metodo(array(null, "get_nomeECargoELotacao", null, "exibeCurso"));
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 

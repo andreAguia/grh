@@ -45,7 +45,6 @@ class Aposentadoria {
 
         # Monta o select
         $select = 'SELECT tbservidor.idfuncional,
-                              tbpessoa.nome,
                               tbservidor.idServidor,
                               tbservidor.dtAdmissao,
                               tbservidor.dtDemissao,
@@ -65,13 +64,12 @@ class Aposentadoria {
         $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Admissão', 'Saída', 'Motivo'));
-        #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-        $tabela->set_align(array('center', 'left', 'left', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
+        $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo'));
+        $tabela->set_align(array('center', 'left', 'center', 'center', 'left'));
+        $tabela->set_funcao(array(null, null, "date_to_php", "date_to_php"));
 
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_cargo"));
+        $tabela->set_classe(array(null, "pessoal"));
+        $tabela->set_metodo(array(null, "get_nomeECargo"));
 
         $tabela->set_conteudo($result);
 
@@ -94,7 +92,6 @@ class Aposentadoria {
 
         # Monta o select
         $select = 'SELECT tbservidor.idfuncional,
-                              tbpessoa.nome,
                               tbservidor.idServidor,
                               tbservidor.dtAdmissao,
                               tbservidor.dtDemissao,
@@ -114,13 +111,12 @@ class Aposentadoria {
         $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Admissão', 'Saída', 'Perfil'));
-        #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-        $tabela->set_align(array('center', 'left', 'left'));
-        $tabela->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
+        $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Perfil'));
+        $tabela->set_align(array('center', 'left'));
+        $tabela->set_funcao(array(null, null, "date_to_php", "date_to_php"));
 
-        $tabela->set_classe(array(null, null, "pessoal", null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_cargo", null, null, "get_perfil"));
+        $tabela->set_classe(array(null, "pessoal", null, null, "pessoal"));
+        $tabela->set_metodo(array(null, "get_nomeECargo", null, null, "get_perfil"));
 
         $tabela->set_conteudo($result);
 

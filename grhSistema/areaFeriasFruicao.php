@@ -329,8 +329,7 @@ if ($acesso) {
             # Conecta com o banco de dados
             $servidor = new Pessoal();
 
-            $select = "SELECT tbpessoa.nome,
-                             tbservidor.idServidor,
+            $select = "SELECT tbservidor.idServidor,
                              tbferias.anoExercicio,
                              tbferias.dtInicial,
                              tbferias.numDias,
@@ -361,18 +360,20 @@ if ($acesso) {
             }
 
 
-            $select .= " ORDER BY dtInicial, tbpessoa.nome";
+            $select .= " ORDER BY tbpessoa.nome, tbferias.anoExercicio, dtInicial";
 
             $result = $servidor->select($select);
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano de Fruição: " . $parametroAno . " (Data Inicial)");
-            $tabela->set_label(array('Nome', 'Lotação', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação'));
-            $tabela->set_align(array("left", "left"));
-            $tabela->set_funcao(array(null, null, null, "date_to_php", null, null, null, null));
-            $tabela->set_classe(array(null, "pessoal", null, null, null, null, "pessoal"));
-            $tabela->set_metodo(array(null, "get_lotacaoSimples", null, null, null, null, "get_feriasPeriodo"));
+            $tabela->set_label(array('Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação'));
+            $tabela->set_align(array("left"));
+            $tabela->set_funcao(array(null, null, "date_to_php", null, null, null, null));
+            $tabela->set_classe(array("pessoal", null, null, null, null, "pessoal"));
+            $tabela->set_metodo(array("get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo"));
             $tabela->set_conteudo($result);
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
 
             $tabela->set_editar('?fase=editaServidorFerias&id=');
             $tabela->set_nomeColunaEditar("Acessar");

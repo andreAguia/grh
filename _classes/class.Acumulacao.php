@@ -146,15 +146,14 @@ class Acumulacao {
         }
 
         # Retorno
-        if (is_null($publicacao)) {
-            p("---", "pgetNome");
+        if (empty($publicacao)) {
+            pLista("---");
         } else {
-            p(date_to_php($publicacao), "pgetNome");
-            p("pag: " . trataNulo($pagina), "pgetCargo");            
+            pLista(date_to_php($publicacao), "pag: " . trataNulo($pagina));
         }
-        
-        if(!empty($recurso)){
-             p($recurso, "pgetCargo");
+
+        if (!empty($recurso)) {
+            pLista(null, $recurso);
         }
     }
 
@@ -182,18 +181,10 @@ class Acumulacao {
         $row = $pessoal->select($select, false);
 
         # Retorno
-        if (empty($row[0])) {
-            $retorno = trataNulo($row[0]);
+        if (empty($row["processo"])) {
+            pLista("---");
         } else {
-            $retorno = $row["processo"] . "<br/>" . date_to_php($row["dtProcesso"]);
-        }
-
-        # Retorno
-        if (is_null($row["processo"])) {
-            p(trataNulo($row["processo"]), "pgetNome");
-        } else {
-            p($row["processo"], "pgetNome");
-            p(date_to_php($row["dtProcesso"]), "pgetCargo");
+            pLista($row["processo"], date_to_php($row["dtProcesso"]));
         }
     }
 
@@ -223,10 +214,14 @@ class Acumulacao {
         $row = $pessoal->select($select, false);
 
         # Retorno
-        p($row["instituicao"], "pgetNome");
-        p($row["cargo"], "pgetCargo");
-        if (!empty($row["instituicao"])) {
-            p("Matrícula: {$row['matricula']} / Admissão: " . date_to_php($row['dtAdmissao']), "pgetPerfil");
+        if (empty($row["instituicao"])) {
+            return null;
+        } else {
+            pLista(
+                    $row["instituicao"],
+                    $row["cargo"],
+                    "Matrícula: {$row['matricula']} / Admissão: " . date_to_php($row['dtAdmissao'])
+            );
         }
     }
 
@@ -246,9 +241,11 @@ class Acumulacao {
             return null;
         } else {
             $pessoal = new Pessoal();
-            p($pessoal->get_lotacao($idServidor), "pgetNome");
-            p($pessoal->get_cargo($idServidor), "pgetCargo");
-            p("Matrícula: {$pessoal->get_matricula($idServidor)} / Admissão: {$pessoal->get_dtAdmissao($idServidor)}", "pgetPerfil");
+            pLista(
+                    $pessoal->get_lotacao($idServidor),
+                    $pessoal->get_cargo($idServidor),
+                    "Matrícula: {$pessoal->get_matricula($idServidor)} / Admissão: {$pessoal->get_dtAdmissao($idServidor)}"
+            );
         }
     }
 

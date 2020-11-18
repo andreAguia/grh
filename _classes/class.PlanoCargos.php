@@ -317,8 +317,10 @@ class PlanoCargos {
             $row = $pessoal->select($select, false);
 
 
-            p($row[0] . " - " . $row[1], "pprogressao1");
-            p($row[2], "pprogressao2");
+            pLista(
+                    "{$row[0]} - {$row[1]}",
+                    $row[2]
+            );
         }
     }
 

@@ -40,8 +40,8 @@ if ($acesso) {
     $parametroCurso = post('parametroCurso', get_session('parametroCurso'));
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
-    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil',1));
-    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao',1));
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
@@ -63,8 +63,7 @@ if ($acesso) {
 
 ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
             br(4);
             aguarde();
@@ -217,8 +216,6 @@ if ($acesso) {
             ##############
             # Pega os dados
             $select = "SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbescolaridade.escolaridade,
                       idFormacao,
@@ -236,11 +233,11 @@ if ($acesso) {
             if ($parametroSituacao <> "Todos") {
                 $select .= " AND situacao = {$parametroSituacao}";
             }
-            
+
             if ($parametroPerfil <> "Todos") {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
-            
+
             if ($parametroNivel <> "Todos") {
                 $select .= " AND tbtipocargo.nivel = '{$parametroNivel}'";
             }
@@ -268,17 +265,17 @@ if ($acesso) {
 
             $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
             #echo $select;
-            
+
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Escolaridade", "Curso", "Instituição"));
+            $tabela->set_label(array("IdFuncional", "Servidor", "Escolaridade", "Curso", "Instituição"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center", "left", "left", "left", "center", "left", "left"));
-            $tabela->set_classe(array(null, null, "pessoal", "pessoal", null, "Formacao"));
-            $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_curso"));
+            $tabela->set_align(array("center", "left", "center", "left", "left"));
+            $tabela->set_classe(array(null, "pessoal", null, "Formacao"));
+            $tabela->set_metodo(array(null, "get_nomeECargo", null, "get_curso"));
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 
@@ -314,8 +311,6 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbescolaridade.escolaridade,
                       idFormacao,
@@ -334,12 +329,12 @@ if ($acesso) {
                 $select .= " AND situacao = {$parametroSituacao}";
                 $subTitulo .= "Filtro Situação: {$pessoal->get_nomeSituacao($parametroSituacao)}<br/>";
             }
-            
+
             if ($parametroPerfil <> "Todos") {
                 $select .= " AND idPerfil = {$parametroPerfil}";
                 $subTitulo .= "Filtro Perfil: {$pessoal->get_perfilNome($parametroPerfil)}<br/>";
             }
-            
+
             if ($parametroNivel <> "Todos") {
                 $select .= " AND tbtipocargo.nivel = '{$parametroNivel}'";
                 $subTitulo .= "Filtro Cargo Efetivo de Nível: {$parametroNivel}<br/>";
@@ -383,11 +378,11 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
-            $relatorio->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Escolaridade", "Curso", "Instituição"));
+            $relatorio->set_label(array("IdFuncional", "Servidor", "Escolaridade", "Curso", "Instituição"));
             $relatorio->set_conteudo($result);
-            $relatorio->set_align(array("center", "left", "left", "left", "center", "left", "left"));
-            $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, "Formacao"));
-            $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_curso"));
+            $relatorio->set_align(array("center", "left", "center", "left", "left"));
+            $relatorio->set_classe(array(null, "pessoal", null, "Formacao"));
+            $relatorio->set_metodo(array(null, "get_nomeECargo", null, "get_curso"));
             $relatorio->show();
             break;
     }

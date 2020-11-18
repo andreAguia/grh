@@ -1,7 +1,6 @@
 <?php
 
-class Readaptacao
-{
+class Readaptacao {
 
     /**
      * Exibe as informações sobre a Readaptação de servidor
@@ -12,8 +11,7 @@ class Readaptacao
 
     ###########################################################
 
-    public function __construct($idServidor = null)
-    {
+    public function __construct($idServidor = null) {
 
         /**
          * Inicia a classe e preenche o idServidor
@@ -25,8 +23,7 @@ class Readaptacao
 
     ###########################################################
 
-    public function set_idServidor($idServidor)
-    {
+    public function set_idServidor($idServidor) {
         /**
          * Informa o idServidor quando não se pode informar no instanciamento da classe
          *
@@ -39,8 +36,7 @@ class Readaptacao
 
     ###########################################################
 
-    function get_dados($idReadaptacao)
-    {
+    function get_dados($idReadaptacao) {
 
         /**
          * Informe o número do processo de solicitação de redução de carga horária de um servidor
@@ -69,8 +65,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibeStatus($idReadaptacao)
-    {
+    function exibeStatus($idReadaptacao) {
 
         /**
          * Informe o status de uma solicitação de redução de carga horária específica
@@ -90,8 +85,7 @@ class Readaptacao
         $retorno = null;
 
         # Verifica o status
-        switch ($row[0])
-        {
+        switch ($row[0]) {
             case 1:
                 $retorno = "Em Aberto";
                 break;
@@ -110,8 +104,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibeSolicitacao($idReadaptacao)
-    {
+    function exibeSolicitacao($idReadaptacao) {
 
         /**
          * Informe a data da solicitação
@@ -139,8 +132,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibeDadosPericia($idReadaptacao)
-    {
+    function exibeDadosPericia($idReadaptacao) {
 
         /**
          * Informe os dados da perícia de uma solicitação de redução de carga horária específica
@@ -195,8 +187,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibeResultado($idReadaptacao)
-    {
+    function exibeResultado($idReadaptacao) {
 
         /**
          * Informe os dados do resultado de uma solicitação de redução de carga horária específica
@@ -218,8 +209,7 @@ class Readaptacao
         $dataCiencia = $row[1];
 
         # Verifica o resultado
-        switch ($resultado)
-        {
+        switch ($resultado) {
             case null:
                 $retorno = $resultado;
                 break;
@@ -248,8 +238,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibePublicacao($idReadaptacao)
-    {
+    function exibePublicacao($idReadaptacao) {
 
         /**
          * Informe os dados da Publicação de uma solicitação de redução de carga horária específica
@@ -269,11 +258,13 @@ class Readaptacao
 
         # Retorno
         if ($row[2] == 1) {
-            if (is_null($row[0])) {
-                p("---", "pgetNome");
+            if (empty($row[0])) {
+                pLista("---");
             } else {
-                p(date_to_php($row[0]), "pgetNome");
-                p("pag: " . trataNulo($row[1]), "pgetCargo");          
+                pLista(
+                        date_to_php($row[0]),
+                        "pag: " . trataNulo($row[1])
+                );
             }
         } else {
             return null;
@@ -282,8 +273,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibePeriodo($idReadaptacao)
-    {
+    function exibePeriodo($idReadaptacao) {
 
         /**
          * Informe os dados da período de uma solicitação de redução de carga horária específica
@@ -353,8 +343,7 @@ class Readaptacao
 
     ###########################################################
 
-    function exibeBotaoDocumentos($idReadaptacao)
-    {
+    function exibeBotaoDocumentos($idReadaptacao) {
 
         /**
          * Exibe o botão de imprimir os documentos de uma solicitação de redução de carga horária específica
@@ -472,8 +461,7 @@ class Readaptacao
 
     ###########################################################
 
-    function get_dadosAnterior($idReadaptacao)
-    {
+    function get_dadosAnterior($idReadaptacao) {
 
         /**
          * Informe os dados de uma Readaptacao imediatamente anterior cronológicamente
@@ -505,8 +493,7 @@ class Readaptacao
         $row = $pessoal->select($select);
 
         # Percorre o array para encontrar o anterior
-        foreach ($row as $redux)
-        {
+        foreach ($row as $redux) {
             if ($idReadaptacao == $redux[0]) {    // Verifica se é a atual
                 break;                          // Se for sai do loop 
             } else {
@@ -523,8 +510,7 @@ class Readaptacao
 
     ##########################################################################################
 
-    public function mudaStatus()
-    {
+    public function mudaStatus() {
 
         /** 	
          * Função que altera o status de acordo com o resultado
@@ -541,7 +527,6 @@ class Readaptacao
          * data final não passou-> status: 2 (Vigente)
          * data final já passou -> status: 3 (Arquivado)
          */
-        
         # Conecta
         $pessoal = new Pessoal();
 

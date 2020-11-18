@@ -169,7 +169,7 @@ if ($acesso) {
             $acumul->showResumoAcumula($parametroAno, $parametroLotacao, $parametroNome);
 
             ######################################################
-            # Só exibe se não tiver pesqwuisa por nome
+            # Só exibe se não tiver pesquisa por nome
             if (empty($parametroNome)) {
 
                 if ($parametroLotacao <> "*") {

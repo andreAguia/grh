@@ -212,22 +212,22 @@ class ListaFerias
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
-            $tabela->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
-            $tabela->set_classe(array(null, null, "pessoal", "pessoal"));
-            $tabela->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
-            $tabela->set_funcao(array(null, null, null, null, "date_to_php", null, "get_situacao"));
+            $tabela->set_label(array("Id", "Servidor", "Lotação","Admissão", "Dias", "Situação"));
+            $tabela->set_classe(array(null, "pessoal", "pessoal"));
+            $tabela->set_metodo(array(null, "get_nomeECargoEPerfil", "get_lotacaoSimples"));
+            $tabela->set_funcao(array(null, null, null, "date_to_php", null, "get_situacao"));
             $tabela->set_align(array("center", "left", "left"));
             $tabela->set_idCampo('idServidor');
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 5,
+                array('coluna' => 4,
                     'valor' => 30,
                     'operador' => '>',
                     'id' => 'problemas'),
-                array('coluna' => 5,
+                array('coluna' => 4,
                     'valor' => 30,
                     'operador' => '=',
                     'id' => 'certo'),
-                array('coluna' => 5,
+                array('coluna' => 4,
                     'valor' => 30,
                     'operador' => '<',
                     'id' => 'faltando')));
@@ -352,7 +352,6 @@ class ListaFerias
         $servidor = new Pessoal();
 
         $select = "(SELECT tbservidor.idFuncional,
-                            tbpessoa.nome,
                             tbservidor.idServidor,
                             tbservidor.idServidor,
                             tbservidor.dtAdmissao,
@@ -407,8 +406,7 @@ class ListaFerias
             $servidor = new Pessoal();
 
             $select2 = "SELECT tbservidor.idFuncional,
-                           tbpessoa.nome,
-                           tbservidor.idServidor,
+                            tbservidor.idServidor,
                            tbservidor.idServidor,
                            tbservidor.dtAdmissao,
                            '-',

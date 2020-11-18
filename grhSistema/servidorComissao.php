@@ -100,14 +100,13 @@ if ($acesso) {
     #    $objeto->set_rotinaExtraListarParametro($mensagem);
     #}
     # select da lista
-    $objeto->set_selectLista('SELECT CONCAT(simbolo," - ",tbtipocomissao.descricao),
-                                     idComissao,
+    $objeto->set_selectLista('SELECT idComissao,
                                      tbcomissao.dtNom,
                                      tbcomissao.dtExo,
                                      idComissao
                                 FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY 3 desc');
+                            ORDER BY 2 desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
@@ -137,13 +136,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo", "Descrição", "Nomeação", "Exoneração", "Documentos"));
+    $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos"));
     #$objeto->set_width(array(30,45,10,10));	
     $objeto->set_align(array("left", "left", "center"));
-    $objeto->set_funcao(array(null, "descricaoComissao", "date_to_php", "date_to_php"));
+    $objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
 
-    $objeto->set_classe(array(null, null, null, null, "Cargocomissao"));
-    $objeto->set_metodo(array(null, null, null, null, "exibeBotaoDocumentos"));
+    $objeto->set_classe(array("Cargocomissao", null, null, "Cargocomissao"));
+    $objeto->set_metodo(array("exibeCargoCompleto", null, null, "exibeBotaoDocumentos"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

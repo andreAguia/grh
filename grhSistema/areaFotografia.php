@@ -134,8 +134,6 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT idFuncional,
-                              tbpessoa.nome,
-                              idServidor,
                               idServidor,
                               idPessoa
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -151,16 +149,16 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
                 $tabela->set_titulo("Área de Fotografias dos Servidores");
-                $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Foto"));
-                $tabela->set_align(array("center", "left", "left", "left"));
+                $tabela->set_label(array("IdFuncional", "Servidor", "Foto"));
+                $tabela->set_align(array("center", "left"));
 
                 if (!is_null($parametro)) {
                     $tabela->set_textoRessaltado($parametro);
                 }
 
-                $tabela->set_funcao(array(null, null, null, null, "exibeFoto"));
-                $tabela->set_classe(array(null, null, "Pessoal", "Pessoal"));
-                $tabela->set_metodo(array(null, null, "get_cargo", "get_Lotacao"));
+                $tabela->set_funcao(array(null, null, "exibeFoto"));
+                $tabela->set_classe(array(null, "Pessoal"));
+                $tabela->set_metodo(array(null, "get_nomeECargoELotacao"));
                 $tabela->show();
             }
 

@@ -1,7 +1,6 @@
 <?php
 
-class Licenca
-{
+class Licenca {
 
     /**
      * Abriga as várias rotina referentes a cessão de servidor da Uenf para outro órgão
@@ -10,8 +9,7 @@ class Licenca
      */
 ##############################################################
 
-    public function exibeNome($idTpLicenca = null)
-    {
+    public function exibeNome($idTpLicenca = null) {
         # Verifica se o id foi informado
         if (vazio($idTpLicenca)) {
             alert("É necessário informar o id.");
@@ -23,10 +21,12 @@ class Licenca
         $select = "SELECT nome, lei
                      FROM tbtipolicenca
                     WHERE idTpLicenca = {$idTpLicenca}";
-                    
+
         $licenca = $servidor->select($select, false);
-        p($licenca[0],"pTipoLicenca");
-        p($licenca[1],"pLeiLicenca");
+        pLista(
+                $licenca[0],
+                $licenca[1]
+        );
     }
 
 ##############################################################

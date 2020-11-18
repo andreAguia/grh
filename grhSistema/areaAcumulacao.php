@@ -153,7 +153,8 @@ if ($acesso) {
 
             $tabela->set_titulo("Área de Acumulação");
 
-            $tabela->set_formatacaoCondicional(array(array('coluna'   => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna'   => 0,
                     'valor'    => 'Resolvido',
                     'operador' => '=',
                     'id'       => 'emAberto'),

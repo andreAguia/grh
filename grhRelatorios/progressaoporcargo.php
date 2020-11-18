@@ -30,8 +30,6 @@ if ($acesso) {
     ######
 
     $select = 'SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -53,17 +51,16 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Administrativos e Técnicos Ativos');
     $relatorio->set_tituloLinha2('Com a Última Progressão / Enquadramento');
     $relatorio->set_subtitulo('Agrupados por Escolaridade do Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Salário Atual', 'Data Inicial', 'Análise', "Cargo"));
-    #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "exibeDadosSalarioAtual"));
+    $relatorio->set_label(array('IdFuncional', 'Servidor', 'Salário Atual', 'Data Inicial', 'Análise', "Cargo"));
+    $relatorio->set_align(array("center", "left", "left"));
+    $relatorio->set_funcao(array(null, null, "exibeDadosSalarioAtual"));
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, "Progressao", "Progressao"));
-    $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_dtInicialAtual", "analisaServidor"));
+    $relatorio->set_classe(array(null, "pessoal", null, "Progressao", "Progressao"));
+    $relatorio->set_metodo(array(null, "get_nomeECargoELotacao", null, "get_dtInicialAtual", "analisaServidor"));
 
     $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(7);
+    $relatorio->set_numGrupo(5);
 
     # Pega os dados da combo cargo
     $result = $servidor->select('SELECT idTipoCargo, 
@@ -78,7 +75,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $result,
             'size' => 30,
-            'col' => 4,
+            'col' => 6,
             'padrao' => $parametroCargo,
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));

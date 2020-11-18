@@ -121,8 +121,6 @@ if ($acesso)
             $select = 'SELECT tbdependente.nome,
                              TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
                              tbparentesco.Parentesco,
-                             tbpessoa.nome,
-                             tbservidor.idServidor,
                              tbservidor.idServidor
                         FROM tbdependente JOIN tbpessoa USING (idPessoa)
                                           JOIN tbservidor USING (idPessoa)
@@ -143,11 +141,11 @@ if ($acesso)
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Parentes de Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("Parente", "Idade", "Parentesco", "Servidor", "Cargo", "Lotação"));
+            $tabela->set_label(array("Parente", "Idade", "Parentesco", "Servidor"));
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("left", "center", "center", "left", "left", "left"));
-            $tabela->set_classe(array(null, null, null, null, "pessoal", "pessoal"));
-            $tabela->set_metodo(array(null, null, null, null, "get_Cargo", "get_Lotacao"));
+            $tabela->set_align(array("left", "center", "center", "left"));
+            $tabela->set_classe(array(null, null, null, "pessoal"));
+            $tabela->set_metodo(array(null, null, null, "get_nomeECargoELotacao"));
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

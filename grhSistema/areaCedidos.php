@@ -146,7 +146,7 @@ if ($acesso) {
                  */
 
                 $select = "SELECT tbservidor.idFuncional,  
-                          tbpessoa.nome,
+                          tbservidor.idServidor,
                           tbhistcessao.orgao,
                           tbhistcessao.dtInicio,
                           tbhistcessao.dtFim,
@@ -161,14 +161,14 @@ if ($acesso) {
                       AND tbhistcessao.dtInicio = (select max(dtInicio) from tbhistcessao where tbhistcessao.idServidor = tbservidor.idServidor)
                       AND situacao = 1
                       AND tbhistlot.lotacao = 113";
-                
+
                 # Pesquisa por nome
                 if (!empty($parametroNome)) {
                     $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
                 }
-                                
+
                 $select .= " ORDER BY tbpessoa.nome";
-                
+
                 $result = $pessoal->select($select);
                 $count = $pessoal->count($select);
 
@@ -178,8 +178,8 @@ if ($acesso) {
                 $tabela->set_label(['IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Lotação']);
                 $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'left']);
                 $tabela->set_titulo("Servidor(es) que já terminaram o período de cessão mas ainda estão lotados na Reitoria - Cedidos");
-                $tabela->set_classe([null, null, null, null, null, "Pessoal"]);
-                $tabela->set_metodo([null, null, null, null, null, "get_lotacao"]);
+                $tabela->set_classe([null, "Pessoal", null, null, null, "Pessoal"]);
+                $tabela->set_metodo([null, "get_nomeECargo", null, null, null, "get_lotacao"]);
                 $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->set_idCampo('idServidor');
@@ -194,7 +194,7 @@ if ($acesso) {
                  */
 
                 $select = "SELECT DISTINCT tbservidor.idFuncional,
-                              tbpessoa.nome,
+                              tbservidor.idServidor,
                               tbhistcessao.dtInicio,
                               tbhistcessao.dtFim,
                               tbhistcessao.orgao,
@@ -204,12 +204,12 @@ if ($acesso) {
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1
                           AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
-                
+
                 # Pesquisa por nome
                 if (!empty($parametroNome)) {
                     $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
                 }
-                
+
                 $select .= " GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1";
 
                 $result = $pessoal->select($select);
@@ -221,6 +221,8 @@ if ($acesso) {
                 $tabela->set_label(['IdFuncional', 'Nome', 'Início', 'Término', 'Órgão']);
                 $tabela->set_align(['center', 'left', 'center', 'center', 'left']);
                 $tabela->set_titulo("Servidor(es) Com Mais de uma Cessão Vigente Cadastrada");
+                $tabela->set_classe([null, "Pessoal", null, null, null, "Pessoal"]);
+                $tabela->set_metodo([null, "get_nomeECargo", null, null, null, "get_lotacao"]);
                 $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->set_idCampo('idServidor');
@@ -236,7 +238,7 @@ if ($acesso) {
 
                 $select = "SELECT year(tbhistcessao.dtInicio),
                               tbservidor.idFuncional,
-                              tbpessoa.nome,
+                              idServidor,
                               tbhistcessao.dtInicio,
                               tbhistcessao.dtFim,
                               tbhistcessao.orgao,
@@ -247,7 +249,7 @@ if ($acesso) {
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1
                           AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
-                
+
                 # Pesquisa por nome
                 if (!empty($parametroNome)) {
                     $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
@@ -266,8 +268,8 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
                 $tabela->set_width([5, 10, 20, 10, 10, 30, 5]);
 
-                $tabela->set_classe([null, null, null, null, null, null, "Cessao"]);
-                $tabela->set_metodo([null, null, null, null, null, null, "lotacaoCorreta"]);
+                $tabela->set_classe([null, null, "Pessoal", null, null, null, "Cessao"]);
+                $tabela->set_metodo([null, null, "get_nomeECargo", null, null, null, "lotacaoCorreta"]);
 
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);
@@ -292,14 +294,14 @@ if ($acesso) {
                                                 JOIN tbpessoa USING (idPessoa)
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1";
-                
+
                 # Pesquisa por nome
                 if (!empty($parametroNome)) {
                     $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
                 }
 
                 $select .= " ORDER BY dtInicio desc";
-                
+
                 $result = $pessoal->select($select);
 
                 # Monta a tabela

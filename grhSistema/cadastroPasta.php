@@ -128,8 +128,7 @@ if ($acesso) {
 
             # Se for todos
             if ($parametroPasta == "TD") {
-                $select = "SELECT tbpessoa.nome,
-                              idServidor,
+                $select = "SELECT idServidor,
                               CASE tbpasta.tipo
                                    WHEN 1 THEN 'Documento' 
                                    WHEN 2 THEN 'Processo'
@@ -144,8 +143,7 @@ if ($acesso) {
 
             # Se for SEM pasta
             if ($parametroPasta == "CP") {
-                $select = "SELECT tbpessoa.nome,
-                                  idServidor,
+                $select = "SELECT idServidor,
                                   CASE tbpasta.tipo
                                        WHEN 1 THEN 'Documento' 
                                        WHEN 2 THEN 'Processo'
@@ -160,8 +158,7 @@ if ($acesso) {
 
             # Se for SEM pasta
             if ($parametroPasta == "SP") {
-                $select = "SELECT tbpessoa.nome,
-                                  idServidor,
+                $select = "SELECT idServidor,
                                   null,
                                   null,
                                   null,
@@ -189,13 +186,12 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Nome", "Lotação", "Tipo", "Descrição", "Ver"));
-            $tabela->set_align(array("left", "left", "left", "left"));
-            #$tabela->set_funcao(array(null,null,null,null,"date_to_php"));
-            $tabela->set_width(array(25, 25, 10, 30, 5));
+            $tabela->set_label(array("Servidor", "Tipo", "Descrição", "Ver"));
+            $tabela->set_align(array("left", "left", "left"));
+            $tabela->set_width(array(30, 10, 50, 5));
 
-            $tabela->set_classe(array(null, "Pessoal", null, null, "PastaFuncional"));
-            $tabela->set_metodo(array(null, "get_lotacao", null, null, "exibePasta"));
+            $tabela->set_classe(array("Pessoal", null, null, "PastaFuncional"));
+            $tabela->set_metodo(array("get_nomeECargoELotacao", null, null, "exibePasta"));
 
             $tabela->set_titulo("Cobtrole de Pasta Funcional");
 

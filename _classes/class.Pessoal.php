@@ -1017,7 +1017,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return "---";
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -1197,7 +1201,7 @@ class Pessoal extends Bd {
 
         $dt = parent::select($select, false);
 
-        if (vazio($dt[0])) {
+        if (empty($dt[0])) {
             return null;
         } else {
             return date_to_php($dt[0]);
@@ -1861,10 +1865,10 @@ class Pessoal extends Bd {
                         WHERE idServidor = ' . $idServidor;
 
         $motivo = parent::select($select, false);
-        
-        if(empty($motivo[0])){
+
+        if (empty($motivo[0])) {
             return null;
-        }else{
+        } else {
             return $motivo[0];
         }
     }
@@ -1934,7 +1938,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método get_nomeECargo
@@ -1946,8 +1950,10 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         } else {
-            p($this->get_nome($idServidor),"pgetNome");
-            p($this->get_cargo($idServidor),"pgetCargo");
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor)
+            );
         }
     }
 
@@ -1963,8 +1969,10 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         } else {
-            p($this->get_nome($idServidor),"pgetNome");
-            p("IdFuncional: ".$this->get_idFuncional($idServidor),"pgetCargo");
+            pLista(
+                    $this->get_nome($idServidor),
+                    "IdFuncional: " . $this->get_idFuncional($idServidor)
+            );
         }
     }
 
@@ -1980,13 +1988,56 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         } else {
-            p($this->get_nome($idServidor),"pgetNome");
-            p($this->get_cargo($idServidor),"pgetCargo");
-            p($this->get_perfil($idServidor),"pgetPerfil");
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor),
+                    $this->get_perfil($idServidor)
+            );
         }
     }
 
     ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacaoEPerfil
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoELotacaoEPerfil($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor),
+                    $this->get_lotacao($idServidor),
+                    $this->get_perfil($idServidor)
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacaoEPerfil
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoELotacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor),
+                    $this->get_lotacao($idServidor)
+            );
+        }
+    }
+
+    ##########################################################
 
     /**
      * Método get_nomeSimples
@@ -2142,12 +2193,11 @@ class Pessoal extends Bd {
                        OR (dtExo is null))
                     AND idServidor = ' . $idServidor;
 
-        $row = parent::select($select,false);
+        $row = parent::select($select, false);
         return $row;
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargoComissaoDescricao
@@ -3788,6 +3838,29 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_idFuncional
+     * Informa a idFuncional de um servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_idFuncionalEMatricula($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT idFuncional,
+                          matricula
+                         FROM tbservidor
+                        WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        pLista(
+                $row["idFuncional"],
+                dv($row["matricula"])
+        );
+    }
+
+    ###########################################################
+
+    /**
      * Método get_tipoSenha
      * Informa o tipo da senha (padrão/bloqueada/Ok) 
      * 
@@ -4139,9 +4212,9 @@ class Pessoal extends Bd {
                          ORDER BY anoexercicio asc';
 
         $row = parent::select($select, false);
-        if(empty($row[1])){
+        if (empty($row[1])) {
             return 0;
-        }else{
+        } else {
             return $row[1];
         }
     }

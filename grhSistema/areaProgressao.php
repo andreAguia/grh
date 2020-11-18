@@ -128,9 +128,6 @@ if ($acesso) {
             ##############
             # Pega os dados
             $select = 'SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -148,39 +145,39 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Administrativos e Técnicos Ativos Com a Última Progressão / Enquadramento');
-            $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Salário Atual', 'Data Inicial', 'Análise'));
-            #$relatorio->set_width(array(10,30,30,0,10,10,10));
-            $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_funcao(array(null, null, null, null, "exibeDadosSalarioAtual"));
+            $tabela->set_label(array('IdFuncional', 'Servidor', 'Salário Atual', 'Data Inicial', 'Análise'));
+            $tabela->set_align(array("center", "left", "left"));
+            $tabela->set_funcao(array(null, null, "exibeDadosSalarioAtual"));
 
-            $tabela->set_classe(array(null, null, "pessoal", "pessoal", null, "Progressao", "Progressao"));
-            $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_dtInicialAtual", "analisaServidor"));
+            $tabela->set_classe(array(null, "pessoal", null, "Progressao", "Progressao"));
+            $tabela->set_metodo(array(null, "get_nomeECargoELotacao", null, "get_dtInicialAtual", "analisaServidor"));
 
             $tabela->set_conteudo($result);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
-                    'valor' => 'Tem Direito a Progressão por Antiguidade',
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna'   => 4,
+                    'valor'    => 'Tem Direito a Progressão por Antiguidade',
                     'operador' => '=',
-                    'id' => 'podeProgredir'),
-                array('coluna' => 6,
-                    'valor' => 'Aparentemente Tudo Certo',
+                    'id'       => 'podeProgredir'),
+                array('coluna'   => 4,
+                    'valor'    => 'Aparentemente Tudo Certo',
                     'operador' => '=',
-                    'id' => 'naoEstaUltimo'),
-                array('coluna' => 6,
-                    'valor' => 'Plano ERRADO',
+                    'id'       => 'naoEstaUltimo'),
+                array('coluna'   => 4,
+                    'valor'    => 'Plano ERRADO',
                     'operador' => '=',
-                    'id' => 'planoErrado'),
-                array('coluna' => 6,
-                    'valor' => 'Não Tem Salário Cadastrado',
+                    'id'       => 'planoErrado'),
+                array('coluna'   => 4,
+                    'valor'    => 'Não Tem Salário Cadastrado',
                     'operador' => '=',
-                    'id' => 'planoErrado'),
-                array('coluna' => 6,
-                    'valor' => 'Não Pode Progredir',
+                    'id'       => 'planoErrado'),
+                array('coluna'   => 4,
+                    'valor'    => 'Não Pode Progredir',
                     'operador' => '=',
-                    'id' => 'tanofim')
+                    'id'       => 'tanofim')
             ));
             $tabela->show();
 

@@ -140,13 +140,19 @@ if ($acesso) {
             $form = new Form('?fase=porAno');
 
             # Cria um array com os anos possíveis
-            $anoInicial = 1999;
-            $anoAtual = date('Y');
+            $select = 'SELECT DISTINCT YEAR(tbservidor.dtDemissao), YEAR(tbservidor.dtDemissao)
+                         FROM tbservidor 
+                        WHERE situacao = 2
+                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                     ORDER BY 1 desc';
 
-            $controle = new Input('parametroAno', 'numero');
+
+            $anos = $pessoal->select($select);
+
+            $controle = new Input('parametroAno', 'combo');
             $controle->set_size(6);
             $controle->set_title('Filtra por Ano exercício');
-            $controle->set_valor(date("Y"));
+            $controle->set_array($anos);
             $controle->set_valor($parametroAno);
             $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');

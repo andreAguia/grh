@@ -625,11 +625,13 @@ class ReducaoCargaHoraria {
 
         # Retorno
         if ($row[2] == 1) {
-            if (is_null($row[0])) {
-                p("---", "pgetNome");
+            if (empty($row[0])) {
+                pLista("---");
             } else {
-                p(date_to_php($row[0]), "pgetNome");
-                p("pag: " . trataNulo($row[1]), "pgetCargo");          
+                pLista(
+                        date_to_php($row[0]),
+                        "pag: " . trataNulo($row[1])
+                );
             }
         } else {
             return null;
@@ -731,9 +733,10 @@ class ReducaoCargaHoraria {
     }
 
     ###########################################################
+
     function mudaStatus() {
 
-         /** 	
+        /** 	
          * Função que altera o status de acordo com o resultado
          * 
          * Caso
@@ -742,8 +745,7 @@ class ReducaoCargaHoraria {
          * resultado: 1 (deferido) e data final já passou   -> status: 3 (Arquivado)
          * resultado: 2 (indeferido)                        -> status: 3 (Arquivado)
          */
-        
-         # Conecta
+        # Conecta
         $pessoal = new Pessoal();
 
         /*
@@ -753,7 +755,7 @@ class ReducaoCargaHoraria {
                  WHERE resultado IS NULL';
 
         $pessoal->update($sql);
-        
+
         /*
          * resultado: 1 (deferido) e data final não passou-> status: 2 (Vigente)
          */
@@ -762,8 +764,8 @@ class ReducaoCargaHoraria {
                    AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
 
         $pessoal->update($sql);
-        
-         /*
+
+        /*
          * origem = 2(solicitado) e resultado: 1 (deferido) e data final já passou -> status: 3 (Arquivado)
          */
         $sql = 'UPDATE tbreducao SET status = 3
@@ -771,8 +773,8 @@ class ReducaoCargaHoraria {
                    AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
         $pessoal->update($sql);
-        
-         /*
+
+        /*
          * resultado: 2 (indeferido) -> status: 3 (Arquivado)
          */
         $sql = 'UPDATE tbreducao SET status = 3

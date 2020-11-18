@@ -42,8 +42,8 @@ class CargoComissao {
          */
         # Pega os dados
         $select = "SELECT tbdescricaocomissao.descricao
-                   FROM tbdescricaocomissao JOIN tbcomissao USING (idDescricaoComissao)
-                  WHERE idComissao = $idComissao";
+                     FROM tbdescricaocomissao JOIN tbcomissao USING (idDescricaoComissao)
+                    WHERE idComissao = $idComissao";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -57,24 +57,30 @@ class CargoComissao {
 
     ###########################################################
 
-    function get_cargoCompleto($idComissao) {
+    function exibeCargoCompleto($idComissao) {
 
         /**
          * fornece a próxima tarefa a ser realizada
          */
         # Pega os dados
         $select = "SELECT tbtipocomissao.simbolo,
-                        tbtipocomissao.descricao,
-                        tbdescricaocomissao.descricao
-                   FROM tbcomissao JOIN tbtipocomissao USING (idTipoComisso)
-                                   JOIN descricaocomissao USING (idDescricaoComissao)
-                  WHERE tbcomissao.idComissao = $idComissao";
+                          tbtipocomissao.descricao,
+                          tbdescricaocomissao.descricao
+                     FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                                     LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
+                    WHERE tbcomissao.idComissao = $idComissao";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
 
-        $retorno = $dados[0] . " - " . $dados[1] . "<br/>" . $dados[2];
-        return $retorno;
+        if (empty($dados[0])) {
+            return null;
+        } else {
+            pLista(
+                    "{$dados[0]} - {$dados[1]}",
+                    $dados[2]
+            );
+        }
     }
 
     ###########################################################

@@ -28,7 +28,6 @@ if ($acesso) {
     ######
 
     $select = 'SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.dtAdmissao,
                       tbservidor.dtDemissao,
@@ -47,13 +46,12 @@ if ($acesso) {
     #$relatorio->set_tituloLinha2('Com Informaçao de Contatos');
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Admissão', 'Saída', 'Motivo'));
-    #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-    $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'left'));
-    $relatorio->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo'));
+    $relatorio->set_align(array('center', 'left', 'center', 'center', 'left'));
+    $relatorio->set_funcao(array(null, null, "date_to_php", "date_to_php"));
 
-    $relatorio->set_classe(array(null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargo"));
+    $relatorio->set_classe(array(null, "pessoal"));
+    $relatorio->set_metodo(array(null, "get_nomeECargo"));
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

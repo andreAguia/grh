@@ -26,8 +26,9 @@ class MenuPrincipal {
 
         # Módulos
         $this->moduloServidores();
-        $this->moduloSei();
-        $this->moduloSigrh();
+        $this->moduloTabelaAuxiliares();
+        #$this->moduloSei();
+        #$this->moduloSigrh();
         $this->moduloLegislacao();
         $this->moduloTabelasSecundarias();
 
@@ -38,8 +39,11 @@ class MenuPrincipal {
         $grid->abreColuna(12, 8, 5);
 
         # Módulos      
-        $this->moduloTabelaAuxiliares();
+        
+        $this->moduloSispatri();
+        $this->moduloSistemas();
         $this->moduloAreaEspecial();
+        
         $this->moduloLinksExternos();
 
         $grid->fechaColuna();
@@ -174,6 +178,60 @@ class MenuPrincipal {
     ######################################################################################################################
 
     /**
+     * Método moduloSistemas
+     * 
+     * Exibe o menu Sei
+     */
+    private function moduloSistemas() {
+
+        $painel = new Callout();
+        $painel->abre();
+
+        # Servidores
+        titulo('Sistemas');
+        br();
+
+        $menu = new MenuGrafico(2);
+
+        $botao = new BotaoGrafico();
+        $botao->set_title('Sistema Eletrônico de informações');
+        $botao->set_imagem(PASTA_FIGURAS . "sei.png", 220, 72);
+        $botao->set_url("https://sei.fazenda.rj.gov.br/sip/login.php?sigla_orgao_sistema=ERJ&sigla_sistema=SEI&infra_url=L3NlaS8=");
+        $botao->set_target("_aba");
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label();
+        $botao->set_url("https://sigrh.rj.gov.br/gerj/Ergon/Administracao/ERGadm_mnu001.tp");
+        $botao->set_imagem(PASTA_FIGURAS . 'sigrh.png', 80, 80);
+        $botao->set_title('Sistema Integrado de Gestão de Recursos Humanos');
+        $botao->set_target("_blank");
+        $menu->add_item($botao);
+
+        $menu->show();
+        $painel->fecha();
+    }
+
+     ######################################################################################################################
+
+    /**
+     * Método moduloSispatri
+     */
+    private function moduloSispatri() {
+
+        $botao = new BotaoGrafico();
+        $botao->set_label();
+        $botao->set_url("");
+        $botao->set_imagem(PASTA_FIGURAS . 'sispatri2020.jpeg', '100%', '100%');
+        $botao->set_title('Sistema de Registros de Bens dos Agentes Públicos');
+        #$botao->set_target("_blank");
+        $botao->show();
+        br();
+    }
+
+    ######################################################################################################################
+
+    /**
      * Método moduloLegislacao
      * 
      * Exibe o menu de Legislação
@@ -219,7 +277,7 @@ class MenuPrincipal {
                     WHERE month(curdate()) = mes 
                       AND day(curdate()) = dia 
                       AND year(curdate()) = ano";
-        $sortudos = $pessoal->select($select,false);
+        $sortudos = $pessoal->select($select, false);
 
         # Verifica se o usuário logado é um sortudo
         $idServidor = $intra->get_idServidor($idUsuario);
@@ -234,7 +292,7 @@ class MenuPrincipal {
 
                 $painel2->fecha();
             }
-        }else{
+        } else {
             $sortudos[0] = "";
             $sortudos[1] = "";
         }
@@ -343,7 +401,7 @@ class MenuPrincipal {
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');

@@ -291,8 +291,9 @@ if ($acesso) {
 
             botaoVoltar("?");
             titulo('Alertas do Sistema');
-            $painel = new Callout();
-            $painel->abre();
+            br();
+            #$painel = new Callout();
+            #$painel->abre();
 
             $checkup = New Checkup(false);
 
@@ -300,7 +301,7 @@ if ($acesso) {
             $checkup->get_all();
             echo "</ul>";
 
-            $painel->fecha();
+            #$painel->fecha();
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
@@ -546,11 +547,11 @@ if ($acesso) {
             titulo("Área de Acumulação de Cargos");
             br(2);
             $tamanhoImage = 60;
-            
+
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(8);
-            
+
             callout("É dever do servidor ou empregado público informar à GRH
                 quanto a eventual acumulação de cargos, empregos ou funções
                 públicas (Art. 282 e 283 do Decreto nº 2.479/79), inclusive
@@ -570,7 +571,7 @@ if ($acesso) {
                 ativos da UENF, deverão, anualmente, preencher e encaminhar
                 à GRH, via SEI, assinado eletrônicamente, a declaração
                 Anual de Acumulação de Cargo.");
-            
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             br(2);
@@ -588,7 +589,7 @@ if ($acesso) {
             $botao = new BotaoGrafico();
             $botao->set_novo(true);
             $botao->set_label('Controle da Entrega da Declaração Anual');
-            $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');            
+            $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
             $menu->add_item($botao);

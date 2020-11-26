@@ -153,6 +153,32 @@ class Concurso {
 
     ###########################################################
 
+    /**
+     * Método get_dtPublicacaoEdital
+     * 
+     * Informa a data de publicação do edital
+     * 	 
+     */
+    public function get_dtPublicacaoEdital($idconcurso) {
+
+        # Monta o select            
+        $select = 'SELECT dtPublicacaoEdital              
+                         FROM tbconcurso
+                        WHERE idconcurso = ' . $idconcurso;
+        
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+        
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]);
+        }
+    }
+
+    ###########################################################
+
     public function exibeQuadroDocentesSemConcurso() {
         /**
          * Exibe um quadro com os docentes sem concurso
@@ -181,10 +207,10 @@ class Concurso {
         #$tabela->set_width(array(80,20));
         $tabela->set_align(array("left", "center"));
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                'valor' => "Total",
+        $tabela->set_formatacaoCondicional(array(array('coluna'   => 0,
+                'valor'    => "Total",
                 'operador' => '=',
-                'id' => 'totalVagas')));
+                'id'       => 'totalVagas')));
         $tabela->show();
     }
 
@@ -347,19 +373,18 @@ class Concurso {
         $pessoal = new Pessoal();
         $row = $pessoal->select($select);
         $count = $pessoal->count($select);
-        
+
         $vaga = new Vaga();
 
         if ($count > 0) {
-            foreach($row as $tt){
-                
+            foreach ($row as $tt) {
+
                 $novoIdConcurso = $vaga->get_idConcursoProfessor($tt[0]);
-                
+
                 # Grava na tabela
                 $campos = array("idConcurso");
                 $valor = array($novoIdConcurso);
                 $pessoal->gravar($campos, $valor, $tt[0], "tbservidor", "idServidor", false);
-                
             }
         }
 

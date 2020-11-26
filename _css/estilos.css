@@ -92,32 +92,19 @@ p#puser{
  * Check up
  *******************************************/
 
-a#checkupResumo4{
-    font-size: 12px;
-    text-align: left;
-    color: #02548b;
-    margin: 0px;
-}
-
-a#checkupResumo3{
-    font-size: 12px;
-    text-align: left;
-    color: #cc3300;
-    margin: 0px;
-}
-
-a#checkupResumo2{
-    font-size: 12px;
-    text-align: left;
-    color: #000000;
-    margin: 0px;
-}
-
 a#checkupResumo1{
     font-size: 12px;
     text-align: left;
-    color: #ff0000;
-    margin: 0px;
+    color: #af4747;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+a#checkupResumo{
+    font-size: 12px;
+    text-align: left;
+    color:#02548b;
+    margin-left: 15px;
 }
 
 ul.checkupResumo li{
@@ -132,6 +119,13 @@ p#exibeOcorrencia{
     padding: 0px 0px 0px 0px;
     text-align: left;
     font-size: 12px;
+    margin: 0px;
+}
+
+p#checkCategoria{ 
+    padding: 5px 0px 5px 0px;
+    text-align: left;
+    font-size: 14px;
     margin: 0px;
 }
 

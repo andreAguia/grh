@@ -1,6 +1,7 @@
 <?php
 
-class Checkup {
+class Checkup
+{
 
     /**
      * Classe Checup
@@ -19,13 +20,15 @@ class Checkup {
      * 
      * Faz um checkup
      */
-    public function __construct($lista = true) {
+    public function __construct($lista = true)
+    {
         $this->lista = $lista;
     }
 
     ###########################################################
 
-    public function set_linkEditar($linkEditar = null) {
+    public function set_linkEditar($linkEditar = null)
+    {
         if (!empty($linkEditar)) {
             $this->linkEditar = $linkEditar;
         }
@@ -38,7 +41,11 @@ class Checkup {
      * 
      * Executa todos os métodos desta classe (menos é claro o get_all e o construct
      */
-    public function get_all() {
+    public function get_all()
+    {
+        # Calcula o tempo
+        $time_start = microtime(true);
+
         # Pega todos as informações da classe
         $api = new ReflectionClass($this);
 
@@ -55,36 +62,54 @@ class Checkup {
             }
         }
 
-        # Ordena os métodos pela prioridade
+        # Ordena os métodos pela categoria
 
-        function cmp($a, $b) {          // Função específica que compara se $a é maior que $b
+        function cmp($a, $b)
+        {
+            # Função específica que compara se $a é maior que $b
             return $a[2] > $b[2];
         }
 
         // Ordena
         usort($metodoRetorno, 'cmp');
 
-        $prioridadeAnterior = null;
+        $categoriaAnterior = null;
 
         # Percorre o array $metodoRetorno e exibe a lista
         foreach ($metodoRetorno as $listaRetorno) {
 
             # Exibe uma linha horizontal
-            if ($prioridadeAnterior <> $listaRetorno[2]) {
-                if (is_null($prioridadeAnterior)) {
-                    $prioridadeAnterior = $listaRetorno[2];
+            if ($categoriaAnterior <> $listaRetorno[2]) {
+                if (is_null($categoriaAnterior)) {
+                    $categoriaAnterior = $listaRetorno[2];
+                    p($categoriaAnterior, "checkCategoria");
                 } else {
-                    $prioridadeAnterior = $listaRetorno[2];
+                    $categoriaAnterior = $listaRetorno[2];
                     hr("alerta");
+                    p($categoriaAnterior, "checkCategoria");
                 }
             }
 
             $link = new Link($listaRetorno[0], "?fase=alerta&alerta=" . $listaRetorno[1]);
-            $link->set_id("checkupResumo" . $listaRetorno[2]);
+
+            # Define a cor de acordo com a prioridade
+            if (empty($listaRetorno[3])) {
+                $link->set_id("checkupResumo");
+            } else {
+                $link->set_id("checkupResumo" . $listaRetorno[3]);
+            }
+
             echo "<li>";
             $link->show();
             echo "</li>";
         }
+
+        hr("alerta");
+
+        # Exibe o tempo decorrido
+        $time_end = microtime(true);
+        $time = $time_end - $time_start;
+        p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
     }
 
     ###########################################################
@@ -94,27 +119,30 @@ class Checkup {
      * 
      * Servidores com Licença vencendo este ano
      */
-    public function get_licencaVencendo($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 4;
+    public function get_licencaVencendo($idServidor = null)
+    {
+
+        # Define a categoria e a categoria
+        $prioridade = null;
+        $categoria = "Licenças";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional,
-                  tbpessoa.nome,
-                  tbperfil.nome,
-                  tbtipolicenca.nome,
-                  tblicenca.dtInicial,
-                  tblicenca.numDias,
-                  ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                  tbservidor.idServidor
-             FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                             LEFT JOIN tblicenca USING (idServidor)
-                             LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
-                             LEFT JOIN tbperfil USING (idPerfil)
-            WHERE tbservidor.situacao = 1
-              AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "' . date('Y') . '"';
+                          tbpessoa.nome,
+                        tbperfil.nome,
+                        tbtipolicenca.nome,
+                        tblicenca.dtInicial,
+                        tblicenca.numDias,
+                        ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                        tbservidor.idServidor
+                   FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                   LEFT JOIN tblicenca USING (idServidor)
+                                   LEFT JOIN tbtipolicenca ON (tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca)
+                                   LEFT JOIN tbperfil USING (idPerfil)
+                  WHERE tbservidor.situacao = 1
+                    AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "' . date('Y') . '"';
         if (!is_null($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
@@ -122,20 +150,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) com licença terminando em ' . date('Y');
-        $label = ['IdFuncional', 'Nome', 'Perfil', 'Licença', 'Data Inicial', 'Dias', 'Data Final'];
-        $funcao = [null, null, null, null, "date_to_php", null, "date_to_php"];
-        $align = ['center', 'left'];
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
+        $tabela->set_label(['IdFuncional', 'Servidor', 'Perfil', 'Licença', 'Data Inicial', 'Dias', 'Data Final']);
+        $tabela->set_align(['center', 'left', 'center', 'left']);
+        #$tabela->set_classe([null, "Pessoal"]);
+        #$tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -146,7 +171,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -162,87 +187,16 @@ class Checkup {
     ##########################################################
 
     /**
-     * Método get_licencaPremioVencendo
-     * 
-     * Servidores com Licença Premio vencendo este ano
-     */
-    /*
-
-      public function get_licencaPremioVencendo($idServidor = null){
-      # Define a prioridade (1, 2 ou 3)
-      $prioridade = 4;
-
-      $servidor = new Pessoal();
-      $metodo = explode(":",__METHOD__);
-
-      $select = 'SELECT tbservidor.idFuncional,
-      tbpessoa.nome,
-      tbperfil.nome,
-      tblicencapremio.dtInicial,
-      tblicencapremio.numDias,
-      ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-      tbservidor.idServidor
-      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-      LEFT JOIN tblicencapremio USING (idServidor)
-      LEFT JOIN tbperfil USING (idPerfil)
-      WHERE tbservidor.situacao = 1
-      AND YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = "'.date('Y').'"';
-      if(!is_null($idServidor)){
-      $select .= ' AND idServidor = "'.$idServidor.'"';
-      }
-      $select .= ' ORDER BY 7';
-
-      $result = $servidor->select($select);
-      $count = $servidor->count($select);
-
-      # Cabeçalho da tabela
-      $titulo = 'Servidor(es) com '.$servidor->get_licencaNome(6).' terminando em '.date('Y');
-      $label = ['IdFuncional','Nome','Perfil','Data Inicial','Dias','Data Final'];
-      $funcao = [null,null,null,"date_to_php",null,"date_to_php"];
-      $align = ['center','left'];
-
-      # Exibe a tabela
-      $tabela = new Tabela();
-      $tabela->set_conteudo($result);
-      $tabela->set_label($label);
-      $tabela->set_align($align);
-      $tabela->set_titulo($titulo);
-      $tabela->set_funcao($funcao);
-      $tabela->set_editar($this->linkEditar);
-      $tabela->set_idCampo('idServidor');
-
-      if ($count > 0){
-      if(!is_null($idServidor)){
-      return $titulo;
-      }elseif($this->lista){
-      $tabela->show();
-      set_session('alerta',$metodo[2]);
-      }else{
-      $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
-      return $retorna;
-      }
-      }elseif($this->lista){
-      br();
-      tituloTable($titulo);
-      $callout = new Callout();
-      $callout->abre();
-      p('Nenhum item encontrado !!','center');
-      $callout->fecha();
-      }
-      }
-     * 
-     */
-
-    ##########################################################
-
-    /**
      * Método get_trienioVencendo
      * 
      * Servidores com trênio vencendo este ano
      */
-    public function get_trienioVencendo($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_trienioVencendo($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Triênio";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -289,20 +243,15 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio'];
-        $align = ['center', 'left'];
-        $titulo = 'Servidor(es) com triênio vencendo em ' . date('Y');
-        $funcao = [null, null, "date_to_php", null, "date_to_php", "date_to_php"];
+        $titulo = 'Servidor(es) estatutários com triênio vencendo em ' . date('Y');
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio']);
+        $tabela->set_align(['center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
+        $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -313,7 +262,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -333,9 +282,12 @@ class Checkup {
      * 
      * Servidores com trênio vencido anterior a esse ano
      */
-    public function get_trienioVencido($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_trienioVencido($idServidor = null)
+    {
+
+        # Define a categoria e a categoria
+        $prioridade = null;
+        $categoria = "Triênio";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -386,7 +338,7 @@ class Checkup {
         # Cabeçalho da tabela
         $label = ['IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Deveriam ter recebido em:'];
         $align = ['center', 'left'];
-        $titulo = 'Servidor(es) com triênio vencido antes de ' . date('Y');
+        $titulo = 'Servidor(es) estatutários com triênio vencido antes de ' . date('Y');
         $funcao = [null, null, "date_to_php", null, "date_to_php", "date_to_php"];
 
         # Exibe a tabela
@@ -406,7 +358,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -426,9 +378,12 @@ class Checkup {
      * 
      * Servidores com o auxílio creche vencendo este ano
      */
-    public function get_auxilioCrecheVencido($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 4;
+    public function get_auxilioCrecheVencido($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Auxílio Creche";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -444,6 +399,7 @@ class Checkup {
              FROM tbdependente JOIN tbpessoa USING (idpessoa)
                                JOIN tbservidor USING (idpessoa)
             WHERE tbservidor.situacao = 1
+              AND idPerfil = 1
               AND YEAR(dtTermino) = "' . date('Y') . '"';
         if (!is_null($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
@@ -453,21 +409,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $titulo = 'Servidor(es) com o auxílio creche vencendo em ' . date('Y');
+        $titulo = 'Servidor(es) estatutários com o auxílio creche vencendo em ' . date('Y');
         $label = ["IdFuncional", "Servidor", "Dependente", "Nascimento", "Término do Aux.", "CI Exclusão", "Processo"];
-        $funcao = [null, null, null, "date_to_php", "date_to_php"];
-        $align = ['center', 'left', 'left'];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(["IdFuncional", "Servidor", "Dependente", "Nascimento", "Término do Aux.", "CI Exclusão", "Processo"]);
+        $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -478,7 +429,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -498,15 +449,17 @@ class Checkup {
      * 
      * Motoristas com carteira de habilitação vencida no sistema
      */
-    public function get_motoristaCarteiraVencida($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_motoristaCarteiraVencida($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Motorista";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional, 
-                          tbservidor.matricula,  
                           tbpessoa.nome,
                           motorista,
                           tbdocumentacao.dtVencMotorista,
@@ -526,25 +479,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Habilitação', 'Data da Carteira', 'Cargo'];
-        $align = ['center', 'center', 'left', 'center', 'center', 'left'];
         $titulo = 'Motorista(s) com carteira de habilitação vencida';
-        $funcao = [null, "dv", null, null, "date_to_php"];
-        $classe = [null, null, null, null, null, "Pessoal"];
-        $rotina = [null, null, null, null, null, "get_cargo"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Habilitação', 'Data da Carteira', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo"]);
+        $tabela->set_funcao([null, null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -556,7 +501,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -576,15 +521,17 @@ class Checkup {
      * 
      * Motoristas com carteira de habilitação sem data de vencimento cadastrada no sistema
      */
-    public function get_motoristaSemDataCarteira($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_motoristaSemDataCarteira($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Motorista";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
         $select = 'SELECT tbservidor.idFuncional, 
-                          tbservidor.matricula,  
                           tbpessoa.nome,
                           motorista,
                           tbdocumentacao.dtVencMotorista,
@@ -602,25 +549,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Habilitação', 'Data da Carteira', 'Cargo'];
-        $align = ['center', 'center', 'left', 'center', 'center', 'left'];
         $titulo = 'Motorista(s) com carteira de habilitação sem data de vencimento';
-        $funcao = [null, "dv", null, null, "date_to_php"];
-        $classe = [null, null, null, null, null, "Pessoal"];
-        $rotina = [null, null, null, null, null, "get_cargo"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Habilitação', 'Data da Carteira', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo"]);
+        $tabela->set_funcao([null, null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -632,7 +571,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -652,9 +591,12 @@ class Checkup {
      * 
      * Motorista sem número da carteira de habilitação cadastrada:
      */
-    public function get_motoristaSemCarteira($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_motoristaSemCarteira($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Motorista";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -677,25 +619,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Habilitação', 'Cargo');
-        $align = array('center', 'center', 'left');
         $titulo = 'Motorista(s) sem número da carteira de habilitação cadastrada:';
-        $classe = array(null, null, null, null, "Pessoal");
-        $rotina = array(null, null, null, null, "get_cargo");
-        $funcao = array(null, "dv");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Habilitação', 'Cargo']);
+        $tabela->set_align(['center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo"]);
+        #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -707,7 +641,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -727,9 +661,12 @@ class Checkup {
      * 
      * Servidor estatutário que faz 75 anos este ano (Preparar aposentadoria compulsória)
      */
-    public function get_servidorCom74($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorCom74($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Aposentadoria";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -751,25 +688,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Nome', 'Data de Nascimento', 'Idade', 'Lotação', 'Cargo');
-        $align = array('center', 'left', 'center', 'center', 'left', 'left');
         $titulo = 'Servidor(es) estatutário(s) que faz 75 anos este ano. Preparar aposentadoria compulsória';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        $funcao = array(null, null, "date_to_php");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Data de Nascimento', 'Idade', 'Lotação', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'center', 'center', 'left', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -781,7 +710,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -801,9 +730,12 @@ class Checkup {
      * 
      * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
      */
-    public function get_servidorComMais75($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_servidorComMais75($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Aposentadoria";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -825,25 +757,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Nome', 'Data de Nascimento', 'Idade', 'Lotação', 'Cargo');
-        $align = array('center', 'left', 'center', 'center', 'left', 'left');
         $titulo = 'Servidor(es) estatutário com 75 anos ou mais. Aposentar Compulsoriamente';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        $funcao = array(null, null, "date_to_php");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Data de Nascimento', 'Idade', 'Lotação', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'center', 'center', 'left', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -854,7 +778,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -874,9 +798,12 @@ class Checkup {
      * 
      * Servidor estatutário com mais de uma matriculka ativa
      */
-    public function get_servidorComMaisde1MatriculaAtiva($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorComMaisde1MatriculaAtiva($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -906,22 +833,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
+        $titulo = 'Servidor(es) com mais de um vínculo (matrícula) ativo';
 
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
-        $titulo = 'Servidor(es) com mais de uma matrícula ativa';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        #$funcao = array(null,null,"date_to_php");
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
         #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -934,7 +855,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -954,9 +875,12 @@ class Checkup {
      * 
      * Servidor Ativo com perfil outros
      */
-    public function get_servidorComPerfilOutros($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_servidorComPerfilOutros($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -981,22 +905,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
         $titulo = 'Servidor(es) com perfil outros';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
         #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -1009,7 +927,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1029,15 +947,17 @@ class Checkup {
      * 
      * Servidor com perfil outros
      */
-    public function get_servidorSemPerfil($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorSemPerfil($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Perfil";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
         $select = 'SELECT idfuncional,
-                          matricula,
                           tbpessoa.nome,
                           tbperfil.nome,                          
                           idServidor,
@@ -1056,22 +976,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
         $titulo = 'Servidor(es) sem perfil cadastrado';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_lotacao", "get_cargo"]);
         #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -1084,7 +998,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1104,15 +1018,169 @@ class Checkup {
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorTecnicoEstatutarioSemConcurso($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorTecnicoEstatutarioInativosSemConcurso($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Concurso";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
         $select = 'SELECT idfuncional,
                           matricula,
+                          dtAdmissao,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idConcurso is null
+                      AND tbservidor.situacao <> 1
+                      AND idPerfil = 1
+                      AND (idCargo <> 128 AND idCargo <> 129)';
+        if (!is_null($idServidor)) {
+            $select .= ' AND idServidor = "' . $idServidor . '"';
+        }
+        $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+        $titulo = 'Servidor(es) técnico(s) estatutário(s) inativos sem concurso cadastrado';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "dv", "date_to_php"]);
+        $tabela->set_editar($this->linkEditar);
+        $tabela->set_idCampo('idServidor');
+
+        if ($count > 0) {
+            if (!is_null($idServidor)) {
+                return $titulo;
+            } elseif ($this->lista) {
+                callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
+                $tabela->show();
+                set_session('alerta', $metodo[2]);
+            } else {
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
+                return $retorna;
+            }
+        } elseif ($this->lista) {
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+            p('Nenhum item encontrado !!', 'center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorTecnicoEstatutarioSemConcurso
+     * 
+     * Servidor Concursado sem concurso cadastrado
+     */
+    public function get_servidorTecnicoCeletistaInativosSemConcurso($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Concurso";
+
+        $servidor = new Pessoal();
+        $metodo = explode(":", __METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          matricula,
+                          dtAdmissao,
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE idConcurso is null
+                      AND tbservidor.situacao <> 1
+                      AND idPerfil = 4
+                      AND (idCargo <> 128 AND idCargo <> 129)';
+        if (!is_null($idServidor)) {
+            $select .= ' AND idServidor = "' . $idServidor . '"';
+        }
+        $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+        $titulo = 'Servidor(es) técnico(s) celetista(s) inativos sem concurso cadastrado';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "dv", "date_to_php"]);
+        $tabela->set_editar($this->linkEditar);
+        $tabela->set_idCampo('idServidor');
+
+        if ($count > 0) {
+            if (!is_null($idServidor)) {
+                return $titulo;
+            } elseif ($this->lista) {
+                callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
+                $tabela->show();
+                set_session('alerta', $metodo[2]);
+            } else {
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
+                return $retorna;
+            }
+        } elseif ($this->lista) {
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+            p('Nenhum item encontrado !!', 'center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorTecnicoEstatutarioSemConcurso
+     * 
+     * Servidor Concursado sem concurso cadastrado
+     */
+    public function get_servidorTecnicoAtivosEstatutarioSemConcurso($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Concurso";
+
+        $servidor = new Pessoal();
+        $metodo = explode(":", __METHOD__);
+
+        $select = 'SELECT idfuncional,
                           dtAdmissao,
                           tbpessoa.nome,
                           tbperfil.nome,                          
@@ -1135,25 +1203,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação'];
-        $align = ['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center'];
-        $titulo = 'Servidor(es) técnico(s) estatutário(s) sem concurso cadastrado';
-        $classe = [null, null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, null, "get_lotacao", "get_cargo"];
-        $funcao = [null, "dv", "date_to_php"];
-
+        $titulo = 'Servidor(es) técnico(s) estatutário(s) ativos sem concurso cadastrado';
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1165,7 +1225,157 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
+                return $retorna;
+            }
+        } elseif ($this->lista) {
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+            p('Nenhum item encontrado !!', 'center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorAtivoComConcursoPosteriorAdmissao
+     * 
+     * Servidor Concursado com concurso posterior a admissão
+     */
+    public function get_servidorAtivoComConcursoPosteriorAdmissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = 1;
+        $categoria = "Concurso";
+
+        $servidor = new Pessoal();
+        $metodo = explode(":", __METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          dtPublicacaoEdital,
+                          dtAdmissao,                          
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                     LEFT JOIN tbconcurso USING (idConcurso)
+                    WHERE tbservidor.situacao = 1
+                      AND dtAdmissao < tbconcurso.dtPublicacaoEdital
+                      AND idPerfil = 1';
+        if (!is_null($idServidor)) {
+            $select .= ' AND idServidor = "' . $idServidor . '"';
+        }
+        $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+        $titulo = 'Servidor(es) Ativos Admitido Antes do Concurso';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label(['IdFuncional', 'Concurso', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
+        $tabela->set_editar($this->linkEditar);
+        $tabela->set_idCampo('idServidor');
+
+        if ($count > 0) {
+            if (!is_null($idServidor)) {
+                return $titulo;
+            } elseif ($this->lista) {
+                callout("Um servidor concursado não pode ser admitido antes de efetivamente passar no concurso.");
+                $tabela->show();
+                set_session('alerta', $metodo[2]);
+            } else {
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
+                return $retorna;
+            }
+        } elseif ($this->lista) {
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+            p('Nenhum item encontrado !!', 'center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorComConcursoPosteriorAdmissao
+     * 
+     * Servidor Concursado com concurso posterior a admissão
+     */
+    public function get_servidorInativoComConcursoPosteriorAdmissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Concurso";
+
+        $servidor = new Pessoal();
+        $metodo = explode(":", __METHOD__);
+
+        $select = 'SELECT idfuncional,
+                          dtPublicacaoEdital,
+                          dtAdmissao,                          
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                          JOIN tbconcurso USING (idConcurso)
+                    WHERE tbservidor.situacao <> 1
+                      AND dtAdmissao < dtPublicacaoEdital
+                      AND idPerfil = 1 OR idPerfil = 4';
+        if (!is_null($idServidor)) {
+            $select .= ' AND idServidor = "' . $idServidor . '"';
+        }
+        $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+        $titulo = 'Servidor(es) Inativos Admitido Antes do Concurso';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label(['IdFuncional', 'Concurso', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
+        $tabela->set_editar($this->linkEditar);
+        $tabela->set_idCampo('idServidor');
+
+        if ($count > 0) {
+            if (!is_null($idServidor)) {
+                return $titulo;
+            } elseif ($this->lista) {
+                callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
+                $tabela->show();
+                set_session('alerta', $metodo[2]);
+            } else {
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1185,9 +1395,12 @@ class Checkup {
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorProfessorAtivoSemConcurso($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorProfessorAtivoSemConcurso($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Concurso";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1216,25 +1429,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação'];
-        $align = ['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center'];
         $titulo = 'Professores ativos sem concurso cadastrado';
-        $classe = [null, null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, null, "get_lotacao", "get_cargo"];
-        $funcao = [null, "dv", "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "dv", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1246,7 +1451,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1266,9 +1471,12 @@ class Checkup {
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorProfessorInativoSemConcurso($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorProfessorInativoSemConcurso($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Concurso";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1297,25 +1505,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação'];
-        $align = ['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center'];
         $titulo = 'Professores inativos sem concurso cadastrado';
-        $classe = [null, null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, null, "get_lotacao", "get_cargo"];
-        $funcao = [null, "dv", "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "dv", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1327,7 +1527,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1347,9 +1547,12 @@ class Checkup {
      * 
      * Cargo em comissão nomeado e exonerado no mesmo dia?!
      */
-    public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cargo em Comissão";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1375,25 +1578,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Descrição');
-        $align = array('center', 'center', 'left', 'center', 'center', 'left');
         $titulo = 'Cargo em comissão nomeado e exonerado no mesmo dia';
-        $classe = array(null, null, null, null, null, null, null, null, "CargoComisso");
-        $rotina = array(null, null, null, null, null, null, null, null, "get_descricaoCargo");
-        $funcao = array(null, "dv", null, "date_to_php", "date_to_php", "descricaoComissao");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Descrição']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_funcao([null, "dv", null, "date_to_php", "date_to_php", "descricaoComissao"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1405,7 +1600,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1425,9 +1620,12 @@ class Checkup {
      * 
      * Exibe servidor ativo sem id Funcional cadastrado que não for bolsista
      */
-    public function get_servidorSemIdFuncional($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorSemIdFuncional($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1454,22 +1652,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
         $titulo = 'Servidor(es) sem id funcional cadastrado no sistema';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
         #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
@@ -1482,7 +1674,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1502,9 +1694,12 @@ class Checkup {
      * 
      * Servidor sem data de nasciment cadastrada
      */
-    public function get_servidorSemDtNasc($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorSemDtNasc($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1524,23 +1719,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Nome', 'Data de Nascimento', 'Lotação', 'Cargo');
-        $align = array('center', 'left', 'center', 'left', 'left');
         $titulo = 'Servidor(es) sem data de nascimento cadastrada no sistema';
-        $classe = array(null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, "get_lotacao", "get_cargo");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Data de Nascimento', 'Lotação', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'center', 'left', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
+        $tabela->set_classe([null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_lotacao", "get_cargo"]);
         #$tabela->set_funcao($funcao);
-        $tabela->set_metodo($rotina);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1552,7 +1741,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1572,9 +1761,12 @@ class Checkup {
      * 
      * Servidor DA UENF cedido a outro orgão que não está lotado na reitoria cedidos
      */
-    public function get_servidorCedidoLotacaoErrada($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorCedidoLotacaoErrada($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cedidos";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1602,25 +1794,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Lotação');
-        $align = array('center', 'left', 'left', 'center', 'center', 'left');
         $titulo = 'Servidor(es) cedido(s) pela UENF sem estar lotado no Reitoria - Cedidos';
-        $classe = array(null, null, null, null, null, "Pessoal");
-        $rotina = array(null, null, null, null, null, "get_lotacao");
-        $funcao = array(null, null, null, "date_to_php", "date_to_php");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Lotação']);
+        $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_funcao($funcao);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao"]);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1632,7 +1816,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1652,9 +1836,12 @@ class Checkup {
      * 
      * Servidor DA UENF cedido a outro orgão onde a dta de término de cassão já passou mas continua cedido na reitoria cedidos
      */
-    public function get_servidorCedidoDataExpirada($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorCedidoDataExpirada($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cedidos";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1684,23 +1871,17 @@ class Checkup {
         $count = $servidor->count($select);
 
         # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Lotação');
-        $align = array('center', 'left', 'left', 'center', 'center', 'left');
         $titulo = 'Servidor(es) cedido(s) pela UENF que terminaram a cessão mas ainda lotados na Reitoria - Cedidos';
-        $classe = array(null, null, null, null, null, "Pessoal");
-        $rotina = array(null, null, null, null, null, "get_lotacao");
-        $funcao = array(null, null, null, "date_to_php", "date_to_php");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Lotação']);
+        $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_funcao($funcao);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_lotacao"]);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1712,7 +1893,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1732,16 +1913,18 @@ class Checkup {
      * 
      * Servidor estatutário sem cargo cadastrado:
      */
-    public function get_servidorEstatutarioSemCargo($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_servidorEstatutarioSemCargo($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
 
         $select = 'SELECT idfuncional,
-                          matricula,
                           tbpessoa.nome,        
                           idServidor,
                           tbperfil.nome,   
@@ -1759,25 +1942,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Lotação', 'Perfil', 'Cargo'];
-        $align = ['center', 'center', 'left', 'left', 'center'];
-        $titulo = 'Servidor(es) estatutário(s) sem cargo cadastrado.';
-        $classe = [null, null, null, "Pessoal", null, "Pessoal"];
-        $rotina = [null, null, null, "get_lotacao", null, "get_cargo"];
-        $funcao = [null, "dv"];
-
+        $titulo = 'Servidor(es) ativos estatutário(s) sem cargo efetivo cadastrado.';
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Perfil', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, "Pessoal", null, "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_lotacao", null, "get_cargo"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1789,7 +1963,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1809,16 +1983,18 @@ class Checkup {
      * 
      * Servidor NÃO estatutário E NÃO bolsista sem cargo cadastrado:
      */
-    public function get_servidorSemCargo($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorSemCargo($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
 
         $select = 'SELECT idfuncional,
-                          matricula,
                           tbpessoa.nome,
                           tbperfil.nome,                          
                           idServidor,
@@ -1828,7 +2004,6 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                     WHERE (idCargo IS null OR idCargo = 0)
                       AND situacao = 1
-                      AND idPerfil <> 10
                       AND idPerfil <> 1';
         if (!is_null($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
@@ -1837,25 +2012,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo');
-        $align = array('center', 'center', 'left', 'center', 'left');
-        $titulo = 'Servidor(es) sem cargo cadastrado.';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        $funcao = array(null, "dv");
-
+        $titulo = 'Servidor(es) ativo não estatutário sem cargo cadastrado.';
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_lotacao", "get_cargo"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1867,7 +2033,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1887,9 +2053,12 @@ class Checkup {
      * 
      * Servidor cedido PARA a UENF sem informação do órgão cedente
      */
-    public function get_servidorCedidoSemInfoCedente($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_servidorCedidoSemInfoCedente($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cedidos";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1912,23 +2081,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
+        $titulo = 'Servidor(es) ativo cedido(s) para UENF sem informações da cessão';
 
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Nome', 'Órgão Cedente', 'Lotação');
-        $align = array('center', 'left', 'left', 'left');
-        $titulo = 'Servidor(es) cedido(s) para UENF sem informações da cessão';
-        $classe = array(null, null, null, "Pessoal");
-        $rotina = array(null, null, null, "get_lotacao");
-        #$funcao = array(null,null,null,"date_to_php","date_to_php");
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Órgão Cedente', 'Lotação']);
+        $tabela->set_align(['center', 'left', 'left', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        #$tabela->set_funcao($funcao);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_lotacao"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -1940,7 +2102,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -1960,9 +2122,12 @@ class Checkup {
      * 
      * Servidor Inativo com perfil outros
      */
-    public function get_servidorInativoComPerfilOutros($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorInativoComPerfilOutros($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -1987,25 +2152,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
         $titulo = 'Servidor(es) inativo(s) com perfil outros';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-        $funcao = array(null, "dv");
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2017,7 +2174,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2037,9 +2194,12 @@ class Checkup {
      * 
      * Servidor inativo sem motivo de saída:
      */
-    public function get_servidorInativoSemMotivoSaida($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorInativoSemMotivoSaida($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2064,25 +2224,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Motivo'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
         $titulo = 'Servidor(es) inativo(s) sem motivo de saída cadastrado.';
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Motivo']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2094,7 +2246,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2114,9 +2266,12 @@ class Checkup {
      * 
      * Servidor inativo sem data de saída:
      */
-    public function get_servidorInativoSemdataSaida($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorInativoSemdataSaida($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2141,25 +2296,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Saída'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
         $titulo = 'Servidor(es) inativo(s) sem data de saída cadastrada.';
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Saída']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2171,7 +2318,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2191,9 +2338,12 @@ class Checkup {
      * 
      * Servidor Duplicado no Sistema
      */
-    public function get_servidorDuplicado($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorDuplicado($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Cadastro Geral !!";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2220,23 +2370,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação');
-        $align = array('center', 'center', 'left', 'center', 'left');
         $titulo = 'Servidor(es) duplicado(s) no sistema.';
-        $classe = array(null, null, null, null, "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2248,7 +2392,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2268,9 +2412,12 @@ class Checkup {
      * 
      * Servidor sem situação cadastrada
      */
-    public function get_servidorSemSituacao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorSemSituacao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2292,23 +2439,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left');
         $titulo = 'Servidor(es) sem situacao cadastrada.';
-        $classe = array(null, null, null, "Pessoal", "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, "get_perfil", "get_cargo", "get_situacao");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_perfil", "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2320,7 +2461,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2340,9 +2481,12 @@ class Checkup {
      * 
      * Servidor sem data de admissão
      */
-    public function get_servidorSemAdmissao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorSemAdmissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2365,23 +2509,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Admissão', 'Perfil', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'center', 'left');
         $titulo = 'Servidor(es) sem data de admissão cadastrada.';
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_perfil", "get_cargo", "get_situacao");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Admissão', 'Perfil', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_perfil", "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2393,7 +2531,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2413,16 +2551,18 @@ class Checkup {
      * 
      * Servidor estatutario ativo sem processo de Licença Premio (especial) 
      */
-    public function get_servidorSemProcessoPremio($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 4;
+    public function get_servidorSemProcessoPremio($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Licenças";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
 
         $select = 'SELECT idfuncional,
-                          matricula,
                           tbpessoa.nome,
                           idServidor,                          
                           idServidor,
@@ -2439,23 +2579,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
+        $titulo = 'Servidor(es) estatutário(s) ativo(s) sem processo de ' . $servidor->get_licencaNome(6);
 
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left');
-        $titulo = 'Servidor(es) estatutário(s) sem processo de ' . $servidor->get_licencaNome(6);
-        $classe = array(null, null, null, "Pessoal", "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, "get_perfil", "get_cargo", "get_situacao");
-        #$funcao = array(null,null,"date_to_php");
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Perfil', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, "Pessoal", "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_perfil", "get_cargo", "get_situacao"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2467,7 +2600,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2487,9 +2620,12 @@ class Checkup {
      * 
      * Servidores com Férias anteriores a data de admissão
      */
-    public function get_feriasAntesAdmissao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_feriasAntesAdmissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Férias";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2514,21 +2650,15 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Férias anteriores a data de Admissão do servidor';
-        $label = ['IdFuncional', 'Nome', 'Perfil', 'Ano Exercicio', 'Data Inicial', 'Dias', 'Admissão'];
-        $funcao = [null, null, null, null, "date_to_php", null, "date_to_php"];
-        $align = ['center', 'left'];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Perfil', 'Ano Exercicio', 'Data Inicial', 'Dias', 'Admissão']);
+        $tabela->set_align(['center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
+        $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2539,7 +2669,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2559,9 +2689,12 @@ class Checkup {
      * 
      * Servidores com Licença Prêmio com dias diferente de 30, 60 e 90 dias
      */
-    public function get_licencaPremioEstranha($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_licencaPremioEstranha($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Licenças";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2586,23 +2719,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $titulo = 'Servidores com Licença Prêmio diferente de 30,60 e 90 dias';
-        $label = ['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Dias'];
-        $classe = array(null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, "get_cargo", "get_lotacao");
-        $align = ['center', 'left'];
-
+        $titulo = 'Servidores com Licença Prêmio diferente de 30, 60 e 90 dias';
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Dias']);
+        $tabela->set_align(['center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2614,7 +2740,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2634,9 +2760,12 @@ class Checkup {
      * 
      * Servidor estatutario ativo com licença medica CLT
      */
-    public function get_estatutarioComLicencaMedicaClt($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_estatutarioComLicencaMedicaClt($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Licenças";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2664,23 +2793,14 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Alta', 'Data Inicial', 'Dias', 'Data Final');
-        $align = array('center', 'center', 'left', 'center', 'left');
         $titulo = 'Servidor(es) estatutário(s) com licença medica CLT';
-        #$classe = array(null,null,null,"Pessoal","Pessoal","Pessoal");
-        #$rotina = array(null,null,null,"get_perfil","get_cargo","get_situacao");
-        #$funcao = array(null,null,"date_to_php");
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Alta', 'Data Inicial', 'Dias', 'Data Final']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        #$tabela->set_classe($classe);
-        #$tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2692,7 +2812,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2712,9 +2832,12 @@ class Checkup {
      * 
      * Servidores com Mais folgas fruídas do que concedidas
      */
-    public function get_folgaFruidaTreMaiorConcedida($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_folgaFruidaTreMaiorConcedida($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = 1;
+        $categoria = "TRE";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2736,25 +2859,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) com mais folgas fruídas do Tre do que concedidas';
-        $label = ['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Folgas Concedidas', 'Folgas Fruídas'];
-        $funcao = [null];
-        $classe = [null, null, null, "Pessoal", "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, "get_lotacao", "get_treFolgasConcedidas", "get_treFolgasFruidas"];
-        $align = ['center', 'left'];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Folgas Concedidas', 'Folgas Fruídas']);
+        $tabela->set_align(['center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_lotacao", "get_treFolgasConcedidas", "get_treFolgasFruidas"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2765,7 +2879,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2785,9 +2899,12 @@ class Checkup {
      * 
      * Servidores com progressão e/ou 
      */
-    public function get_progressaoImportada($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_progressaoImportada($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Progressão";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2810,25 +2927,16 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) ativos com progressão importada';
-        $label = ['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Situação'];
-        $funcao = [null];
-        $classe = [null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, "get_lotacao", "get_situacao"];
-        $align = ['center', 'left'];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Situação']);
+        $tabela->set_align(['center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_classe([null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, "get_lotacao", "get_situacao"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2839,7 +2947,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2859,14 +2967,18 @@ class Checkup {
      * 
      * Servidores com progressão e/ou 
      */
-    public function get_progressaoImportadaInativos($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 1;
+    public function get_progressaoImportadaInativos($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Progressão";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
         $select = 'SELECT distinct tbservidor.idFuncional,
+                          tbservidor.matricula,
                           tbpessoa.nome,
                           tbperfil.nome,
                           tbservidor.idServidor,
@@ -2884,25 +2996,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) INATIVOS com progressão importada';
-        $label = ['IdFuncional', 'Nome', 'Perfil', 'Lotação', 'Situação'];
-        $funcao = [null];
-        $classe = [null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, "get_lotacao", "get_situacao"];
-        $align = ['center', 'left'];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_funcao($funcao);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
+        $tabela->set_funcao([null, "dv"]);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_situacao"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2913,7 +3017,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -2933,9 +3037,12 @@ class Checkup {
      * 
      * Celetista com situação Fim de Cessão
      */
-    public function get_celetistaInativoFimCessao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_celetistaInativoFimCessao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -2957,25 +3064,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Celetista(s) com situação Fim de Cessão.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -2987,7 +3086,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3007,13 +3106,15 @@ class Checkup {
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorSemSexo($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorSemSexo($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3031,25 +3132,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor sem sexo cadastrado no sistema.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3061,7 +3154,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3081,13 +3174,15 @@ class Checkup {
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorSemEstCiv($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorSemEstCiv($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3105,25 +3200,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor sem estado civil cadastrado no sistema.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3135,7 +3222,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3155,13 +3242,15 @@ class Checkup {
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorComAverbacaoAposAdmissao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorComAverbacaoAposAdmissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Aposentadoria";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3182,25 +3271,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) com tempo averbado iniciando após admissão.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Admissão', 'Data da Averbação'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv", null, null, null, null, "date_to_php", "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Admissão', 'Data da Averbação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3212,7 +3293,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3232,13 +3313,15 @@ class Checkup {
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorComAverbacaoTerminandoAposAdmissao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
+    public function get_servidorComAverbacaoTerminandoAposAdmissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
         $prioridade = 1;
+        $categoria = "Aposentadoria";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3259,25 +3342,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) com tempo averbado terminando após admissão.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Admissão', 'Data Final da Averbação'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_situacao"];
-        $funcao = [null, "dv", null, null, null, null, "date_to_php", "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Situação', 'Admissão', 'Data Final da Averbação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_situacao"]);
+        $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3289,7 +3364,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3305,99 +3380,19 @@ class Checkup {
     ##########################################################
 
     /**
-     * Método get_servidorComReducaoMenor90Dias
-     * 
-     * Servidor Com redução da carga horário terminando em menos de 90 dias
-     */
-    /*
-      public function get_servidorComReducaoMenor90Dias($idServidor = null){
-      # Define a prioridade (1, 2 ou 3)
-      $prioridade = 1;
-
-      $servidor = new Pessoal();
-      $metodo = explode(":",__METHOD__);
-
-
-      $select = 'SELECT idfuncional,
-      matricula,
-      tbpessoa.nome,
-      tbperfil.nome,
-      idServidor,
-      idServidor,
-      tbreducao.dtInicio,
-      ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),
-      DATEDIFF(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),curdate())
-      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-      LEFT JOIN tbperfil USING (idPerfil)
-      LEFT JOIN tbreducao USING (idServidor)
-      WHERE (
-      (DATEDIFF(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),curdate()) > 0)
-      AND (DATEDIFF(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),curdate()) < 90)
-      )';
-
-      if(!is_null($idServidor)){
-      $select .= ' AND idServidor = "'.$idServidor.'"';
-      }
-      $select .= ' ORDER BY tbpessoa.nome';
-
-      $result = $servidor->select($select);
-      $count = $servidor->count($select);
-
-      # Cabeçalho da tabela
-      $titulo = 'Servidor(es) com redução da carga horária terminando em menos de 90 dias.';
-      $label = ['IdFuncional','Matrícula','Nome','Perfil','Cargo','Situação','Data inicial','Data Final','Faltando'];
-      $align = ['center','center','left','center','left'];
-      $classe = [null,null,null,null,"Pessoal","Pessoal"];
-      $rotina = [null,null,null,null,"get_cargo","get_situacao"];
-      $funcao = [null,"dv",null,null,null,null,"date_to_php","date_to_php"];
-
-
-      # Exibe a tabela
-      $tabela = new Tabela();
-      $tabela->set_conteudo($result);
-      $tabela->set_label($label);
-      $tabela->set_align($align);
-      $tabela->set_titulo($titulo);
-      $tabela->set_classe($classe);
-      $tabela->set_metodo($rotina);
-      $tabela->set_funcao($funcao);
-      $tabela->set_editar($this->linkEditar);
-      $tabela->set_idCampo('idServidor');
-
-      if($count > 0){
-      if(!is_null($idServidor)){
-      return $titulo;
-      }elseif($this->lista){
-      #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
-      $tabela->show();
-      set_session('alerta',$metodo[2]);
-      }else{
-      $retorna = [$count.' '.$titulo,$metodo[2],$prioridade];
-      return $retorna;
-      }}elseif($this->lista){
-      br();
-      tituloTable($titulo);
-      $callout = new Callout();
-      $callout->abre();
-      p('Nenhum item encontrado !!','center');
-      $callout->fecha();
-      }
-      }
-     */
-    ##########################################################
-
-    /**
      * Método get_servidorComDependentesSemParentesco
      * 
      * Servidor Com Dependentes (parentes) sem parentesco cadastrado
      */
-    public function get_servidorComDependentesSemParentesco($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorComDependentesSemParentesco($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Cadastro Geral";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT tbdependente.nome,
                           tbparentesco.Parentesco,
@@ -3417,23 +3412,14 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Servidor(es) com parentes sem parentesco cadastrado.';
-        $label = ['Parente', 'Parentesco', 'ID Funcional', 'Matrícula', 'Servidor'];
-        $align = ['left', 'center', 'center', 'center', 'left'];
-        #$classe = [null,null,null,null,"Pessoal","Pessoal"];
-        #$rotina = [null,null,null,null,"get_cargo","get_situacao"];
-        #$funcao = [null,"dv",null,null,null,null,"date_to_php","date_to_php"];
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['Parente', 'Parentesco', 'ID Funcional', 'Matrícula', 'Servidor']);
+        $tabela->set_align(['left', 'center', 'center', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        #$tabela->set_classe($classe);
-        #$tabela->set_metodo($rotina);
-        #$tabela->set_funcao($funcao);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3441,11 +3427,11 @@ class Checkup {
             if (!is_null($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
-                #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
+                callout("É necessário definir o típo de parentesco entre o parente e o servidor");
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3465,13 +3451,15 @@ class Checkup {
      * 
      * Servidor Com Readaptação terminando em menos de 90 dias
      */
-    public function get_servidorComTerminoReadaptacaoMenos90Dias($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+    public function get_servidorComTerminoReadaptacaoMenos90Dias($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Benefícios";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3494,25 +3482,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Readaptação terminando em menos de 90 dias.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_lotacao"];
-        $funcao = [null, "dv", null, null, null, null, "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
+        $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3524,7 +3504,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3544,13 +3524,15 @@ class Checkup {
      * 
      * Servidor Com Redução terminando em menos de 90 dias
      */
-    public function get_servidorComTerminoReducaoMenos90Dias($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+    public function get_servidorComTerminoReducaoMenos90Dias($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Benefícios";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3573,25 +3555,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Redução da CH terminando em menos de 90 dias.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes'];
-        $align = ['center', 'center', 'left', 'center', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_lotacao"];
-        $funcao = [null, "dv", null, null, null, null, "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
+        $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3603,7 +3577,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3623,13 +3597,15 @@ class Checkup {
      * 
      * Servidor Com Licença Sem Vencimentos terminando em menos de 90 dias
      */
-    public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 2;
+    public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = null;
+        $categoria = "Licenças";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
-
 
         $select = 'SELECT idfuncional,
                           matricula,
@@ -3655,25 +3631,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
         $titulo = 'Licença Sem Vencimentos terminando em menos de 90 dias.';
-        $label = ['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Licença', 'Data Final', 'Dias Faltantes'];
-        $align = ['center', 'center', 'left', 'center', 'left', 'left', 'left'];
-        $classe = [null, null, null, null, "Pessoal", "Pessoal"];
-        $rotina = [null, null, null, null, "get_cargo", "get_lotacao"];
-        $funcao = [null, "dv", null, null, null, null, null, "date_to_php"];
-
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Licença', 'Data Final', 'Dias Faltantes']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'left']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
+        $tabela->set_funcao([null, "dv", null, null, null, null, null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3685,7 +3653,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {
@@ -3705,9 +3673,12 @@ class Checkup {
      * 
      * Servidor Inativo com cargo em comissao
      */
-    public function get_servidorInativoComCargoEmComissao($idServidor = null) {
-        # Define a prioridade (1, 2 ou 3)
-        $prioridade = 3;
+    public function get_servidorInativoComCargoEmComissao($idServidor = null)
+    {
+
+        # Define a categoria e a prioridade
+        $prioridade = 1;
+        $categoria = "Cargo em Comissão";
 
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
@@ -3737,24 +3708,17 @@ class Checkup {
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-
-        # Cabeçalho da tabela
-        $label = array('IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Nomeação', 'Exoneração', 'Situação');
-        $align = array('center', 'center', 'left', 'center', 'left', 'left', 'center');
         $titulo = 'Servidor(es) inativo(s) com cargo em comissao ainda vigente';
-        $funcao = array(null, "dv", null, null, null, null, "date_to_php", "date_to_php");
-        $classe = array(null, null, null, null, "Pessoal", "Pessoal");
-        $rotina = array(null, null, null, null, "get_lotacao", "get_cargo");
-
+        
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Nomeação', 'Exoneração', 'Situação']);
+        $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'center']);
         $tabela->set_titulo($titulo);
-        $tabela->set_classe($classe);
-        $tabela->set_metodo($rotina);
-        $tabela->set_funcao($funcao);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacao", "get_cargo"]);
+        $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php", "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
 
@@ -3766,7 +3730,7 @@ class Checkup {
                 $tabela->show();
                 set_session('alerta', $metodo[2]);
             } else {
-                $retorna = [$count . ' ' . $titulo, $metodo[2], $prioridade];
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
                 return $retorna;
             }
         } elseif ($this->lista) {

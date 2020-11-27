@@ -1,7 +1,6 @@
 <?php
 
-class Checkup
-{
+class Checkup {
 
     /**
      * Classe Checup
@@ -20,15 +19,13 @@ class Checkup
      * 
      * Faz um checkup
      */
-    public function __construct($lista = true)
-    {
+    public function __construct($lista = true) {
         $this->lista = $lista;
     }
 
     ###########################################################
 
-    public function set_linkEditar($linkEditar = null)
-    {
+    public function set_linkEditar($linkEditar = null) {
         if (!empty($linkEditar)) {
             $this->linkEditar = $linkEditar;
         }
@@ -41,8 +38,7 @@ class Checkup
      * 
      * Executa todos os métodos desta classe (menos é claro o get_all e o construct
      */
-    public function get_all()
-    {
+    public function get_all() {
         # Calcula o tempo
         $time_start = microtime(true);
 
@@ -64,8 +60,7 @@ class Checkup
 
         # Ordena os métodos pela categoria
 
-        function cmp($a, $b)
-        {
+        function cmp($a, $b) {
             # Função específica que compara se $a é maior que $b
             return $a[2] > $b[2];
         }
@@ -80,7 +75,7 @@ class Checkup
 
             # Exibe uma linha horizontal
             if ($categoriaAnterior <> $listaRetorno[2]) {
-                if (is_null($categoriaAnterior)) {
+                if (empty($categoriaAnterior)) {
                     $categoriaAnterior = $listaRetorno[2];
                     p($categoriaAnterior, "checkCategoria");
                 } else {
@@ -119,8 +114,7 @@ class Checkup
      * 
      * Servidores com Licença vencendo este ano
      */
-    public function get_licencaVencendo($idServidor = null)
-    {
+    public function get_licencaVencendo($idServidor = null) {
 
         # Define a categoria e a categoria
         $prioridade = null;
@@ -143,7 +137,7 @@ class Checkup
                                    LEFT JOIN tbperfil USING (idPerfil)
                   WHERE tbservidor.situacao = 1
                     AND YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = "' . date('Y') . '"';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY 7';
@@ -165,7 +159,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -191,8 +185,7 @@ class Checkup
      * 
      * Servidores com trênio vencendo este ano
      */
-    public function get_trienioVencendo($idServidor = null)
-    {
+    public function get_trienioVencendo($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -212,7 +205,7 @@ class Checkup
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' 
@@ -231,7 +224,7 @@ class Checkup
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= '        
@@ -256,7 +249,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -282,8 +275,7 @@ class Checkup
      * 
      * Servidores com trênio vencido anterior a esse ano
      */
-    public function get_trienioVencido($idServidor = null)
-    {
+    public function get_trienioVencido($idServidor = null) {
 
         # Define a categoria e a categoria
         $prioridade = null;
@@ -303,7 +295,7 @@ class Checkup
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= '        
@@ -322,7 +314,7 @@ class Checkup
                              LEFT JOIN tbtrienio USING (idServidor)
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= '                      
@@ -352,7 +344,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -378,8 +370,7 @@ class Checkup
      * 
      * Servidores com o auxílio creche vencendo este ano
      */
-    public function get_auxilioCrecheVencido($idServidor = null)
-    {
+    public function get_auxilioCrecheVencido($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -401,7 +392,7 @@ class Checkup
             WHERE tbservidor.situacao = 1
               AND idPerfil = 1
               AND YEAR(dtTermino) = "' . date('Y') . '"';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= '        
@@ -423,7 +414,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -449,8 +440,7 @@ class Checkup
      * 
      * Motoristas com carteira de habilitação vencida no sistema
      */
-    public function get_motoristaCarteiraVencida($idServidor = null)
-    {
+    public function get_motoristaCarteiraVencida($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -471,7 +461,7 @@ class Checkup
                     AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista < now()';
 
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
 
@@ -494,7 +484,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada.<br/>Lembre-se de cadastrar no sistema, na área de documentos do motorista, a nova data, senão esta mensagem continuará sendo exibida para esse servidor.");
@@ -521,8 +511,7 @@ class Checkup
      * 
      * Motoristas com carteira de habilitação sem data de vencimento cadastrada no sistema
      */
-    public function get_motoristaSemDataCarteira($idServidor = null)
-    {
+    public function get_motoristaSemDataCarteira($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -542,7 +531,7 @@ class Checkup
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
                     AND tbdocumentacao.dtVencMotorista is null';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -564,7 +553,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, a data da carteira, senão esta mensagem continuará sendo exibida para esse servidor.");
@@ -591,8 +580,7 @@ class Checkup
      * 
      * Motorista sem número da carteira de habilitação cadastrada:
      */
-    public function get_motoristaSemCarteira($idServidor = null)
-    {
+    public function get_motoristaSemCarteira($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -612,7 +600,7 @@ class Checkup
                     WHERE tbservidor.situacao = 1
                     AND tbservidor.idcargo = 63
                     AND (tbdocumentacao.motorista is null OR tbdocumentacao.motorista ="")';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -634,7 +622,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Solicitar aos motoristas que compareçam a GRH com a cópia da carteira para ser arquivada. Lembre-se de cadastrar no sistema, na área de documentos do motorista, os dados da carteira de habilitação, senão esta mensagem continuará sendo exibida para esse servidor.");
@@ -661,8 +649,7 @@ class Checkup
      * 
      * Servidor estatutário que faz 75 anos este ano (Preparar aposentadoria compulsória)
      */
-    public function get_servidorCom74($idServidor = null)
-    {
+    public function get_servidorCom74($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -681,7 +668,7 @@ class Checkup
                     WHERE tbservidor.situacao = 1
                     AND YEAR(CURDATE()) - YEAR(tbpessoa.dtNasc) = 75
                     AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -703,7 +690,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Avisar ao servidor sobre a aposentadoria compulsória.");
@@ -730,8 +717,7 @@ class Checkup
      * 
      * Servidor estatutário com 75 anos ou mais (Aposentar Compulsoriamente)
      */
-    public function get_servidorComMais75($idServidor = null)
-    {
+    public function get_servidorComMais75($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -750,7 +736,7 @@ class Checkup
                     WHERE tbservidor.situacao = 1
                     AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) >= 75 
                     AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -772,7 +758,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -798,8 +784,7 @@ class Checkup
      * 
      * Servidor estatutário com mais de uma matriculka ativa
      */
-    public function get_servidorComMaisde1MatriculaAtiva($idServidor = null)
-    {
+    public function get_servidorComMaisde1MatriculaAtiva($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -825,7 +810,7 @@ class Checkup
                       WHERE tbservidor.situacao = 1 GROUP BY idPessoa HAVING COUNT(*) > 1 
                    ORDER BY idpessoa)
                       AND tbservidor.situacao = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
 
@@ -848,7 +833,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Servidor com 2 matriculas Ativas !! Houve algum erro no sistema, favor verificar. Somente uma matrícula deveria estar ativa");
@@ -875,8 +860,7 @@ class Checkup
      * 
      * Servidor Ativo com perfil outros
      */
-    public function get_servidorComPerfilOutros($idServidor = null)
-    {
+    public function get_servidorComPerfilOutros($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -898,7 +882,7 @@ class Checkup
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                     WHERE idPerfil = 8
                       AND tbservidor.situacao = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -920,7 +904,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco. Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
@@ -947,8 +931,7 @@ class Checkup
      * 
      * Servidor com perfil outros
      */
-    public function get_servidorSemPerfil($idServidor = null)
-    {
+    public function get_servidorSemPerfil($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -969,7 +952,7 @@ class Checkup
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                     WHERE idPerfil is null
                       AND tbservidor.situacao = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -991,7 +974,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Algum erro no sistema, favor verificar. Todos os servidores devem tem um perfil cadastrado.");
@@ -1018,8 +1001,7 @@ class Checkup
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorTecnicoEstatutarioInativosSemConcurso($idServidor = null)
-    {
+    public function get_servidorTecnicoEstatutarioInativosSemConcurso($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1044,7 +1026,7 @@ class Checkup
                       AND tbservidor.situacao <> 1
                       AND idPerfil = 1
                       AND (idCargo <> 128 AND idCargo <> 129)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
@@ -1067,7 +1049,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
@@ -1094,8 +1076,7 @@ class Checkup
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorTecnicoCeletistaInativosSemConcurso($idServidor = null)
-    {
+    public function get_servidorTecnicoCeletistaInativosSemConcurso($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1120,7 +1101,7 @@ class Checkup
                       AND tbservidor.situacao <> 1
                       AND idPerfil = 4
                       AND (idCargo <> 128 AND idCargo <> 129)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
@@ -1143,7 +1124,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
@@ -1170,8 +1151,7 @@ class Checkup
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorTecnicoAtivosEstatutarioSemConcurso($idServidor = null)
-    {
+    public function get_servidorTecnicoAtivosEstatutarioSemConcurso($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1195,7 +1175,7 @@ class Checkup
                       AND tbservidor.situacao = 1
                       AND idPerfil = 1
                       AND (idCargo <> 128 AND idCargo <> 129)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
@@ -1218,7 +1198,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
@@ -1245,8 +1225,7 @@ class Checkup
      * 
      * Servidor Concursado com concurso posterior a admissão
      */
-    public function get_servidorAtivoComConcursoPosteriorAdmissao($idServidor = null)
-    {
+    public function get_servidorAtivoComConcursoPosteriorAdmissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -1271,7 +1250,7 @@ class Checkup
                     WHERE tbservidor.situacao = 1
                       AND dtAdmissao < tbconcurso.dtPublicacaoEdital
                       AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
@@ -1293,7 +1272,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Um servidor concursado não pode ser admitido antes de efetivamente passar no concurso.");
@@ -1316,12 +1295,11 @@ class Checkup
     ##########################################################
 
     /**
-     * Método get_servidorComConcursoPosteriorAdmissao
+     * Método get_servidorInativoComConcursoPosteriorAdmissao
      * 
      * Servidor Concursado com concurso posterior a admissão
      */
-    public function get_servidorInativoComConcursoPosteriorAdmissao($idServidor = null)
-    {
+    public function get_servidorInativoComConcursoPosteriorAdmissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1342,18 +1320,18 @@ class Checkup
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                                          JOIN tbconcurso USING (idConcurso)
+                                     LEFT JOIN tbconcurso USING (idConcurso)
                     WHERE tbservidor.situacao <> 1
-                      AND dtAdmissao < dtPublicacaoEdital
-                      AND idPerfil = 1 OR idPerfil = 4';
-        if (!is_null($idServidor)) {
+                      AND dtAdmissao < tbconcurso.dtPublicacaoEdital
+                      AND idPerfil = 1';
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
 
         $result = $servidor->select($select);
         $count = $servidor->count($select);
-        $titulo = 'Servidor(es) Inativos Admitido Antes do Concurso';
+        $titulo = 'Servidor(es) Inativo Admitido Antes do Concurso';
 
         # Exibe a tabela
         $tabela = new Tabela();
@@ -1368,7 +1346,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
@@ -1395,8 +1373,7 @@ class Checkup
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorProfessorAtivoSemConcurso($idServidor = null)
-    {
+    public function get_servidorProfessorAtivoSemConcurso($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1422,7 +1399,7 @@ class Checkup
                       AND tbservidor.situacao = 1
                       AND (idPerfil = 1 OR idPerfil = 4)
                       AND (idCargo = 128 OR idCargo = 129)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
@@ -1444,7 +1421,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
@@ -1471,8 +1448,7 @@ class Checkup
      * 
      * Servidor Concursado sem concurso cadastrado
      */
-    public function get_servidorProfessorInativoSemConcurso($idServidor = null)
-    {
+    public function get_servidorProfessorInativoSemConcurso($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1498,7 +1474,7 @@ class Checkup
                       AND tbservidor.situacao <> 1
                       AND (idPerfil = 1 OR idPerfil = 4)
                       AND (idCargo = 128 OR idCargo = 129)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
@@ -1520,7 +1496,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Todo servidor concursado deve ter cadastrado o concurso no qual foi aprovado.");
@@ -1547,8 +1523,7 @@ class Checkup
      * 
      * Cargo em comissão nomeado e exonerado no mesmo dia?!
      */
-    public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = null)
-    {
+    public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1570,7 +1545,7 @@ class Checkup
                                    LEFT JOIN tbcomissao USING (idServidor)
                                         JOIN tbtipocomissao USING (idTipoComissao)
                    WHERE tbtipocomissao.ativo AND (tbcomissao.dtNom = tbcomissao.dtExo)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -1593,7 +1568,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Cargo em comissão nomeado e exonerado no mesmo dia.");
@@ -1620,8 +1595,7 @@ class Checkup
      * 
      * Exibe servidor ativo sem id Funcional cadastrado que não for bolsista
      */
-    public function get_servidorSemIdFuncional($idServidor = null)
-    {
+    public function get_servidorSemIdFuncional($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1645,7 +1619,7 @@ class Checkup
                     WHERE (idFuncional IS null OR idFuncional = "")
                       AND idPerfil <> 10
                       AND tbservidor.situacao = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -1667,7 +1641,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -1694,8 +1668,7 @@ class Checkup
      * 
      * Servidor sem data de nasciment cadastrada
      */
-    public function get_servidorSemDtNasc($idServidor = null)
-    {
+    public function get_servidorSemDtNasc($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1712,7 +1685,7 @@ class Checkup
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                     WHERE tbpessoa.dtNasc is null
                     AND situacao = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -1734,7 +1707,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("O cadastro da data de nascimento do servidor é necessário para diversas rotinas do sistema. Verifique se na pasta do arquivo não tem nenhuma cópia de documento que tenha essa informação.");
@@ -1761,8 +1734,7 @@ class Checkup
      * 
      * Servidor DA UENF cedido a outro orgão que não está lotado na reitoria cedidos
      */
-    public function get_servidorCedidoLotacaoErrada($idServidor = null)
-    {
+    public function get_servidorCedidoLotacaoErrada($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1787,7 +1759,7 @@ class Checkup
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND situacao = 1
                       AND tbhistlot.lotacao <> 113';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -1809,7 +1781,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("O servidor cedido pela UENF deve estar cadastrado no setor Reitoria - Cessão.");
@@ -1836,8 +1808,7 @@ class Checkup
      * 
      * Servidor DA UENF cedido a outro orgão onde a dta de término de cassão já passou mas continua cedido na reitoria cedidos
      */
-    public function get_servidorCedidoDataExpirada($idServidor = null)
-    {
+    public function get_servidorCedidoDataExpirada($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1862,7 +1833,7 @@ class Checkup
                       AND tbhistcessao.dtInicio = (select max(dtInicio) from tbhistcessao where tbhistcessao.idServidor = tbservidor.idServidor)
                       AND situacao = 1
                       AND tbhistlot.lotacao = 113';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -1886,7 +1857,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Os servidores cedidos pela UENF que já terminaram o período de cessão deverão ser (re)lotados na universidade ou devem ter seu período de cessão renovado.");
@@ -1913,8 +1884,7 @@ class Checkup
      * 
      * Servidor estatutário sem cargo cadastrado:
      */
-    public function get_servidorEstatutarioSemCargo($idServidor = null)
-    {
+    public function get_servidorEstatutarioSemCargo($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -1935,7 +1905,7 @@ class Checkup
                     WHERE (idCargo IS null OR idCargo = 0)
                       AND situacao = 1
                       AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -1956,7 +1926,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -1983,8 +1953,7 @@ class Checkup
      * 
      * Servidor NÃO estatutário E NÃO bolsista sem cargo cadastrado:
      */
-    public function get_servidorSemCargo($idServidor = null)
-    {
+    public function get_servidorSemCargo($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2005,7 +1974,7 @@ class Checkup
                     WHERE (idCargo IS null OR idCargo = 0)
                       AND situacao = 1
                       AND idPerfil <> 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2026,7 +1995,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2053,8 +2022,7 @@ class Checkup
      * 
      * Servidor cedido PARA a UENF sem informação do órgão cedente
      */
-    public function get_servidorCedidoSemInfoCedente($idServidor = null)
-    {
+    public function get_servidorCedidoSemInfoCedente($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2074,7 +2042,7 @@ class Checkup
                        OR tbcedido.orgaoOrigem = "")
                       AND situacao = 1
                       AND idPerfil = 2';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2095,7 +2063,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("O servidor cedido psra a UENF deve ter cadastrado as informações da cessão.");
@@ -2122,8 +2090,7 @@ class Checkup
      * 
      * Servidor Inativo com perfil outros
      */
-    public function get_servidorInativoComPerfilOutros($idServidor = null)
-    {
+    public function get_servidorInativoComPerfilOutros($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2145,7 +2112,7 @@ class Checkup
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                     WHERE idPerfil = 8
                       AND tbservidor.situacao <> 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2167,7 +2134,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("O perfil outros foi definido na importação para servidores que estavam com perfil em branco.<br/>Deve-se analisar para saber o real perfil desse servidor ou se não for servidor efetuar sua exclusão do sistema.");
@@ -2194,8 +2161,7 @@ class Checkup
      * 
      * Servidor inativo sem motivo de saída:
      */
-    public function get_servidorInativoSemMotivoSaida($idServidor = null)
-    {
+    public function get_servidorInativoSemMotivoSaida($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2217,7 +2183,7 @@ class Checkup
                                      LEFT JOIN tbperfil USING (idPerfil)                                     
                     WHERE situacao <> 1
                       AND (motivo is null OR motivo = 0)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2239,7 +2205,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2266,8 +2232,7 @@ class Checkup
      * 
      * Servidor inativo sem data de saída:
      */
-    public function get_servidorInativoSemdataSaida($idServidor = null)
-    {
+    public function get_servidorInativoSemdataSaida($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2289,7 +2254,7 @@ class Checkup
                                      LEFT JOIN tbperfil USING (idPerfil)
                     WHERE situacao <> 1
                       AND (dtDemissao IS null)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2311,7 +2276,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2338,8 +2303,7 @@ class Checkup
      * 
      * Servidor Duplicado no Sistema
      */
-    public function get_servidorDuplicado($idServidor = null)
-    {
+    public function get_servidorDuplicado($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -2363,7 +2327,7 @@ class Checkup
                                                         AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                                    GROUP BY tbservidor.idServidor
                                                      HAVING COUNT(*) > 1)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2385,7 +2349,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Verifique se não existem 2 lançamentos de lotação com o mesmo dia. Isso gera registros duplos em listagem onde é exibidda a lotação do servidor.");
@@ -2412,8 +2376,7 @@ class Checkup
      * 
      * Servidor sem situação cadastrada
      */
-    public function get_servidorSemSituacao($idServidor = null)
-    {
+    public function get_servidorSemSituacao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -2432,7 +2395,7 @@ class Checkup
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                     
                     WHERE situacao IS null OR situacao > 6';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2454,7 +2417,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2481,8 +2444,7 @@ class Checkup
      * 
      * Servidor sem data de admissão
      */
-    public function get_servidorSemAdmissao($idServidor = null)
-    {
+    public function get_servidorSemAdmissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -2502,7 +2464,7 @@ class Checkup
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                     
                     WHERE dtadmissao IS null';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2524,7 +2486,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2551,8 +2513,7 @@ class Checkup
      * 
      * Servidor estatutario ativo sem processo de Licença Premio (especial) 
      */
-    public function get_servidorSemProcessoPremio($idServidor = null)
-    {
+    public function get_servidorSemProcessoPremio($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2572,7 +2533,7 @@ class Checkup
                     WHERE processoPremio IS null
                       AND idPerfil = 1
                       AND situacao = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2593,7 +2554,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2620,8 +2581,7 @@ class Checkup
      * 
      * Servidores com Férias anteriores a data de admissão
      */
-    public function get_feriasAntesAdmissao($idServidor = null)
-    {
+    public function get_feriasAntesAdmissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2643,7 +2603,7 @@ class Checkup
                                      LEFT JOIN tbperfil USING (idPerfil)
                      WHERE tbservidor.situacao = 1
                        AND dtInicial < dtAdmissao';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY 2,4 desc';
@@ -2663,7 +2623,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -2689,8 +2649,7 @@ class Checkup
      * 
      * Servidores com Licença Prêmio com dias diferente de 30, 60 e 90 dias
      */
-    public function get_licencaPremioEstranha($idServidor = null)
-    {
+    public function get_licencaPremioEstranha($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2712,7 +2671,7 @@ class Checkup
                        AND tblicencapremio.numDias <> 30
                        AND tblicencapremio.numDias <> 60
                        AND tblicencapremio.numDias <> 90';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2733,7 +2692,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("A licença prêmio deve ter 30, 60 ou 90 dias. Valores diferentes podem ter sido causados na importação dos dados onde outro tipo de licença foi atribuido, erroneamente, como licença prêmio.");
@@ -2760,8 +2719,7 @@ class Checkup
      * 
      * Servidor estatutario ativo com licença medica CLT
      */
-    public function get_estatutarioComLicencaMedicaClt($idServidor = null)
-    {
+    public function get_estatutarioComLicencaMedicaClt($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2786,7 +2744,7 @@ class Checkup
                     WHERE idTpLicenca = 21 
                       AND dtInicial>"2003-09-09"
                       AND idPerfil = 1';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2805,7 +2763,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("Servidor sem Id Funcional cadastrado no Sistema");
@@ -2832,8 +2790,7 @@ class Checkup
      * 
      * Servidores com Mais folgas fruídas do que concedidas
      */
-    public function get_folgaFruidaTreMaiorConcedida($idServidor = null)
-    {
+    public function get_folgaFruidaTreMaiorConcedida($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -2852,7 +2809,7 @@ class Checkup
                                      LEFT JOIN tbperfil USING (idPerfil)
                      WHERE tbservidor.situacao = 1
                        AND (SELECT sum(dias) FROM tbfolga WHERE tbfolga.idServidor = tbservidor.idServidor) > (SELECT sum(folgas) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor)';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY 2,4 desc';
@@ -2873,7 +2830,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -2899,8 +2856,7 @@ class Checkup
      * 
      * Servidores com progressão e/ou 
      */
-    public function get_progressaoImportada($idServidor = null)
-    {
+    public function get_progressaoImportada($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2920,7 +2876,7 @@ class Checkup
                      WHERE situacao = 1 
                        AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                        AND idTpProgressao = 9';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -2941,7 +2897,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -2967,8 +2923,7 @@ class Checkup
      * 
      * Servidores com progressão e/ou 
      */
-    public function get_progressaoImportadaInativos($idServidor = null)
-    {
+    public function get_progressaoImportadaInativos($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -2989,7 +2944,7 @@ class Checkup
                      WHERE situacao <> 1 
                        AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                        AND idTpProgressao = 9';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3011,7 +2966,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 $tabela->show();
@@ -3037,8 +2992,7 @@ class Checkup
      * 
      * Celetista com situação Fim de Cessão
      */
-    public function get_celetistaInativoFimCessao($idServidor = null)
-    {
+    public function get_celetistaInativoFimCessao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3057,7 +3011,7 @@ class Checkup
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)                                     
                     WHERE situacao = 6 AND idPerfil = 4';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3079,7 +3033,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3106,8 +3060,7 @@ class Checkup
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorSemSexo($idServidor = null)
-    {
+    public function get_servidorSemSexo($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3125,7 +3078,7 @@ class Checkup
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)                                     
                     WHERE sexo is null';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3147,7 +3100,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3174,8 +3127,7 @@ class Checkup
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorSemEstCiv($idServidor = null)
-    {
+    public function get_servidorSemEstCiv($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3193,7 +3145,7 @@ class Checkup
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)                                     
                     WHERE estciv is null';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3215,7 +3167,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3242,8 +3194,7 @@ class Checkup
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorComAverbacaoAposAdmissao($idServidor = null)
-    {
+    public function get_servidorComAverbacaoAposAdmissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -3264,7 +3215,7 @@ class Checkup
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbaverbacao USING (idServidor)
                     WHERE tbservidor.dtAdmissao < tbaverbacao.dtInicial';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3286,7 +3237,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3313,8 +3264,7 @@ class Checkup
      * 
      * Servidor sem Sexo Cadastrado
      */
-    public function get_servidorComAverbacaoTerminandoAposAdmissao($idServidor = null)
-    {
+    public function get_servidorComAverbacaoTerminandoAposAdmissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -3335,7 +3285,7 @@ class Checkup
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbaverbacao USING (idServidor)
                     WHERE tbservidor.dtAdmissao < tbaverbacao.dtFinal';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3357,7 +3307,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3384,8 +3334,7 @@ class Checkup
      * 
      * Servidor Com Dependentes (parentes) sem parentesco cadastrado
      */
-    public function get_servidorComDependentesSemParentesco($idServidor = null)
-    {
+    public function get_servidorComDependentesSemParentesco($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3405,7 +3354,7 @@ class Checkup
                                      LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
                     WHERE tbdependente.parentesco IS null ';
 
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDEr BY tbpessoa.nome';
@@ -3424,7 +3373,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("É necessário definir o típo de parentesco entre o parente e o servidor");
@@ -3451,8 +3400,7 @@ class Checkup
      * 
      * Servidor Com Readaptação terminando em menos de 90 dias
      */
-    public function get_servidorComTerminoReadaptacaoMenos90Dias($idServidor = null)
-    {
+    public function get_servidorComTerminoReadaptacaoMenos90Dias($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3475,7 +3423,7 @@ class Checkup
                     WHERE tbreadaptacao.dtInicio IS NOT null
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) <=90';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY 7 desc';
@@ -3497,7 +3445,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3524,8 +3472,7 @@ class Checkup
      * 
      * Servidor Com Redução terminando em menos de 90 dias
      */
-    public function get_servidorComTerminoReducaoMenos90Dias($idServidor = null)
-    {
+    public function get_servidorComTerminoReducaoMenos90Dias($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3548,7 +3495,7 @@ class Checkup
                     WHERE tbreducao.dtInicio IS NOT null
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) <=90';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY 7 desc';
@@ -3570,7 +3517,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3597,8 +3544,7 @@ class Checkup
      * 
      * Servidor Com Licença Sem Vencimentos terminando em menos de 90 dias
      */
-    public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = null)
-    {
+    public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = null;
@@ -3624,7 +3570,7 @@ class Checkup
                       AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY)) >= 0 
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY)) <=90';
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY 7 desc';
@@ -3646,7 +3592,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 #callout("A situação FIM DE CESSÃO é somente para servidores cedidos que terminaram a cessão e não para celetistas");
@@ -3673,8 +3619,7 @@ class Checkup
      * 
      * Servidor Inativo com cargo em comissao
      */
-    public function get_servidorInativoComCargoEmComissao($idServidor = null)
-    {
+    public function get_servidorInativoComCargoEmComissao($idServidor = null) {
 
         # Define a categoria e a prioridade
         $prioridade = 1;
@@ -3701,7 +3646,7 @@ class Checkup
                       AND ((CURRENT_DATE BETWEEN tbcomissao.dtNom AND tbcomissao.dtExo)
                        OR (tbcomissao.dtExo is null))';
 
-        if (!is_null($idServidor)) {
+        if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }
         $select .= ' ORDER BY tbpessoa.nome';
@@ -3709,7 +3654,7 @@ class Checkup
         $result = $servidor->select($select);
         $count = $servidor->count($select);
         $titulo = 'Servidor(es) inativo(s) com cargo em comissao ainda vigente';
-        
+
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($result);
@@ -3723,7 +3668,7 @@ class Checkup
         $tabela->set_idCampo('idServidor');
 
         if ($count > 0) {
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 return $titulo;
             } elseif ($this->lista) {
                 callout("Deve-se exonerar o servidor do cargo em comissão antes de aposentar, demitir, exonerá-lo");

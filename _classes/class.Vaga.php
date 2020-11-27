@@ -512,7 +512,7 @@ class Vaga {
 
             if (empty($dado[0])) {
                 return 'Disponível';
-            }else{
+            } else {
                 # Pega a situação
                 $idSituacao = $pessoal->get_idSituacao($dado[0]);
 
@@ -899,7 +899,12 @@ class Vaga {
                     WHERE idServidor = ' . $idServidor;
 
         $dado = $pessoal->select($select, false);
-        return $dado[0];
+
+        if (empty($dado[0])) {
+            return null;
+        } else {
+            return $dado[0];
+        }
     }
 
     ###########################################################
@@ -967,7 +972,7 @@ class Vaga {
                  ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1";
 
         $dado = $pessoal->select($select, false);
-        
+
         return $dado[0];
     }
 

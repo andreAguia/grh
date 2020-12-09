@@ -89,7 +89,7 @@ if ($acesso) {
                                       idTipoCargo
                                  FROM tbtipocargo
                                 WHERE cargo LIKE "%' . $parametro . '%"
-                             ORDER BY 1 asc');
+                             ORDER BY 2 asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT cargo,

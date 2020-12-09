@@ -545,12 +545,32 @@ if ($acesso) {
 
             # Título
             titulo("Área de Acumulação de Cargos");
-            br(2);
-            $tamanhoImage = 60;
-
+            br(2);      
+            
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(8);
+            
+            $tamanhoImage = 60;
+            $menu = new MenuGrafico(2);
+            $menu->set_espacoEntreLink(true);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Servidores que Acumulam Cargos Públicos');
+            $botao->set_url('areaAcumulacao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle de Acumulação de Cargo Público');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            #$botao->set_novo(true);
+            $botao->set_label('Controle da Entrega da Declaração Anual');
+            $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
+            $menu->add_item($botao);
+
+            $menu->show();
 
             callout("É dever do servidor ou empregado público informar à GRH
                 quanto a eventual acumulação de cargos, empregos ou funções
@@ -575,26 +595,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             br(2);
-
-            $menu = new MenuGrafico(2);
-            $menu->set_espacoEntreLink(true);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Servidores que Acumulam Cargos Públicos');
-            $botao->set_url('areaAcumulacao.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Controle de Acumulação de Cargo Público');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_novo(true);
-            $botao->set_label('Controle da Entrega da Declaração Anual');
-            $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
-            $menu->add_item($botao);
-
-            $menu->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

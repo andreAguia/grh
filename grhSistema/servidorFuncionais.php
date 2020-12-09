@@ -56,6 +56,8 @@ if ($acesso) {
         # Verifica o regime do servidor
         $conc = new Concurso();
         $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
+    }else{
+        $regime = null;
     }
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)

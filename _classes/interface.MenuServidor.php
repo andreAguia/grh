@@ -311,8 +311,7 @@ class MenuServidor {
         if ($ferias) {
             $exercicio = $pessoal->emFeriasExercicio($this->idServidor);
             $mensagem[] = 'Servidor em férias (Exercicio ' . $exercicio . ')';
-        }
-        
+        }        
 
         # Licenca
         if ($licenca) {
@@ -403,7 +402,6 @@ class MenuServidor {
      * Exibe os vinculos desse servidor
      */
     private function moduloVinculos() {
-
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();

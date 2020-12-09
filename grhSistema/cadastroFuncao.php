@@ -102,8 +102,10 @@ if ($acesso) {
                                WHERE idCargo = ' . $id);
 
     # Caminhos
+    if (Verifica::acesso($idUsuario, 1)) {      // Excluir somente admin
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 

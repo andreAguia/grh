@@ -51,8 +51,8 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if($fase <> "relatorioInativo" AND $fase <> "relatorioAtivo")
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorioInativo" AND $fase <> "relatorioAtivo")
+        AreaServidor::cabecalho();
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -102,8 +102,10 @@ if ($acesso) {
                                WHERE idTipoCargo = ' . $id);
 
     # Caminhos
+    if (Verifica::acesso($idUsuario, 1)) {      // Excluir somente admin
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 

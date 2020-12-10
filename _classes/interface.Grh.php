@@ -812,7 +812,7 @@ class Grh
         #$align = array("center");
 
         $classe = array(null, null, "pessoal", "pessoal", "pessoal",null, "pessoal");
-        $metodo = array(null, null, "get_Cargo", "get_Lotacao", "get_Perfil", null, "get_Situacao");
+        $metodo = array(null, null, "get_cargoComSalto", "get_Lotacao", "get_Perfil", null, "get_Situacao");
 
         $formatacaoCondicional = array(array('coluna'   => 0,
                 'valor'    => $servidor->get_idFuncional($idServidor),
@@ -1002,7 +1002,7 @@ class Grh
         #$relatorio->set_width(array(8,20,10,20,10,20,5));
         $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
         $relatorio->set_classe(array(null, null, null, "pessoal", null, "pessoal", "pessoal"));
-        $relatorio->set_metodo(array(null, null, null, "get_Cargo", null, "get_Lotacao", "get_Situacao"));
+        $relatorio->set_metodo(array(null, null, null, "get_cargoComSalto", null, "get_Lotacao", "get_Situacao"));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
@@ -1067,9 +1067,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresAtivosTipoCargo($id);
-
-        echo $numero;
+        echo $pessoal->get_servidoresAtivosTipoCargo($id);
         echo "&nbsp&nbsp&nbsp";
 
         # Botão de exibição dos servidores
@@ -1092,9 +1090,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresInativosTipoCargo($id);
-
-        echo $numero;
+        echo $pessoal->get_servidoresInativosTipoCargo($id);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=exibeServidoresInativos&id=' . $id);
@@ -1116,9 +1112,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresCargoComissao($id);
-
-        echo $numero;
+        echo $pessoal->get_servidoresCargoComissao($id);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=vigente&id=' . $id);
@@ -1140,9 +1134,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresAtivosPerfil($id);
-
-        echo $numero;
+        echo $pessoal->get_servidoresAtivosPerfil($id);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $id);
@@ -1164,9 +1156,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresInativosPerfil($id);
-
-        echo $numero;
+        echo $pessoal->get_servidoresInativosPerfil($id);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresInativos&id=' . $id);
@@ -1188,9 +1178,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresAtivosLotacao($idLotacao);
-
-        echo $numero;
+        echo $pessoal->get_servidoresAtivosLotacao($idLotacao);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $idLotacao);
@@ -1212,9 +1200,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresInativosLotacao($idLotacao);
-
-        echo $numero;
+        echo $pessoal->get_servidoresInativosLotacao($idLotacao);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresInativos&id=' . $idLotacao);
@@ -1236,9 +1222,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresAtivosConcurso($idConcurso);
-
-        echo $numero;
+        echo $pessoal->get_servidoresAtivosConcurso($idConcurso);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $idConcurso);
@@ -1260,9 +1244,7 @@ class Grh
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        $numero = $pessoal->get_servidoresInativosConcurso($idConcurso);
-
-        echo $numero;
+        echo $pessoal->get_servidoresInativosConcurso($idConcurso);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresInativos&id=' . $idConcurso);
@@ -1271,5 +1253,5 @@ class Grh
         $botao->show();
     }
 
-######################################################################################################################
+    ###########################################################
 }

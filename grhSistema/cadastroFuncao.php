@@ -110,15 +110,15 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver"));
+    $objeto->set_label(["id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver","Servidores<br/>Inativos"]);
     #$objeto->set_width(array(5,20,25,25,10,5,5));
-    $objeto->set_align(array("center", "left", "left", "left"));
+    $objeto->set_align(["center", "left", "left", "left"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(null, null, null, null, "Pessoal"));
-    $objeto->set_metodo([null, null, null, null, "get_servidoresCargo"]);
+    $objeto->set_classe([null, null, null, null, "Pessoal",null,"pessoal"]);
+    $objeto->set_metodo([null, null, null, null, "get_servidoresCargo",null,"get_servidoresInativosCargo"]);
 
     # Botão de exibição dos servidores
     $botao = new BotaoGrafico();
@@ -242,7 +242,19 @@ if ($acesso) {
 
         ################################################################    
 
-        case "excluir" :
+         case "excluir" :
+            # Verifica se tem servidores nesse cargo            
+            if($pessoal->get_servidoresCargo($id) > 0 OR $pessoal->get_servidoresInativosCargo($id) > 0){
+                alert("Não é possível excluir um cargo com servidores cadastrados !!");
+                back(1);
+            }else{
+                # Se não tiver exclui o cargo
+                $objeto->excluir($id);
+            }
+            break;    
+            
+        ################################################################
+            
         case "gravar" :
             $objeto->$fase($id);
             break;

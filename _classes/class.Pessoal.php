@@ -459,7 +459,7 @@ class Pessoal extends Bd {
                     $orgao = "-";
                 }
                 #$retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
-                $retorno = "Cedido para<br/><span id='orgaoCedido'>$orgao</span>";
+                $retorno = "Cedido para <span id='orgaoCedido'>$orgao</span>";
             } else {
                 $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
             }
@@ -689,39 +689,35 @@ class Pessoal extends Bd {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
-                          tbcargo.nome
+                          tbcargo.nome,
+                          idPerfil
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-
-        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
-            $tipoCargo = null;
-        } else {
-            $tipoCargo = $row[1];
-        }
-
-        $nomeCargo = $row[2];
         $retorno = null;
 
-        $comissao = $this->get_cargoComissao($idServidor);
-        #$descricao = $this->get_cargoComissaoDescricao($idServidor);
+        if (empty($row["idTipoCargo"])) {
+            return $retorno;
+        } else {
+            # Verifica se é cedido
+            if ($row["idPerfil"] == 2) {
+                $retorno .= "Exercendo função equivalente ao ";
+            }
 
-        if (!empty($tipoCargo)) {
-            $retorno = $tipoCargo;
-        }
-
-        if (!empty($nomeCargo)) {
-            if (!empty($tipoCargo)) {
-                $retorno .= ' - ' . $nomeCargo;
+            # Define o cargo
+            if (($row["idTipoCargo"] == 1) OR ($row["idTipoCargo"] == 2)) {
+                $retorno .= $row["nome"];
             } else {
-                $retorno = $nomeCargo;
+                $retorno .= "{$row["sigla"]} - {$row["nome"]}";
             }
         }
 
-        if ((!empty($comissao)) and ($exibeComissao)) {
-            $retorno .= '<br/>' . $comissao;
+        # Verifica se tem cargo em comissão
+        $comissao = $this->get_cargoComissao($idServidor);
+        if ((!empty($comissao)) AND ($exibeComissao)) {
+            $retorno .= "<br/>{$comissao}";
         }
 
         return $retorno;
@@ -730,59 +726,65 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_cargo
-     * Informa o cargo do servidor
+     * Método get_cargoComSalto
+     * Informa o cargo do servidor com salto de linha 
      * 
      * @param string $idServidor    null idServidor do servidor
      * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
-    public function get_cargoSimples2($idServidor, $exibeComissao = true) {
+    public function get_cargoComSalto($idServidor, $exibeComissao = true) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
-                          tbcargo.nome
+                          tbcargo.nome,
+                          idPerfil
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
 
-        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
-            $tipoCargo = null;
+        if (empty($row["idTipoCargo"])) {
+            return null;
         } else {
-            $tipoCargo = $row[1];
-        }
+            # Verifica se é cedido
+            if ($row["idPerfil"] == 2) {
+                p("Exercendo função equivalente ao", "pLinha3");
+            }
 
-        $nomeCargo = $row[2];
-        $retorno = null;
-
-        $comissao = $this->get_cargoComissao($idServidor);
-        $descricao = $this->get_cargoComissaoDescricao($idServidor);
-
-        if (!empty($tipoCargo)) {
-            $retorno = $tipoCargo;
-        }
-
-        if (!empty($nomeCargo)) {
-            if (!empty($tipoCargo)) {
-                $retorno .= ' - ' . $nomeCargo;
+            # Define o cargo
+            if (($row["idTipoCargo"] == 1) OR ($row["idTipoCargo"] == 2)) {
+                p($row["nome"], "pLinha1");
             } else {
-                $retorno = $nomeCargo;
+                p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
             }
         }
 
-        if ((!empty($comissao)) and ($exibeComissao)) {
-            $retorno .= '<br/><span title="' . $descricao . '" id="orgaoCedido">[' . $descricao . ']</span>';
+        # Verifica se tem cargo em comissão
+        $comissao = $this->get_cargoComissao($idServidor);
+        if ((!empty($comissao)) AND ($exibeComissao)) {
+            echo $comissao;
         }
+    }
 
-        return $retorno;
+    ###########################################################
+
+    /**
+     * Método get_cargoComSalto
+     * Informa o cargo do servidor com salto de linha 
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
+    public function get_cargoComSaltoSemComissao($idServidor) {
+        $this->get_cargoComSalto($idServidor, false);
     }
 
     ###########################################################
 
     /**
      * Método get_cargoSimples
-     * Informa o cargo do servidor sem o cargo em comissão
+     * Informa o cargo do servidor sem o cargo em comissão 
      * 
      * @param string $idServidor    null idServidor do servidor
      */
@@ -790,33 +792,28 @@ class Pessoal extends Bd {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
-                          tbcargo.nome
+                          tbcargo.nome,
+                          idPerfil
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                     WHERE idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-
-        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
-            $tipoCargo = null;
-        } else {
-            $tipoCargo = $row[1];
-        }
-
-        $nomeCargo = $row[2];
         $retorno = null;
 
-        $descricao = $this->get_cargoComissaoDescricao($idServidor);
+        if (empty($row["idTipoCargo"])) {
+            return $retorno;
+        } else {
+            # Verifica se é cedido
+            if ($row["idPerfil"] == 2) {
+                $retorno = "exercendo função equivalente ao ";
+            }
 
-        if (!empty($tipoCargo)) {
-            $retorno = $tipoCargo;
-        }
-
-        if (!empty($nomeCargo)) {
-            if (!empty($tipoCargo)) {
-                $retorno .= ' - ' . $nomeCargo;
+            # Define o cargo
+            if (($row["idTipoCargo"] == 1) OR ($row["idTipoCargo"] == 2)) {
+                $retorno .= $row["nome"];
             } else {
-                $retorno = $nomeCargo;
+                $retorno .= "{$row["sigla"]} - {$row["nome"]}";
             }
         }
 
@@ -1549,9 +1546,9 @@ class Pessoal extends Bd {
     function get_licenca($idServidor, $data = null) {
 
 
-        # Função que informa licenca de uma matrícula
+        # Função que informa licenca de um servidor
         #
-        # Parâmetro: a matrícula a ser pesquisada
+        # Parâmetro:o idServidor
         #             a data no formato dd/mm/aaaa
         # Verifica a data
         if (is_null($data)) {
@@ -1568,7 +1565,11 @@ class Pessoal extends Bd {
                       AND ('{$data}' <= ADDDATE(dtInicial,numDias-1) OR (numDias IS NULL))";
 
         $row = parent::select($select, false);
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1590,7 +1591,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1613,7 +1618,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1636,7 +1645,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1658,7 +1671,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1680,7 +1697,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1702,7 +1723,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1724,7 +1749,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1746,7 +1775,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1768,7 +1801,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1790,7 +1827,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -1812,7 +1853,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -2273,6 +2318,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     function get_salarioCargoComissao($idServidor) {
+        
         # Pega o id do cargo em comissão (se houver)
         $row1 = parent::select("SELECT idComissao
                                   FROM tbcomissao 
@@ -2285,8 +2331,12 @@ class Pessoal extends Bd {
         } else {
             $row2 = parent::select("SELECT tbtipocomissao.valsal 
                                       FROM tbcomissao JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
-                                     WHERE idcomissao = {$idCargo}", false);
-            return $row2[0];
+                                     WHERE idcomissao = {$row1[0]}", false);
+            if (empty($row2[0])) {
+                return null;
+            } else {
+                return $row2[0];
+            }
         }
     }
 
@@ -2306,7 +2356,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -2527,12 +2581,29 @@ class Pessoal extends Bd {
     /**
      * Método get_servidoresCargo
      * 
-     * Exibe o n�mero de servidores ativos em um determinado cargo
+     * Exibe o n�mero de servidores ativos em um determinado cargo(funcao)
      */
     public function get_servidoresCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
+                          idCargo = ' . $id;
+
+        $numero = parent::count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresInativosCargo
+     * 
+     * Exibe o n�mero de servidores inativos em um determinado cargo(funcao)
+     */
+    public function get_servidoresInativosCargo($id) {
+        $select = 'SELECT idServidor                             
+                     FROM tbservidor
+                    WHERE situacao <> 1 AND 
                           idCargo = ' . $id;
 
         $numero = parent::count($select);

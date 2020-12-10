@@ -55,7 +55,8 @@ if ($acesso) {
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional  = $pessoal->get_idFuncional($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
+    #$cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
+    $cargoEfetivo = $pessoal->get_cargoSimples($idServidorPesquisado);
     $sexo         = $pessoal->get_sexo($idServidorPesquisado);
 
     # Altera parte do texto de acordo com o sexo (gênero) do servidor

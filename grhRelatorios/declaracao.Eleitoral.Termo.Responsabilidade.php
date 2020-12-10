@@ -25,6 +25,13 @@ if ($acesso) {
     $idFuncional  = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
     $sexo         = $pessoal->get_sexo($idServidorPesquisado);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
+    
+    if($idPerfil == 2){
+        $cargoEfetivo = "exercendo a função equivalente ao {$cargoEfetivo}";
+    }else{
+        $cargoEfetivo = "ocupante do cargo de {$cargoEfetivo}";
+    }
 
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {
@@ -50,7 +57,7 @@ if ($acesso) {
 
     $dec->set_data(null);
 
-    $dec->set_texto("<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional}, ocupante do cargo de {$cargoEfetivo}, "
+    $dec->set_texto("<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional}, {$cargoEfetivo}, "
             . "<b>declaro(a)</b> para os devidos fins, especialmente para fins de afastamento eleitoral ora requerido, na forma do "
             . "disposto no inciso IV, do art. 74, do Decreto nº 2.479, de 08 de março de 1979, c/c a Lei Complementar nº 64, de 18 de"
             . " maio de 1990, que se responsabiliza perante a Administração Pública estadual pela indicação do lapso temporal correspondente "

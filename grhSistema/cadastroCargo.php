@@ -202,9 +202,18 @@ if ($acesso) {
         case "listar" :
             $objeto->listar();
             break;
-
-        case "editar" :
+        
         case "excluir" :
+            # Verifica se tem servidores nesse cargo            
+            if($pessoal->get_servidoresAtivosTipoCargo($id) > 0 OR $pessoal->get_servidoresInativosTipoCargo($id) > 0){
+                alert("Não é possível excluir um cargo com servidores cadastrados !!");
+                back(1);
+            }else{
+                # Se não tiver exclui o cargo
+                $objeto->excluir($id);
+            }
+            break;    
+        case "editar" :        
         case "gravar" :
             $objeto->$fase($id);
             break;

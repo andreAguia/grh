@@ -130,8 +130,7 @@ class ListaServidores {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
-        $select = 'SELECT CAST(tbservidor.idFuncional AS UNSIGNED),
-                          tbservidor.matricula,
+        $select = 'SELECT tbservidor.idServidor,
                           tbpessoa.nome,
                           tbservidor.idServidor,
                           tbservidor.idServidor,
@@ -410,19 +409,18 @@ class ListaServidores {
 
         # Dados da Tabela
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = array("IDFuncional", "Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
+            $width = array(8,20,20,18,14,5,5);
+            $function = array(null, null, null, null, null, "date_to_php", $situacao);
         } else {
-            $label = array("IDFuncional", "Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
+            $width = array(8,20,20,18,14,5,5,5);
+            $function = array(null, null, null, null, null, "date_to_php", "date_to_php", $situacao);
         }
-        #$width = array(5,5,15,16,15,8,8,5,5);
-        $align = array("center", "center", "left", "left", "left");
-        if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $function = array("trataNulo", "dv", null, null, null, null, "date_to_php", $situacao);
-        } else {
-            $function = array("trataNulo", "dv", null, null, null, null, "date_to_php", "date_to_php", $situacao);
-        }
-        $classe = array(null, null, null, "pessoal", "pessoal", "pessoal");
-        $metodo = array(null, null, null, "get_cargo", "get_lotacao", "get_perfil");
+        
+        $align = array("center", "left", "left", "left");
+        $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_lotacao", "get_perfil");
 
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);
@@ -441,7 +439,7 @@ class ListaServidores {
             $tabela->set_titulo($this->nomeLista);
             $tabela->set_conteudo($conteudo);
             $tabela->set_label($label);
-            #$tabela->set_width($width);
+            $tabela->set_width($width);
             $tabela->set_align($align);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
@@ -485,35 +483,33 @@ class ListaServidores {
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();
-        #echo $this->select;
+        
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($this->select, true);
-
-        if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = array("IDFuncional", "Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
+        
+         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
+            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
+            $width = array(8,20,25,23,14,5,5);
+            $function = array(null, null, null, null, null, "date_to_php", "get_situacaoRel");
         } else {
-            $label = array("IDFuncional", "Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
+            $width = array(8,20,25,20,14,5,5,5);
+            $function = array(null, null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel");
         }
-        #$width = array(5,5,15,16,15,8,8,5,5);
-        $align = array("center", "center", "left", "left", "left");
-        if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $function = array(null, "dv", null, null, null, null, "date_to_php", "get_situacaoRel");
-        } else {
-            $function = array(null, "dv", null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel");
-        }
-        $classe = array(null, null, null, "pessoal", "pessoal", "pessoal");
-        $metodo = array(null, null, null, "get_cargoRel", "get_lotacao", "get_perfil");
+        
+        $align = array("center", "left", "left", "left");
+        $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_lotacao", "get_perfil");
 
         # Relatório
         $relatorio = new Relatorio();
-        #$relatorio->set_titulo($this->nomeLista);
         $relatorio->set_titulo("Servidores " . $this->titulo);
         if (!is_null($this->subTitulo)) {
             $relatorio->set_subtitulo($this->subTitulo);
         }
 
         $relatorio->set_label($label);
-        #$relatorio->set_width($width);
+        $relatorio->set_width($width);
         $relatorio->set_align($align);
         $relatorio->set_funcao($function);
         $relatorio->set_classe($classe);

@@ -53,7 +53,7 @@ if ($acesso) {
     $relatorio->set_align(array("center"));
     $relatorio->set_funcao(array("dv", null, null, null, "date_to_php"));
     $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao"));
+    $relatorio->set_metodo(array(null, null, "get_cargoComSaltoSemComissao", "get_Lotacao"));
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);

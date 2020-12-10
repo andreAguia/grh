@@ -52,7 +52,7 @@ if ($acesso) {
     $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
 
     $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples2", "get_Lotacao", null, null, "get_Situacao"));
+    $relatorio->set_metodo(array(null, null, "get_cargo", "get_Lotacao", null, null, "get_Situacao"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

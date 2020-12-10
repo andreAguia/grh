@@ -25,6 +25,11 @@ if ($acesso) {
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
+    
+    if($idPerfil == 2){
+        $cargoEfetivo = "exercendo a função equivalente ao {$cargoEfetivo}";
+    }
 
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {

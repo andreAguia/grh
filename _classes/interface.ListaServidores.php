@@ -37,7 +37,7 @@ class ListaServidores {
     private $itemInicial = null;
 
     # Ordenação
-    private $ordenacao = "3 asc";               # ordenação da listagem. Padrão 3 por nome
+    private $ordenacao = "2 asc";               # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordanação
     # Parâmetros do relatório
     private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
@@ -59,18 +59,16 @@ class ListaServidores {
         $this->ordenacaoCombo = array(
             array("1 asc", "por Id Funcional asc"),
             array("1 desc", "por Id Funcional desc"),
-            array("2 asc", "por Matrícula asc"),
-            array("2 desc", "por Matrícula desc"),
-            array("3 asc", "por Nome asc"),
-            array("3 desc", "por Nome desc"),
+            array("2 asc", "por Nome asc"),
+            array("2 desc", "por Nome desc"),
             array("tbtipocargo.sigla asc,tbcargo.nome asc", "por Cargo asc"),
             array("tbtipocargo.sigla desc,tbcargo.nome desc", "por Cargo desc"),
             array("UADM asc, DIR asc, GER asc", "por Lotação asc"),
             array("UADM desc, DIR desc, GER desc", "por Lotação desc"),
             array("tbperfil.nome asc", "por Perfil asc"),
             array("tbperfil.nome desc", "por Perfil desc"),
-            array("7 asc", "por Admissão asc"),
-            array("7 desc", "por Admissão desc"),
+            array("6 asc", "por Admissão asc"),
+            array("6 desc", "por Admissão desc"),
             array("tbsituacao.situacao asc", "por Situação asc"),
             array("tbsituacao.situacao desc", "por Situação desc")
         );
@@ -253,13 +251,13 @@ class ListaServidores {
         $select .= " ORDER BY $this->ordenacao";
 
         # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por nome
-        if (($this->ordenacao <> "3 asc") AND ($this->ordenacao <> "3 desc")) {
-            $select .= ", 3 asc";
+        if (($this->ordenacao <> "2 asc") AND ($this->ordenacao <> "2 desc")) {
+            $select .= ", 2 asc";
         }
 
         # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por admissão
-        if (($this->ordenacao <> "7 asc") AND ($this->ordenacao <> "7 desc")) {
-            $select .= ", 7 asc";
+        if (($this->ordenacao <> "6 asc") AND ($this->ordenacao <> "6 desc")) {
+            $select .= ", 6 asc";
         }
 
         foreach ($this->ordenacaoCombo as $value) {

@@ -27,9 +27,10 @@ if ($acesso) {
     ######
 
     $select = 'SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbdocumentacao.cpf,
-                     tbpessoa.emailUenf
+                      idServidor,
+                      idServidor,
+                      tbdocumentacao.cpf,
+                      idServidor
                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                 LEFT JOIN tbdocumentacao USING (idPessoa)
                WHERE tbservidor.situacao = 1
@@ -40,16 +41,15 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
-    $relatorio->set_subtitulo('Email UENF e CPF<br/>Ordenados pelo Nome do Servidor');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Email Uenf'));
-    #$relatorio->set_width(array(10,30,10,30,20));
-    $relatorio->set_align(array("center", "left", "center", "left"));
-    #$relatorio->set_classe(array(null,null,null,"pessoal"));
-    #$relatorio->set_metodo(array(null,null,null,"get_lotacaoRel"));
+    $relatorio->set_subtitulo('Emails e CPF<br/>Ordenados pelo Nome do Servidor');
+    $relatorio->set_label(array('IdFuncional', 'Servidor','Lotação','CPF', 'Emails'));
+    $relatorio->set_width(array(10,25,25,15,25));
+    $relatorio->set_bordaInterna(true);
+    $relatorio->set_align(array("center", "left", "left", "left","left"));
+    $relatorio->set_classe(array(null,"pessoal","pessoal",null,"pessoal"));
+    $relatorio->set_metodo(array(null,"get_nomeECargo","get_lotacaoRel",null,"get_emails"));
 
     $relatorio->set_conteudo($result);
-
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();

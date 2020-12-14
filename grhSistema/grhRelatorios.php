@@ -319,6 +319,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geralServidoresAtivosAssinatura.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geralServidoresAtivosAssinaturaCpf.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Emails e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf2.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Check', '../grhRelatorios/geralServidoresAtivosCheck.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimento.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');

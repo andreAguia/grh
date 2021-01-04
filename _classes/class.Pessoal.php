@@ -2318,7 +2318,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     function get_salarioCargoComissao($idServidor) {
-        
+
         # Pega o id do cargo em comissão (se houver)
         $row1 = parent::select("SELECT idComissao
                                   FROM tbcomissao 
@@ -5124,25 +5124,30 @@ class Pessoal extends Bd {
                  ORDER BY tbtipocomissao.simbolo LIMIT 1";
 
         $row = parent::select($select, false);
-        $chefia = $row[0];
 
-        # Verifica se o servidor é o cargo em comissão e procura o diretor
-        if (($chefia == $idServidor) or (is_null($chefia))) {
-            $chefia = $this->get_diretor($idLotacao);
+        if (empty($row[0])) {
+            return null;
+        } else {
+
+            $chefia = $row[0];
+            
+            # Verifica se o servidor é o cargo em comissão e procura o diretor
+            if (($chefia == $idServidor) or (is_null($chefia))) {
+                $chefia = $this->get_diretor($idLotacao);
+            }
+
+            # Verifica se o servidor é diretorr
+            if (($chefia == $idServidor) or (is_null($chefia))) {
+                $chefia = $this->get_reitor();
+            }
+
+            # Verifica se o servidor é o reitor
+            if ($chefia == $idServidor) {
+                $chefia = null;
+            }
+            
+            return $chefia;
         }
-
-        # Verifica se o servidor é diretorr
-        if (($chefia == $idServidor) or (is_null($chefia))) {
-            $chefia = $this->get_reitor();
-        }
-
-        # Verifica se o servidor é o reitor
-        if ($chefia == $idServidor) {
-            $chefia = null;
-        }
-
-        # Retorna
-        return $chefia;
     }
 
     ##########################################################################################
@@ -5175,10 +5180,12 @@ class Pessoal extends Bd {
         $select .= " ORDER BY tbtipocomissao.simbolo LIMIT 1";
 
         $row = parent::select($select, false);
-        $chefia = $row[0];
-
-        # Retorna
-        return $chefia;
+        
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################

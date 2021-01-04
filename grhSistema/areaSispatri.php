@@ -5,12 +5,6 @@
  *  
  * By Alat
  */
-#
-#       ATENÇÃO !!
-#       Esta rotina usa a classe upload que foi descontinuada
-#       Para reativá-la deve-se fazer a conversão para as novas rotinas !!
-#
-#
 # Reservado para o servidor logado
 $idUsuario = null;
 
@@ -26,13 +20,13 @@ if ($acesso) {
     $pessoal = new Pessoal();
 
     # Verifica a fase do programa
-    $fase = get('fase', "resumo");
+    $fase = get('fase', "inicio");
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de Formação";
+        $atividade = "Visualizou a área do Sispatri";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -42,12 +36,27 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Fizeram'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroSituacao', $parametroSituacao);
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "importar") {
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
+
+    if ($fase == "ci") {
+        $page->set_ready("CKEDITOR.replace('textoCi', {
+            
+        });");
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -60,36 +69,55 @@ if ($acesso) {
     $menu1 = new MenuBar();
 
     # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu1->add_link($botaoVoltar, "left");
+    if ($fase <> "ci") {
+        if ($fase == "importar" OR $fase == "regras" OR $fase == "config") {
+            $botaoVoltar = new Link("Voltar", "?");
+        } else {
+            $botaoVoltar = new Link("Voltar", "grh.php");
+        }
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu1->add_link($botaoVoltar, "left");
 
-    # Ci
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel = new Button();
-    $botaoRel->set_title("CI");
-    $botaoRel->set_url("../grhRelatorios/ciSispatri.php");
-    $botaoRel->set_target("_blank");
-    $botaoRel->set_imagem($imagem);
+        # Importar
+        if ($fase == "resumo") {
+            $botaoImp = new Link("Importar", "?fase=regras");
+            $botaoImp->set_class('button');
+            $botaoImp->set_title('Importa arquivo cvs');
+            $botaoImp->set_accessKey('I');
+            $menu1->add_link($botaoImp, "right");
 
-    if ($parametroLotacao <> "Todos") {
-        $menu1->add_link($botaoRel, "right");
+            if ($parametroSituacao == "Não Fizeram" AND $parametroLotacao <> "Todos") {
+                # ci
+                $botaoci = new Link("CI", "?fase=ci");
+                $botaoci->set_target("_blank");
+                $botaoci->set_class('button');
+                $botaoci->set_title('CI dos servidores que NÃO entregaram o Sispatri');
+                $menu1->add_link($botaoci, "right");
+            }
+
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("../grhRelatorios/sispatri.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel, "right");
+        }
+
+        $menu1->show();
+
+        # Titulo
+        titulo("Área do Sispatri");
+        br();
+    } else {
+        # Titulo
+        br();
+        titulo("CI dos Servidores que NÃO Fizeram o Sispatri");
+        br();
     }
-
-    # Importar
-    $botaoImp = new Link("Importar", "?fase=importar");
-    $botaoImp->set_class('button');
-    $botaoImp->set_title('Importa arquivo cvs');
-    $botaoImp->set_accessKey('I');
-    $menu1->add_link($botaoImp, "right");
-
-    $menu1->show();
-
-    # Titulo
-    titulo("Área do Sispatri");
-    br();
 
     # Inicia a Classe
     $sispatri = new Sispatri();
@@ -99,75 +127,22 @@ if ($acesso) {
 
     switch ($fase) {
 
-        # Área Lateral
+        case "inicio" :
+
+            br(5);
+            aguarde("Montando a tabela");
+
+            loadPage("?fase=resumo");
+            break;
+
         case "resumo" :
 
-            # Pega o Número de Servidores
-            $numSispatriAtivos = $sispatri->get_numServidoresAtivos();
-            $numSispatriNaoAtivos = $sispatri->get_numServidoresNaoAtivos();
-
+            # Área Lateral
             $grid = new Grid();
-
-            ## Coluna do menu            
             $grid->abreColuna(12, 3);
 
-            # Número de Servidores
-            $painel = new Callout();
-            $painel->abre();
-
-            titulo("Resumo");
-            br();
-
-            $texto1 = null;
-
-            if ($parametroLotacao == "Todos") {
-                $numServidores = $pessoal->get_numServidoresAtivos();
-                $texto1 = "Na UENF";
-            } else {
-                $numServidores = $pessoal->get_numServidoresAtivos($parametroLotacao);
-                $texto1 = "Nesta Lotação";
-            }
-
-            $array = array(
-                array("Ativos", $numSispatriAtivos),
-                array("Não Ativos", $numSispatriNaoAtivos,),
-                array("Total", $numSispatriAtivos + $numSispatriNaoAtivos)
-            );
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("Não Fizeram o Sispatri");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(array("Descrição", "Servidores"));
-            $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                    'valor' => "Total",
-                    'operador' => '=',
-                    'id' => 'estatisticaTotal')));
-            $tabela->show();
-
-            # Chart
-            $chart = new Chart("Pie", array(array("Fez Sispatri", $numServidores - $numSispatriAtivos), array("Não Fez Sispatri", $numSispatriAtivos)));
-            $chart->set_idDiv("sispatri");
-            $chart->set_legend(false);
-            $chart->set_tamanho($largura = "50%", $altura = "50%");
-            $chart->show();
-
-            $array = array(
-                array($texto1, $numServidores),
-                array("Fizeram o Sispatri", $numServidores - $numSispatriAtivos),
-                array("Não Fizeram o Sispatri", $numSispatriAtivos)
-            );
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("Servidores Ativos");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(array("Descrição", "Servidores"));
-            $tabela->set_align(array("left", "center"));
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
-
-            $painel->fecha();
+            # Resumo
+            $sispatri->exibeResumo();
 
             $grid->fechaColuna();
 
@@ -194,52 +169,40 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(9);
+            $form->add_item($controle);
+
+            # Situação no sispatri
+            $array = ["Fizeram", "Não Fizeram"];
+
+            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array($array);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
 
             ##############
-
-            $result = $sispatri->get_servidoresAtivos();
-
-            $tabela = new Tabela();
-            $tabela->set_titulo('Servidores Ativos que Não Fizeram Sispatriff');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
-            $tabela->set_conteudo($result);
-            $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_classe(array(null, null, "pessoal", "pessoal"));
-            $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao"));
-            $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
-
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor');
-
-            if ($numSispatriAtivos > 0) {
-                $tabela->show();
-            } else {
-                callout("Não há dados para serem exibidos.", "secondary");
+            # Exibe os problemas de importação
+            if ($sispatri->get_numProblemas() > 0) {
+                $sispatri->exibeProblemas();
             }
 
-            #######
+            if ($parametroSituacao == "Fizeram") {
 
-            if ($numSispatriNaoAtivos > 0) {
-                $result = $sispatri->get_servidoresNaoAtivos();
+                # Exibe os servidores ativos que entregaram o sispatri
+                $sispatri->exibeServidoresEntregaramAtivos();
 
-                $tabela = new Tabela();
-                $tabela->set_titulo('Servidores Não Ativos que Não Fizeram Sispatri');
-                #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-                $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
-                $tabela->set_conteudo($result);
-                $tabela->set_align(array("center", "left", "left", "left"));
-                $tabela->set_classe(array(null, null, "pessoal", "pessoal", "pessoal"));
-                $tabela->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", "get_situacao"));
-
-                $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('?fase=editaServidor');
-
-                $tabela->show();
+                # Exibe os servidores inativos que entregaram o sispatri
+                $sispatri->exibeServidoresEntregaramInativos();
+            } else {
+                # Exibe os servidores ativos que Não entregaram o sispatri
+                $sispatri->exibeServidoresNaoEntregaramAtivos();
             }
 
             # Fecha o grid
@@ -247,6 +210,23 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
+        ################################################################
+
+        case "excluir" :
+            # Conecta com o banco de dados
+            $pessoal->set_tabela("tbsispatri");
+            $pessoal->set_idCampo("idSispatri");
+
+            if ($pessoal->excluir($id)) {
+                $intra->registraLog($idUsuario,
+                        date("Y-m-d H:i:s"),
+                        "Apagou registro importado",
+                        "tbsispatri",
+                        $id,
+                        3);
+            }
+            loadPage("?");
+            break;
         ################################################################
 
         case "editaServidor" :
@@ -264,40 +244,159 @@ if ($acesso) {
             break;
 
         ################################################################
-        # Ci
+
         case "ci" :
+
+            # Pega o idServidor da Chefia
+            $idChefia = $pessoal->get_chefiaImediataIdLotacao($parametroLotacao);
+
+            # Verifica se temos o idChefia
+            if (empty($idChefia)) {
+                $nomeLotacao = $pessoal->get_nomeLotacao2($parametroLotacao);
+                $chefia = null;
+            } else {
+                $nomeLotacao = $pessoal->get_cargoComissaoDescricao($idChefia);
+                $chefia = $pessoal->get_nome($idChefia);
+
+                # Verifica se conseguiu  a descrição do cargo
+                if (empty($nomeLotacao)) {
+                    $nomeLotacao = $pessoal->get_nomeLotacao2($lotacao);
+                }
+            }
+
+            # Formuário da CI
+            $form = new Form("../grhRelatorios/ciSispatri.php");
+
+            # usuário
+            $controle = new Input('ci', 'numero', 'N° CI:', 1);
+            $controle->set_size(5);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_required(true);
+            $controle->set_autofocus(true);
+            $controle->set_tabIndex(1);
+            $controle->set_title('O número da CI');
+            $form->add_item($controle);
+
+            # chefia
+            $controle = new Input('chefia', 'texto', 'Chefia Imediata:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(9);
+            $controle->set_tabIndex(2);
+            $controle->set_title('O Destinatário da CI');
+            $controle->set_valor($chefia);
+            $form->add_item($controle);
+
+            # texto
+            $controle = new Input('textoCi', 'editor', 'Texto da CI:', 1);
+            $controle->set_linha(2);
+            $controle->set_size([90, 10]);
+            $controle->set_title('Texto da CI');
+            $controle->set_valor($sispatri->get_textoCi());
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('submit', 'submit');
+            $controle->set_valor('Vizualizar');
+            $controle->set_linha(3);
+            $controle->set_tabIndex(3);
+            $controle->set_accessKey('E');
+            $form->add_item($controle);
+
+            $form->show();
             break;
 
         ################################################################
         # Importar
+        case "regras" :
+
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+            br(2);
+
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            p("Regras para a importação dos dados do SISPATRI", "center");
+            br();
+            p("- A importação é referente aos servidores que FIZERAM o Sispatri;");
+            p("- O arquivo deverá estar no formato de planilha csv;");
+            p("- Deve ser utilizado a vírgula para separar as colunas;");
+            p("- Na planilha o servidor é identificado pelo CPF;");
+            p("- Linhas que não tiverem o número de CPF serão ignoradas;");
+            p("- Toda nova importação apagará os dados importados anteriormente sobrescrevendo com os novos dados;");
+            $painel->fecha();
+            br();
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Importar
+            $botaoImp = new Link("Continuar", "?fase=importar");
+            $botaoImp->set_class('button');
+            $botaoImp->set_title('Importa arquivo cvs');
+            $menu1->add_link($botaoImp, "right");
+            $menu1->show();
+
+            $grid->fechaGrid();
+            break;
+
         case "importar" :
 
             $grid = new Grid("center");
             $grid->abreColuna(6);
 
+            # Gera a área de upload
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
-                    <input type='file' name='sispatri'>
-                    <p>Click aqui ou arraste o arquivo.</p>
-                    <button type='submit' name='submit'>Upload</button>
-                </form>";
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
 
             $pasta = "../_temp/";
 
-            if ((isset($_POST["submit"])) && (!empty($_FILES['sispatri']))) {
-                $upload = new Upload($_FILES['sispatri'], $pasta, "sispatri");
-                echo $upload->salvar();
-
-                # Registra log
-                $Objetolog = new Intra();
-                $data = date("Y-m-d H:i:s");
-                $atividade = "Alterou a foto do servidor";
-                $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4);
-
-                # Volta para o menu
-                loadPage("?fase=importar1");
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
             }
 
-            $grid->fechaColuna();
+            # Extensões possíveis
+            $extensoes = array("csv");
+
+            # Pega os valores do php.ini
+            $postMax = limpa_numero(ini_get('post_max_size'));
+            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+            $limite = menorValor(array($postMax, $uploadMax));
+
+            $texto = "Extensões Permitidas:";
+
+            foreach ($extensoes as $pp) {
+                $texto .= " $pp";
+            }
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
+            br();
+            p($texto, "f14", "center");
+
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                $upload = new UploadDoc($_FILES['doc'], $pasta, "sispatri", $extensoes);
+
+                # Salva e verifica se houve erro
+                if ($upload->salvar()) {
+
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Importou arquivo csv do sispatri";
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
+
+                    # Volta para o menu
+                    loadPage("?fase=importar1");
+                } else {
+                    loadPage("?fase=importar");
+                }
+            }
             $grid->fechaGrid();
             break;
 
@@ -311,7 +410,7 @@ if ($acesso) {
 
         case "importar2" :
 
-            # Apaga a tabela
+            # Apaga a tabela tbsispatri
             $select = 'SELECT idSispatri
                          FROM tbsispatri';
 
@@ -339,6 +438,8 @@ if ($acesso) {
         case "importar4" :
             # Define o arquivo a ser importado
             $arquivo = "../_temp/sispatri.csv";
+            $certos = 0;
+            $linhas = 0;
 
             # Verifica a existência do arquivo
             if (file_exists($arquivo)) {
@@ -347,17 +448,36 @@ if ($acesso) {
                 # Percorre o arquivo e guarda os dados em um array
                 foreach ($lines as $linha) {
 
+                    # Zera as variáveis de gravação
+                    $nome = null;
+                    $cpf = null;
+
+                    # incrementa as linhas
+                    $linhas++;
+
                     # Divide as colunas
-                    $parte = explode(";", $linha);
+                    $parte = explode(",", $linha);
 
+                    # Percorre as partes da linha
                     foreach ($parte as $pp) {
-                        if (is_numeric($pp)) {
 
-                            # Grava na tabela tbsispatri
-                            $campos = array("cpf");
-                            $valor = array($pp);
-                            $pessoal->gravar($campos, $valor, null, "tbsispatri", "idSispatri");
+                        if (!empty($pp)) {
+                            if ($pp == "Nome do Agente" OR $pp == "Processo:") {
+                                break;
+                            }
+                            if (is_numeric($pp)) {
+                                $cpf = $pp;
+                                $certos++;
+                            } else {
+                                $nome .= $pp . " | ";
+                            }
                         }
+                    }
+                    if (!empty($cpf)) {
+                        # Grava na tabela tbsispatri
+                        $campos = array("cpf", "obs");
+                        $valor = array($cpf, $nome);
+                        $pessoal->gravar($campos, $valor, null, "tbsispatri", "idSispatri");
                     }
                 }
             }
@@ -377,12 +497,8 @@ if ($acesso) {
             $problema = 0;
 
             br();
-            $select = 'SELECT idSispatri,
-                              cpf
-                         FROM tbsispatri';
-
+            $select = 'SELECT idSispatri,cpf FROM tbsispatri';
             $row = $pessoal->select($select);
-
             $contador = 0;
 
             foreach ($row as $tt) {
@@ -393,7 +509,6 @@ if ($acesso) {
                 $novoCpf = str_pad($novoCpf, 11, "0", STR_PAD_LEFT);
 
                 # CPF XXX.XXX.XXX-XX
-
                 $parte1 = substr($novoCpf, 0, 3);
                 $parte2 = substr($novoCpf, 3, 3);
                 $parte3 = substr($novoCpf, 6, 3);
@@ -407,7 +522,7 @@ if ($acesso) {
 
                 $row2 = $pessoal->select($select2, false);
 
-                if (is_null($row2[0])) {
+                if (empty($row2[0])) {
                     $problema++;
                 } else {
                     $idServidorPesquisado = $pessoal->get_idServidoridPessoa($row2[0]);
@@ -419,7 +534,13 @@ if ($acesso) {
                 }
             }
 
-            loadPage("?");
+            if ($problema > 0) {
+                alert("A importação foi concluída com {$problema} problema(s)");
+                loadPage("?");
+            } else {
+                alert("A importação foi concluída SEM problemas");
+                loadPage("?");
+            }
             break;
 
         ################################################################

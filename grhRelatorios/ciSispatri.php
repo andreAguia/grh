@@ -29,45 +29,21 @@ if ($acesso) {
     $lotacao = get_session('parametroLotacao');
     $ci = post('ci');
     $chefia = post('chefia');
+    $textoCi = post('textoCi');
 
     # Trata Lotação
     if ($lotacao == "*") {
-        $lotacao = null;
-    }
-
-    # Pega o idServidor da Chefia
-    $idChefia = $servidor->get_chefiaImediataIdLotacao($lotacao);
-
-    # Se nenhum Chefe foi digitado
-    if (vazio($chefia)) {
-
-        # Varifica se temos o idChefia
-        if (vazio($idChefia)) {
-            $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
-            $chefia = null;
-        } else {
-            $nomeLotacao = $servidor->get_cargoComissaoDescricao($idChefia);
-            $chefia = $servidor->get_nome($idChefia);
-
-            # Verifica se conseguiu  a descrição do cargo
-            if (vazio($nomeLotacao)) {
-                $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
-            }
-        }
+        $nomeLotacao == null;
     } else {
-        if (vazio($idChefia)) {
-            $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
-        } else {
-            if ($servidor->get_nome($idChefia) == $chefia) {
-                $nomeLotacao = $servidor->get_cargoComissaoDescricao($idChefia);
-            } else {
-                $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
-            }
-        }
+        $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
     }
+    
+    # Grava o novo texto nas configurações do sispatri
+    $sispatri = new Sispatri();
+    $sispatri->set_textoCi($textoCi);
 
     # Parâmetro da função
-    $parametro = array($nomeLotacao, $ci, $chefia);
+    $parametro = array($nomeLotacao, $ci, $chefia, $textoCi);
 
     $grid = new Grid();
     $grid->abreColuna(1);
@@ -82,14 +58,16 @@ if ($acesso) {
         $nomeLotacao = $parametro[0];
         $ci = $parametro[1];
         $chefia = $parametro[2];
+        $texto = $parametro[3];
 
         if (!is_null($nomeLotacao)) {
 
             $servidor = new Pessoal();
+            $intra = new Intra();
 
             $grid = new Grid();
             $grid->abreColuna(5);
-            p("CI GRH/DGA/UENF n° $ci/19", "left");
+            p("CI GRH/DGA/UENF n° $ci/" . date('Y'), "left");
             $grid->fechaColuna();
             $grid->abreColuna(7);
             p("Campos dos Goytacazes, " . dataExtenso(date('d/m/Y')), "right");
@@ -104,17 +82,7 @@ if ($acesso) {
 
             p("Prezado(a) Senhor(a)", "left");
 
-
-            $texto = "Conforme resolução conjunta CGE/SEFAZ nº 01 de 15 de agosto de 2018, em cumprimento ao"
-                    . " disposto no art. 9º do Decreto nº 46.634, de 17 de julho de 2018, e tendo em vista o"
-                    . " que consta no Processo Administrativo nº E-32/001/100001/2018 foi implantado o SISPATRI"
-                    . " no âmbito do Poder Executivo Estadual. O agente público deve acessar www.servidor.rj.gov.br"
-                    . " e fazer a declaração de bens e valores (DBV) on-line. Informamos abaixo em epígrafe relação"
-                    . " dos agentes públicos da sua unidade administrativa que não entregaram a declaração até a presente data."
-                    . " <b>Salientamos que o prazo encerra em 30 de junho de 2019.</b> Conforme art.6º §2º a não apresentação por"
-                    . " parte do agente público acarretará a abertura de Processo Administrativo Disciplinar.";
-
-            p($texto, "justify");
+            echo $texto;
         }
     }
 
@@ -168,33 +136,6 @@ if ($acesso) {
     $relatorio->set_dataImpressao(false);
     $relatorio->set_linhaNomeColuna(false);
     $relatorio->set_conteudo($result);
-
-    $chefiaImediata = $servidor->get_nome($servidor->get_chefiaImediataIdLotacao($lotacao));
-
-    if (vazio($chefia)) {
-        $chefia = $chefiaImediata;
-    }
-
-    $relatorio->set_formCampos(array(
-        array('nome' => 'chefia',
-            'label' => 'Chefia Imediata:',
-            'tipo' => 'texto',
-            'size' => 200,
-            'col' => 9,
-            'padrao' => $chefia,
-            'onChange' => 'formPadrao.submit();',
-            'linha' => 1),
-        array('nome' => 'ci',
-            'label' => 'N° CI:',
-            'tipo' => 'texto',
-            'size' => 4,
-            'col' => 3,
-            'padrao' => $ci,
-            'onChange' => 'formPadrao.submit();',
-            'linha' => 1)
-    ));
-
-    $relatorio->set_formLink('?');
     $relatorio->show();
 
     $grid->fechaColuna();

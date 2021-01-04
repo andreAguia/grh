@@ -322,7 +322,7 @@ if ($acesso) {
             br();
             p("- A importação é referente aos servidores que FIZERAM o Sispatri;");
             p("- O arquivo deverá estar no formato de planilha csv;");
-            p("- Deve ser utilizado a vírgula para separar as colunas;");
+            p("- Deve ser utilizado o ponto e vírgula para separar as colunas;");
             p("- Na planilha o servidor é identificado pelo CPF;");
             p("- Linhas que não tiverem o número de CPF serão ignoradas;");
             p("- Toda nova importação apagará os dados importados anteriormente sobrescrevendo com os novos dados;");
@@ -456,7 +456,7 @@ if ($acesso) {
                     $linhas++;
 
                     # Divide as colunas
-                    $parte = explode(",", $linha);
+                    $parte = explode(";", $linha);
 
                     # Percorre as partes da linha
                     foreach ($parte as $pp) {
@@ -474,9 +474,11 @@ if ($acesso) {
                         }
                     }
                     if (!empty($cpf)) {
+                        echo $cpf," - ",$nome;br();
+                        
                         # Grava na tabela tbsispatri
                         $campos = array("cpf", "obs");
-                        $valor = array($cpf, $nome);
+                        $valor = array(utf8_encode($cpf), utf8_encode($nome));
                         $pessoal->gravar($campos, $valor, null, "tbsispatri", "idSispatri");
                     }
                 }

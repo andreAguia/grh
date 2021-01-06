@@ -2121,20 +2121,30 @@ if ($acesso) {
             # Servidores com filhos ativos na Uenf
             $maes = $pessoal->get_numServidoresAtivosSexoFilhos("Feminino");
             $pais = $pessoal->get_numServidoresAtivosSexoFilhos("Masculino");
+            
+             # Porcentagem
+            $pmae = ($maes * 100)/$mulheres;
+            $ppai = ($pais * 100)/$homens;
                        
             # Tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo(array(["Mulheres",$mulheres,$maes],
-                ["Homens",$homens,$pais],
-                ["Total",$mulheres + $homens,$pais + $maes]));
-            $tabela->set_label(array("Gênero", "Servidores","Servidores Com filhos"));
-            $tabela->set_width(array(33,33,33));
+            $tabela->set_conteudo(array(["Feminino",$mulheres,$maes, number_format($pmae,2,',','')." %"],
+                ["Masculino",$homens,$pais,number_format($ppai,2,',','')." %"],
+                ["Total",$mulheres + $homens,$pais + $maes,null]));
+            
+            $tabela->set_label(array("Sexo", "Servidores","Servidores Com filhos","Servidores Com filhos (%)"));
+            $tabela->set_width(array(25,25,25,25));
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
             $tabela->set_totalRegistro(false);
             $tabela->show();
+            
+           
+                       
+            
+            
             
             $painel->fecha();
             break;

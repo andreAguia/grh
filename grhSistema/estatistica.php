@@ -143,6 +143,7 @@ if ($acesso) {
             array('Por Lotação x Cargo', 'cargoGerencia'),
             array('Por Diretoria', 'diretoria'),
             array('Por Gerência', 'gerencia'),
+            array('Por Filhos', 'filhos'),
             array('Por Idade', 'idade'),
             array('Por Faixa Etária', 'faixaEtaria'),
             array('Por Escolaridade', 'escolaridade'),
@@ -2101,6 +2102,39 @@ if ($acesso) {
             break;
 
 ####################################################################################################            
+
+        case "filhos":
+
+            # Abre o painel
+            $painel = new Callout();
+            $painel->abre();
+
+            titulotable("Servidores Ativos");
+            br();
+
+            ########
+            
+            # Servidores ativos na Uenf
+            $mulheres = $pessoal->get_numServidoresAtivosSexo("Feminino");
+            $homens = $pessoal->get_numServidoresAtivosSexo("Masculino");
+            
+            # Servidores com filhos ativos na Uenf
+            $maes = $pessoal->get_numServidoresAtivosSexoFilhos("Feminino");
+            $pais = $pessoal->get_numServidoresAtivosSexoFilhos("Masculino");
+                       
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo(array(["Mulheres",$mulheres,$maes],["Homens",$homens,$pais]));
+            $tabela->set_label(array("Gênero", "Servidores","Servidores Com filhos"));
+            $tabela->set_width(array(33,33,33));
+            #$tabela->set_align(array("left", "left"));
+            $tabela->set_rodape("Total de Servidores: ".($mulheres + $homens));
+            $tabela->show();
+            
+            $painel->fecha();
+            break;
+
+####################################################################################################                
     }
 
     # Fecha o grid

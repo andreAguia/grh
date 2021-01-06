@@ -3539,6 +3539,47 @@ class Pessoal extends Bd {
 
     ###########################################################
 
+    function get_numServidoresAtivosSexo($sexo = null) {
+
+        /**
+         * informa o número de Servidores Ativos por sexo
+         * 
+         * @param string $sexo do servidor Masculino|Feminino
+         */
+        if (empty($sexo)) {
+            return null;
+        } else {
+            $select = "SELECT idServidor
+                     FROM tbservidor JOIN tbpessoa USING(idPessoa)                                     
+                    WHERE situacao = 1 AND sexo = '{$sexo}'";
+
+            return parent::count($select);
+        }
+    }
+
+     ###########################################################
+
+    function get_numServidoresAtivosSexoFilhos($sexo = null) {
+
+        /**
+         * informa o número de Servidores Ativos por sexo com filhos
+         * 
+         * @param string $sexo do servidor Masculino|Feminino
+         */
+        if (empty($sexo)) {
+            return null;
+        } else {
+            $select = "SELECT distinct idServidor
+                     FROM tbservidor JOIN tbpessoa USING(idPessoa)
+                                     JOIN tbdependente USING(idPessoa) 
+                    WHERE situacao = 1 AND tbpessoa.sexo = '{$sexo}' AND parentesco = 2";
+
+            return parent::count($select);
+        }
+    }
+
+    ###########################################################
+
     function get_numServidoresAtivosCargoLotacao($idCargo = null, $idLotacao = null, $idPerfil = null) {
 
         /**
@@ -5130,7 +5171,7 @@ class Pessoal extends Bd {
         } else {
 
             $chefia = $row[0];
-            
+
             # Verifica se o servidor é o cargo em comissão e procura o diretor
             if (($chefia == $idServidor) or (is_null($chefia))) {
                 $chefia = $this->get_diretor($idLotacao);
@@ -5145,7 +5186,7 @@ class Pessoal extends Bd {
             if ($chefia == $idServidor) {
                 $chefia = null;
             }
-            
+
             return $chefia;
         }
     }
@@ -5180,7 +5221,7 @@ class Pessoal extends Bd {
         $select .= " ORDER BY tbtipocomissao.simbolo LIMIT 1";
 
         $row = parent::select($select, false);
-        
+
         if (empty($row[0])) {
             return null;
         } else {

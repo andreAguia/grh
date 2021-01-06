@@ -2124,11 +2124,16 @@ if ($acesso) {
                        
             # Tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo(array(["Mulheres",$mulheres,$maes],["Homens",$homens,$pais]));
+            $tabela->set_conteudo(array(["Mulheres",$mulheres,$maes],
+                ["Homens",$homens,$pais],
+                ["Total",$mulheres + $homens,$pais + $maes]));
             $tabela->set_label(array("Gênero", "Servidores","Servidores Com filhos"));
             $tabela->set_width(array(33,33,33));
-            #$tabela->set_align(array("left", "left"));
-            $tabela->set_rodape("Total de Servidores: ".($mulheres + $homens));
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                    'valor' => "Total",
+                    'operador' => '=',
+                    'id' => 'estatisticaTotal')));
+            $tabela->set_totalRegistro(false);
             $tabela->show();
             
             $painel->fecha();

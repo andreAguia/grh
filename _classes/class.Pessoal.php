@@ -726,6 +726,40 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_cargoSigla
+     * Informa a sigla do cargo do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
+    public function get_cargoSigla($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.sigla,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        if (empty($row["idTipoCargo"])) {
+            return null;
+        } else {
+            # Verifica se é cedido
+            if ($row["idPerfil"] <> 1 AND $row["idPerfil"] <> 4) {
+               return null;
+            }
+
+            # Retorna a sigla
+            return $row["sigla"];
+        }
+    }
+
+    ###########################################################
+
+
+    /**
      * Método get_cargoComSalto
      * Informa o cargo do servidor com salto de linha 
      * 
@@ -4674,6 +4708,69 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
+    public function get_telefoneCelular($idServidor) {
+
+        # Função que retorna os telefones do servidor cadastrado no sistema
+        #
+        # Parâmetro: id do servidor
+
+        $select = 'SELECT telCelularDDD,
+                              telCelular
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+        if(empty($row[1])){
+            return null;
+        }else{
+            return "($row[0]) $row[1]";
+        }
+    }
+
+     ##########################################################################################
+
+    public function get_telefoneResidencial($idServidor) {
+
+        # Função que retorna os telefones do servidor cadastrado no sistema
+        #
+        # Parâmetro: id do servidor
+
+        $select = 'SELECT telResidencialDDD,
+                              telResidencial
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+        if(empty($row[1])){
+            return null;
+        }else{
+            return "($row[0]) $row[1]";
+        }
+    }
+
+     ##########################################################################################
+
+    public function get_telefoneRecado($idServidor) {
+
+        # Função que retorna os telefones do servidor cadastrado no sistema
+        #
+        # Parâmetro: id do servidor
+
+        $select = 'SELECT telRecadosDDD,
+                              telRecados
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+        if(empty($row[1])){
+            return null;
+        }else{
+            return "($row[0]) $row[1]";
+        }
+    }
+
+     ##########################################################################################
+
     public function get_foto($idServidor, $largura = 75, $altura = 100) {
 
         # Função que retorna a foto do servidor
@@ -5458,6 +5555,26 @@ class Pessoal extends Bd {
             $link->show();
         } else {
             echo "-";
+        }
+    }
+
+     ###########################################################
+
+    public function get_siglaNomeLotacao($idServidor) {
+        /**
+         * Exibe a sigla do cargo efetivo, o nome somente com 2 nomes e a lotação reduzida
+         * Foi pedida por Gustavo
+         * 
+         * @param $idServidor integer null O id do servidor
+         * 
+         * @syntax $pessoal->get_siglaNomeLotacao($idServidor);
+         */
+        
+        if(empty($idServidor)){
+            return null;
+        }else{
+            $nome = explode(" ",$this->get_nome($idServidor));
+            return $this->get_cargoSigla($idServidor)." - ".$nome[0]." ".$nome[1]." - ".$this->get_lotacaoSimples($idServidor);
         }
     }
 

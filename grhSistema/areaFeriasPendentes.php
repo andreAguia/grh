@@ -64,42 +64,14 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-
-    # Ano Exercício
-    $botaoVoltar = new Link("Ano Exercício");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Férias por Ano Exercício');
-    #$menu1->add_link($botaoVoltar,"right");
-    # Ano por Fruíção
-    $botaoVoltar = new Link("por Ano de Fruição", "areaFeriasFruicao.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Férias por Ano em que foi realmente fruído');
-    #$menu1->add_link($botaoVoltar,"right");
-
     $menu1->show();
 
     # Título
-    titulo("Área de Férias - Por Ano de Exercício");
+    titulo("Área de Férias - Pendentes");
 
 ################################################################
     # Formulário de Pesquisa
     $form = new Form('?');
-
-    # Cria um array com os anos possíveis
-    $anoInicial = 1999;
-    $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoAtual + 2, $anoInicial, "d");
-
-    $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
-    $controle->set_size(8);
-    $controle->set_title('Filtra por Ano exercício');
-    $controle->set_array($anoExercicio);
-    $controle->set_valor(date("Y"));
-    $controle->set_valor($parametroAno);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(3);
-    $form->add_item($controle);
 
     # Lotação
     $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
@@ -117,23 +89,7 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(7);
-    $form->add_item($controle);
-
-    # Situação
-    $result = $pessoal->select('SELECT idsituacao, situacao
-                                              FROM tbsituacao                                
-                                          ORDER BY 1');
-    array_unshift($result, array('*', '-- Todos --'));
-
-    $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
-    $controle->set_size(30);
-    $controle->set_title('Filtra por Situação');
-    $controle->set_array($result);
-    $controle->set_valor($parametroSituacao);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(2);
+    $controle->set_col(12);
     $form->add_item($controle);
 
     $form->show();
@@ -171,9 +127,9 @@ if ($acesso) {
 
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Tipo');
-            $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
+            $menu->add_item('link', 'por Ano de Exercício', 'areaFeriasExercicio.php');
             $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
-            #$menu->add_item('link', 'pendentes', 'areaFeriasPendentes.php');
+            $menu->add_item('link', '<b>pendentes</b>', 'areaFeriasPendentes.php');
 
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');

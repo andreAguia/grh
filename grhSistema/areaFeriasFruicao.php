@@ -169,6 +169,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Tipo');
             $menu->add_item('link', 'por Ano de Exercício', 'areaFeriasExercicio.php');
             $menu->add_item('link', '<b>por Ano de Fruíção</b>', '#');
+            #$menu->add_item('link', 'pendentes', 'areaFeriasPendentes.php');
 
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', 'Anual Agrupado por Mês', '../grhRelatorios/ferias.fruicao.anual.porMes.php');

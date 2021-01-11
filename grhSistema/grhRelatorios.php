@@ -98,7 +98,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Professores', '?fase=professores', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
+            #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Triênio', '?fase=trienio', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Histórico', '?fase=historico', '', '', 'divMenuRelatorioGrh');
@@ -426,7 +426,6 @@ if ($acesso) {
         case "sispatri";
             $menu = new Menu();
             $menu->add_item('titulo', 'Sispatri');
-            $menu->add_item('linkWindow', 'CI dos Servidores que Nao Entregaram o Sispatri', '../grhRelatorios/sispatriLotacao.php');
             $menu->show();
             break;
 
@@ -462,6 +461,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Contatos');
             $menu->add_item('linkWindow', 'Email dos Servidores', '../grhRelatorios/email.php');
             $menu->add_item('linkWindow', 'Telefones dos Servidores', '../grhRelatorios/telefone.php');
+            $menu->add_item('linkWindow', 'Telefones dos Servidores 2', '../grhRelatorios/telefone2.php');
 
             $menu->show();
             break;

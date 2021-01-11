@@ -26,12 +26,18 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao'));
-
+    
+    if($lotacao = "*"){
+        $lotacao = null;
+    }
+    
     $subTitulo = null;
 
     ######
 
     $select = 'SELECT tbservidor.idServidor,
+                      tbservidor.idServidor,
+                      tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbservidor.idServidor
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
@@ -58,9 +64,9 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Telefones dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Tel Residencial', 'Celular'));   
-    $relatorio->set_classe(array("pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_siglaNomeLotacao", "get_telefoneResidencial","get_telefoneCelular"));
+    $relatorio->set_label(array('Servidor', 'Tel Residencial', 'Celular','Email Uenf','Email Pessoal'));   
+    $relatorio->set_classe(array("pessoal", "pessoal", "pessoal", "pessoal", "pessoal"));
+    $relatorio->set_metodo(array("get_siglaNomeLotacao", "get_telefoneResidencial","get_telefoneCelular","get_emailUenf","get_emailPessoal"));
     
     $relatorio->set_align(array("left"));
 

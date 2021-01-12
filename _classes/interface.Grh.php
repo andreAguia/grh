@@ -1048,7 +1048,8 @@ class Grh
         p('Usuário : ' . $intra->get_usuario($idUsuario), 'usuarioLogado');
         $grid->fechaColuna();
         $grid->abreColuna(6);
-        p("Desenvolvido por André Águia", 'pauthor');
+        #p("Desenvolvido por André Águia", 'pauthor');
+        p("UENF - Universidade Estadual do Norte Fluminense Darcy Ribeiro",'pauthor');
         $grid->fechaColuna();
         $grid->fechaGrid();
     }

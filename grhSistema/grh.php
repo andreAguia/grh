@@ -81,7 +81,7 @@ if ($acesso) {
         case "menu" :
 
             p(SISTEMA, 'grhTitulo');
-            p("Versão: " . VERSAO . " de " . ATUALIZACAO, "versao");
+            p("Versão: " . VERSAO, "versao");
 
             # Limita o tamanho da tela
             $grid = new Grid();

@@ -312,15 +312,6 @@ if ($acesso) {
         $objeto->set_tipoCampoPesquisa("combo");
         $objeto->set_arrayPesquisa($result);
 
-        # ordenação
-        if (is_null($orderCampo)) {
-            $orderCampo = "1";
-        }
-
-        if (is_null($orderTipo)) {
-            $orderTipo = 'desc';
-        }
-
         # select da lista
         $selectLicença = '(SELECT tblicenca.idTpLicenca,
                                   tblicenca.idTpLicenca,
@@ -337,7 +328,7 @@ if ($acesso) {
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE idServidor=' . $idServidorPesquisado;
         if (!vazio($parametro)) {
-            $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro . ')';
+            $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro . ' ORDER BY 4 desc)';
         } else {
             $selectLicença .= ')
                                UNION
@@ -382,10 +373,6 @@ if ($acesso) {
                                    obs,
                                    idServidor
                               FROM tblicenca WHERE idLicenca = ' . $id);
-        # ordem da lista
-        $objeto->set_orderCampo($orderCampo);
-        $objeto->set_orderTipo($orderTipo);
-        $objeto->set_orderChamador('?fase=listar');
 
 
         # Caminhos

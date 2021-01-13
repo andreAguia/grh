@@ -24,15 +24,6 @@ if ($acesso) {
     $diretoria = get('diretoria');
     $grafico = get('grafico');
 
-    # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', false);
-    if ($grh) {
-        # Grava no log a atividade
-        $atividade = "Visualizou a área de estatística";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
-    }
-
     # Pega o ano
     $ano = post("ano", date("Y"));
 
@@ -87,7 +78,6 @@ if ($acesso) {
 
     titulo("Estatística de Servidores");
     br();
-
 
     if (!$rel) {
         $grid = new Grid();
@@ -187,6 +177,10 @@ if ($acesso) {
             $painal = new Callout();
             $painel->abre();
 
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por idade";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
+
             # Título
             tituloTable("Por Idade");
 
@@ -282,6 +276,10 @@ if ($acesso) {
             # Abre o painel
             $painel = new Callout();
             $painel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por faixa etária";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             titulotable("por Faixa Etária");
             br();
@@ -672,6 +670,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por perfil";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Perfil");
@@ -706,6 +708,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por cargo";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Cargo - Geral");
@@ -955,6 +961,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por cargo administrativo e técnico";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Cargo - Administrativo e Tecnicos");
@@ -1161,6 +1171,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por diretoria";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Diretoria");
@@ -1477,6 +1491,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por gerência";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Gerência");
@@ -1549,6 +1567,10 @@ if ($acesso) {
             # Sexo por Lotação
             $painel = new Callout();
             $painel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por escolaridade";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             titulotable("por Escolaridade");
             br();
@@ -1746,6 +1768,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por nacionalidade";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Nacionalidade");
@@ -1774,6 +1800,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por estado civil";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Estado Civil");
@@ -1802,6 +1832,10 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por cidade de moradia";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             titulotable("por Cidade de Moradia");
@@ -2010,6 +2044,10 @@ if ($acesso) {
             # Abre o painel
             $painel = new Callout();
             $painel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por Diretoria/Gerência x Cargo/Função";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);            
 
             titulotable("por Diretoria/Gerência x Cargo/Função");
             br();
@@ -2092,10 +2130,10 @@ if ($acesso) {
             #$tabela->set_width(array(80,20));
             $tabela->set_align(array("left", "left"));
             $tabela->set_rodape("Total de Servidores: " . $total);
-            
+
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
-    
+
             $tabela->show();
 
             $painel->fecha();
@@ -2108,44 +2146,42 @@ if ($acesso) {
             # Abre o painel
             $painel = new Callout();
             $painel->abre();
+            
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por filhos";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);       
 
             titulotable("Servidores Ativos");
             br();
 
             ########
-            
             # Servidores ativos na Uenf
             $mulheres = $pessoal->get_numServidoresAtivosSexo("Feminino");
             $homens = $pessoal->get_numServidoresAtivosSexo("Masculino");
-            
+
             # Servidores com filhos ativos na Uenf
             $maes = $pessoal->get_numServidoresAtivosSexoFilhos("Feminino");
             $pais = $pessoal->get_numServidoresAtivosSexoFilhos("Masculino");
-            
-             # Porcentagem
-            $pmae = ($maes * 100)/$mulheres;
-            $ppai = ($pais * 100)/$homens;
-                       
+
+            # Porcentagem
+            $pmae = ($maes * 100) / $mulheres;
+            $ppai = ($pais * 100) / $homens;
+
             # Tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo(array(["Feminino",$mulheres,$maes, number_format($pmae,2,',','')." %"],
-                ["Masculino",$homens,$pais,number_format($ppai,2,',','')." %"],
-                ["Total",$mulheres + $homens,$pais + $maes,null]));
-            
-            $tabela->set_label(array("Sexo", "Servidores","Servidores Com filhos","Servidores Com filhos (%)"));
-            $tabela->set_width(array(25,25,25,25));
+            $tabela->set_conteudo(array(["Feminino", $mulheres, $maes, number_format($pmae, 2, ',', '') . " %"],
+                ["Masculino", $homens, $pais, number_format($ppai, 2, ',', '') . " %"],
+                ["Total", $mulheres + $homens, $pais + $maes, null]));
+
+            $tabela->set_label(array("Sexo", "Servidores", "Servidores Com Filhos", "Servidores Com Filhos (%)"));
+            $tabela->set_width(array(25, 25, 25, 25));
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
             $tabela->set_totalRegistro(false);
             $tabela->show();
-            
-           
-                       
-            
-            
-            
+
             $painel->fecha();
             break;
 

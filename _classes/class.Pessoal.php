@@ -4300,7 +4300,7 @@ class Pessoal extends Bd {
         $ultimo = null;
 
         # Se não tiver férias cadastradas o ano disponível é o posterior ao da admissão
-        if (count($lista) == 0) {
+        if (empty($lista)) {
             $retorno = $anoAdmissao + 1;
         } else {
             # Se houver verifica se alguma das férias tem menos de 30 dias 

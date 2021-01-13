@@ -221,8 +221,8 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label();
-        $botao->set_url("");
-        $botao->set_imagem(PASTA_FIGURAS . 'sispatri2020.jpeg', '100%', '100%');
+        $botao->set_url("https://www.servidor.rj.gov.br/portal-web/index");
+        $botao->set_imagem(PASTA_FIGURAS . 'sispatri2020.png', '100%', '100%');
         $botao->set_title('Sistema de Registros de Bens dos Agentes Públicos');
         #$botao->set_target("_blank");
         $botao->show();

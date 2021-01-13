@@ -172,13 +172,13 @@ if ($acesso) {
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Tipo');
             $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
-            $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
-            #$menu->add_item('link', 'pendentes', 'areaFeriasPendentes.php');
+            $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');            
 
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
             $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
             $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
+            $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
             $menu->show();
 
             #######################################

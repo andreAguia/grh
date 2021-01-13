@@ -29,6 +29,19 @@ if ($acesso) {
 
     # Limita o tamanho da tela
     $grid = new Grid();
+    $grid->abreColuna(12);    
+
+    # Exibe as férias pendentes
+    $ferias = new Ferias();
+    $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
+    if (!empty($pendentes)) {
+        $callout = new Callout();
+        $callout->abre();
+        p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center');
+        $callout->fecha();
+    }
+    
+    $grid->fechaColuna();
     $grid->abreColuna(3);
 
     $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
@@ -80,7 +93,6 @@ if ($acesso) {
 
     $relatorio->set_rowspan(0);
     $relatorio->set_grupoCorColuna(0);
-
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

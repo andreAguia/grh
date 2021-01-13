@@ -244,7 +244,17 @@ if ($acesso) {
 
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
-
+            
+            # Exibe as férias pendentes
+            $ferias = new Ferias();
+            $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
+            if(!empty($pendentes)){
+                $callout = new Callout("warning");
+                $callout->abre();
+                p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center');
+                $callout->fecha();
+            }
+            
             $objeto->listar();
 
             $grid2->fechaColuna();

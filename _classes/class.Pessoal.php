@@ -4692,15 +4692,15 @@ class Pessoal extends Bd {
         $retorno = null;
 
         if (!vazio($row[1])) {
-            $retorno .= "($row[0]) $row[1]<br/>";
+            $retorno .= "($row[0]) $row[1] (Res)<br/>";
         }
 
         if (!vazio($row[3])) {
-            $retorno .= "($row[2]) $row[3]<br/>";
+            $retorno .= "($row[2]) $row[3] (Cel)<br/>";
         }
 
         if (!vazio($row[5])) {
-            $retorno .= "($row[4]) $row[5]<br/>";
+            $retorno .= "($row[4]) $row[5] (Rec)<br/>";
         }
 
         return $retorno;
@@ -4720,6 +4720,7 @@ class Pessoal extends Bd {
                         WHERE idservidor = ' . $idServidor;
 
         $row = parent::select($select, false);
+        
         if(empty($row[1])){
             return null;
         }else{

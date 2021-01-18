@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Sistema GRH
  * 
@@ -35,17 +34,20 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbservidor.idServidor,
-                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor
-                FROM tbservidor JOIN tbpessoa USING (idpessoa)
-                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-               WHERE tbservidor.situacao = 1
-                 AND idPerfil <> 10
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+    $select = 'SELECT tbservidor.idServidor,        
+                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao, 
+                      tbservidor.idServidor,
+                      tbservidor.idServidor
+                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
+                 JOIN tbhistlot USING (idServidor)
+                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                WHERE tbservidor.situacao = 1
+                  AND ((telResidencial IS NULL) OR (telResidencial = "") OR 
+                       (telCelular IS NULL) OR (telCelular = "") OR
+                       (telRecados IS NULL) OR (telRecados = "") OR
+                       (emailPessoal IS NULL) OR (emailPessoal = "") OR
+                       (emailUenf IS NULL) OR (emailUenf = ""))
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {
         # Verifica se o que veio é numérico
@@ -67,16 +69,14 @@ if ($acesso) {
 
     $result = $servidor->select($select);
 
-    $relatorio->set_titulo('Relatório de Telefones dos Servidores Ativos');
+    $relatorio->set_titulo('Relatório de Servidores Ativos Com Algum Contato Faltando');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Lotação', 'Residencial', 'Celular', 'Recados'));
-    #$relatorio->set_width(array(10,40,50));
-    $relatorio->set_align(array("left", "left", "left", "left", "left"));
-    $relatorio->set_conteudo($result);
+    $relatorio->set_label(array('Servidor', 'Lotação', 'Telefones', 'Emails'));
+    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefones", "get_emails"));
+    $relatorio->set_align(array("left","left","left","left"));
     $relatorio->set_bordaInterna(true);
-
-    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefoneResidencial", "get_telefoneCelular", "get_telefoneRecado"));
+    $relatorio->set_conteudo($result);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
@@ -100,7 +100,6 @@ if ($acesso) {
 
     $relatorio->set_formFocus('lotacao');
     $relatorio->set_formLink('?');
-
     $relatorio->show();
 
     $page->terminaPagina();

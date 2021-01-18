@@ -26,51 +26,57 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao'));
-    
-    if($lotacao = "*"){
+    if ($lotacao == "*") {
         $lotacao = null;
     }
-    
     $subTitulo = null;
 
     ######
 
+    $relatorio = new Relatorio();
+
     $select = 'SELECT tbservidor.idServidor,
-                      tbservidor.idServidor,
-                      tbservidor.idServidor,
-                      tbservidor.idServidor,
-                      tbservidor.idServidor
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor,
+                     tbservidor.idServidor
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
-                JOIN tbhistlot USING (idServidor)
+                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
+                 AND idPerfil <> 10
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $subTitulo .= "Lotação: " . $servidor->get_nomeCompletoLotacao($lotacao) . "<br/>";
+            $relatorio->set_numGrupo(1);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
             $subTitulo .= "Lotação: " . $lotacao . "<br/>";
+            $relatorio->set_numGrupo(1);
         }
     }
 
-    $select .= ' ORDER BY tbpessoa.nome';
+    if (is_null($lotacao)) {
+        $select .= ' ORDER BY tbpessoa.nome';
+    } else {
+        $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
+    }
 
     $result = $servidor->select($select);
 
-    $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Telefones dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Tel Residencial', 'Celular','Email Uenf','Email Pessoal'));   
-    $relatorio->set_classe(array("pessoal", "pessoal", "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_siglaNomeLotacao", "get_telefoneResidencial","get_telefoneCelular","get_emailUenf","get_emailPessoal"));
-    
-    $relatorio->set_align(array("left"));
-
+    $relatorio->set_label(array('Servidor', 'Lotação', 'Telefones'));
+    #$relatorio->set_width(array(10,40,50));
+    $relatorio->set_align(array("left", "left", "left"));
     $relatorio->set_conteudo($result);
+    $relatorio->set_bordaInterna(true);
+
+    $relatorio->set_classe(array("pessoal", null, "pessoal"));
+    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefones"));
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao

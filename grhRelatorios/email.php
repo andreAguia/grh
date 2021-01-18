@@ -26,13 +26,16 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao'));
-
+    if($lotacao == "*"){
+        $lotacao = null;
+    }
     $subTitulo = null;
 
     ######
 
-    $select = 'SELECT tbservidor.idfuncional,
-                     tbpessoa.nome,
+    $relatorio = new Relatorio();
+
+    $select = 'SELECT tbservidor.idServidor,
                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
                      tbpessoa.emailUenf,
                      tbpessoa.emailPessoal
@@ -47,27 +50,35 @@ if ($acesso) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $subTitulo .= "Lotação: " . $servidor->get_nomeCompletoLotacao($lotacao) . "<br/>";
+            $relatorio->set_numGrupo(1);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
             $subTitulo .= "Lotação: " . $lotacao . "<br/>";
+            $relatorio->set_numGrupo(1);
         }
     }
 
-    $select .= ' ORDER BY tbpessoa.nome';
+    if (is_null($lotacao)) {
+        $select .= ' ORDER BY tbpessoa.nome';
+    } else {
+        $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
+    }
 
 
     $result = $servidor->select($select);
 
-    $relatorio = new Relatorio();
+
     $relatorio->set_titulo('Relatório de Emails dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Email UENF', 'Email Pessoal'));
+    $relatorio->set_label(array('Servidor', 'Lotação', 'Email UENF', 'Email Pessoal'));
     #$relatorio->set_width(array(10,40,50));
-    $relatorio->set_align(array("center", "left", "left", "left", "left"));
-
+    $relatorio->set_align(array("left", "left", "left", "left"));
     $relatorio->set_conteudo($result);
+    $relatorio->set_bordaInterna(true);
 
+    $relatorio->set_classe(array("pessoal"));
+    $relatorio->set_metodo(array("get_nomeECargo"));
+    
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
@@ -90,7 +101,6 @@ if ($acesso) {
 
     $relatorio->set_formFocus('lotacao');
     $relatorio->set_formLink('?');
-
     $relatorio->show();
 
     $page->terminaPagina();

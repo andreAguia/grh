@@ -67,16 +67,16 @@ if ($acesso) {
 
     $result = $servidor->select($select);
 
-    $relatorio->set_titulo('Relatório de Telefones dos Servidores Ativos');
+    $relatorio->set_titulo('Relatório de Contatos dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Lotação', 'Residencial', 'Celular', 'Recados'));
+    $relatorio->set_label(array('Servidor', 'Lotação', 'Telefones','Emails'));
     #$relatorio->set_width(array(10,40,50));
     $relatorio->set_align(array("left", "left", "left", "left", "left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefoneResidencial", "get_telefoneCelular", "get_telefoneRecado"));
+    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefones", "get_emails"));
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao

@@ -459,9 +459,20 @@ if ($acesso) {
         case "contatos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Contatos');
+            $menu->add_item('titulo1', 'Email');
             $menu->add_item('linkWindow', 'Email dos Servidores', '../grhRelatorios/email.php');
+            $menu->add_item('linkWindow', 'Email dos Servidores 2', '../grhRelatorios/email2.php');
+            
+            $menu->add_item('titulo1', 'Telefone');
             $menu->add_item('linkWindow', 'Telefones dos Servidores', '../grhRelatorios/telefone.php');
             $menu->add_item('linkWindow', 'Telefones dos Servidores 2', '../grhRelatorios/telefone2.php');
+            
+            
+            $menu->add_item('titulo1', 'Contatos');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores', '../grhRelatorios/contatos.php');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores (Formato Sispatri)', '../grhRelatorios/contatos.sispatri.php');
+            #$menu->add_item('linkWindow', 'Servidores sem Algum dos Contatos', '../grhRelatorios/contatos.servidoresSemContatos.php');
+            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional ou Celular Cadastrado', '../grhRelatorios/contatos.servidoresSemEmailECelular.php');
 
             $menu->show();
             break;

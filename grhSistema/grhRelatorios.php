@@ -155,6 +155,7 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Aposentados');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Aposentados Agrupados por Cargo', '../grhRelatorios/professor.aposentadoPorCargo.php');
 
             $menu->show();
             break;
@@ -502,6 +503,9 @@ if ($acesso) {
         case "professores";
             $menu = new Menu();
             $menu->add_item('titulo', 'Professores');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos', '../grhRelatorios/geralServidoresProfessoresAtivos.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos Agrupados por Cargo', '../grhRelatorios/professor.ativoPorCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Aposentados Agrupados por Cargo', '../grhRelatorios/professor.aposentadoPorCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Nacionalidade', '../grhRelatorios/professorNacionalidade.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Com Data de Nascimento e Sexo', '../grhRelatorios/professorIdadeSexo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Lotaçao', '../grhRelatorios/professorporLotacao.php');

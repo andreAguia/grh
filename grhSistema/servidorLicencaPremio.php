@@ -196,12 +196,9 @@ if ($acesso) {
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-        $imagem = new Imagem(PASTA_FIGURAS . 'ajuda.png', null, 15, 15);
-        $botaoHelp = new Button();
-        $botaoHelp->set_imagem($imagem);
-        $botaoHelp->set_title("Ajuda");
-        $botaoHelp->set_url("../grhRelatorios/servidorLicenca.php");
-        $botaoHelp->set_target("_blank");
+        $botaoAfast = new Button('Verifica Afastamentos', 'servidorAfastamentos.php?volta=0');
+        $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
+        $botaoAfast->set_target("_blank");
 
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
@@ -210,7 +207,7 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorLicencaPremio.php");
         $botaoRel->set_target("_blank");
 
-        $objeto->set_botaoListarExtra(array($botaoRel));
+        $objeto->set_botaoListarExtra(array($botaoRel, $botaoAfast));
 
         ################################################################
 

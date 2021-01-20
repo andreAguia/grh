@@ -29,6 +29,8 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
+    # Verifica se tem ou não botão de voltar
+    $volta = get("volta", true);
 
     # Começa uma nova página
     $page = new Page();
@@ -43,14 +45,18 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Cria um menu
-    $menu = new MenuBar();
+    if ($volta) {
+        $menu = new MenuBar();
 
-    # Botão voltar
-    $linkBotaoVoltar = new Button('Voltar', 'servidorMenu.php');
-    $linkBotaoVoltar->set_title('Volta para a página anterior');
-    $linkBotaoVoltar->set_accessKey('V');
-    $menu->add_link($linkBotaoVoltar, "left");
-    $menu->show();
+        # Botão voltar
+        $linkBotaoVoltar = new Button('Voltar', 'servidorMenu.php');
+        $linkBotaoVoltar->set_title('Volta para a página anterior');
+        $linkBotaoVoltar->set_accessKey('V');
+        $menu->add_link($linkBotaoVoltar, "left");
+        $menu->show();
+    }else{
+        br();
+    }
 
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);

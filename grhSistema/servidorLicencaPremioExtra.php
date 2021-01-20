@@ -38,7 +38,7 @@ $dtFinal = addDias(date_to_php($dtInicial), $numDias);
 $verifica = new VerificaAfastamentos($idServidor, date_to_php($dtInicial), $dtFinal);
 $verifica->setIsento("tblicencapremio", $id);
 $outro = $verifica->verifica();
-if (!empty($outro)) {
+if (!empty($outro[0])) {
     $msgErro .= 'Já existe um(a) ' . $outro[0] . ' nesse período!\n';
     $erro = 1;
 }

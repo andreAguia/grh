@@ -698,9 +698,7 @@ class Pessoal extends Bd {
         $row = parent::select($select, false);
         $retorno = null;
 
-        if (empty($row["idTipoCargo"])) {
-            return $retorno;
-        } else {
+        if (!empty($row["idTipoCargo"])) {
             # Verifica se é cedido
             if ($row["idPerfil"] == 2) {
                 $retorno .= "Exercendo função equivalente ao ";
@@ -778,9 +776,7 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (empty($row["idTipoCargo"])) {
-            return null;
-        } else {
+        if (!empty($row["idTipoCargo"])) {
             # Verifica se é cedido
             if ($row["idPerfil"] == 2) {
                 p("Exercendo função equivalente ao", "pLinha3");

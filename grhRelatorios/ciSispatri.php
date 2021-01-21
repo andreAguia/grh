@@ -37,7 +37,7 @@ if ($acesso) {
     } else {
         $nomeLotacao = $servidor->get_nomeLotacao2($lotacao);
     }
-    
+
     # Grava o novo texto nas configurações do sispatri
     $sispatri = new Sispatri();
     $sispatri->set_textoCi($textoCi);
@@ -76,7 +76,7 @@ if ($acesso) {
 
             $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
 
-            p("<b>De: $gerenteGrh<br/>Gerente de Recursos Humanos - GRH/UENF</b>", "left");
+            p("<b>De: Gerência de Recursos Humanos - GRH/UENF</b>", "left");
 
             p("Para: $chefia<br/>$nomeLotacao", "left");
 
@@ -97,18 +97,22 @@ if ($acesso) {
         $grid->fechaColuna();
         $grid->abreColuna(6);
 
-        $figura = new Imagem(PASTA_FIGURAS . 'assinatura.png', 'Assinatura do Gerente', 120, 140);
-        $figura->show();
+        # assinatura -> Retirado a pedido de gustavo pois vai assinar digitalmente pelo sei
+        #$figura = new Imagem(PASTA_FIGURAS . 'assinatura.png', 'Assinatura do Gerente', 120, 140);
+        #$figura->show();
+//        $servidor = new Pessoal();
+//        $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
+//        $idGerente = $servidor->get_idFuncional($servidor->get_gerente(66));
+//        p("$gerenteGrh<br/>Gerente de Recursos Humanos<br/>Id Funcional: $idGerente", "center", "f12");
 
-        $servidor = new Pessoal();
-        $gerenteGrh = $servidor->get_Nome($servidor->get_gerente(66));
-        $idGerente = $servidor->get_idFuncional($servidor->get_gerente(66));
-        p("$gerenteGrh<br/>Gerente de Recursos Humanos<br/>Id Funcional: $idGerente", "center", "f12");
+
+
 
         $grid->fechaColuna();
         $grid->abreColuna(3);
         $grid->fechaColuna();
         $grid->fechaGrid();
+        p("Gerência de Recursos Humanos", "left");
 
         p("_______________________________________________________________________________<br/>Av. Alberto Lamego 2000 - Parque California - Campos dos Goytacazes/RJ - 28013-602<br/>Tel.: (22) 2739-7064 - correio eletronico: grh@uenf.br", "center", "f12");
     }
@@ -128,7 +132,7 @@ if ($acesso) {
 
     #$relatorio->set_titulo('Relatório de Servidores Que nao Entregaram o Sispatri');
 
-    $relatorio->set_label(array('idFuncional', 'Nome'));
+    $relatorio->set_label(array('idFuncional', 'Nome', 'Lotação'));
     $relatorio->set_width(array(20, 80));
     $relatorio->set_align(array("center", "left"));
     $relatorio->set_subTotal(false);
@@ -136,6 +140,7 @@ if ($acesso) {
     $relatorio->set_dataImpressao(false);
     $relatorio->set_linhaNomeColuna(false);
     $relatorio->set_conteudo($result);
+    $relatorio->set_numGrupo(2);
     $relatorio->show();
 
     $grid->fechaColuna();

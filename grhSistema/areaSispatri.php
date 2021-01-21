@@ -36,7 +36,7 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
-    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Fizeram'));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Entregaram'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
@@ -88,7 +88,7 @@ if ($acesso) {
             $botaoImp->set_accessKey('I');
             $menu1->add_link($botaoImp, "right");
 
-            if ($parametroSituacao == "Não Fizeram" AND $parametroLotacao <> "Todos") {
+            if ($parametroSituacao == "Não Entregaram" AND $parametroLotacao <> "Todos") {
                 # ci
                 $botaoci = new Link("CI", "?fase=ci");
                 $botaoci->set_target("_blank");
@@ -115,7 +115,7 @@ if ($acesso) {
     } else {
         # Titulo
         br();
-        titulo("CI dos Servidores que NÃO Fizeram o Sispatri");
+        titulo("CI dos Servidores que NÃO Entregaram a Declaração do Sispatri");
         br();
     }
 
@@ -173,7 +173,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Situação no sispatri
-            $array = ["Fizeram", "Não Fizeram"];
+            $array = ["Entregaram", "Não Entregaram"];
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
             $controle->set_size(30);
@@ -193,7 +193,7 @@ if ($acesso) {
                 $sispatri->exibeProblemas();
             }
 
-            if ($parametroSituacao == "Fizeram") {
+            if ($parametroSituacao == "Entregaram") {
 
                 # Exibe os servidores ativos que entregaram o sispatri
                 $sispatri->exibeServidoresEntregaramAtivos();
@@ -320,7 +320,7 @@ if ($acesso) {
 
             p("Regras para a importação dos dados do SISPATRI", "center");
             br();
-            p("- A importação é referente aos servidores que FIZERAM o Sispatri;");
+            p("- A importação é referente aos servidores que ENTREGARAM a Declaração do Sispatri;");
             p("- O arquivo deverá estar no formato de planilha csv;");
             p("- Deve ser utilizado o ponto e vírgula para separar as colunas;");
             p("- Na planilha o servidor é identificado pelo CPF;");

@@ -25,21 +25,21 @@ if ($acesso) {
     $page->iniciaPagina();
 
     $parametroLotacao = get_session('parametroLotacao', 'Todos');
-    $parametroSituacao = get_session('parametroSituacao', 'Fizeram');
+    $parametroSituacao = get_session('parametroSituacao', 'Entregaram');
 
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($parametroLotacao);
 
     ######
     # Pega os registros
-    if ($parametroSituacao == "Fizeram") {
+    if ($parametroSituacao == "Entregaram") {
         # Exibe os servidores ativos que entregaram o sispatri
         $lista = $sispatri->get_servidoresEntregaramAtivos();
-        $titulo = 'Relatório dos Servidores Ativos que FIZERAM o Sispatri';
+        $titulo = 'Relatório de Declarações Entregues do Sispatri';
     } else {
         # Exibe os servidores ativos que Não entregaram o sispatri
         $lista = $sispatri->get_servidoresNaoEntregaramAtivos();
-        $titulo = 'Relatório dos Servidores Ativos que NÃO FIZERAM o Sispatri';
+        $titulo = 'Relatório de Declarações Não Entregues do Sispatri';
     }
 
     $relatorio = new Relatorio();

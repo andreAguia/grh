@@ -218,7 +218,8 @@ class Sispatri {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome
+                         tbpessoa.nome,
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -251,7 +252,7 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY 2';
+        $select .= ') ORDER BY 3,2';
 
         $pessoal = new Pessoal();
         return $pessoal->select($select);
@@ -299,7 +300,7 @@ class Sispatri {
 
     public function exibeResumo() {
 
-        # Servidores ativos que fizeram o sispatri
+        # Servidores ativos que Entregaram o sispatri
         $numSispatriAtivos = $this->get_numServidoresAtivos();
 
         # Servidores no total
@@ -307,8 +308,8 @@ class Sispatri {
         $numServidores = $pessoal->get_numServidoresAtivos($this->lotacao);
 
         $array = array(
-            array("Fizeram o Sispatri", $numSispatriAtivos),
-            array("Não Fizeram", $numServidores - $numSispatriAtivos),
+            array("Entregaram o Sispatri", $numSispatriAtivos),
+            array("Não Entregaram", $numServidores - $numSispatriAtivos),
             array("Total", $numServidores),
         );
 
@@ -332,7 +333,7 @@ class Sispatri {
         $result = $this->get_servidoresEntregaramAtivos();
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Servidores Ativos que FIZERAM o Sispatri');
+        $tabela->set_titulo('Servidores Ativos que ENTREGARAM a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
         $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
         $tabela->set_conteudo($result);
@@ -355,7 +356,7 @@ class Sispatri {
             $result = $this->get_servidoresEntregaramNaoAtivos();
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores Não Ativos que Não Fizeram Sispatri');
+            $tabela->set_titulo('Servidores Inativos que Entregaram a Declaração do Sispatri');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
             $tabela->set_conteudo($result);
@@ -377,7 +378,7 @@ class Sispatri {
         $result = $this->get_servidoresNaoEntregaramAtivos();
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Servidores Ativos que NÃO Fzeram o Sispatri');
+        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
         $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
         $tabela->set_conteudo($result);

@@ -43,7 +43,7 @@ if ($acesso) {
     $sispatri->set_textoCi($textoCi);
 
     # Parâmetro da função
-    $parametro = array($nomeLotacao, $ci, $chefia, $textoCi);
+    $parametro = array($nomeLotacao, $ci, $chefia, $textoCi, $lotacao);
 
     $grid = new Grid();
     $grid->abreColuna(1);
@@ -59,6 +59,7 @@ if ($acesso) {
         $ci = $parametro[1];
         $chefia = $parametro[2];
         $texto = $parametro[3];
+        $lotacao = $parametro[4];
 
         if (!is_null($nomeLotacao)) {
 
@@ -78,7 +79,11 @@ if ($acesso) {
 
             p("<b>De: Gerência de Recursos Humanos - GRH/UENF</b>", "left");
 
-            p("Para: $chefia<br/>$nomeLotacao", "left");
+            if (is_numeric($lotacao)) {
+                p("Para: {$chefia}<br/>{$nomeLotacao}", "left");
+            } else {
+                p("Para: {$chefia} - {$nomeLotacao}", "left");
+            }
 
             p("Prezado(a) Senhor(a)", "left");
 

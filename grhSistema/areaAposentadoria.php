@@ -642,6 +642,9 @@ if ($acesso) {
 
             # Cria um array com os anos possíveis
             $anos = arrayPreenche(date("Y"), date("Y") + 20);
+            if($parametroAno < date("Y")){
+                $parametroAno = date("Y");
+            }
 
             $controle = new Input('parametroAno', 'combo');
             $controle->set_size(6);

@@ -1505,4 +1505,35 @@ class Aposentadoria {
         $menu->show();
     }
 
+    ##############################################################################################################################################
+
+    /**
+     * Método get_ultimoAnoAposentadoria
+     * informa ultimo ano de uma aposentadoria no banco de dados
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_ultimoAnoAposentadoria() {
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        $select = 'SELECT YEAR(tbservidor.dtDemissao)
+                         FROM tbservidor 
+                        WHERE situacao = 2
+                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                     ORDER BY 1 desc
+                     LIMIT 1';
+
+
+        $ano = $pessoal->select($select, false);
+
+        if (empty($ano[0])) {
+            return null;
+        } else {
+            return $ano[0];
+        }
+    }
+
+##############################################################################################################################################
 }

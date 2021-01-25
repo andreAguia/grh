@@ -44,7 +44,7 @@ if ($acesso) {
     AreaServidor::cabecalho();
 
     # Pega os parâmetros
-    $parametroAno = post('parametroAno', get_session('parametroAno', date('Y')));
+    $parametroAno = post('parametroAno', get_session('parametroAno', $aposentadoria->get_ultimoAnoAposentadoria()));
     $parametroMotivo = post('parametroMotivo', get_session('parametroMotivo', 3));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
     $parametroSexo = get('parametroSexo', get_session('parametroSexo', "Feminino"));

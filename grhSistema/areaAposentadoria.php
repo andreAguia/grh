@@ -230,7 +230,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(7);
+            $aposentadoria->exibeMenu(8);
 
             $painel->fecha();
 
@@ -569,14 +569,13 @@ if ($acesso) {
         ################################################################
 
         case "somatorio" :
-
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(6);
+            $aposentadoria->exibeMenu(7);
 
             $painel->fecha();
 
@@ -593,7 +592,7 @@ if ($acesso) {
             loadPage('?fase=previsaoSomatorio');
             break;
 
-################################################################
+        ################################################################
 
         case "previsaoSomatorio" :
 
@@ -603,7 +602,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(6);
+            $aposentadoria->exibeMenu(7);
 
             $painel->fecha();
 
@@ -621,6 +620,88 @@ if ($acesso) {
             $grid2->fechaGrid();
             break;
 
+        ################################################################
+
+        case "compulsoria" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(6);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=compulsoria');
+
+            # Cria um array com os anos possíveis
+            $anos = arrayPreenche(date("Y"), date("Y") + 20);
+
+            $controle = new Input('parametroAno', 'combo');
+            $controle->set_size(6);
+            $controle->set_title('Filtra por Ano exercício');
+            $controle->set_array($anos);
+            $controle->set_valor($parametroAno);
+            $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Exibe a lista
+
+            $select = 'SELECT month(dtNasc),  
+                          tbservidor.idServidor,
+                          dtNasc,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          ADDDATE(dtNasc, INTERVAL 75 YEAR),
+                          tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE tbservidor.situacao = 1
+                    AND idPerfil = 1
+                    AND (' . $parametroAno . ' - YEAR(tbpessoa.dtNasc) = 75)                    
+                    ORDER BY dtNasc';
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = 'Servidor(es) estatutário(s) que faz(em) 75 anos em '.$parametroAno;
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['Mês', 'Servidor', 'Nascimento', 'Idade', 'Fará 75', 'Lotação']);
+            $tabela->set_align(['center', 'left', 'center', 'center', 'center', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", null, null, null, "Pessoal"]);
+            $tabela->set_metodo([null, "get_nomeECargo", null, null, null, "get_lotacao"]);
+            $tabela->set_funcao(["get_nomeMes", null, "date_to_php", null, "date_to_php"]);
+            #$tabela->set_editar($this->linkEditar);
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+            $tabela->set_idCampo('idServidor');
+
+            if ($count > 0) {
+                $tabela->show();
+            } else {
+                br();
+                tituloTable($titulo);
+                $callout = new Callout();
+                $callout->abre();
+                p('Nenhum item encontrado !!', 'center');
+                $callout->fecha();
+            }
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
         ################################################################
     }
     $page->terminaPagina();

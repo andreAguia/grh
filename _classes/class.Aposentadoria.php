@@ -1485,7 +1485,7 @@ class Aposentadoria {
      */
     public function exibeMenu($itemBold = null) {
 
-        $bold = array(false, false, false, false, false, false, false, false);
+        $bold = array(false, false, false, false, false, false, false, false, false);
 
         $bold[$itemBold] = true;
 
@@ -1499,8 +1499,9 @@ class Aposentadoria {
         $menu->add_item("titulo", "Servidores Ativos");
         $menu->add_item("link", "Previsão Masculino", "?fase=previsaoM", "Previsão de Aposentadoria de Servidores Ativos do Sexo Masculino", null, null, $bold[4]);
         $menu->add_item("link", "Previsão Feminino", "?fase=previsaoF", "Previsão de Aposentadoria de Servidores Ativos do Sexo Feminino", null, null, $bold[5]);
-        $menu->add_item("link", "Somatório", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", null, null, $bold[6]);
-        $menu->add_item("link", "Regras", "?fase=regras", "Regras de Aposentadoria", null, null, $bold[7]);
+        $menu->add_item("link", "Previsão Compulsória", "?fase=compulsoria", "Previsão de Aposentadoria Compulsória", null, null, $bold[6]);
+        $menu->add_item("link", "Somatório", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", null, null, $bold[7]);
+        $menu->add_item("link", "Regras", "?fase=regras", "Regras de Aposentadoria", null, null, $bold[8]);
 
         $menu->show();
     }
@@ -1514,7 +1515,7 @@ class Aposentadoria {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_ultimoAnoAposentadoria() {
-        
+
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 

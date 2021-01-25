@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $acumul = new AcumulacaoDeclaracao();
 
     # Verifica a fase do programa
     $fase = get('fase');
@@ -36,7 +37,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros
-    $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
+    $parametroAno = post('parametroAno', get_session('parametroAno',$acumul->getUltimoAnoDeclaracao()));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
     $parametroNome = retiraAspas(post('parametroNome', get_session('parametroNome')));
 
@@ -112,7 +113,7 @@ if ($acesso) {
             ORDER BY anoReferencia');
 
             if (empty($comboAno)) {
-                $comboAno[] = date("Y");
+                $comboAno[] = $acumul->getUltimoAnoDeclaracao();
             }
 
             # Ano
@@ -164,7 +165,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(3);
 
-            $acumul = new AcumulacaoDeclaracao();
+            
             $acumul->showResumoGeral($parametroAno, $parametroLotacao, $parametroNome);
             $acumul->showResumoAcumula($parametroAno, $parametroLotacao, $parametroNome);
 

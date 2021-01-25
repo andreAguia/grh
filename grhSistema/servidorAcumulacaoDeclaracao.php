@@ -127,7 +127,7 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = 2019;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoAtual, $anoInicial, "d");
+    $anoExercicio = arrayPreenche($anoAtual+1, $anoInicial, "d");
 
     # Campos para o formulario
     $objeto->set_campos(array(

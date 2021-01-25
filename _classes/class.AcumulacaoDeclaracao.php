@@ -18,10 +18,6 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->getNumDecEntregues([$ano]);
          */
-        # Verifica o ano
-        if (empty($ano)) {
-            $ano = date("Y");
-        }
 
         # slq
         $select = "SELECT COUNT(idAcumulacaoDeclaracao)
@@ -62,10 +58,6 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->getNumDecEntregues([$ano]);
          */
-        # Verifica o ano
-        if (empty($ano)) {
-            $ano = date("Y");
-        }
 
         # slq
         $select = "SELECT COUNT(idAcumulacaoDeclaracao)
@@ -107,10 +99,6 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->showResumoGeral();  
          */
-        # Verifica o ano
-        if (empty($ano)) {
-            $ano = date("Y");
-        }
 
         $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
         $servidores = $this->getnumServidoresAtivos($idLotacao, $parametroNome);
@@ -120,9 +108,9 @@ class AcumulacaoDeclaracao {
 
         if (!empty($idLotacao) AND $idLotacao <> "*") {
             $pessoal = new Pessoal();
-            $titulo = $pessoal->get_nomeLotacao($idLotacao);
+            $titulo = $pessoal->get_nomeLotacao($idLotacao)." ({$ano}}";
         } else {
-            $titulo = "Resumo Geral";
+            $titulo = "Resumo Geral ({$ano}}";
         }
 
         # Monta a tabela
@@ -147,11 +135,7 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->showResumoGeral();  
          */
-        # Verifica o ano
-        if (empty($ano)) {
-            $ano = date("Y");
-        }
-
+        
         $acumulam = $this->getNumAcumula($ano, $idLotacao, $parametroNome);
         $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
         $pessoal = new Pessoal();
@@ -160,9 +144,9 @@ class AcumulacaoDeclaracao {
         $array[] = array("NÃO Acumulam", $entregaram - $acumulam);
 
         if (!empty($idLotacao) AND $idLotacao <> "*") {
-            $titulo = "Declaração - " . $pessoal->get_nomeLotacao($idLotacao);
+            $titulo = "Declaração - " . $pessoal->get_nomeLotacao($idLotacao)."  ({$ano}}";
         } else {
-            $titulo = "Declaração";
+            $titulo = "Declaração ({$ano}}";
         }
 
         # Monta a tabela
@@ -189,13 +173,9 @@ class AcumulacaoDeclaracao {
             $anoref = $pessoal->select($select, false);
 
             if (empty($anoref[0])) {
-                return date("Y");
+                return $this->getUltimoAnoDeclaracao();
             } else {
-                if ($anoref[0] == date("Y")) {
-                    return null;
-                } else {
-                    return $anoref[0] + 1;
-                }
+                return $anoref[0] + 1;
             }
         }
     }
@@ -228,10 +208,31 @@ class AcumulacaoDeclaracao {
                 $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
             }
         }
-        
+
         $pessoal = new Pessoal();
         $count = $pessoal->count($select);
         return $count;
+    }
+
+    ###########################################################     
+
+    /**
+     * Método get_ultimoAnoDeclaracao
+     * informa ultimo ano cadastrado de uma declaração
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function getUltimoAnoDeclaracao() {
+
+        $select = "SELECT MAX(anoReferencia) as dd FROM tbacumulacaodeclaracao LIMIT 1";
+        $pessoal = new Pessoal();
+        $ano = $pessoal->select($select, false);
+
+        if (empty($ano[0])) {
+            return date("Y");
+        } else {
+           return $ano[0];
+        }
     }
 
     ###########################################################

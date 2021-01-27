@@ -123,6 +123,219 @@ class Sispatri {
 
 ###########################################################
 
+    public function get_servidoresNaoEntregaramAtivosFerias() {
+
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
+                     ';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY 4,2';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        return $retorno;
+    }
+
+###########################################################
+
+    public function get_servidoresNaoEntregaramAtivosLicPremio() {
+
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tblicencapremio ON (tbservidor.idServidor = tblicencapremio.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
+                     ';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY 4,2';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        return $retorno;
+    }
+
+###########################################################
+
+    public function get_servidoresNaoEntregaramAtivosLicMedica() {
+
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
+                     AND (idTpLicenca = 1 OR idTpLicenca = 30)
+                     ';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY 4,2';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        return $retorno;
+    }
+
+###########################################################
+
+    public function get_servidoresNaoEntregaramAtivosTrabalhando() {
+
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                         tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                        LEFT JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND (CURDATE() < dtInicial OR CURDATE() > ADDDATE(dtInicial,numDias-1))
+                     ';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY 4,2';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        return $retorno;
+    }
+
+###########################################################
+
     public function get_servidoresEntregaramNaoAtivos() {
 
         # Pega os dados
@@ -393,6 +606,92 @@ class Sispatri {
     }
 
 ###########################################################
+
+    public function exibeServidoresNaoEntregaramAtivosFerias() {
+
+        $result = $this->get_servidoresNaoEntregaramAtivosFerias();
+
+        $tabela = new Tabela();
+        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
+        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_conteudo($result);
+        $tabela->set_align(array("center", "left", "left", "left"));
+        $tabela->set_classe(array(null, null, "pessoal"));
+        $tabela->set_metodo(array(null, null, "get_Cargo"));
+        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editaServidor');
+        $tabela->show();
+    }
+
+###########################################################
+
+    public function exibeServidoresNaoEntregaramAtivosLicPremio() {
+
+        $result = $this->get_servidoresNaoEntregaramAtivosLicPremio();
+
+        $tabela = new Tabela();
+        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
+        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_conteudo($result);
+        $tabela->set_align(array("center", "left", "left", "left"));
+        $tabela->set_classe(array(null, null, "pessoal"));
+        $tabela->set_metodo(array(null, null, "get_Cargo"));
+        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editaServidor');
+        $tabela->show();
+    }
+
+###########################################################
+
+    public function exibeServidoresNaoEntregaramAtivosLicMedica() {
+
+        $result = $this->get_servidoresNaoEntregaramAtivosLicMedica();
+
+        $tabela = new Tabela();
+        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
+        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_conteudo($result);
+        $tabela->set_align(array("center", "left", "left", "left"));
+        $tabela->set_classe(array(null, null, "pessoal"));
+        $tabela->set_metodo(array(null, null, "get_Cargo"));
+        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editaServidor');
+        $tabela->show();
+    }
+
+###########################################################
+
+
+    public function exibeServidoresNaoEntregaramAtivosTrabalhando() {
+
+        $result = $this->get_servidoresNaoEntregaramAtivosTrabalhando();
+
+        $tabela = new Tabela();
+        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
+        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_conteudo($result);
+        $tabela->set_align(array("center", "left", "left", "left"));
+        $tabela->set_classe(array(null, null, "pessoal"));
+        $tabela->set_metodo(array(null, null, "get_Cargo"));
+        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editaServidor');
+        $tabela->show();
+    }
+
+###########################################################
+
 
     /**
      * Método get_textoCi

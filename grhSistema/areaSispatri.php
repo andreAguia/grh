@@ -37,10 +37,12 @@ if ($acesso) {
     # Pega os parâmetros    
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Entregaram'));
+    $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
+    set_session('parametroAfastamento', $parametroAfastamento);
 
     # Começa uma nova página
     $page = new Page();
@@ -169,7 +171,12 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(9);
+            if ($parametroSituacao == "Entregaram") {
+                $controle->set_col(9);
+            } else {
+                $controle->set_col(6);
+            }
+
             $form->add_item($controle);
 
             # Situação no sispatri
@@ -184,6 +191,21 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
+
+            # Afastamentos
+            $array = ["Todos", "Férias", "Licença Prêmio","Licença Médica"];
+
+            $controle = new Input('parametroAfastamento', 'combo', 'Afastamento:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Afastamento');
+            $controle->set_array($array);
+            $controle->set_valor($parametroAfastamento);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            if ($parametroSituacao <> "Entregaram") {
+                $form->add_item($controle);
+            }
 
             $form->show();
 
@@ -202,7 +224,21 @@ if ($acesso) {
                 $sispatri->exibeServidoresEntregaramInativos();
             } else {
                 # Exibe os servidores ativos que Não entregaram o sispatri
-                $sispatri->exibeServidoresNaoEntregaramAtivos();
+                if ($parametroAfastamento == "Todos") {
+                    $sispatri->exibeServidoresNaoEntregaramAtivos();
+                }
+
+                if ($parametroAfastamento == "Férias") {
+                    $sispatri->exibeServidoresNaoEntregaramAtivosFerias();
+                }
+                
+                if ($parametroAfastamento == "Licença Prêmio") {
+                    $sispatri->exibeServidoresNaoEntregaramAtivosLicPremio();
+                }
+                
+                if ($parametroAfastamento == "Licença Médica") {
+                    $sispatri->exibeServidoresNaoEntregaramAtivosLicMedica();
+                }
             }
 
             # Fecha o grid
@@ -474,8 +510,9 @@ if ($acesso) {
                         }
                     }
                     if (!empty($cpf)) {
-                        echo $cpf," - ",$nome;br();
-                        
+                        echo $cpf, " - ", $nome;
+                        br();
+
                         # Grava na tabela tbsispatri
                         $campos = array("cpf", "obs");
                         $valor = array(utf8_encode($cpf), utf8_encode($nome));

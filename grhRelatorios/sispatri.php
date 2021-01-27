@@ -26,24 +26,49 @@ if ($acesso) {
 
     $parametroLotacao = get_session('parametroLotacao', 'Todos');
     $parametroSituacao = get_session('parametroSituacao', 'Entregaram');
+    $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
 
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($parametroLotacao);
 
     ######
+    
+    $relatorio = new Relatorio();
+    
     # Pega os registros
     if ($parametroSituacao == "Entregaram") {
         # Exibe os servidores ativos que entregaram o sispatri
         $lista = $sispatri->get_servidoresEntregaramAtivos();
-        $titulo = 'Relatório de Declarações Entregues do Sispatri';
+        $relatorio->set_titulo('Relatório de Declarações Entregues do Sispatri');
     } else {
+
         # Exibe os servidores ativos que Não entregaram o sispatri
-        $lista = $sispatri->get_servidoresNaoEntregaramAtivos();
-        $titulo = 'Relatório de Declarações Não Entregues do Sispatri';
+        if ($parametroAfastamento == "Todos") {
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivos();
+            $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
+        }
+
+        if ($parametroAfastamento == "Férias") {            
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosFerias();
+            $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
+            $relatorio->set_tituloLinha3("Em Férias");
+        }
+
+        if ($parametroAfastamento == "Licença Prêmio") {
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicPremio();
+            $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
+            $relatorio->set_tituloLinha3("Em Licença Prêmio");
+        }
+
+        if ($parametroAfastamento == "Licença Médica") {
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicMedica();
+            $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
+            $relatorio->set_tituloLinha3("Em Licença Médica");
+        }
     }
 
-    $relatorio = new Relatorio();
-    $relatorio->set_titulo($titulo);
+    
+    
     if (!is_numeric($parametroLotacao)) {
         $relatorio->set_tituloLinha2($parametroLotacao);
     }

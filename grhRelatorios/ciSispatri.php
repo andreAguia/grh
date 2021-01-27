@@ -27,6 +27,7 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = get_session('parametroLotacao');
+    $parametroAfastamento = get_session('parametroAfastamento');
     $ci = post('ci');
     $chefia = post('chefia');
     $textoCi = post('textoCi');
@@ -127,7 +128,25 @@ if ($acesso) {
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($lotacao);
 
-    $result = $sispatri->get_servidoresRelatorio();
+    # Exibe os servidores ativos que Não entregaram o sispatri
+    if ($parametroAfastamento == "Todos") {
+        $result = $sispatri->get_servidoresNaoEntregaramAtivos();
+    }
+
+    if ($parametroAfastamento == "Férias") {
+        $result = $sispatri->get_servidoresNaoEntregaramAtivosFerias();
+    }
+
+    if ($parametroAfastamento == "Licença Prêmio") {
+        $result = $sispatri->get_servidoresNaoEntregaramAtivosLicPremio();
+    }
+
+    if ($parametroAfastamento == "Licença Médica") {
+        $result = $sispatri->get_servidoresNaoEntregaramAtivosLicMedica();
+    }
+
+    #$result = $sispatri->get_servidoresRelatorio();
+    #$result = $sispatri->get_servidoresNaoEntregaramAtivos();
 
     $relatorio = new Relatorio();
     $relatorio->set_funcaoAntesTitulo('exibeTextoSispatri');
@@ -135,17 +154,17 @@ if ($acesso) {
 
     $relatorio->set_funcaoFinalRelatorio('exibeTextoFinal');
 
-    #$relatorio->set_titulo('Relatório de Servidores Que nao Entregaram o Sispatri');
-
-    $relatorio->set_label(array('idFuncional', 'Nome', 'Lotação'));
-    $relatorio->set_width(array(20, 80));
-    $relatorio->set_align(array("center", "left"));
+    $relatorio->set_label(array('idFuncional', 'Nome', 'Cargo', 'Lotação'));
+    $relatorio->set_width(array(20, 40, 40));
+    $relatorio->set_align(array("center", "left", "left"));
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
     $relatorio->set_linhaNomeColuna(false);
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(2);
+    $relatorio->set_classe(array(null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargoSimples"));
+    $relatorio->set_numGrupo(3);
     $relatorio->show();
 
     $grid->fechaColuna();

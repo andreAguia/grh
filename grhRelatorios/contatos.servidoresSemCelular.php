@@ -34,27 +34,25 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbservidor.idServidor,        
+    $select = 'SELECT tbpessoa.nome,      
                       concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao, 
-                      tbservidor.idServidor,
                       tbservidor.idServidor
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
                  JOIN tbhistlot USING (idServidor)
                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE tbservidor.situacao = 1
-                  AND ((telCelular IS NULL) OR (telCelular = "") OR
-                       (emailUenf IS NULL) OR (emailUenf = ""))
+                  AND (telCelular IS NULL) OR (telCelular = "") 
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $relatorio->set_numGrupo(1);
+            $relatorio->set_numGrupo(2);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
             $subTitulo .= "Lotação: " . $lotacao . "<br/>";
-            $relatorio->set_numGrupo(1);
+            $relatorio->set_numGrupo(2);
         }
     }
 
@@ -66,12 +64,12 @@ if ($acesso) {
 
     $result = $servidor->select($select);
 
-    $relatorio->set_titulo('Relatório de Servidores Ativos Sem E-mail Institucional ou Celular Cadastrado');
+    $relatorio->set_titulo('Relatório de Servidores Ativos Sem Celular Cadastrado');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Lotação', 'Telefones', 'Emails'));
-    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefones", "get_emails"));
-    $relatorio->set_align(array("left","left","left","left"));
+    $relatorio->set_label(array('Servidor', 'Lotação','Cargo'));
+    $relatorio->set_classe(array(null,null,"pessoal"));
+    $relatorio->set_metodo(array(null,null,"get_cargo"));
+    $relatorio->set_align(array("left","left","left"));
     $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
 

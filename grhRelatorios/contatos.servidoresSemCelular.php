@@ -34,14 +34,14 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbpessoa.nome,      
+    $select = 'SELECT tbservidor.idServidor,
                       concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao, 
                       tbservidor.idServidor
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
                  JOIN tbhistlot USING (idServidor)
                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE tbservidor.situacao = 1
-                  AND (telCelular IS NULL) OR (telCelular = "") 
+                  AND (telCelular IS NULL OR telCelular = "") 
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {
@@ -66,9 +66,9 @@ if ($acesso) {
 
     $relatorio->set_titulo('Relatório de Servidores Ativos Sem Celular Cadastrado');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Lotação','Cargo'));
-    $relatorio->set_classe(array(null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,"get_cargo"));
+   $relatorio->set_label(array('Servidor', 'Lotação', 'Celular'));
+    $relatorio->set_classe(array("pessoal", null, "pessoal"));
+    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefoneCelular"));
     $relatorio->set_align(array("left","left","left"));
     $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);

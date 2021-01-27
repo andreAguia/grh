@@ -48,11 +48,11 @@ if ($acesso) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $relatorio->set_numGrupo(2);
+            $relatorio->set_numGrupo(1);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
             $subTitulo .= "Lotação: " . $lotacao . "<br/>";
-            $relatorio->set_numGrupo(2);
+            $relatorio->set_numGrupo(1);
         }
     }
 

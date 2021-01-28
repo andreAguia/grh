@@ -40,7 +40,7 @@ class MenuPrincipal {
 
         # Módulos      
         
-        $this->moduloSispatri();
+        #$this->moduloSispatri();
         $this->moduloSistemas();
         $this->moduloAreaEspecial();
         

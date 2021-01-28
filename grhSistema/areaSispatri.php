@@ -510,9 +510,6 @@ if ($acesso) {
                         }
                     }
                     if (!empty($cpf)) {
-                        echo $cpf, " - ", $nome;
-                        br();
-
                         # Grava na tabela tbsispatri
                         $campos = array("cpf", "obs");
                         $valor = array(utf8_encode($cpf), utf8_encode($nome));

@@ -146,6 +146,10 @@ if ($acesso) {
             # Resumo
             $sispatri->exibeResumo();
 
+            if ($parametroSituacao == "Entregaram") {
+                $sispatri->exibeResumoPorCargoEntregaram();
+            }
+
             $grid->fechaColuna();
 
             ##############
@@ -193,7 +197,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Afastamentos
-            $array = ["Todos", "Férias", "Licença Prêmio","Licença Médica"];
+            $array = ["Todos", "Férias", "Licença Prêmio", "Licença Médica"];
 
             $controle = new Input('parametroAfastamento', 'combo', 'Afastamento:', 1);
             $controle->set_size(30);
@@ -231,11 +235,11 @@ if ($acesso) {
                 if ($parametroAfastamento == "Férias") {
                     $sispatri->exibeServidoresNaoEntregaramAtivosFerias();
                 }
-                
+
                 if ($parametroAfastamento == "Licença Prêmio") {
                     $sispatri->exibeServidoresNaoEntregaramAtivosLicPremio();
                 }
-                
+
                 if ($parametroAfastamento == "Licença Médica") {
                     $sispatri->exibeServidoresNaoEntregaramAtivosLicMedica();
                 }

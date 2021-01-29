@@ -594,6 +594,76 @@ class Sispatri {
 
 ###########################################################
 
+    public function exibeResumoPorCargoNaoEntregaram() {
+
+        # Servidores ativos que Entregaram o sispatri
+        $numSispatriAtivos = $this->get_numServidoresAtivos();
+
+        # Servidores no total
+        $pessoal = new Pessoal();
+
+        # Geral - Por Cargo
+        $select = 'SELECT tbtipocargo.sigla, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+        
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+
+        $select .= ') GROUP BY tbtipocargo.cargo
+                     ORDER BY tbtipocargo.cargo DESC ';
+
+        $servidores = $pessoal->select($select);
+        $total = array_sum(array_column($servidores, "jj"));
+        
+        array_push($servidores, array('Total', $total));
+
+        # Exemplo de tabela simples
+        $tabela = new Tabela();
+        $tabela->set_titulo("NÃO Entregaram");
+        $tabela->set_conteudo($servidores);
+        $tabela->set_label(array("Tipo do Cargo", "Servidores"));
+        $tabela->set_width(array(80, 20));
+        $tabela->set_align(array("left", "center"));
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                'valor' => "Total",
+                'operador' => '=',
+                'id' => 'estatisticaTotal')));
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
+###########################################################
+
     public function exibeServidoresEntregaramAtivos() {
 
         $result = $this->get_servidoresEntregaramAtivos();

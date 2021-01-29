@@ -148,6 +148,8 @@ if ($acesso) {
 
             if ($parametroSituacao == "Entregaram") {
                 $sispatri->exibeResumoPorCargoEntregaram();
+            }else{
+                $sispatri->exibeResumoPorCargoNaoEntregaram();
             }
 
             $grid->fechaColuna();

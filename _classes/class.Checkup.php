@@ -59,7 +59,6 @@ class Checkup {
         }
 
         # Ordena os métodos pela categoria
-
         function cmp($a, $b) {
             # Função específica que compara se $a é maior que $b
             return $a[2] > $b[2];
@@ -157,7 +156,7 @@ class Checkup {
         $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php"]);
         $tabela->set_editar($this->linkEditar);
         $tabela->set_idCampo('idServidor');
-
+        
         if ($count > 0) {
             if (!empty($idServidor)) {
                 return $titulo;
@@ -1025,7 +1024,7 @@ class Checkup {
                     WHERE idConcurso is null
                       AND tbservidor.situacao <> 1
                       AND idPerfil = 1
-                      AND (idCargo <> 128 AND idCargo <> 129)';
+                      AND (idCargo IS NULL OR (idCargo <> 128 AND idCargo <> 129))';
         if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';
         }

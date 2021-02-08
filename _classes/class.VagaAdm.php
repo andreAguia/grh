@@ -36,13 +36,13 @@ class VagaAdm {
      * 
      * Exibe o número de svagas totais (reais e de reposição em todos os cargos de um concurso)
      */
-    public function get_numVagas($idConcurso,$idTipoCargo = null) {
+    public function get_numVagas($idConcurso, $idTipoCargo = null) {
 
         $select = "SELECT (COALESCE(SUM(vagasNovas),0) + COALESCE(SUM(vagasReposicao),0))
                      FROM tbconcursovaga
                     WHERE idConcurso = {$idConcurso}";
-                    
-        if(!empty($idTipoCargo)){
+
+        if (!empty($idTipoCargo)) {
             $select .= " AND tbcargo.idTipoCargo = {$idTipoCargo}";
         }
 
@@ -101,7 +101,7 @@ class VagaAdm {
                      Order BY idTipoCargo";
 
         $pessoal = new Pessoal();
-        $row =  $pessoal->select($select);
+        $row = $pessoal->select($select);
         return $row;
     }
 
@@ -120,7 +120,7 @@ class VagaAdm {
                       AND idTipoCargo is NULL";
 
         $pessoal = new Pessoal();
-        $row =  $pessoal->count($select);
+        $row = $pessoal->count($select);
         return $row;
     }
 
@@ -131,8 +131,8 @@ class VagaAdm {
      * 
      * Exibe o número de servidores ativos e Inativos em um determinado concurso
      */
-    public function get_numServidoresConcurso($idConcurso,$idTipoCargo = null) {
-        
+    public function get_numServidoresConcurso($idConcurso, $idTipoCargo = null) {
+
         # Verifica se o concurso é de Adm & Tec ou se é de Professor
         $concurso = new Concurso();
         $dados = $concurso->get_dados($idConcurso);
@@ -147,8 +147,8 @@ class VagaAdm {
         }
 
         $select .= ' WHERE true';
-        
-        if(!empty($idTipoCargo)){
+
+        if (!empty($idTipoCargo)) {
             $select .= " AND tbcargo.idTipoCargo = {$idTipoCargo}";
         }
 
@@ -196,7 +196,7 @@ class VagaAdm {
      * 
      * Exibe o número de servidores ativos em um determinado vaga
      */
-    public function get_servidoresAtivosVaga($idConcurso = null,$idTipoCargo = null) {
+    public function get_servidoresAtivosVaga($idConcurso = null, $idTipoCargo = null) {
 
         $select = "SELECT tbservidor.idServidor                             
                      FROM tbservidor JOIN tbcargo USING(idCargo)
@@ -212,4 +212,112 @@ class VagaAdm {
 
     ###########################################################
 
+    /**
+     * Método get_servidoresAtivosConcurso
+     * 
+     * Exibe o número de servidores ativos em um determinado vaga
+     */
+    public function get_numServidoresAtivosVaga($idConcursoVaga = null) {
+
+        $dados = $this->get_dados($idConcursoVaga);
+
+        $select = "SELECT tbservidor.idServidor                             
+                     FROM tbservidor JOIN tbcargo USING(idCargo)
+                    WHERE situacao = 1
+                      AND tbservidor.idConcurso = {$dados['idConcurso']}
+                      AND tbcargo.idTipoCargo = {$dados['idTipoCargo']}
+                    ";
+
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresAtivosConcurso
+     * 
+     * Exibe o número de servidores ativos em um determinado vaga
+     */
+    public function get_vagasDisponiveis($idConcursoVaga = null) {
+
+        # Pega o número de vagas reais
+        $dados = $this->get_dados($idConcursoVaga);
+
+        $select = "SELECT vagasNovas
+                     FROM tbconcursovaga
+                    WHERE idConcurso = {$dados['idConcurso']}
+                      AND idTipoCargo = {$dados['idTipoCargo']}
+                    ";
+
+        $pessoal = new Pessoal();
+        $numero = $pessoal->select($select, false);
+
+        # Pega o número de servidores Ativos nessa vaga
+        $numServAtivos = $this->get_numServidoresAtivosVaga($idConcursoVaga);
+
+
+        return $numero[0] - $numServAtivos;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numVagas
+     * 
+     * Exibe o número de svagas totais (reais e de reposição em todos os cargos de um concurso)
+     */
+    public function get_numReaisCargo($idTipoCargo) {
+
+        $select = "SELECT SUM(vagasNovas)
+                     FROM tbconcursovaga
+                    WHERE idTipoCargo = {$idTipoCargo}";
+
+        $pessoal = new Pessoal();
+        $numero = $pessoal->select($select, false);
+        return $numero[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numServidoresAtivosCargo
+     * 
+     * Exibe o número de servidores estatutários ativos em um determinado cargo
+     */
+    public function get_numServidoresAtivosCargo($idTipoCargo = null) {
+
+        $select = "SELECT tbservidor.idServidor                             
+                     FROM tbservidor JOIN tbcargo USING(idCargo)
+                    WHERE situacao = 1 
+                      AND idPerfil = 1
+                      AND tbcargo.idTipoCargo = {$idTipoCargo}
+                    ";
+
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresAtivosConcurso
+     * 
+     * Exibe o número de servidores ativos em um determinado vaga
+     */
+    public function get_vagasDisponiveisCargo($idTipoCargo = null) {
+
+        # Vagas Reais
+        $vagaReais = $this->get_numReaisCargo($idTipoCargo);
+
+        # Servidores Ativos
+        $numServAtivos = $this->get_numServidoresAtivosCargo($idTipoCargo);
+
+
+        return $vagaReais - $numServAtivos;
+    }
+
+    ###########################################################
 }

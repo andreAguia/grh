@@ -87,7 +87,8 @@ if ($acesso) {
     $result3 = $pessoal->select('SELECT idTipoCargo,
                                         cargo
                                   FROM tbtipocargo
-                              ORDER BY cargo');
+                                  WHERE tipo = "Adm/Tec"
+                              ORDER BY idTipoCargo');
     array_push($result3, array(null, null));
 
     # Campos para o formulario

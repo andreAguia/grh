@@ -1790,6 +1790,12 @@ if ($acesso) {
             $estatistica->exibeTabelaPorTipoCargo("por Cargo");
 
             $grid->fechaColuna();
+            $grid->abreColuna(6);
+
+            $estatistica = new Estatistica("nacionalidade",false);
+            $estatistica->exibeTabelaPorTipoCargo("por Cargo");
+
+            $grid->fechaColuna();
             $grid->fechaGrid();
             $painel->fecha();
             break;

@@ -13,15 +13,17 @@ class Estatistica {
     private $arrayTabela = null;    // o array da tabela
     private $arrayGrafico = null;   // o array do gráfico
 
+    private $somenteAtivos = true;
     ###########################################################
 
     /**
      * Método Construtor
      */
-    public function __construct($assunto = null) {
+    public function __construct($assunto = null,$somenteAtivos = true) {
 
         # insere o assunto
         $this->assunto = $assunto;
+        $this->somenteAtivos = $somenteAtivos;
     }
 
     ###########################################################
@@ -52,10 +54,12 @@ class Estatistica {
 
                 $select = 'SELECT tbestciv.estciv, count(tbservidor.idServidor) as grupo
                          FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
-                                             JOIN tbservidor USING (idPessoa)
-                        WHERE tbservidor.situacao = 1 
-                     GROUP BY 1
-                     ORDER BY 2 DESC ';
+                                             JOIN tbservidor USING (idPessoa)';
+                if($this->somenteAtivos){
+                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= ' GROUP BY 1 ORDER BY 2 DESC ';
 
                 $pessoal = new Pessoal();
                 $servidores = $pessoal->select($select);
@@ -69,10 +73,12 @@ class Estatistica {
                 $select = 'SELECT CONCAT(tbcidade.nome," (",tbestado.uf,")"), count(tbservidor.idServidor) as grupo
                          FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                        JOIN tbcidade USING (idCidade)
-                                       JOIN tbestado USING (idEstado)
-                        WHERE tbservidor.situacao = 1 
-                     GROUP BY 1
-                     ORDER BY 2 DESC ';
+                                       JOIN tbestado USING (idEstado)';
+                if($this->somenteAtivos){
+                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= ' GROUP BY 1 ORDER BY 2 DESC ';
 
                 $pessoal = new Pessoal();
                 $servidores = $pessoal->select($select);
@@ -85,10 +91,12 @@ class Estatistica {
 
                 $select = 'SELECT tbnacionalidade.nacionalidade, count(tbservidor.idServidor) as grupo
                          FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
-                                              JOIN tbservidor USING (idPessoa)
-                        WHERE tbservidor.situacao = 1 
-                     GROUP BY 1
-                     ORDER BY 2 DESC ';
+                                              JOIN tbservidor USING (idPessoa)';
+                if($this->somenteAtivos){
+                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= ' GROUP BY 1 ORDER BY 2 DESC ';
 
                 $pessoal = new Pessoal();
                 $servidores = $pessoal->select($select);
@@ -165,9 +173,12 @@ class Estatistica {
                 # Select
                 $select = 'SELECT tbperfil.nome, tbpessoa.sexo, count(tbservidor.idServidor) as grupo
                          FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                                       JOIN tbperfil USING (idPerfil)
-                        WHERE tbservidor.situacao = 1
-                     GROUP BY 1, tbpessoa.sexo
+                                       JOIN tbperfil USING (idPerfil)';
+                if($this->somenteAtivos){
+                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= ' GROUP BY 1, tbpessoa.sexo
                      ORDER BY grupo desc';
 
                 $this->labelTabela = array("Perfil", "Feminino", "Masculino", "Total");
@@ -179,9 +190,12 @@ class Estatistica {
                 # Select
                 $select = 'SELECT tbestciv.estciv, tbpessoa.sexo, count(tbservidor.idServidor) as grupo
                          FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
-                                             JOIN tbservidor USING (idPessoa)
-                        WHERE tbservidor.situacao = 1
-                     GROUP BY 1, tbpessoa.sexo
+                                             JOIN tbservidor USING (idPessoa)';
+                if($this->somenteAtivos){
+                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= ' GROUP BY 1, tbpessoa.sexo
                      ORDER BY tbestciv.estciv';
 
                 $this->labelTabela = array("Estado Civil", "Feminino", "Masculino", "Total");
@@ -193,10 +207,14 @@ class Estatistica {
                 # Select
                 $select = 'SELECT tbnacionalidade.nacionalidade, tbpessoa.sexo, count(tbservidor.idServidor) as grupo
                          FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
-                                              JOIN tbservidor USING (idPessoa)
-                        WHERE tbservidor.situacao = 1
-                     GROUP BY 1, tbpessoa.sexo
+                                              JOIN tbservidor USING (idPessoa)';
+                if($this->somenteAtivos){
+                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= 'GROUP BY 1, tbpessoa.sexo
                      ORDER BY tbnacionalidade.nacionalidade';
+                     
 
                 $this->labelTabela = array("Nacionalidade", "Feminino", "Masculino", "Total");
                 $this->labelGrafico = array("Nacionalidade", "Feminino", "Masculino");
@@ -285,8 +303,12 @@ class Estatistica {
                                        JOIN tbcargo USING (idCargo)
                                        JOIN tbtipocargo USING (idTipoCargo)
                                        JOIN tbperfil USING (idPerfil)
-                        WHERE tbservidor.situacao = 1
-                          AND idPerfil = 1
+                                       WHERE (idPerfil = 1 OR idPerfil = 2)';
+                if($this->somenteAtivos){
+                    $select .= ' AND tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= '
                      GROUP BY 1, tbtipocargo.tipo
                      ORDER BY grupo desc';
 
@@ -302,8 +324,12 @@ class Estatistica {
                                              JOIN tbservidor USING (idPessoa)
                                              JOIN tbcargo USING (idCargo)
                                              JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE tbservidor.situacao = 1
-                          AND idPerfil = 1
+                                       WHERE (idPerfil = 1 OR idPerfil = 2)';
+                if($this->somenteAtivos){
+                    $select .= ' AND tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= '
                      GROUP BY 1,  tbtipocargo.tipo
                      ORDER BY tbestciv.estciv';
 
@@ -319,8 +345,12 @@ class Estatistica {
                                               JOIN tbservidor USING (idPessoa)
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE tbservidor.situacao = 1
-                          AND idPerfil = 1
+                                       WHERE (idPerfil = 1 OR idPerfil = 2)';
+                if($this->somenteAtivos){
+                    $select .= ' AND tbservidor.situacao = 1 ';
+                }
+                        
+                $select .= '
                      GROUP BY 1, tbtipocargo.tipo
                      ORDER BY tbnacionalidade.nacionalidade';
 

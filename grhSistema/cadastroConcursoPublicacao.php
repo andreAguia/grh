@@ -109,6 +109,8 @@ if ($acesso) {
             'array' => $concurso,
             'padrao' => $idConcurso,
             'col' => 3,
+            'autofocus' => true,
+            'required' => true,
             'size' => 30),
         array('linha' => 1,
             'nome' => 'descricao',

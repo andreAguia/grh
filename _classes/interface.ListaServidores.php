@@ -14,6 +14,7 @@ class ListaServidores {
     # Parâmetros de Pesquisa
     private $matNomeId = null;  # Busca por matricula nome ou id em um só campos
     private $cargo = null;
+    private $tipoCargo = null;
     private $cargoComissao = null;
     private $perfil = null;
     private $concurso = null;
@@ -199,8 +200,12 @@ class ListaServidores {
         if (!is_null($this->perfil)) {
             $select .= ' AND (tbperfil.idperfil = "' . $this->perfil . '")';
             $this->subTitulo .= "Perfil: " . $servidor->get_nomePerfil($this->perfil) . "<br/>";
-        } else {
-            $select .= ' AND tbservidor.idPerfil <> 10';
+        }
+
+        # tipoCargo
+        if (!is_null($this->tipoCargo)) {
+            $select .= ' AND (tbcargo.idTipoCargo = ' . $this->tipoCargo . ')';
+            $this->subTitulo .= "Cargo: " . $this->tipoCargo . "<br/>";
         }
 
         # cargo
@@ -408,14 +413,14 @@ class ListaServidores {
         # Dados da Tabela
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
             $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
-            $width = array(8,20,20,18,14,5,5);
+            $width = array(8, 20, 20, 18, 14, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", $situacao);
         } else {
             $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
-            $width = array(8,20,20,18,14,5,5,5);
+            $width = array(8, 20, 20, 18, 14, 5, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", "date_to_php", $situacao);
         }
-        
+
         $align = array("center", "left", "left", "left");
         $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
         $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_lotacao", "get_perfil");
@@ -481,20 +486,20 @@ class ListaServidores {
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();
-        
+
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($this->select, true);
-        
-         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
+
+        if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
             $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
-            $width = array(8,20,25,23,14,5,5);
+            $width = array(8, 20, 25, 23, 14, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", "get_situacaoRel");
         } else {
             $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
-            $width = array(8,20,25,20,14,5,5,5);
+            $width = array(8, 20, 25, 20, 14, 5, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel");
         }
-        
+
         $align = array("center", "left", "left", "left");
         $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
         $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_lotacao", "get_perfil");

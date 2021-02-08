@@ -11,6 +11,9 @@ $idUsuario = null;
 # Configuração
 include ("_config.php");
 
+# Apaga a origem
+set_session('origem');
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
 
@@ -32,17 +35,16 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
     $subFase = get('subFase', 1);
+    $parametroCargo = get('cargo');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     $idConcursoPublicacao = soNumeros(get('idConcursoPublicacao'));
 
     # Pega os parâmetros
-    $parametroAno = post('parametroAno', get_session('parametroAno'));
-    $parametroTipo = post('parametroTipo', get_session('parametroTipo'));
+    $parametroTipo = get('parametroTipo', get_session('parametroTipo', 1));
 
-    # Joga os parâmetros par as sessions    
-    set_session('parametroAno', $parametroAno);
+    # Joga os parâmetros par as sessions 
     set_session('parametroTipo', $parametroTipo);
 
     # Pega os dados do concurso
@@ -51,6 +53,7 @@ if ($acesso) {
     # Pega os dados do concurso
     if (!vazio($id)) {
         $dados = $concurso->get_dados();
+        $tipo = $dados["tipo"];
     }
 
     # Começa uma nova página
@@ -74,7 +77,11 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Concursos');
+    if ($parametroTipo == 1) {
+        $objeto->set_nome('Concursos para Administrativo e Técnico');
+    } else {
+        $objeto->set_nome('Concursos para Professor');
+    }
 
     # botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -95,10 +102,6 @@ if ($acesso) {
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                 WHERE true';
-
-    if (!vazio($parametroAno)) {
-        $select .= ' AND anoBase = ' . $parametroAno;
-    }
 
     if (!vazio($parametroTipo)) {
         $select .= ' AND tipo = ' . $parametroTipo;
@@ -236,7 +239,6 @@ if ($acesso) {
     $objeto->set_botaoVoltarLista(false);
     $objeto->set_botaoIncluir(false);
 
-
     if (!vazio($id)) {
         $ativos = $pessoal->get_servidoresAtivosConcurso($id);
         $inativos = $pessoal->get_servidoresInativosConcurso($id);
@@ -264,6 +266,32 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
+            # Adm & Tec
+            $botaoAdmin = new Button("Adm & Tec", "?parametroTipo=1");
+            $botaoAdmin->set_title("Exibe os concursos para os cargos administrativos e técnicos");
+            if ($parametroTipo == 1) {
+                $botaoAdmin->set_class("hollow button");
+            }
+            $menu1->add_link($botaoAdmin, "right");
+
+            # Professores
+            $botaoProf = new Button("Professor", "?parametroTipo=2");
+            $botaoProf->set_title("Exibe os concursos para os cargos de docentes");
+            if ($parametroTipo == 2) {
+                $botaoProf->set_class("hollow button");
+            }
+            $menu1->add_link($botaoProf, "right");
+
+            # Vagas
+            if ($parametroTipo == 1) {
+                $botaoVaga = new Button("Vagas", "areaVagasAdmTec.php");
+                $botaoVaga->set_title("Vagas de Adm & Tec");
+            } else {
+                $botaoVaga = new Button("Vagas", "areaVagasDocentes.php?origem=cadastroConcurso");
+                $botaoVaga->set_title("Vagas de Docentes");
+            }
+            $menu1->add_link($botaoVaga, "right");
+
             # Incluir
             $botaoInserir = new Button("Incluir", "?fase=editar");
             $botaoInserir->set_title("Incluir");
@@ -279,41 +307,6 @@ if ($acesso) {
             #$menu1->add_link($botaoRel,"right");
 
             $menu1->show();
-
-            # Pega os dados da combo ano
-            $result = $pessoal->select('SELECT distinct anoBase, anoBase
-                                          FROM tbconcurso
-                                      ORDER BY anoBase');
-
-            array_unshift($result, array(null, "Todos"));
-
-            # Formulário de Pesquisa
-            $form = new Form('?');
-
-            # Ano    
-            $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
-            $controle->set_size(20);
-            $controle->set_title('Ano base');
-            $controle->set_valor($parametroAno);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(2);
-            $controle->set_array($result);
-            $controle->set_autofocus(true);
-            $form->add_item($controle);
-
-            # Tipo    
-            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
-            $controle->set_size(20);
-            $controle->set_title('Tipo do concurso');
-            $controle->set_valor($parametroTipo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_array(array(array(null, "Todos"), array(1, "Adm & Tec"), array(2, "Professor")));
-            $form->add_item($controle);
-
-            $form->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -371,11 +364,7 @@ if ($acesso) {
                 $menu = new Menu("menuProcedimentos");
                 $menu->add_item('titulo', 'Menu');
                 $menu->add_item('link', "<b>Publicações ($publicacao)</b>", '?fase=editar&id=' . $id);
-
-                if ($dados["tipo"] == 2) {
-                    $menu->add_item('link', "Vagas ($vagas)", '?fase=concursoVagas&id=' . $id);
-                }
-
+                $menu->add_item('link', "Vagas ($vagas)", '?fase=concursoVagas&id=' . $id);
                 $menu->add_item('link', "Servidores Ativos ($ativos)", '?fase=listaServidoresAtivos&id=' . $id);
                 $menu->add_item('link', "Servidores Inativos ($inativos)", '?fase=listaServidoresInativos&id=' . $id);
 
@@ -469,18 +458,21 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Incluir Vaga
-            $botaoInserir = new Button("Incluir Vaga", "#");
-            $botaoInserir->set_title("Incluir Vaga");
-            $menu1->add_link($botaoInserir, "right");
+            if ($tipo == 1) {
+                $botaoInserir = new Button("Incluir Vaga", "cadastroConcursoVaga.php?fase=editar&idConcurso={$id}");
+                $botaoInserir->set_title("Incluir Vaga");
+                $menu1->add_link($botaoInserir, "right");
+            } else {
 
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório de vagas desse concurao");
-            $botaoRel->set_url("../grhRelatorios/concurso.vagas.docentes.php?id=" . $id);
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel, "right");
+                # Relatórios
+                $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+                $botaoRel = new Button();
+                $botaoRel->set_title("Relatório de vagas desse concurao");
+                $botaoRel->set_url("../grhRelatorios/concurso.vagas.docentes.php?id=" . $id);
+                $botaoRel->set_target("_blank");
+                $botaoRel->set_imagem($imagem);
+                $menu1->add_link($botaoRel, "right");
+            }
 
             $menu1->show();
 
@@ -517,12 +509,138 @@ if ($acesso) {
 
             $grid->abreColuna(9);
 
-            # Pega o tipo do concurso
-            $dados = $concurso->get_dados();
-            $tipo = $dados["tipo"];
-
             if ($tipo == 1) {
-                echo "adm";
+
+                $grid2 = new Grid();
+                $grid2->abreColuna(6);
+                # Exibe as vagas 
+                $select = "SELECT sigla,
+                                  vagasNovas,
+                                  vagasReposicao,
+                                  (COALESCE(vagasNovas,0) + COALESCE(vagasReposicao,0)),
+                                  idConcursoVaga
+                             FROM tbconcursovaga JOIN tbtipocargo USING (idTipoCargo)
+                            WHERE idConcurso = {$id}
+                         ORDER BY 1 DESC";
+
+                $conteudo = $pessoal->select($select);
+                $numConteudo = $pessoal->count($select);
+
+                if ($numConteudo > 0) {
+                    # Monta a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($conteudo);
+                    $tabela->set_titulo("Vagas Disponibilizadas");
+                    $tabela->set_label(array("Cargo", "Vagas Novas", "Vagas de Reposição", "Total"));
+                    #$tabela->set_width(array(40, 15, 15, 15));
+                    $tabela->set_align(array("left"));
+
+                    $tabela->set_colunaSomatorio([1, 2, 3]);
+                    $tabela->set_textoSomatorio("Total:");
+                    $tabela->set_totalRegistro(false);
+
+                    #$tabela->set_classe(array(null, null, null, null, "VagaAdm", "VagaAdm", "VagaAdm"));
+                    #$tabela->set_metodo(array(null, null, null, null, "get_servidoresAtivosVagaIdConcurso", "get_servidoresInativosVagaIdConcurso", "get_servidoresVaga"));
+
+                    $tabela->set_editar('cadastroConcursoVaga.php?fase=editar&idConcurso=' . $id);
+                    $tabela->set_excluir('cadastroConcursoVaga.php?fase=excluir&idConcurso=' . $id);
+                    $tabela->set_idCampo('idConcursoVaga');
+
+                    $tabela->show();
+
+                    $grid2->fechaColuna();
+                    $grid2->abreColuna(6);
+
+                    ###
+                    # Exibe os servidores deste concurso
+                    $concurso->exibeQuadroServidoresConcursoPorCargo($id);
+
+                    $grid2->fechaColuna();
+                    $grid2->abreColuna(12);
+
+                    ###
+                    # Análise dos dados
+
+                    tituloTable("Análise dos Dados");
+                    $painel = new Callout();
+                    $painel->abre();
+
+                    $problemas = 0;
+
+                    $vagaAdm = new VagaAdm();
+
+                    # Verifica se tem servidores sem cargo cadastrado neste concurso
+                    $semCargo = $vagaAdm->get_numSemCargo($id);
+                    if ($semCargo > 0) {
+                        label("Problema Encontrado", "alert");
+                        callout("Existem {$semCargo} servidor(es) empossado(s) neste concurso sem cargo cadastrado!!", "warning");
+                        $problemas = 1;
+                    }
+
+                    # Verifica se o número total de empossados é menor ou igual ao número de vagas
+                    $empossados = $vagaAdm->get_numServidoresConcurso($id);
+                    $vagas = $vagaAdm->get_numVagas($id);
+                    if ($empossados > $vagas) {
+                        label("Problema Encontrado", "alert");
+                        callout("Existem {$empossados} servidor(es) empossado(s) neste concurso, mas só existem {$vagas} vagas disponibilizadas!!<br/>Deve ter algum servidor cadastrado em concurso errado", "warning");
+                        $problemas = 1;
+                    }
+
+                    # Verifica se teva algum empossado nesse concurso
+                    if ($empossados == 0) {
+                        label("Atenção", "warning");
+                        callout("Não existe nenhum servidor empossado por este concurso! Isto está certo?", "warning");
+                        $problemas = 1;
+                    }
+
+
+                    # Verifica se o número de empossados por cada cargo é menor ou igual ao número de vagas
+                    # Pega os cargos disponibilizados pelo concurso
+                    $cargos = $vagaAdm->get_CargosEVagas($id);
+                    foreach ($cargos as $item) {
+                        if ($vagaAdm->get_numServidoresConcurso($id, $item[0]) > $item[1]) {
+                            label("Problema Encontrado", "alert");
+                            callout("Existem {$vagaAdm->get_numServidoresConcurso($id, $item[0])} servidor(es) empossado(s) neste concurso para o cargo de {$pessoal->get_nomeTipoCargo($item[0])}, mas só existem {$item[1]} vagas disponíveis para este cargo!!", "warning");
+                            $problemas = 1;
+                        }
+                    }
+
+                    # Verifica se tem servidor de cargo não disponibilizado
+                    # Pega os cargos disponibilizados pelo concurso
+                    $cargosEmpossados = $vagaAdm->get_CargosEmpossados($id);
+                    $cargos = $vagaAdm->get_Cargos($id);
+
+                    foreach ($cargosEmpossados as $semp) {
+                        $achei = false;
+                        foreach ($cargos as $cdisp) {
+                            if ($semp[0] == $cdisp[0]) {
+                                $achei = true;
+                                continue;
+                            }
+
+                            if (empty($semp[0])) {
+                                $achei = true;
+                                continue;
+                            }
+                        }
+                        if (!$achei) {
+                            label("Problema Encontrado", "alert");
+                            callout("Existem servidores empossados em cargo não disponibilizados!!", "warning");
+                            $problemas = 1;
+                        }
+                    }
+
+                    if ($problemas == 0) {
+                        callout("Nenhum Problema Encontrado!");
+                    }
+
+                    $painel->fecha();
+                    $grid2->fechaColuna();
+                    $grid2->fechaGrid(6);
+                } else {
+                    tituloTable("Vagas de Servidores Administrativos e Técnicos");
+                    callout("Nenhuma vaga cadastrada", "secondary");
+                }
             } else {
                 # Exibe as vagas de Docente
                 $select = 'SELECT tblotacao.DIR,
@@ -600,6 +718,8 @@ if ($acesso) {
             # Informa a origem
             set_session('origem', 'cadastroConcurso.php?fase=listaServidoresAtivos&id=' . $id);
 
+            $vagaAdm = new VagaAdm();
+
             # Cria um menu
             $menu = new MenuBar();
 
@@ -638,17 +758,17 @@ if ($acesso) {
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Menu');
             $menu->add_item('link', "Publicações ($publicacao)", '?fase=editar&id=' . $id);
-
-            if ($dados["tipo"] == 2) {
-                $menu->add_item('link', "Vagas ($vagas)", '?fase=concursoVagas&id=' . $id);
-            }
-
+            $menu->add_item('link', "Vagas ($vagas)", '?fase=concursoVagas&id=' . $id);
             $menu->add_item('link', "<b>Servidores Ativos ($ativos)</b>", '?fase=listaServidoresAtivos&id=' . $id);
             $menu->add_item('link', "Servidores Inativos ($inativos)", '?fase=listaServidoresInativos&id=' . $id);
-
             $menu->show();
 
             $painel->fecha();
+
+            if ($tipo == 1) {
+                # Exibe os servidores deste concurso
+                $concurso->exibeQuadroServidoresConcursoPorCargo($id);
+            }
 
             $grid->fechaColuna();
 
@@ -656,9 +776,44 @@ if ($acesso) {
 
             $grid->abreColuna(9);
 
+            # Cria um sub menu
+            $menu = new MenuBar("small button-group");
+
+            # Cria botões com os cargos
+            $select = "SELECT idTipoCargo, cargo FROM tbtipocargo ORDER BY 1";
+            $conteudo = $pessoal->select($select);
+
+            $botaocargo = new Button("Todos", "?fase=listaServidoresAtivos&id={$id}");
+            $botaocargo->set_title("Todos os Cargos");
+            if ($parametroCargo == "Todos" OR empty($parametroCargo)) {
+                $botaocargo->set_class("hollow button");
+            } else {
+                $botaocargo->set_class("button");
+            }
+            $menu->add_link($botaocargo, "right");
+
+            foreach ($conteudo as $item) {
+                $numero = $vagaAdm->get_servidoresAtivosVaga($id, $item[0]);
+                if ($numero > 0) {
+                    # cargos
+                    $botaocargo = new Button($item[1], "?fase=listaServidoresAtivos&id={$id}&cargo={$item[0]}");
+                    $botaocargo->set_title($pessoal->get_nomeTipoCargo($item[0]));
+                    if ($parametroCargo == $item[0]) {
+                        $botaocargo->set_class("hollow button");
+                    } else {
+                        $botaocargo->set_class("button");
+                    }
+
+                    $menu->add_link($botaocargo, "right");
+                }
+            }
+
+            $menu->show();
+
             # Lista de Servidores Ativos
-            $lista = new ListaServidores('Servidores Ativos');
+            $lista = new ListaServidores($pessoal->get_nomeTipoCargo($parametroCargo) . ' Servidores Ativos');
             $lista->set_situacao(1);
+            $lista->set_tipoCargo($parametroCargo);
             $lista->set_concurso($id);
             $lista->showTabela();
 
@@ -715,14 +870,9 @@ if ($acesso) {
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Menu');
             $menu->add_item('link', "Publicações ($publicacao)", '?fase=editar&id=' . $id);
-
-            if ($dados["tipo"] == 2) {
-                $menu->add_item('link', "Vagas ($vagas)", '?fase=concursoVagas&id=' . $id);
-            }
-
+            $menu->add_item('link', "Vagas ($vagas)", '?fase=concursoVagas&id=' . $id);
             $menu->add_item('link', "Servidores Ativos ($ativos)", '?fase=listaServidoresAtivos&id=' . $id);
             $menu->add_item('link', "<b>Servidores Inativos ($inativos)</b>", '?fase=listaServidoresInativos&id=' . $id);
-
             $menu->show();
 
             $painel->fecha();
@@ -897,7 +1047,7 @@ if ($acesso) {
                     </form>";
 
             $pasta = PASTA_CONCURSO;
-            
+
             # Se não existe o programa cria
             if (!file_exists($pasta) || !is_dir($pasta)) {
                 mkdir($pasta, 0755);

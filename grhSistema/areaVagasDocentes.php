@@ -28,6 +28,9 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # pega a origem (se tiver)
+    $origem = get('origem', get_session('origem'));
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -69,17 +72,23 @@ if ($acesso) {
             $menu = new MenuBar();
 
             # Voltar
-            $botao = new Link("Voltar", "grh.php");
+            if (empty($origem)) {
+                $botao = new Link("Voltar", "grh.php");
+            } else {
+                $botao = new Link("Voltar", "{$origem}.php");
+                set_session('origem', $origem);
+            }
+
             $botao->set_class('button');
             $botao->set_title('Voltar a página anterior');
             $botao->set_accessKey('V');
             $menu->add_link($botao, "left");
-            
+
             # Incluir
             $botaoInserir = new Button("Incluir Nova Vaga", "cadastroVagas.php?fase=editar");
             $botaoInserir->set_title("Incluir");
             $menu->add_link($botaoInserir, "right");
-            
+
             # Por nome
             $botao = new Link("por Nome", "?fase=porNome");
             $botao->set_class('button');
@@ -102,7 +111,7 @@ if ($acesso) {
              *  Formulário de Pesquisa
              */
 
-            tituloTable("Pesquisar");
+            tituloTable("Área de Vagas de Concurso para Cargos de Professores");
             br();
             $form = new Form('?');
 
@@ -121,7 +130,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Situação
-            $situacao = array("Todas","Disponível", "Ocupada");
+            $situacao = array("Todas", "Disponível", "Ocupada");
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
             $controle->set_size(8);

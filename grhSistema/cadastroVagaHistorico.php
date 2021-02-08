@@ -34,7 +34,10 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    $idVaga = get_session('idVaga');    
+    $idVaga = get_session('idVaga');
+    
+    # Pega o status da vaga
+    $statusVaga = $vaga->get_status($idVaga);
 
     # Pega os dados dessa vaga    
     $vagaDados = $vaga->get_dados($idVaga);
@@ -62,25 +65,25 @@ if ($acesso) {
     $objeto->set_voltarLista('areaVagasDocentes.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT concat(tbconcurso.anoBase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
-                                      concat(IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao,
+    $objeto->set_selectLista("SELECT concat(tbconcurso.anoBase,' - Edital: ',DATE_FORMAT(tbconcurso.dtPublicacaoEdital,'%d/%m/%Y')) as concurso,
+                                      concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao,
                                       area,
                                       idServidor,
                                       tbvagahistorico.obs,
                                       idVagaHistorico
                                  FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
                                                       JOIN tblotacao USING (idLotacao)
-                                WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc');
+                                WHERE idVaga = {$idVaga} ORDER BY tbconcurso.dtPublicacaoEdital desc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idVaga,
+    $objeto->set_selectEdita("SELECT idVaga,
                                      idConcurso,
                                      idLotacao,
                                      area,
                                      idServidor,
                                      obs
                                 FROM tbvagahistorico
-                               WHERE idVagaHistorico = ' . $id);
+                               WHERE idVagaHistorico = {$id}");
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -129,27 +132,27 @@ if ($acesso) {
                                      ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1),
                                      ' - ',centro,' / ',tbcargo.nome)
                                  FROM tbvaga AS A LEFT JOIN tbcargo USING (idCargo)
-                                 WHERE idCargo = $idCargo AND centro = '$centro'");
+                                 WHERE idCargo = {$idCargo} AND centro = '{$centro}'");
 
     array_unshift($vagas, array(0, null));
 
     ###############
     # Pega os dados para combo concurso 
-    $concurso = $pessoal->select('SELECT idconcurso,
-                                         concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y")) as concurso
+    $concurso = $pessoal->select("SELECT idconcurso,
+                                         concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
                                     FROM tbconcurso
                                     WHERE tipo = 2
-                                ORDER BY dtPublicacaoEdital desc');
+                                ORDER BY dtPublicacaoEdital desc");
 
     array_unshift($concurso, array(0, null));
 
     ###############
     # Pega os dados da combo lotacao
-    $selectLotacao = 'SELECT idlotacao, 
-                             concat(IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao                       
+    $selectLotacao = "SELECT idlotacao, 
+                             concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao                       
                         FROM tblotacao 
-                        WHERE tblotacao.DIR = "' . $centro . '"  
-                        ORDER BY ativo desc, lotacao';
+                        WHERE tblotacao.DIR = '{$centro}'  
+                        ORDER BY ativo desc, lotacao";
 
     $result = $pessoal->select($selectLotacao);
     array_unshift($result, array(null, null)); # Adiciona o valor de nulo
@@ -158,29 +161,31 @@ if ($acesso) {
     $idCargo = $vaga->get_idCargoVaga($idVaga);
 
     # Pega os dados da combo idServidor
-    $select = 'SELECT idServidor,
-                      CONCAT("(",date_format(dtAdmissao,"%d/%m/%Y"),") - ",tbpessoa.nome)
+    $select = "SELECT idServidor,
+                      CONCAT('(',date_format(dtAdmissao,'%d/%m/%Y'),') - ',tbpessoa.nome)
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa) 
-                WHERE idCargo = ' . $idCargo . ' 
-                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';
+                WHERE idCargo = {$idCargo} 
+                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)";
 
     # Se for inclusão
-    if (vazio($id)) {
-        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT null) ';
+    if (empty($id)) {
+        $select .= "AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT null) ";
 
         # Pega o último ocupante
         $idUltimo = $vaga->get_idServidorOcupante($idVaga);
 
         # Se não for vazio coloca no select
-        if (!vazio($idUltimo)) {
+        if (!empty($idUltimo)) {
 
             # Pega a data de demissão desse servidor
             $dtSaida = $pessoal->get_dtSaida($idUltimo);
 
-            $select .= 'AND (dtAdmissao > "' . date_to_bd($dtSaida) . '") ';
+            if (!empty($dtSaida)) {
+                $select .= "AND (dtAdmissao > '" . date_to_bd($dtSaida) . "') ";
+            }
         }
     } else { # Se for edição
-        $select .= 'AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT null AND idVagaHistorico <> ' . $id . ') ';
+        $select .= "AND idServidor NOT IN (SELECT idServidor FROM tbvagahistorico WHERE idServidor IS NOT null AND idVagaHistorico <> {$id}) ";
 
         # Pega os servidores que já ocuparam essa vaga
         $ocupantes = $vaga->get_idServidoresOcupantes($idVaga);
@@ -188,11 +193,11 @@ if ($acesso) {
         # Pega o servidor desse concurso nessa vaga
         $ss = "SELECT idServidor
                  FROM tbvagahistorico
-                WHERE idVagaHistorico = $id";
+                WHERE idVagaHistorico = {$id}";
 
         $essaVaga = $pessoal->select($ss, false);
 
-        if (!vazio($essaVaga)) {
+        if (!empty($essaVaga)) {
 
             # Pega a posição no array desse servidor
             $idArray = array_search($essaVaga, $ocupantes);
@@ -203,13 +208,13 @@ if ($acesso) {
                 $idAnterior = $ocupantes[$idArray - 1]["idServidor"];
 
                 # Verifica se não está em branco
-                if (!vazio($idAnterior)) {
+                if (!empty($idAnterior)) {
                     # Pega a data de demissão do servidor anterior
                     $dtSaida = $pessoal->get_dtSaida($idAnterior);
 
                     # Joga no select
-                    if (!vazio($dtSaida)) {
-                        $select .= 'AND (dtAdmissao > "' . date_to_bd($dtSaida) . '") ';
+                    if (!empty($dtSaida)) {
+                        $select .= "AND (dtAdmissao > '" . date_to_bd($dtSaida) . "') ";
                     }
                 }
             }
@@ -217,7 +222,6 @@ if ($acesso) {
     }
 
     $select .= ' ORDER BY tbpessoa.nome';
-
     $docente = $pessoal->select($select);
     array_unshift($docente, array(null, null)); # Adiciona o valor de nulo
     ###############
@@ -303,10 +307,12 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             # Incluir
-            $botaoVoltar = new Link("Incluir Concurso", "?fase=editar");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
-            $menu1->add_link($botaoVoltar, "right");
+            if ($statusVaga == "Disponível") {
+                $botaoVoltar = new Link("Incluir Concurso", "?fase=editar");
+                $botaoVoltar->set_class('button');
+                $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
+                $menu1->add_link($botaoVoltar, "right");
+            }
 
             $menu1->show();
 
@@ -317,7 +323,6 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             # Exibe dados da vaga
-            $vaga = new Vaga();
             $vaga->exibeDadosVaga($idVaga);
 
             $grid->fechaColuna();
@@ -325,6 +330,11 @@ if ($acesso) {
             # Área Principal
 
             $grid->abreColuna(9);
+            
+            # Informa sobre o botão incluir
+            if ( $statusVaga == "Ocupada") {
+                callout("Observe que o botão de inclusão de novo concurso somente aparecerá para vagas que estiverem disponíveis. Como esta vaga está ocupada o botão não aparece.");
+            }
 
             # Alerta de laboratório
             $msn = $vaga->verificaProblemaVaga($idVaga);

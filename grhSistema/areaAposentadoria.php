@@ -48,12 +48,14 @@ if ($acesso) {
     $parametroMotivo = post('parametroMotivo', get_session('parametroMotivo', 3));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
     $parametroSexo = get('parametroSexo', get_session('parametroSexo', "Feminino"));
-
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));    
+    
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroMotivo', $parametroMotivo);
     set_session('parametroSexo', $parametroSexo);
     set_session('parametroNome', $parametroNome);
+    set_session('parametroLotacao', $parametroLotacao);
 
     $grid = new Grid();
     $grid->abreColuna(12);
@@ -298,13 +300,32 @@ if ($acesso) {
             $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("*", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
             $form->add_item($controle);
 
             $form->show();
 
             # Exibe a lista
-            $aposentadoria->exibeAtivosPrevisao("Masculino", $parametroNome);
+            $aposentadoria->exibeAtivosPrevisao("Masculino", $parametroNome, $parametroLotacao);
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
@@ -365,13 +386,32 @@ if ($acesso) {
             $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("*", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
             $form->add_item($controle);
 
             $form->show();
 
             # Exibe a lista
-            $aposentadoria->exibeAtivosPrevisao("Feminino", $parametroNome);
+            $aposentadoria->exibeAtivosPrevisao("Feminino", $parametroNome, $parametroLotacao);
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
@@ -642,7 +682,7 @@ if ($acesso) {
 
             # Cria um array com os anos possíveis
             $anos = arrayPreenche(date("Y"), date("Y") + 20);
-            if($parametroAno < date("Y")){
+            if ($parametroAno < date("Y")) {
                 $parametroAno = date("Y");
             }
 
@@ -675,7 +715,7 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
-            $titulo = 'Servidor(es) estatutário(s) que faz(em) 75 anos em '.$parametroAno;
+            $titulo = 'Servidor(es) estatutário(s) que faz(em) 75 anos em ' . $parametroAno;
 
             # Exibe a tabela
             $tabela = new Tabela();

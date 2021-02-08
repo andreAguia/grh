@@ -51,9 +51,10 @@ class VagaDocentes {
         if ($this->situacao == "Disponível") {
             $select .= " AND (
                 ((SELECT tbservidor.situacao FROM tbvagahistorico s JOIN tbconcurso USING (idConcurso) JOIN tbservidor USING (idServidor) WHERE s.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1) <> 1)
-                   OR ((SELECT tbservidor.situacao FROM tbvagahistorico s JOIN tbconcurso USING (idConcurso) JOIN tbservidor USING (idServidor) WHERE s.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1) IS NULL))";
+             OR ((SELECT tbservidor.situacao FROM tbvagahistorico s JOIN tbconcurso USING (idConcurso) JOIN tbservidor USING (idServidor) WHERE s.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1) IS NULL))";
         } elseif($this->situacao == "Ocupada") {
-            $select .= " AND (SELECT tbservidor.situacao FROM tbvagahistorico s JOIN tbconcurso USING (idConcurso) JOIN tbservidor USING (idServidor) WHERE s.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1) = 1";
+            $select .= " AND 
+                 (SELECT tbservidor.situacao FROM tbvagahistorico s JOIN tbconcurso USING (idConcurso) JOIN tbservidor USING (idServidor) WHERE s.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1) = 1";
         }
 
         $select .= " ORDER BY idVaga";

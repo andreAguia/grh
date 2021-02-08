@@ -84,11 +84,13 @@ class Concurso {
         $painel = new Callout("primary");
         $painel->abre();
 
-        $btnEditar = new Link("Editar", "?fase=editardeFato&id=" . $this->idConcurso);
-        $btnEditar->set_class('button tiny secondary');
-        $btnEditar->set_id('editarVaga');
-        $btnEditar->set_title('Editar o Concurso');
-        $btnEditar->show();
+        if ($editar) {
+            $btnEditar = new Link("Editar", "?fase=editardeFato&id=" . $this->idConcurso);
+            $btnEditar->set_class('button tiny secondary');
+            $btnEditar->set_id('editarVaga');
+            $btnEditar->set_title('Editar o Concurso');
+            $btnEditar->show();
+        }
 
         $anobase = $conteudo["anobase"];
         $dtPublicacaoEdital = date_to_php($conteudo["dtPublicacaoEdital"]);
@@ -165,11 +167,11 @@ class Concurso {
         $select = 'SELECT dtPublicacaoEdital              
                          FROM tbconcurso
                         WHERE idconcurso = ' . $idconcurso;
-        
+
         # Pega os dados
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
-        
+
         if (empty($row[0])) {
             return null;
         } else {
@@ -207,10 +209,10 @@ class Concurso {
         #$tabela->set_width(array(80,20));
         $tabela->set_align(array("left", "center"));
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(array('coluna'   => 0,
-                'valor'    => "Total",
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                'valor' => "Total",
                 'operador' => '=',
-                'id'       => 'totalVagas')));
+                'id' => 'totalVagas')));
         $tabela->show();
     }
 
@@ -316,15 +318,32 @@ class Concurso {
             $this->idConcurso = $idConcurso;
         }
 
-        # Monta o select            
-        $select = "SELECT idVagaHistorico
+        # Pega os dados deste concurso
+        $dados = $this->get_dados($idConcurso);
+
+        # Verifica se é de docentes ou administrativo
+        if ($dados["tipo"] == 1) {
+            # Monta o select            
+            $select = "SELECT SUM(vagasNovas) as nova,
+                              SUM(vagasReposicao) as repo
+                         FROM tbconcursovaga
+                        WHERE idConcurso = $this->idConcurso";
+
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+            return $row[0] + $row[1];
+        } else {
+            # Monta o select            
+            $select = "SELECT idVagaHistorico
                          FROM tbvagahistorico
                         WHERE idConcurso = $this->idConcurso";
 
-        # Pega os dados
-        $pessoal = new Pessoal();
-        $row = $pessoal->count($select);
-        return $row;
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->count($select);
+            return $row;
+        }
     }
 
     #####################################################################################
@@ -389,6 +408,41 @@ class Concurso {
         }
 
         return $count;
+    }
+
+    ###########################################################
+
+    public function exibeQuadroServidoresConcursoPorCargo($idConcurso) {
+        /**
+         * Exibe um quadro com os docentes sem concurso
+         * 
+         * @syntax $plano->exibeQuadroDocentesSemConcurso();
+         */
+        $select = "SELECT distinct tbtipocargo.sigla,
+                          (SELECT COUNT(idServidor) FROM tbservidor JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND idTipoCargo = tt.idTipoCargo AND idConcurso = {$idConcurso}),
+                          (SELECT COUNT(idServidor) FROM tbservidor JOIN tbcargo USING (idCargo) WHERE situacao <> 1 AND idTipoCargo = tt.idTipoCargo AND idConcurso = {$idConcurso}),
+                          (SELECT COUNT(idServidor) FROM tbservidor JOIN tbcargo USING (idCargo) WHERE idTipoCargo = tt.idTipoCargo AND idConcurso = {$idConcurso})
+                     FROM tbservidor JOIN tbcargo as tt USING (idCargo) 
+                                     JOIN tbtipocargo USING (idTipoCargo) 
+                    WHERE idConcurso = {$idConcurso}
+                 ORDER BY 1 DESC";
+
+        $pessoal = new Pessoal();
+        $conteudo = $pessoal->select($select);
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($conteudo);
+        $tabela->set_titulo("Servidores Empossados");
+        $tabela->set_label(array("Cargo", "Ativos", "Inativos", "Total"));
+        #$tabela->set_width(array(30, 15, 15, 15, 15));
+        $tabela->set_align(array("left"));
+
+        $tabela->set_colunaSomatorio([1,2,3]);
+        $tabela->set_textoSomatorio("Total:");
+        $tabela->set_totalRegistro(false);
+
+        $tabela->show();
     }
 
     #####################################################################################

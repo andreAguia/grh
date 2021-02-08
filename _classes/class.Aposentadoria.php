@@ -266,7 +266,7 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
-    function exibeAtivosPrevisao($parametroSexo = null, $parametroNome = null) {
+    function exibeAtivosPrevisao($parametroSexo = null, $parametroNome = null, $parametroLotacao = null) {
 
         /**
          * Exibe tabela com a previsão de aposentadoria de servidores ativos
@@ -276,23 +276,39 @@ class Aposentadoria {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
+        if ($parametroLotacao == "*") {
+            $parametroLotacao = null;
+        }
+
+
         # Monta o select
-        $select = 'SELECT tbservidor.idFuncional,
+        $select = "SELECT tbservidor.idFuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          tbservidor.idServidor,
                          tbservidor.idServidor,
                          tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbservidor.situacao = 1
                      AND idPerfil = 1
-                     AND tbpessoa.sexo = "' . $parametroSexo . '"';
+                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbpessoa.sexo = '{$parametroSexo}'";
 
-        if (!is_null($parametroNome)) {
-            $select .= ' AND tbpessoa.nome LIKE "%' . $parametroNome . '%"';
+        if (!is_null($parametroLotacao)) {  // senão verifica o da classe
+            if (is_numeric($parametroLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+            } else { # senão é uma diretoria genérica
+                $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+            }
         }
 
-        $select .= ' ORDER BY tbpessoa.nome';
+        if (!is_null($parametroNome)) {
+            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        }
+
+        $select .= " ORDER BY tbpessoa.nome";
 
         $result = $pessoal->select($select);
 

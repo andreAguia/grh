@@ -162,7 +162,7 @@ class Vaga {
     ###########################################################
 
     /**
-     * Método get_numVagasCargoDiretoria
+     * Método get_numVagasCargoDiretoriaDisponiveis
      * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
      */
     function get_numVagasCargoDiretoriaDisponiveis($idCargo = null, $dir = null) {
@@ -194,7 +194,7 @@ class Vaga {
             $idServidor = $this->get_idServidorOcupante($dd[0]);
 
             # Se não tiver nenhum candidato
-            if (is_null($idServidor)) {
+            if (empty($idServidor)) {
                 $disponivel++;
             } else {
                 $situacao = $pessoal->get_situacao($idServidor);
@@ -211,7 +211,7 @@ class Vaga {
     ###########################################################
 
     /**
-     * Método get_numVagasCargoDiretoria
+     * Método get_numVagasCargoDiretoriaOcupados
      * fornece o número de vagas cadastradas para um determinado cargo (Titular/Associado) para uma determinada diretoria
      * 
      * @param	string $idVaga O id da vaga do servidor
@@ -244,7 +244,7 @@ class Vaga {
             $idServidor = $this->get_idServidorOcupante($dd[0]);
 
             # Se não tiver nenhum candidato
-            if (!is_null($idServidor)) {
+            if (!empty($idServidor)) {
                 $situacao = $pessoal->get_situacao($idServidor);
 
                 # Compara se está ocupado
@@ -504,9 +504,9 @@ class Vaga {
             # Conecta o banco
             $pessoal = new Pessoal();
 
-            $select = 'SELECT idServidor
+            $select = "SELECT idServidor
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                        WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                        WHERE idVaga = {$idVaga} ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1";
 
             $dado = $pessoal->select($select, false);
 
@@ -606,9 +606,10 @@ class Vaga {
         $painel->abre();
 
         if ($status == "Disponível") {
-            tituloTable("Ocupante Atual");
+            tituloTable("Vaga Disponível");
             br();
-            p("Vaga Disponível", "center", "f14");
+            p("Ninguém ocupa esta vaga atualmente!", "center", "f14");
+            br();
         } else {
             tituloTable("Ocupante Atual");
             br();

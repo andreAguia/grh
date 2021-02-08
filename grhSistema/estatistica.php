@@ -1781,12 +1781,13 @@ if ($acesso) {
             $grid->abreColuna(6);
 
             $estatistica = new Estatistica("nacionalidade");
-            $estatistica->exibeTabelaPorSexo();
+            $estatistica->exibeTabelaPorSexo("por Sexo");
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
-            $estatistica->exibeGraficoSimples(400);
+            $estatistica = new Estatistica("nacionalidade");
+            $estatistica->exibeTabelaPorTipoCargo("por Cargo");
 
             $grid->fechaColuna();
             $grid->fechaGrid();

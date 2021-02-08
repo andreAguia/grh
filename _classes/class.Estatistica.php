@@ -121,6 +121,7 @@ class Estatistica {
 
         $tabela = new Tabela();
         $tabela->set_conteudo($this->arrayTabela);
+        $tabela->set_titulo($this->tabelatitulo);
         $tabela->set_label($this->labelTabela);
         $tabela->set_width(array(80, 20));
         $tabela->set_align(array("left", "center"));
@@ -150,7 +151,6 @@ class Estatistica {
         $chart->show();
     }
 
-    ###########################################################
     ###########################################################
 
     /**
@@ -271,9 +271,135 @@ class Estatistica {
     ###########################################################
 
     /**
+     * Método pega os dados
+     */
+    private function get_dadosPorTipoCargo() {
+
+        switch ($this->assunto) {
+
+            case "perfil" :
+
+                # Select
+                $select = 'SELECT tbperfil.nome, tbtipocargo.tipo, count(tbservidor.idServidor) as grupo
+                         FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                       JOIN tbcargo USING (idCargo)
+                                       JOIN tbtipocargo USING (idTipoCargo)
+                                       JOIN tbperfil USING (idPerfil)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                     GROUP BY 1, tbtipocargo.tipo
+                     ORDER BY grupo desc';
+
+                $this->labelTabela = array("Perfil", "Adm/Tec", "Professor", "Total");
+                $this->labelGrafico = array("Perfil", "Adm/Tec", "Professor");
+                break;
+
+            case "estadoCivil" :
+
+                # Select
+                $select = 'SELECT tbestciv.estciv, tbtipocargo.tipo, count(tbservidor.idServidor) as grupo
+                         FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
+                                             JOIN tbservidor USING (idPessoa)
+                                             JOIN tbcargo USING (idCargo)
+                                             JOIN tbtipocargo USING (idTipoCargo)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                     GROUP BY 1,  tbtipocargo.tipo
+                     ORDER BY tbestciv.estciv';
+
+                $this->labelTabela = array("Estado Civil", "Adm/Tec", "Professor", "Total");
+                $this->labelGrafico = array("Estado Civil", "Adm/Tec", "Professor");
+                break;
+
+            case "nacionalidade" :
+
+                # Select
+                $select = 'SELECT tbnacionalidade.nacionalidade, tbtipocargo.tipo, count(tbservidor.idServidor) as grupo
+                         FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
+                                              JOIN tbservidor USING (idPessoa)
+                                              JOIN tbcargo USING (idCargo)
+                                              JOIN tbtipocargo USING (idTipoCargo)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                     GROUP BY 1, tbtipocargo.tipo
+                     ORDER BY tbnacionalidade.nacionalidade';
+
+                $this->labelTabela = array("Nacionalidade", "Adm/Tec", "Professor", "Total");
+                $this->labelGrafico = array("Nacionalidade", "Adm/Tec", "Professor");
+                break;
+        }
+
+        # Pega os valores
+        $pessoal = new Pessoal();
+        $servidores = $pessoal->select($select);
+
+        # Novo array 
+        $arrayResultado = array();
+        $arrayGrafico = array();
+
+        # Valores anteriores
+        $valorAnterior = null;
+
+        # inicia as variáveis
+        $masc = 0;
+        $femi = 0;
+        $totalMasc = 0;
+        $totalFemi = 0;
+        $total = 0;
+
+        # Modelar o novo array
+        foreach ($servidores as $value) {
+            # Carrega as variáveis
+            $valor = $value[0];
+            $sexo = $value[1];
+            $contagem = $value[2];
+
+            # Verifica se mudou de valor
+            if ($valor <> $valorAnterior) {
+
+                if (is_null($valorAnterior)) {
+                    $valorAnterior = $valor;
+                } else {
+                    # joga para os arrays
+                    $arrayResultado[] = array($valorAnterior, $femi, $masc, $femi + $masc);
+                    $arrayGrafico[] = array($valorAnterior, $femi, $masc);
+
+                    $masc = 0;
+                    $femi = 0;
+
+                    $valorAnterior = $valor;
+                    $total += ($femi + $masc);
+                }
+            }
+
+            if ($sexo == 'Professor') {
+                $masc = $contagem;
+                $totalMasc += $masc;
+            } else {
+                $femi = $contagem;
+                $totalFemi += $femi;
+            }
+        }
+
+        $arrayResultado[] = array($valorAnterior, $femi, $masc, $femi + $masc);
+        $arrayGrafico[] = array($valorAnterior, $femi, $masc);
+
+        # Soma a coluna do count
+        $totalColuna = array_sum(array_column($servidores, "grupo"));
+
+        $arrayResultado[] = array("Total", $totalFemi, $totalMasc, $totalColuna);
+
+
+        $this->arrayTabela = $arrayResultado;
+        $this->arrayGrafico = $arrayGrafico;
+    }
+
+    ###########################################################
+
+    /**
      * Método exibeTabelaPorSexo
      */
-    public function exibeTabelaPorSexo() {
+    public function exibeTabelaPorSexo($titulo = null) {
 
         # Pega os dados
         $this->get_dadosPorSexo();
@@ -281,6 +407,7 @@ class Estatistica {
         # Tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($this->arrayTabela);
+        $tabela->set_titulo($titulo);
         $tabela->set_label($this->labelTabela);
         $tabela->set_align(array("left", "center", "center", "center"));
         $tabela->set_totalRegistro(false);
@@ -309,6 +436,30 @@ class Estatistica {
         $chart->set_tituloEixoX("Perfil");
         $chart->set_legend(false);
         $chart->show();
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeTabelaPorSexo
+     */
+    public function exibeTabelaPorTipoCargo($titulo = null) {
+
+        # Pega os dados
+        $this->get_dadosPorTipoCargo();
+
+        # Tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($this->arrayTabela);
+        $tabela->set_titulo($titulo);
+        $tabela->set_label($this->labelTabela);
+        $tabela->set_align(array("left", "center", "center", "center"));
+        $tabela->set_totalRegistro(false);
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                'valor' => "Total",
+                'operador' => '=',
+                'id' => 'estatisticaTotal')));
+        $tabela->show();
     }
 
     ###########################################################

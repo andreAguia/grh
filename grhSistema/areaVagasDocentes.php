@@ -150,7 +150,7 @@ if ($acesso) {
 
             $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
             $controle->set_size(8);
-            $controle->set_title('Filtra por CArgo');
+            $controle->set_title('Filtra por Cargo');
             $controle->set_array($cargos);
             $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');

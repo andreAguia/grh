@@ -66,6 +66,10 @@ if ($acesso) {
     set_session('idProcedimento');
     set_session('parametroAfastamento');
 
+    set_session('parametroCentro');
+    set_session('parametroLab');
+    set_session('parametroSituacao');
+
     set_session('sessionParametro'); # Zera a session do parâmetro de pesquisa da classe modelo
     set_session('sessionPaginacao'); # Zera a session de paginação da classe modelo
     set_session('sessionLicenca');      # Zera a session do tipo de licença
@@ -546,12 +550,12 @@ if ($acesso) {
 
             # Título
             titulo("Área de Acumulação de Cargos");
-            br(2);      
-            
+            br(2);
+
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(8);
-            
+
             $tamanhoImage = 60;
             $menu = new MenuGrafico(2);
             $menu->set_espacoEntreLink(true);

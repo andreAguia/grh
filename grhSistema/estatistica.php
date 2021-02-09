@@ -1781,19 +1781,19 @@ if ($acesso) {
             $grid->abreColuna(6);
 
             $estatistica = new Estatistica("nacionalidade");
-            $estatistica->exibeTabelaPorSexo("por Sexo");
+            $estatistica->exibeTabelaPorSexo("por Sexo (Todos os Servidores Ativos)");
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
             $estatistica = new Estatistica("nacionalidade");
-            $estatistica->exibeTabelaPorTipoCargo("por Cargo");
+            $estatistica->exibeTabelaPorTipoCargo("por Cargo (Estatutários Ativos)");
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
             $estatistica = new Estatistica("nacionalidade",false);
-            $estatistica->exibeTabelaPorTipoCargo("por Cargo");
+            $estatistica->exibeTabelaPorTipoCargo("por Cargo (Ativos e Inativos)");
 
             $grid->fechaColuna();
             $grid->fechaGrid();

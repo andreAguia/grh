@@ -299,13 +299,15 @@ class Estatistica {
 
                 # Select
                 $select = 'SELECT tbperfil.nome, tbtipocargo.tipo, count(tbservidor.idServidor) as grupo
-                         FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                                       JOIN tbcargo USING (idCargo)
-                                       JOIN tbtipocargo USING (idTipoCargo)
-                                       JOIN tbperfil USING (idPerfil)
-                                       WHERE (idPerfil = 1 OR idPerfil = 2)';
-                if($this->somenteAtivos){
-                    $select .= ' AND tbservidor.situacao = 1 ';
+                             FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                           JOIN tbcargo USING (idCargo)
+                                           JOIN tbtipocargo USING (idTipoCargo)
+                                           JOIN tbperfil USING (idPerfil)';
+                                       
+                if($this->somenteAtivos){                    
+                    $select .= ' WHERE idPerfil = 1 AND tbservidor.situacao = 1 ';
+                }else{
+                    $select .= ' WHERE (idPerfil = 1 OR idPerfil = 4)';
                 }
                         
                 $select .= '
@@ -323,10 +325,12 @@ class Estatistica {
                          FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
                                              JOIN tbservidor USING (idPessoa)
                                              JOIN tbcargo USING (idCargo)
-                                             JOIN tbtipocargo USING (idTipoCargo)
-                                       WHERE (idPerfil = 1 OR idPerfil = 2)';
-                if($this->somenteAtivos){
-                    $select .= ' AND tbservidor.situacao = 1 ';
+                                             JOIN tbtipocargo USING (idTipoCargo)';
+                                       
+                if($this->somenteAtivos){                    
+                    $select .= ' WHERE idPerfil = 1 AND tbservidor.situacao = 1 ';
+                }else{
+                    $select .= ' WHERE (idPerfil = 1 OR idPerfil = 4)';
                 }
                         
                 $select .= '
@@ -344,10 +348,12 @@ class Estatistica {
                          FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
                                               JOIN tbservidor USING (idPessoa)
                                               JOIN tbcargo USING (idCargo)
-                                              JOIN tbtipocargo USING (idTipoCargo)
-                                       WHERE (idPerfil = 1 OR idPerfil = 2)';
-                if($this->somenteAtivos){
-                    $select .= ' AND tbservidor.situacao = 1 ';
+                                              JOIN tbtipocargo USING (idTipoCargo)';
+                                       
+                if($this->somenteAtivos){                    
+                    $select .= ' WHERE idPerfil = 1 AND tbservidor.situacao = 1 ';
+                }else{
+                    $select .= ' WHERE (idPerfil = 1 OR idPerfil = 4)';
                 }
                         
                 $select .= '

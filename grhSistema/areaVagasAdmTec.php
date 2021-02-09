@@ -87,7 +87,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($conteudo);
             $tabela->set_titulo("Geral");
-            $tabela->set_label(array("Cargo", "Vagas Disponíveis", "Servidores Ativos", "Vagas Disponíveis"));
+            $tabela->set_label(array("Cargo", "Vagas Novas", "Servidores Ativos", "Vagas Disponíveis"));
             #$tabela->set_width(array(40, 15, 15, 15));
             $tabela->set_align(array("left"));
 

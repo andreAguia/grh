@@ -826,6 +826,8 @@ if ($acesso) {
             # Informa a origem
             set_session('origem', 'cadastroConcurso.php?fase=listaServidoresInativos&id=' . $id);
 
+            $vagaAdm = new VagaAdm();
+
             # Cria um menu
             $menu = new MenuBar();
 
@@ -846,10 +848,10 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             $menu->show();
-
+            
             $grid->fechaColuna();
 
-            #######################################################
+            #######################################################3
             # Menu
 
             $grid->abreColuna(3);
@@ -871,16 +873,56 @@ if ($acesso) {
 
             $painel->fecha();
 
+            if ($tipo == 1) {
+                # Exibe os servidores deste concurso
+                $concurso->exibeQuadroServidoresConcursoPorCargo($id);
+            }
+
             $grid->fechaColuna();
 
             #######################################################3
 
             $grid->abreColuna(9);
 
+            # Cria um sub menu
+            $menu = new MenuBar("small button-group");
+
+            # Cria botões com os cargos
+            $select = "SELECT idTipoCargo, cargo FROM tbtipocargo ORDER BY 1";
+            $conteudo = $pessoal->select($select);
+
+            $botaocargo = new Button("Todos", "?fase=listaServidoresInativos&id={$id}");
+            $botaocargo->set_title("Todos os Cargos");
+            if ($parametroCargo == "Todos" OR empty($parametroCargo)) {
+                $botaocargo->set_class("hollow button");
+            } else {
+                $botaocargo->set_class("button");
+            }
+            $menu->add_link($botaocargo, "right");
+
+            foreach ($conteudo as $item) {
+                $numero = $vagaAdm->get_servidoresAtivosVaga($id, $item[0]);
+                if ($numero > 0) {
+                    # cargos
+                    $botaocargo = new Button($item[1], "?fase=listaServidoresInativos&id={$id}&cargo={$item[0]}");
+                    $botaocargo->set_title($pessoal->get_nomeTipoCargo($item[0]));
+                    if ($parametroCargo == $item[0]) {
+                        $botaocargo->set_class("hollow button");
+                    } else {
+                        $botaocargo->set_class("button");
+                    }
+
+                    $menu->add_link($botaocargo, "right");
+                }
+            }
+
+            $menu->show();
+
             # Lista de Servidores Inativos
             $lista = new ListaServidores('Servidores Inativos');
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
+            $lista->set_tipoCargo($parametroCargo);
             $lista->set_concurso($id);
             $lista->showTabela();
 

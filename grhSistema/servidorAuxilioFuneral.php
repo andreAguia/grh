@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Observações do servidor
+ * Dados Gerais do servidor
  *  
  * By Alat
  */
@@ -15,16 +15,18 @@ include ("_config.php");
 $acesso = Verifica::acesso($idUsuario, 2);
 
 if ($acesso) {
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
+    $intra = new Intra();
+
     # Verifica a fase do programa
     $fase = get('fase', 'editar');
-
-    $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Observações";
+        $atividade = "Cadastro do servidor - Dados do auxílio funeral";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -44,12 +46,22 @@ if ($acesso) {
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
+    # Pega o perfil do Servidor    
+    $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    #$objeto->set_nome('');
+    $objeto->set_nome('Auxílio Funeral');
+
     # select do edita
-    $objeto->set_selectEdita('SELECT obs
-                                FROM tbservidor
-                               WHERE idServidor = ' . $idServidorPesquisado);
+    $selectEdita = 'SELECT processoAuxilioFuneral,
+                           dtPublicacaoAuxilioFuneral,
+                           pgPublicacaoAuxilioFuneral
+            FROM tbservidor
+            WHERE idServidor = ' . $idServidorPesquisado;
+
+    #echo $selectEdita;
+
+    $objeto->set_selectEdita($selectEdita);
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
@@ -72,27 +84,35 @@ if ($acesso) {
     $objeto->set_formlabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array(
+    $campos = array(
         array('linha' => 1,
-            'nome' => 'obs',
+            'nome' => 'processoAuxilioFuneral',
+            'label' => 'Processo',
+            'tipo' => 'seif',
             'autofocus' => true,
-            'label' => 'Observações do Servidor',
-            'tipo' => 'textarea',
-            'size' => array(255, 20))));
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Observações do Servidor");
-    $botaoRel->set_url("../grhRelatorios/servidorObs.php");
-    $botaoRel->set_target("_blank");
+            'size' => 30,
+            'col' => 4,
+            'title' => 'Número do Processo no SEI.'),
+        array('linha' => 2,
+            'nome' => 'dtPublicacaoAuxilioFuneral',
+            'label' => 'Publicação:',
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Data da Publicação no DOERJ.'),
+        array('linha' => 2,
+            'nome' => 'pgPublicacaoAuxilioFuneral',
+            'label' => 'Pág:',
+            'tipo' => 'texto',
+            'title' => 'Página da publicação',
+            'col' => 2,
+            'size' => 5));
 
-    $objeto->set_botaoEditarExtra(array($botaoRel));
+    $objeto->set_campos($campos);
 
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
     ################################################################
     switch ($fase) {
         case "editar" :

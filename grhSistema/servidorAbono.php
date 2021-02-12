@@ -58,9 +58,11 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista('SELECT processo,
                                      dtPublicacao,
+                                     pgPublicacao,
                                      if(status = 1,"Deferido","Indeferido"),
                                      data,
                                      idServidor,
+                                     obs,
                                      idAbono
                                 FROM tbabono
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -69,8 +71,10 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita('SELECT processo,
                                      dtPublicacao,
+                                     pgPublicacao,
                                      status,
                                      data,
+                                     obs,
                                      idServidor
                                 FROM tbabono
                                WHERE idAbono = ' . $id);
@@ -82,10 +86,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Processo", "Publicaçao", "Status", "Data"));
-    #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(null, "date_to_php", null, "date_to_php"));
+    $objeto->set_label(array("Processo", "Publicaçao", "Pag", "Status", "Data", "Obs"));
+    $objeto->set_width(array(15,10,5,10,10,40));	
+    $objeto->set_align(array("left","center","center","center","center","left"));
+    $objeto->set_funcao(array(null, "date_to_php", null, null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -116,7 +120,14 @@ if ($acesso) {
             'col' => 3,
             'required' => true,
             'title' => 'A data da publicaçao no DOERJ.',
-            'linha' => 1),
+            'linha' => 2),
+        array('nome' => 'pgPublicacao',
+            'label' => 'Página:',
+            'tipo' => 'texto',
+            'size' => 10,
+            'col' => 2,
+            'title' => 'A página da Publicação no DOERJ.',
+            'linha' => 2),
         array('nome' => 'status',
             'label' => 'Status:',
             'tipo' => 'combo',
@@ -125,14 +136,22 @@ if ($acesso) {
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,
             'required' => true,
-            'linha' => 1),
+            'linha' => 3),
         array('nome' => 'data',
             'label' => 'Data:',
             'tipo' => 'data',
             'size' => 10,
             'col' => 3,
             'title' => 'A data em que o servidor passou a receber.',
-            'linha' => 1),
+            'linha' => 3),
+        array('linha' => 4,
+            'col' => 12,
+            'nome' => 'obs',
+            'label' => 'Obs:',
+            'tipo' => 'textarea',
+            'fieldset' => 'fecha',
+            'title' => 'Observações.',
+            'size' => array(80, 4)),
         array('nome' => 'idServidor',
             'label' => 'idServidor',
             'tipo' => 'hidden',
@@ -141,7 +160,7 @@ if ($acesso) {
             'title' => 'Matrícula',
             'linha' => 6)));
 
-    # Alterar Senha
+    # site da grh
     $botao1 = new Button("Site da GRH");
     $botao1->set_target('_blank');
     $botao1->set_title("Pagina no site da GRH sobre Abono Permanencia");

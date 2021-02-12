@@ -43,8 +43,12 @@ if (!empty($dtInicial) AND!empty($numDias)) {
     $verifica->setPeriodo(date_to_php($dtInicial), addDias(date_to_php($dtInicial), $numDias));
     $verifica->setIsento("tbtrabalhotre", $id);
 
-    if ($verifica->verifica()) {        
-        $erro = 1;
-        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
+    if ($verifica->verifica()) {
+        # A pedido de Gustavo retirei do "gesso" as férias e a licença prêmio da verificação
+        # para efeito do cadastro de dias trabalhados para o tre
+        if ($verifica->getAfastamento() <> "Férias" AND $verifica->getDetalhe() <> "Licença Prêmio") {
+            $erro = 1;
+            $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
+        }
     }
 }

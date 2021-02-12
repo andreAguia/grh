@@ -61,7 +61,6 @@ if ($acesso) {
                                      pgPublicacao,
                                      if(status = 1,"Deferido","Indeferido"),
                                      data,
-                                     idServidor,
                                      obs,
                                      idAbono
                                 FROM tbabono

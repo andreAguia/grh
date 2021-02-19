@@ -48,7 +48,7 @@ class VerificaAfastamentos {
      * Se não for informado será considerada a data de hoje
      */
 
-    function setPeriodo($dtInicial, $dtFinal) {
+    function setPeriodo($dtInicial, $dtFinal = null) {
         if (empty($dtInicial)) {
             alert("É necessário informar a data inicial.");
             return;
@@ -57,8 +57,9 @@ class VerificaAfastamentos {
         }
 
         if (empty($dtFinal)) {
-            alert("É necessário informar o data Final.");
-            return;
+            # Quando somente data Inicial é fornecida é para saber se o
+            # servidor está afastado naquela data
+            $this->dtFinal = $this->dtInicial;
         } else {
             $this->dtFinal = date_to_bd($dtFinal);
         }
@@ -119,7 +120,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbferias" AND !empty($this->id)) {
+        if ($this->tabela == "tbferias" AND!empty($this->id)) {
             $select .= " AND idFerias <> {$this->id}";
         }
 
@@ -142,29 +143,63 @@ class VerificaAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                    OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                    OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1))
-                   OR (dtInicial <= '{$this->dtFinal}' AND numDias IS NULL)
-)";
+                   OR (dtInicial <= '{$this->dtFinal}' AND numDias IS NULL))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicenca" AND !empty($this->id)) {
+        if ($this->tabela == "tblicenca" AND!empty($this->id)) {
             $select .= " AND idLicenca <> {$this->id}";
         }
 
         $select .= " ORDER BY dtInicial";
 
         $afast = $pessoal->select($select, false);
-        
-        
-        
+
+
+
         if (!empty($afast)) {
             # Verifica se é Licença ou afastamento
-            if(mb_stripos($afast['nome'], 'Afastamento') === false){
+            if (mb_stripos($afast['nome'], 'Afastamento') === false) {
                 $this->afastamento = "Licença";
-            }else{
+            } else {
                 $this->afastamento = "Afastamento";
-            }            
+            }
             $this->detalhe = $afast['nome'];
             return true;
+        }
+
+        /*
+         * Licença Médica Sem Alta
+         */
+
+        # Verifica se o servidor está em licença médica vencida sem alta
+        $select = "SELECT idLicenca, alta, dtInicial
+                      FROM tblicenca
+                     WHERE idServidor = {$this->idServidor}
+                       AND (idTpLicenca = 1 OR idTpLicenca = 30)
+                  ORDER BY dtInicial DESC LIMIT 1";
+        $row2 = $pessoal->select($select, false);
+
+        if (!empty($row2[0]) AND $row2[1] <> 1) {
+            # Verifica se tem isenção - A isenção neste caso é particulkarmente diferente
+            if ($this->tabela == "tblicenca" AND $this->id == $row2[0]) {
+                return false;
+            } else {
+                # Verifica se a licença editada é posterior a data em aberto
+                if (dataMaior(date_to_php($row2[2]), date_to_php($this->dtInicial)) == date_to_php($this->dtInicial)) {
+                    $this->afastamento = "Licença Em Aberto";
+                    $this->detalhe = "Licença Médica Sem Alta";
+                    return true;
+                }
+
+                # Verifica se a data em aberto está entre as datas da licença editada
+                if (entre(date_to_php($row2[2]), date_to_php($this->dtInicial), date_to_php($this->dtFinal))) {
+                    $this->afastamento = "Licença Em Aberto";
+                    $this->detalhe = "Licença Médica Sem Alta";
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
 
         /*
@@ -178,7 +213,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicencapremio" AND !empty($this->id)) {
+        if ($this->tabela == "tblicencapremio" AND!empty($this->id)) {
             $select .= " AND idLicencaPremio <> {$this->id}";
         }
 
@@ -203,7 +238,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicencasemvencimentos" AND !empty($this->id)) {
+        if ($this->tabela == "tblicencasemvencimentos" AND!empty($this->id)) {
             $select .= " AND idLicencaSemVencimentos <> {$this->id}";
         }
 
@@ -228,7 +263,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicio AND '{$this->dtFinal}' >= ADDDATE(dtInicio,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbatestado" AND !empty($this->id)) {
+        if ($this->tabela == "tbatestado" AND!empty($this->id)) {
             $select .= " AND idAtestado <> {$this->id}";
         }
 
@@ -253,7 +288,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbtrabalhotre" AND !empty($this->id)) {
+        if ($this->tabela == "tbtrabalhotre" AND!empty($this->id)) {
             $select .= " AND idTrabalhoTre <> {$this->id}";
         }
 
@@ -278,7 +313,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbfolga" AND !empty($this->id)) {
+        if ($this->tabela == "tbfolga" AND!empty($this->id)) {
             $select .= " AND idFolga <> {$this->id}";
         }
 

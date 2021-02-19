@@ -3688,4 +3688,77 @@ class Checkup {
     }
 
     ##########################################################
+
+    /**
+     * Método get_servidorAtivoLicencaMedicaEmAberto
+     * 
+     * Servidor Com licença médica em aberto
+     */
+    public function get_servidorAtivoLicencaMedicaEmAberto($idServidor = null) {
+
+        # Define a categoria e a prioridade
+        $prioridade = 1;
+        $categoria = "Licenças";
+
+        $servidor = new Pessoal();
+        $metodo = explode(":", __METHOD__);
+
+        $select = 'SELECT distinct idfuncional,
+                          tbpessoa.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          idServidor
+                     FROM tblicenca AS t1 LEFT JOIN tbservidor USING (idServidor)
+                                               JOIN tbpessoa USING (idPessoa)
+                    WHERE (idTpLicenca = 1 OR idTpLicenca = 30)
+                      AND situacao = 1
+                      AND (SELECT alta
+                                            FROM tblicenca AS t2 
+                                           WHERE (idTpLicenca = 1 OR idTpLicenca = 30) 
+                                             AND t2.idServidor = t1.idServidor
+                                             ORDER BY dtInicial DESC LIMIT 1) <> 1';
+
+        if (!empty($idServidor)) {
+            $select .= ' AND idServidor = "' . $idServidor . '"';
+        }
+        $select .= ' ORDER BY tbpessoa.nome';
+
+        $result = $servidor->select($select);
+        $count = $servidor->count($select);
+        $titulo = 'Servidor(es) com Licença Médica em Aberto (sem alta)';
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($result);
+        $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Cargo']);
+        $tabela->set_align(['center', 'left', 'left', 'left']);
+        $tabela->set_titulo($titulo);
+        $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_lotacao", "get_cargo"]);
+        #$tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php", "date_to_php"]);
+        $tabela->set_editar($this->linkEditar);
+        $tabela->set_idCampo('idServidor');
+
+        if ($count > 0) {
+            if (!empty($idServidor)) {
+                return $titulo;
+            } elseif ($this->lista) {
+                callout("Deve-se acertar as licenças médicas definindo se tem ou não alta");
+                $tabela->show();
+                set_session('alerta', $metodo[2]);
+            } else {
+                $retorna = [$count . ' ' . $titulo, $metodo[2], $categoria, $prioridade];
+                return $retorna;
+            }
+        } elseif ($this->lista) {
+            br();
+            tituloTable($titulo);
+            $callout = new Callout();
+            $callout->abre();
+            p('Nenhum item encontrado !!', 'center');
+            $callout->fecha();
+        }
+    }
+
+    ##########################################################
 }

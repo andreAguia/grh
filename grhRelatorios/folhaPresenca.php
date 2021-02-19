@@ -147,42 +147,21 @@ if ($acesso) {
                 # Cria variavel com a data no formato americano (ano/mes/dia)
                 $data = date("d/m/Y", mktime(0, 0, 0, $mesInicial + $i, $contador, $anoBase));
 
-                # Verifica se nesta data o servidor está com licença
-                $licenca = $pessoal->get_licenca($idServidorPesquisado, $data);
-
-                # Verifica se nesta data o servidor está em licança especial (prêmio)
-                $licencaPremio = $pessoal->emLicencaPremio($idServidorPesquisado, $data);
-
-                # Verifica se nesta data o servidor está em férias
-                $ferias = $pessoal->emFerias($idServidorPesquisado, $data);
-
-                # Pega o exercicio
-                if ($ferias) {
-                    $exercicio = $pessoal->emFeriasExercicio($idServidorPesquisado, $data);
-                }
-
-                # Verifica se nesta data o servidor está trabalhando no TRE
-                $emAfastamentoTre = $pessoal->emAfastamentoTre($idServidorPesquisado, $data);
-
-                # Verifica se nesta data o servidor está em folga do TRE
-                $emFolgaTre = $pessoal->emFolgaTre($idServidorPesquisado, $data);
+                # Verifica se o servidor está com afastamento
+                $afastClass = new VerificaAfastamentos($idServidorPesquisado);
+                $afastClass->setPeriodo($data);
+                $afastClass->verifica();
+                $afastamento = $afastClass->getAfastamento();
+                $detalhe = $afastClass->getDetalhe();
 
                 # Verifica se nesta data existe um feriado
                 $feriado = $pessoal->get_feriado($data);
 
                 # informa as ocorrências                
-                if ($emFolgaTre) { // verifica se está folgando pelo no TRE
-                    echo '<td align="center">Folga do TRE</td>';
-                } elseif ($emAfastamentoTre) { // verifica se está trabalhando no TRE
-                    echo '<td align="center">Trabalhando no TRE</td>';
-                } elseif (!is_null($feriado)) {     // verifica se tem feriado
+                if (!empty($feriado)) {     // verifica se tem feriado
                     echo '<td align="center">' . $feriado . '</td>';
-                } elseif (!is_null($licenca)) {     // verifica se tem licença
-                    echo '<td align="center">' . $licenca . '</td>';
-                } elseif ($ferias) { // verifica se tem férias
-                    echo '<td align="center">Férias (' . $exercicio . ')</td>';
-                } elseif ($licencaPremio) { // verifica se tem licença prêmio
-                    echo '<td align="center">Licença Especial (Prêmio)</td>';
+                } elseif (!empty($afastamento)) {     // verifica se tem licença
+                    echo '<td align="center">' . $afastamento . '</td>';
                 } else {
 
                     $tstamp = mktime(0, 0, 0, $mesInicial + $i, $contador, $anoBase);

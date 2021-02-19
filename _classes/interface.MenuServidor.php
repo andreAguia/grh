@@ -292,62 +292,22 @@ class MenuServidor {
 
         # Inicializa a variável das mensagens
         $mensagem = array();
-
-        ##### Situação do servidor
-        # Pega as situações
-        $ferias = $pessoal->emFerias($this->idServidor);
-        $licenca = $pessoal->emLicenca($this->idServidor);
-        $licencaPremio = $pessoal->emLicencaPremio($this->idServidor);
-        $licencaSemVencimentos = $pessoal->emLicencaSemVencimentos($this->idServidor);
+        
+        ##### Verifica Afastamentos
+        $afastClass = new VerificaAfastamentos($this->idServidor);
+        $afastClass->verifica();
+        if(!vazio($afastClass->getAfastamento())){
+            $mensagem[] = "Servidor em {$afastClass->getAfastamento()} ({$afastClass->getDetalhe()})";
+        }
+        
         $situacao = $pessoal->get_idSituacao($this->idServidor);
-        $folgaTre = $pessoal->emFolgaTre($this->idServidor);
-        $afastadoTre = $pessoal->emAfastamentoTre($this->idServidor);
-        #$cedido = $pessoal->emCessao($this->idServidor);
-        $orgaoCedido = null;
-
-        # Férias
-        if ($ferias) {
-            $exercicio = $pessoal->emFeriasExercicio($this->idServidor);
-            $mensagem[] = 'Servidor em férias (Exercicio ' . $exercicio . ')';
-        }
-
-        # Licenca
-        if ($licenca) {
-            $mensagem[] = 'Servidor em ' . $pessoal->get_licenca($this->idServidor);
-        }
-
-        # Licenca Prêmio
-        if ($licencaPremio) {
-            $mensagem[] = 'Servidor em ' . $pessoal->get_licencaNome(6);
-        }
-
-        # Licenca Sem Vencimentos
-        if ($licencaSemVencimentos) {
-            $mensagem[] = 'Servidor em Licença Sem Vencimentos';
-        }
 
         # Motivo de Saída
         if (($situacao <> 1) AND ($pessoal->get_motivo($this->idServidor) <> "Outros")) {
             $mensagem[] = $pessoal->get_motivo($this->idServidor);
         }
 
-        # Folga TRE
-        if ($folgaTre) {
-            $mensagem[] = 'Servidor em Folga TRE';
-        }
-
-        # Afastamento TRE
-        if ($afastadoTre) {
-            $mensagem[] = 'Prestando serviço ao TRE';
-        }
-
-        # Cedido
-        #if($cedido){
-        #    $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
-        #    $mensagem[] = 'Servidor Cedido a(o) '.$orgaoCedido;
-        #}
-        ##### Ocorrências
-
+        # Checkup        
         $metodos = get_class_methods('Checkup');
         $ocorrencia = new Checkup(false);
 
@@ -361,12 +321,6 @@ class MenuServidor {
                 }
             }
         }
-
-        # Chefia Imediata
-        #$idChefe = $pessoal->get_chefiaImediata($this->idServidor);
-        #if(!is_null($idChefe)){
-        #    $mensagem[] = "Chefia Imediata: ".$pessoal->get_nome($idChefe). " (".$pessoal->get_chefiaImediataDescricao($this->idServidor).")";
-        #}
 
         $qtdMensagem = count($mensagem);
         $contador = 1;

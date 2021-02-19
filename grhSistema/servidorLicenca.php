@@ -507,7 +507,7 @@ if ($acesso) {
                 'label' => 'Número da Bim:',
                 'tipo'  => 'texto',
                 'size'  => 30,
-                'col'   => 2,
+                'col'   => 4,
                 'title' => 'Número da Bim',
                 'linha' => 7),
             array('linha' => 8,

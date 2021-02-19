@@ -23,6 +23,15 @@ $obs = $campoValor[11];
 $idServidor = $campoValor[12];
 
 /*
+ * Verifica se digitou a data final oiu o numero de dias e preenche automaticamente
+ */
+
+if(empty($dtTermino)){
+    $campoValor[6] = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
+    $dtTermino = $campoValor[6];
+}
+
+/*
  *  Verifica se o tipo de licença foi informado
  */
 if ($idTpLicenca == "Inicial") {
@@ -39,7 +48,7 @@ if ($idTpLicenca == "Inicial") {
 
     if ($verifica->verifica()) {
         $erro = 1;
-        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
+        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n('.$id.')';
     }
 
     /*
@@ -68,7 +77,7 @@ if ($idTpLicenca == "Inicial") {
      * Verifica se nas licenças 110 e 111 tem a alta digitada
      */
     if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
-        if (is_null($alta)) {
+        if (empty($alta)) {
             $msgErro .= 'E necessario informar se teve ou não alta!\n';
             $erro = 1;
         }

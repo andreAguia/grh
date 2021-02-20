@@ -61,7 +61,7 @@ if ($acesso) {
     $script = '<script type="text/javascript" language="javascript">
             
             $(document).ready(function(){';
-
+    
     # Retira todos os controles
     $script .= '
                 $("#alta").hide();
@@ -127,6 +127,20 @@ if ($acesso) {
                 }
             }
         }
+    }else{
+        # Se for inclusão a mudança se faz pelo que está na combo
+        $script .= '
+            // Guarda na variável id o valor alterado
+            var id = $("#idTpLicenca option:selected").val();
+            
+                        if(id == 1 || id == 30 || id == 2) {
+                            $("#alta").show();
+                            $("#labelalta").show();
+                        }else{
+                            $("#alta").hide();
+                            $("#labelalta").hide();
+                        }
+                        ';
     }
 
     $script .= '    

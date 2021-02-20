@@ -3703,20 +3703,19 @@ class Checkup {
         $servidor = new Pessoal();
         $metodo = explode(":", __METHOD__);
 
-        $select = 'SELECT distinct idfuncional,
+        $select = 'SELECT idfuncional,
                           tbpessoa.nome,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
+                          t1.idServidor,
+                          t1.idServidor,
                           idServidor
-                     FROM tblicenca AS t1 LEFT JOIN tbservidor USING (idServidor)
-                                               JOIN tbpessoa USING (idPessoa)
-                    WHERE (idTpLicenca = 1 OR idTpLicenca = 30)
-                      AND situacao = 1
-                      AND (SELECT alta
-                                            FROM tblicenca AS t2 
-                                           WHERE (idTpLicenca = 1 OR idTpLicenca = 30) 
-                                             AND t2.idServidor = t1.idServidor
-                                             ORDER BY dtInicial DESC LIMIT 1) <> 1';
+                     FROM tbservidor AS t1 JOIN tbpessoa USING (idPessoa)
+                    WHERE situacao = 1
+                      AND 
+                          (SELECT alta
+                             FROM tblicenca AS t2 
+                            WHERE (idTpLicenca = 1 OR idTpLicenca = 30) 
+                              AND t2.idServidor = t1.idServidor
+                         ORDER BY dtInicial DESC LIMIT 1) <> 1';
 
         if (!empty($idServidor)) {
             $select .= ' AND idServidor = "' . $idServidor . '"';

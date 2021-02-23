@@ -1005,7 +1005,6 @@ function exibeRegraStatusLSV() {
     $tabela->show();
 
     $div->fecha();
-
     return;
 }
 
@@ -1114,6 +1113,57 @@ function get_DadosServidorCessao($idServidor) {
         }
         $painel->fecha();
     }
+}
+
+##########################################################
+
+/**
+ * Função que retorna uma tabela com as declarações de acumulação positivas de um servidor 
+ */
+function exibeDeclaracaoAcumulacaoPositiva($idServidor) {
+    # Abre a div para a invisibilidade
+    $div = new Div("divRegrasLsv");
+    $div->abre();
+
+    # Conecta 
+    $pessoal = new Pessoal();
+
+    # select da lista
+    $select = "SELECT anoReferencia,
+                       dtEntrega, 
+                       IF(acumula,'SIM','Não'),
+                       CONCAT('SEI-',processo),
+                       obs,
+                       idAcumulacaoDeclaracao
+                  FROM tbacumulacaodeclaracao 
+                WHERE idServidor = {$idServidor}
+                   AND acumula 
+                ORDER BY anoReferencia desc";
+
+    $conteudo = $pessoal->select($select);
+
+    # Exibe em forma de tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Declarações Positivas de Acumulação");
+    $tabela->set_conteudo($conteudo);
+
+    $tabela->set_label(array("Referência", "Entregue em", "Declarou Acumular", "Processo", "Obs"));
+    $tabela->set_width(array(10, 15, 10, 20, 35));
+    $tabela->set_align(array("center", "center", "center", "left", "left"));
+    $tabela->set_funcao(array(null, "date_to_php"));
+
+    $tabela->set_formatacaoCondicional(array(
+                array('coluna'   => 2,
+                    'valor'    => 'SIM',
+                    'operador' => '=',
+                    'id'       => 'problemas')));
+    
+    $tabela->set_totalRegistro(false);
+    $tabela->set_mensagemTabelaVazia("Este servidor não possui declarações positivas de acumulação!");
+    $tabela->show();
+
+    $div->fecha();
+    return;
 }
 
 ##########################################################

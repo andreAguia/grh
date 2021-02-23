@@ -49,6 +49,10 @@ if ($acesso) {
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    
+    # Rotina extra editar
+    $objeto->set_rotinaExtraEditar("exibeDeclaracaoAcumulacaoPositiva");
+    $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Acumulações de Cargos Públicos');
@@ -351,6 +355,13 @@ if ($acesso) {
     $botao2->set_target("_blank");
 
     $objeto->set_botaoListarExtra(array($botaoRel, $botao2));
+    
+    # Botão exibe declaração na rotina editar
+    $botaoDec = new Button("Declarações");
+    $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
+    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
+
+    $objeto->set_botaoEditarExtra(array($botaoDec));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -372,7 +383,7 @@ if ($acesso) {
 
         case "regras" :
             $regra = new Procedimento();
-            $regra->exibeProcedimento(24, $idUsuario);
+            $regra->exibeProcedimento(24);
             break;
     }
     $page->terminaPagina();

@@ -638,19 +638,6 @@ function get_situacao($idServidor) {
 function get_situacaoRel($idServidor) {
     $pessoal = new Pessoal();
     $retorno = $pessoal->get_situacao($idServidor);
-
-    # Pega os afastamentos
-    $verifica = new VerificaAfastamentos($idServidor);
-
-    # Verifica se está cedido
-    if ($pessoal->emCessao($idServidor) AND $verifica->verifica()) {
-        $retorno .= "<br/>(Cedido - {$verifica->getAfastamento()})";
-    } elseif ($pessoal->emCessao($idServidor)) {
-        $retorno .= "<br/>(Cedido)";
-    } elseif ($verifica->verifica()) {
-        $retorno .= "<br/>({$verifica->getAfastamento()})";
-    }
-
     return $retorno;
 }
 

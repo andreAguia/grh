@@ -229,7 +229,8 @@ class MenuServidor {
         # Acumulação
         $botao = new BotaoGrafico();
         $botao->set_label('Acumulação de Cargos Públicos');
-        $botao->set_url('servidorAcumulacao.php?grh=1');
+        #$botao->set_url('servidorAcumulacao.php?grh=1');
+        $botao->set_url('servidorMenu.php?fase=acumulacao');
         $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle de Acumulação de Cargo Público');
         $menu->add_item($botao);
@@ -240,7 +241,7 @@ class MenuServidor {
         $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
-        $menu->add_item($botao);
+        #$menu->add_item($botao);
 
         # Obs
         $botao = new BotaoGrafico();

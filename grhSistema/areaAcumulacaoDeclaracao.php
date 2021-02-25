@@ -337,7 +337,7 @@ if ($acesso) {
             set_session('origem', 'areaAcumulacaoDeclaracao.php');
 
             # Carrega a página específica
-            loadPage('servidorAcumulacaoDeclaracao.php');
+            loadPage('servidorMenu.php?fase=acumulacao');
             break;
 
         ################################################################

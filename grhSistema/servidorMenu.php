@@ -123,14 +123,12 @@ if ($acesso) {
 
         $menu->show();
     } else {
-        if (($fase <> "despacho") AND
-                ($fase <> "despachoChefia")) {
+        if ($fase <> "despacho" AND $fase <> "despachoChefia" AND $fase <> "acumulacao") {
             botaoVoltar("?");
         }
     }
 
-    if (($fase <> "despacho") AND
-            ($fase <> "despachoChefia")) {
+    if ($fase <> "despacho" AND $fase <> "despachoChefia" AND $fase <> "acumulacao") {
 
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
@@ -139,8 +137,7 @@ if ($acesso) {
     $grid->fechaColuna();
     $grid->fechaGrid();
 
-    switch ($fase)
-    {
+    switch ($fase) {
         # Exibe o Menu Inicial
         case "menu" :
             # monta o menu do servidor
@@ -231,8 +228,7 @@ if ($acesso) {
 
             $texto = "Extensões Permitidas:";
 
-            foreach ($extensoes as $pp)
-            {
+            foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
 
@@ -364,6 +360,59 @@ if ($acesso) {
             break;
 
         ##################################################################
+
+        case "acumulacao" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Botão de Voltar
+            $origem = get_session("origem");
+            if (is_null($origem)) {
+                botaoVoltar("servidorMenu.php");
+            } else {
+                botaoVoltar($origem);
+            }
+
+            # Exibe os dados do Servidor
+            Grh::listaDadosServidor($idServidorPesquisado);
+            br();
+
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+
+            $tamanhoImage = 60;
+            $menu = new MenuGrafico(2);
+            $menu->set_espacoEntreLink(true);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Controle do Processo de Acumulação de Cargos Públicos');
+            $botao->set_url('servidorAcumulacao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle de Acumulação de Cargo Público');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            #$botao->set_novo(true);
+            $botao->set_label('Controle da Entrega da Declaração Anual');
+            $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
+            $menu->add_item($botao);
+
+            $menu->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            br(2);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+##################################################################
     }
 
     $grid->fechaColuna();

@@ -53,15 +53,8 @@ if ($acesso) {
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Controle da Entrega da Declaração Anual de Acumulação de Cargo Público');
 
-    $origem = get_session("origem");
-    if (is_null($origem)) {
-        $caminhoVolta = 'servidorMenu.php';
-    } else {
-        $caminhoVolta = $origem;
-    }
-
     # botão de voltar da lista
-    $objeto->set_voltarLista($caminhoVolta);
+    $objeto->set_voltarLista("servidorMenu.php?fase=acumulacao");
 
     # select da lista
     $objeto->set_selectLista("SELECT anoReferencia,
@@ -95,12 +88,12 @@ if ($acesso) {
     $objeto->set_width(array(10, 15, 10, 20, 35));
     $objeto->set_align(array("center", "center", "center", "left", "left"));
     $objeto->set_funcao(array(null, "date_to_php"));
-    
+
     $objeto->set_formatacaoCondicional(array(
-                array('coluna'   => 2,
-                    'valor'    => 'SIM',
-                    'operador' => '=',
-                    'id'       => 'problemas')));
+        array('coluna' => 2,
+            'valor' => 'SIM',
+            'operador' => '=',
+            'id' => 'problemas')));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -127,61 +120,61 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = 2019;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoAtual+1, $anoInicial, "d");
+    $anoExercicio = arrayPreenche($anoAtual + 1, $anoInicial, "d");
 
     # Campos para o formulario
     $objeto->set_campos(array(
         array(
-            'linha'    => 1,
-            'nome'     => 'anoReferencia',
-            'label'    => 'Ano Referência:',
-            'tipo'     => 'combo',
-            'array'    => $anoExercicio,
-            'padrao'   => $anoDisponível,
+            'linha' => 1,
+            'nome' => 'anoReferencia',
+            'label' => 'Ano Referência:',
+            'tipo' => 'combo',
+            'array' => $anoExercicio,
+            'padrao' => $anoDisponível,
             'required' => true,
-            'col'      => 2,
-            'size'     => 8),
+            'col' => 2,
+            'size' => 8),
         array(
-            'nome'      => 'dtEntrega',
-            'label'     => 'Data da Entrega:',
-            'tipo'      => 'date',
-            'size'      => 20,
-            'required'  => true,
+            'nome' => 'dtEntrega',
+            'label' => 'Data da Entrega:',
+            'tipo' => 'date',
+            'size' => 20,
+            'required' => true,
             "autofocus" => true,
-            'title'     => 'Data da entega',
-            'col'       => 3,
-            'padrao'    => date('Y-m-d'),
-            'linha'     => 1),
-        array(
-            'linha'    => 1,
-            'nome'     => 'processo',
-            'label'    => 'Processo:',
-            'tipo'     => 'seif',
-            'required' => true,
-            'col'      => 4,
-            'size'     => 50),
+            'title' => 'Data da entega',
+            'col' => 3,
+            'padrao' => date('Y-m-d'),
+            'linha' => 1),
         array(
             'linha' => 1,
-            'nome'  => 'acumula',
+            'nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'seif',
+            'required' => true,
+            'col' => 4,
+            'size' => 50),
+        array(
+            'linha' => 1,
+            'nome' => 'acumula',
             'label' => 'Declarou que Acumula?:',
-            'tipo'  => 'simnao',
-            'col'   => 3,
-            'size'  => 5),
+            'tipo' => 'simnao',
+            'col' => 3,
+            'size' => 5),
         array(
             'linha' => 2,
-            'col'   => 12,
-            'nome'  => 'obs',
+            'col' => 12,
+            'nome' => 'obs',
             'label' => 'Observação:',
-            'tipo'  => 'textarea',
-            'size'  => array(80, 5)),
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
         array(
-            'nome'   => 'idServidor',
-            'label'  => 'idServidor:',
-            'tipo'   => 'hidden',
+            'nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
             'padrao' => $idServidorPesquisado,
-            'size'   => 5,
-            'title'  => 'Matrícula',
-            'linha'  => 3)));
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 3)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

@@ -74,7 +74,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Categorias de Relatórios');
             $menu->add_item('linkAjax', 'Abono Permanencia', '?fase=abono', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Aposentados', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Aposentadoria e Tempo Averbado', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
@@ -153,9 +153,10 @@ if ($acesso) {
 
         case "aposentados";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Aposentados');
+            $menu->add_item('titulo', 'Aposentadoria e Tempo Averbado');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Aposentados Agrupados por Cargo', '../grhRelatorios/professor.aposentadoPorCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Sem Tempo Averbado', '../grhRelatorios/servidores.ativos.semTempoAverbado.php');
 
             $menu->show();
             break;

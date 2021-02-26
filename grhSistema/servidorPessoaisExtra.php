@@ -5,11 +5,11 @@
  * 
  */
 
-$ano = $campoValor[8];
+$ano = $campoValor[9];
 
 # Valida se o valor é igual a zero e muda para nulo
 if ($ano == 0) {
-    $campoValor[8] = null;
+    $campoValor[9] = null;
     $ano = null;
 } else {
     # Força o ano a ter 4 digitos

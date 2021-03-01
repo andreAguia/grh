@@ -65,6 +65,7 @@ if ($acesso) {
     set_session('idCategoria');
     set_session('idProcedimento');
     set_session('parametroAfastamento');
+    set_session('categoria');
 
     set_session('parametroCentro');
     set_session('parametroLab');
@@ -118,7 +119,8 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             # Alertas
-            $linkArea = new Link("Alertas", "?fase=resumoAlertas&grh=1");
+            $linkArea = new Link("Alertas", "alertas.php");
+            #$linkArea = new Link("Alertas", "?fase=resumoAlertas&grh=1");
             $linkArea->set_class('button alert');
             $linkArea->set_title('Alertas do Sistema');
             $menu->add_link($linkArea, "right");

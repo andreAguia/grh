@@ -242,7 +242,6 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
         #$menu->add_item($botao);
-
         # Obs
         $botao = new BotaoGrafico();
         $botao->set_label('Observações');
@@ -293,53 +292,41 @@ class MenuServidor {
 
         # Inicializa a variável das mensagens
         $mensagem = array();
-        
+
         ##### Verifica Afastamentos
         $afastClass = new VerificaAfastamentos($this->idServidor);
         $afastClass->verifica();
-        if(!vazio($afastClass->getAfastamento())){
+        if (!vazio($afastClass->getAfastamento())) {
             $mensagem[] = "Servidor em {$afastClass->getAfastamento()} ({$afastClass->getDetalhe()})";
         }
-        
+
         $situacao = $pessoal->get_idSituacao($this->idServidor);
 
-        # Motivo de Saída
+        # Motivo de Saída (quanto inativo)
         if (($situacao <> 1) AND ($pessoal->get_motivo($this->idServidor) <> "Outros")) {
             $mensagem[] = $pessoal->get_motivo($this->idServidor);
         }
 
-        # Checkup        
+        # Alertas        
         $metodos = get_class_methods('Checkup');
-        $ocorrencia = new Checkup(false);
-
-        foreach ($metodos as $nomeMetodo) {
-            if (($nomeMetodo <> 'get_all') AND ($nomeMetodo <> '__construct')) {
-
-                $texto = $ocorrencia->$nomeMetodo($this->idServidor);
-
-                if (!is_null($texto)) {
-                    $mensagem[] = $texto;
-                }
-            }
-        }
-
-        $qtdMensagem = count($mensagem);
-        $contador = 1;
+        $checkup = new Checkup();
+        $alertas = $checkup->listaPorServidor($this->idServidor);
+        
+        # Junta todas as ocorrências em um único array
+        $ocorrencias = array_merge($mensagem,$alertas);
+        
+        # Pega a quantidade de ocorrências
+        $qtdMensagem = count($ocorrencias);
 
         $painel = new Callout("warning");
         $painel->abre();
 
         p("Ocorrências", "palertaServidor");
-
-        # Verifica se tem algo a ser exibido
+        
+        # Verifica se tem alguma ocorrência
         if ($qtdMensagem > 0) {
-
-            # Percorre o array 
-            foreach ($mensagem as $mm) {
-                p("- " . $mm, "exibeOcorrencia");
-                if ($contador < $qtdMensagem) {
-                    $contador++;
-                }
+            foreach ($ocorrencias as $item) {
+                p("- " . $item, "exibeOcorrencia");
             }
         } else {
             p("Não há ocorrências deste servidor.", "center", "f12");
@@ -714,14 +701,14 @@ class MenuServidor {
         $botao->set_title('Controle de Redução da Carga Horária');
         $menu->add_item($botao);
 
-        if ($this->situacao <> "Ativo" AND $this->perfil == 1){
+        if ($this->situacao <> "Ativo" AND $this->perfil == 1) {
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Auxílio Funeral');
-        $botao->set_url('servidorAuxilioFuneral.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'funeral.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Dados do auxílio funeral');
-        $menu->add_item($botao);
+            $botao = new BotaoGrafico();
+            $botao->set_label('Auxílio Funeral');
+            $botao->set_url('servidorAuxilioFuneral.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'funeral.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Dados do auxílio funeral');
+            $menu->add_item($botao);
         }
 
         $menu->show();

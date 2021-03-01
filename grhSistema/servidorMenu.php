@@ -18,9 +18,6 @@ set_session('sessionPaginacao'); // Zera a session de paginação da classe mode
 $origem = get_session("origem");
 $origemId = get_session("origemId");
 
-# Verifica se veio dos alertas
-$alerta = get_session("alerta");
-
 # Verifica se veio menu grh e registra o acesso no log
 $grh = get('grh', false);
 
@@ -75,15 +72,11 @@ if ($acesso) {
         # Cria um menu
         $menu = new MenuBar();
 
-        # Verifica se veio de um alerta
-        if (!is_null($alerta)) {
-            $caminhoVolta = 'grh.php?fase=alerta&alerta=' . $alerta;
+        # Verifica a origem
+        if (is_null($origem)) {
+            $caminhoVolta = 'servidor.php';
         } else {
-            if (is_null($origem)) {
-                $caminhoVolta = 'servidor.php';
-            } else {
-                $caminhoVolta = $origem;
-            }
+            $caminhoVolta = $origem;
         }
 
         $linkBotao1 = new Link("Voltar", $caminhoVolta);
@@ -366,7 +359,7 @@ if ($acesso) {
             # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
-            
+
             # Botão de Voltar
             $origem = get_session("origem");
             if (is_null($origem)) {

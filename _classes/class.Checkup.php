@@ -4077,7 +4077,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Servidor(es) com a Última Licença Médica em Aberto (sem alta)';
+            $titulo = 'Servidor(es) Ativos com a Última Licença Médica em Aberto (sem alta)';
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -4162,7 +4162,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Servidor(es) com Licença Médica em Aberto (sem alta)';
+            $titulo = 'Servidor(es) Ativos com Licença Médica em Aberto (sem alta)';
 
             # Exibe a tabela
             $tabela = new Tabela();

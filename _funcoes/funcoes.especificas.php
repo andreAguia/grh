@@ -614,16 +614,19 @@ function get_situacao($idServidor) {
     # Preenche retorno com a situação
     $retorno = $pessoal->get_situacao($idServidor);
 
-    # Verifica se está cedido
-    if ($pessoal->emCessao($idServidor)) {
-        $retorno .= "<br/><span title='{$pessoal->get_orgaoCedido($idServidor)}' class='primary label'>Cedido</span>";
-    }
+    # Somente exibe dados da cessão ou de afastamentos se o servidor for ativo
+    if ($retorno == "Ativo") {
+        # Verifica se está cedido
+        if ($pessoal->emCessao($idServidor)) {
+            $retorno .= "<br/><span title='{$pessoal->get_orgaoCedido($idServidor)}' class='primary label'>Cedido</span>";
+        }
 
-    # Pega os afastamentos
-    $verifica = new VerificaAfastamentos($idServidor);
+        # Pega os afastamentos
+        $verifica = new VerificaAfastamentos($idServidor);
 
-    if ($verifica->verifica()) {
-        $retorno .= "<br/><span title='{$verifica->getDetalhe()}' class='warning label'>{$verifica->getAfastamento()}</span>";
+        if ($verifica->verifica()) {
+            $retorno .= "<br/><span title='{$verifica->getDetalhe()}' class='warning label'>{$verifica->getAfastamento()}</span>";
+        }
     }
 
     return $retorno;
@@ -1140,11 +1143,11 @@ function exibeDeclaracaoAcumulacaoPositiva($idServidor) {
     $tabela->set_funcao(array(null, "date_to_php"));
 
     $tabela->set_formatacaoCondicional(array(
-                array('coluna'   => 2,
-                    'valor'    => 'SIM',
-                    'operador' => '=',
-                    'id'       => 'problemas')));
-    
+        array('coluna' => 2,
+            'valor' => 'SIM',
+            'operador' => '=',
+            'id' => 'problemas')));
+
     $tabela->set_totalRegistro(false);
     $tabela->set_mensagemTabelaVazia("Este servidor não possui declarações positivas de acumulação!");
     $tabela->show();

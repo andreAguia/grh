@@ -55,16 +55,21 @@ class Checkup {
         }
 
         # Percorre o array $metodoRetorno e exibe a lista
-        echo "<ul class='checkupResumo'>";
-        foreach ($metodoRetorno as $listaRetorno) {
+        if (empty($metodoRetorno)) {
+            br();
+            p("Não há alertas para esta categoria.","f14","center");
+        } else {
+            echo "<ul class='checkupResumo'>";
+            foreach ($metodoRetorno as $listaRetorno) {
 
-            $link = new Link($listaRetorno[0], "?fase=tabela&alerta=" . $listaRetorno[1]);
-            $link->set_id("checkupResumo");
-            echo "<li id='checkupResumo'>";
-            $link->show();
-            echo "</li>";
+                $link = new Link($listaRetorno[0], "?fase=tabela&alerta=" . $listaRetorno[1]);
+                $link->set_id("checkupResumo");
+                echo "<li id='checkupResumo'>";
+                $link->show();
+                echo "</li>";
+            }
+            echo "</ul>";
         }
-        echo "</ul>";
     }
 
     ##################################################

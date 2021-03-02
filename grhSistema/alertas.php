@@ -32,13 +32,6 @@ if ($acesso) {
     # Joga os parâmetros par as sessions
     set_session('categoria', $categoria);
 
-//    echo "fase: {$fase}";
-//    br();
-//    echo "categoria: {$categoria}";
-//    br();
-//    echo "alerta: {$alerta}";
-//    br();
-
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
@@ -46,7 +39,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de aposentadoria";
+        $atividade = "Visualizou os alertas do sistema";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -142,6 +135,11 @@ if ($acesso) {
             # Mostra a tabela
             $checkup->set_lista(true);
             $checkup->$alerta();
+
+            # Grava no log a atividade
+            $data = date("Y-m-d H:i:s");
+            $atividade = 'Visualizou o método: ' . $alerta . ' da classe Checkup.';
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
     }
 

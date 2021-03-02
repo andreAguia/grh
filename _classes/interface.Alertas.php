@@ -39,7 +39,7 @@ class Alertas {
         usort($itens, 'cmp');
 
         $menu = new Menu();
-        $menu->add_item('titulo', 'Menu');
+        $menu->add_item('titulo', 'Categorias');
 
         foreach ($itens as $ii) {
             if ($fase == $ii[1]) {

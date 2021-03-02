@@ -119,8 +119,7 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             # Alertas
-            $linkArea = new Link("Alertas", "alertas.php");
-            #$linkArea = new Link("Alertas", "?fase=resumoAlertas&grh=1");
+            $linkArea = new Link("Alertas", "alertas.php?grh=1");
             $linkArea->set_class('button alert');
             $linkArea->set_title('Alertas do Sistema');
             $menu->add_link($linkArea, "right");
@@ -259,91 +258,6 @@ if ($acesso) {
 
             # Exibe o rodapé da página
             Grh::rodape($idUsuario);
-            break;
-
-##################################################################	
-
-        case "resumoAlertas" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Verifica se veio menu grh e registra o acesso no log
-            $grh = get('grh', false);
-            if ($grh) {
-                # Grava no log a atividade
-                $atividade = "Visualizou os alertas do sistema";
-                $data = date("Y-m-d H:i:s");
-                $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
-            }
-
-            br();
-            titulo('Alertas do Sistema');
-            br(5);
-            aguarde("Isto pode demorar um pouquinho...");
-            br(5);
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
-            loadPage("?fase=resumoAlertas2");
-            break;
-
-############
-
-        case "resumoAlertas2" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            botaoVoltar("?");
-            titulo('Alertas do Sistema');
-            br();
-            #$painel = new Callout();
-            #$painel->abre();
-
-            $checkup = New Checkup(false);
-
-            echo "<ul class='checkupResumo'>";
-            $checkup->get_all();
-            echo "</ul>";
-
-            #$painel->fecha();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-##################################################################
-
-        case "alerta" :
-            # Botão voltar
-            botaoVoltar('?fase=resumoAlertas');
-
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Exibe o título
-            titulo('Alertas do Sistema');
-            br();
-
-            # executa o checkup
-            $checkup = New Checkup();
-
-            if (is_null($alerta)) {
-                $checkup->get_all();
-                set_session('alerta');
-            } else {
-                $checkup->$alerta();
-            }
-
-            # Grava no log a atividade
-            $data = date("Y-m-d H:i:s");
-            $atividade = 'Visualizou o método: ' . $alerta . ' da classe Checkup.';
-            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
             break;
 
 ##################################################################	

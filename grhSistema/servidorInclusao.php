@@ -129,6 +129,9 @@ if ($acesso) {
         ####################################################################################
         # Valida o CPF e verifica se tem servidor cadastrado com esse CPF    
         case "validaCPF" :
+            # Limita a Tela 
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
 
             # Variáveis para tratamento de erros
             $erro = 0;    // flag de erro: 1 - tem erro; 0 - não tem	
@@ -151,22 +154,60 @@ if ($acesso) {
             # Verifica se o CPF já está cadastrado
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
-            if (!is_null($idPessoa)) {
-                # Servidor ativo
-                if (!is_null($pessoal->get_idPessoaAtiva($idPessoa))) {
-                    $msgErro .= 'Funcionário com matrícula ativa! Não pode ser incluído em outra matrícula!\n';
-                    $erro = 1;
-                }
-            }
-
             # Verifia se houve erro 
             if ($erro == 1) {
                 alert($msgErro);
                 back(1);
             } else {
                 set_session('sessionCpf', $cpf);
-                loadPage('?fase=incluir2');
+
+                # Verifica se já existe servidor ativo
+                if (!is_null($idPessoa)) {
+
+                    # Servidor ativo
+                    if (!is_null($pessoal->get_idPessoaAtiva($idPessoa))) {
+
+                        $grid->fechaColuna();
+                        $grid->abreColuna(8);
+                        br(3);
+
+                        titulotable('Atenção!, Já existe um servidor ativo com este CPF!');
+                        $callout = new Callout("warning");
+                        $callout->abre();
+
+                        p("Caso você esteja querendo incluir um vínculo antigo"
+                                . " já inativo não tem problema, "
+                                . "clique em Incluir mesmo assim.<br/><br/>"
+                                . "Agora caso você esteja querendo incluir um "
+                                . "novo vínculo, é necessário terminar o vínculo "
+                                . "atualmente ativo. Desta forma clique em Voltar.");
+
+                        # Cria um menu
+                        $menu1 = new MenuBar();
+                        br();
+
+                        # Voltar
+                        $botaoVoltar = new Link("Voltar", "servidor.php");
+                        $botaoVoltar->set_class('button');
+                        $botaoVoltar->set_title('Voltar a página anterior');
+                        $botaoVoltar->set_accessKey('V');
+                        $menu1->add_link($botaoVoltar, "left");
+
+                        # Incluir
+                        $botaoInserir = new Button("Incluir mesmo assim", "?fase=incluir2");
+                        $botaoInserir->set_title("Incluir um Servidor");
+                        $menu1->add_link($botaoInserir, "right");
+                        $menu1->show();
+
+                        $callout->fecha();
+                    }
+                } else {
+                    set_session('sessionCpf', $cpf);
+                    loadPage('?fase=incluir2');
+                }
             }
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
 
 ####################################################################################
@@ -191,6 +232,8 @@ if ($acesso) {
             if (!is_null($idPessoa)) {
                 $nome = $pessoal->get_nomeidPessoa($idPessoa);
                 $pis = $pessoal->get_Pis($idPessoa);
+                $dtNasc = date_to_bd($pessoal->get_dataNascimentoIdPessoa($idPessoa));
+                $sexo = $pessoal->get_sexoidPessoa($idPessoa);
             }
 
             # Botão voltar
@@ -205,7 +248,7 @@ if ($acesso) {
             if (is_null($nome)) {
                 $mensagem = 'O CPF ' . $cpf . ' não está cadastrado no sistema, dessa forma um novo servidor será incluído.';
             } else {
-                $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor INATIVO: ' . $nome . '. Entre com os dados de seu novo vínculo.';
+                $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor: ' . $nome . '. Entre com os outros dados.';
             }
 
             # Mensagem do cpf
@@ -246,6 +289,10 @@ if ($acesso) {
             $controle->set_col(2);
             $controle->set_array(array(null, "Masculino", "Feminino"));
             $controle->set_required(true);
+            if (!is_null($sexo)) {
+                $controle->set_valor($sexo);
+                $controle->set_readonly(true);
+            }
             $controle->set_linha(1);
             $controle->set_title('Sexo do Servidor.');
             $form->add_item($controle);
@@ -255,6 +302,10 @@ if ($acesso) {
             $controle->set_size(15);
             $controle->set_col(3);
             $controle->set_required(true);
+            if (!is_null($dtNasc)) {
+                $controle->set_valor($dtNasc);
+                $controle->set_readonly(true);
+            }
             $controle->set_linha(1);
             $controle->set_title('A data de nascimento do servidor.');
             $form->add_item($controle);
@@ -410,7 +461,7 @@ if ($acesso) {
                     $erro = 1;
                 }
             }
-
+echo "->>>>".$matricula;
             # Verifica se a matrícula já existe
             if (!empty($matricula)) {
                 if ($pessoal->get_existeMatricula($matricula)) {

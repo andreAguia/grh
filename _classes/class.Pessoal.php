@@ -746,7 +746,7 @@ class Pessoal extends Bd {
         } else {
             # Verifica se é cedido
             if ($row["idPerfil"] <> 1 AND $row["idPerfil"] <> 4) {
-               return null;
+                return null;
             }
 
             # Retorna a sigla
@@ -755,7 +755,6 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargoComSalto
@@ -2155,6 +2154,23 @@ class Pessoal extends Bd {
         return $sexo[0];
     }
 
+     ###########################################################
+
+    /**
+     * Método get_sexo
+     * informa o sexo de uma idServidor
+     * 
+     * @param	string $idPessoa $idPessoa do servidor
+     */
+    function get_sexoidPessoa($idPessoa) {
+        $select = "SELECT tbpessoa.sexo
+                     FROM tbpessoa 
+                    WHERE idPessoa = {$idPessoa}";
+
+        $sexo = parent::select($select, false);
+        return $sexo[0];
+    }
+
     ###########################################################
 
     /**
@@ -3239,6 +3255,7 @@ class Pessoal extends Bd {
      */ {
         # pega a faixa da matrícula para esse perfil
         $faixa = $this->get_perfilMatricula($perfil);
+        
         if (is_null($faixa[0])) {
             return "-";
         } else {
@@ -3587,7 +3604,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     function get_numServidoresAtivosSexoFilhos($sexo = null) {
 
@@ -4439,6 +4456,23 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_dataNascimento
+     * informa a data de nascimento de um idServidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_dataNascimentoIdPessoa($idPessoa) {
+        $select = "SELECT tbpessoa.dtNasc
+                         FROM tbpessoa 
+                        WHERE idPessoa = {$idPessoa}";
+
+        $nome = parent::select($select, false);
+        return date_to_php($nome[0]);
+    }
+
+    ###########################################################
+
+    /**
      * Método get_idServidoridFuncional
      * Informa a idServidor de um idFuncional
      * 
@@ -4716,15 +4750,15 @@ class Pessoal extends Bd {
                         WHERE idservidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-        
-        if(empty($row[1])){
+
+        if (empty($row[1])) {
             return null;
-        }else{
+        } else {
             return "($row[0]) $row[1]";
         }
     }
 
-     ##########################################################################################
+    ##########################################################################################
 
     public function get_telefoneResidencial($idServidor) {
 
@@ -4738,14 +4772,14 @@ class Pessoal extends Bd {
                         WHERE idservidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-        if(empty($row[1])){
+        if (empty($row[1])) {
             return null;
-        }else{
+        } else {
             return "($row[0]) $row[1]";
         }
     }
 
-     ##########################################################################################
+    ##########################################################################################
 
     public function get_telefoneRecado($idServidor) {
 
@@ -4759,14 +4793,14 @@ class Pessoal extends Bd {
                         WHERE idservidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-        if(empty($row[1])){
+        if (empty($row[1])) {
             return null;
-        }else{
+        } else {
             return "($row[0]) $row[1]";
         }
     }
 
-     ##########################################################################################
+    ##########################################################################################
 
     public function get_foto($idServidor, $largura = 75, $altura = 100) {
 
@@ -5555,7 +5589,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     public function get_siglaNomeLotacao($idServidor) {
         /**
@@ -5566,12 +5600,11 @@ class Pessoal extends Bd {
          * 
          * @syntax $pessoal->get_siglaNomeLotacao($idServidor);
          */
-        
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
-        }else{
-            $nome = explode(" ",$this->get_nome($idServidor));
-            return $this->get_cargoSigla($idServidor)." - ".$nome[0]." ".$nome[1]." - ".$this->get_lotacaoSimples($idServidor);
+        } else {
+            $nome = explode(" ", $this->get_nome($idServidor));
+            return $this->get_cargoSigla($idServidor) . " - " . $nome[0] . " " . $nome[1] . " - " . $this->get_lotacaoSimples($idServidor);
         }
     }
 

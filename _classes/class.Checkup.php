@@ -4042,9 +4042,9 @@ class Checkup {
     /**
      * Método get_servidorAtivoLicencaMedicaEmAberto
      * 
-     * Servidor Com licença médica em aberto
+     * Servidor Com a ultima licença médica em aberto
      */
-    public function get_servidorAtivoLicencaMedicaEmAberto($idServidor = null, $catEscolhida = null) {
+    public function get_servidorAtivoUltimaLicencaMedicaEmAberto($idServidor = null, $catEscolhida = null) {
 
         if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
 
@@ -4064,6 +4064,91 @@ class Checkup {
                             WHERE (idTpLicenca = 1 OR idTpLicenca = 30) 
                               AND t2.idServidor = t1.idServidor
                          ORDER BY dtInicial DESC LIMIT 1) <> 1';
+
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Servidor(es) com a Última Licença Médica em Aberto (sem alta)';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Cargo']);
+            $tabela->set_align(['center', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_lotacao", "get_cargo"]);
+            #$tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php", "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Na relação abaixo, "
+                                . "somente está incluída a última licença "
+                                . "médica de cada servidor cujo campo alta esteja"
+                                . " em branco ou com o valor 'NÃO'.<br/>"
+                                . "As licenças para o tratamento de saúde de "
+                                . "parentes não são consideradas nesta listagem.<br/>"
+                                . "Atente para o fato que caso o servidor tenha "
+                                . "a última licença médica em aberto, o sistema "
+                                . "não permitirá o cadastro de mais nenhuma "
+                                . "licença posterior.");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorAtivoLicencaMedicaSemAlta
+     * 
+     * Servidor Com licença médica sem alta cadastrada
+     */
+    public function get_servidorAtivoLicencaMedicaSemAlta($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT distinct idfuncional,
+                          tbpessoa.nome,
+                          t1.idServidor,
+                          t1.idServidor,
+                          idServidor
+                     FROM tbservidor AS t1 JOIN tbpessoa USING (idPessoa)
+                                           JOIN tblicenca USING (idServidor)
+                    WHERE situacao = 1
+                      AND alta <> 1 
+                      AND alta <> 2
+                      AND (idTpLicenca = 1 OR idTpLicenca = 30 OR idTpLicenca = 2)';
 
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
@@ -4094,7 +4179,11 @@ class Checkup {
             } else {  # Vários servidores
                 if ($this->lista) {
                     if ($count > 0) {
-                        callout("Deve-se acertar as licenças médicas definindo se tem ou não alta");
+                        callout("Na relação abaixo estão incluídas as licenças "
+                                . "médicas cujo campo alta esteja EM BRANCO, ou seja, "
+                                . "NÃO PREENCHIDO<br/>Atente que, para esta listagem, "
+                                . "as licenças para o tratamento de saúde de "
+                                . "parentes são consideradas.");
                         $tabela->show();
                         set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
                     } else {

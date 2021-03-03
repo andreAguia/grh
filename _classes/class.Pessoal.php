@@ -2249,10 +2249,13 @@ class Pessoal extends Bd {
                 # Verifica se tem tipo
                 if (!vazio($tipo)) {
                     $tipoCargo .= $tipo;
+                    #$descricao .= $tipo;
                 }
 
                 # Coloca na variável retorno
                 $retorno .= '<span title="' . $descricao . '" id="orgaoCedido">[' . $tipoCargo . ']</span>';
+                #$retorno .= "<span id='orgaoCedido'>[{$descricao}]</span>";
+                
             }
 
             if ($contador < $num) {

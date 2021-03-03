@@ -4184,7 +4184,7 @@ class Checkup {
             } else {  # Vários servidores
                 if ($this->lista) {
                     if ($count > 0) {
-                        callout("Na relação abaixo estão incluídas as licenças "
+                        callout("Na relação abaixo estão incluídas TODAS as licenças "
                                 . "médicas cujo campo alta esteja EM BRANCO, ou seja, "
                                 . "NÃO PREENCHIDO<br/>Atente que, para esta listagem, "
                                 . "as licenças para o tratamento de saúde de "

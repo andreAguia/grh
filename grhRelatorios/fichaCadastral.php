@@ -8,16 +8,15 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Verifica qual será o id
-if (is_null($idServidorPesquisado)) {
-    $idFicha = $idUsuario;
-} else {
-    $idFicha = $idServidorPesquisado;
+if (empty($idServidorPesquisado)) {
+    alert("É necessário informar o id do Servidor.");
 }
 
 # Pega os parâmetros do relatório
@@ -37,6 +36,7 @@ $postAbono = post('abono');
 $postDireito = post('direito');
 $postPenalidade = post('penalidade');
 $postElogio = post('elogio');
+$postDadosUsuario = post('dadosUsuario');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario);
@@ -66,7 +66,7 @@ if ($acesso) {
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                  LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                  LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                WHERE tbservidor.idServidor = ' . $idFicha;
+                WHERE tbservidor.idServidor = ' . $idServidorPesquisado;
 
     $result = $pessoal->select($select);
 
@@ -231,12 +231,21 @@ if ($acesso) {
             'valor' => $postElogio,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3)
+            'linha' => 3),
+        array('nome' => 'dadosUsuario',
+            'label' => 'Dados Usuário',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe ou não os dados do usuário que emitiu a ficha',
+            'valor' => $postDadosUsuario,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 4)
     ));
 
     $relatorio->set_formFocus('contatos');
     $relatorio->set_formLink('?');
-    $relatorio->set_logServidor($idFicha);
+    $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a ficha cadastral");
     $relatorio->show();
 
@@ -295,7 +304,7 @@ if ($acesso) {
                       tbmotivo.motivo
                  FROM tbservidor LEFT OUTER JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
                                  LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)             
-                WHERE tbservidor.idServidor = ' . $idFicha;
+                WHERE tbservidor.idServidor = ' . $idServidorPesquisado;
 
     $result = $pessoal->select($select);
 
@@ -328,10 +337,10 @@ if ($acesso) {
     tituloRelatorio('Dados Financeiros');
 
     # pega os valores
-    $salarioBase = $pessoal->get_salarioBase($idFicha);                              // salário base
-    $trienio = ($salarioBase * ($pessoal->get_trienioPercentual($idFicha))) / 100;     // triênio
-    $comissao = $pessoal->get_salarioCargoComissao($idFicha);                        // cargo em comissão
-    $gratificacao = $pessoal->get_gratificacao($idFicha);                            // gratificação especial
+    $salarioBase = $pessoal->get_salarioBase($idServidorPesquisado);                              // salário base
+    $trienio = ($salarioBase * ($pessoal->get_trienioPercentual($idServidorPesquisado))) / 100;     // triênio
+    $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);                        // cargo em comissão
+    $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);                            // gratificação especial
     $total = $salarioBase + $trienio + $comissao + $gratificacao;
     $conteudo = array(array($salarioBase, $trienio, $comissao, $gratificacao, $total));
 
@@ -360,7 +369,7 @@ if ($acesso) {
      */
 
     # Pega o idPerfil da matricula
-    $idPerfil = $pessoal->get_idPerfil($idFicha);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Verifica se é Cedido
     if ($idPerfil == '2') {
@@ -373,7 +382,7 @@ if ($acesso) {
                           processo,
                           dtPublicacao
                      FROM tbcedido
-                    WHERE idServidor = ' . $idFicha;
+                    WHERE idServidor = ' . $idServidorPesquisado;
 
         $result = $pessoal->select($select);
 
@@ -403,7 +412,7 @@ if ($acesso) {
      */
 
     # Pega o idPessoa
-    $idPessoa = $pessoal->get_idPessoa($idFicha);
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
     tituloRelatorio('Dados Pessoais');
 
@@ -740,7 +749,7 @@ if ($acesso) {
                          concat(tblotacao.UADM,"-",tblotacao.DIR,"-",tblotacao.GER) as lotacao,
                          tbhistlot.motivo
                     FROM tblotacao join tbhistlot on (tblotacao.idLotacao = tbhistlot.lotacao)
-                   WHERE tbhistlot.idservidor = ' . $idFicha . '
+                   WHERE tbhistlot.idservidor = ' . $idServidorPesquisado . '
                 ORDER BY tbhistlot.data desc';
 
         $result = $pessoal->select($select);
@@ -782,7 +791,7 @@ if ($acesso) {
                           tbcomissao.dtPublicExo
                      FROM tbcomissao, tbtipocomissao
                     WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
-                      AND idServidor = ' . $idFicha . '
+                      AND idServidor = ' . $idServidorPesquisado . '
                  ORDER BY dtNom desc';
 
         $result = $pessoal->select($select);
@@ -822,7 +831,7 @@ if ($acesso) {
                          tbprogressao.dtPublicacao
                     FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
                                       JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
-                    WHERE idServidor = ' . $idFicha . '
+                    WHERE idServidor = ' . $idServidorPesquisado . '
                  ORDER BY tbprogressao.dtInicial desc, vv desc';
 
         $result = $pessoal->select($select);
@@ -860,7 +869,7 @@ if ($acesso) {
                           numProcesso,
                           dtPublicacao
                      FROM tbtrienio
-                    WHERE idServidor = ' . $idFicha . '
+                    WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -898,7 +907,7 @@ if ($acesso) {
                           valor,
                           processo
                      FROM tbgratificacao
-                    WHERE idServidor = ' . $idFicha . '
+                    WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -937,7 +946,7 @@ if ($acesso) {
                           processo,
                           dtPublicacao
                      FROM tbdireitopessoal
-                    WHERE idServidor = ' . $idFicha . '
+                    WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -976,7 +985,7 @@ if ($acesso) {
                           numDias,
                           ADDDATE(dtInicial,numDias-1)
                      FROM tbferias
-                    WHERE idServidor=' . $idFicha . '
+                    WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY anoExercicio desc,dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -1021,7 +1030,7 @@ if ($acesso) {
                                      dtPublicacao,
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                               WHERE idServidor=' . $idFicha . ')
+                               WHERE idServidor=' . $idServidorPesquisado . ')
                                UNION
                                (SELECT (SELECT tbtipolicenca.nome FROM tbtipolicenca WHERE idTpLicenca = 6),
                                        "",
@@ -1032,7 +1041,7 @@ if ($acesso) {
                                        tbpublicacaopremio.dtPublicacao,
                                        idLicencaPremio
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                                 WHERE tblicencapremio.idServidor = ' . $idFicha . ')
+                                 WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
                                ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
@@ -1073,7 +1082,7 @@ if ($acesso) {
                             tblicencasemvencimentos.dtPublicacao,
                             idLicencasemvencimentos
                        FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
-                       WHERE tblicencasemvencimentos.idServidor = ' . $idFicha . '
+                       WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado . '
                   ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
@@ -1117,7 +1126,7 @@ if ($acesso) {
                         dtPublicacao,
                         processo
                 FROM tbaverbacao
-                    WHERE idServidor=' . $idFicha . '
+                    WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -1161,7 +1170,7 @@ if ($acesso) {
                           valor,
                           iddiaria
                      FROM tbdiaria 
-                    WHERE idServidor=' . $idFicha . '
+                    WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY dataSaida desc';
 
 
@@ -1201,7 +1210,7 @@ if ($acesso) {
                           if(status = 1,"Deferido","Indeferido"),
                           data
                      FROM tbabono
-                    WHERE idServidor = ' . $idFicha . '
+                    WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY data desc';
 
         $result = $pessoal->select($select);
@@ -1242,7 +1251,7 @@ if ($acesso) {
                           pgPublicacao,
                           descricao
                      FROM tbpenalidade JOIN tbtipopenalidade USING (idTipoPenalidade)
-                    WHERE idServidor={$idFicha}
+                    WHERE idServidor={$idServidorPesquisado}
                  ORDER BY data desc";
 
         $result = $pessoal->select($select);
@@ -1274,7 +1283,7 @@ if ($acesso) {
         $select = "SELECT data,
                           descricao
                      FROM tbelogio
-                    WHERE idServidor={$idFicha}
+                    WHERE idServidor={$idServidorPesquisado}
                  ORDER BY data desc";
 
         $result = $pessoal->select($select);
@@ -1296,9 +1305,18 @@ if ($acesso) {
         $relatorio->show();
     }
 
+    if ($postDadosUsuario) {
+        $intra = new Intra();
+        $idServidorUsuario = $intra->get_idServidor($idUsuario);
 
-    # Data da Impressão
-    p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
+        p('Emitido em: ' . date("d/m/Y - H:i:s"), 'pRelatorioDataImpressao');
+        p(' por: ' . $pessoal->get_nome($idServidorUsuario) . ' - Id: ' . $pessoal->get_idFuncional($idServidorUsuario), 'pRelatorioDataImpressao');
+        p($pessoal->get_cargo($idServidorUsuario), 'pRelatorioDataImpressao');
+        p($pessoal->get_lotacao($idServidorUsuario), 'pRelatorioDataImpressao');
+    } else {
+        # Data da Impressão
+        p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'f10', 'center');
+    }
 
     $grid->fechaColuna();
     $grid->fechaGrid();

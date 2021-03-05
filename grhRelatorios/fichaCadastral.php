@@ -1315,7 +1315,7 @@ if ($acesso) {
         p($pessoal->get_lotacao($idServidorUsuario), 'pRelatorioDataImpressao');
     } else {
         # Data da Impressão
-        p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'f10', 'center');
+        p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
     }
 
     $grid->fechaColuna();

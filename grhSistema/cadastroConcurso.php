@@ -1098,11 +1098,9 @@ if ($acesso) {
             $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
-
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
-
             $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
 
             br(2);

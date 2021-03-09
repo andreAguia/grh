@@ -206,7 +206,8 @@ class Acumulacao {
         $select = "SELECT instituicao,
                           cargo,                                     
                           matricula,
-                          dtAdmissao
+                          dtAdmissao,
+                          dtAposentadoria
                      FROM tbacumulacao
                     WHERE idAcumulacao = {$idAcumulacao}";
 
@@ -217,10 +218,21 @@ class Acumulacao {
         if (empty($row["instituicao"])) {
             return null;
         } else {
+            # Monta a terceira linha
+            $tercLinha =  "Matrícula: {$row['matricula']}";
+            
+            if(!empty($row['dtAdmissao'])){
+                $tercLinha .=  " / Admissão: ".date_to_php($row['dtAdmissao']);
+            }
+            
+            if(!empty($row['dtAposentadoria'])){
+                $tercLinha .=  " / Aposentadoria: ".date_to_php($row['dtAposentadoria']);
+            }
+                    
             pLista(
                     $row["instituicao"],
                     $row["cargo"],
-                    "Matrícula: {$row['matricula']} / Admissão: " . date_to_php($row['dtAdmissao'])
+                    $tercLinha
             );
         }
     }

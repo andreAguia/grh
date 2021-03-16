@@ -27,13 +27,12 @@ if ($acesso) {
     Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Histórico de Cargo em Comissão');
 
     br();
-    $select = "SELECT CONCAT(simbolo,' - ',tbtipocomissao.descricao),
+    $select = "SELECT idComissao,
                       idComissao,
-                      tbcomissao.dtNom,
-                      tbcomissao.dtExo
-                FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
-               WHERE idServidor = $idServidorPesquisado
-            ORDER BY 3 desc";
+                      idComissao
+                 FROM tbcomissao
+                WHERE idServidor = {$idServidorPesquisado}
+             ORDER BY dtNom desc";
 
     $result = $pessoal->select($select);
 
@@ -42,16 +41,12 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Cargo", "Descrição", "Nomeação", "Exoneração"));
-    #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array("left", "left", "center"));
-    $relatorio->set_funcao(array(null, "descricaoComissao", "date_to_php", "date_to_php"));
-    #$relatorio->set_classe(array(null,"pessoal"));
-    #$relatorio->set_metodo(array(null,"get_nomelotacao"));    
-
+    $relatorio->set_label(array("Cargo", "Nomeação", "Exoneração"));
+    $relatorio->set_align(array("left", "left", "left"));
+    $relatorio->set_classe(array("Cargocomissao", "Cargocomissao", "Cargocomissao"));
+    $relatorio->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao"));
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Cargo em Comissão");
     $relatorio->show();

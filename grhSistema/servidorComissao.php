@@ -104,9 +104,9 @@ if ($acesso) {
                                      idComissao,
                                      idComissao,
                                      idComissao
-                                FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
+                                FROM tbcomissao
                                WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY 2 desc');
+                            ORDER BY dtNom desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,

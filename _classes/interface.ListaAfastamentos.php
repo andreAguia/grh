@@ -1059,9 +1059,9 @@ class ListaAfastamentos {
             echo "}";
             echo "</script>";
 
-            #[ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
-            #[ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
-            #[ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
+            //[ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
+            //[ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
+            //[ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
 
             $altura = ($numAtividades * 45) + 50;
             echo '<div id="timeline" style="height: ' . $altura . 'px; width: 100%;"></div>';

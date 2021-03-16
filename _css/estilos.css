@@ -317,6 +317,14 @@ p#vagaOrigem{
 a#editarVaga{
     position: absolute;
 }
+
+p#pdadosComissao{
+    font-size: 12px;
+    text-align: left;
+    padding: 0px;
+    margin: 0px;
+}
+
 /*******************************************
  * Cadastro de Tempo de Servico
  *******************************************/

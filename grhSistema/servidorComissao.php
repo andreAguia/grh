@@ -101,8 +101,8 @@ if ($acesso) {
     #}
     # select da lista
     $objeto->set_selectLista('SELECT idComissao,
-                                     tbcomissao.dtNom,
-                                     tbcomissao.dtExo,
+                                     idComissao,
+                                     idComissao,
                                      idComissao
                                 FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -138,11 +138,11 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos"));
     #$objeto->set_width(array(30,45,10,10));	
-    $objeto->set_align(array("left", "left", "center"));
-    $objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
+    $objeto->set_align(array("left","left","left"));
+    #$objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
 
-    $objeto->set_classe(array("Cargocomissao", null, null, "Cargocomissao"));
-    $objeto->set_metodo(array("exibeCargoCompleto", null, null, "exibeBotaoDocumentos"));
+    $objeto->set_classe(array("Cargocomissao", "Cargocomissao", "Cargocomissao", "Cargocomissao"));
+    $objeto->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao", "exibeBotaoDocumentos"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

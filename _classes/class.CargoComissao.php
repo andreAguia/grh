@@ -204,7 +204,6 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $nomeCargo = $pessoal->get_nomeCargoComissao($idTipoCargo);
 
-
         # Coloca no array
         $dados[] = array($nomeCargo, $simbolo, "R$ " . formataMoeda($valor), $vagas, $nomeados, $dispoinivel, $proTempore, $designados);
 
@@ -215,18 +214,18 @@ class CargoComissao {
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
         $tabela->set_titulo($nomeCargo);
-        $tabela->set_formatacaoCondicional(array(array('coluna'   => 5,
-                'valor'    => 0,
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
+                'valor' => 0,
                 'operador' => '<',
-                'id'       => "comissaoVagasNegativas"),
-            array('coluna'   => 5,
-                'valor'    => 0,
+                'id' => "comissaoVagasNegativas"),
+            array('coluna' => 5,
+                'valor' => 0,
                 'operador' => '=',
-                'id'       => "comissaoSemVagas"),
-            array('coluna'   => 5,
-                'valor'    => 0,
+                'id' => "comissaoSemVagas"),
+            array('coluna' => 5,
+                'valor' => 0,
                 'operador' => '>',
-                'id'       => "comissaoSemVagas")));
+                'id' => "comissaoSemVagas")));
         $tabela->show();
 
         # Exibe alerta de nomeação a maios que vagas
@@ -285,31 +284,16 @@ class CargoComissao {
          * 
          * @obs Usada na tabela inicial do cadastro de redução
          */
-        $menu = new MenuGrafico(3);
+        $menu = new Menu("menuBeneficios");
 
         # Ato de Nomeação
-        $botao = new BotaoGrafico();
-        $botao->set_url('?fase=atoNomeacao2&id=' . $idComissao);
-        $botao->set_label("Ato de Nomeação");
-        $botao->set_imagem(PASTA_FIGURAS . 'print.png', 20, 20);
-        $botao->set_title("Imprime o Ato de Nomeação");
-        $menu->add_item($botao);
+        $menu->add_item('link', "\u{1F5A8} Ato de Nomeação", '?fase=atoNomeacao2&id=' . $idComissao, "Imprime o Ato de Nomeação");
 
         # Termo de Posse
-        $botao = new BotaoGrafico();
-        $botao->set_url('?fase=termoPosse&id=' . $idComissao);
-        $botao->set_label("Termo de Posse");
-        $botao->set_imagem(PASTA_FIGURAS . 'print.png', 20, 20);
-        $botao->set_title("Imprime o Termo de Posse");
-        $menu->add_item($botao);
+        $menu->add_item('link', "\u{1F5A8} Termo de Posse", '?fase=termoPosse&id=' . $idComissao, "Imprime o Termo de Posse");
 
         # Ato de Exoneração
-        $botao = new BotaoGrafico();
-        $botao->set_url('?fase=atoExoneracao&id=' . $idComissao);
-        $botao->set_label("Ato de Exoneração");
-        $botao->set_imagem(PASTA_FIGURAS . 'print.png', 20, 20);
-        $botao->set_title("Imprime o Ato de Exoneração");
-        $menu->add_item($botao);
+        $menu->add_item('link', "\u{1F5A8} Ato de Exoneração", '?fase=atoExoneracao&id=' . $idComissao, "Imprime o Ato de Exoneração");
 
         $menu->show();
     }
@@ -356,7 +340,6 @@ class CargoComissao {
         $dados = $this->get_dados($idComissao);
         $idDescricaoComissao = $dados['idDescricaoComissao'];
 
-
         # Pega os Servidores com a mesma descrição
         $select = "SELECT tbpessoa.nome,
                           tbcomissao.dtNom,
@@ -384,12 +367,84 @@ class CargoComissao {
         $tabela->set_funcao($function);
         #$tabela->set_classe($classe);
         #$tabela->set_metodo($metodo);
-        $tabela->set_formatacaoCondicional(array(array('coluna'   => 2,
-                'valor'    => null,
+        $tabela->set_formatacaoCondicional(array(array('coluna' => 2,
+                'valor' => null,
                 'operador' => '=',
-                'id'       => 'vigente')));
+                'id' => 'vigente')));
         $tabela->show();
     }
 
-    ###########################################################        
+    ###########################################################
+
+    function exibeDadosNomeacao($idComissao) {
+
+        /**
+         * Exibe todos os dados de uma nomeação
+         * Utilizado na tabela de histórico de cargo em comissão de um servidor
+         */
+        # Pega os dados
+        $select = "SELECT dtNom,
+                          dtAtoNom,
+                          numProcNom,
+                          dtPublicNom
+                     FROM tbcomissao 
+                    WHERE idComissao = {$idComissao}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (!empty($dados["dtNom"])) {
+            p("Data: " . date_to_php($dados["dtNom"]), "pdadosComissao");
+        }
+
+        if (!empty($dados["dtAtoNom"])) {
+            p("Ato do Reitor: " . date_to_php($dados["dtNom"]), "pdadosComissao");
+        }
+
+        if (!empty($dados["numProcNom"])) {
+            p("Processo: " . $dados["numProcNom"], "pdadosComissao");
+        }
+
+        if (!empty($dados["dtPublicNom"])) {
+            p("Publicação: " . date_to_php($dados["dtPublicNom"]), "pdadosComissao");
+        }
+    }
+
+     ###########################################################
+
+    function exibeDadosExoneracao($idComissao) {
+
+        /**
+         * Exibe todos os dados de uma nomeação
+         * Utilizado na tabela de histórico de cargo em comissão de um servidor
+         */
+        # Pega os dados
+        $select = "SELECT dtExo,
+                          dtAtoExo,
+                          numProcExo,
+                          dtPublicExo
+                     FROM tbcomissao 
+                    WHERE idComissao = {$idComissao}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (!empty($dados["dtExo"])) {
+            p("Data: " . date_to_php($dados["dtExo"]), "pdadosComissao");
+        }
+
+        if (!empty($dados["dtAtoExo"])) {
+            p("Ato do Reitor: " . date_to_php($dados["dtAtoExo"]), "pdadosComissao");
+        }
+
+        if (!empty($dados["numProcExo"])) {
+            p("Processo: " . $dados["numProcExo"], "pdadosComissao");
+        }
+
+        if (!empty($dados["dtPublicExo"])) {
+            p("Publicação: " . date_to_php($dados["dtPublicExo"]), "pdadosComissao");
+        }
+    }
+
+    ###########################################################               
 }

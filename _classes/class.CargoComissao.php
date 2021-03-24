@@ -398,7 +398,7 @@ class CargoComissao {
         }
 
         if (!empty($dados["dtAtoNom"])) {
-            p("Ato do Reitor: " . date_to_php($dados["dtNom"]), "pdadosComissao");
+            p("Ato do Reitor: " . date_to_php($dados["dtAtoNom"]), "pdadosComissao");
         }
 
         if (!empty($dados["numProcNom"])) {

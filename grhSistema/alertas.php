@@ -113,6 +113,38 @@ if ($acesso) {
             $grid->abreColuna(12, 9);
 
             tituloTable($alertas->getNomeCategoria($categoria));
+            br(5);
+
+            aguarde("Aguarde ...");
+            loadPage("?fase=menu2&categoria={$categoria}");
+            break;
+        
+        case "menu2" :
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+            $menu->show();
+
+            # Título
+            titulo("Alertas");
+            br();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12, 3);
+
+            $alertas->menu($categoria);
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12, 9);
+
+            tituloTable($alertas->getNomeCategoria($categoria));
             br();
 
             $checkup->listaCategoria($categoria);

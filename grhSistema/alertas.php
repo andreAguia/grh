@@ -112,6 +112,9 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(12, 9);
 
+            tituloTable($alertas->getNomeCategoria($categoria));
+            br();
+
             $checkup->listaCategoria($categoria);
             break;
 

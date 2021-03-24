@@ -113,7 +113,7 @@ if ($acesso) {
             $grid->abreColuna(12, 9);
 
             tituloTable($alertas->getNomeCategoria($categoria));
-            br(5);
+            br(3);
 
             aguarde("Aguarde ...");
             loadPage("?fase=menu2&categoria={$categoria}");

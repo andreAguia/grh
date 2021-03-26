@@ -105,8 +105,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Tipo", "Perfil", "Servidores<br/>Ativos", "Servidores<br/>Inativos"));
-    $objeto->set_width(array(5, 20, 45, 10, 10));
+    $objeto->set_label(array("id", "Tipo", "Perfil", "Servidores Ativos", "Servidores Inativos"));
+    $objeto->set_width(array(5, 20, 41, 12, 12));
     $objeto->set_align(array("center", "center", "left"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 

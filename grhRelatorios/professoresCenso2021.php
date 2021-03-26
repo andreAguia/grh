@@ -43,7 +43,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Docentes Ativos');
+    $relatorio->set_titulo('Relatório de Docentes Estatutários Ativos');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(array("Matrícula","Nome","CPF", "Email", "Cargo"));
     $relatorio->set_width(array(10, 25, 15, 25, 20));

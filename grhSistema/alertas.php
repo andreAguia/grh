@@ -165,6 +165,27 @@ if ($acesso) {
 
             # Título
             titulo("Alertas");
+            br(3);
+
+            aguarde("Aguarde ...");
+            loadPage("?fase=tabela2&categoria={$categoria}");
+            break;
+        
+         case "tabela2" :
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?fase=menu");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+            $menu->show();
+
+            # Título
+            titulo("Alertas");
             br();
 
             # Mostra a tabela

@@ -95,7 +95,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Outros', '?fase=outros', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Parentes', '?fase=parentes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Professores', '?fase=professores', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Professores (Docentes)', '?fase=professores', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
@@ -506,15 +506,21 @@ if ($acesso) {
         case "professores";
             $menu = new Menu();
             $menu->add_item('titulo', 'Professores');
+            $menu->add_item('titulo1', 'Geral');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos', '../grhRelatorios/geralServidoresProfessoresAtivos.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos Agrupados por Cargo', '../grhRelatorios/professor.ativoPorCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Aposentados Agrupados por Cargo', '../grhRelatorios/professor.aposentadoPorCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Nacionalidade', '../grhRelatorios/professorNacionalidade.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Com Data de Nascimento e Sexo', '../grhRelatorios/professorIdadeSexo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Lotaçao', '../grhRelatorios/professorporLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório da Professores Ativos - A pedido da PROPPG', '../grhRelatorios/professoresPROPPG.php');
-            $menu->add_item('linkWindow', 'Relatório da Professores Não-Ativos - A pedido da PROPPG', '../grhRelatorios/professoresPROPPGInativos.php');
-            $menu->add_item('linkWindow', 'Relatório da Professores - Censo Anual', '../grhRelatorios/professoresCensoAnual.php');
+            $menu->add_item('titulo1', 'A Pedido da PROPPG');
+            $menu->add_item('linkWindow', 'Relatório da Professores Ativos', '../grhRelatorios/professoresPROPPG.php');
+            $menu->add_item('linkWindow', 'Relatório da Professores Não-Ativos', '../grhRelatorios/professoresPROPPGInativos.php');
+            $menu->add_item('titulo1', 'A pedido da SECACAD - Censo Anual');
+            $menu->add_item('linkWindow', 'Censo 2020 - Relatório da Professores', '../grhRelatorios/professoresCenso2020.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Ativos', '../grhRelatorios/professoresCenso2021.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Admissão', '../grhRelatorios/professoresCenso2021Admissao.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Data de Saída', '../grhRelatorios/professoresCenso2021Saida.php');
 
             $menu->show();
             break;

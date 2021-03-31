@@ -27,10 +27,11 @@ if ($acesso) {
     # Verifica a fase e o alerta
     $fase = get('fase');
     $categoria = get("categoria", get_session('categoria'));
-    $alerta = get('alerta');
+    $alerta = get('alerta', get_session('alerta'));
 
     # Joga os parâmetros par as sessions
     set_session('categoria', $categoria);
+    set_session('alerta', $alerta);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));

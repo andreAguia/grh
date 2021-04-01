@@ -45,6 +45,7 @@ if ($idTpLicenca == "Inicial") {
     $verifica = new VerificaAfastamentos($idServidor);
     $verifica->setPeriodo(date_to_php($dtInicial), addDias(date_to_php($dtInicial), $numDias));
     $verifica->setIsento("tblicenca", $id);
+    $verifica->setTipoLicenca($idTpLicenca);
 
     if ($verifica->verifica()) {
         $erro = 1;
@@ -74,7 +75,7 @@ if ($idTpLicenca == "Inicial") {
     }
 
     /*
-     * Verifica se nas licenças 110 e 111 tem a alta digitada
+     * Verifica se nas licenças artigo 110 e 111, ou seja 1 ou 30, tem a alta digitada
      */
     if (($idTpLicenca == 1) OR ($idTpLicenca == 30)) {
         if (empty($alta)) {

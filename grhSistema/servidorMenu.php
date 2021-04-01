@@ -125,6 +125,11 @@ if ($acesso) {
 
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
+        
+        # Exibe o idServidor somente para o administrador
+        if (Verifica::acesso($idUsuario, 1)) {
+            p($idServidorPesquisado, "idServidor2");
+        }
     }
 
     $grid->fechaColuna();

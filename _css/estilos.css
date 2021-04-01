@@ -88,6 +88,16 @@ p#puser{
     text-align: left;
 }
 
+p#idServidor2{
+    font-size: 9px;
+    text-align: left;
+    color: #02548b;
+    padding: 0px;
+    margin: 0px;
+    margin-top: -20px;
+    float: right;
+}
+
 /*******************************************
  * Check up
  *******************************************/

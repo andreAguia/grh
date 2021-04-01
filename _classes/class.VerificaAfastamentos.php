@@ -14,6 +14,11 @@ class VerificaAfastamentos {
     private $dtFinal;
 
     /*
+     * do tipo
+     */
+    private $tipoLicenca;
+
+    /*
      * da isenção
      */
     private $tabela;
@@ -74,6 +79,15 @@ class VerificaAfastamentos {
     public function setIsento($tabela, $id) {
         $this->tabela = $tabela;
         $this->id = $id;
+    }
+
+    ###########################################################
+    /*
+     * Informa o Tipo de Licença incluído
+     */
+
+    public function setTipoLicenca($tipoLicenca) {
+        $this->tipoLicenca = $tipoLicenca;
     }
 
     ###########################################################
@@ -154,8 +168,6 @@ class VerificaAfastamentos {
 
         $afast = $pessoal->select($select, false);
 
-
-
         if (!empty($afast)) {
             # Verifica se é Licença ou afastamento
             if (mb_stripos($afast['nome'], 'Afastamento') === false) {
@@ -179,6 +191,7 @@ class VerificaAfastamentos {
                   ORDER BY dtInicial DESC LIMIT 1";
         $row2 = $pessoal->select($select, false);
 
+        # Verifica se tem algum registro e não é de alta
         if (!empty($row2[0]) AND $row2[1] <> 1) {
             # Verifica se tem isenção - A isenção neste caso é particulkarmente diferente
             if ($this->tabela == "tblicenca" AND $this->id == $row2[0]) {
@@ -186,9 +199,16 @@ class VerificaAfastamentos {
             } else {
                 # Verifica se a licença editada é posterior a data em aberto
                 if (dataMaior(date_to_php($row2[2]), date_to_php($this->dtInicial)) == date_to_php($this->dtInicial)) {
-                    $this->afastamento = "Licença Em Aberto";
-                    $this->detalhe = "Licença Médica Sem Alta";
-                    return true;
+
+                    # Agora Verifica se é a que está sendo incluída não é continuação desta ultima
+                    if (!empty($this->tipoLicenca) AND ($this->tipoLicenca == 1 OR $this->tipoLicenca == 30)) {
+                        return false;
+                    } else {
+                        # Se não for é uma outra licença sendo incluída sem que a licença anterior tenha alta
+                        $this->afastamento = "Licença Em Aberto";
+                        $this->detalhe = "Licença Médica Sem Alta";
+                        return true;
+                    }
                 }
 
                 # Verifica se a data em aberto está entre as datas da licença editada

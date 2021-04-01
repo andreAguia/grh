@@ -762,7 +762,6 @@ class Grh {
         $width = array(70, 30);
         $align = array("left");
 
-
         $tabela = new Tabela("tabelaTre");
         #$estatistica->set_titulo('Legenda'); 
         $tabela->set_conteudo($folgas);
@@ -845,26 +844,27 @@ class Grh {
      * 
      * @param    string $idUsuario -> Usuário logado
      */
-    public static function rodape($idUsuario, $idServidor = null, $idPessoa = null) { {
-            # Exibe faixa azul
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            titulo();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
+    public static function rodape($idUsuario, $idServidor = null, $idPessoa = null) {
 
-            # Exibe a versão do sistema
-            $intra = new Intra();
-            $grid = new Grid();
-            $grid->abreColuna(6);
-            p('Usuário : ' . $intra->get_usuario($idUsuario), 'usuarioLogado');
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
-            #p("Desenvolvido por André Águia", 'pauthor');
-            p("UENF - Universidade Estadual do Norte Fluminense Darcy Ribeiro", 'pauthor');
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-        }
+        $grid = new Grid();
+        $grid->abreColuna(12);
+
+        # Exibe faixa azul
+        titulo();
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+
+        # Exibe a versão do sistema
+        $intra = new Intra();
+        $grid = new Grid();
+        $grid->abreColuna(6);
+        p('Usuário : ' . $intra->get_usuario($idUsuario), 'usuarioLogado');
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
+        #p("Desenvolvido por André Águia", 'pauthor');
+        p("UENF - Universidade Estadual do Norte Fluminense Darcy Ribeiro", 'pauthor');
+        $grid->fechaColuna();
+        $grid->fechaGrid();
     }
 
 ######################################################################################################################

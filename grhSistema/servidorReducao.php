@@ -1203,7 +1203,7 @@ if ($acesso) {
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(3);
-            $controle->set_array(array(null, "Permanente", "Eventual"));
+            $controle->set_array(array(null, "Permanente", "Eventual","Duradoura"));
             $controle->set_valor($necessidade);
             #$controle->set_required(true);
             $controle->set_title('Como a necessidade foi caracterizada.');

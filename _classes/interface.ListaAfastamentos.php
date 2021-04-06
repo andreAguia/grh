@@ -272,8 +272,8 @@ class ListaAfastamentos {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
-
-        #######################    
+        
+        #######################  
         # Licença Prêmio
         $select .= ') UNION (
                   SELECT ';
@@ -673,6 +673,75 @@ class ListaAfastamentos {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
+        
+        #######################  
+        # Licença Médica Sem Alta
+        $select .= ') UNION (
+                  SELECT ';
+
+        if ($this->idFuncional) {
+            $select .= 'T2.idfuncional,';
+        }
+
+        if (empty($this->idServidor)) {
+            $select .= ' tbpessoa.nome,
+                         T2.idServidor,';
+        }
+        
+        $select .= '       tblicenca.dtInicial,
+                           tblicenca.numDias,
+                           ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                           CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),"<br/>(Em Aberto)"),
+                          T2.idServidor
+                      FROM tbservidor AS T2 
+                           LEFT JOIN tbpessoa USING (idPessoa)
+                                JOIN tbhistlot USING (idServidor)
+                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                           LEFT JOIN tblicenca USING (idServidor)
+                           LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = T2.idServidor)
+                      AND (idTpLicenca = 1 OR idTpLicenca = 30)
+                      AND alta <> 1
+                      AND idLicenca = (SELECT idLicenca FROM tblicenca AS T1 WHERE T1.idServidor = T2.idServidor ORDER BY dtInicial DESC LIMIT 1)';
+        
+        # Tipo de afastamento
+        if (!empty($this->tipo)) {
+            if (is_numeric($this->tipo)) {
+                if (($this->tipo <> 6) AND ($this->tipo <> 5) AND ($this->tipo <> 8) AND ($this->tipo <> 16)) {
+                    $select .= ' AND idTpLicenca = ' . $this->tipo;
+                } else {
+                    $select .= ' AND false';
+                }
+            } else {
+                $select .= ' AND false';
+            }
+        }
+
+        # Verifica se é somente de um servidor
+        if (empty($this->idServidor)) {
+            $select .= ' AND T2.situacao = 1';
+        } else {
+            $select .= ' AND T2.idServidor = ' . $this->idServidor;
+            $select .= ' AND tblicenca.dtInicial IS NOT null';
+        }
+
+        if (!empty($this->mes)) {
+            $select .= ' AND ("' . $data . '" > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))';            
+        } elseif (!empty($this->ano)) {
+            $select .= ' AND (YEAR(tblicenca.dtInicial) <= ' . $this->ano . ')';
+        }
+
+        # lotacao
+        if (!is_null($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        #######################    
 
         if ($this->idFuncional) {
             $select .= ') ORDER BY 2, 3';

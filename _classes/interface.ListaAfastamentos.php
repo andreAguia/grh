@@ -691,7 +691,7 @@ class ListaAfastamentos {
         $select .= '       tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                           CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),"<br/>(Em Aberto)"),
+                           CONCAT(tbtipolicenca.nome," - (Em Aberto)<br/>",IFnull(tbtipolicenca.lei,"")),
                           T2.idServidor
                       FROM tbservidor AS T2 
                            LEFT JOIN tbpessoa USING (idPessoa)

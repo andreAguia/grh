@@ -242,6 +242,15 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
         #$menu->add_item($botao);
+        
+        # Prestador de Contas
+        $botao = new BotaoGrafico();
+        $botao->set_label('Ordenação de Despesas');
+        $botao->set_url('servidorOrdenador.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Histórico de designação para ordenação de despesas');
+        $menu->add_item($botao);
+        
         # Obs
         $botao = new BotaoGrafico();
         $botao->set_label('Observações');

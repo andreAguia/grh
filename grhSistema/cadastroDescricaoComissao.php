@@ -71,7 +71,8 @@ if ($acesso) {
     $objeto->set_selectLista('SELECT idDescricaoComissao,
                                       CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao,
                                       tbdescricaocomissao.descricao,
-                                      if(tbdescricaocomissao.ativo = 0,"Não","Sim")
+                                      if(tbdescricaocomissao.ativo = 1,"Sim","Não"),
+                                      if(tbdescricaocomissao.prestadorNato = 1,"Sim","Não")
                                  FROM tbdescricaocomissao JOIN tbtipocomissao USING (idTipoComissao)
                                 WHERE tbdescricaocomissao.descricao LIKE "%' . $parametro . '%"
                                    OR tbtipocomissao.descricao LIKE "%' . $parametro . '%"
@@ -81,6 +82,7 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita('SELECT idTipoComissao,
                                      ativo,
+                                     prestadorNato,
                                      descricao,
                                      obs
                                 FROM tbdescricaocomissao
@@ -93,9 +95,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Cargo em Comissão", "Descrição", "Ativo"));
-    #$objeto->set_width(array(5,70,10));
-    $objeto->set_align(array("center", "left", "left", "center"));
+    $objeto->set_label(array("Id", "Cargo em Comissão", "Descrição", "Ativo","Prestador Nato"));
+    $objeto->set_width(array(5,20,50,8,8));
+    $objeto->set_align(array("center", "left", "left"));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -129,18 +131,25 @@ if ($acesso) {
             'autofocus' => true,
             'array' => $comissao,
             'size' => 20,
-            'col' => 9,
+            'col' => 8,
             'title' => 'Tipo dp Cargo em Comissão',
             'linha' => 1),
         array('linha' => 1,
-            'col' => 3,
+            'col' => 2,
             'nome' => 'ativo',
             'required' => true,
             'label' => 'Ativo:',
             'title' => 'Se o cargo está ativo e permite movimentações',
-            'tipo' => 'combo',
-            'array' => array(array(1, 'Sim'), array(0, 'Não')),
+            'tipo' => 'simnao',
             'padrao' => 1,
+            'size' => 5),
+        array('linha' => 1,
+            'col' => 2,
+            'nome' => 'prestadorNato',
+            'label' => 'Prestador Nato:',
+            'title' => 'Se o cargo é prestador de contas nato',
+            'tipo' => 'simnao',
+            'padrao' => 0,
             'size' => 5),
         array('linha' => 2,
             'nome' => 'descricao',

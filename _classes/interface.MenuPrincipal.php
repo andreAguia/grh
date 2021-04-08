@@ -550,6 +550,14 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'semVencimento.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
         $menu->add_item($botao);
+        
+        # Prestador de Contas
+        $botao = new BotaoGrafico();
+        $botao->set_label('Responsáveis pela Prestação de Contas');
+        $botao->set_url('areaPrestacaoContas.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle dos responsáveis pela prestação de contas');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Concurso');

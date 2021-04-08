@@ -113,7 +113,7 @@ if ($acesso) {
             # Cria um array com os anos possíveis
             $anoInicial = 1999;
             $anoAtual = date('Y');
-            $anoExercicio = arrayPreenche($anoInicial, $anoAtual);
+            $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
 
             $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(8);
@@ -165,7 +165,6 @@ if ($acesso) {
             $result[] = array("FTRE", "Folga TRE");
 
             array_unshift($result, array(null, "Todos"));
-
 
             $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
             $controle->set_size(30);

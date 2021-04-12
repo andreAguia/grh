@@ -116,11 +116,11 @@ if ($acesso) {
 
     $declaracao = new AcumulacaoDeclaracao();
     $anoDisponível = $declaracao->getProximoAnoReferencia($idServidorPesquisado);
-
+    
     # Cria um array com os anos possíveis
     $anoInicial = 2019;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoAtual + 1, $anoInicial, "d");
+    $anoExercicio = arrayPreenche($anoInicial,$anoAtual + 1, "d");
 
     # Campos para o formulario
     $objeto->set_campos(array(

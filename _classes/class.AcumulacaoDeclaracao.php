@@ -171,7 +171,7 @@ class AcumulacaoDeclaracao {
             $select = "SELECT MAX(anoReferencia) as dd FROM tbacumulacaodeclaracao WHERE idServidor = {$idServidor} LIMIT 1";
             $pessoal = new Pessoal();
             $anoref = $pessoal->select($select, false);
-
+            
             if (empty($anoref[0])) {
                 return $this->getUltimoAnoDeclaracao();
             } else {

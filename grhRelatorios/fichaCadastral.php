@@ -256,9 +256,7 @@ if ($acesso) {
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
-    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
-        
-        tituloRelatorio('Informações');
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {        
         
         # Verifica o regime original do servidor (regime do concurso)
         $conc = new Concurso();
@@ -267,6 +265,7 @@ if ($acesso) {
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
 
         if ($regime == "CLT") {
+            tituloRelatorio('Informações');
             $mensagem = "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
 
             # Verifica se foi transformado

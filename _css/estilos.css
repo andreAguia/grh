@@ -838,6 +838,14 @@ div#tituloFichaCadastral{
     padding: 4px 2px 2px 10px;
 }
 
+p#pFichaCadastralMensagem{
+    text-align: left;
+    font-size: 12px;
+    color: #000;
+    padding: 0px;
+    margin: 0px;
+}
+
 /*******************************************
  * Ato de Nomeacao
  *******************************************/

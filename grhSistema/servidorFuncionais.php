@@ -56,7 +56,7 @@ if ($acesso) {
         # Verifica o regime do servidor
         $conc = new Concurso();
         $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
-    }else{
+    } else {
         $regime = null;
     }
 
@@ -197,7 +197,7 @@ if ($acesso) {
     $campos = array(array('linha' => 1,
             'nome' => 'idFuncional',
             'label' => 'id Funcional:',
-            'tipo' => 'texto',      //'tipo' => 'idFuncional',
+            'tipo' => 'texto', //'tipo' => 'idFuncional',
             'autofocus' => true,
             'size' => 10,
             'col' => 2,
@@ -361,17 +361,25 @@ if ($acesso) {
     switch ($fase) {
         case "ver" :
         case "editar" :
-            
+
             $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
             $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
 
             if ($regime == "CLT") {
-                $mensagem = "Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
-                
+                $mensagem = "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+
                 # Verifica se foi transformado
                 if (!empty($dtTranfRegime)) {
-                    $mensagem .= "Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
+                    $mensagem .= "- Transformado em regime estatutário em {$dtTranfRegime},"
+                            . " conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de"
+                            . " 09/09/2003.";
                 }
+
+                # Informa sobre a mudança do nome do cargo
+                $mensagem .= "<br>- Mudança de Nomenclatura do Cargo efetivo conforme"
+                        . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
+                        . "Lei 4800/2006 de 30/06/2006";
+
                 $objeto->set_rotinaExtraEditar(array("callout"));
                 $objeto->set_rotinaExtraEditarParametro(array($mensagem));
             }

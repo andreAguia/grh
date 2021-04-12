@@ -250,46 +250,40 @@ if ($acesso) {
     $relatorio->show();
 
     /*
-     * Regime
+     * Informações
      */
 
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
-        # Verifica o regime do servidor
+        
+        tituloRelatorio('Informações');
+        
+        # Verifica o regime original do servidor (regime do concurso)
         $conc = new Concurso();
         $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
         $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
 
         if ($regime == "CLT") {
-            $mensagem = "Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+            $mensagem = "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
 
             # Verifica se foi transformado
             if (!empty($dtTranfRegime)) {
-                $mensagem .= "Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
+                $mensagem .= "- Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
             }
-            br();
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array('Regime'));
-            $relatorio->set_align(array('left'));
-            $relatorio->set_conteudo(array(array($mensagem)));
-            #$relatorio->set_numGrupo(0);
-            $relatorio->set_botaoVoltar(false);
-            #$relatorio->set_bordaInterna(true);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
+            
+            # Informa sobre a mudança do nome do cargo
+            $mensagem .=  "<br>- Mudança de Nomenclatura do Cargo efetivo conforme"
+                    . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
+                    . "Lei 4800/2006 de 30/06/2006";
+            
+           p($mensagem,"pFichaCadastralMensagem");
+           hr("rpa");
         }
     }
+
 
     /*
      * Dados Funcionais
@@ -516,7 +510,6 @@ if ($acesso) {
     #$relatorio->set_linhaNomeColuna(false);
     $relatorio->set_log(false);
     $relatorio->show();
-    br();
 
     ##
 
@@ -530,26 +523,29 @@ if ($acesso) {
 
     $result = $pessoal->select($select);
 
-    $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
-    #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('Carteira Motorista', 'Vencimento', 'Conselho de Classe', 'Registro', 'Reservista'));
-    $relatorio->set_width(array(20, 20, 20, 20, 20));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("trataNulo", "date_to_php", "trataNulo", "trataNulo", "trataNulo"));
-    $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
-    $relatorio->show();
-    br();
+    if (!empty($result[0][0]) OR!empty($result[0][1]) OR!empty($result[0][2]) OR!empty($result[0][3]) OR!empty($result[0][4])) {
+
+        br();
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Carteira Motorista', 'Vencimento', 'Conselho de Classe', 'Registro', 'Reservista'));
+        $relatorio->set_width(array(20, 20, 20, 20, 20));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_funcao(array("trataNulo", "date_to_php", "trataNulo", "trataNulo", "trataNulo"));
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(0);
+        $relatorio->set_botaoVoltar(false);
+        #$relatorio->set_bordaInterna(true);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
     ##
 
@@ -561,25 +557,29 @@ if ($acesso) {
 
     $result = $pessoal->select($select);
 
-    $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
-    #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('Carteira Profissional', 'Serie', 'UF'));
-    $relatorio->set_width(array(30, 30, 30));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo"));
-    $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_log(false);
-    $relatorio->show();
+    if (!empty($result[0][0]) OR!empty($result[0][1]) OR!empty($result[0][2])) {
+        
+        br();
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Carteira Profissional', 'Serie', 'UF'));
+        $relatorio->set_width(array(30, 30, 30));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo"));
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(0);
+        $relatorio->set_botaoVoltar(false);
+        #$relatorio->set_bordaInterna(true);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
     /*
      * Endereço
@@ -1172,7 +1172,6 @@ if ($acesso) {
                      FROM tbdiaria 
                     WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY dataSaida desc';
-
 
         $result = $pessoal->select($select);
 

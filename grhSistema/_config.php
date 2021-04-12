@@ -65,26 +65,31 @@ setcookie(session_name(), session_id(), time() + $lifetime);
 include_once (PASTA_FUNCOES_GERAIS . "funcoes.gerais.php");
 include_once (PASTA_FUNCOES . "funcoes.especificas.php");
 
-# Framework gráfico 
-#include ('../../_framework/_outros/libchart/classes/libchart.php');
 # Dados do Browser
 $browser = get_BrowserName();
-define("BROWSER_NAME", $browser['browser']); # Nome do browser
-define("BROWSER_VERSION", $browser['version']); # Versão do browser
-# Pega o ip e nome da máquina
-define("IP", getenv("REMOTE_ADDR"));     # Ip da máquina
+
+# Nome do browser
+define("BROWSER_NAME", $browser['browser']);
+
+# Versão do browser
+define("BROWSER_VERSION", $browser['version']);
+
+# Pega o ip da máquina
+define("IP", getenv("REMOTE_ADDR"));
+
 # Sistema Operacional
 define("SO", get_So());
 
-setlocale(LC_ALL, 'pt_BR');
-setlocale(LC_CTYPE, 'pt_BR');
+# Carrega as session do servidor logado
+$idUsuario = get_session('idUsuario');
 
-# carrega as session
-$idUsuario = get_session('idUsuario');                          // Servidor Logado
-$idServidorPesquisado = get_session('idServidorPesquisado');    // Servidor Editado na pesquisa do sistema do GRH
+# Carregaa session do servidor editado na pesquisa do sistema do GRH
+$idServidorPesquisado = get_session('idServidorPesquisado');
+
 # Define o horário
 date_default_timezone_set("America/Sao_Paulo");
 setlocale(LC_ALL, 'pt_BR');
+setlocale(LC_CTYPE, 'pt_BR');
 
 /**
  * Função que é chamada automaticamente pelo sistema

@@ -4229,7 +4229,84 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Servidor(es) ativo(s) cuja opção de transferência para Uenf de 2002 não foi cadastrada';
+            $titulo = 'Servidor(es) ativo(s) cuja opção de transferência para Uenf não foi cadastrada';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Lotação', 'Cargo']);
+            $tabela->set_align(['center', 'center', 'left', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, null, "get_lotacao", "get_cargo"]);
+            $tabela->set_funcao([null, "dv"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Deve-se cadastrar se o servidor optou Sim ou Não para a transferência para a Uenf");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorNaoAtivoSemEscolha
+     * 
+     * Informa os servidores não ativos anteriores a separação FENORTE x UENF que não foi
+     * cadastrado no sistema a opção voluntária de transferência para a Uenf
+     */
+    public function get_servidorNaoAtivoSemEscolha($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                    WHERE tbservidor.situacao <> 1
+                      AND matricula < 10000
+                      AND (idPerfil = 1 OR idPerfil = 4)
+                      AND opcaoFenorteUenf IS NULL';
+
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Servidor(es) inativo(s) cuja opção de transferência para Uenf não foi cadastrada';
 
             # Exibe a tabela
             $tabela = new Tabela();

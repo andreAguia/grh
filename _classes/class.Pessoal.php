@@ -4581,6 +4581,49 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método temOpcaoFenorteUenf
+     * Verifica se o servidor teve que optar em se transferir da FENMORTE PARa UENF
+     *
+     * @param integer $idServidor O idServidor do servidor em questão
+     */
+    public function temOpcaoFenorteUenf($idServidor = null) {
+
+        $select = "SELECT matricula, idPerfil
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $result = parent::select($select,false);
+        
+        # Verifica se a matrícula é manor que 10000 e é celetista ou estatutário
+        if ($result["matricula"] < 10000 AND ($result["idPerfil"] == 1 OR $result["idPerfil"] == 4)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método opcaoFenorteUenf
+     * Informa a opção (true/false) se o servidor optou por transferir ou não para Uenf
+     *
+     * @param integer $idServidor O idServidor do servidor em questão
+     */
+    public function opcaoFenorteUenf($idServidor = null) {
+
+        $select = "SELECT opcaoFenorteUenf
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $result = parent::select($select,false);
+        return $result["opcaoFenorteUenf"];
+    }
+
+    ###########################################################
+
+
+    /**
      * Método podeNovoServidor
      * Verifica se é permitido incluir novos servidores nesse perfil.
      *

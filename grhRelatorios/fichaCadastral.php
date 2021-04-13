@@ -255,9 +255,10 @@ if ($acesso) {
 
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
+    $mensagem = null;
 
-    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {        
-        
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+
         # Verifica o regime original do servidor (regime do concurso)
         $conc = new Concurso();
         $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
@@ -265,21 +266,33 @@ if ($acesso) {
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
 
         if ($regime == "CLT") {
-            tituloRelatorio('Informações');
             $mensagem = "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
 
             # Verifica se foi transformado
             if (!empty($dtTranfRegime)) {
                 $mensagem .= "- Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
             }
-            
+
             # Informa sobre a mudança do nome do cargo
-            $mensagem .=  "<br>- Mudança de Nomenclatura do Cargo efetivo conforme"
+            $mensagem .= "<br>- Mudança de Nomenclatura do Cargo efetivo conforme"
                     . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
-                    . "Lei 4800/2006 de 30/06/2006";
-            
-           p($mensagem,"pFichaCadastralMensagem");
-           hr("rpa");
+                    . "Lei 4800/2006 de 30/06/2006<br/>";
+        }
+
+        if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
+            if (!is_null($pessoal->opcaoFenorteUenf($idServidorPesquisado))) {
+                if ($pessoal->opcaoFenorteUenf($idServidorPesquisado)) {
+                    $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.<br/>";
+                } else {
+                    $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.<br/>";
+                }
+            }
+        }
+
+        if (!empty($mensagem)) {
+            tituloRelatorio('Informações');
+            p($mensagem, "pFichaCadastralMensagem");
+            hr("rpa");
         }
     }
 
@@ -557,7 +570,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     if (!empty($result[0][0]) OR!empty($result[0][1]) OR!empty($result[0][2])) {
-        
+
         br();
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);

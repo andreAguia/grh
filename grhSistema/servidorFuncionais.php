@@ -72,16 +72,23 @@ if ($acesso) {
     # Somente se for estatutário ou Celetista
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         $selectEdita .= 'idConcurso,';
+    }
 
+    # os demais
+    $selectEdita .= 'idCargo,';
+
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         # Se houve transformação de regime
         if ($regime == "CLT") {
             $selectEdita .= 'dtTransfRegime,';
         }
     }
 
-    # os demais
-    $selectEdita .= 'idCargo,
-                    dtAdmissao,
+    if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
+        $selectEdita .= 'opcaoFenorteUenf,';
+    }
+
+    $selectEdita .= 'dtAdmissao,
                     processoAdm,
                     dtPublicAdm,
                     ciGepagAdm,
@@ -227,7 +234,8 @@ if ($acesso) {
             'array' => $situacao,
             'col' => 2,
             'title' => 'Situação',
-            'size' => 15));
+            'size' => 15)
+    );
 
     # Somente se for estatutário ou celetista
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
@@ -241,23 +249,9 @@ if ($acesso) {
                     'padrao' => $idConcurso,
                     'col' => 3,
                     'size' => 15));
-
-        if ($regime == "CLT") {
-
-            array_push($campos,
-                    array('linha' => 2,
-                        'nome' => 'dtTransfRegime',
-                        'label' => 'Data da Transformação do Regime:',
-                        'tipo' => 'data',
-                        'size' => 20,
-                        'col' => 3,
-                        'title' => 'Data da Transformação do regime de Celetista para estatutário'));
-            $colunaCargo = 9;
-        }
     }
 
-
-    # os demais
+    # Cargo
     array_push($campos,
             array('linha' => 2,
                 'nome' => 'idCargo',
@@ -266,8 +260,41 @@ if ($acesso) {
                 'array' => $cargo,
                 'title' => 'Cargo',
                 'col' => $colunaCargo,
-                'size' => 15),
-            array('linha' => 3,
+                'size' => 15));
+
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+        if ($regime == "CLT") {
+
+            array_push($campos,
+                    array('linha' => 3,
+                        'nome' => 'dtTransfRegime',
+                        'label' => 'Data da transformação de regime:',
+                        'helptext' => 'Transformação para estatutário conforme Lei 4.152 de 08/09/2003.:',
+                        'tipo' => 'data',
+                        'size' => 20,
+                        'col' => 3,
+                        'title' => 'Data da Transformação do regime de Celetista para estatutário'));
+            $colunaCargo -= 3;
+        }
+    }
+
+    if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
+        array_push($campos,
+                array('linha' => 3,
+                    'nome' => 'opcaoFenorteUenf',
+                    'label' => 'Optou ser transferido?',
+                    'helptext' => 'Quando da separação das Instituições FENORTE e UENF (Lei nº3.684 de 23/10/2001) o servidor optou por trasnferir-se para a UENF?',
+                    'tipo' => 'simnao2',
+                    'size' => 10,
+                    'col' => 3,
+                    'padrao' => 0,
+                    'title' => 'Se o servidor optou em se transferir da FENORTE para e UENF de acordo com Lei nº 3684 de 23/10/2001'));
+        $colunaCargo -= 1;
+    }
+
+    # os demais
+    array_push($campos,
+            array('linha' => 4,
                 'nome' => 'dtAdmissao',
                 'label' => 'Data de Admissão:',
                 'tipo' => 'data',
@@ -276,28 +303,28 @@ if ($acesso) {
                 'fieldset' => 'Dados da Admissão',
                 'required' => true,
                 'title' => 'Data de Admissão.'),
-            array('linha' => 3,
+            array('linha' => 4,
                 'nome' => 'processoAdm',
                 'label' => 'Processo de Admissão:',
                 'tipo' => 'texto',
                 'col' => 3,
                 'size' => 25,
                 'title' => 'Número do processo de admissão.'),
-            array('linha' => 3,
+            array('linha' => 4,
                 'nome' => 'dtPublicAdm',
                 'label' => 'Data da Publicação:',
                 'tipo' => 'data',
                 'size' => 20,
                 'col' => 3,
                 'title' => 'Data da Publicação no DOERJ.'),
-            array('linha' => 3,
+            array('linha' => 4,
                 'nome' => 'ciGepagAdm',
                 'label' => 'Documento:',
                 'tipo' => 'texto',
                 'size' => 30,
                 'col' => 3,
                 'title' => 'Documento informando a admissão.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'dtDemissao',
                 'label' => 'Data da Saída:',
                 'tipo' => 'data',
@@ -305,28 +332,28 @@ if ($acesso) {
                 'fieldset' => 'Dados da Saída do Servidor',
                 'size' => 20,
                 'title' => 'Data da Saída do Servidor.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'processoExo',
                 'label' => 'Processo:',
                 'tipo' => 'processo',
                 'size' => 25,
                 'col' => 3,
                 'title' => 'Número do processo.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'dtPublicExo',
                 'label' => 'Data da Publicação:',
                 'tipo' => 'data',
                 'size' => 20,
                 'col' => 3,
                 'title' => 'Data da Publicação no DOERJ.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'ciGepagExo',
                 'label' => 'Documento:',
                 'tipo' => 'texto',
                 'size' => 30,
                 'col' => 3,
                 'title' => 'Documento informando a saída do servidor'),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'motivo',
                 'label' => 'Motivo:',
                 'tipo' => 'combo',
@@ -334,7 +361,7 @@ if ($acesso) {
                 'col' => 4,
                 'size' => 30,
                 'title' => 'Motivo da Saida do Servidor.'),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'tipoAposentadoria',
                 'label' => 'Tipo:',
                 'tipo' => 'combo',
@@ -342,7 +369,7 @@ if ($acesso) {
                 'title' => 'Tipo de Aposentadoria',
                 'col' => 2,
                 'size' => 15),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'motivoDetalhe',
                 'label' => 'Motivo Detalhado:',
                 'tipo' => 'texto',

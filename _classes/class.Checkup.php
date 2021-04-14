@@ -4376,8 +4376,7 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                                      LEFT JOIN tbconcurso USING (idConcurso)
-                    WHERE tbservidor.situacao = 1
-                      AND dtAdmissao > (SELECT dtPublicacaoEdital FROM tbconcurso WHERE idConcurso = 3)
+                    WHERE dtAdmissao > (SELECT dtPublicacaoEdital FROM tbconcurso WHERE idConcurso = 3)
                       AND idConcurso <> 3
                       AND (idPerfil = 1 OR idPerfil = 4)
                       AND (idCargo <> 128 AND idCargo <> 129)';

@@ -4350,4 +4350,87 @@ class Checkup {
     }
 
     ##########################################################
+
+    /**
+     * Método get_servidorAdmTecConcursoNao2012AdmitidoDepois2012
+     * 
+     * Servidor Concursado com concurso posterior a admissão
+     */
+    public function get_servidorAdmTecConcursoNao2012AdmitidoDepois2012($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                          dtPublicacaoEdital,
+                          dtAdmissao,                          
+                          tbpessoa.nome,
+                          tbperfil.nome,                          
+                          idServidor,
+                          idServidor,
+                          tbsituacao.situacao,
+                          idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                     LEFT JOIN tbconcurso USING (idConcurso)
+                    WHERE tbservidor.situacao = 1
+                      AND dtAdmissao > (SELECT dtPublicacaoEdital FROM tbconcurso WHERE idConcurso = 3)
+                      AND idConcurso <> 3
+                      AND (idPerfil = 1 OR idPerfil = 4)
+                      AND (idCargo <> 128 AND idCargo <> 129)';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = "Servidor concursado antes do concurso de 2012 admitido depois deste concurso";
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Concurso', 'Admissão', 'Nome', 'Perfil', 'Lotação', 'Cargo', 'Situação']);
+            $tabela->set_align(['center', 'center', 'center', 'left', 'center', 'left', 'left', 'center']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, null, null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, null, null, null, "get_lotacao", "get_cargo"]);
+            $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Servidor concursado antes do concurso de 2012 não pode ser admitido "
+                                . "depois deste concurso.");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
 }

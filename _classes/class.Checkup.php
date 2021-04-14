@@ -4388,7 +4388,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = "Servidor concursado antes do concurso de 2012 admitido depois deste concurso";
+            $titulo = "Servidor(es) concursado(s) antes do concurso de 2012 admitido(s) depois deste concurso";
 
             # Exibe a tabela
             $tabela = new Tabela();

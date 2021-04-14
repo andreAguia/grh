@@ -112,8 +112,70 @@ class Ordenador {
                     p("Publicação: " . date_to_php($dados["dtPublicTermino"]) . " pag:" . $dados["pgPublicTermino"], "pdadosComissao");
                 }
             }
-        }else{
+        } else {
             echo "---";
+        }
+    }
+
+    ###########################################################
+
+    function exibeDadosCargoComissaoVinculado($idComissao) {
+
+        # Verifica se veio algum id
+        if (empty($idComissao)) {
+            return null;
+        } else {
+            # Verifica se é númerico
+            if (is_numeric($idComissao)) {
+                # Pega os dados dessa comissão
+                $comissao = new CargoComissao();
+                $dados = $comissao->get_dados($idComissao);
+
+                # Pega os dados do Tipo de comissao
+                $tipo = new TipoComissao();
+                $dadosTipo = $tipo->get_dados($dados["idTipoComissao"]);
+
+                p("{$dadosTipo['simbolo']} - {$dadosTipo['descricao']}", "pdadosComissao");
+                p($comissao->get_descricaoCargo($idComissao), "pdadosComissao");
+                hr("rpa");
+
+                # Dados da Nomeação
+                if (!empty($dados["dtNom"])) {
+                    p("Nomeação: " . date_to_php($dados["dtNom"]), "pdadosComissao");
+                }
+
+                if (!empty($dados["dtAtoNom"])) {
+                    p("Ato do Reitor: " . date_to_php($dados["dtAtoNom"]), "pdadosComissao");
+                }
+
+                if (!empty($dados["numProcNom"])) {
+                    p("Processo: " . $dados["numProcNom"], "pdadosComissao");
+                }
+
+                if (!empty($dados["dtPublicNom"])) {
+                    p("Publicação: " . date_to_php($dados["dtPublicNom"]), "pdadosComissao");
+                }
+
+                # Dados da Exoneração
+                if (!empty($dados["dtExo"])) {
+                    hr("rpa");
+                    p("Exoneração: " . date_to_php($dados["dtExo"]), "pdadosComissao");
+                }
+
+                if (!empty($dados["dtAtoExo"])) {
+                    p("Ato do Reitor: " . date_to_php($dados["dtAtoExo"]), "pdadosComissao");
+                }
+
+                if (!empty($dados["numProcExo"])) {
+                    p("Processo: " . $dados["numProcExo"], "pdadosComissao");
+                }
+
+                if (!empty($dados["dtPublicExo"])) {
+                    p("Publicação: " . date_to_php($dados["dtPublicExo"]), "pdadosComissao");
+                }
+            } else {
+                return null;
+            }
         }
     }
 

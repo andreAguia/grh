@@ -70,6 +70,7 @@ if ($acesso) {
     $objeto->set_selectLista('SELECT descricao,
                                      idOrdenador,
                                      idOrdenador,
+                                     idComissao,
                                      obs,                                     
                                      idOrdenador
                                 FROM tbordenador
@@ -78,6 +79,7 @@ if ($acesso) {
 
     # select do edita
     $objeto->set_selectEdita('SELECT descricao,
+                                     idComissao,
                                      dtDesignacao,
                                      dtPublicDesignacao,
                                      pgPublicDesignacao,
@@ -92,7 +94,7 @@ if ($acesso) {
                                      idServidor
                                 FROM tbordenador
                                WHERE idOrdenador = ' . $id);
-    
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -100,14 +102,14 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Descrição","Designação"," Término","Obs"));
-    $objeto->set_width(array(25,20,20,25));	
-    $objeto->set_align(array("left","center","center","left"));
+    $objeto->set_label(array("Descrição", "Designação", " Término", "Cargo em Comissão<br/>Vinculado", "Obs"));
+    $objeto->set_width(array(20, 20, 20, 20, 20));
+    $objeto->set_align(array("left", "center", "center", "left", "left"));
     #$objeto->set_funcao(array("date_to_php"));
 
-    $objeto->set_classe(array(null,"Ordenador","Ordenador"));
-    $objeto->set_metodo(array(null,"exibeDadosDesignacao","exibeDadosTermino"));
-    
+    $objeto->set_classe(array(null, "Ordenador", "Ordenador", "Ordenador"));
+    $objeto->set_metodo(array(null, "exibeDadosDesignacao", "exibeDadosTermino", "exibeDadosCargoComissaoVinculado"));
+
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -117,9 +119,19 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idOrdenador');
 
+    # Pega os dados da combo idComissao
+    $cargo = $pessoal->select("SELECT idComissao,
+                                      concat(tbtipocomissao.simbolo,' - ',tbtipocomissao.descricao)
+                                 FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                                 WHERE idServidor = {$idServidorPesquisado}
+                             ORDER BY tbcomissao.dtNom");
+
+    array_unshift($cargo, array(0, null));
+
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('nome' => 'descricao',
+        array(
+            'nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
             'size' => 100,
@@ -128,7 +140,17 @@ if ($acesso) {
             'autofocus' => true,
             'title' => 'Descrição da ordenação de despesa específica',
             'linha' => 1),
-        array('nome' => 'dtDesignacao',
+        array(
+            'linha' => 1,
+            'nome' => 'idComissao',
+            'label' => 'Vinculado ao cargo:',
+            'tipo' => 'combo',
+            'array' => $cargo,
+            'title' => 'Cargo',
+            'col' => 4,
+            'size' => 30),
+        array(
+            'nome' => 'dtDesignacao',
             'label' => 'Data da Designação:',
             'fieldset' => 'Designação',
             'tipo' => 'data',
@@ -137,35 +159,40 @@ if ($acesso) {
             'title' => 'Data da Designação.',
             'col' => 3,
             'linha' => 2),
-        array('nome' => 'dtAtoDesignacao',
+        array(
+            'nome' => 'dtAtoDesignacao',
             'label' => 'Data do Ato do Reitor:',
             'title' => 'Data do Ato do Reitor da Designacao',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'linha' => 2),
-        array('nome' => 'numProcDesignacao',
+        array(
+            'nome' => 'numProcDesignacao',
             'label' => 'Processo:',
             'tipo' => 'processo',
             'size' => 30,
             'title' => 'Número do Processo',
             'col' => 3,
             'linha' => 2),
-        array('nome' => 'dtPublicDesignacao',
+        array(
+            'nome' => 'dtPublicDesignacao',
             'label' => 'Data da Publicação:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'title' => 'Data da Publicação no DOERJ.',
             'linha' => 3),
-        array('nome' => 'pgPublicDesignacao',
+        array(
+            'nome' => 'pgPublicDesignacao',
             'label' => 'Página da Publicação:',
             'tipo' => 'texto',
             'size' => 20,
             'col' => 3,
             'title' => 'Página da Publicação no DOERJ.',
             'linha' => 3),
-        array('nome' => 'dtTermino',
+        array(
+            'nome' => 'dtTermino',
             'label' => 'Data do Término:',
             'fieldset' => 'Término',
             'tipo' => 'data',
@@ -173,42 +200,48 @@ if ($acesso) {
             'title' => 'Data do Término.',
             'col' => 3,
             'linha' => 4),
-        array('nome' => 'dtAtoTermino',
+        array(
+            'nome' => 'dtAtoTermino',
             'label' => 'Data do Ato do Reitor:',
             'title' => 'Data do ato do reitor do término da designacao',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'linha' => 4),
-        array('nome' => 'numProcTermino',
+        array(
+            'nome' => 'numProcTermino',
             'label' => 'Processo:',
             'tipo' => 'processo',
             'size' => 30,
             'title' => 'Número do Processo',
             'col' => 3,
             'linha' => 4),
-        array('nome' => 'dtPublicTermino',
+        array(
+            'nome' => 'dtPublicTermino',
             'label' => 'Data da Publicação:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'title' => 'Data da Publicação no DOERJ.',
             'linha' => 5),
-        array('nome' => 'pgPublicTermino',
+        array(
+            'nome' => 'pgPublicTermino',
             'label' => 'Página da Publicação:',
             'tipo' => 'texto',
             'size' => 20,
             'col' => 3,
             'title' => 'Página da Publicação no DOERJ.',
             'linha' => 5),
-        array('linha' => 6,
+        array(
+            'linha' => 6,
             'nome' => 'obs',
             'col' => 12,
             'label' => 'Observação:',
             'tipo' => 'textarea',
             'fieldset' => 'fecha',
             'size' => array(80, 4)),
-        array('nome' => 'idServidor',
+        array(
+            'nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',
             'padrao' => $idServidorPesquisado,

@@ -68,9 +68,9 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT descricao,
-                                     idOrdenador,
-                                     idOrdenador,
                                      idComissao,
+                                     idOrdenador,
+                                     idOrdenador,
                                      obs,                                     
                                      idOrdenador
                                 FROM tbordenador
@@ -102,13 +102,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Descrição", "Designação", " Término", "Cargo em Comissão<br/>Vinculado", "Obs"));
+    $objeto->set_label(array("Descrição", "Cargo em Comissão<br/>Vinculado","Designação<br/>da Competência", " Término",  "Obs"));
     $objeto->set_width(array(20, 20, 20, 20, 20));
     $objeto->set_align(array("left", "center", "center", "left", "left"));
     #$objeto->set_funcao(array("date_to_php"));
 
     $objeto->set_classe(array(null, "Ordenador", "Ordenador", "Ordenador"));
-    $objeto->set_metodo(array(null, "exibeDadosDesignacao", "exibeDadosTermino", "exibeDadosCargoComissaoVinculado"));
+    $objeto->set_metodo(array(null, "exibeDadosCargoComissaoVinculado", "exibeDadosDesignacao", "exibeDadosTermino"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -152,7 +152,7 @@ if ($acesso) {
         array(
             'nome' => 'dtDesignacao',
             'label' => 'Data da Designação:',
-            'fieldset' => 'Designação',
+            'fieldset' => 'Designação da Competência',
             'tipo' => 'data',
             'size' => 20,
             'required' => true,

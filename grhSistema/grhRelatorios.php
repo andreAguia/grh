@@ -521,6 +521,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Censo 2020 - Relatório da Professores', '../grhRelatorios/professoresCenso2020.php');
             $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Ativos', '../grhRelatorios/professoresCenso2021.php');
             $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Admissão', '../grhRelatorios/professoresCenso2021Admissao.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Admissão 2', '../grhRelatorios/professoresCenso2021Admissao2.php');
             $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Data de Saída', '../grhRelatorios/professoresCenso2021Saida.php');
 
             $menu->show();

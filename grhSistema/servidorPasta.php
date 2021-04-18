@@ -303,7 +303,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(6);            
 
-            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+            echo "<form class='upload1' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>

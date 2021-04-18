@@ -301,7 +301,7 @@ if ($acesso) {
             tituloTable("Upload de Documento para Pasta Funcional");
 
             $grid->fechaColuna();
-            $grid->abreColuna(6);
+            $grid->abreColuna(6);            
 
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
@@ -330,7 +330,7 @@ if ($acesso) {
                 $texto .= " $pp";
             }
 
-            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";            
             br();
             p($texto, "f14", "center");
 

@@ -339,9 +339,7 @@ if ($acesso) {
             p($texto, "f14", "center");
             p($dadosPasta["descricao"], "f14", "center");
 
-            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
-                aguarde("Enviando o Arquivo...",30);
-                
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {                
                 $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
 
                 # Salva e verifica se houve erro

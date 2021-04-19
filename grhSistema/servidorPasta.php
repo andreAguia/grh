@@ -109,7 +109,7 @@ if ($acesso) {
     $botao = new BotaoGrafico();
     $botao->set_label('');
     $botao->set_url('?fase=upload&id=');
-    $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
+    $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 15, 15);
 
     # Coloca o objeto link na tabela			
     $objeto->set_link(array("", "", "", $botao));

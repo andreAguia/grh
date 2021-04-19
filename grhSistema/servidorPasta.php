@@ -329,10 +329,15 @@ if ($acesso) {
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
-
+            
+            # Exibe o nome do processo/documento para informar na tela de upload
+            $ClassePasta = new PastaFuncional();
+            $dadosPasta = $ClassePasta->get_dados($id);
+            
             $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";            
             br();
             p($texto, "f14", "center");
+            p($dadosPasta["descricao"], "f14", "center");
 
             if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
                 $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);

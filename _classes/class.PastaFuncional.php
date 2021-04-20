@@ -78,7 +78,7 @@ class PastaFuncional {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(null, $arquivo, "Exibe o MCF");
+            $link = new Link(null, $arquivo, "Exibe o Documento/Processo");
             $link->set_imagem(PASTA_FIGURAS_GERAIS . "olho.png", 20, 20);
             $link->set_target("_blank");
             $link->show();

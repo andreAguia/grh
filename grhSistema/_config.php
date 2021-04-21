@@ -4,31 +4,51 @@
  * Configuração do Sistema de Pessoal
  * 
  * By Alat
+*/
+
+/*
+ *  Classes
  */
-# Classes
 define("PASTA_CLASSES_GERAIS", "../../_framework/_classesGerais/");  # Classes Gerais
 define("PASTA_CLASSES_ADMIN", "../../areaServidor/_classes/");       # Classes do sistema de Administração 
-define("PASTA_CLASSES", "../_classes/");                             # Classes Específicas
-# Funções
+define("PASTA_CLASSES", "../_classes/");                              # Classes Específicas
+
+/*
+ *  Funções
+ */
 define("PASTA_FUNCOES_GERAIS", "../../_framework/_funcoesGerais/");  # Funções Gerais
-define("PASTA_FUNCOES", "../_funcoes/");                             # Funções Específicas
-# Figuras
+define("PASTA_FUNCOES", "../_funcoes/");                    # Funções Específicas GRH
+
+/*
+ *  Figuras
+ */
 define("PASTA_FIGURAS_GERAIS", "../../_framework/_imgGerais/");      # Figuras Gerais
-define("PASTA_FIGURAS", "../_img/");                                 # Figuras Específicas
-# Estilos
+define("PASTA_FIGURAS", "../_img/");                               # Figuras Específicas
+
+/*
+ *  Estilos
+ */
 define("PASTA_ESTILOS_GERAIS", "../../_framework/_cssGerais/");      # Estilos Gerais (Foundation)
-define("PASTA_ESTILOS", "../_css/");                                 # Estilos Específicos
-# Uploads
+define("PASTA_ESTILOS", "../_css/");                                  # Estilos Específicos
+
+/*
+ *  Arquivos
+ */
 define("PASTA_FOTOS", "../../_arquivos/fotos/");                     # Fotos dos Servidores
 define("PASTA_MCF", "../../_arquivos/mcf/");                         # MCF dos Servidores
 define("PASTA_CONCURSO", "../../_arquivos/concurso/");               # Publicações de concurso
-define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");        # Pasta Funcional do Servidor
-# Fontes para PDF
-#define('FPDF_FONTPATH','../../_framework/_pdfFont/');
-# Tags aceitas em campos com htmlTag = true
-define('TAGS', '<p></p><a></a><br/><br><div></div><table></table><tr></tr><td></td><th></th><strong></strong><em></em><u></u><sub></sub><sup></sup><ol></ol><li></li><ul></ul><hr><span></span><h3></h3>');
+define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");                     # Fotos dos Servidores
 
-# Cria array dos meses
+/*
+ *  Tags aceitas em campos com htmlTag = true
+ */
+define('TAGS', '<p></p><a></a><br/><br><div></div><table></table><tr></tr><td></td><th></th><strong></strong>'
+        . '<em></em><u></u><sub></sub><sup></sup><ol></ol><li></li><ul></ul><hr><span></span><h1></h1>'
+        . '<h2></h2><h3></h3><h4></h4><h5></h5><pre></pre>');
+
+/*
+ *  Cria array dos meses
+ */
 $mes = array(array("1", "Janeiro"),
     array("2", "Fevereiro"),
     array("3", "Março"),
@@ -56,12 +76,14 @@ $nomeMes = array(null,
     "Novembro",
     "Dezembro");
 
-/* Inicia a sessão */
-//$lifetime = 20000;
-//setcookie(session_name(), session_id(), time() + $lifetime);
-session_start();
+# Inicia a Session
+if (!isset($_SESSION)) {
+    session_start();
+}
 
-# Funçõess gerais	
+/*
+ *  Funções
+ */
 include_once (PASTA_FUNCOES_GERAIS . "funcoes.gerais.php");
 include_once (PASTA_FUNCOES . "funcoes.especificas.php");
 
@@ -116,13 +138,18 @@ function autoload($classe) {
 
 spl_autoload_register("autoload");
 
-# Sobre o Sistema
+/*
+ *  Sobre o Sistema
+ */
 $intra = new Intra();
 define("SISTEMA", $intra->get_variavel("sistemaGrh"));             # Nome do sistema
 define("DESCRICAO", $intra->get_variavel("sistemaGrhDescricao"));  # Descrição do sistema
 define("AUTOR", $intra->get_variavel("sistemaAutor"));             # Autor do sistema
 define("EMAILAUTOR", $intra->get_variavel("sistemaAutorEmail"));   # Autor do sistema
-# Versão do sistema
+
+/*
+ *  Versão do sistema
+ */
 $versao = $intra->get_versaoAtual();
 define("VERSAO", $versao[0]);                    # Versão do Sistema 								
 define("ATUALIZACAO", date_to_php($versao[1]));  # Última Atualização

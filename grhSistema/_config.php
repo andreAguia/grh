@@ -6,6 +6,11 @@
  * By Alat
 */
 
+# Inicia a Session
+if (!isset($_SESSION)) {
+    session_start();
+}
+
 /*
  *  Classes
  */
@@ -75,11 +80,6 @@ $nomeMes = array(null,
     "Outubro",
     "Novembro",
     "Dezembro");
-
-# Inicia a Session
-if (!isset($_SESSION)) {
-    session_start();
-}
 
 /*
  *  Funções

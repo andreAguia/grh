@@ -8,6 +8,12 @@
 
 # Inicia a Session
 if (!isset($_SESSION)) {
+    # server should keep session data for AT LEAST 2 hours
+    ini_set('session.gc_maxlifetime', 7200);
+
+    # each client should remember their session id for EXACTLY 2 hours
+    session_set_cookie_params(7200);
+
     session_start();
 }
 

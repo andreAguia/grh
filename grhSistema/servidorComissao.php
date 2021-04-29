@@ -141,7 +141,7 @@ if ($acesso) {
     $objeto->set_align(array("left","left","left"));
     #$objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
 
-    $objeto->set_classe(array("Cargocomissao", "Cargocomissao", "Cargocomissao", "Cargocomissao"));
+    $objeto->set_classe(array("CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao"));
     $objeto->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao", "exibeBotaoDocumentos"));
 
     # Classe do banco de dados

@@ -5655,4 +5655,23 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_nomenclaturaOriginal
+     * Informa a nomenclaturaOriginal do cargo de um servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_nomenclaturaOriginal($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT nomenclaturaOriginal
+                         FROM tbservidor
+                        WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        return $row[0];
+    }
+
+    ###########################################################
 }

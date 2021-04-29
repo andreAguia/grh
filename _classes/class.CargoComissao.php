@@ -65,7 +65,8 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tbtipocomissao.simbolo,
                           tbtipocomissao.descricao,
-                          tbdescricaocomissao.descricao
+                          tbdescricaocomissao.descricao,
+                          tbcomissao.tipo
                      FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
                                      LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                     WHERE tbcomissao.idComissao = $idComissao";
@@ -80,6 +81,18 @@ class CargoComissao {
                     "{$dados[0]} - {$dados[1]}",
                     $dados[2]
             );
+        }
+
+        # Informa o tipo
+        switch ($dados['tipo']) {
+
+            case 1:
+                label("Pro Tempore");
+                break;
+
+            case 2:
+                label("Designado");
+                break;
         }
     }
 
@@ -260,6 +273,24 @@ class CargoComissao {
     ###########################################################
 
     /**
+     * Método get_descricaoTipoCargo
+     * 
+     * Exibe a descrição de um determinado tipo de cargo em comissao
+     */
+    public function get_descricaoTipoCargo($idTipoCargo) {
+
+        $select = 'SELECT descricao                             
+                     FROM tbtipocomissao 
+                    WHERE idTipoComissao = ' . $idTipoCargo;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
      * Método get_valor
      * 
      * Exibe o valor de um determinado cargo em comissao
@@ -410,7 +441,7 @@ class CargoComissao {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     function exibeDadosExoneracao($idComissao) {
 
@@ -446,5 +477,129 @@ class CargoComissao {
         }
     }
 
-    ###########################################################               
+    ###########################################################
+
+    function exibeDadosVagas($idTipoCargo) {
+
+        /**
+         * Exibe todos os dados de vagas de um cargo
+         */
+        $vagas = $this->get_vagas($idTipoCargo);
+        $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
+        $protempore = $this->get_numServidoresProTempore($idTipoCargo);
+        $designado = $this->get_numServidoresDesignados($idTipoCargo);
+        $disponiveis = $this->get_vagasDisponiveis($idTipoCargo);
+        $simbolo = $this->get_simbolo($idTipoCargo);
+        $descricao = $this->get_descricaoTipoCargo($idTipoCargo);
+
+        echo "{$simbolo} - {$descricao}";
+        br();
+        echo "{$vagas} vaga(s) | {$nomeados} nomeado(s) | {$disponiveis} disponível(is)";
+        br();
+        if (!empty($designado)) {
+            echo "{$designado} designado(s)";
+        }
+        if (!empty($protempore)) {
+            if (!empty($designado)) {
+                echo " | ";
+            }
+            echo "{$protempore} pro tempore";
+        }
+    }
+
+    ###########################################################
+
+    function exibeNomeadoVigente($idComissao) {
+
+        /**
+         * Exibe todos os dados de vagas de um cargo
+         */
+        $dados = $this->get_dados($idComissao);
+        $idServidor = $dados["idServidor"];
+
+        $pessoal = new Pessoal();
+
+        pLista(
+                $pessoal->get_nome($idServidor),
+                $pessoal->get_cargoSimples($idServidor),
+                $pessoal->get_lotacao($idServidor),
+                date_to_php($dados["dtNom"])
+        );
+    }
+
+    ###########################################################
+
+    function exibeNomeadoAnterior($idComissao) {
+
+        /**
+         * Exibe todos os dados de vagas de um cargo
+         */
+        # Pega a descrição
+        $dados = $this->get_dados($idComissao);
+        $idDescricaoComissao = $dados['idDescricaoComissao'];
+
+        # Pega os Servidores com a mesma descrição
+        $select = "SELECT idServidor, dtNom, dtExo
+                     FROM tbcomissao
+                    WHERE idDescricaoComissao = $idDescricaoComissao 
+                 ORDER BY dtNom desc
+                    LIMIT 2";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+        if (count($row) > 1) {
+            $idServidor = $row[1][0];
+
+            $pessoal = new Pessoal();
+
+            pLista(
+                    $pessoal->get_nome($idServidor),
+                    $pessoal->get_cargoSimples($idServidor),
+                    $pessoal->get_lotacao($idServidor),
+                    date_to_php($row[1][1]) . ' - ' . date_to_php($row[1][2])
+            );
+        } else {
+            
+        }
+    }
+
+    ##################################################################
+
+    function exibeDescricaoComissao($idComissao) {
+        /**
+         * Exibe informações sobre a Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria	
+         * 
+         * @note Usado na rotina de cadastro de Cargo em comissão de um detrerminado servidor
+         * 
+         * @syntax descricaoComissao($idComissao);
+         * 
+         * @param $idComissao integer null o id do cargo em comissão
+         */
+        # Conecta ao Banco de Dados
+        $comissao = new CargoComissao();
+
+        # Pega os dados da comissão
+        $dados = $comissao->get_dados($idComissao);
+        $descricao = $comissao->get_descricaoCargo($idComissao);
+        $tipo = $dados['tipo'];
+
+        echo $descricao;
+
+        # Informa o tipo
+        switch ($tipo) {
+
+            case 1:
+                br();
+                label("Pro Tempore");
+                break;
+
+            case 2:
+                br();
+                label("Designado");
+                break;
+        }
+        return;
+    }
+
+##########################################################                                 
 }

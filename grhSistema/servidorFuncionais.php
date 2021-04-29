@@ -87,8 +87,11 @@ if ($acesso) {
     if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
         $selectEdita .= 'opcaoFenorteUenf,';
     }
+    
+    
 
-    $selectEdita .= 'dtAdmissao,
+    $selectEdita .= 'nomenclaturaOriginal,
+                    dtAdmissao,
                     processoAdm,
                     dtPublicAdm,
                     ciGepagAdm,
@@ -259,7 +262,7 @@ if ($acesso) {
                 'tipo' => 'combo',
                 'array' => $cargo,
                 'title' => 'Cargo',
-                'col' => $colunaCargo,
+                'col' => 12,
                 'size' => 15));
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
@@ -283,17 +286,25 @@ if ($acesso) {
                 array('linha' => 3,
                     'nome' => 'opcaoFenorteUenf',
                     'label' => 'Optou ser transferido?',
-                    'helptext' => 'Quando da separação das Instituições FENORTE e UENF (Lei nº3.684 de 23/10/2001) o servidor optou por trasnferir-se para a UENF?',
+                    'helptext' => 'Quando da separação das Instituições FENORTE e UENF (Lei nº3.684 de 23/10/2001) o servidor optou por trasnferir-se da FENORTE para a UENF?',
                     'tipo' => 'simnao2',
                     'size' => 10,
                     'col' => 3,
                     'padrao' => 0,
                     'title' => 'Se o servidor optou em se transferir da FENORTE para e UENF de acordo com Lei nº 3684 de 23/10/2001'));
-        $colunaCargo -= 1;
+        $colunaCargo -= 3;
     }
 
     # os demais
     array_push($campos,
+            array('linha' => 3,
+                'nome' => 'nomenclaturaOriginal',
+                'label' => 'Nomenclatura Original do Cargo:',
+                'tipo' => 'texto',
+                'helptext' => 'Informe a nomenclatura original do cargo, caso a mesma tenha sido alterada pelo Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e Lei 4800/2006 de 30/06/2006.',
+                'col' => $colunaCargo,
+                'size' => 200,
+                'title' => 'Cargo de origem, que consta no ato de investidura.'),
             array('linha' => 4,
                 'nome' => 'dtAdmissao',
                 'label' => 'Data de Admissão:',
@@ -391,9 +402,11 @@ if ($acesso) {
 
             $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
             $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
+            $nomenclaturaOgiginal = $pessoal->get_nomenclaturaOriginal($idServidorPesquisado);
+            $mensagem = null;
 
             if ($regime == "CLT") {
-                $mensagem = "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+                $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
 
                 # Verifica se foi transformado
                 if (!empty($dtTranfRegime)) {
@@ -401,15 +414,21 @@ if ($acesso) {
                             . " conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de"
                             . " 09/09/2003.";
                 }
-
+            }
+            
+            if (!empty($nomenclaturaOgiginal)) {
                 # Informa sobre a mudança do nome do cargo
                 $mensagem .= "<br>- Mudança de Nomenclatura do Cargo efetivo conforme"
                         . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
                         . "Lei 4800/2006 de 30/06/2006";
-
+            }
+            
+            # Exibe a mensagem
+            if (!empty($mensagem)) {
                 $objeto->set_rotinaExtraEditar(array("callout"));
                 $objeto->set_rotinaExtraEditarParametro(array($mensagem));
             }
+                
 
             $objeto->$fase($idServidorPesquisado);
             break;

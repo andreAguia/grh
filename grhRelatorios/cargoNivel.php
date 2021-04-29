@@ -27,11 +27,11 @@ if ($acesso) {
     ######
 
     $select = 'SELECT tbtipocargo.cargo,
-                     tbarea.area,
-                     nome
-                FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                             LEFT JOIN tbarea USING (idarea)
-            ORDER BY 1,2,3';
+                      tbarea.area,
+                      nome
+                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                              LEFT JOIN tbarea USING (idarea)
+             ORDER BY 1,2,3';
 
     $result = $pessoal->select($select);
 

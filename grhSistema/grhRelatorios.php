@@ -194,6 +194,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Cargos');
             $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Ativos', '../grhRelatorios/cargoComissaoAtivos.php');
             $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Inativos', '../grhRelatorios/cargoComissaoInativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Vigente e Anterior', '../grhRelatorios/cargoComissaoVigenteEAnterior.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo', '../grhRelatorios/cargosComissionados.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Lotacao', '../grhRelatorios/cargosComissionadosLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG', '../grhRelatorios/cargosComissionadosCpfRg.php');
@@ -466,12 +467,11 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Email dos Servidores', '../grhRelatorios/email.php');
             $menu->add_item('linkWindow', 'Email dos Servidores 2', '../grhRelatorios/email2.php');
             $menu->add_item('linkWindow', 'Email dos Servidores 3', '../grhRelatorios/email3.php');
-            
+
             $menu->add_item('titulo1', 'Telefone');
             $menu->add_item('linkWindow', 'Telefones dos Servidores', '../grhRelatorios/telefone.php');
             $menu->add_item('linkWindow', 'Telefones dos Servidores 2', '../grhRelatorios/telefone2.php');
-            
-            
+
             $menu->add_item('titulo1', 'Contatos');
             $menu->add_item('linkWindow', 'Contatos dos Servidores', '../grhRelatorios/contatos.php');
             $menu->add_item('linkWindow', 'Contatos dos Servidores (Formato Sispatri)', '../grhRelatorios/contatos.sispatri.php');
@@ -545,7 +545,6 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Professores Com CPF e Assinatura por Locação', '../grhRelatorios/eleitoral.Assinatura.Professores.PorLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Com CPF e Assinatura - Polo Macaé', '../grhRelatorios/eleitoral.Assinatura.Professores.PoloMacae.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Com CPF e Assinatura - Polo Campos', '../grhRelatorios/eleitoral.Assinatura.Professores.PoloCampos.php');
-
 
             $menu->show();
             break;
@@ -689,7 +688,6 @@ if ($acesso) {
             $resumo[] = array("Recadastrados Ativos", $recadastradosAdmAtivos, $recadastradosProfessoresAtivos, $recadastradosAtivosTotal);
             $resumo[] = array("Recadastrados Inativos", $recadastradosAdmInativos, $recadastradosProfessoresInativos, $recadastradosInativosTotal);
             $resumo[] = array("NÃO Recadastrados Ativos", ($totalAdm - $recadastradosAdmAtivos), ($totalProfessores - $recadastradosProfessoresAtivos), ($totalServidores - $recadastradosAtivosTotal));
-
 
             # Monta a tabela
             $tabela = new Tabela();

@@ -266,6 +266,7 @@ if ($acesso) {
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
         $nomenclaturaOgiginal = $pessoal->get_nomenclaturaOriginal($idServidorPesquisado);
 
+        # Informa se o servidor entrou como CLT
         if ($regime == "CLT") {
             $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
 
@@ -274,23 +275,33 @@ if ($acesso) {
                 $mensagem .= "- Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
             }
         }
-
-        if (!empty($nomenclaturaOgiginal)) {
-
-            # Informa sobre a mudança do nome do cargo
-            $mensagem .= "<br>- Mudança de Nomenclatura do Cargo efetivo conforme"
-                    . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
-                    . "Lei 4800/2006 de 30/06/2006. Nomenclatura Original do Cargo: <b>{$nomenclaturaOgiginal}<b/>";
-        }
-
+        
+        # Informa se servidor optou da transferência FENORTE x UENF em 2002
         if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
             if (!is_null($pessoal->opcaoFenorteUenf($idServidorPesquisado))) {
+                if (!empty($mensagem)) {
+                    $mensagem .= "<br/>";
+                }
+
                 if ($pessoal->opcaoFenorteUenf($idServidorPesquisado)) {
-                    $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.<br/>";
+                    $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.";
                 } else {
-                    $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.<br/>";
+                    $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.";
                 }
             }
+        }
+
+        # Informa se houve alteração da nomenclatura do cargo
+        if (!empty($nomenclaturaOgiginal)) {
+
+            if (!empty($mensagem)) {
+                $mensagem .= "<br/>";
+            }
+
+            # Informa sobre a mudança do nome do cargo
+            $mensagem .= "- Mudança de Nomenclatura do Cargo efetivo conforme"
+                    . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
+                    . "Lei 4800/2006 de 30/06/2006. Nomenclatura Original do Cargo: <b>{$nomenclaturaOgiginal}<b/>";
         }
 
         if (!empty($mensagem)) {

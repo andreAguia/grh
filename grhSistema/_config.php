@@ -4,18 +4,31 @@
  * Configuração do Sistema de Pessoal
  * 
  * By Alat
-*/
+ */
+
+########################################################33
 
 # Inicia a Session
-if (!isset($_SESSION)) {
-    # server should keep session data for AT LEAST 2 hours
-    ini_set('session.gc_maxlifetime', 7200);
+// Configure timeout to 5 horas
+$timeout = 18000;
 
-    # each client should remember their session id for EXACTLY 2 hours
-    session_set_cookie_params(7200);
+// Set the maxlifetime of session
+ini_set("session.gc_maxlifetime", $timeout);
 
-    session_start();
+// Also set the session cookie timeout
+ini_set("session.cookie_lifetime", $timeout);
+
+// Now start the session 
+session_start();
+
+// Update the timeout of session cookie
+$sessionName = session_name();
+
+if (isset($_COOKIE[$sessionName])) {
+    setcookie($sessionName, $_COOKIE[$sessionName], time() + $timeout, '/');
 }
+
+########################################################
 
 /*
  *  Classes

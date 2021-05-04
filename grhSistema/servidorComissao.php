@@ -49,18 +49,9 @@ if ($acesso) {
                     $(document).ready(function(){
                         $("#idTipoComissao").change(function(){
                             $("#idDescricaoComissao").load("servidorComissaoExtraCombo.php?tipo="+$("#idTipoComissao").val());
-                            $("#idAnterior").load("servidorComissaoExtraCombo2.php?tipo="+$("#idTipoComissao").val()+"&descricao="+$("#idDescricaoComissao").val());
                         })
                     })
                     
-                    $(document).ready(function(){
-                    
-                        $("#idDescricaoComissao").change(function(){
-                            $("#idAnterior").load("servidorComissaoExtraCombo2.php?tipo="+$("#idTipoComissao").val()+"&descricao="+$("#idDescricaoComissao").val());
-                        })
-                    })
-
-
             </script>';
 
     # Começa uma nova página

@@ -238,6 +238,7 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
             $tabela->set_titulo("Servidores Nomeados");
+            $tabela->set_width([10,20,13,13,19,20]);
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_classe($classe);

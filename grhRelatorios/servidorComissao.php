@@ -29,6 +29,7 @@ if ($acesso) {
     br();
     $select = "SELECT idComissao,
                       idComissao,
+                      idComissao,
                       idComissao
                  FROM tbcomissao
                 WHERE idServidor = {$idServidorPesquisado}
@@ -41,10 +42,11 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Cargo", "Nomeação", "Exoneração"));
-    $relatorio->set_align(array("left", "left", "left"));
-    $relatorio->set_classe(array("Cargocomissao", "Cargocomissao", "Cargocomissao"));
-    $relatorio->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao"));
+    $relatorio->set_label(array("Cargo", "Nomeação", "Exoneração","Ocupante Anterior"));
+    $relatorio->set_align(array("left", "left", "left", "left"));
+    $relatorio->set_width(array(40,20,20,20));
+    $relatorio->set_classe(array("Cargocomissao", "Cargocomissao", "Cargocomissao","Cargocomissao"));
+    $relatorio->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao","exibeOcupanteAnterior"));
     $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
     $relatorio->set_logServidor($idServidorPesquisado);

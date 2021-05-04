@@ -425,7 +425,7 @@ class CargoComissao {
         $dados = $pessoal->select($select, false);
 
         if (!empty($dados["dtNom"])) {
-            p("Data: " . date_to_php($dados["dtNom"]), "pdadosComissao");
+            p("Nomeação: " . date_to_php($dados["dtNom"]), "pdadosComissao");
         }
 
         if (!empty($dados["dtAtoNom"])) {
@@ -461,7 +461,7 @@ class CargoComissao {
         $dados = $pessoal->select($select, false);
 
         if (!empty($dados["dtExo"])) {
-            p("Data: " . date_to_php($dados["dtExo"]), "pdadosComissao");
+            p("Exoneração: " . date_to_php($dados["dtExo"]), "pdadosComissao");
         }
 
         if (!empty($dados["dtAtoExo"])) {
@@ -529,42 +529,6 @@ class CargoComissao {
 
     ###########################################################
 
-    function exibeNomeadoAnterior($idComissao) {
-
-        /**
-         * Exibe todos os dados de vagas de um cargo
-         */
-        # Pega a descrição
-        $dados = $this->get_dados($idComissao);
-        $idDescricaoComissao = $dados['idDescricaoComissao'];
-
-        # Pega os Servidores com a mesma descrição
-        $select = "SELECT idServidor, dtNom, dtExo
-                     FROM tbcomissao
-                    WHERE idDescricaoComissao = $idDescricaoComissao 
-                 ORDER BY dtNom desc
-                    LIMIT 2";
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select);
-        if (count($row) > 1) {
-            $idServidor = $row[1][0];
-
-            $pessoal = new Pessoal();
-
-            pLista(
-                    $pessoal->get_nome($idServidor),
-                    $pessoal->get_cargoSimples($idServidor),
-                    $pessoal->get_lotacao($idServidor),
-                    date_to_php($row[1][1]) . ' - ' . date_to_php($row[1][2])
-            );
-        } else {
-            
-        }
-    }
-
-    ##################################################################
-
     function exibeDescricaoComissao($idComissao) {
         /**
          * Exibe informações sobre a Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria	
@@ -601,5 +565,35 @@ class CargoComissao {
         return;
     }
 
-##########################################################                                 
+###########################################################
+
+    function exibeOcupanteAnterior($idComissao) {
+
+        /**
+         * Exibe todos os dados de vagas de um cargo
+         */
+        # Pega a nomeação anterior
+        $dados1 = $this->get_dados($idComissao);
+        $idAnterior = $dados1['idAnterior'];
+
+        if (empty($idAnterior)) {
+            return "---";
+        } else {
+
+            # Pega o nome do nomeado anterio
+            $dados2 = $this->get_dados($idAnterior);
+            $idServidorAnterior = $dados2['idServidor'];
+
+            $pessoal = new Pessoal();
+
+            pLista(
+                    $pessoal->get_nome($idServidorAnterior),
+                    $pessoal->get_cargoSimples($idServidorAnterior),
+                    $pessoal->get_lotacao($idServidorAnterior),
+                    date_to_php($dados2['dtNom']) . ' - ' . date_to_php($dados2['dtExo'])
+            );
+        }
+    }
+
+    ##################################################################                                 
 }

@@ -49,8 +49,17 @@ if ($acesso) {
                     $(document).ready(function(){
                         $("#idTipoComissao").change(function(){
                             $("#idDescricaoComissao").load("servidorComissaoExtraCombo.php?tipo="+$("#idTipoComissao").val());
+                            $("#idAnterior").load("servidorComissaoExtraCombo2.php?tipo="+$("#idTipoComissao").val()+"&descricao="+$("#idDescricaoComissao").val());
                         })
                     })
+                    
+                    $(document).ready(function(){
+                    
+                        $("#idDescricaoComissao").change(function(){
+                            $("#idAnterior").load("servidorComissaoExtraCombo2.php?tipo="+$("#idTipoComissao").val()+"&descricao="+$("#idDescricaoComissao").val());
+                        })
+                    })
+
 
             </script>';
 
@@ -103,6 +112,7 @@ if ($acesso) {
     $objeto->set_selectLista('SELECT idComissao,
                                      idComissao,
                                      idComissao,
+                                     idComissao,
                                      idComissao
                                 FROM tbcomissao
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -112,6 +122,7 @@ if ($acesso) {
     $objeto->set_selectEdita('SELECT idTipoComissao,
                                      idDescricaoComissao,
                                      tipo,
+                                     idAnterior,
                                      dtNom,
                                      dtAtoNom,
                                      numProcNom,
@@ -136,13 +147,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos"));
-    #$objeto->set_width(array(30,45,10,10));	
-    $objeto->set_align(array("left","left","left"));
+    $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos", "Ocupante Anterior"));
+    $objeto->set_width(array(20, 20, 20, 15, 20));
+    $objeto->set_align(array("left", "left", "left", "left", "left"));
     #$objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
 
-    $objeto->set_classe(array("CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao"));
-    $objeto->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao", "exibeBotaoDocumentos"));
+    $objeto->set_classe(array("CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao"));
+    $objeto->set_metodo(array("exibeCargoCompleto", "exibeDadosNomeacao", "exibeDadosExoneracao", "exibeBotaoDocumentos", "exibeOcupanteAnterior"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -182,11 +193,76 @@ if ($acesso) {
 
     array_unshift($descricao, array(null, null));
 
-    # Label
-    $labelDescricao = 'Descrição do Cargo:';
+    # Pega os dados do ocupante anterior
+    if (is_null($id)) {
+        $ocupanteAnterior = null;
+    } else {
+        $comissao = $cargoComissao->get_dados($id);
+
+        # Primeiro select pega os cargos com a mesma descrição do $id
+        $selectOcupante1 = 'SELECT idComissao,
+                                  CONCAT(DATE_FORMAT(dtNom,"%d/%m/%Y")," - ",DATE_FORMAT(dtExo,"%d/%m/%Y")," | ",tbpessoa.nome," | ",tbperfil.nome) as ff,
+                                  tbdescricaocomissao.descricao
+                             FROM tbcomissao as tb1 JOIN tbservidor USING (idServidor) 
+                                                    JOIN tbpessoa USING (idPessoa)
+                                                    JOIN tbperfil USING (idPerfil)
+                                                    JOIN tbdescricaocomissao USING (idDescricaoComissao)';
+        # Seleciona somente os de mesmo cargo
+        $selectOcupante1 .= ' WHERE tbdescricaocomissao.idTipoComissao = ' . $comissao["idTipoComissao"];
+
+        # Seleciona somente os exinerados
+        $selectOcupante1 .= ' AND tbdescricaocomissao.idDescricaoComissao = ' . $comissao["idDescricaoComissao"];
+
+        # Seleciona somente os exinerados
+        $selectOcupante1 .= ' AND dtExo IS NOT null';
+
+        # Não pode o anterior ser o próprio mandato atual
+        $selectOcupante1 .= ' AND idComissao <> ' . $id;
+
+        # Impede que o mandato já escolhido apareça
+        $selectOcupante1 .= ' AND tb1.idComissao NOT IN (SELECT idAnterior FROM tbcomissao as tb2 WHERE idAnterior IS NOT null AND tb2.idComissao <> ' . $id . ')';
+
+        # Ordena pela descrição e data de nomeação para facilitar o agrupamento
+        $selectOcupante1 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
+        $ocupanteAnterior1 = $pessoal->select($selectOcupante1);
+
+        # Segundo select pega os cargos que sao diferentes do $id, pois existe 
+        # remota possibilidade do cargp anterior ser de outra descrição
+        $selectOcupante2 = 'SELECT idComissao,
+                                  CONCAT(DATE_FORMAT(dtNom,"%d/%m/%Y")," - ",DATE_FORMAT(dtExo,"%d/%m/%Y")," | ",tbpessoa.nome," | ",tbperfil.nome) as ff,
+                                  tbdescricaocomissao.descricao
+                             FROM tbcomissao as tb1 JOIN tbservidor USING (idServidor) 
+                                                    JOIN tbpessoa USING (idPessoa)
+                                                    JOIN tbperfil USING (idPerfil)
+                                                    JOIN tbdescricaocomissao USING (idDescricaoComissao)';
+        # Seleciona somente os de mesmo cargo
+        $selectOcupante2 .= ' WHERE tbdescricaocomissao.idTipoComissao = ' . $comissao["idTipoComissao"];
+
+        # Seleciona somente os exinerados
+        $selectOcupante2 .= ' AND tbdescricaocomissao.idDescricaoComissao <> ' . $comissao["idDescricaoComissao"];
+
+        # Seleciona somente os exinerados
+        $selectOcupante2 .= ' AND dtExo IS NOT null';
+
+        # Não pode o anterior ser o próprio mandato atual
+        $selectOcupante2 .= ' AND idComissao <> ' . $id;
+
+        # Impede que o mandato já escolhido apareça
+        $selectOcupante2 .= ' AND tb1.idComissao NOT IN (SELECT idAnterior FROM tbcomissao as tb2 WHERE idAnterior IS NOT null AND tb2.idComissao <> ' . $id . ')';
+
+        # Ordena pela descrição e data de nomeação para facilitar o agrupamento
+        $selectOcupante2 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
+        $ocupanteAnterior2 = $pessoal->select($selectOcupante2);
+        
+        # Junta os arrays
+        $ocupanteAnterior = array_merge($ocupanteAnterior1,$ocupanteAnterior2);
+
+        array_unshift($ocupanteAnterior, [null, null]);
+    }
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'idTipoComissao',
+    $objeto->set_campos(array(
+        array('nome' => 'idTipoComissao',
             'label' => 'Tipo da Cargo em Comissão:',
             'tipo' => 'combo',
             'required' => true,
@@ -197,9 +273,9 @@ if ($acesso) {
             'title' => 'Tipo dp Cargo em Comissão',
             'linha' => 1),
         array('linha' => 1,
-            'col' => 6,
+            'col' => 8,
             'nome' => 'idDescricaoComissao',
-            'label' => $labelDescricao,
+            'label' => 'Descrição do Cargo:',
             'tipo' => 'combo',
             'array' => $descricao,
             'size' => 100),
@@ -211,7 +287,15 @@ if ($acesso) {
             'size' => 20,
             'col' => 2,
             'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
-            'linha' => 1),
+            'linha' => 2),
+        array('linha' => 2,
+            'col' => 10,
+            'nome' => 'idAnterior',
+            'label' => 'Ocupante Anterior:',
+            'tipo' => 'combo',
+            'optgroup' => true,
+            'array' => $ocupanteAnterior,
+            'size' => 100),
         array('nome' => 'dtNom',
             'label' => 'Data da Nomeação:',
             'fieldset' => 'Nomeação',

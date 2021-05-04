@@ -422,7 +422,7 @@ if ($acesso) {
 
             # Limita ainda mais a tela paara o painel
             $grid = new Grid("center");
-            $grid->abreColuna(11);
+            $grid->abreColuna(8);
 
             # Pega os dados 
             $atualizacoes = $intra->get_atualizacoes();
@@ -433,7 +433,7 @@ if ($acesso) {
                 $painel->abre();
 
                 $grid2 = new Grid("center");
-                $grid2->abreColuna(6);
+                $grid2->abreColuna(6);                
                 p("Versão: " . $valor[0], "patualizacaoL");
                 $grid2->fechaColuna();
                 $grid2->abreColuna(6);

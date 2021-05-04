@@ -203,11 +203,11 @@ if ($acesso) {
 
             # select
             $select = "SELECT tbservidor.idServidor,
-                              tbpessoa.nome,
+                              tbservidor.idServidor,
                               tbcomissao.dtNom,
                               tbcomissao.dtExo,
                               tbcomissao.idComissao,
-                              tbservidor.idServidor,
+                              tbcomissao.idComissao,
                               idComissao
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbcomissao USING(idServidor)
@@ -227,11 +227,11 @@ if ($acesso) {
             }
 
             $result = $pessoal->select($select);
-            $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Perfil');
-            $align = array("center", "left", "center", "center", "left", "center");
-            $function = array("idMatricula", null, "date_to_php", "date_to_php", "descricaoComissao");
-            $classe = array(null, null, null, null, null, "Pessoal");
-            $metodo = array(null, null, null, null, null, "get_perfil");
+            $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Ocupante Anterior');
+            $align = array("center", "left", "center", "center", "left", "left");
+            $function = array(null, null, "date_to_php", "date_to_php", "descricaoComissao");
+            $classe = array("Pessoal", "Pessoal", null, null, null, "CargoComissao");
+            $metodo = array("get_idFuncionalEMatricula", "get_nomeECargoSimplesEPerfil", null, null, null, "exibeOcupanteAnterior");
 
             # Monta a tabela
             $tabela = new Tabela();

@@ -48,7 +48,7 @@ if ($acesso) {
     $relatorio->set_titulo("Relatório Servidores Comissionados Vigentes e Anteriors");
     $relatorio->set_align(["left", "left", "left", "left", "center"]);    
     $relatorio->set_classe(["CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao"]);
-    $relatorio->set_metodo(["exibeDadosVagas", "exibeDescricaoComissao", "exibeNomeadoVigente", "exibeNomeadoAnterior"]);
+    $relatorio->set_metodo(["exibeDadosVagas", "exibeDescricaoComissao", "exibeNomeadoVigente", "exibeOcupanteAnterior"]);
     $relatorio->set_numGrupo(0);
     $relatorio->set_bordaInterna(true);
     $relatorio->show();

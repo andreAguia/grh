@@ -15,6 +15,8 @@ $descricao = $pessoal->select('SELECT idDescricaoComissao,
                                 WHERE tbdescricaocomissao.idTipoComissao = ' . $tipo . ' 
                              ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao,  tbdescricaocomissao.descricao');
 
+array_unshift($descricao, [null, null]);
+
 echo '<label id="labelidTipoComissao" for="idTipoComissao">Tipo da Cargo em Comissão: * </label>';
 
 foreach ($descricao as $dd) {

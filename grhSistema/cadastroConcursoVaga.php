@@ -55,6 +55,7 @@ if ($acesso) {
     $objeto->set_selectEdita("SELECT idTipoCargo,
                                      vagasNovas,
                                      vagasReposicao,
+                                     obs,
                                      idConcurso
                                 FROM tbconcursovaga
                               WHERE idConcursoVaga = {$id}");
@@ -115,6 +116,12 @@ if ($acesso) {
             'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
+        array('linha' => 2,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'col' => 12,
+            'size' => array(80, 5)),
         array('linha' => 3,
             'nome' => 'idConcurso',
             'label' => 'Concurso:',

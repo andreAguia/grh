@@ -430,6 +430,11 @@ class CargoComissao {
             $retorna .= "<br/>";
         }
 
+        if (!empty($dados["dtPublicNom"])) {
+            $retorna .= "Publicação: " . date_to_php($dados["dtPublicNom"]);
+            $retorna .= "<br/>";
+        }
+
         if (!empty($dados["dtAtoNom"])) {
             $retorna .= "Ato do Reitor: " . date_to_php($dados["dtAtoNom"]);
             $retorna .= "<br/>";
@@ -437,11 +442,6 @@ class CargoComissao {
 
         if (!empty($dados["numProcNom"])) {
             $retorna .= "Processo: " . $dados["numProcNom"];
-            $retorna .= "<br/>";
-        }
-
-        if (!empty($dados["dtPublicNom"])) {
-            $retorna .= "Publicação: " . date_to_php($dados["dtPublicNom"]);
         }
 
         return $retorna;
@@ -472,6 +472,11 @@ class CargoComissao {
             $retorna .= "<br/>";
         }
 
+        if (!empty($dados["dtPublicExo"])) {
+            $retorna .= "Publicação: " . date_to_php($dados["dtPublicExo"]);
+            $retorna .= "<br/>";
+        }
+
         if (!empty($dados["dtAtoExo"])) {
             $retorna .= "Ato do Reitor: " . date_to_php($dados["dtAtoExo"]);
             $retorna .= "<br/>";
@@ -479,11 +484,6 @@ class CargoComissao {
 
         if (!empty($dados["numProcExo"])) {
             $retorna .= "Processo: " . $dados["numProcExo"];
-            $retorna .= "<br/>";
-        }
-
-        if (!empty($dados["dtPublicExo"])) {
-            $retorna .= "Publicação: " . date_to_php($dados["dtPublicExo"]);
         }
 
         return $retorna;

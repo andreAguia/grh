@@ -337,8 +337,8 @@ p#pdadosComissao{
 
 div#divEditaNota{
     float: right;
-    margin-top: -15px;
-    margin-right: -5px;
+    padding: 0px;
+    margin: 0px;
 }
 /*******************************************
  * Cadastro de Tempo de Servico

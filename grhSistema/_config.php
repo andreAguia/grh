@@ -5,29 +5,14 @@
  * 
  * By Alat
  */
-
 ########################################################33
+# Iniciando a sessão
 
-# Inicia a Session
-// Configure timeout to 5 horas
-$timeout = 18000;
-
-// Set the maxlifetime of session
-ini_set("session.gc_maxlifetime", $timeout);
-
-// Also set the session cookie timeout
-ini_set("session.cookie_lifetime", $timeout);
-
-// Now start the session 
-session_start();
-
-// Update the timeout of session cookie
-$sessionName = session_name();
-
-if (isset($_COOKIE[$sessionName])) {
-    setcookie($sessionName, $_COOKIE[$sessionName], time() + $timeout, '/');
+if (session_status() !== PHP_SESSION_ACTIVE) { 
+    session_cache_expire(300);
+    session_start();
 }
-
+$cache_expire = session_cache_expire();
 ########################################################
 
 /*
@@ -172,3 +157,5 @@ define("EMAILAUTOR", $intra->get_variavel("sistemaAutorEmail"));   # Autor do si
 $versao = $intra->get_versaoAtual();
 define("VERSAO", $versao[0]);                    # Versão do Sistema 								
 define("ATUALIZACAO", date_to_php($versao[1]));  # Última Atualização
+
+#echo "As sessões em cache irão expirar depois de " . ($cache_expire / 60) . " horas";

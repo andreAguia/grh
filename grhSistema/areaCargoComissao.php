@@ -203,12 +203,11 @@ if ($acesso) {
 
             # select
             $select = "SELECT tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbcomissao.dtNom,
-                              tbcomissao.dtExo,
                               tbcomissao.idComissao,
                               tbcomissao.idComissao,
-                              idComissao
+                              tbcomissao.idComissao,
+                              tbcomissao.idComissao,
+                              tbcomissao.dtExo
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbcomissao USING(idServidor)
                                          LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
@@ -227,27 +226,27 @@ if ($acesso) {
             }
 
             $result = $pessoal->select($select);
-            $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Ocupante Anterior');
-            $align = array("center", "left", "center", "center", "left", "left");
-            $function = array(null, null, "date_to_php", "date_to_php", "descricaoComissao");
-            $classe = array("Pessoal", "Pessoal", null, null, null, "CargoComissao");
-            $metodo = array("get_idFuncionalEMatricula", "get_nomeECargoSimplesEPerfil", null, null, null, "exibeOcupanteAnterior");
+            $label = array('Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Ocupante Anterior');
+            $align = array("left", "left", "left", "left", "left");
+            $function = array(null, null, null, "descricaoComissao");
+            $classe = array("Pessoal", "CargoComissao", "CargoComissao", null, "CargoComissao");
+            $metodo = array("get_nomeECargoSimplesEPerfil", "exibeDadosNomeacao", "exibeDadosExoneracao", null, "exibeOcupanteAnterior");
 
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
             $tabela->set_titulo("Servidores Nomeados");
-            $tabela->set_width([10,20,13,13,19,20]);
+            $tabela->set_width([20, 20, 20, 20, 20]);
             $tabela->set_align($align);
             $tabela->set_funcao($function);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);
             $tabela->set_idCampo('idComissao');
             $tabela->set_editar('?fase=editarCargo');
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 3,
-                    'valor' => null,
-                    'operador' => '=',
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 2,
+                    'operador' => 'is_null',
                     'id' => 'vigente')));
             $tabela->show();
             break;
@@ -427,7 +426,8 @@ if ($acesso) {
                 $tabela->set_funcao($function);
                 $tabela->set_idCampo('idComissao');
                 $tabela->set_editar('?fase=editarCargo');
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 0,
                         'valor' => "Exoneração",
                         'operador' => '=',
                         'id' => "comissaoVagasNegativas"),

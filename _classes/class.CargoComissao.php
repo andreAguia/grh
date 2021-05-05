@@ -423,22 +423,28 @@ class CargoComissao {
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
+        $retorna = null;
 
         if (!empty($dados["dtNom"])) {
-            p("Nomeação: " . date_to_php($dados["dtNom"]), "pdadosComissao");
+            $retorna .= "Nomeação: " . date_to_php($dados["dtNom"]);
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["dtAtoNom"])) {
-            p("Ato do Reitor: " . date_to_php($dados["dtAtoNom"]), "pdadosComissao");
+            $retorna .= "Ato do Reitor: " . date_to_php($dados["dtAtoNom"]);
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["numProcNom"])) {
-            p("Processo: " . $dados["numProcNom"], "pdadosComissao");
+            $retorna .= "Processo: " . $dados["numProcNom"];
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["dtPublicNom"])) {
-            p("Publicação: " . date_to_php($dados["dtPublicNom"]), "pdadosComissao");
+            $retorna .= "Publicação: " . date_to_php($dados["dtPublicNom"]);
         }
+        
+        return $retorna;
     }
 
     ###########################################################
@@ -459,22 +465,28 @@ class CargoComissao {
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
-
+        $retorna = null;
+        
         if (!empty($dados["dtExo"])) {
-            p("Exoneração: " . date_to_php($dados["dtExo"]), "pdadosComissao");
+            $retorna .= "Exoneração: " . date_to_php($dados["dtExo"]);
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["dtAtoExo"])) {
-            p("Ato do Reitor: " . date_to_php($dados["dtAtoExo"]), "pdadosComissao");
+            $retorna .= "Ato do Reitor: " . date_to_php($dados["dtAtoExo"]);
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["numProcExo"])) {
-            p("Processo: " . $dados["numProcExo"], "pdadosComissao");
+            $retorna .= "Processo: " . $dados["numProcExo"];
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["dtPublicExo"])) {
-            p("Publicação: " . date_to_php($dados["dtPublicExo"]), "pdadosComissao");
+            $retorna .= "Publicação: " . date_to_php($dados["dtPublicExo"]);
         }
+        
+        return $retorna;
     }
 
     ###########################################################

@@ -443,7 +443,7 @@ class CargoComissao {
         if (!empty($dados["dtPublicNom"])) {
             $retorna .= "Publicação: " . date_to_php($dados["dtPublicNom"]);
         }
-        
+
         return $retorna;
     }
 
@@ -466,7 +466,7 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
         $retorna = null;
-        
+
         if (!empty($dados["dtExo"])) {
             $retorna .= "Exoneração: " . date_to_php($dados["dtExo"]);
             $retorna .= "<br/>";
@@ -485,7 +485,7 @@ class CargoComissao {
         if (!empty($dados["dtPublicExo"])) {
             $retorna .= "Publicação: " . date_to_php($dados["dtPublicExo"]);
         }
-        
+
         return $retorna;
     }
 
@@ -607,5 +607,33 @@ class CargoComissao {
         }
     }
 
-    ##################################################################                                 
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoEPerfil
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoSimplesEPerfil($idComissao) {
+        if (empty($idComissao)) {
+            return null;
+        } else {
+            $dados = $this->get_dados($idComissao);
+
+            $pessoal = new Pessoal();
+            $pessoal->get_nomeECargoSimplesEPerfil($dados["idServidor"]);
+
+            # Verifica se tem observação, se tiver exibe uma figura com mouseover
+            if (!empty($dados["obs"])) {
+
+                $div = new Div("divEditaNota");
+                $div->abre();
+                toolTip("Obs", $dados["obs"]);
+                $div->fecha();
+            }
+        }
+    }
+
+    ###########################################################                                 
 }

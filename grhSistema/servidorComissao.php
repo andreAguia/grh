@@ -361,7 +361,7 @@ if ($acesso) {
             'label' => 'Observação:',
             'tipo' => 'textarea',
             'fieldset' => 'fecha',
-            'size' => array(80, 2)),
+            'size' => array(80, 4)),
         array('nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',

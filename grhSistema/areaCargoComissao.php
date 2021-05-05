@@ -202,7 +202,7 @@ if ($acesso) {
             $comissao->exibeResumo($parametroCargo);
 
             # select
-            $select = "SELECT tbservidor.idServidor,
+            $select = "SELECT tbcomissao.idComissao,
                               tbcomissao.idComissao,
                               tbcomissao.idComissao,
                               tbcomissao.idComissao,
@@ -229,7 +229,7 @@ if ($acesso) {
             $label = array('Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Ocupante Anterior');
             $align = array("left", "left", "left", "left", "left");
             $function = array(null, null, null, "descricaoComissao");
-            $classe = array("Pessoal", "CargoComissao", "CargoComissao", null, "CargoComissao");
+            $classe = array("CargoComissao", "CargoComissao", "CargoComissao", null, "CargoComissao");
             $metodo = array("get_nomeECargoSimplesEPerfil", "exibeDadosNomeacao", "exibeDadosExoneracao", null, "exibeOcupanteAnterior");
 
             # Monta a tabela

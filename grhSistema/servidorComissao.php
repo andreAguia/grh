@@ -149,7 +149,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos", "Ocupante Anterior", "Obs"));
-    $objeto->set_width(array(16, 16, 16, 15, 16, 16));
+    $objeto->set_width(array(18, 16, 16, 15, 16, 14));
     $objeto->set_align(array("left", "left", "left", "left", "left", "left"));
     #$objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
 

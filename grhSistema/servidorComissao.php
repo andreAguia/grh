@@ -113,7 +113,8 @@ if ($acesso) {
                                      idComissao,
                                      idComissao,
                                      idComissao,
-                                     idComissao
+                                     idComissao,
+                                     obs
                                 FROM tbcomissao
                                WHERE idServidor = ' . $idServidorPesquisado . '
                             ORDER BY dtNom desc');
@@ -147,9 +148,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos", "Ocupante Anterior"));
-    $objeto->set_width(array(20, 20, 20, 15, 20));
-    $objeto->set_align(array("left", "left", "left", "left", "left"));
+    $objeto->set_label(array("Cargo", "Nomeação", "Exoneração", "Documentos", "Ocupante Anterior", "Obs"));
+    $objeto->set_width(array(16, 16, 16, 15, 16, 16));
+    $objeto->set_align(array("left", "left", "left", "left", "left", "left"));
     #$objeto->set_funcao(array(null, "date_to_php", "date_to_php"));
 
     $objeto->set_classe(array("CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao"));
@@ -253,9 +254,9 @@ if ($acesso) {
         # Ordena pela descrição e data de nomeação para facilitar o agrupamento
         $selectOcupante2 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
         $ocupanteAnterior2 = $pessoal->select($selectOcupante2);
-        
+
         # Junta os arrays
-        $ocupanteAnterior = array_merge($ocupanteAnterior1,$ocupanteAnterior2);
+        $ocupanteAnterior = array_merge($ocupanteAnterior1, $ocupanteAnterior2);
 
         array_unshift($ocupanteAnterior, [null, null]);
     }

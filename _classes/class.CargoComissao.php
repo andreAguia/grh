@@ -587,9 +587,14 @@ class CargoComissao {
         # Pega a nomeação anterior
         $dados1 = $this->get_dados($idComissao);
         $idAnterior = $dados1['idAnterior'];
+        $outraOrigem = $dados1['outraOrigem'];
 
         if (empty($idAnterior)) {
-            return "---";
+            if (empty($outraOrigem)) {
+                return "---";
+            } else {
+                return $outraOrigem;
+            }
         } else {
 
             # Pega o nome do nomeado anterio

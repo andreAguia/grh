@@ -760,7 +760,7 @@ class MenuPrincipal {
         $botao = new BotaoGrafico();
         $botao->set_label("");
         $botao->set_imagem(PASTA_FIGURAS . "do.png", 150, 70);
-        $botao->set_url("http://www.imprensaoficial.rj.gov.br/portal/modules/profile/user.php?xoops_redirect=/portal/modules/content/index.php?id=21");
+        $botao->set_url("http://www.ioerj.com.br");
         $botao->set_title("Imprensa Oficial do Estado do Rio de Janeiro");
         $menu->add_item($botao);
 

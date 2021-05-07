@@ -410,7 +410,7 @@ if ($acesso) {
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
                              WHERE tbcomissao.dtPublicExo = "' . $dd[0] . '") a
-                         ORDER BY 6, 1, 4';
+                         ORDER BY 1, 6';
 
                 $result = $pessoal->select($select);
                 $label = array('Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
@@ -421,7 +421,7 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($result);
                 $tabela->set_label($label);
-                $tabela->set_titulo("Nomeações & Exonerações Publicadas em " . date_to_php($dd[0]));
+                $tabela->set_titulo("Publicadas em " . date_to_php($dd[0]));
                 $tabela->set_align($align);
                 $tabela->set_funcao($function);
                 $tabela->set_idCampo('idComissao');
@@ -435,6 +435,8 @@ if ($acesso) {
                         'valor' => "Nomeação",
                         'operador' => '=',
                         'id' => "comissaoComVagas")));
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
                 $tabela->show();
             }
 
@@ -570,7 +572,7 @@ if ($acesso) {
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
                              WHERE tbcomissao.dtAtoExo = "' . $dd[0] . '") a
-                         ORDER BY 6, 1';
+                         ORDER BY 1,6';
 
                 $result = $pessoal->select($select);
                 $label = array('Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
@@ -581,7 +583,7 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($result);
                 $tabela->set_label($label);
-                $tabela->set_titulo("Nomeações & Exonerações do Ato do Reitor de " . date_to_php($dd[0]));
+                $tabela->set_titulo("Ato do Reitor de " . date_to_php($dd[0]));
                 $tabela->set_align($align);
                 $tabela->set_funcao($function);
                 $tabela->set_idCampo('idComissao');
@@ -594,7 +596,8 @@ if ($acesso) {
                         'valor' => "Nomeação",
                         'operador' => '=',
                         'id' => "comissaoComVagas")));
-
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
                 $tabela->show();
             }
 

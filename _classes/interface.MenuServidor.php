@@ -54,56 +54,43 @@ class MenuServidor {
             $this->moduloOrgaoCedido();
             $grid->fechaColuna();
         }
-
-        $grid->abreColuna(12, 6);
-
+        # --
+        $grid->abreColuna(12, 6, 6);
         $this->moduloOcorrencias();
-
         $grid->fechaColuna();
-        $grid->abreColuna(12, 6);
-
+        # --
+        $grid->abreColuna(12, 6, 6);
         $this->moduloVinculos();
-
         $grid->fechaColuna();
-
-        ###
-
-        $grid->abreColuna(12, 6, 5);
-
+        # --
+        $grid->abreColuna(12, 7, 6);
         $this->moduloFuncionais();
-
         $grid->fechaColuna();
-        $grid->abreColuna(12, 6, 3);
-
+        # --
+        $grid->abreColuna(7, 5, 4);
         $this->moduloPessoais();
-
-        $grid->fechaColuna();
-        $grid->abreColuna(12, 6, 2);
-
-        $this->moduloBeneficios();
-
-        $grid->fechaColuna();
-
-        $grid->abreColuna(12, 6, 2);
-
+        $grid->fechaColuna();        
+        # --
+        $grid->abreColuna(5, 3, 2);
         $this->moduloFoto();
-
         $grid->fechaColuna();
-        $grid->abreColuna(12, 6, 4);
-
+        # --
+        $grid->abreColuna(5, 3, 2);
+        $this->moduloBeneficios();
+        $grid->fechaColuna();
+        # --
+        $grid->abreColuna(7, 6, 5);
         $this->moduloFinanceiro();
-
         $grid->fechaColuna();
-        $grid->abreColuna(12, 6, 4);
-
+        # --
+        $grid->abreColuna(12, 6, 5);
         $this->moduloAfastamentos();
-
         $grid->fechaColuna();
-        $grid->abreColuna(12, 6, 4);
-
+        # --
+        $grid->abreColuna(12, 6, 6);
         $this->moduloRelatorios();
-
         $grid->fechaColuna();
+        # --
         $grid->fechaGrid();
     }
 
@@ -162,7 +149,7 @@ class MenuServidor {
         titulo('Funcionais');
         br();
 
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(5);
 
         # Funcionais
         $botao = new BotaoGrafico();
@@ -251,14 +238,6 @@ class MenuServidor {
         $botao->set_title('Histórico de designação para ordenação de despesas');
         $menu->add_item($botao);
         
-        # Obs
-        $botao = new BotaoGrafico();
-        $botao->set_label('Observações');
-        $botao->set_url('servidorObs.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'obs.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Observações Gerais do Servidor');
-        $menu->add_item($botao);
-
         # Pasta Funcional
         $botao = new BotaoGrafico();
         $botao->set_label('Pasta Funcional');
@@ -267,6 +246,14 @@ class MenuServidor {
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
 
+        # Sei
+        $botao = new BotaoGrafico();
+        $botao->set_label('Documentos no Sei');
+        $botao->set_url('servidorSei.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Cadastro de documentos com os respectivos números no Sei');
+        $menu->add_item($botao);
+        
         # Elogios
         $botao = new BotaoGrafico();
         $botao->set_label('Elogios');
@@ -282,6 +269,15 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
         $menu->add_item($botao);
+        
+        # Obs
+        $botao = new BotaoGrafico();
+        $botao->set_label('Observações');
+        $botao->set_url('servidorObs.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'obs.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Observações Gerais do Servidor');
+        $menu->add_item($botao);
+
 
         $menu->show();
         br();

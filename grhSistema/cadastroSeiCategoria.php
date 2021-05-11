@@ -51,7 +51,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Documentos no Sei');
+    $objeto->set_nome('Cadastro de Categorias do Sei');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorSei.php');

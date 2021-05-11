@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cadastro de documentos no Sei
+ * Cadastro de categorias de documentos no Sei
  *  
  * By Alat
  */
@@ -30,7 +30,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Documentos no Sei";
+        $atividade = "Cadastro do servidor - Categorias de Documentos no Sei";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -54,24 +54,20 @@ if ($acesso) {
     $objeto->set_nome('Cadastro de Documentos no Sei');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorMenu.php');
+    $objeto->set_voltarLista('servidorSei.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT tbseicategoria.categoria,
-                                     descricao,
-                                     CONCAT("SEI-",numero),
-                                     idSei
-                                FROM tbsei LEFT JOIN tbseicategoria USING (idSeiCategoria)
-                          WHERE idServidor=' . $idServidorPesquisado . '
-                       ORDER BY tbseicategoria.categoria desc');
+    $objeto->set_selectLista('SELECT idSeiCategoria,
+                                     categoria,
+                                     obs
+                                FROM tbseicategoria
+                       ORDER BY idSeiCategoria');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idSeiCategoria,
-                                     descricao,
-                                     numero,
-                                     idServidor
-                                FROM tbsei
-                               WHERE idSei = ' . $id);
+    $objeto->set_selectEdita('SELECT categoria,
+                                     obs
+                                FROM tbseicategoria
+                               WHERE idSeiCategoria = ' . $id);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -80,76 +76,42 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Categoria", "Descrição", "Número"));
-    $objeto->set_width(array(25, 45, 20));
+    $objeto->set_label(array("id", "Categoria", "Obs"));
+    $objeto->set_width(array(5, 30, 60));
     $objeto->set_align(array("center", "left", "left"));
-
-    $objeto->set_rowspan(0);
-    $objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbsei');
+    $objeto->set_tabela('tbseicategoria');
 
     # Nome do campo id
-    $objeto->set_idCampo('idSei');
+    $objeto->set_idCampo('idSeiCategoria');
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
 
-    # Pega os dados da datalist curso
-    $categorias = $pessoal->select('SELECT idSeiCategoria, categoria
-                                       FROM tbseicategoria
-                                   ORDER BY categoria');
-    array_unshift($categorias, array(null,null));
-
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('nome' => 'idSeiCategoria',
+        array('nome' => 'categoria',
             'label' => 'Categoria:',
-            'tipo' => 'combo',
-            'array' => $categorias,
+            'tipo' => 'texto',
             'size' => 100,
             'col' => 4,
             'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
+            'title' => 'Nome da categoria.',
             'linha' => 2),
-        array('nome' => 'descricao',
-            'label' => 'Descrição:',
-            'tipo' => 'texto',
-            'size' => 200,
-            'col' => 8,
-            'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),
-        array('nome' => 'numero',
-            'label' => 'Número:',
-            'tipo' => 'seif',
-            'size' => 50,
-            'col' => 6,
-            'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),
-        array('nome' => 'idServidor',
-            'label' => 'idServidor:',
-            'tipo' => 'hidden',
-            'padrao' => $idServidorPesquisado,
-            'size' => 5,
-            'title' => 'Matrícula',
-            'linha' => 4)));
+        array('linha' => 2,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'col' => 12,
+            'size' => array(80, 5))));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-    
-    # Cadastro de Categoria
-    $botaoCat = new Button("Categorias");
-    $botaoCat->set_title("Acessa o Cadastro de Categorias");
-    $botaoCat->set_url('cadastroSeiCategoria.php');
-
-    $objeto->set_botaoListarExtra([$botaoCat]);
 
     ################################################################
 

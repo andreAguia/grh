@@ -119,17 +119,20 @@ if ($acesso) {
                                             escolaridade
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
-    array_unshift($result, array(null, null)); # Adiciona o valor de nulo
+    array_unshift($result, array(null, null));
+    
     # Pega os dados da datalist curso
     $cursos = $pessoal->select('SELECT distinct habilitacao
                                        FROM tbformacao
                                    ORDER BY habilitacao');
-    array_unshift($cursos, array(null)); # Adiciona o valor de nulo
+    array_unshift($cursos, array(null));
+    
     # Pega os dados da datalist instEnsino
     $instEnsino = $pessoal->select('SELECT distinct instEnsino
                                        FROM tbformacao
                                    ORDER BY instEnsino');
-    array_unshift($instEnsino, array(null)); # Adiciona o valor de nulo
+    array_unshift($instEnsino, array(null));
+    
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'idEscolaridade',
             'label' => 'Nível:',

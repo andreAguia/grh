@@ -186,7 +186,7 @@ if ($acesso) {
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
-    #$botaoGra->set_accessKey('G');
+    
     # Cadastro de Cargos
     $botaoCargo = new Button("Funções");
     $botaoCargo->set_title("Acessa o Cadastro de Cargos");

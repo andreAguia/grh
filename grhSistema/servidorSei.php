@@ -21,6 +21,14 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega o parametro de pesquisa (se tiver)
+    if (is_null(post('parametro'))) {     # Se o parametro não vier por post (for nulo)
+        $parametro = retiraAspas(get_session('sessionParametro'));
+    } else {
+        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
+        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
+    }
 
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
@@ -55,6 +63,10 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # select da lista
     $objeto->set_selectLista('SELECT tbseicategoria.categoria,
@@ -63,6 +75,9 @@ if ($acesso) {
                                      idSei
                                 FROM tbsei LEFT JOIN tbseicategoria USING (idSeiCategoria)
                           WHERE idServidor=' . $idServidorPesquisado . '
+                            AND (tbseicategoria.categoria LIKE "%' . $parametro . '%"
+                                 OR descricao LIKE "%' . $parametro . '%" 
+                                 OR CONCAT("SEI-",numero) LIKE "%' . $parametro . '%")
                        ORDER BY tbseicategoria.categoria desc');
 
     # select do edita

@@ -279,11 +279,20 @@ if ($acesso) {
 
         ################################################################
 
-        case "aguarde" :
+        case "aguardeAtivos" :
             br(10);
-            aguarde();
+            aguarde("Montando a Listagem");
             br();
-            loadPage('?fase=listaServidores&id=' . $id);
+            loadPage('?fase=listaServidoresAtivos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=listaServidoresInativos&id=' . $id);
             break;
 
         ################################################################

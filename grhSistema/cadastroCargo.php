@@ -224,6 +224,25 @@ if ($acesso) {
 
         ################################################################
 
+        case "aguardeAtivos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresAtivos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresInativos&id=' . $id);
+            break;
+
+        ################################################################
+
+
         case "exibeServidoresAtivos" :
             # Limita o tamanho da tela
             $grid = new Grid();

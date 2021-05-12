@@ -287,7 +287,26 @@ if ($acesso) {
             $objeto->$fase($id);
             break;
 
+         ################################################################
+
+        case "aguardeAtivos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=listaServidoresAtivos&id=' . $id);
+            break;
+
         ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=listaServidoresInativos&id=' . $id);
+            break;
+
+        ################################################################
+
 
         case "listaServidoresAtivos" :
             # Limita o tamanho da tela

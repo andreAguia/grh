@@ -884,7 +884,7 @@ class Grh {
         echo "&nbsp&nbsp&nbsp";
 
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=exibeServidoresAtivos&id=' . $id);
+        $botao = new Link('', '?fase=aguardeAtivos&id=' . $id);
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();
@@ -906,7 +906,7 @@ class Grh {
         echo $pessoal->get_servidoresInativosTipoCargo($id);
 
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=exibeServidoresInativos&id=' . $id);
+        $botao = new Link('', '?fase=aguardeInativos&id=' . $id);
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();
@@ -950,7 +950,7 @@ class Grh {
         echo $pessoal->get_servidoresAtivosPerfil($id);
 
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $id);
+        $botao = new Link('', '?fase=aguardeAtivos&id=' . $id);
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();
@@ -972,7 +972,7 @@ class Grh {
         echo $pessoal->get_servidoresInativosPerfil($id);
 
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=listaServidoresInativos&id=' . $id);
+        $botao = new Link('', '?fase=aguardeInativos&id=' . $id);
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();
@@ -994,7 +994,7 @@ class Grh {
         echo $pessoal->get_servidoresAtivosLotacao($idLotacao);
 
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $idLotacao);
+        $botao = new Link('', '?fase=aguardeAtivos&id=' . $idLotacao);
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();
@@ -1016,7 +1016,7 @@ class Grh {
         echo $pessoal->get_servidoresInativosLotacao($idLotacao);
 
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=listaServidoresInativos&id=' . $idLotacao);
+        $botao = new Link('', '?fase=aguardeInativos&id=' . $idLotacao);
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();

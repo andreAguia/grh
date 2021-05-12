@@ -89,7 +89,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("id", "Cargo", "Area", "Descrição Sintética da Área", "Requisitos para Provimento", "Servidores<br/>Ativos"));
-    $objeto->set_width(array(5, 12, 18, 36, 15, 5));
+    $objeto->set_width(array(5, 12, 18, 30, 21, 5));
     $objeto->set_align(array("center", "left", "left", "left", "left"));
 
     $objeto->set_rowspan(1);

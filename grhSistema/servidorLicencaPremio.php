@@ -81,6 +81,7 @@ if ($acesso) {
                                          dtInicial,
                                          tblicencapremio.numdias,
                                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                                         idLicencaPremio,
                                          idLicencaPremio
                                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                    WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . '
@@ -102,12 +103,12 @@ if ($acesso) {
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(array("Data da Publicação", "Período Aquisitivo<br/>Início", "Período Aquisitivo<br/>Fim", "Inicio", "Dias", "Término"));
-        #$objeto->set_width(array(25,10,25,25));	
-        $objeto->set_align(array("center"));
+        $objeto->set_label(array("Data da Publicação", "Período Aquisitivo<br/>Início", "Período Aquisitivo<br/>Fim", "Inicio", "Dias", "Término","Obs"));
+        $objeto->set_width(array(16,16,16,16,5,16,10));	
+        #$objeto->set_align(array("center","center","center","center","center","center","left"));
         $objeto->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
-        #$objeto->set_classe(array(null,null,null,'LicencaPremio'));
-        #$objeto->set_metodo(array(null,null,null,'get_publicacao'));
+        $objeto->set_classe(array(null,null,null,null,null,null,'LicencaPremio'));
+        $objeto->set_metodo(array(null,null,null,null,null,null,'exibeObs'));
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
         $objeto->set_exibeTempoPesquisa(false);

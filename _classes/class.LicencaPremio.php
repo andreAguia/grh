@@ -748,5 +748,30 @@ class LicencaPremio {
         return $row;
     }
 
-    ##########################################################################################
+    ###########################################################
+
+    public function exibeObs($idLicencaPremio) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = 'SELECT obs
+                     FROM tblicencapremio
+                    WHERE idLicencaPremio = ' . $idLicencaPremio;
+
+        $retorno = $pessoal->select($select, false);
+        if(empty($retorno[0])){
+            echo "---";
+        }else{
+            toolTip("Obs", $retorno[0]);
+        }
+    }
+
+###########################################################
+
 }

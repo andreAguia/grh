@@ -210,17 +210,6 @@ if ($acesso) {
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
-    # Cadastro de Áreas
-    $botaoArea = new Button("Áreas");
-    $botaoArea->set_title("Acessa o Cadastro de Áreas");
-    $botaoArea->set_url('cadastroArea.php');
-    #$botaoArea->set_accessKey('L');
-
-    $objeto->set_botaoListarExtra([$botaoArea]);
-
     ################################################################
 
     switch ($fase) {

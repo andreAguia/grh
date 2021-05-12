@@ -186,14 +186,18 @@ if ($acesso) {
     #$botaoGra->set_onClick("abreFechaDivId('divGrafico');");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
-    
+
     # Cadastro de Cargos
     $botaoCargo = new Button("Funções");
     $botaoCargo->set_title("Acessa o Cadastro de Cargos");
     $botaoCargo->set_url('cadastroFuncao.php');
-    #$botaoCargo->set_accessKey('L');
 
-    $objeto->set_botaoListarExtra([$botaoGra, $botaoCargo]);
+    # Cadastro de Áreas
+    $botaoArea = new Button("Áreas");
+    $botaoArea->set_title("Acessa o Cadastro de Áreas");
+    $botaoArea->set_url('cadastroArea.php');
+
+    $objeto->set_botaoListarExtra([$botaoGra, $botaoArea, $botaoCargo]);
 
     ################################################################
 
@@ -202,18 +206,18 @@ if ($acesso) {
         case "listar" :
             $objeto->listar();
             break;
-        
+
         case "excluir" :
             # Verifica se tem servidores nesse cargo            
-            if($pessoal->get_servidoresAtivosTipoCargo($id) > 0 OR $pessoal->get_servidoresInativosTipoCargo($id) > 0){
+            if ($pessoal->get_servidoresAtivosTipoCargo($id) > 0 OR $pessoal->get_servidoresInativosTipoCargo($id) > 0) {
                 alert("Não é possível excluir um cargo com servidores cadastrados !!");
                 back(1);
-            }else{
+            } else {
                 # Se não tiver exclui o cargo
                 $objeto->excluir($id);
             }
-            break;    
-        case "editar" :        
+            break;
+        case "editar" :
         case "gravar" :
             $objeto->$fase($id);
             break;

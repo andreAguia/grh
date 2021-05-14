@@ -772,6 +772,27 @@ class LicencaPremio {
         }
     }
 
-###########################################################
+###########################################################                          
+
+    function exibePeriodoAquisitivo($idLicencaPremio) {
+
+        /**
+         * Informa o período Aquisitivo
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = 'SELECT dtInicioPeriodo,
+                          dtFimPeriodo
+                     FROM tbpublicacaopremio LEFT JOIN tblicencapremio USING (idPublicacaoPremio)
+                    WHERE idLicencaPremio = ' . $idLicencaPremio;
+
+        $row = $pessoal->select($select, false);
+        
+        return date_to_php($row['dtInicioPeriodo']) ." - ".date_to_php($row['dtFimPeriodo']);
+    }
+
+    ###########################################################
 
 }

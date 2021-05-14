@@ -1045,31 +1045,20 @@ if ($acesso) {
     if ($postLicenca) {
         tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
-        $select = '(SELECT tbtipolicenca.nome,
-                                     CASE alta
-                                        WHEN 1 THEN "Sim"
-                                        WHEN 2 THEN "Não"
-                                        end,
-                                     dtInicial,
-                                     numdias,
-                                     ADDDATE(dtInicial,numDias-1),
-                                     CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
-                                     dtPublicacao,
-                                     idLicenca
-                                FROM tblicenca LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                               WHERE idServidor=' . $idServidorPesquisado . ')
-                               UNION
-                               (SELECT (SELECT tbtipolicenca.nome FROM tbtipolicenca WHERE idTpLicenca = 6),
-                                       "",
-                                       dtInicial,
-                                       tblicencapremio.numdias,
-                                       ADDDATE(dtInicial,tblicencapremio.numDias-1),
-                                       CONCAT("6&",tblicencapremio.idServidor),
-                                       tbpublicacaopremio.dtPublicacao,
-                                       idLicencaPremio
-                                  FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                                 WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
-                               ORDER BY 3 desc';
+        $select = 'SELECT tbtipolicenca.nome,
+                        CASE alta
+                           WHEN 1 THEN "Sim"
+                           WHEN 2 THEN "Não"
+                           end,
+                        dtInicial,
+                        numdias,
+                        ADDDATE(dtInicial,numDias-1),
+                        CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
+                        dtPublicacao,
+                        idLicenca
+                   FROM tblicenca LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                  WHERE idServidor=' . $idServidorPesquisado . '
+                  ORDER BY 3 desc';
 
         $result = $pessoal->select($select);
 
@@ -1080,6 +1069,49 @@ if ($acesso) {
         #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
         $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
         $relatorio->set_align(array('left', 'center'));
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(0);
+        $relatorio->set_botaoVoltar(false);
+        #$relatorio->set_bordaInterna(true);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
+    
+     /*
+     * Histórico de Licença Especial (Prêmio)
+     */
+
+    if ($postLicenca) {
+        tituloRelatorio('Histórico de Licença Especial');
+
+        $select = 'SELECT idLicencaPremio,
+                            dtInicial,
+                            tblicencapremio.numdias,
+                            ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                            CONCAT("6&",tblicencapremio.idServidor),
+                            tbpublicacaopremio.dtPublicacao,
+                            idLicencaPremio
+                       FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                      WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . '
+                    ORDER BY dtInicial desc';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array("Período Aquisitivo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
+        #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $relatorio->set_classe(array('LicencaPremio'));
+        $relatorio->set_metodo(array('exibePeriodoAquisitivo'));
+        #$relatorio->set_align(array('left'));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);

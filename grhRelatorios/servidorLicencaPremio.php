@@ -92,7 +92,6 @@ if ($acesso) {
     $relatorio->set_subtitulo("Dados");
     $relatorio->set_label(array('Descrição', 'Valor'));
     $relatorio->set_align(array('left', 'center'));
-    $relatorio->set_colunaSomatorio([1,2,3]);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
 
@@ -131,7 +130,8 @@ if ($acesso) {
     $relatorio->set_align(array("center"));
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
-    $relatorio->set_funcao(array('date_to_php'));
+    $relatorio->set_funcao(array('date_to_php'));    
+    $relatorio->set_colunaSomatorio([2,3,4]);
     $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
     $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
 

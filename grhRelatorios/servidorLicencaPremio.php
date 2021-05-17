@@ -92,6 +92,7 @@ if ($acesso) {
     $relatorio->set_subtitulo("Dados");
     $relatorio->set_label(array('Descrição', 'Valor'));
     $relatorio->set_align(array('left', 'center'));
+    $relatorio->set_colunaSomatorio([1,2,3]);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
 

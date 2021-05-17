@@ -56,12 +56,12 @@ if ($acesso) {
     $relatorio->set_tituloLinha2("Exercício: {$parametroAno}");
     $relatorio->set_tituloLinha3($parametroLotacao);
 
-    $relatorio->set_label(['Id', 'Nome', 'Lotação','Cargo', 'Admissão', 'Observação']);
+    $relatorio->set_label(['Id', 'Nome', 'Lotação', 'Cargo', 'Admissão', 'Observação']);
     #$relatorio->set_width([6, 25, 0, 10, 20, 25, 25]);
-    $relatorio->set_align(["center", "left", "center","left", "center", "left"]);
-    $relatorio->set_funcao([null, null, null, null,"date_to_php", "exibeFeriasPendentes"]);
-    $relatorio->set_classe(array(null,null,null,"pessoal"));
-    $relatorio->set_metodo(array(null,null,null,"get_cargo"));
+    $relatorio->set_align(["center", "left", "center", "left", "center", "left"]);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php", "exibeFeriasPendentes"]);
+    $relatorio->set_classe(array(null, null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, null, "get_cargo"));
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
     $relatorio->set_bordaInterna(true);
@@ -74,7 +74,7 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoAtual + 2, $anoInicial, "d");
+    $anoExercicio = arrayPreenche($anoInicial, $anoAtual + 2, "d");
 
     $relatorio->set_formCampos(array(
         array('nome' => 'parametroAno',

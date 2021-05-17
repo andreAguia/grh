@@ -1240,7 +1240,7 @@ if ($acesso) {
         $relatorio->set_label(array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"));
         #$relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
         $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"));
-        #$relatorio->set_align(array('left','left','left','left','left','left','left','left','left','Left'));
+        $relatorio->set_align(array('center','center','center','left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_colunaSomatorio(2);
         #$relatorio->set_textoSomatorio("Total de Dias Averbados:");

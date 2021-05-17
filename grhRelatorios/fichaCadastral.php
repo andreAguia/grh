@@ -275,7 +275,7 @@ if ($acesso) {
                 $mensagem .= "- Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
             }
         }
-        
+
         # Informa se servidor optou da transferência FENORTE x UENF em 2002
         if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
             if (!is_null($pessoal->opcaoFenorteUenf($idServidorPesquisado))) {
@@ -1082,13 +1082,13 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
-    
-     /*
+
+    /*
      * Histórico de Licença Especial (Prêmio)
      */
 
     if ($postLicenca) {
-        tituloRelatorio('Histórico de Licença Especial');
+        tituloRelatorio('Histórico de Licença Especial (Prêmio)');
 
         $select = 'SELECT idLicencaPremio,
                             dtInicial,
@@ -1118,6 +1118,51 @@ if ($acesso) {
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
+
+    /*
+     * Histórico de Publicações de Licença Especial (Prêmio)
+     */
+
+    if ($postLicenca) {
+        tituloRelatorio('Publicações de Licença Especial');
+
+        $select = "SELECT dtPublicacao,
+                        idPublicacaoPremio,
+                        numDias,
+                        idPublicacaoPremio,
+                        idPublicacaoPremio,
+                        idPublicacaoPremio
+                   FROM tbpublicacaopremio
+                   WHERE idServidor = $idServidorPesquisado
+                ORDER BY dtInicioPeriodo desc";
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo", "Dias Publicados", "Dias Fruídos", "Dias Disponíveis"));
+        #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+        $relatorio->set_align(array("center"));
+        $relatorio->set_numeroOrdem(true);
+        $relatorio->set_numeroOrdemTipo("d");
+        $relatorio->set_funcao(array('date_to_php'));
+        $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
+        $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(0);
+        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_colunaSomatorio([2,3,4]);
+        #$relatorio->set_colunaSomatorio(4);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);

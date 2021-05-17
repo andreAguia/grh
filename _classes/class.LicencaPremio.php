@@ -535,8 +535,7 @@ class LicencaPremio {
             # Exibe as Publicações
             $select = 'SELECT idServidor, 
                               dtPublicacao,
-                              dtInicioPeriodo,
-                              dtFimPeriodo,
+                              idPublicacaoPremio,
                               numDias,
                               idPublicacaoPremio,
                               idPublicacaoPremio,
@@ -559,11 +558,11 @@ class LicencaPremio {
 
             # Cabeçalho da tabela
             $titulo = 'Publicações';
-            $label = array("Vínculo", "Data da Publicação", "Período Aquisitivo <br/> Início", "Período Aquisitivo <br/> Fim", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis");
+            $label = array("Vínculo", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis");
             #$width = array(15,10,15,15,15,10,10,10);
-            $funcao = array(null, 'date_to_php', 'date_to_php', 'date_to_php');
-            $classe = array("Pessoal", null, null, null, null, 'LicencaPremio', 'LicencaPremio');
-            $metodo = array("get_cargoSimples", null, null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao');
+            $funcao = array(null, 'date_to_php');
+            $classe = array("Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio');
+            $metodo = array("get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao');
             $align = array(null, 'center');
 
             # Exibe a tabela
@@ -793,6 +792,28 @@ class LicencaPremio {
         return date_to_php($row['dtInicioPeriodo']) ." - ".date_to_php($row['dtFimPeriodo']);
     }
 
+    ###########################################################                          
+
+    function exibePeriodoAquisitivo2($idPublicacaoPremio) {
+
+        /**
+         * Informa o período Aquisitivo
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = 'SELECT dtInicioPeriodo,
+                          dtFimPeriodo
+                     FROM tbpublicacaopremio
+                    WHERE idPublicacaoPremio = ' . $idPublicacaoPremio;
+
+        $row = $pessoal->select($select, false);
+        
+        return date_to_php($row['dtInicioPeriodo']) ." - ".date_to_php($row['dtFimPeriodo']);
+    }
+
     ###########################################################
+
 
 }

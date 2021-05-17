@@ -31,8 +31,7 @@ if ($acesso) {
     ###### Licenças Prêmio Fruídas
 
     $select = 'SELECT tbpublicacaopremio.dtPublicacao,
-                      tbpublicacaopremio.dtInicioPeriodo,
-                      tbpublicacaopremio.dtFimPeriodo,
+                      idLicencaPremio,
                       dtInicial,
                       tblicencapremio.numdias,
                       ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -52,12 +51,12 @@ if ($acesso) {
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
     $relatorio->set_subtitulo("Licenças Fruídas");
-    $relatorio->set_label(array("Publicação", "Início do Período", "Fim do Período", "Inicio", "Dias", "Término"));
+    $relatorio->set_label(array("Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
-    #$relatorio->set_classe(array(null,null,null,'LicencaPremio'));
-    #$relatorio->set_metodo(array(null,null,null,'get_publicacao'));
+    $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
+    $relatorio->set_classe(array(null,'LicencaPremio'));
+    $relatorio->set_metodo(array(null,'exibePeriodoAquisitivo'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
@@ -83,7 +82,7 @@ if ($acesso) {
 
     # Limita o tamanho da tela
     $grid = new Grid();
-    $grid->abreColuna(3);
+    $grid->abreColuna(4);
 
     $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(false);
@@ -103,13 +102,12 @@ if ($acesso) {
     $relatorio->show();
 
     $grid->fechaColuna();
-    $grid->abreColuna(9);
+    $grid->abreColuna(8);
 
     ###### Publicações
 
     $select = "SELECT dtPublicacao,
-                    dtInicioPeriodo,
-                    dtFimPeriodo,
+                    idPublicacaoPremio,
                     numDias,
                     idPublicacaoPremio,
                     idPublicacaoPremio,
@@ -127,14 +125,14 @@ if ($acesso) {
     $relatorio->set_totalRegistro(false);
     $relatorio->set_subtitulo("Publicações");
 
-    $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo <br/> Início", "Período Aquisitivo <br/> Fim", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"));
+    $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"));
     #$relatorio->set_width(array(15,5,15,15,15,10,10,10));
     $relatorio->set_align(array("center"));
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
-    $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php'));
-    $relatorio->set_classe(array(null, null, null, null, 'LicencaPremio', 'LicencaPremio'));
-    $relatorio->set_metodo(array(null, null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
+    $relatorio->set_funcao(array('date_to_php'));
+    $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
+    $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
 
     #$relatorio->set_dataImpressao(false);
     $relatorio->set_conteudo($result);

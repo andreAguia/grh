@@ -40,8 +40,60 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # Rotina em Jscript
+    $script = '<script type="text/javascript" language="javascript">
+        
+            $(document).ready(function(){
+            
+                // Quando muda a data de término
+                 $("#dtTermino").change(function(){
+                    var dt1 = $("#dtInicial").val();
+                    var dt2 = $("#dtTermino").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(dt2);
+                    
+                    dias = (data2 - data1)/(1000*3600*24)+1;
+
+                    $("#numDias").val(dias);
+                  });                  
+
+                 // Quando muda o período 
+                 $("#numDias").change(function(){
+                   
+                    var dt1 = $("#dtInicial").val();
+                    var numDias = $("#numDias").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
+                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
+            
+                    $("#dtTermino").val(formatado);
+                  });
+                  
+                // Quando muda a data Inicial
+                $("#dtInicial").change(function(){
+                   
+                    var dt1 = $("#dtInicial").val();
+                    var numDias = $("#numDias").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
+                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
+            
+                    $("#dtTermino").val(formatado);
+                  });
+                  
+                });
+             </script>';
+
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "editar") {
+        $page->set_jscript($script);
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -76,8 +128,7 @@ if ($acesso) {
 
         # select da lista
         $objeto->set_selectLista('SELECT tbpublicacaopremio.dtPublicacao,
-                                         tbpublicacaopremio.dtInicioPeriodo,
-                                         tbpublicacaopremio.dtFimPeriodo,
+                                         idLicencaPremio,
                                          dtInicial,
                                          tblicencapremio.numdias,
                                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -90,6 +141,7 @@ if ($acesso) {
         # select do edita
         $objeto->set_selectEdita('SELECT dtInicial,
                                          numDias,
+                                         dtTermino,
                                          idPublicacaoPremio,
                                          obs,
                                          idServidor
@@ -103,12 +155,12 @@ if ($acesso) {
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(array("Data da Publicação", "Período Aquisitivo<br/>Início", "Período Aquisitivo<br/>Fim", "Inicio", "Dias", "Término","Obs"));
-        $objeto->set_width(array(16,16,16,16,5,16,10));	
+        $objeto->set_label(array("Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"));
+        $objeto->set_width(array(17, 22, 17, 10, 17, 12));
         #$objeto->set_align(array("center","center","center","center","center","center","left"));
-        $objeto->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
-        $objeto->set_classe(array(null,null,null,null,null,null,'LicencaPremio'));
-        $objeto->set_metodo(array(null,null,null,null,null,null,'exibeObs'));
+        $objeto->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
+        $objeto->set_classe(array(null, 'LicencaPremio',null,null,null,'LicencaPremio'));
+        $objeto->set_metodo(array(null, "exibePeriodoAquisitivo",null,null,null,'exibeObs'));
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
         $objeto->set_exibeTempoPesquisa(false);
@@ -153,7 +205,8 @@ if ($acesso) {
 
         array_unshift($publicacao, array(null, ' -- Selecione uma Publicação')); # Adiciona o valor de nulo
         # Campos para o formulario
-        $objeto->set_campos(array(array('nome' => 'dtInicial',
+        $objeto->set_campos(array(
+            array('nome' => 'dtInicial',
                 'label' => 'Data Inicial:',
                 'tipo' => 'data',
                 'required' => true,
@@ -164,12 +217,19 @@ if ($acesso) {
                 'linha' => 1),
             array('nome' => 'numDias',
                 'label' => 'Dias:',
-                'tipo' => 'combo',
-                'array' => $array = array(90, 60, 30),
+                'tipo' => 'numero',
+                'min' => 1,
                 'size' => 5,
                 'required' => true,
                 'title' => 'Número de dias.',
                 'col' => 2,
+                'linha' => 1),
+            array('nome' => 'dtTermino',
+                'label' => 'Data de Termino (opcional):',
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
+                'title' => 'Data de término da licença.',
                 'linha' => 1),
             array('nome' => 'idPublicacaoPremio',
                 'label' => 'Publicação:',
@@ -177,14 +237,13 @@ if ($acesso) {
                 'size' => 50,
                 'array' => $publicacao,
                 'title' => 'Publicação.',
-                'col' => 5,
+                'col' => 4,
                 'linha' => 1),
             array('linha' => 3,
                 'nome' => 'obs',
                 'label' => 'Observação:',
                 'tipo' => 'textarea',
-                'size' => array(80, 4),
-                'linha' => 2),
+                'size' => array(80, 4)),
             array('nome' => 'idServidor',
                 'label' => 'idServidor:',
                 'tipo' => 'hidden',

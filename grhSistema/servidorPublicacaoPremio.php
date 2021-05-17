@@ -51,14 +51,14 @@ if ($acesso) {
     #$objeto->set_parametroValue($parametro);
     # select da lista
     $objeto->set_selectLista('SELECT dtPublicacao,
-                                      dtInicioPeriodo,
-                                      dtFimPeriodo,
-                                      numDias,
-                                      idPublicacaoPremio,
-                                      idPublicacaoPremio,
-                                      idPublicacaoPremio
-                                 FROM tbpublicacaopremio
-                                 WHERE idServidor = ' . $idServidorPesquisado . '
+                                     idPublicacaoPremio,
+                                     numDias,
+                                     idPublicacaoPremio,
+                                     idPublicacaoPremio,
+                                     obs,
+                                     idPublicacaoPremio                                     
+                                FROM tbpublicacaopremio
+                                WHERE idServidor = ' . $idServidorPesquisado . '
                              ORDER BY dtInicioPeriodo desc');
 
     # select do edita
@@ -78,12 +78,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data da Publicação", "Período Aquisitivo <br/> Início", "Período Aquisitivo <br/> Fim", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"));
-    #$objeto->set_width(array(15,5,15,15,15,10,10,10));
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php'));
-    $objeto->set_classe(array(null, null, null, null, 'LicencaPremio', 'LicencaPremio'));
-    $objeto->set_metodo(array(null, null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
+    $objeto->set_label(array("Data da Publicação", "Período Aquisitivo", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis","Obs"));
+    $objeto->set_width(array(15,20,10,10,10,30));
+    $objeto->set_align(array("center","center","center","center","center","left"));
+    $objeto->set_funcao(array('date_to_php'));
+    $objeto->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
+    $objeto->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
     $objeto->set_exibeTempoPesquisa(false);
 
     # Classe do banco de dados

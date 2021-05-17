@@ -10,7 +10,16 @@ $pessoal = new Pessoal();
 
 $dtInicial = $campoValor[0];
 $numDias = $campoValor[1];
-$idServidor = $campoValor[4];
+$dtTermino = $campoValor[2];
+$idServidor = $campoValor[5];
+
+# Preenche a data de término quando for nula
+if (vazio($dtTermino)) {
+    if (!vazio($dtInicial)) {
+        $campoValor[2] = date_to_bd(addDias($dtInicial, $numDias));
+        $dtTermino = $campoValor[2];
+    }
+}
 
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);

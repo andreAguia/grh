@@ -383,6 +383,10 @@ class ReducaoCargaHoraria {
          * 
          * @obs Usada na tabela inicial do cadastro de redução
          */
+        
+        # Pega os Dados
+        $dados = $this->get_dados($idReducao);
+        
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
@@ -398,27 +402,27 @@ class ReducaoCargaHoraria {
         $row = $pessoal->select($select, false);
 
         # Retorno
-        if ($row[3] == 1) {
+        if ($dados["resultado"] == 1) {
 
             # Trata a data de Início
-            if (vazio($row[0])) {
+            if (vazio($dados["dtInicio"])) {
                 $dtInicio = "---";
             } else {
-                $dtInicio = date_to_php($row[0]);
+                $dtInicio = date_to_php($dados["dtInicio"]);
             }
 
             # Trata o período
-            if (vazio($row[1])) {
+            if (vazio($dados["periodo"])) {
                 $periodo = "---";
             } else {
-                $periodo = $row[1] . " m";
+                $periodo = $dados["periodo"] . " m";
             }
 
             # Trata a data de término
-            if (vazio($row[2])) {
+            if (vazio($dados["dtTermino"])) {
                 $dttermino = "---";
             } else {
-                $dttermino = date_to_php($row[2]);
+                $dttermino = date_to_php($dados["dtTermino"]);
             }
 
             $retorno = "Início : " . $dtInicio . "<br/>"
@@ -428,12 +432,12 @@ class ReducaoCargaHoraria {
             $retorno = null;
         }
 
-        # Verifica se estamos a 90 dias da data Termino
-        if (!vazio($row[2])) {
+        # Verifica se estamos a 31 dias da data Termino
+        if (!vazio($dados["dtTermino"])) {
             $hoje = date("d/m/Y");
             $dias = dataDif($hoje, $dttermino);
 
-            if (($dias > 0) AND ($dias < 31)) {
+            if (($dias > 0) AND ($dias < 45)) {
                 if ($dias == 1) {
                     $retorno .= "<br/><span title='Falta apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Falta apenas $dias dia</span>";
                 } else {
@@ -441,6 +445,10 @@ class ReducaoCargaHoraria {
                 }
             } elseif ($dias == 0) {
                 $retorno .= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+            } elseif ($dias < 0) {
+                if ($dados["status"] == 2) {
+                    $retorno .= "<br/><span title='Benefício terminou em {$dttermino}' class='alert label'>Já Terminou!</span>";
+                }
             }
         }
 
@@ -513,10 +521,10 @@ class ReducaoCargaHoraria {
             $nomeBotaoInicio = "CI Início n° " . $ciInicio;
         }
 
-        # Nome do botão de 90 Dias
-        $nomeBotao90 = "CI 90 Dias";
+        # Nome do botão de 45 Dias
+        $nomeBotao90 = "CI 45 Dias";
         if (!is_null($ci90)) {
-            $nomeBotao90 = "CI 90 Dias n° " . $ci90;
+            $nomeBotao90 = "CI 45 Dias n° " . $ci90;
         }
 
         # Nome do botão de Término

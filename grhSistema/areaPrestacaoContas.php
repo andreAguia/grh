@@ -139,7 +139,6 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo('Responsáveis pela Prestação de Contas');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(array("Tipo","IdFuncional", "Servidor", "Nomeação", "Publicação",  "Detalhe"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("left","center", "left", "center", "center", "left"));

@@ -276,6 +276,7 @@ if ($acesso) {
             case "listar" :
                 # Exibe quadro de licença prêmio
                 #Grh::quadroLicencaPremio($idServidorPesquisado);
+                
                 # Pega os dados 
                 $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
@@ -322,10 +323,13 @@ if ($acesso) {
                 # Limita o tamanho da tela
                 $grid = new Grid();
                 $grid->abreColuna(12);
+                
+                # Exibe a Observação (se houver)
+                $licenca->exibeObsGeral($idServidorPesquisado);
 
                 # Exibe as licenças prêmio de outros vinculos com a UENF                
                 $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
-                #p("Vinculos: $numVinculos");
+                
                 # Exibe o tempo de licença anterior somente de servidores ativos
                 #if($idSituacao == 1){
                 # Verifica se tem vinculos anteriores

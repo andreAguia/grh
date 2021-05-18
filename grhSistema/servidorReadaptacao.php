@@ -385,7 +385,11 @@ if ($acesso) {
         array('nome' => 'status',
             'label' => 'Status:',
             'tipo' => 'combo',
-            'array' => array(array(1, "Em Aberto"), array(2, "Vigente"), array(3, "Arquivado"), array(4, "Aguardando Publicação")),
+            'array' => array(
+                array(1, "Em Aberto"), 
+                array(2, "Vigente"), 
+                array(3, "Arquivado"), 
+                array(4, "Aguardando Publicação")),
             'size' => 2,
             'valor' => 0,
             'col' => 3,

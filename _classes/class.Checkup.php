@@ -3713,11 +3713,11 @@ class Checkup {
     ##########################################################
 
     /**
-     * Método get_servidorComTerminoReadaptacaoMenos90Dias
+     * Método get_servidorComTerminoReadaptacaoMenos45Dias
      * 
-     * Servidor Com Readaptação terminando em menos de 90 dias
+     * Servidor Com Readaptação terminando em menos de 45 dias
      */
-    public function get_servidorComTerminoReadaptacaoMenos90Dias($idServidor = null, $catEscolhida = null) {
+    public function get_servidorComTerminoReadaptacaoMenos45Dias($idServidor = null, $catEscolhida = null) {
 
         if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
 
@@ -3738,7 +3738,7 @@ class Checkup {
                                      LEFT JOIN tbreadaptacao USING (idServidor)
                     WHERE tbreadaptacao.dtInicio IS NOT null
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
-                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) <=90';
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) <=45';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
             }
@@ -3746,7 +3746,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Readaptação terminando em menos de 90 dias.';
+            $titulo = 'Readaptação terminando em menos de 45 dias.';
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -3791,11 +3791,11 @@ class Checkup {
     ##########################################################
 
     /**
-     * Método get_servidorComTerminoReducaoMenos90Dias
+     * Método get_servidorComTerminoReducaoMenos45Dias
      * 
-     * Servidor Com Redução terminando em menos de 90 dias
+     * Servidor Com Redução terminando em menos de 45 dias
      */
-    public function get_servidorComTerminoReducaoMenos90Dias($idServidor = null, $catEscolhida = null) {
+    public function get_servidorComTerminoReducaoMenos45Dias($idServidor = null, $catEscolhida = null) {
 
         if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
 
@@ -3815,7 +3815,7 @@ class Checkup {
                                      LEFT JOIN tbreducao USING (idServidor)
                     WHERE tbreducao.dtInicio IS NOT null
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
-                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) <=90';
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) <=45';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
             }
@@ -3823,7 +3823,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Redução da CH terminando em menos de 90 dias.';
+            $titulo = 'Redução da CH terminando em menos de 45 dias.';
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -4431,5 +4431,161 @@ class Checkup {
         }
     }
 
+     ##########################################################
+
+    /**
+     * Método get_servidorComReadaptacaoVigenteTerminada
+     * 
+     * Servidor Com Readaptação vigente terminada
+     */
+    public function get_servidorComReadaptacaoVigenteTerminada($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
+
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor,
+                          idServidor,
+                          DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY),
+                          TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY))
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbreadaptacao USING (idServidor)
+                    WHERE tbreadaptacao.dtInicio IS NOT null
+                      AND tbreadaptacao.status = 2
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) < 0';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY 7 desc';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Readaptação vigente já terminada !!.';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes']);
+            $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
+            $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
     ##########################################################
+
+    /**
+     * Método get_servidorComTerminoReducaoVigenteTerminada
+     * 
+     * Servidor Com Redução vigente terminada
+     */
+    public function get_servidorComTerminoReducaoVigenteTerminada($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor,
+                          idServidor,
+                          DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY),
+                          TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY))
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tbreducao USING (idServidor)
+                    WHERE tbreducao.dtInicio IS NOT null
+                      AND tbreducao.status = 2
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) < 0';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY 7 desc';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Redução da CH vigente já terminada !!.';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes']);
+            $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
+            $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+
 }

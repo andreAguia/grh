@@ -1088,7 +1088,7 @@ if ($acesso) {
      */
 
     if ($postLicenca) {
-        tituloRelatorio('Histórico de Licença Especial (Prêmio)');
+        tituloRelatorio('Histórico de Fruição de Licença Especial (Prêmio)');
 
         $select = 'SELECT idLicencaPremio,
                             dtInicial,
@@ -1125,13 +1125,46 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
+    
+    /*
+     * Informações adicionais de Licença Especial (Prêmio)
+     */
+
+    if ($postLicenca) {        
+
+        $select = "SELECT obsPremio
+                     FROM tbservidor
+                   WHERE idServidor = $idServidorPesquisado";
+
+        $result = $pessoal->select($select);
+
+        if (!empty($result[0])) {
+            
+            $relatorio = new Relatorio('relatorioFichaCadastral');
+            #$relatorio->set_titulo(null);
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_label(array("Informações"));
+            #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+            $relatorio->set_align(array("left"));
+            $relatorio->set_conteudo($result);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        }
+    }
+
 
     /*
      * Histórico de Publicações de Licença Especial (Prêmio)
      */
 
     if ($postLicenca) {
-        tituloRelatorio('Publicações de Licença Especial');
+        tituloRelatorio('Períodos Aquisitivos de Licença Especial (Prêmio)');
 
         $select = "SELECT dtPublicacao,
                         idPublicacaoPremio,
@@ -1159,7 +1192,7 @@ if ($acesso) {
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);
-        $relatorio->set_colunaSomatorio([2,3,4]);
+        $relatorio->set_colunaSomatorio([2, 3, 4]);
         #$relatorio->set_colunaSomatorio(4);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
@@ -1170,7 +1203,7 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
-
+    
     /*
      * Histórico de Licença Sem Vencimentos 
      */
@@ -1240,7 +1273,7 @@ if ($acesso) {
         $relatorio->set_label(array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"));
         #$relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
         $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"));
-        $relatorio->set_align(array('center','center','center','left'));
+        $relatorio->set_align(array('center', 'center', 'center', 'left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_colunaSomatorio(2);
         #$relatorio->set_textoSomatorio("Total de Dias Averbados:");

@@ -71,22 +71,32 @@ if ($acesso) {
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao2($pessoal->get_idLotacao($idServidorPesquisado));
+    
+    # Servidor da GRH
+    $origemNome = "Christiane Assis";
+    $origemDescricao = "PNS - Apoio Acadêmico ";
+    $origemIdFuncional = "ID:4130147-1";    
 
     # Assunto
     $assunto = "Aviso de prazo para fim do benefício.";
 
     # Monta a CI
     $ci = new Ci($numCi90, $dtCi90, $assunto);
+    $ci->set_nomeAssinatura($origemNome, $origemDescricao,$origemIdFuncional);
     $ci->set_destinoNome($lotacao);
     $ci->set_destinoSetor("A/C " . $nomeServidor);
-    $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão de sua Readaptação, conforme publicação no DOERJ de $publicacao.<br/>");
-    $ci->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos sua manifestação o quanto antes para que os procedimentos administrativos sejam providenciados com a devida antecedência.");
+    $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão "
+            . "de sua Readaptação, conforme publicação no DOERJ de $publicacao.<br/>");
+    $ci->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos"
+            . " sua manifestação o quanto antes, através de processo eletrônico no"
+            . " sistema SEI, para que os procedimentos administrativos sejam"
+            . " providenciados com a devida antecedência.");
     $ci->set_saltoRodape(5);
     $ci->show();
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Ci de início de redução da carga horária: ';
+    $atividades = "Visualizou a Ci que informa que a readaptação irá terminar em {$dias} dias";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", $id, $tipoLog, $idServidorPesquisado);
 

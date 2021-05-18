@@ -34,9 +34,9 @@ class LicencaPremio {
         $row = $pessoal->select($select, false);
 
         # Retorno
-        if (is_null($row[0])){
+        if (is_null($row[0])) {
             return 0;
-        }else{
+        } else {
             return $row[0];
         }
     }
@@ -442,7 +442,6 @@ class LicencaPremio {
         $idSituacao = $pessoal->get_idSituacao($idServidor);
         $colunaDados = 3;
 
-
         # Cria os arrays da tabela
         $numProcesso = array("Processo");
         $diasPublicados = array("Dias Publicados");
@@ -582,7 +581,6 @@ class LicencaPremio {
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
 
-
             $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
                     'valor' => 0,
                     'operador' => '<',
@@ -622,6 +620,53 @@ class LicencaPremio {
         $grid->abreColuna(6);
 
         $procedimento->exibeProcedimento(12);
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+    }
+
+###########################################################
+
+    public function exibeObsGeral($idServidor) {
+
+        /**
+         * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
+         */
+        # Pega a obs
+        $obs = $this->get_obsGeral($idServidor);
+
+        # Limita o tamanho da tela
+        $grid = new Grid();
+        $grid->abreColuna(12);
+        
+        $painel = new Callout();
+        $painel->abre();
+        tituloTable("Informações");
+
+        if (!empty($obs)) {
+            p($obs, "situacaoAtual", "left important");
+        } else {
+            br();
+            p(" Nenhuma observação cadastrada.", "situacaoAtual", "left important");
+        }        
+
+        # Editar
+        $div = new Div("divEdita1");
+        $div->abre();
+
+        $div = new Div("divEdita2");
+        $div->abre();
+
+        # Editar
+        $botaoEditar = new Link("Editar", "servidorObsPremio.php");
+        $botaoEditar->set_class('tiny button secondary');
+        $botaoEditar->set_title('Editar observação');
+        $botaoEditar->show();
+
+        $div->fecha();
+
+        $div->fecha();
+        $painel->fecha();
 
         $grid->fechaColuna();
         $grid->fechaGrid();
@@ -754,7 +799,6 @@ class LicencaPremio {
         /**
          * Exibe um botao que exibirá a observação (quando houver)
          */
-        
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
@@ -764,9 +808,9 @@ class LicencaPremio {
                     WHERE idLicencaPremio = ' . $idLicencaPremio;
 
         $retorno = $pessoal->select($select, false);
-        if(empty($retorno[0])){
+        if (empty($retorno[0])) {
             echo "---";
-        }else{
+        } else {
             toolTip("Obs", $retorno[0]);
         }
     }
@@ -788,8 +832,8 @@ class LicencaPremio {
                     WHERE idLicencaPremio = ' . $idLicencaPremio;
 
         $row = $pessoal->select($select, false);
-        
-        return date_to_php($row['dtInicioPeriodo']) ." - ".date_to_php($row['dtFimPeriodo']);
+
+        return date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']);
     }
 
     ###########################################################                          
@@ -809,11 +853,35 @@ class LicencaPremio {
                     WHERE idPublicacaoPremio = ' . $idPublicacaoPremio;
 
         $row = $pessoal->select($select, false);
-        
-        return date_to_php($row['dtInicioPeriodo']) ." - ".date_to_php($row['dtFimPeriodo']);
+
+        return date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']);
     }
 
     ###########################################################
 
+    function get_obsGeral($idServidor) {
 
+        /**
+         * Informe obs da licença prêmio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (is_numeric($idServidor)) {
+
+            # Pega os dias publicados
+            $select = 'SELECT obsPremio
+                         FROM tbservidor
+                        WHERE idServidor = ' . $idServidor;
+
+            $retorno = $pessoal->select($select, false);
+
+            # Retorno
+            return $retorno[0];
+        } else {
+            return $idServidor;
+        }
+    }
+
+    ###########################################################
 }

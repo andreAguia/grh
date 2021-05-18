@@ -68,6 +68,25 @@ class Ci {
 
     ###########################################################
 
+    public function set_nomeAssinatura($origemNome, $origemDescricao,$origemIdFuncional){
+        
+        /**
+         * Altera o servidor da assinatura no lugar do gerente
+         * 
+         * @syntax $form->set_nomeAssinatura($origemNome, $origemDescricao, $origemIdFuncional)
+         * 
+         * @param $origemNome texto null O nome do servidor
+         * @param $origemDescricao texto null Descrição do cargo / Função desse servidor
+         * @param $origemIdFuncional texto null o idFuncional desse servidor
+         * 
+         */
+        $this->origemNome = $origemNome;
+        $this->origemDescricao = $origemDescricao;
+        $this->origemIdFuncional = $origemIdFuncional;
+    }
+
+    ###########################################################
+
     /**
      * Métodos get e set construídos de forma automática pelo 
      * metodo mágico __call.

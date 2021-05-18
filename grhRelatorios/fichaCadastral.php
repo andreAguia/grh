@@ -1138,7 +1138,7 @@ if ($acesso) {
 
         $result = $pessoal->select($select);
 
-        if (!empty($result[0])) {
+        if (!empty($result[0][0])) {
             
             $relatorio = new Relatorio('relatorioFichaCadastral');
             #$relatorio->set_titulo(null);

@@ -98,6 +98,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Professores (Docentes)', '?fase=professores', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Seguro Anual', '?fase=seguro', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Triênio', '?fase=trienio', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
@@ -581,6 +582,17 @@ if ($acesso) {
             $menu->add_item('titulo', 'Parentes');
             $menu->add_item('linkWindow', 'Relatório de Parentes de Servidores ', '../grhRelatorios/parentes.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Parentes de Servidores Com até 24 Anos', '../grhRelatorios/parentes.ate24.php');
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "seguro";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Seguro Anual');
+            $menu->add_item('linkWindow', 'Relatório Geral de Ativos', '../grhRelatorios/seguro.geral.php');
+            $menu->add_item('linkWindow', 'Relatório de Administrativo e Tecnicos', '../grhRelatorios/seguro.admTec.php');
+            $menu->add_item('linkWindow', 'Relatório de Docentes', '../grhRelatorios/seguro.professores.php');
             $menu->show();
             break;
 

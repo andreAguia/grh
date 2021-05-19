@@ -38,7 +38,6 @@ if ($acesso) {
                                      JOIN tbtipocargo USING (idTipoCargo) 
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                WHERE tbservidor.situacao = 1
-                 AND tbservidor.idPerfil <> 10
                  AND tbtipocargo.tipo = "Adm/Tec"
             ORDER BY tbpessoa.nome';
 

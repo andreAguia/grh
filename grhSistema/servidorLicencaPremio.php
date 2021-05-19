@@ -159,8 +159,8 @@ if ($acesso) {
         $objeto->set_width(array(17, 22, 17, 10, 17, 12));
         #$objeto->set_align(array("center","center","center","center","center","center","left"));
         $objeto->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-        $objeto->set_classe(array(null, 'LicencaPremio',null,null,null,'LicencaPremio'));
-        $objeto->set_metodo(array(null, "exibePeriodoAquisitivo",null,null,null,'exibeObs'));
+        $objeto->set_classe(array(null, 'LicencaPremio', null, null, null, 'LicencaPremio'));
+        $objeto->set_metodo(array(null, "exibePeriodoAquisitivo", null, null, null, 'exibeObs'));
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
         $objeto->set_exibeTempoPesquisa(false);
@@ -276,7 +276,6 @@ if ($acesso) {
             case "listar" :
                 # Exibe quadro de licença prêmio
                 #Grh::quadroLicencaPremio($idServidorPesquisado);
-                
                 # Pega os dados 
                 $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
@@ -323,15 +322,11 @@ if ($acesso) {
                 # Limita o tamanho da tela
                 $grid = new Grid();
                 $grid->abreColuna(12);
-                
-                # Exibe a Observação (se houver)
-                $licenca->exibeObsGeral($idServidorPesquisado);
 
                 # Exibe as licenças prêmio de outros vinculos com a UENF                
                 $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
-                
-                # Exibe o tempo de licença anterior somente de servidores ativos
-                #if($idSituacao == 1){
+
+                # Exibe o tempo de licença anterior
                 # Verifica se tem vinculos anteriores
                 if ($numVinculos > 0) {
 
@@ -357,7 +352,7 @@ if ($acesso) {
                         }
                     }
                 }
-                # }
+                
                 # Cria um menu
                 $menu = new MenuBar();
 
@@ -384,6 +379,9 @@ if ($acesso) {
                 #br();
                 #$licenca->exibeProcedimentos();
                 #$painel->fecha();
+                # Exibe as informasções adicionais
+                $licenca->exibeInformacaoAdicional($idServidorPesquisado);
+
                 # Exibe o idServidor
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                 $texto = '';

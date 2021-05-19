@@ -627,7 +627,7 @@ class LicencaPremio {
 
 ###########################################################
 
-    public function exibeObsGeral($idServidor) {
+    public function exibeInformacaoAdicional($idServidor) {
 
         /**
          * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
@@ -638,34 +638,27 @@ class LicencaPremio {
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
+
+        # Cria um menu
+        $menu = new MenuBar();
         
+        # Edita as informações
+        $linkBotao3 = new Link("Edita Informações Adicionais", "servidorInformacaoAdicionalPremio.php");
+        $linkBotao3->set_class('button');
+        $linkBotao3->set_title("Edita as informações adicionais");
+        $menu->add_link($linkBotao3, "left");
+        $menu->show();
+
         $painel = new Callout();
         $painel->abre();
-        tituloTable("Informações");
+        tituloTable("Informações Adicionais");
 
         if (!empty($obs)) {
-            p($obs, "situacaoAtual", "left important");
+            p($obs, "f12");
         } else {
             br();
-            p(" Nenhuma observação cadastrada.", "situacaoAtual", "left important");
-        }        
-
-        # Editar
-        $div = new Div("divEdita1");
-        $div->abre();
-
-        $div = new Div("divEdita2");
-        $div->abre();
-
-        # Editar
-        $botaoEditar = new Link("Editar", "servidorObsPremio.php");
-        $botaoEditar->set_class('tiny button secondary');
-        $botaoEditar->set_title('Editar observação');
-        $botaoEditar->show();
-
-        $div->fecha();
-
-        $div->fecha();
+            p(" Nenhuma observação cadastrada.", "f12");
+        }
         $painel->fecha();
 
         $grid->fechaColuna();

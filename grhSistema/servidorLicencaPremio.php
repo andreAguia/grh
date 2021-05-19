@@ -117,7 +117,12 @@ if ($acesso) {
         $objeto->set_rotinaExtraParametro(array($idServidorPesquisado));
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-        $objeto->set_nome($pessoal->get_licencaNome(6));
+        $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
+        if ($numVinculos == 1) {
+            $objeto->set_nome($pessoal->get_licencaNome(6));
+        } else {
+            $objeto->set_nome($pessoal->get_licencaNome(6) . " do Vínculo Atual");
+        }
 
         # botão de voltar da lista
         if ($areaPremio) {
@@ -128,7 +133,7 @@ if ($acesso) {
 
         # select da lista
         $objeto->set_selectLista('SELECT tbpublicacaopremio.dtPublicacao,
-                                         idLicencaPremio,
+                                         CONCAT(DATE_FORMAT(dtInicioPeriodo, "%d/%m/%Y")," - ",DATE_FORMAT(dtFimPeriodo, "%d/%m/%Y")),
                                          dtInicial,
                                          tblicencapremio.numdias,
                                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -159,11 +164,16 @@ if ($acesso) {
         $objeto->set_width(array(17, 22, 17, 10, 17, 12));
         #$objeto->set_align(array("center","center","center","center","center","center","left"));
         $objeto->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-        $objeto->set_classe(array(null, 'LicencaPremio', null, null, null, 'LicencaPremio'));
-        $objeto->set_metodo(array(null, "exibePeriodoAquisitivo", null, null, null, 'exibeObs'));
+        $objeto->set_classe(array(null, null, null, null, null, 'LicencaPremio'));
+        $objeto->set_metodo(array(null, null, null, null, null, 'exibeObs'));
+
+        $objeto->set_exibeTempoPesquisa(false);
+
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
-        $objeto->set_exibeTempoPesquisa(false);
+
+        $objeto->set_rowspan(1);
+        $objeto->set_grupoCorColuna(1);
 
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
@@ -352,7 +362,7 @@ if ($acesso) {
                         }
                     }
                 }
-                
+
                 # Cria um menu
                 $menu = new MenuBar();
 

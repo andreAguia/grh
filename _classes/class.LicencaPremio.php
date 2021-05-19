@@ -440,7 +440,7 @@ class LicencaPremio {
         # Pega os Dados 
         $numVinculos = $this->get_numVinculosPremio($idServidor);
         $idSituacao = $pessoal->get_idSituacao($idServidor);
-        $colunaDados = 3;
+        $colunaDados = 4;
 
         # Cria os arrays da tabela
         $numProcesso = array("Processo");
@@ -455,7 +455,7 @@ class LicencaPremio {
         $diasDisponiveisTotal = 0;
 
         # Verifica os vinculos anteriores
-        if ($numVinculos > 0) {
+        if ($numVinculos > 1) {
             $colunaDados = 5;
 
             # Carrega um array com os idServidor de cada vinculo
@@ -497,7 +497,7 @@ class LicencaPremio {
         $diasFruidosTotal += $this->get_numDiasFruidos($idServidor);
         $diasDisponiveisTotal += $this->get_numDiasDisponiveis($idServidor);
 
-        if ($numVinculos > 0) {
+        if ($numVinculos > 1) {
             $numProcesso[] = "";
             $diasPublicados[] = $diasPublicadosTotal;
             $diasFruidos[] = $diasFruidosTotal;
@@ -510,19 +510,24 @@ class LicencaPremio {
         $grid->abreColuna($colunaDados);
 
         # Tabela
-        $tabela = array($numProcesso,
+        $conteudo = array($numProcesso,
             $diasPublicados,
             $diasFruidos,
             $diasDisponiveis);
 
-        $estatistica = new Tabela();
-        $estatistica->set_conteudo($tabela);
-        $estatistica->set_label($cargo);
-        $estatistica->set_align(array("left"));
-        #$estatistica->set_width(array(60,40));
-        $estatistica->set_totalRegistro(false);
-        $estatistica->set_titulo("Dados");
-        $estatistica->show();
+        $tabela = new Tabela();
+        $tabela->set_conteudo($conteudo);
+        $tabela->set_align(["left"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_titulo("Dados");
+        if ($numVinculos == 1) {
+            $tabela->set_width([30, 50, 20]);
+            $tabela->set_label(["Descrição", "Valores"]);
+        } elseif ($numVinculos == 2) {
+            $tabela->set_width([25, 30, 30, 15]);
+            $tabela->set_label($cargo);
+        }
+        $tabela->show();
 
         $grid->fechaColuna();
         $grid->abreColuna(12 - $colunaDados);
@@ -531,8 +536,10 @@ class LicencaPremio {
             # Conecta com o banco de dados
             $pessoal = new Pessoal();
 
-            # Exibe as Publicações
-            $select = 'SELECT idServidor, 
+            if ($numVinculos > 1) {
+
+                # Exibe as Publicações
+                $select = 'SELECT idServidor, 
                               dtPublicacao,
                               idPublicacaoPremio,
                               numDias,
@@ -542,51 +549,74 @@ class LicencaPremio {
                          FROM tbpublicacaopremio
                         WHERE idServidor = ' . $idServidor;
 
-            # Inclui as publicações de outros vinculos
-            if ($numVinculos > 0) {
-                # Percorre os vinculos
-                foreach ($vinculos as $tt) {
-                    $select .= ' OR idServidor = ' . $tt[0];
+                # Inclui as publicações de outros vinculos
+                if ($numVinculos > 1) {
+                    # Percorre os vinculos
+                    foreach ($vinculos as $tt) {
+                        $select .= ' OR idServidor = ' . $tt[0];
+                    }
                 }
+
+                $select .= ' ORDER BY dtInicioPeriodo desc';
+
+                $result = $pessoal->select($select);
+                $count = $pessoal->count($select);
+
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($result);
+                $tabela->set_titulo('Publicações');
+                $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+                $tabela->set_funcao([null, 'date_to_php']);
+                $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+
+                $tabela->set_numeroOrdem(true);
+                $tabela->set_numeroOrdemTipo("d");
+
+                $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
+                        'valor' => 0,
+                        'operador' => '<',
+                        'id' => 'alerta')));
+
+                $tabela->show();
+            }else{
+                 # Exibe as Publicações
+                $select = "SELECT dtPublicacao,
+                              CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' (',date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y'),')'),
+                              numDias,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio
+                         FROM tbpublicacaopremio
+                        WHERE idServidor = {$idServidor}
+                        ORDER BY dtInicioPeriodo desc";
+
+                $result = $pessoal->select($select);
+                $count = $pessoal->count($select);
+
+                # Exibe a tabela
+                $tabela = new Tabela();
+                $tabela->set_conteudo($result);
+                $tabela->set_titulo('Publicações');
+                $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+                $tabela->set_funcao(['date_to_php']);
+                $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+
+                $tabela->set_numeroOrdem(true);
+                $tabela->set_numeroOrdemTipo("d");
+
+                $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
+                        'valor' => 0,
+                        'operador' => '<',
+                        'id' => 'alerta')));
+
+                $tabela->show();
             }
-
-            $select .= ' ORDER BY idServidor, dtInicioPeriodo desc';
-
-            $result = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            # Cabeçalho da tabela
-            $titulo = 'Publicações';
-            $label = array("Vínculo", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis");
-            #$width = array(15,10,15,15,15,10,10,10);
-            $funcao = array(null, 'date_to_php');
-            $classe = array("Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio');
-            $metodo = array("get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao');
-            $align = array(null, 'center');
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($result);
-            $tabela->set_align($align);
-            $tabela->set_label($label);
-            #$tabela->set_width($width);
-            $tabela->set_titulo($titulo);
-            $tabela->set_funcao($funcao);
-            $tabela->set_classe($classe);
-            $tabela->set_metodo($metodo);
-
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-
-            $tabela->set_numeroOrdem(true);
-            $tabela->set_numeroOrdemTipo("d");
-
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
-                    'valor' => 0,
-                    'operador' => '<',
-                    'id' => 'alerta')));
-
-            $tabela->show();
         } else {
             br();
             tituloTable("Publicações");
@@ -641,7 +671,7 @@ class LicencaPremio {
 
         # Cria um menu
         $menu = new MenuBar();
-        
+
         # Edita as informações
         $linkBotao3 = new Link("Editar Informações Adicionais", "servidorInformacaoAdicionalPremio.php");
         $linkBotao3->set_class('button');
@@ -848,7 +878,7 @@ class LicencaPremio {
 
         $row = $pessoal->select($select, false);
 
-        return date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']);
+        return strval(date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']));
     }
 
     ###########################################################

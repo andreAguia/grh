@@ -654,6 +654,7 @@ class LicencaPremio {
         tituloTable("Informações Adicionais");
 
         if (!empty($obs)) {
+            br();
             p($obs, "f12");
         } else {
             br();

@@ -643,7 +643,7 @@ class LicencaPremio {
         $menu = new MenuBar();
         
         # Edita as informações
-        $linkBotao3 = new Link("Edita Informações Adicionais", "servidorInformacaoAdicionalPremio.php");
+        $linkBotao3 = new Link("Editar Informações Adicionais", "servidorInformacaoAdicionalPremio.php");
         $linkBotao3->set_class('button');
         $linkBotao3->set_title("Edita as informações adicionais");
         $menu->add_link($linkBotao3, "left");

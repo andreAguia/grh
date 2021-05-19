@@ -357,7 +357,7 @@ if ($acesso) {
                 $menu = new MenuBar();
 
                 # Número do processo
-                $linkBotao1 = new Link("Edita Processo", "servidorProcessoPremio.php");
+                $linkBotao1 = new Link("Editar Processo", "servidorProcessoPremio.php");
                 $linkBotao1->set_class('button');
                 $linkBotao1->set_title("Edita o número do processo de licença prêmio");
                 $menu->add_link($linkBotao1, "left");

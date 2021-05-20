@@ -1125,12 +1125,12 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
-    
+
     /*
      * Informações adicionais de Licença Especial (Prêmio)
      */
 
-    if ($postLicenca) {        
+    if ($postLicenca) {
 
         $select = "SELECT obsPremio
                      FROM tbservidor
@@ -1138,8 +1138,19 @@ if ($acesso) {
 
         $result = $pessoal->select($select);
 
+        # Acrescenta informações sobre publicações pendentes
+        $licenca = new LicencaPremio();
+        $publicFaltantesTotal = $licenca->get_numPublicacoesFaltantesTotal($idServidorPesquisado);
+        if ($publicFaltantesTotal > 0) {
+            if ($publicFaltantesTotal == 1) {
+                array_unshift($result, ["Servidor com direito a mais 1 publicação de licença especial (prêmio)"]);
+            } else {
+                array_unshift($result, ["Servidor com direito a mais {$publicFaltantesTotal} publicações de licença especial (prêmio)"]);
+            }
+        }
+
         if (!empty($result[0][0])) {
-            
+
             $relatorio = new Relatorio('relatorioFichaCadastral');
             #$relatorio->set_titulo(null);
             #$relatorio->set_subtitulo($subtitulo);
@@ -1203,7 +1214,7 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
-    
+
     /*
      * Histórico de Licença Sem Vencimentos 
      */

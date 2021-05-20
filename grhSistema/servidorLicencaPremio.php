@@ -44,6 +44,18 @@ if ($acesso) {
     $script = '<script type="text/javascript" language="javascript">
         
             $(document).ready(function(){
+                
+                // Faz o cáuculo quando entra na tela
+                var dt1 = $("#dtInicial").val();
+                var numDias = $("#numDias").val();
+                    
+                data1 = new Date(dt1);
+                data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
+                    
+                formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
+            
+                $("#dtTermino").val(formatado);
+
             
                 // Quando muda a data de término
                  $("#dtTermino").change(function(){
@@ -247,6 +259,7 @@ if ($acesso) {
                 'size' => 50,
                 'array' => $publicacao,
                 'title' => 'Publicação.',
+                'required' => true,
                 'col' => 4,
                 'linha' => 1),
             array('linha' => 3,
@@ -285,7 +298,8 @@ if ($acesso) {
             case "" :
             case "listar" :
                 # Exibe quadro de licença prêmio
-                #Grh::quadroLicencaPremio($idServidorPesquisado);
+                /* Grh::quadroLicencaPremio($idServidorPesquisado); */
+
                 # Pega os dados 
                 $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);

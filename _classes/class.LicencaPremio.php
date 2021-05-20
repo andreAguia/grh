@@ -536,6 +536,16 @@ class LicencaPremio {
             # Conecta com o banco de dados
             $pessoal = new Pessoal();
 
+            # Informa se o servidor tem publicações em aberto
+            $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
+            if ($publicFaltantesTotal > 0) {
+                if ($publicFaltantesTotal == 1) {
+                    callout("Atenção, este servidor tem direito a mais 1 publicação de licença prêmio!");
+                } else {
+                    callout("Atenção, este servidor tem direito a mais {$publicFaltantesTotal} publicações de licença prêmio!");
+                }
+            }
+
             if ($numVinculos > 1) {
 
                 # Exibe as Publicações
@@ -583,8 +593,8 @@ class LicencaPremio {
                         'id' => 'alerta')));
 
                 $tabela->show();
-            }else{
-                 # Exibe as Publicações
+            } else {
+                # Exibe as Publicações
                 $select = "SELECT dtPublicacao,
                               CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' (',date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y'),')'),
                               numDias,
@@ -688,7 +698,7 @@ class LicencaPremio {
             p($obs, "f12");
         } else {
             br();
-            p(" Nenhuma observação cadastrada.", "f12");
+            p("Nenhuma informação cadastrada.", "f12");
         }
         $painel->fecha();
 

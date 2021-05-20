@@ -592,8 +592,9 @@ if ($acesso) {
             $menu->add_item('titulo', 'Seguro Anual');
             $menu->add_item('linkWindow', 'Relatório Geral de Ativos', '../grhRelatorios/seguro.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Administrativo e Tecnicos', '../grhRelatorios/seguro.admTec.php');
-            $menu->add_item('linkWindow', 'Relatório de Docentes', '../grhRelatorios/seguro.professores.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores', '../grhRelatorios/seguro.professores.php');
             $menu->show();
+            p("Os relatórios desta seção se referentem ao contrato de seguro solicitado anualmente pela PROGRAD.");
             break;
 
         ######################################

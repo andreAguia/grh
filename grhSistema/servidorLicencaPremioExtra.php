@@ -14,9 +14,10 @@ $dtTermino = $campoValor[2];
 $idServidor = $campoValor[5];
 
 # Preenche a data de término quando for nula
-if (vazio($dtTermino)) {
-    if (!vazio($dtInicial)) {
+if (empty($dtTermino)) {
+    if (!empty($dtInicial)) {
         $campoValor[2] = date_to_bd(addDias($dtInicial, $numDias));
+        echo $campoValor[2];
         $dtTermino = $campoValor[2];
     }
 }

@@ -41,6 +41,7 @@ class MenuPrincipal {
         # Módulos      
         
         #$this->moduloSispatri();
+        $this->moduloSispatri();
         $this->moduloSistemas();
         $this->moduloAreaEspecial();
         
@@ -223,7 +224,7 @@ class MenuPrincipal {
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("https://www.servidor.rj.gov.br/portal-web/index");
-        $botao->set_imagem(PASTA_FIGURAS . 'sispatri.jpg', '90%', '90%');
+        $botao->set_imagem(PASTA_FIGURAS . 'sispatri2.png', '90%', '90%');
         $botao->set_title('Sistema de Registros de Bens dos Agentes Públicos');
         #$botao->set_target("_blank");
         $botao->show();

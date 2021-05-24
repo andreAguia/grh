@@ -554,8 +554,18 @@ class LicencaPremio {
             $tabela->set_label($cargo);
         }
         $tabela->show();
+        
+        # Informa se o servidor tem publicações em aberto
+        $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
+        if ($publicFaltantesTotal > 0) {
+            if ($publicFaltantesTotal == 1) {
+                callout("Atenção, este servidor tem direito a 1 publicação de licença prêmio não publicadas!");
+            } else {
+                callout("Atenção, este servidor tem direito a {$publicFaltantesTotal} publicações de licença prêmio não publicadas!");
+            }
+        }
 
-        # Tabela
+        # Tabela n° de publicações
         $conteudo = array(
             $publicacaoPossivel,
             $publicacaoPublicada,
@@ -575,16 +585,6 @@ class LicencaPremio {
             $tabela->set_label($cargo);
         }
         $tabela->show();
-
-        # Informa se o servidor tem publicações em aberto
-        $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
-        if ($publicFaltantesTotal > 0) {
-            if ($publicFaltantesTotal == 1) {
-                callout("Atenção, este servidor tem direito a 1 publicação de licença prêmio não publicadas!");
-            } else {
-                callout("Atenção, este servidor tem direito a {$publicFaltantesTotal} publicações de licença prêmio não publicadas!");
-            }
-        }
 
         $grid->fechaColuna();
         $grid->abreColuna(12 - $colunaDados);

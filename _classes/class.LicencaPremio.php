@@ -536,18 +536,16 @@ class LicencaPremio {
         $grid = new Grid();
         $grid->abreColuna($colunaDados);
 
-        # Tabela
-        $conteudo = array($numProcesso,
-            $publicacaoPossivel,
-            $publicacaoPublicada,
-            $publicacaoFaltante
-            );
+        # Tabela Processo
+        $conteudo = array(
+            $numProcesso
+        );
 
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
         $tabela->set_align(["left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_titulo("Dados");
+        $tabela->set_titulo("Processo");
         if ($numVinculos == 1) {
             $tabela->set_width([35, 45, 20]);
             $tabela->set_label(["Descrição", "Valores"]);
@@ -557,8 +555,26 @@ class LicencaPremio {
         }
         $tabela->show();
 
-        $grid->fechaColuna();
-        $grid->abreColuna(12 - $colunaDados);
+        # Tabela
+        $conteudo = array(
+            $publicacaoPossivel,
+            $publicacaoPublicada,
+            $publicacaoFaltante
+        );
+
+        $tabela = new Tabela();
+        $tabela->set_conteudo($conteudo);
+        $tabela->set_align(["left"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_titulo("N° de Publicações");
+        if ($numVinculos == 1) {
+            $tabela->set_width([35, 45, 20]);
+            $tabela->set_label(["Descrição", "Valores"]);
+        } elseif ($numVinculos == 2) {
+            $tabela->set_width([25, 30, 30, 15]);
+            $tabela->set_label($cargo);
+        }
+        $tabela->show();
 
         # Informa se o servidor tem publicações em aberto
         $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
@@ -569,6 +585,9 @@ class LicencaPremio {
                 callout("Atenção, este servidor tem direito a {$publicFaltantesTotal} publicações de licença prêmio não publicadas!");
             }
         }
+
+        $grid->fechaColuna();
+        $grid->abreColuna(12 - $colunaDados);
 
         if ($diasPublicadosTotal > 0) {
             # Conecta com o banco de dados
@@ -611,8 +630,8 @@ class LicencaPremio {
 
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);
-                
-                $tabela->set_colunaSomatorio([3,4,5]);
+
+                $tabela->set_colunaSomatorio([3, 4, 5]);
                 $tabela->set_totalRegistro(false);
 
                 $tabela->set_numeroOrdem(true);
@@ -650,8 +669,8 @@ class LicencaPremio {
 
                 $tabela->set_numeroOrdem(true);
                 $tabela->set_numeroOrdemTipo("d");
-                
-                $tabela->set_colunaSomatorio([2,3,4]);
+
+                $tabela->set_colunaSomatorio([2, 3, 4]);
                 #$tabela->set_colunaSomatorio(2);
                 $tabela->set_totalRegistro(false);
 
@@ -662,6 +681,10 @@ class LicencaPremio {
 
                 $tabela->show();
             }
+            
+            # Exibe as informasções adicionais
+            $this->exibeInformacaoAdicional($idServidor);
+            
         } else {
             tituloTable("Publicações");
             $callout = new Callout();
@@ -717,10 +740,10 @@ class LicencaPremio {
         $menu = new MenuBar();
 
         # Edita as informações
-        $linkBotao3 = new Link("Editar Informações Adicionais", "servidorInformacaoAdicionalPremio.php");
+        $linkBotao3 = new Link("Editar ", "servidorInformacaoAdicionalPremio.php");
         $linkBotao3->set_class('button');
         $linkBotao3->set_title("Edita as informações adicionais");
-        $menu->add_link($linkBotao3, "left");
+        $menu->add_link($linkBotao3, "right");
         $menu->show();
 
         $painel = new Callout();

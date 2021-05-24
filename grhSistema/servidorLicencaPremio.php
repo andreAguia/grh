@@ -402,9 +402,7 @@ if ($acesso) {
                 #titulo("Procedimentos");
                 #br();
                 #$licenca->exibeProcedimentos();
-                #$painel->fecha();
-                # Exibe as informasções adicionais
-                $licenca->exibeInformacaoAdicional($idServidorPesquisado);
+                #$painel->fecha();                
 
                 # Exibe o idServidor
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);

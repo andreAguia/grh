@@ -3598,7 +3598,29 @@ class Pessoal extends Bd {
                      FROM tbservidor
                     WHERE situacao = 1';
 
-        # Lotação
+        # Perfil
+        if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
+            $select .= ' AND idPerfil = ' . $idPerfil;
+        }
+
+        $count = parent::count($select);
+        return $count;
+    }
+
+     ###########################################################
+
+    function get_numServidoresInativosPerfil($idPerfil = null) {
+
+        /**
+         * informa o número de Servidores Ativos por perfil
+         * 
+         * @param integer $idPerfil do servidor
+         */
+        $select = 'SELECT idServidor
+                     FROM tbservidor
+                    WHERE situacao <> 1';
+
+        # Perfil
         if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
             $select .= ' AND idPerfil = ' . $idPerfil;
         }

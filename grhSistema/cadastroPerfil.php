@@ -71,6 +71,8 @@ if ($acesso) {
                                       tipo,
                                       nome,
                                       idPerfil,
+                                      idPerfil,
+                                      idPerfil,
                                       idPerfil
                                  FROM tbperfil
                                 WHERE nome LIKE "%' . $parametro . '%"
@@ -105,17 +107,19 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Tipo", "Perfil", "Servidores Ativos", "Servidores Inativos"));
-    $objeto->set_width(array(5, 20, 41, 12, 12));
+    $objeto->set_label(array("id", "Tipo", "Perfil", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"));
+    $objeto->set_width(array(5, 23, 30, 10, 5, 10, 5));
     $objeto->set_align(array("center", "center", "left"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
-    $objeto->set_classe(array(null, null, null, "Grh", "Grh"));
-    $objeto->set_metodo(array(null, null, null, "get_numServidoresAtivosPerfil", "get_numServidoresInativosPerfil"));
+    $objeto->set_classe(array(null, null, null, "Pessoal", "Grh", "Pessoal","Grh"));
+    $objeto->set_metodo(array(null, null, null, "get_numServidoresAtivosPerfil", "verServidoresAtivosPerfil", "get_numServidoresInativosPerfil","get_numServidoresInativosPerfil"));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
+    $objeto->set_colunaSomatorio([3, 5]);
+    #$objeto->set_totalRegistro(false);
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 

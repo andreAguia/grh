@@ -114,8 +114,6 @@ if ($acesso) {
 
         $tabela->show();
 
-
-
         $painel->fecha();
 
         ###############################
@@ -730,7 +728,6 @@ if ($acesso) {
                             ORDER BY 2 DESC ';
 
             $servidores = $pessoal->select($selectGrafico);
-            $total = array_sum(array_column($servidores, "jj"));
 
             # Exemplo de tabela simples
             $tabela = new Tabela();
@@ -738,7 +735,8 @@ if ($acesso) {
             $tabela->set_label(array("Tipo do Cargo", "Servidores"));
             $tabela->set_width(array(80, 20));
             $tabela->set_align(array("left", "center"));
-            $tabela->set_rodape("Total de Servidores: " . $total);
+            $tabela->set_colunaSomatorio(1);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $grid3->fechaColuna();

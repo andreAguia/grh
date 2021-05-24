@@ -937,22 +937,15 @@ class Grh {
     ###########################################################
 
     /**
-     * Método exibe get_numServidoresAtivosPerfil
+     * Método exibe verServidoresAtivosPerfil
      * 
-     * Exibe o número de servidores ativos por perfil e o link para exibí-los
+     * Exibe link para exibir os servidorea tivos em um deeterminado perfil
      * Usado na tabela da rotina de cadastro de perfil
      */
-    public function get_numServidoresAtivosPerfil($id) {
-
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
-        echo $pessoal->get_servidoresAtivosPerfil($id);
-
+    public function verServidoresAtivosPerfil($id) {
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=aguardeAtivos&id=' . $id);
-        $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao = new Link(null, "?fase=aguardeAtivos&id={$id}");
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 
@@ -965,16 +958,9 @@ class Grh {
      * Usado na tabela da rotina de cadastro de perfil
      */
     public function get_numServidoresInativosPerfil($id) {
-
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
-        echo $pessoal->get_servidoresInativosPerfil($id);
-
         # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=aguardeInativos&id=' . $id);
-        $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao = new Link(null, '?fase=aguardeInativos&id=' . $id);
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 

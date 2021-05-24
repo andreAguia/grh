@@ -449,10 +449,17 @@ class LicencaPremio {
         $diasDisponiveis = array("Disponíveis");
         $cargo = array("Descrição");
 
+        $publicacaoPossivel = array("Publicações Possíveis");
+        $publicacaoPublicada = array("Publicações Efetuadas");
+        $publicacaoFaltante = array("Publicações Faltantes");
+
         # Totais (quando tiver mais de um vinculo)
         $diasPublicadosTotal = 0;
         $diasFruidosTotal = 0;
         $diasDisponiveisTotal = 0;
+        $publicacaoPossivelTotal = 0;
+        $publicacaoPublicadaTotal = 0;
+        $publicacaoFaltanteTotal = 0;
 
         # Verifica os vinculos anteriores
         if ($numVinculos > 1) {
@@ -476,10 +483,18 @@ class LicencaPremio {
                         $numProcesso[] = $this->get_numProcesso($tt[0]);
                         $cargo[] = "Vínculo<br>" . $pessoal->get_cargoSimples($tt[0]);
 
+                        $publicacaoPublicada[] = $this->get_numPublicacoes($tt[0]);
+                        $publicacaoPossivel[] = $this->get_numPublicacoesPossiveis($tt[0]);
+                        $publicacaoFaltante[] = $this->get_numPublicacoesFaltantes($tt[0]);
+
                         # Totais
                         $diasPublicadosTotal += $this->get_numDiasPublicados($tt[0]);
                         $diasFruidosTotal += $this->get_numDiasFruidos($tt[0]);
                         $diasDisponiveisTotal += $this->get_numDiasDisponiveis($tt[0]);
+
+                        $publicacaoPossivelTotal += $this->get_numPublicacoesPossiveis($tt[0]);
+                        $publicacaoPublicadaTotal += $this->get_numPublicacoes($tt[0]);
+                        $publicacaoFaltanteTotal += $this->get_numPublicacoesFaltantes($tt[0]);
                     }
                 }
             }
@@ -492,10 +507,18 @@ class LicencaPremio {
         $numProcesso[] = $this->get_numProcesso($idServidor);
         $cargo[] = "Vínculo<br>" . $pessoal->get_cargoSimples($idServidor);
 
+        $publicacaoPublicada[] = $this->get_numPublicacoes($idServidor);
+        $publicacaoPossivel[] = $this->get_numPublicacoesPossiveis($idServidor);
+        $publicacaoFaltante[] = $this->get_numPublicacoesFaltantes($idServidor);
+
         # Totais
         $diasPublicadosTotal += $this->get_numDiasPublicados($idServidor);
         $diasFruidosTotal += $this->get_numDiasFruidos($idServidor);
         $diasDisponiveisTotal += $this->get_numDiasDisponiveis($idServidor);
+
+        $publicacaoPossivelTotal += $this->get_numPublicacoesPossiveis($idServidor);
+        $publicacaoPublicadaTotal += $this->get_numPublicacoes($idServidor);
+        $publicacaoFaltanteTotal += $this->get_numPublicacoesFaltantes($idServidor);
 
         if ($numVinculos > 1) {
             $numProcesso[] = "";
@@ -503,6 +526,10 @@ class LicencaPremio {
             $diasFruidos[] = $diasFruidosTotal;
             $diasDisponiveis[] = $diasDisponiveisTotal;
             $cargo[] = "Total";
+
+            $publicacaoPublicada[] = $publicacaoPossivelTotal;
+            $publicacaoPossivel[] = $publicacaoPossivelTotal;
+            $publicacaoFaltante[] = $publicacaoFaltanteTotal;
         }
 
         # Limita o tamanho da tela
@@ -511,9 +538,10 @@ class LicencaPremio {
 
         # Tabela
         $conteudo = array($numProcesso,
-            $diasPublicados,
-            $diasFruidos,
-            $diasDisponiveis);
+            $publicacaoPossivel,
+            $publicacaoPublicada,
+            $publicacaoFaltante
+            );
 
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
@@ -521,7 +549,7 @@ class LicencaPremio {
         $tabela->set_totalRegistro(false);
         $tabela->set_titulo("Dados");
         if ($numVinculos == 1) {
-            $tabela->set_width([30, 50, 20]);
+            $tabela->set_width([35, 45, 20]);
             $tabela->set_label(["Descrição", "Valores"]);
         } elseif ($numVinculos == 2) {
             $tabela->set_width([25, 30, 30, 15]);
@@ -532,19 +560,19 @@ class LicencaPremio {
         $grid->fechaColuna();
         $grid->abreColuna(12 - $colunaDados);
 
+        # Informa se o servidor tem publicações em aberto
+        $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
+        if ($publicFaltantesTotal > 0) {
+            if ($publicFaltantesTotal == 1) {
+                callout("Atenção, este servidor tem direito a 1 publicação de licença prêmio não publicadas!");
+            } else {
+                callout("Atenção, este servidor tem direito a {$publicFaltantesTotal} publicações de licença prêmio não publicadas!");
+            }
+        }
+
         if ($diasPublicadosTotal > 0) {
             # Conecta com o banco de dados
             $pessoal = new Pessoal();
-
-            # Informa se o servidor tem publicações em aberto
-            $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
-            if ($publicFaltantesTotal > 0) {
-                if ($publicFaltantesTotal == 1) {
-                    callout("Atenção, este servidor tem direito a mais 1 publicação de licença prêmio!");
-                } else {
-                    callout("Atenção, este servidor tem direito a mais {$publicFaltantesTotal} publicações de licença prêmio!");
-                }
-            }
 
             if ($numVinculos > 1) {
 
@@ -583,6 +611,9 @@ class LicencaPremio {
 
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);
+                
+                $tabela->set_colunaSomatorio([3,4,5]);
+                $tabela->set_totalRegistro(false);
 
                 $tabela->set_numeroOrdem(true);
                 $tabela->set_numeroOrdemTipo("d");
@@ -619,6 +650,10 @@ class LicencaPremio {
 
                 $tabela->set_numeroOrdem(true);
                 $tabela->set_numeroOrdemTipo("d");
+                
+                $tabela->set_colunaSomatorio([2,3,4]);
+                #$tabela->set_colunaSomatorio(2);
+                $tabela->set_totalRegistro(false);
 
                 $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
                         'valor' => 0,
@@ -628,7 +663,6 @@ class LicencaPremio {
                 $tabela->show();
             }
         } else {
-            br();
             tituloTable("Publicações");
             $callout = new Callout();
             $callout->abre();

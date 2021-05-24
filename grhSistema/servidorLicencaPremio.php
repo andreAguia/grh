@@ -305,7 +305,7 @@ if ($acesso) {
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidorPesquisado);
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
-
+                        
                 $nome = $pessoal->get_licencaNome(6);
                 $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
 
@@ -380,7 +380,7 @@ if ($acesso) {
                 # Cria um menu
                 $menu = new MenuBar();
 
-                # Número do processo
+                # Editar Processo
                 $linkBotao1 = new Link("Editar Processo", "servidorProcessoPremio.php");
                 $linkBotao1->set_class('button');
                 $linkBotao1->set_title("Edita o número do processo de licença prêmio");

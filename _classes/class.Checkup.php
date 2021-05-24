@@ -4431,7 +4431,7 @@ class Checkup {
         }
     }
 
-     ##########################################################
+    ##########################################################
 
     /**
      * Método get_servidorComReadaptacaoVigenteTerminada
@@ -4588,4 +4588,88 @@ class Checkup {
 
     ##########################################################
 
+    /**
+     * Método get_servidorPublicacaoPremioPendente
+     * 
+     * Servidores com publicação de licença premio pendente
+     */
+    public function get_servidorPublicacaoPremioPendente($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT tbservidor.idFuncional,
+                          tbpessoa.nome,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                     WHERE tbservidor.situacao = 1
+                       AND idPerfil = 1';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY tbpessoa.nome';
+            $result = $servidor->select($select);
+            $count = 0;
+            
+            $result2 = null;
+
+            # Percorre o array e retira os servidores com 0 publicações pendentes
+            $licenca = new LicencaPremio();
+            foreach ($result as $tt) {
+                if ($licenca->get_numPublicacoesFaltantesTotal($tt[6]) <> 0) {
+                    $result2[] = $tt;
+                    $count++;
+                }
+            }
+            
+            $titulo = 'Servidor(es) com Publicação(ões) de Licença Especial (Prêmio) Pendente(s)';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result2);
+            $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Publicações Possíveis', 'Publicações Efetuadas', 'Publicações Pendentes']);
+            $tabela->set_width([8, 22, 25, 25, 5, 5, 5]);
+            $tabela->set_align(['center', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal", "LicencaPremio", "LicencaPremio", "LicencaPremio"]);
+            $tabela->set_metodo([null, null, "get_cargo", "get_lotacao", "get_numPublicacoesPossiveisTotal", "get_numPublicacoesTotal", "get_numPublicacoesFaltantesTotal"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Considerando TODOS os vínculos do servidor.");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
 }

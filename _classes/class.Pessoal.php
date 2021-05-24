@@ -5182,7 +5182,7 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-    function get_vinculos($idServidor) {
+    function get_vinculos($idServidor, $crescente = true) {
 
         # Função que retorna o idServidor de cada vinculos esse servidor teve com a uenf.
         #
@@ -5195,11 +5195,18 @@ class Pessoal extends Bd {
         # Pega o idPessoa desse idServidor
         $idPessoa = $this->get_idPessoa($idServidor);
 
-        # Monta o select		
+        # Monta o select
+        if($crescente){
         $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
                      ORDER BY dtadmissao";
+        }else{
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = $idPessoa
+                     ORDER BY dtadmissao desc";
+        }
 
         $row = parent::select($select);
         return $row;

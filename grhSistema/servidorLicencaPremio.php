@@ -305,7 +305,7 @@ if ($acesso) {
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidorPesquisado);
                 $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
-                        
+
                 $nome = $pessoal->get_licencaNome(6);
                 $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
 
@@ -330,6 +330,11 @@ if ($acesso) {
                 if (is_null($numProcesso)) {
                     $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
                     $objeto->set_botaoIncluir(false);
+                }
+                
+                # Servidor com publicação pendente
+                if($licenca->get_numPublicacoesFaltantes($idServidorPesquisado) > 0){
+                    $mensagem .= "Existem publicações pendentes para este servidor.<br/>";
                 }
 
                 if (!is_null($mensagem)) {
@@ -396,6 +401,9 @@ if ($acesso) {
                 # Exibe as publicações de Licença Prêmio
                 $licenca->exibePublicacoesPremio($idServidorPesquisado);
 
+//                # Exibe as informasções adicionais
+//                $licenca->exibeInformacaoAdicional($idServidorPesquisado);
+
                 # Exibe os procedimentos
                 #$painel = new Callout();
                 #$painel->abre();
@@ -403,7 +411,6 @@ if ($acesso) {
                 #br();
                 #$licenca->exibeProcedimentos();
                 #$painel->fecha();                
-
                 # Exibe o idServidor
                 $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
                 $texto = '';

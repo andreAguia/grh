@@ -353,6 +353,7 @@ class LicencaPremio {
 
         $contador = 0;
         $ds = date("d/m/Y");
+        $da = $pessoal->get_dtAdmissao($idServidor);
 
         # Percorre os vinculos
         foreach ($vinculos as $tt) {
@@ -439,164 +440,130 @@ class LicencaPremio {
 
         # Pega os Dados 
         $numVinculos = $this->get_numVinculosPremio($idServidor);
-        $idSituacao = $pessoal->get_idSituacao($idServidor);
-        $colunaDados = 4;
 
-        # Cria os arrays da tabela
-        $numProcesso = array("Processo");
-        $diasPublicados = array("Dias Publicados");
-        $diasFruidos = array("Dias Fruídos");
-        $diasDisponiveis = array("Disponíveis");
-        $cargo = array("Descrição");
-
-        $publicacaoPossivel = array("Publicações Possíveis");
-        $publicacaoPublicada = array("Publicações Efetuadas");
-        $publicacaoFaltante = array("Publicações Faltantes");
-
-        # Totais (quando tiver mais de um vinculo)
-        $diasPublicadosTotal = 0;
-        $diasFruidosTotal = 0;
-        $diasDisponiveisTotal = 0;
-        $publicacaoPossivelTotal = 0;
-        $publicacaoPublicadaTotal = 0;
-        $publicacaoFaltanteTotal = 0;
-
-        # Verifica os vinculos anteriores
+        /*
+         * Exibe o número do processo
+         */
         if ($numVinculos > 1) {
-            $colunaDados = 5;
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(5);
+            $colunaPub = 7;
 
             # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor);
+            $vinculos = $pessoal->get_vinculos($idServidor, false);
 
             # Percorre os vinculos
             foreach ($vinculos as $tt) {
-
-                # Pega o perfil da cada vínculo
-                $idPerfilPesquisado = $pessoal->get_idPerfil($tt[0]);
-
-                if ($idServidor <> $tt[0]) {
-                    # Verifica se é estatutário
-                    if ($idPerfilPesquisado == 1) {
-                        $diasPublicados[] = $this->get_numDiasPublicados($tt[0]);
-                        $diasFruidos[] = $this->get_numDiasFruidos($tt[0]);
-                        $diasDisponiveis[] = $this->get_numDiasDisponiveis($tt[0]);
-                        $numProcesso[] = $this->get_numProcesso($tt[0]);
-                        $cargo[] = "Vínculo<br>" . $pessoal->get_cargoSimples($tt[0]);
-
-                        $publicacaoPublicada[] = $this->get_numPublicacoes($tt[0]);
-                        $publicacaoPossivel[] = $this->get_numPublicacoesPossiveis($tt[0]);
-                        $publicacaoFaltante[] = $this->get_numPublicacoesFaltantes($tt[0]);
-
-                        # Totais
-                        $diasPublicadosTotal += $this->get_numDiasPublicados($tt[0]);
-                        $diasFruidosTotal += $this->get_numDiasFruidos($tt[0]);
-                        $diasDisponiveisTotal += $this->get_numDiasDisponiveis($tt[0]);
-
-                        $publicacaoPossivelTotal += $this->get_numPublicacoesPossiveis($tt[0]);
-                        $publicacaoPublicadaTotal += $this->get_numPublicacoes($tt[0]);
-                        $publicacaoFaltanteTotal += $this->get_numPublicacoesFaltantes($tt[0]);
-                    }
-                }
+                # Insere no array o vinculo e o processo
+                $conteudo1[] = [
+                    $pessoal->get_cargoSimples($tt[0]),
+                    $this->get_numProcesso($tt[0])
+                ];
             }
-        }
 
-        # Pega os dados do vinculo principal
-        $diasPublicados[] = $this->get_numDiasPublicados($idServidor);
-        $diasFruidos[] = $this->get_numDiasFruidos($idServidor);
-        $diasDisponiveis[] = $this->get_numDiasDisponiveis($idServidor);
-        $numProcesso[] = $this->get_numProcesso($idServidor);
-        $cargo[] = "Vínculo<br>" . $pessoal->get_cargoSimples($idServidor);
-
-        $publicacaoPublicada[] = $this->get_numPublicacoes($idServidor);
-        $publicacaoPossivel[] = $this->get_numPublicacoesPossiveis($idServidor);
-        $publicacaoFaltante[] = $this->get_numPublicacoesFaltantes($idServidor);
-
-        # Totais
-        $diasPublicadosTotal += $this->get_numDiasPublicados($idServidor);
-        $diasFruidosTotal += $this->get_numDiasFruidos($idServidor);
-        $diasDisponiveisTotal += $this->get_numDiasDisponiveis($idServidor);
-
-        $publicacaoPossivelTotal += $this->get_numPublicacoesPossiveis($idServidor);
-        $publicacaoPublicadaTotal += $this->get_numPublicacoes($idServidor);
-        $publicacaoFaltanteTotal += $this->get_numPublicacoesFaltantes($idServidor);
-
-        if ($numVinculos > 1) {
-            $numProcesso[] = "";
-            $diasPublicados[] = $diasPublicadosTotal;
-            $diasFruidos[] = $diasFruidosTotal;
-            $diasDisponiveis[] = $diasDisponiveisTotal;
-            $cargo[] = "Total";
-
-            $publicacaoPublicada[] = $publicacaoPossivelTotal;
-            $publicacaoPossivel[] = $publicacaoPossivelTotal;
-            $publicacaoFaltante[] = $publicacaoFaltanteTotal;
-        }
-
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna($colunaDados);
-
-        # Tabela Processo
-        $conteudo = array(
-            $numProcesso
-        );
-
-        $tabela = new Tabela();
-        $tabela->set_conteudo($conteudo);
-        $tabela->set_align(["left"]);
-        $tabela->set_totalRegistro(false);
-        $tabela->set_titulo("Processo");
-        if ($numVinculos == 1) {
+            $tabela = new Tabela();
+            $tabela->set_conteudo($conteudo1);
+            $tabela->set_align(["left"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_titulo("Processo");
             $tabela->set_width([35, 45, 20]);
-            $tabela->set_label(["Descrição", "Valores"]);
-        } elseif ($numVinculos == 2) {
-            $tabela->set_width([25, 30, 30, 15]);
-            $tabela->set_label($cargo);
+            $tabela->set_label(["Vínculo", "Processos"]);
+            $tabela->set_grupoCorColuna(0);
+            $tabela->show();
+        } else {
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(4);
+            $colunaPub = 8;
+
+            titulotable("Processo");
+            $painel = new Callout();
+            $painel->abre();
+            p($this->get_numProcesso($idServidor), "f20", "center");
+            $painel->fecha();
         }
-        $tabela->show();
-        
+
+        /*
+         * Exibe o número de publicação
+         */
+
+        # Verifica qual rotina vai executar
+        if ($numVinculos > 1) {
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor, false);
+
+            # Percorre os vinculos
+            foreach ($vinculos as $tt) {
+                # Insere no array o vinculo e o processo
+                $conteudo2[] = [
+                    $pessoal->get_cargoSimples($tt[0]),
+                    $this->get_numPublicacoesPossiveis($tt[0]),
+                    $this->get_numPublicacoes($tt[0]),
+                    $this->get_numPublicacoesFaltantes($tt[0])
+                ];
+            }
+
+            $tabela = new Tabela();
+            $tabela->set_titulo("N° de Publicações");
+            $tabela->set_align(["left"]);
+            $tabela->set_conteudo($conteudo2);
+            $tabela->set_grupoCorColuna(0);
+            $tabela->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 3,
+                    'valor' => 0,
+                    'operador' => '<',
+                    'id' => 'alerta')));
+            $tabela->show();
+        } else {
+
+            $conteudo[] = [
+                $this->get_numPublicacoesPossiveis($idServidor),
+                $this->get_numPublicacoes($idServidor),
+                $this->get_numPublicacoesFaltantes($idServidor)
+            ];
+
+            $tabela = new Tabela();
+            $tabela->set_titulo("N° de Publicações");
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label(["Possíveis", "Publicadas", "Pendentes"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 2,
+                    'valor' => 0,
+                    'operador' => '<>',
+                    'id' => 'alerta')));
+            $tabela->show();
+        }
+
+        /*
+         * Exibe a lista de publicações
+         */
+
+        $grid->fechaColuna();
+        $grid->abreColuna($colunaPub);
+
         # Informa se o servidor tem publicações em aberto
         $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
         if ($publicFaltantesTotal > 0) {
             if ($publicFaltantesTotal == 1) {
-                callout("Atenção, este servidor tem direito a 1 publicação de licença prêmio não publicadas!");
+                callout("Atenção, este servidor tem 1 publicação pendente!");
             } else {
-                callout("Atenção, este servidor tem direito a {$publicFaltantesTotal} publicações de licença prêmio não publicadas!");
+                callout("Atenção, este servidor tem {$publicFaltantesTotal} publicações pendentes!");
             }
+        } elseif ($publicFaltantesTotal < 0) {
+            callout("Atenção, Este servidor parece ter mais publicações a que tem direito!");
         }
 
-        # Tabela n° de publicações
-        $conteudo = array(
-            $publicacaoPossivel,
-            $publicacaoPublicada,
-            $publicacaoFaltante
-        );
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
 
-        $tabela = new Tabela();
-        $tabela->set_conteudo($conteudo);
-        $tabela->set_align(["left"]);
-        $tabela->set_totalRegistro(false);
-        $tabela->set_titulo("N° de Publicações");
-        if ($numVinculos == 1) {
-            $tabela->set_width([35, 45, 20]);
-            $tabela->set_label(["Descrição", "Valores"]);
-        } elseif ($numVinculos == 2) {
-            $tabela->set_width([25, 30, 30, 15]);
-            $tabela->set_label($cargo);
-        }
-        $tabela->show();
+        if ($numVinculos > 1) {
 
-        $grid->fechaColuna();
-        $grid->abreColuna(12 - $colunaDados);
-
-        if ($diasPublicadosTotal > 0) {
-            # Conecta com o banco de dados
-            $pessoal = new Pessoal();
-
-            if ($numVinculos > 1) {
-
-                # Exibe as Publicações
-                $select = 'SELECT idServidor, 
+            # Exibe as Publicações
+            $select = 'SELECT idServidor, 
                               dtPublicacao,
                               idPublicacaoPremio,
                               numDias,
@@ -606,46 +573,40 @@ class LicencaPremio {
                          FROM tbpublicacaopremio
                         WHERE idServidor = ' . $idServidor;
 
-                # Inclui as publicações de outros vinculos
-                if ($numVinculos > 1) {
-                    # Percorre os vinculos
-                    foreach ($vinculos as $tt) {
-                        $select .= ' OR idServidor = ' . $tt[0];
-                    }
+            # Inclui as publicações de outros vinculos
+            if ($numVinculos > 1) {
+                # Percorre os vinculos
+                foreach ($vinculos as $tt) {
+                    $select .= ' OR idServidor = ' . $tt[0];
                 }
+            }
 
-                $select .= ' ORDER BY dtInicioPeriodo desc';
+            $select .= ' ORDER BY dtInicioPeriodo desc';
 
-                $result = $pessoal->select($select);
-                $count = $pessoal->count($select);
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
 
-                # Exibe a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($result);
-                $tabela->set_titulo('Publicações');
-                $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
-                $tabela->set_funcao([null, 'date_to_php']);
-                $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio']);
-                $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_titulo('Publicações');
+            $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+            $tabela->set_funcao([null, 'date_to_php']);
+            $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio']);
+            $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
 
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
 
-                $tabela->set_colunaSomatorio([3, 4, 5]);
-                $tabela->set_totalRegistro(false);
+            $tabela->set_colunaSomatorio([3, 4, 5]);
+            $tabela->set_totalRegistro(false);
 
-                $tabela->set_numeroOrdem(true);
-                $tabela->set_numeroOrdemTipo("d");
-
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 6,
-                        'valor' => 0,
-                        'operador' => '<',
-                        'id' => 'alerta')));
-
-                $tabela->show();
-            } else {
-                # Exibe as Publicações
-                $select = "SELECT dtPublicacao,
+            $tabela->set_numeroOrdem(true);
+            $tabela->set_numeroOrdemTipo("d");
+            $tabela->show();
+        } else {
+            # Exibe as Publicações
+            $select = "SELECT dtPublicacao,
                               CONCAT(date_format(dtPublicacao,'%d/%m/%Y'),' (',date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y'),')'),
                               numDias,
                               idPublicacaoPremio,
@@ -655,43 +616,29 @@ class LicencaPremio {
                         WHERE idServidor = {$idServidor}
                         ORDER BY dtInicioPeriodo desc";
 
-                $result = $pessoal->select($select);
-                $count = $pessoal->count($select);
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
 
-                # Exibe a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($result);
-                $tabela->set_titulo('Publicações');
-                $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
-                $tabela->set_funcao(['date_to_php']);
-                $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio']);
-                $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_titulo('Publicações');
+            $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+            $tabela->set_funcao(['date_to_php']);
+            $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio']);
+            $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
 
-                $tabela->set_numeroOrdem(true);
-                $tabela->set_numeroOrdemTipo("d");
+            $tabela->set_numeroOrdem(true);
+            $tabela->set_numeroOrdemTipo("d");
 
-                $tabela->set_colunaSomatorio([2, 3, 4]);
-                #$tabela->set_colunaSomatorio(2);
-                $tabela->set_totalRegistro(false);
-
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
-                        'valor' => 0,
-                        'operador' => '<',
-                        'id' => 'alerta')));
-
-                $tabela->show();
-            }
-            
-            # Exibe as informasções adicionais
-            $this->exibeInformacaoAdicional($idServidor);
-            
-        } else {
-            tituloTable("Publicações");
-            $callout = new Callout();
-            $callout->abre();
-            p('Nenhum item encontrado !!', 'center');
-            $callout->fecha();
+            $tabela->set_colunaSomatorio([2, 3, 4]);
+            #$tabela->set_colunaSomatorio(2);
+            $tabela->set_totalRegistro(false);
+            $tabela->show();
         }
+
+        # Exibe as informasções adicionais
+        $this->exibeInformacaoAdicional($idServidor);
 
         $grid->fechaColuna();
         $grid->fechaGrid();

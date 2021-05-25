@@ -606,7 +606,7 @@ class LicencaPremio {
         } else {
             # Exibe as Publicações
             $select = "SELECT dtPublicacao,
-                              CONCAT(date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y'),')'),
+                              CONCAT(date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y')),
                               numDias,
                               idPublicacaoPremio,
                               idPublicacaoPremio,

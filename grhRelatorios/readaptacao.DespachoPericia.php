@@ -72,9 +72,8 @@ if ($acesso) {
     } else {
         $despacho->set_texto("Encaminhamos a solicitação de Readaptação {$detalhe} <b>{$nomeServidor}</b>, ID nº {$idFuncional}, {$cargoEfetivo}, por motivo de saúde.");
     }
-
     
-    $despacho->set_texto($texto);
+    #$despacho->set_texto($texto);
 
     # Pega o idServidor do gerente GRH
     $idGerente = $pessoal->get_gerente(66);

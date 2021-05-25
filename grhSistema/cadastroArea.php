@@ -59,10 +59,11 @@ if ($acesso) {
 
     # select da lista
     $select = "SELECT idarea,
-                       tbtipocargo.cargo,
+                       tbtipocargo.sigla,
                        area,
                        descricao,
                        requisitos,
+                       idarea,
                        idarea
                   FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
                  WHERE area LIKE '%$parametro%'
@@ -88,24 +89,26 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Cargo", "Area", "Descrição Sintética da Área", "Requisitos para Provimento", "Servidores<br/>Ativos"));
-    $objeto->set_width(array(5, 12, 18, 30, 21, 5));
-    $objeto->set_align(array("center", "left", "left", "left", "left"));
+    $objeto->set_label(array("id", "Cargo", "Area", "Descrição Sintética da Área", "Requisitos para Provimento", "Servidores<br/>Ativos", "Ver"));
+    $objeto->set_width(array(5, 5, 15, 35, 20, 5, 5));
+    $objeto->set_align(array("center", "center", "left", "left", "left"));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_classe(array(null, null, null, null, null, "Pessoal"));
-    $objeto->set_metodo(array(null, null, null, null, null, "get_servidoresArea"));
+    $objeto->set_colunaSomatorio(5);
+    $objeto ->set_totalRegistro(false);
 
-    # Botão de exibição dos servidores
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    $botao->set_url('?fase=listaServidores&id=');
-    $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+    $objeto->set_classe(array(null, null, null, null, null, "Pessoal"));
+    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresArea"));
+
+    # Ver servidores ativos
+    $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
+    $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servAtivos->set_title("Exibe os servidores ativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("", "", "", "", "", "", "", "", $botao));
+    $objeto->set_link(array("", "", "", "", "", "", $servAtivos));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -165,11 +168,9 @@ if ($acesso) {
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
-
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
+    
     ################################################################
+    
     switch ($fase) {
         case "" :
         case "listar" :
@@ -180,7 +181,73 @@ if ($acesso) {
         case "gravar" :
             $objeto->$fase($id);
             break;
+
+        ################################################################
+
+        case "aguardeAtivos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresAtivos&id=' . $id);
+            break;
+
+        ################################################################
+
+
+        case "exibeServidoresAtivos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroArea.php?fase=exibeServidoresAtivos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioAtivo&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores("Servidores Ativos - Area: {$pessoal->get_area($id)}");
+            $lista->set_situacao(1);
+            $lista->set_area($id);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "relatorioAtivo" :
+            # Pega o nome do tipo de cargo
+            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores("Servidores Ativos - Area: {$pessoal->get_area($id)}");
+            $lista->set_situacao(1);
+            $lista->set_area($id);
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
     }
+
     $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");

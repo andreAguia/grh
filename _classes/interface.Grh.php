@@ -867,51 +867,6 @@ class Grh {
         $grid->fechaGrid();
     }
 
-######################################################################################################################
-
-    /**
-     * Método exibe get_numServidoresAtivosTipoCargo
-     * 
-     * Exibe o número de servidores ativos por tipo de cargo e o link para exibí-los
-     * Usado na tabela da rotina de cadastro de cargo efetivo
-     */
-    public function get_numServidoresAtivosTipoCargo($id) {
-
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
-        echo $pessoal->get_servidoresAtivosTipoCargo($id);
-        echo "&nbsp&nbsp&nbsp";
-
-        # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=aguardeAtivos&id=' . $id);
-        $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
-        $botao->show();
-    }
-
-    ###########################################################
-
-    /**
-     * Método exibe get_numServidoresAtivosTipoCargo
-     * 
-     * Exibe o número de servidores ativos por tipo de cargo e o link para exibí-los
-     * Usado na tabela da rotina de cadastro de cargo efetivo
-     */
-    public function get_numServidoresInativosTipoCargo($id) {
-
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
-        echo $pessoal->get_servidoresInativosTipoCargo($id);
-
-        # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=aguardeInativos&id=' . $id);
-        $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
-        $botao->show();
-    }
-
     ###########################################################
 
     /**
@@ -1020,6 +975,24 @@ class Grh {
         $botao->set_id('aServidorTipoCargo');
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
         $botao->show();
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibe get_numServidoresInativosConcurso
+     * 
+     * Exibe o número de servidores inativos por concurso e o link para exibí-los
+     * Usado na tabela da rotina de cadastro de concurso
+     */
+    public function exibeMapaFuncao($idCargo) {
+
+        # Mapa da Função
+        $botaoMapa = new Link(null,"../grhRelatorios/mapaCargo.php?cargo={$idCargo}");
+        $botaoMapa->set_imagem(PASTA_FIGURAS . 'lista.png', 20, 20);
+        $botaoMapa->set_title("Exibe o mapa do Cargo/Função");
+        $botaoMapa->set_target("_blank");        
+        $botaoMapa->show();
     }
 
     ###########################################################

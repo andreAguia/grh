@@ -8,12 +8,16 @@
  * @author Alat
  */
 class ListaServidores {
-    # Título
+    # Nome da lista que aparece no título
 
-    private $nomeLista = null;  # Nome da lista que aparece no título
-    # Parâmetros de Pesquisa
-    private $matNomeId = null;  # Busca por matricula nome ou id em um só campos
+    private $nomeLista = null;
+
+    /*
+     * Parâmetros de Pesquisa
+     */
+    private $matNomeId = null;
     private $cargo = null;
+    private $area = null;
     private $tipoCargo = null;
     private $cargoComissao = null;
     private $perfil = null;
@@ -22,12 +26,22 @@ class ListaServidores {
     private $situacaoSinal = "=";
     private $lotacao = null;
 
-    # Parâmetro de edição
-    private $permiteEditar = true;          # Indica se terá botão para acessar informções dos servidores
-    # Outros
+    /*
+     * da listagem
+     */
+    private $permiteEditar = true;
+    private $ordenacao = "2 asc";               # ordenação da listagem. Padrão 3 por nome
+    private $ordenacaoCombo = array();          # Array da combo de ordanação
+
+    /*
+     *  Outros
+     */
     private $totReg = 0;        # Total de registros encontrados
     private $detalhado = true;  # Exibe detalhes 
-    # Parâmetros da paginação da listagem
+
+    /*
+     *  Parâmetros da paginação da listagem
+     */
     private $paginacao = false;   # Flag que indica se terá ou não paginação na lista
     private $paginacaoItens = 15;  # Quantidade de registros por página. 
     private $paginacaoInicial = 0;  # A paginação inicial
@@ -37,10 +51,9 @@ class ListaServidores {
     private $itemFinal = null;
     private $itemInicial = null;
 
-    # Ordenação
-    private $ordenacao = "2 asc";               # ordenação da listagem. Padrão 3 por nome
-    private $ordenacaoCombo = array();          # Array da combo de ordanação
-    # Parâmetros do relatório
+    /*
+     * Parâmetros do relatório
+     */
     private $select = null;     // Guarda o select para ser recuperado pela rotina de relatório
     private $selectPaginacao = null;  // Guarda o texto acrescido ao select quando se tem paginação
     private $titulo = null;     // guarda o título do relatório que é montado a partir da pesquisa
@@ -149,6 +162,10 @@ class ListaServidores {
                                      LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)';
+        # Área
+        if (!is_null($this->area)) {
+            $select .= ' LEFT JOIN tbarea ON (tbcargo.idArea = tbarea.idArea)';
+        }
 
         # CArgo em comissão
         if (!is_null($this->cargoComissao)) {
@@ -205,7 +222,13 @@ class ListaServidores {
         # tipoCargo
         if (!is_null($this->tipoCargo)) {
             $select .= ' AND (tbcargo.idTipoCargo = ' . $this->tipoCargo . ')';
-            $this->subTitulo .= "Cargo: " . $this->tipoCargo . "<br/>";
+            $this->subTitulo .= "Cargo: " . $servidor->get_nomeTipoCargo($this->tipoCargo) . "<br/>";
+        }
+
+        # area
+        if (!is_null($this->area)) {
+            $select .= ' AND (tbarea.idArea = ' . $this->area . ')';
+            $this->subTitulo .= "Area: " . $servidor->get_area($this->area) . "<br/>";
         }
 
         # cargo

@@ -35,16 +35,12 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))) {     # Se o parametro não vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
     } else {
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
-
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
 
     # Começa uma nova página
     $page = new Page();
@@ -68,22 +64,13 @@ if ($acesso) {
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
-    if (is_null($orderCampo)) {
-        $orderCampo = "1";
-    }
-
-    if (is_null($orderTipo)) {
-        $orderTipo = 'asc';
-    }
-
     # select da lista
     $objeto->set_selectLista('SELECT idTipoCargo,
                                       tipo,
                                       cargo,
                                       sigla,
                                       nivel,
-                                      vagas,
+                                      idTipoCargo,
                                       idTipoCargo,
                                       idTipoCargo,
                                       idTipoCargo
@@ -110,14 +97,29 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Tipo", "Cargo", "Sigla", "Nível", "Vagas<br/>Publicadas", "Servidores<br/>Ativos", "Vagas<br/>Disponíveis", "Servidores<br/>Inativos"]);
+    $objeto->set_label(["Id", "Tipo", "Cargo", "Sigla", "Nível", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
     $objeto->set_align(["center", "center", "left"]);
 
-    $objeto->set_classe([null, null, null, null, null, null, 'Grh', 'Pessoal', 'Grh']);
-    $objeto->set_metodo([null, null, null, null, null, null, 'get_numServidoresAtivosTipoCargo', 'get_tipoCargoVagasDisponiveis', 'get_numServidoresInativosTipoCargo']);
+    $objeto->set_classe([null, null, null, null, null, 'Pessoal', null, 'Pessoal']);
+    $objeto->set_metodo([null, null, null, null, null, 'get_numServidoresAtivosTipoCargo', null, 'get_numServidoresInativosTipoCargo']);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
+
+    $objeto->set_colunaSomatorio([5, 7]);
+
+    # Ver servidores ativos
+    $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
+    $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servAtivos->set_title("Exibe os servidores ativos");
+
+    # Ver servidores inativos
+    $servInativos = new Link(null, '?fase=aguardeInativos&id=' . $id);
+    $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servInativos->set_title("Exibe os servidores inativos");
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(null, null, null, null, null, null, $servAtivos, null, $servInativos));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -198,6 +200,14 @@ if ($acesso) {
     $botaoArea->set_url('cadastroArea.php');
 
     $objeto->set_botaoListarExtra([$botaoGra, $botaoArea, $botaoCargo]);
+    
+    # Rotina extra editar
+    $objeto->set_rotinaExtraEditar("callout");
+    $objeto->set_rotinaExtraEditarParametro("O campo vagas publicadas se refere as vagas "
+            . "que foram publicadas no plano de cargos, entretanto este campo nada significa"
+            . " na prática, pois o número de vagas que é considerado como válido para este cargo é o que foi"
+            . " publicado nos editais dos concursos. Essa informação está no cadastro de concurso. ");
+
 
     ################################################################
 
@@ -209,7 +219,7 @@ if ($acesso) {
 
         case "excluir" :
             # Verifica se tem servidores nesse cargo            
-            if ($pessoal->get_servidoresAtivosTipoCargo($id) > 0 OR $pessoal->get_servidoresInativosTipoCargo($id) > 0) {
+            if ($pessoal->get_numServidoresAtivosTipoCargo($id) > 0 OR $pessoal->get_numServidoresInativosTipoCargo($id) > 0) {
                 alert("Não é possível excluir um cargo com servidores cadastrados !!");
                 back(1);
             } else {
@@ -241,7 +251,6 @@ if ($acesso) {
             break;
 
         ################################################################
-
 
         case "exibeServidoresAtivos" :
             # Limita o tamanho da tela
@@ -277,7 +286,7 @@ if ($acesso) {
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos - Cargo: ' . $nomeTipo);
             $lista->set_situacao(1);
-            $lista->set_cargo($nomeTipo);
+            $lista->set_tipoCargo($id);
             $lista->showTabela();
 
             $grid->fechaColuna();
@@ -293,7 +302,7 @@ if ($acesso) {
             # Lista de Servidores Ativos
             $lista = new ListaServidores("Cadastro de Servidores Ativos por Cargo");
             $lista->set_situacao(1);
-            $lista->set_cargo($nomeTipo);
+            $lista->set_tipoCargo($id);
             $lista->showRelatorio();
             break;
 
@@ -334,7 +343,7 @@ if ($acesso) {
             $lista = new ListaServidores('Servidores Inativos - Cargo: ' . $nomeTipo);
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
-            $lista->set_cargo($nomeTipo);
+            $lista->set_tipoCargo($id);
             $lista->showTabela();
 
             $grid->fechaColuna();
@@ -344,14 +353,11 @@ if ($acesso) {
         ################################################################
 
         case "relatorioInativo" :
-            # Pega o nome do tipo de cargo
-            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
-
             # Lista de Servidores Inativos
             $lista = new ListaServidores("Cadastro de Servidores Inativos por Cargo");
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
-            $lista->set_cargo($nomeTipo);
+            $lista->set_tipoCargo($id);
             $lista->showRelatorio();
             break;
 
@@ -386,6 +392,8 @@ if ($acesso) {
             $tabela->set_label(array("Cargo", "Servidores"));
             $tabela->set_width(array(80, 20));
             $tabela->set_align(array("left", "center"));
+            $tabela->set_colunaSomatorio(1);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $grid3->fechaColuna();

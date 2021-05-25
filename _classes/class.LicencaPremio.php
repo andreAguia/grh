@@ -438,7 +438,7 @@ class LicencaPremio {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
-        # Pega os Dados 
+        # Pega o número de vínculos
         $numVinculos = $this->get_numVinculosPremio($idServidor);
 
         /*

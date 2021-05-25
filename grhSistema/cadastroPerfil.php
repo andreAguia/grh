@@ -443,7 +443,6 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
             $tabela->set_label(array("Perfil", "Servidores"));
-            #$tabela->set_width(array(80, 20));
             $tabela->set_align(array("left", "center"));
             $tabela->set_colunaSomatorio(1);
             $tabela->set_totalRegistro(false);

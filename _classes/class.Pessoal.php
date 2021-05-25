@@ -1889,6 +1889,32 @@ class Pessoal extends Bd {
         }
     }
 
+    ##########################################################################################
+
+    function get_area($idArea) {
+
+
+        # Função que informa o nome de uma area de um cargo
+        #
+        # Parâmetro: id do tipo da licença
+        # Valida parametro
+        if (is_null($idArea))
+            return false;
+
+        # Monta o select		
+        $select = 'SELECT area
+                     FROM tbarea
+                    WHERE idArea = ' . $idArea;
+
+        $row = parent::select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
     ###########################################################
 
     /**
@@ -2652,7 +2678,7 @@ class Pessoal extends Bd {
      * 
      * Exibe o n�mero de servidores ativos em um determinado cargo(funcao)
      */
-    public function get_servidoresCargo($id) {
+    public function get_numServidoresAtivosCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao = 1 AND 
@@ -2669,7 +2695,7 @@ class Pessoal extends Bd {
      * 
      * Exibe o n�mero de servidores inativos em um determinado cargo(funcao)
      */
-    public function get_servidoresInativosCargo($id) {
+    public function get_numServidoresInativosCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor
                     WHERE situacao <> 1 AND 
@@ -2686,7 +2712,7 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
-    public function get_servidoresAtivosTipoCargo($id) {
+    public function get_numServidoresAtivosTipoCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao = 1 
@@ -2704,7 +2730,7 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores inativos em um determinado tipo de cargo
      */
-    public function get_servidoresInativosTipoCargo($id) {
+    public function get_numServidoresInativosTipoCargo($id) {
         $select = 'SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                     WHERE situacao <> 1 AND 
@@ -4195,7 +4221,7 @@ class Pessoal extends Bd {
      */
     public function get_tipoCargoVagasDisponiveis($id) {
         $vagas = $this->get_TipoCargoVagas($id);
-        $ocupadas = $this->get_servidoresAtivosTipoCargo($id);
+        $ocupadas = $this->get_numServidoresAtivosTipoCargo($id);
         $disponiveis = $vagas - $ocupadas;
 
         return $disponiveis;
@@ -4208,7 +4234,7 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos em uma determinada area
      */
-    public function get_servidoresArea($id) {
+    public function get_numServidoresArea($id) {
         $select = 'SELECT idServidor                             
                          FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                         WHERE situacao = 1 AND 

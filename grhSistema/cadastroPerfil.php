@@ -112,14 +112,27 @@ if ($acesso) {
     $objeto->set_align(array("center", "center", "left"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
-    $objeto->set_classe(array(null, null, null, "Pessoal", "Grh", "Pessoal","Grh"));
-    $objeto->set_metodo(array(null, null, null, "get_numServidoresAtivosPerfil", "verServidoresAtivosPerfil", "get_numServidoresInativosPerfil","get_numServidoresInativosPerfil"));
+    $objeto->set_classe(array(null, null, null, "Pessoal", null, "Pessoal", null));
+    $objeto->set_metodo(array(null, null, null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
     $objeto->set_colunaSomatorio([3, 5]);
-    #$objeto->set_totalRegistro(false);
+
+    # Ver servidores ativos
+    $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
+    $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servAtivos->set_title("Exibe os servidores ativos");
+
+    # Ver servidores inativos
+    $servInativos = new Link(null, '?fase=aguardeInativos&id=' . $id);
+    $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servInativos->set_title("Exibe os servidores inativos");
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(null, null, null, null, $servAtivos, null, $servInativos));
+
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -239,7 +252,7 @@ if ($acesso) {
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
-    #$botaoGra->set_accessKey('G');
+    
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -430,8 +443,10 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
             $tabela->set_label(array("Perfil", "Servidores"));
-            $tabela->set_width(array(80, 20));
+            #$tabela->set_width(array(80, 20));
             $tabela->set_align(array("left", "center"));
+            $tabela->set_colunaSomatorio(1);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $grid3->fechaColuna();

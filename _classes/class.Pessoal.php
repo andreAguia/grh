@@ -604,12 +604,12 @@ class Pessoal extends Bd {
     ######################################################################################
 
     /**
-     * Método get_servidoresAtivosLotacao
+     * Método get_numServidoresAtivosLotacao
      * Informa o número de servidores ativos nessa lotação
      * 
      * @param	integer $idLotacao  id da lotação
      */
-    public function get_servidoresAtivosLotacao($idLotacao) {
+    public function get_numServidoresAtivosLotacao($idLotacao) {
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
@@ -624,12 +624,12 @@ class Pessoal extends Bd {
     ######################################################################################
 
     /**
-     * Método get_servidoresInativosLotacao
+     * Método get_numServidoresInativosLotacao
      * Informa o número de servidores inativos nessa lotação
      * 
      * @param	integer $idLotacao  id da lotação
      */
-    public function get_servidoresInativosLotacao($idLotacao) {
+    public function get_numServidoresInativosLotacao($idLotacao) {
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)

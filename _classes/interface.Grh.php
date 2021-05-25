@@ -937,36 +937,6 @@ class Grh {
     ###########################################################
 
     /**
-     * Método exibe verServidoresAtivosPerfil
-     * 
-     * Exibe link para exibir os servidorea tivos em um deeterminado perfil
-     * Usado na tabela da rotina de cadastro de perfil
-     */
-    public function verServidoresAtivosPerfil($id) {
-        # Botão de exibição dos servidores
-        $botao = new Link(null, "?fase=aguardeAtivos&id={$id}");
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
-        $botao->show();
-    }
-
-    ###########################################################
-
-    /**
-     * Método exibe get_numServidoresInativosPerfil
-     * 
-     * Exibe o número de servidores inativos por perfil e o link para exibí-los
-     * Usado na tabela da rotina de cadastro de perfil
-     */
-    public function get_numServidoresInativosPerfil($id) {
-        # Botão de exibição dos servidores
-        $botao = new Link(null, '?fase=aguardeInativos&id=' . $id);
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
-        $botao->show();
-    }
-
-    ###########################################################
-
-    /**
      * Método exibe get_numServidoresAtivosLotacao
      * 
      * Exibe o número de servidores ativos por lotação e o link para exibí-los

@@ -82,6 +82,8 @@ if ($acesso) {
                                       nome,
                                       idLotacao,
                                       idLotacao,
+                                      idLotacao,
+                                      idLotacao,
                                       if(ativo = 0,"Não","Sim"),
                                       idLotacao
                                  FROM tblotacao LEFT JOIN tbcampus USING (idCampus)
@@ -92,7 +94,7 @@ if ($acesso) {
                                    OR ramais LIKE "%' . $parametro . '%"
                                    OR campus LIKE "%' . $parametro . '%"    
                                    OR idLotacao LIKE "%' . $parametro . '%") 
-                             ORDER BY ativo desc, UADM asc,DIR asc, GER asc, nome asc');
+                             ORDER BY ativo desc, UADM asc, DIR asc, campus, GER asc, nome asc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT codigo,
@@ -113,15 +115,30 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores<br/>Ativos", "Servidores<br/>Inativos", "Ativa"));
+    $objeto->set_label(array("id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver", "Lotação<br/>Ativa?"));
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center", "center", "center", "center", "left"));
 
-    $objeto->set_classe(array(null, null, null, null, null, "Grh", "Grh"));
-    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao", "get_numServidoresInativosLotacao"));
+    $objeto->set_classe(array(null, null, null, null, null, "Pessoal", null, "Pessoal"));
+    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"));
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
+    
+    $objeto->set_colunaSomatorio([5, 7]);
+
+    # Ver servidores ativos
+    $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
+    $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servAtivos->set_title("Exibe os servidores ativos");
+
+    # Ver servidores inativos
+    $servInativos = new Link(null, '?fase=aguardeInativos&id=' . $id);
+    $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servInativos->set_title("Exibe os servidores inativos");
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(null, null, null, null, null, null,$servAtivos, null, $servInativos));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -142,18 +159,6 @@ if ($acesso) {
                               ORDER BY campus');
     array_unshift($result1, array(null, null));
 
-    # Pega os dados da datalist da Diretoria
-    $result2 = $pessoal->select('SELECT DISTINCT DIR,
-                                        DIR
-                                  FROM tblotacao WHERE ativo
-                              ORDER BY DIR');
-    #array_unshift($result2, array(null,null));
-    # Pega os dados da datalist da Geância
-    $result3 = $pessoal->select('SELECT DISTINCT GER,
-                                        GER
-                                  FROM tblotacao WHERE ativo
-                              ORDER BY GER');
-    #array_unshift($result3, array(null,null));
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -177,7 +182,6 @@ if ($acesso) {
             'label' => 'Sigla da Diretoria:',
             'title' => 'Sigla da Diretoria',
             'tipo' => 'texto',
-            'datalist' => $result2,
             'required' => true,
             'size' => 15),
         array('linha' => 1,
@@ -194,7 +198,6 @@ if ($acesso) {
             'label' => 'Sigla da Gerência:',
             'title' => 'Sigla da Gerência',
             'tipo' => 'texto',
-            'datalist' => $result3,
             'size' => 15),
         array('linha' => 2,
             'col' => 10,
@@ -208,7 +211,7 @@ if ($acesso) {
             'col' => 2,
             'nome' => 'ativo',
             'required' => true,
-            'label' => 'Ativo:',
+            'label' => 'Lotação Ativa?',
             'title' => 'Se a lotação está ativa e permite movimentações',
             'tipo' => 'combo',
             'array' => array(array(1, 'Sim'), array(0, 'Não')),
@@ -229,7 +232,7 @@ if ($acesso) {
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem1);
-    #$botaoGra->set_accessKey('G');
+
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -252,7 +255,7 @@ if ($acesso) {
     $botaoOrga->set_title("Exibe o Organograma2 da UENF");
     $botaoOrga->set_imagem($imagem3);
     $botaoOrga->set_url("?fase=organograma");
-    
+
     # Cargos Ativos
     $botaoAtivo = new Button("Lotações Ativas", "?tipo=1");
     $botaoAtivo->set_title("Exibe os Cargos Ativos");
@@ -287,7 +290,7 @@ if ($acesso) {
             $objeto->$fase($id);
             break;
 
-         ################################################################
+        ################################################################
 
         case "aguardeAtivos" :
             br(10);
@@ -436,11 +439,11 @@ if ($acesso) {
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                  AND situacao = 1
-                                 AND ativo
-                            GROUP BY tblotacao.dir';
+                                 AND ativo                           
+                            GROUP BY tblotacao.dir
+                            ORDER BY tblotacao.dir ';
 
             $servidores = $pessoal->select($selectGrafico);
-
 
             titulo('Servidores por Lotação');
 
@@ -451,9 +454,11 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Lotação", "Servidores"));
-            $tabela->set_width(array(80, 20));
+            $tabela->set_label(array("Diretoria / Centro", "Servidores"));
+            #$tabela->set_width(array(80, 20));
             $tabela->set_align(array("left", "center"));
+            $tabela->set_colunaSomatorio(1);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $grid3->fechaColuna();

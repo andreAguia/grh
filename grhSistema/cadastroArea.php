@@ -51,7 +51,7 @@ if ($acesso) {
     $objeto->set_nome('Área');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('cadastroCargo.php');
+    $objeto->set_voltarLista('areaCargoEfetivo.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
@@ -227,7 +227,6 @@ if ($acesso) {
             $lista->set_situacao(1);
             $lista->set_area($id);
             $lista->showTabela();
-
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;

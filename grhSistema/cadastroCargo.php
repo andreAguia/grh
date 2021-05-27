@@ -55,10 +55,10 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos Efetivos');
+    $objeto->set_nome('Cadastro de Cargos');
 
     # Botão de voltar da lista
-    $objeto->set_voltarLista('grh.php');
+    $objeto->set_voltarLista('areaCargoEfetivo.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
@@ -189,17 +189,7 @@ if ($acesso) {
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
 
-    # Cadastro de Cargos
-    $botaoCargo = new Button("Funções");
-    $botaoCargo->set_title("Acessa o Cadastro de Cargos");
-    $botaoCargo->set_url('cadastroFuncao.php');
-
-    # Cadastro de Áreas
-    $botaoArea = new Button("Áreas");
-    $botaoArea->set_title("Acessa o Cadastro de Áreas");
-    $botaoArea->set_url('cadastroArea.php');
-
-    $objeto->set_botaoListarExtra([$botaoGra, $botaoArea, $botaoCargo]);
+    $objeto->set_botaoListarExtra([$botaoGra]);
     
     # Rotina extra editar
     $objeto->set_rotinaExtraEditar("callout");

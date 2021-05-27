@@ -21,7 +21,6 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    $subFase = get('subFase', 1);
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -64,10 +63,10 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cargos e Funções');
+    $objeto->set_nome('Cadastro de Funções');
 
     # bot?o de voltar da lista
-    $objeto->set_voltarLista('cadastroCargo.php');
+    $objeto->set_voltarLista('areaCargoEfetivo.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
@@ -112,7 +111,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver", "Mapa"]);
+    $objeto->set_label(["id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver"]);
     #$objeto->set_width(array(5,20,25,25,10,5,5));
     $objeto->set_align(["center", "left", "left", "left"]);
 
@@ -121,21 +120,16 @@ if ($acesso) {
 
     $objeto->set_colunaSomatorio([4, 6]);
 
-    $objeto->set_classe([null, null, null, null, "Pessoal", null, "pessoal", null, "Grh"]);
-    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosCargo", null, "get_numServidoresInativosCargo", null, "exibeMapaFuncao"]);
+    $objeto->set_classe([null, null, null, null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosCargo"]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
     $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
     $servAtivos->set_title("Exibe os servidores ativos");
 
-    # Ver servidores inativos
-    $servInativos = new Link(null, '?fase=aguardeInativos&id=' . $id);
-    $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
-    $servInativos->set_title("Exibe os servidores inativos");
-
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, null, $servAtivos, null, $servInativos));
+    $objeto->set_link(array(null, null, null, null, null, $servAtivos));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -267,15 +261,6 @@ if ($acesso) {
 
         ################################################################
 
-        case "aguardeInativos" :
-            br(10);
-            aguarde("Montando a Listagem");
-            br();
-            loadPage('?fase=exibeServidoresInativos&id=' . $id);
-            break;
-
-        ################################################################
-
         case "exibeServidoresAtivos" :
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -293,120 +278,22 @@ if ($acesso) {
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar, "left");
 
-            # Tipo de servidores
-            if ($subFase == 1) {
-                $linkTipo = new Link("Servidores Inativos", "?fase=listaServidores&subFase=2&id=$id");
-                $linkTipo->set_title('Exibe os servidores inativos');
-            } else {
-                $linkTipo = new Link("Servidores Ativos", "?fase=listaServidores&subFase=1&id=$id");
-                $linkTipo->set_title('Exibe os servidores ativos');
-            }
-            $linkTipo->set_class('button');
-            $linkTipo->set_title('Exibe os servidores inativos');
-            $menu->add_link($linkTipo, "right");
-
-            # Mapa do Cargo
-            #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',null,15,15);
-            $botaoMapa = new Button("Mapa do Cargo");
-            $botaoMapa->set_title("Mapa do Cargo");
-            $botaoMapa->set_target("_blank");
-            $botaoMapa->set_url("../grhRelatorios/mapaCargo.php?cargo=$id");
-            $menu->add_link($botaoMapa, "right");
-
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&subFase=$subFase&id=$id");
+            $botaoRel->set_url("?fase=relatorio&id=$id");
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel, "right");
 
             $menu->show();
 
-            if ($subFase == 1) {
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores Ativos - Cargo: ' . $pessoal->get_nomeCargo($id));
-                $lista->set_situacao(1);
-                $lista->set_cargo($id);
-                $lista->showTabela();
-            } else {
-                # Lista de Servidores Inativos
-                $lista = new ListaServidores('Servidores Inativos - Cargo: ' . $pessoal->get_nomeCargo($id));
-                $lista->set_situacao(1);
-                $lista->set_situacaoSinal("<>");
-                $lista->set_cargo($id);
-                $lista->showTabela();
-            }
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-        ################################################################
-
-        case "exibeServidoresInativos" :
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Informa a origem
-            set_session('origem', 'cadastroFuncao.php?fase=listaServidores&id=' . $id);
-
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar
-            $btnVoltar = new Button("Voltar", "?");
-            $btnVoltar->set_title('Volta para a página anterior');
-            $btnVoltar->set_accessKey('V');
-            $menu->add_link($btnVoltar, "left");
-
-            # Tipo de servidores
-            if ($subFase == 1) {
-                $linkTipo = new Link("Servidores Inativos", "?fase=listaServidores&subFase=2&id=$id");
-                $linkTipo->set_title('Exibe os servidores inativos');
-            } else {
-                $linkTipo = new Link("Servidores Ativos", "?fase=listaServidores&subFase=1&id=$id");
-                $linkTipo->set_title('Exibe os servidores ativos');
-            }
-            $linkTipo->set_class('button');
-            $linkTipo->set_title('Exibe os servidores inativos');
-            $menu->add_link($linkTipo, "right");
-
-            # Mapa do Cargo
-            #$imagem1 = new Imagem(PASTA_FIGURAS.'lista.png',null,15,15);
-            $botaoMapa = new Button("Mapa do Cargo");
-            $botaoMapa->set_title("Mapa do Cargo");
-            $botaoMapa->set_target("_blank");
-            $botaoMapa->set_url("../grhRelatorios/mapaCargo.php?cargo=$id");
-            $menu->add_link($botaoMapa, "right");
-
-            # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dos Servidores");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&subFase=$subFase&id=$id");
-            $botaoRel->set_imagem($imagem2);
-            $menu->add_link($botaoRel, "right");
-
-            $menu->show();
-
-            if ($subFase == 1) {
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores Ativos - Cargo: ' . $pessoal->get_nomeCargo($id));
-                $lista->set_situacao(1);
-                $lista->set_cargo($id);
-                $lista->showTabela();
-            } else {
-                # Lista de Servidores Inativos
-                $lista = new ListaServidores('Servidores Inativos - Cargo: ' . $pessoal->get_nomeCargo($id));
-                $lista->set_situacao(1);
-                $lista->set_situacaoSinal("<>");
-                $lista->set_cargo($id);
-                $lista->showTabela();
-            }
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Cargo: ' . $pessoal->get_nomeCargo($id));
+            $lista->set_situacao(1);
+            $lista->set_cargo($id);
+            $lista->showTabela();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -415,20 +302,11 @@ if ($acesso) {
         ################################################################
 
         case "relatorio" :
-            if ($subFase == 1) {
-                # Lista de Servidores Ativos
-                $lista = new ListaServidores('Servidores Ativos');
-                $lista->set_situacao(1);
-                $lista->set_cargo($id);
-                $lista->showRelatorio();
-            } else {
-                # Lista de Servidores Inativos
-                $lista = new ListaServidores('Servidores Inativos');
-                $lista->set_situacao(1);
-                $lista->set_situacaoSinal("<>");
-                $lista->set_cargo($id);
-                $lista->showRelatorio();
-            }
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos');
+            $lista->set_situacao(1);
+            $lista->set_cargo($id);
+            $lista->showRelatorio();
             break;
     }
     $page->terminaPagina();

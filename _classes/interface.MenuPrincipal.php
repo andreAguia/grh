@@ -423,7 +423,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cargo Efetivo');
-        $botao->set_url('cadastroCargo.php?grh=1');
+        $botao->set_url('areaCargoEfetivo.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'cracha.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Funções');
         $botao->set_accesskey('C');

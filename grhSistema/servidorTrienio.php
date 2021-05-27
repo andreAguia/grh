@@ -34,10 +34,6 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -73,28 +69,19 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
-
-    # ordenação
-    if (is_null($orderCampo)) {
-        $orderCampo = "2";
-    }
-
-    if (is_null($orderTipo)) {
-        $orderTipo = 'desc';
-    }
-
+    
     # select da lista
-    $objeto->set_selectLista('SELECT dtInicial,
+    $objeto->set_selectLista("SELECT dtInicial,
                                      percentual,
-                                     dtInicioPeriodo,
-                                     dtFimPeriodo,
+                                     CONCAT(date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y')),
                                      numProcesso,
                                      dtPublicacao,
                                      documento,
+                                     obs,
                                      idTrienio
                                 FROM tbtrienio
-                               WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY ' . $orderCampo . ' ' . $orderTipo);
+                               WHERE idServidor = {$idServidorPesquisado}
+                            ORDER BY 2 DESC");
 
     # select do edita
     $objeto->set_selectEdita('SELECT percentual,
@@ -107,12 +94,7 @@ if ($acesso) {
                                      obs,
                                      idServidor
                                 FROM tbtrienio
-                               WHERE idTrienio = ' . $id);
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
+                               WHERE idTrienio = ' . $id);    
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -121,10 +103,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("a partir de", "%", "P.Aq.Início", "P.Aq.Fim", "Processo", "DOERJ", "Documento"));
-    #$objeto->set_width(array(10,5,10,10,20,15,20));
+    $objeto->set_label(array("a partir de", "%", "Período Aquisitivo", "Processo", "DOERJ", "Documento","Obs"));
+    $objeto->set_width(array(10,5,20,15,10,15,15));
     $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", null, "date_to_php", "date_to_php", null, "date_to_php"));
+    $objeto->set_funcao(array("date_to_php", null, null, null, "date_to_php"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

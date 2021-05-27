@@ -149,15 +149,9 @@ class Pessoal extends Bd {
         $numero = parent::count($select);
         $row = parent::select($select, false);
 
-
-        # For�a como null caso seja em branco
-        if ((is_null($row[0])) or ($row == '')) {
-            $row[0] = null;
-        }
-
         # Verifica se j� tem alguma graificação ou se nunca teve
         if ($numero == 0) {
-            return false; # nunca teve graificação
+            return false; # nunca teve gratificação
         } else {
             return $row[0]; # Informa se tem graificação em aberto
         }

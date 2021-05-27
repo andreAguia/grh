@@ -104,11 +104,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Interrompe TS"));
-    $objeto->set_align(array("center", "left"));    
-    $objeto->set_classe(array(null,"Licenca"));
-    $objeto->set_metodo(array(null,"exibeNome"));
-    
+    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Interrompe TS"]);
+    $objeto->set_width([5, 27, 9,9, 9, 9, 9, 9, 9]);
+    $objeto->set_align(["center", "left"]);
+    $objeto->set_classe([null, "Licenca"]);
+    $objeto->set_metodo([null, "exibeNome"]);
+
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 

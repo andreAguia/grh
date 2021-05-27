@@ -386,7 +386,7 @@ class PlanoCargos {
             echo "-";
         } else {
             $link = new Link(null, "../_legislacao/" . $row[0], "Exibe a Lei");
-            $link->set_imagem(PASTA_FIGURAS_GERAIS . "ver.png", 20, 20);
+            $link->set_imagem(PASTA_FIGURAS_GERAIS . "do.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
         }

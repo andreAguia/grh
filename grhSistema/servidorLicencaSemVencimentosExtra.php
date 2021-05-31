@@ -15,27 +15,27 @@ $dtRetorno = $campoValor[9];
 $idServidor = $campoValor[12];
 
 # Preenche a data de término quando for nula
-if (vazio($dtTermino)) {
-    if (!vazio($dtInicial)) {
+if (empty($dtTermino)) {
+    if (!empty($dtInicial)) {
         $campoValor[8] = date_to_bd(addDias($dtInicial, $numDias));
         $dtTermino = $campoValor[8];
     }
 }
 
-if (vazio($numDias)) {
+if (empty($numDias)) {
     $campoValor[8] = null;
     $campoValor[6] = null;
 }
 
 # Verifica a data de retorno
-if (!vazio($dtRetorno)) {
+if (!empty($dtRetorno)) {
     # Verifica qual é q data maior
     $dtRetorno = date_to_php($dtRetorno);
     $dtTermino = date_to_php($dtTermino);
     $dm = dataMaior($dtRetorno, $dtTermino);
 
     # Verifica a data de retorno é anterior a data de termino
-    if ($dm == $dtRetorno) {
+    if ($dtRetorno <> $dtTermino AND $dm == $dtRetorno) {
         $msgErro .= 'A data de retorno não pode ser posterior a data prevista de termino!\n';
         $erro = 1;
     }

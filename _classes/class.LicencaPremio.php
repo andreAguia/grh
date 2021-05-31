@@ -395,11 +395,12 @@ class LicencaPremio {
         /**
          * Informe o número de publicações Que faltam ser publicadas.
          */
-        # Pega publicações feitas 
-        $pf = $this->get_numPublicacoes($idServidor);
-
+        
         # Pega o número de Publicações Possíveis
         $pp = $this->get_numPublicacoesPossiveis($idServidor);
+        
+        # Pega publicações feitas 
+        $pf = $this->get_numPublicacoes($idServidor);
 
         # Calcula o número de publicações faltantes
         $pfalt = $pp - $pf;
@@ -452,7 +453,7 @@ class LicencaPremio {
 
         if ($numVinculos > 1) {
             # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor, false);
+            $vinculos = $pessoal->get_vinculosPremio($idServidor, false);
 
             # Percorre os vinculos
             foreach ($vinculos as $tt) {
@@ -468,7 +469,7 @@ class LicencaPremio {
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_titulo("Processo");
-            $tabela->set_width([35, 45, 20]);
+            $tabela->set_width([50, 50]);
             $tabela->set_label(["Vínculo", "Processos"]);
             $tabela->set_grupoCorColuna(0);
             $tabela->show();
@@ -507,6 +508,7 @@ class LicencaPremio {
             $tabela->set_grupoCorColuna(0);
             $tabela->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
             $tabela->set_totalRegistro(false);
+            $tabela->set_colunaSomatorio([1, 2, 3]);
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 3,
                     'valor' => 0,
@@ -553,9 +555,6 @@ class LicencaPremio {
             callout("Atenção, Este servidor parece ter mais publicações a que tem direito!");
         }
 
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
         if ($numVinculos > 1) {
 
             # Exibe as Publicações
@@ -574,7 +573,9 @@ class LicencaPremio {
             if ($numVinculos > 1) {
                 # Percorre os vinculos
                 foreach ($vinculos as $tt) {
-                    $select .= ' OR idServidor = ' . $tt[0];
+                    if ($tt[0] <> $idServidor) {
+                        $select .= ' OR idServidor = ' . $tt[0];
+                    }
                 }
             }
 
@@ -640,6 +641,220 @@ class LicencaPremio {
 
         # Exibe as informasções adicionais
         $this->exibeInformacaoAdicional($idServidor);
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+    }
+
+###########################################################
+
+    public function exibePublicacoesPremioRelatório($idServidor) {
+
+        /**
+         * Exibe um relatório com as publicações de Licença Prêmio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega o número de vínculos
+        $numVinculos = $this->get_numVinculosPremio($idServidor);
+
+        /*
+         * Exibe o número do processo
+         */
+
+        # Limita o tamanho da tela
+        $grid = new Grid();
+        $grid->abreColuna(4);
+
+        if ($numVinculos > 1) {
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculosPremio($idServidor, false);
+
+            # Percorre os vinculos
+            foreach ($vinculos as $tt) {
+                # Insere no array o vinculo e o processo
+                $conteudo1[] = [
+                    $pessoal->get_cargoSigla($tt[0]),
+                    $this->get_numProcesso($tt[0])
+                ];
+            }
+
+            tituloRelatorio('Processo');
+
+            $relatorio = new Relatorio();
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_width([40, 60]);
+            $relatorio->set_label(["Vínculo", "Processos"]);
+            $relatorio->set_align(["left", "left"]);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_conteudo($conteudo1);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        } else {
+            tituloRelatorio('Processo');
+            p($this->get_numProcesso($idServidor), "pFichaCadastralProcessoPremio");
+            hr("nenhumItem");
+        }
+
+        /*
+         * Exibe o número de publicação
+         */
+
+        # Verifica qual rotina vai executar
+        if ($numVinculos > 1) {
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor, false);
+
+            # Percorre os vinculos
+            foreach ($vinculos as $tt) {
+                # Insere no array o vinculo e o processo
+                $conteudo2[] = [
+                    $pessoal->get_cargoSigla($tt[0]),
+                    $this->get_numPublicacoesPossiveis($tt[0]),
+                    $this->get_numPublicacoes($tt[0]),
+                    $this->get_numPublicacoesFaltantes($tt[0])
+                ];
+            }
+
+            tituloRelatorio('"N° de Publicações"');
+
+            $relatorio = new Relatorio();
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
+            $relatorio->set_colunaSomatorio([1, 2, 3]);
+            $relatorio->set_align(["left"]);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_conteudo($conteudo2);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        } else {
+
+            $conteudo[] = [
+                $this->get_numPublicacoesPossiveis($idServidor),
+                $this->get_numPublicacoes($idServidor),
+                $this->get_numPublicacoesFaltantes($idServidor)
+            ];
+
+            tituloRelatorio("N° de Publicações");
+
+            $relatorio = new Relatorio();
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_label(["Possíveis", "Publicadas", "Pendentes"]);
+            $relatorio->set_align(["center"]);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_conteudo($conteudo);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        }
+
+        /*
+         * Exibe a lista de publicações
+         */
+
+        $grid->fechaColuna();
+        $grid->abreColuna(8);
+
+        if ($numVinculos > 1) {
+
+            # Exibe as Publicações
+            $select = 'SELECT idServidor, 
+                              dtPublicacao,
+                              idPublicacaoPremio,
+                              numDias,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio
+                         FROM tbpublicacaopremio
+                        WHERE idServidor = ' . $idServidor;
+
+            # Inclui as publicações de outros vinculos
+            if ($numVinculos > 1) {
+                # Percorre os vinculos
+                foreach ($vinculos as $tt) {
+                    if ($tt[0] <> $idServidor) {
+                        $select .= ' OR idServidor = ' . $tt[0];
+                    }
+                }
+            }
+
+            $select .= ' ORDER BY dtInicioPeriodo desc';
+            $result = $pessoal->select($select);
+            
+            tituloRelatorio("Publicações");
+
+            $relatorio = new Relatorio();
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+            $relatorio->set_align(["left"]);
+            $relatorio->set_funcao([null, 'date_to_php']);
+            #$relatorio->set_width([23, 12, 23, 10, 10, 10, 12]);
+            $relatorio->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+            $relatorio->set_metodo(["get_cargoSigla", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            $relatorio->set_colunaSomatorio([3, 4, 5]);
+            $relatorio->set_numeroOrdem(true);
+            $relatorio->set_numeroOrdemTipo("d");
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_conteudo($result);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        } else {
+            # Exibe as Publicações
+            $select = "SELECT dtPublicacao,
+                              idPublicacaoPremio,
+                              numDias,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio,
+                              idPublicacaoPremio
+                         FROM tbpublicacaopremio
+                        WHERE idServidor = {$idServidor}
+                        ORDER BY dtInicioPeriodo desc";
+
+            $result = $pessoal->select($select);
+            
+            tituloRelatorio("Publicações");
+            
+            $relatorio = new Relatorio();
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+            $relatorio->set_align(["left"]);
+            $relatorio->set_funcao(['date_to_php']);
+            #$relatorio->set_width([23, 12, 23, 10, 10, 10, 12]);
+            $relatorio->set_classe([ null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+            $relatorio->set_metodo([ null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            $relatorio->set_colunaSomatorio([2,3, 4]);
+            $relatorio->set_numeroOrdem(true);
+            $relatorio->set_numeroOrdemTipo("d");
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_conteudo($result);
+            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        }
 
         $grid->fechaColuna();
         $grid->fechaGrid();
@@ -748,7 +963,7 @@ class LicencaPremio {
         }
 
         # TítuloLink
-        $titulo = "<a id='licencaPremio' href='?fase=outroVinculo&id=$idServidor'><b>Vínculo Anterior: Cargo $cargo:<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)</b></a>";
+        $titulo = "<a id='licencaPremio' href='?fase=outroVinculo&id=$idServidor'>Licenças Fruídas do Vínculo<br/>Cargo $cargo<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)</a>";
 
         if ($count > 0) {
 
@@ -774,6 +989,67 @@ class LicencaPremio {
         }
     }
 
+    ###########################################################
+
+    public function exibeLicencaPremioRelatorio($idServidor) {
+
+        /**
+         * Exibe umrelatório tabela com as Licença Prêmio de um servidor
+         * Usado nos relatório de licenla premio e na ficha cadastral
+         */
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+
+        # Exibe as Publicações
+        $select = 'SELECT tbpublicacaopremio.dtPublicacao,
+                          tbpublicacaopremio.dtInicioPeriodo,
+                          tbpublicacaopremio.dtFimPeriodo,
+                          dtInicial,
+                          tblicencapremio.numdias,
+                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          idLicencaPremio
+                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                    WHERE tblicencapremio.idServidor = ' . $idServidor . '
+                 ORDER BY dtInicial desc';
+
+        $result = $pessoal->select($select);
+        $count = $pessoal->count($select);
+
+        # Dados do vínculo
+        $dtAdm = $pessoal->get_dtAdmissao($idServidor);
+        $dtSai = $pessoal->get_dtSaida($idServidor);
+        $motivo = $pessoal->get_motivo($idServidor);
+        $cargo = $pessoal->get_cargoSimples($idServidor);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+
+        if ($idSituacao == 1) {
+            tituloRelatorio("Licenças Fruídas do Vínculo: Cargo {$cargo} / Admissão: {$dtAdm} - (Ativo)");
+        } else {
+            tituloRelatorio("Licenças Fruídas do Vínculo: Cargo {$cargo} / Admissão: {$dtAdm} - Saída: {$dtSai} ({$motivo})");
+        }
+
+        $relatorio = new Relatorio();
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_subTotal(true);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_numeroOrdem(true);
+        $relatorio->set_numeroOrdemTipo("d");
+        #$relatorio->set_subtitulo("Licenças Fruídas");
+        $relatorio->set_label(array("Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término"));
+        #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
+        $relatorio->set_classe(array(null, 'LicencaPremio'));
+        $relatorio->set_metodo(array(null, 'exibePeriodoAquisitivo'));
+
+        $relatorio->set_conteudo($result);
+        #$relatorio->set_numGrupo(2);
+        $relatorio->set_botaoVoltar(false);
+        $relatorio->show();
+    }
+
     ##########################################################################################
 
     public function get_numVinculosPremio($idServidor) {
@@ -795,7 +1071,7 @@ class LicencaPremio {
         # Monta o select		
         $select = "SELECT idServidor
                          FROM tbservidor
-                        WHERE idPessoa = $idPessoa
+                        WHERE idPessoa = {$idPessoa}
                           AND idPerfil = 1";
 
         $numero = $pessoal->count($select);
@@ -804,14 +1080,14 @@ class LicencaPremio {
 
     ##########################################################################################
 
-    public function get_vinculosPremio($idServidor) {
+    function get_vinculosPremio($idServidor, $crescente = true) {
 
-        # Função que retorna um array com o idServidor de cada vinculo
+        # Função que retorna o idServidor de cada vinculos esse servidor teve com a uenf com direito a lic premio.
         #
         # Parâmetro: id do servidor
-        # Conecta com o banco de dados
+        
         $pessoal = new Pessoal();
-
+        
         # Valida parametro
         if (is_null($idServidor)) {
             return false;
@@ -820,18 +1096,26 @@ class LicencaPremio {
         # Pega o idPessoa desse idServidor
         $idPessoa = $pessoal->get_idPessoa($idServidor);
 
-        # Monta o select		
+        # Monta o select
+        if($crescente){
         $select = "SELECT idServidor
                          FROM tbservidor
-                        WHERE idPessoa = $idPessoa
+                        WHERE idPessoa = {$idPessoa}
                           AND idPerfil = 1
-                     ORDER BY dtAdmissao";
+                     ORDER BY dtadmissao";
+        }else{
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                        WHERE idPessoa = {$idPessoa}
+                          AND idPerfil = 1
+                     ORDER BY dtadmissao desc";
+        }
 
         $row = $pessoal->select($select);
         return $row;
     }
 
-    ###########################################################
+    ##########################################################################################
 
     public function exibeObs($idLicencaPremio) {
 

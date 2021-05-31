@@ -863,6 +863,14 @@ p#pFichaCadastralMensagem{
     margin: 0px;
 }
 
+p#pFichaCadastralProcessoPremio{ 
+    text-align: center;
+    font-size: 12px;
+    color: #000;
+    padding: 2px;
+    margin: 0px;
+}
+
 /*******************************************
  * Ato de Nomeacao
  *******************************************/

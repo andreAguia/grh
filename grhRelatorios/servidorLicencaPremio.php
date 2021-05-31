@@ -28,15 +28,16 @@ if ($acesso) {
 
     ######
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório de ' . $pessoal->get_licencaNome(6));
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório de Licença Prêmio');
     $nome = $pessoal->get_licencaNome(6);
-    
+
     # Pega o número de vínculos
     $licenca = new LicencaPremio();
     $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
-    
-    if($numVinculos > 1){
-        p("Obs: Servidor tem mais de um vínculo com a Universidade e é possivel que tenha direito a outros períodos aquisitivos de licença prêmio.","f12","");
+
+    if ($numVinculos > 1) {
+        tituloRelatorio('Observação:');
+        p("Servidor tem mais de um vínculo com a Universidade e é possivel que tenha direito a outros períodos aquisitivos de licença prêmio.", "f12", "");
     }
 
     ###### Licenças Prêmio Fruídas
@@ -77,80 +78,39 @@ if ($acesso) {
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->show();
 
-    $grid->fechaColuna();
-    $grid->abreColuna(4);
+    # Exibe as licenças prêmio de outros vinculos com a UENF                
+    $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
+
+    # Exibe o tempo de licença anterior
+    # Verifica se tem vinculos anteriores
+    if ($numVinculos > 0) {
+
+        # Carrega um array com os idServidor de cada vinculo
+        $vinculos = $pessoal->get_vinculos($idServidorPesquisado);
+
+        # Percorre os vinculos
+        foreach ($vinculos as $tt) {
+
+            # Pega o perfil da cada vínculo
+            $idPerfilPesquisado = $pessoal->get_idPerfil($tt[0]);
+
+            if ($idServidorPesquisado <> $tt[0]) {
+
+                # Verifica se é estatutário
+                if ($idPerfilPesquisado == 1) {
+                    # Cria um menu
+                    $menu = new MenuBar();
+
+                    # Número do processo
+                    $licenca->exibeLicencaPremioRelatorio($tt[0]);
+                }
+            }
+        }
+    }
 
     ###### Dados
-    tituloRelatorio('N° de Publicações');
-    
-    $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
+    $licenca->exibePublicacoesPremioRelatório($idServidorPesquisado);
 
-    # Tabela de Serviços
-    $tabela = array(
-        array('Possíveis', $licenca->get_numPublicacoesPossiveis($idServidorPesquisado)),
-        array('Publicados', $licenca->get_numPublicacoes($idServidorPesquisado)),
-        array('Pendentes', $licenca->get_numPublicacoesFaltantes($idServidorPesquisado))
-    );
-
-    $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    #$relatorio->set_subtitulo("Dados");
-    $relatorio->set_label(array('Descrição', 'Valor'));
-    $relatorio->set_align(array('left', 'center'));
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-
-    $relatorio->set_conteudo($tabela);
-    #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
-    $relatorio->set_log(false);
-    $relatorio->show();
-
-    $grid->fechaColuna();
-    $grid->abreColuna(8);
-
-    ###### Publicações
-    tituloRelatorio('Publicações');
-
-    $select = "SELECT dtPublicacao,
-                    idPublicacaoPremio,
-                    numDias,
-                    idPublicacaoPremio,
-                    idPublicacaoPremio,
-                    idPublicacaoPremio
-               FROM tbpublicacaopremio
-               WHERE idServidor = $idServidorPesquisado
-            ORDER BY dtInicioPeriodo desc";
-
-    $result = $pessoal->select($select);
-
-    $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    $relatorio->set_totalRegistro(false);
-    #$relatorio->set_subtitulo("Publicações");
-
-    $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"));
-    #$relatorio->set_width(array(15,5,15,15,15,10,10,10));
-    $relatorio->set_align(array("center"));
-    $relatorio->set_numeroOrdem(true);
-    $relatorio->set_numeroOrdemTipo("d");
-    $relatorio->set_funcao(array('date_to_php'));
-    $relatorio->set_colunaSomatorio([2, 3, 4]);
-    $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
-    $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
-
-    #$relatorio->set_dataImpressao(false);
-    $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(2);
-    $relatorio->set_botaoVoltar(false);
-    $relatorio->set_log(false);
-    $relatorio->show();
-    
     $grid->fechaColuna();
     $grid->fechaGrid();
 

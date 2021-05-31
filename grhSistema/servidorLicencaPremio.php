@@ -129,12 +129,7 @@ if ($acesso) {
         $objeto->set_rotinaExtraParametro(array($idServidorPesquisado));
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-        $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
-        if ($numVinculos == 1) {
-            $objeto->set_nome($pessoal->get_licencaNome(6));
-        } else {
-            $objeto->set_nome($pessoal->get_licencaNome(6) . " do Vínculo Atual");
-        }
+        $objeto->set_nome("Licenças Fruídas");
 
         # botão de voltar da lista
         if ($areaPremio) {
@@ -331,9 +326,9 @@ if ($acesso) {
                     $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
                     $objeto->set_botaoIncluir(false);
                 }
-                
+
                 # Servidor com publicação pendente
-                if($licenca->get_numPublicacoesFaltantes($idServidorPesquisado) > 0){
+                if ($licenca->get_numPublicacoesFaltantes($idServidorPesquisado) > 0) {
                     $mensagem .= "Existem publicações pendentes para este servidor.<br/>";
                 }
 
@@ -401,29 +396,9 @@ if ($acesso) {
                 # Exibe as publicações de Licença Prêmio
                 $licenca->exibePublicacoesPremio($idServidorPesquisado);
 
-//                # Exibe as informasções adicionais
-//                $licenca->exibeInformacaoAdicional($idServidorPesquisado);
-
-                # Exibe os procedimentos
-                #$painel = new Callout();
-                #$painel->abre();
-                #titulo("Procedimentos");
-                #br();
-                #$licenca->exibeProcedimentos();
-                #$painel->fecha();                
-                # Exibe o idServidor
-                $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
-                $texto = '';
-
-                if (!is_null($idServidorPesquisado)) {
-                    $texto .= "Servidor: " . $idServidorPesquisado;
-                }
-
-                if (!is_null($idPessoa)) {
-                    $texto .= " - Pessoa: " . $idPessoa;
-                }
-
-                p($texto, 'idServidor');
+                # Exibe o idServidor e idPessoa
+                p("S {$idServidorPesquisado} / P {$pessoal->get_idPessoa($idServidorPesquisado)}", 'idServidor');
+                
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

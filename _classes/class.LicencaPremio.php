@@ -395,10 +395,9 @@ class LicencaPremio {
         /**
          * Informe o número de publicações Que faltam ser publicadas.
          */
-        
         # Pega o número de Publicações Possíveis
         $pp = $this->get_numPublicacoesPossiveis($idServidor);
-        
+
         # Pega publicações feitas 
         $pf = $this->get_numPublicacoes($idServidor);
 
@@ -453,13 +452,13 @@ class LicencaPremio {
 
         if ($numVinculos > 1) {
             # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculosPremio($idServidor, false);
+            $vinculos = $this->get_vinculosPremio($idServidor, false);
 
             # Percorre os vinculos
             foreach ($vinculos as $tt) {
                 # Insere no array o vinculo e o processo
                 $conteudo1[] = [
-                    $pessoal->get_cargoSimples($tt[0]),
+                    $pessoal->get_cargoSigla($tt[0]),
                     $this->get_numProcesso($tt[0])
                 ];
             }
@@ -494,7 +493,7 @@ class LicencaPremio {
             foreach ($vinculos as $tt) {
                 # Insere no array o vinculo e o processo
                 $conteudo2[] = [
-                    $pessoal->get_cargoSimples($tt[0]),
+                    $pessoal->get_cargoSigla($tt[0]),
                     $this->get_numPublicacoesPossiveis($tt[0]),
                     $this->get_numPublicacoes($tt[0]),
                     $this->get_numPublicacoesFaltantes($tt[0])
@@ -669,7 +668,7 @@ class LicencaPremio {
 
         if ($numVinculos > 1) {
             # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculosPremio($idServidor, false);
+            $vinculos = $this->get_vinculosPremio($idServidor, false);
 
             # Percorre os vinculos
             foreach ($vinculos as $tt) {
@@ -795,7 +794,7 @@ class LicencaPremio {
 
             $select .= ' ORDER BY dtInicioPeriodo desc';
             $result = $pessoal->select($select);
-            
+
             tituloRelatorio("Publicações");
 
             $relatorio = new Relatorio();
@@ -831,9 +830,9 @@ class LicencaPremio {
                         ORDER BY dtInicioPeriodo desc";
 
             $result = $pessoal->select($select);
-            
+
             tituloRelatorio("Publicações");
-            
+
             $relatorio = new Relatorio();
             $relatorio->set_cabecalhoRelatorio(false);
             $relatorio->set_menuRelatorio(false);
@@ -843,9 +842,9 @@ class LicencaPremio {
             $relatorio->set_align(["left"]);
             $relatorio->set_funcao(['date_to_php']);
             #$relatorio->set_width([23, 12, 23, 10, 10, 10, 12]);
-            $relatorio->set_classe([ null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
-            $relatorio->set_metodo([ null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
-            $relatorio->set_colunaSomatorio([2,3, 4]);
+            $relatorio->set_classe([null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+            $relatorio->set_metodo([null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            $relatorio->set_colunaSomatorio([2, 3, 4]);
             $relatorio->set_numeroOrdem(true);
             $relatorio->set_numeroOrdemTipo("d");
             $relatorio->set_totalRegistro(false);
@@ -938,18 +937,17 @@ class LicencaPremio {
 
         # Exibe as Publicações
         $select = 'SELECT tbpublicacaopremio.dtPublicacao,
-                          tbpublicacaopremio.dtInicioPeriodo,
-                          tbpublicacaopremio.dtFimPeriodo,
+                          CONCAT(DATE_FORMAT(dtInicioPeriodo, "%d/%m/%Y")," - ",DATE_FORMAT(dtFimPeriodo, "%d/%m/%Y")),
                           dtInicial,
                           tblicencapremio.numdias,
                           ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          idLicencaPremio,
                           idLicencaPremio
                      FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                     WHERE tblicencapremio.idServidor = ' . $idServidor . '
                  ORDER BY dtInicial desc';
 
         $result = $pessoal->select($select);
-        $count = $pessoal->count($select);
 
         # Dados do vínculo
         $dtAdm = $pessoal->get_dtAdmissao($idServidor);
@@ -962,31 +960,33 @@ class LicencaPremio {
             $motivo = "Ativo";
         }
 
+        # Cria um menu
+        $menu = new MenuBar();
+
+        # Cadastro de Publicações
+        $linkBotao3 = new Link("Ir para o Vínculo abaixo", "?fase=outroVinculo&id={$idServidor}");
+        $linkBotao3->set_class('button');
+        $linkBotao3->set_title("Acessa o Cadastro de Publicações");
+        $menu->add_link($linkBotao3, "right");
+        $menu->show();
+
         # TítuloLink
-        $titulo = "<a id='licencaPremio' href='?fase=outroVinculo&id=$idServidor'>Licenças Fruídas do Vínculo<br/>Cargo $cargo<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)</a>";
+        $titulo = "Licenças Fruídas do Vínculo: Cargo $cargo<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)";
 
-        if ($count > 0) {
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo($titulo);
-            $tabela->set_conteudo($result);
-            $tabela->set_label(array("Data da Publicaçãod", "Período Aquisitivo<br/>Início", "Período Aquisitivo<br/>Fim", "Inicio", "Dias", "Término"));
-            $tabela->set_align(array("center"));
-            $tabela->set_funcao(array('date_to_php', 'date_to_php', 'date_to_php', 'date_to_php', null, 'date_to_php'));
-            $tabela->set_numeroOrdem(true);
-            $tabela->set_numeroOrdemTipo("d");
-            $tabela->set_exibeTempoPesquisa(false);
-            $tabela->show();
-        } else {
-
-            br();
-            tituloTable($titulo);
-            $callout = new Callout();
-            $callout->abre();
-            p('Nenhum item encontrado !!', 'center');
-            $callout->fecha();
-        }
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo($titulo);
+        $tabela->set_conteudo($result);
+        $tabela->set_label(array("Data da Publicaçãod", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"));
+        $tabela->set_align(array("center"));
+        $tabela->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
+        $tabela->set_width(array(17, 22, 17, 10, 17, 12));
+        $tabela->set_classe(array(null, null, null, null, null, 'LicencaPremio'));
+        $tabela->set_metodo(array(null, null, null, null, null, 'exibeObs'));
+        $tabela->set_numeroOrdem(true);
+        $tabela->set_numeroOrdemTipo("d");
+        $tabela->set_exibeTempoPesquisa(false);
+        $tabela->show();
     }
 
     ###########################################################
@@ -1002,8 +1002,7 @@ class LicencaPremio {
 
         # Exibe as Publicações
         $select = 'SELECT tbpublicacaopremio.dtPublicacao,
-                          tbpublicacaopremio.dtInicioPeriodo,
-                          tbpublicacaopremio.dtFimPeriodo,
+                          CONCAT(DATE_FORMAT(dtInicioPeriodo, "%d/%m/%Y")," - ",DATE_FORMAT(dtFimPeriodo, "%d/%m/%Y")),
                           dtInicial,
                           tblicencapremio.numdias,
                           ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -1041,9 +1040,7 @@ class LicencaPremio {
         #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-        $relatorio->set_classe(array(null, 'LicencaPremio'));
-        $relatorio->set_metodo(array(null, 'exibePeriodoAquisitivo'));
-
+        
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(2);
         $relatorio->set_botaoVoltar(false);
@@ -1085,9 +1082,9 @@ class LicencaPremio {
         # Função que retorna o idServidor de cada vinculos esse servidor teve com a uenf com direito a lic premio.
         #
         # Parâmetro: id do servidor
-        
+
         $pessoal = new Pessoal();
-        
+
         # Valida parametro
         if (is_null($idServidor)) {
             return false;
@@ -1097,13 +1094,13 @@ class LicencaPremio {
         $idPessoa = $pessoal->get_idPessoa($idServidor);
 
         # Monta o select
-        if($crescente){
-        $select = "SELECT idServidor
+        if ($crescente) {
+            $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = {$idPessoa}
                           AND idPerfil = 1
                      ORDER BY dtadmissao";
-        }else{
+        } else {
             $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = {$idPessoa}

@@ -274,9 +274,13 @@ if ($acesso) {
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-        $botaoAfast = new Button('Verifica Afastamentos', 'servidorAfastamentos.php?volta=0');
+        $botaoAfast = new Button('Todos os Afastamentos', 'servidorAfastamentos.php?volta=0');
         $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
         $botaoAfast->set_target("_blank");
+
+        $botaoAfastPremio = new Button('Afastamentos Específicos', 'servidorAfastamentosPremio.php?volta=0');
+        $botaoAfastPremio->set_title("Verifica os afastamentos que interferem no período aquisitido da licença prêmio deste servidor");
+        $botaoAfastPremio->set_target("_blank");
 
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
@@ -285,7 +289,7 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorLicencaPremio.php");
         $botaoRel->set_target("_blank");
 
-        $objeto->set_botaoListarExtra(array($botaoRel, $botaoAfast));
+        $objeto->set_botaoListarExtra(array($botaoRel, $botaoAfastPremio, $botaoAfast));
 
         ################################################################
 
@@ -398,7 +402,7 @@ if ($acesso) {
 
                 # Exibe o idServidor e idPessoa
                 p("S {$idServidorPesquisado} / P {$pessoal->get_idPessoa($idServidorPesquisado)}", 'idServidor');
-                
+
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

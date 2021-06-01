@@ -1,7 +1,7 @@
 <?php
 
 /**
- * servidor afastamento
+ * servidor afastamento premio
  *  
  * By Alat
  */
@@ -61,7 +61,7 @@ if ($acesso) {
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
 
-    $afast = new ListaAfastamentosServidor($idServidorPesquisado);
+    $afast = new ListaAfastamentosServidorPremio($idServidorPesquisado);
     $afast->exibeTabela();
 
     $grid->fechaColuna();

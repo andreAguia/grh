@@ -69,7 +69,7 @@ class MenuServidor {
         # --
         $grid->abreColuna(7, 5, 4);
         $this->moduloPessoais();
-        $grid->fechaColuna();        
+        $grid->fechaColuna();
         # --
         $grid->abreColuna(5, 3, 2);
         $this->moduloFoto();
@@ -229,7 +229,6 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
         #$menu->add_item($botao);
-        
         # Prestador de Contas
         $botao = new BotaoGrafico();
         $botao->set_label('Ordenação de Despesas');
@@ -237,7 +236,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Histórico de designação para ordenação de despesas');
         $menu->add_item($botao);
-        
+
         # Pasta Funcional
         $botao = new BotaoGrafico();
         $botao->set_label('Pasta Funcional');
@@ -253,7 +252,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro de documentos com os respectivos números no Sei');
         $menu->add_item($botao);
-        
+
         # Elogios
         $botao = new BotaoGrafico();
         $botao->set_label('Elogios');
@@ -269,7 +268,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
         $menu->add_item($botao);
-        
+
         # Obs
         $botao = new BotaoGrafico();
         $botao->set_label('Observações');
@@ -277,7 +276,6 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'obs.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Observações Gerais do Servidor');
         $menu->add_item($botao);
-
 
         $menu->show();
         br();
@@ -316,10 +314,10 @@ class MenuServidor {
         $metodos = get_class_methods('Checkup');
         $checkup = new Checkup();
         $alertas = $checkup->listaPorServidor($this->idServidor);
-        
+
         # Junta todas as ocorrências em um único array
-        $ocorrencias = array_merge($mensagem,$alertas);
-        
+        $ocorrencias = array_merge($mensagem, $alertas);
+
         # Pega a quantidade de ocorrências
         $qtdMensagem = count($ocorrencias);
 
@@ -327,7 +325,7 @@ class MenuServidor {
         $painel->abre();
 
         p("Ocorrências", "palertaServidor");
-        
+
         # Verifica se tem alguma ocorrência
         if ($qtdMensagem > 0) {
             foreach ($ocorrencias as $item) {
@@ -383,7 +381,6 @@ class MenuServidor {
                     $motivo = $pessoal->get_motivo($rr[0]);
                     $idSituacao = $pessoal->get_idSituacao($rr[0]);
 
-
                     # Quando o cargo for null
                     if (!vazio($cargo)) {
                         $cargo = "- " . $cargo;
@@ -418,6 +415,7 @@ class MenuServidor {
 
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
+        $cargo = $pessoal->get_idCargo($this->idServidor);
 
         titulo('Documentos');
         br();
@@ -436,7 +434,7 @@ class MenuServidor {
 
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
-        #$menu->add_item("linkWindow","Mapa do Cargo","../grhRelatorios/mapaCargo.php?cargo=$cargo");
+        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo=$cargo");
 
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');

@@ -267,7 +267,7 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Informa a origem
-            set_session('origem', 'cadastroFuncao.php?fase=listaServidores&id=' . $id);
+            set_session('origem', 'cadastroFuncao.php?fase=exibeServidoresAtivos&id=' . $id);
 
             # Cria um menu
             $menu = new MenuBar();

@@ -111,11 +111,11 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label($label);
-    $objeto->set_width(array(10,10,5,5,20,5,5,8,10,12));	
+    $objeto->set_width(array(10, 10, 5, 5, 20, 5, 5, 8, 10, 12));
     $objeto->set_align($align);
     $objeto->set_funcao($funcao);
 
-    $objeto->set_colunaSomatorio(2);
+    $objeto->set_colunaSomatorio([2, 3]);
     $objeto->set_textoSomatorio("Total de Dias:");
     $objeto->set_totalRegistro(false);
 
@@ -248,8 +248,7 @@ if ($acesso) {
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
@@ -289,15 +288,13 @@ if ($acesso) {
             $idsProblemáticos[] = null;
 
             # Percorre os registros
-            foreach ($resultSobreposicao as $periodo)
-            {
+            foreach ($resultSobreposicao as $periodo) {
                 $dtInicial1 = date_to_php($periodo[0]);
                 $dtFinal1 = date_to_php($periodo[1]);
                 $idAverbado1 = $periodo[2];
 
                 # Percorre a mesma listagem novamente
-                foreach ($resultSobreposicao as $periodoVerificado)
-                {
+                foreach ($resultSobreposicao as $periodoVerificado) {
 
                     $dtInicial2 = date_to_php($periodoVerificado[0]);
                     $dtFinal2 = date_to_php($periodoVerificado[1]);
@@ -371,8 +368,7 @@ if ($acesso) {
                     echo ",";
                 }
 
-                foreach ($atividades1 as $row)
-                {
+                foreach ($atividades1 as $row) {
 
                     # Trata as datas
                     $dt1 = explode($separador, $row['dtInicial']);

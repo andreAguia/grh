@@ -22,11 +22,14 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
 
+    # Verifica se veio da rotina de cadastro de comissão de servidor
+    $origem = get('origem');
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou o cadastro de estado";
+        $atividade = "Visualizou o cadastro de descrição de cargo em comissão";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -95,8 +98,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Cargo em Comissão", "Descrição", "Ativo","Prestador Nato"));
-    $objeto->set_width(array(5,20,50,8,8));
+    $objeto->set_label(array("Id", "Cargo em Comissão", "Descrição", "Ativo", "Prestador Nato"));
+    $objeto->set_width(array(5, 20, 50, 8, 8));
     $objeto->set_align(array("center", "left", "left"));
 
     $objeto->set_rowspan(1);
@@ -168,15 +171,35 @@ if ($acesso) {
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
+    # altera dependendo da origem
+    if (!empty($origem)) {
+        $objeto->set_linkGravar("?fase=gravar&origem={$origem}");
+        $objeto->set_linkListar("?fase=listar&origem={$origem}");
+        $objeto->set_linkEditar("?fase=editar&origem={$origem}");
+        $objeto->set_linkExcluir("?fase=excluir&origem={$origem}");
+        $objeto->set_voltarForm("?fase=listar&origem={$origem}");
+        $objeto->set_botaoVoltarLista(false);
+    }
+
     ################################################################
     switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
             break;
+        case "excluir" :
+            # Verifica essa descrição está sendo usada
+            $comissao = new CargoComissao();
+            if ($comissao->get_numServidoresDescricao($id) > 0) {
+                alert("Não é possível excluir essa descrição, pois ela está sendo usada !!");
+                back(1);
+            } else {
+                # Se não tiver exclui a descrição
+                $objeto->excluir($id);
+            }
+            break;
 
         case "editar" :
-        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;

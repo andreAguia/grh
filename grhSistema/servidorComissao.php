@@ -298,7 +298,7 @@ if ($acesso) {
             'optgroup' => true,
             'array' => $ocupanteAnterior,
             'size' => 100),
-         array('nome' => 'outraOrigem',
+        array('nome' => 'outraOrigem',
             'label' => 'Outra Origem do Cargo (de fora da Uenf):',
             'tipo' => 'texto',
             'size' => 250,
@@ -427,7 +427,7 @@ if ($acesso) {
                 $botao1 = new Button("Descrição");
                 $botao1->set_title("Cadastra uma nova Descrição");
                 $botao1->set_target("_blank");
-                $botao1->set_url("cadastroDescricaoComissao.php?fase=editar");
+                $botao1->set_url("cadastroDescricaoComissao.php?fase=editar&origem=servidor");
 
                 $objeto->set_botaoEditarExtra(array($botao1));
             }

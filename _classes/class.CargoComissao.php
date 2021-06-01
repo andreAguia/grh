@@ -640,5 +640,25 @@ class CargoComissao {
         }
     }
 
-    ###########################################################                                 
+    ###########################################################
+
+    function get_numServidoresDescricao($idDescricao) {
+
+        /**
+         * 
+         * Informa o cargos cadastrados com esta descrição
+         * 
+         */
+        # Pega os dados
+        $select = "SELECT idComissao
+                     FROM tbcomissao
+                    WHERE idDescricaoComissao = {$idDescricao}";
+        
+       
+        $pessoal = new Pessoal();
+        return $pessoal->count($select);
+    }
+
+    ###########################################################
+                                 
 }

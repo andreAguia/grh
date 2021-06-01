@@ -71,13 +71,16 @@ if ($acesso) {
                 . " e Resolução CONSUNI 005/06 de 08/07/2006, publicada DOERJ em 19/10/2006,"
                 . "o cargo de $cargoEfetivo possui as seguintes atribuições:");
 
-        $dec->set_texto("Atribuições da Área");
+//        $dec->set_texto("Atribuições da Área");
+//
+//        $dec->set_texto($atribuicoesArea);
+//        $dec->set_texto("Atribuições do Cargo / Função");
 
-        $dec->set_texto($atribuicoesArea);
-
-        $dec->set_texto("Atribuições da Função");
-
-        $dec->set_texto(formataAtribuicao($atribuicoesCargo));
+        if (empty($atribuicoesCargo)) {
+            $dec->set_texto("(Não há atribuições cadastradas para esse cargo / função.)");
+        } else {
+            $dec->set_texto(formataAtribuicao($atribuicoesCargo), false);
+        }
 
         #$dec->set_texto("Outrossim, declaramos que esta Universidade Estadual do Norte Fluminense Darcy Ribeiro – UENF"
         #              . " é portadora do CNPJ nº 04.809.688/0001-06, com sede na Av. Alberto"

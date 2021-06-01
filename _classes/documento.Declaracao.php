@@ -1,7 +1,6 @@
 <?php
 
-class Declaracao
-{
+class Declaracao {
 
     /**
      * Monta uma Ci
@@ -26,13 +25,11 @@ class Declaracao
     private $carimboCnpj = false;
     private $rodapeSoUntimaPag = false;
     private $assinatura = false;
-    
     private $declaracaoNome = "DECLARAÇÃO";
 
     ###########################################################
 
-    public function __construct()
-    {
+    public function __construct() {
         /**
          * Inicia a Ci e preenche oas variáveis com valores padrão
          */
@@ -54,8 +51,7 @@ class Declaracao
 
     ###########################################################
 
-    public function set_texto($texto)
-    {
+    public function set_texto($texto, $salto = true) {
         /**
          * Inclui um objeto Input ao formulário
          *
@@ -64,7 +60,7 @@ class Declaracao
          * @param $controle object null Objeto Input a ser inserido no Formulário
          *
          */
-        $this->texto[] = $texto;
+        $this->texto[] = [$texto, $salto];
     }
 
     ###########################################################
@@ -82,8 +78,7 @@ class Declaracao
      * @param     $metodo        O nome do metodo
      * @param     $parametros    Os parâmetros inseridos
      */
-    public function __call($metodo, $parametros)
-    {
+    public function __call($metodo, $parametros) {
         ## Se for set, atribui um valor para a propriedade
         if (substr($metodo, 0, 3) == 'set') {
             $var = substr($metodo, 4);
@@ -105,8 +100,7 @@ class Declaracao
      *
      * Exibe o rodapé
      */
-    private function rodape()
-    {
+    private function rodape() {
 
         if ($this->rodapeSoUntimaPag) {
             br($this->saltoRodape);
@@ -117,7 +111,7 @@ class Declaracao
             $div->abre();
 
             hr();
-            p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>Telefone: {$this->rodapeTelefone}","pCiRodape");
+            p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>Telefone: {$this->rodapeTelefone}", "pCiRodape");
 
             $div->fecha();
         }
@@ -125,8 +119,7 @@ class Declaracao
 
     ###########################################################
 
-    public function show()
-    {
+    public function show() {
         /**
          * Exibe a Ci
          *
@@ -154,8 +147,12 @@ class Declaracao
         br();
 
         # Texto
-        foreach ($this->texto as $textoCi) {
-            p($textoCi, 'pCi');
+        foreach ($this->texto as $textoDec) {
+            if ($textoDec[1]) {
+                p($textoDec[0], 'pCi');    // com a identação
+            } else {
+                p($textoDec[0], 'pCiNum'); // sem a identação
+            }
         }
 
         if ($this->carimboCnpj) {
@@ -164,9 +161,9 @@ class Declaracao
 
             # Data
             br(2);
-            if(empty($this->data)){
+            if (empty($this->data)) {
                 p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
-            }else{
+            } else {
                 p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
             }
 
@@ -181,9 +178,9 @@ class Declaracao
         } else {
             # Data
             br(2);
-            if(empty($this->data)){
+            if (empty($this->data)) {
                 p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
-            }else{
+            } else {
                 p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
             }
         }
@@ -200,17 +197,17 @@ class Declaracao
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
-                
+
         $textoAssinatura = "{$this->origemNome}<br/>";
-        
-        if(!empty($this->origemDescricao)){
+
+        if (!empty($this->origemDescricao)) {
             $textoAssinatura .= "{$this->origemDescricao}<br/>";
         }
-        
-        if(!empty($this->origemIdFuncional)){
+
+        if (!empty($this->origemIdFuncional)) {
             $textoAssinatura .= "Id Funcional n° {$this->origemIdFuncional}<br/>";
         }
-                 
+
         p($textoAssinatura, 'pCiAssinatura');
 
         $grid->fechaColuna();

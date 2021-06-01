@@ -117,7 +117,9 @@ function get_DadosFrequencia($idHistCessao) {
  */
 
 function formataAtribuicao($texto) {
-    $novoTexto = str_replace(";", ";<br/>", $texto);
+    $pulo = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    $novoTexto = $pulo."&nbsp;".str_replace(";", ";<br/>{$pulo}", $texto);
+    
     return $novoTexto;
 }
 

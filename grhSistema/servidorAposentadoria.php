@@ -145,18 +145,17 @@ if ($acesso) {
                 WHERE idServidor = ' . $idServidorPesquisado . '
              ORDER BY dtInicial desc';
 
-    $label  = array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
-    $align  = array("center", "center", "center", "left");
-    $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php");
-
     $array = $pessoal->select($select);
 
     $tabela = new Tabela();
     $tabela->set_titulo("Tempo Averbado Detalhado");
     $tabela->set_conteudo($array);
-    $tabela->set_label($label);
-    $tabela->set_funcao($funcao);
-    $tabela->set_align($align);
+    $tabela->set_label(["Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+    $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"]);
+    $tabela->set_align(["center", "center", "center", "left"]);
+    $tabela->set_colunaSomatorio(2);
+    $tabela->set_textoSomatorio("Total de Dias:");
+    $tabela->set_totalRegistro(false);
     $tabela->show();
 
     $painel->fecha();

@@ -108,6 +108,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("id", "Tipo", "Perfil", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"));
+    $objeto->set_colspanLabel(array(null, null, null, 2, null, 2));
     $objeto->set_width(array(5, 23, 30, 10, 5, 10, 5));
     $objeto->set_align(array("center", "center", "left"));
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
@@ -252,7 +253,7 @@ if ($acesso) {
     $botaoGra->set_title("Exibe gráfico da quantidade de servidores");
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem);
-    
+
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();

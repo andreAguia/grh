@@ -115,7 +115,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver", "Lotação<br/>Ativa?"));
+    $objeto->set_label(array("id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Lotação<br/>Ativa?"));
+    $objeto->set_colspanLabel(array(null, null, null, null, null, 2, null, 2));
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(array("center", "center", "center", "center", "left"));
 
@@ -124,7 +125,7 @@ if ($acesso) {
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
-    
+
     $objeto->set_colunaSomatorio([5, 7]);
 
     # Ver servidores ativos
@@ -138,7 +139,7 @@ if ($acesso) {
     $servInativos->set_title("Exibe os servidores inativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, null, null,$servAtivos, null, $servInativos));
+    $objeto->set_link(array(null, null, null, null, null, null, $servAtivos, null, $servInativos));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

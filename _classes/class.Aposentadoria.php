@@ -56,7 +56,6 @@ class Aposentadoria {
                           AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                      ORDER BY dtDemissao';
 
-
         $result = $pessoal->select($select);
 
         $tabela = new Tabela();
@@ -102,7 +101,6 @@ class Aposentadoria {
                           AND situacao = 2
                           AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                      ORDER BY dtDemissao';
-
 
         $result = $pessoal->select($select);
 
@@ -732,15 +730,16 @@ class Aposentadoria {
         $total = $integralTotal + $proporcionalTotal + $compulsoriaTotal;
 
         # Monta o array
-        $valores = array(array("Feminino", $integralFerminino, $proporcionalFerminino, $compulsoriaFerminino, $totalFeminino),
-            array("Masculino", $integralMasculino, $proporcionalMasculino, $compulsoriaMasculino, $totalMasculino),
-            array("Total:", $integralTotal, $proporcionalTotal, $compulsoriaTotal, $total));
+        $valores = array(array("Feminino", $integralFerminino, null, $proporcionalFerminino, null, $compulsoriaFerminino, null, $totalFeminino),
+            array("Masculino", $integralMasculino, null, $proporcionalMasculino, null, $compulsoriaMasculino, null, $totalMasculino),
+            array("Total:", $integralTotal, null, $proporcionalTotal, null, $compulsoriaTotal, null, $total));
 
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
         $tabela->set_titulo("Somatório de Servidores Ativos que Podem se Aposentar");
-        $tabela->set_label(array('Sexo', 'Integral', 'Proporcional', 'Compulsória', 'Total'));
-        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_label(array('Sexo', 'Integral', null, 'Proporcional', null, 'Compulsória', null, 'Total'));
+        $tabela->set_colspanLabel(array(null, 2, null, 2, null, 2));
+        $tabela->set_width(array(15, 10, 5, 10, 5, 10, 5, 10));
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array('left'));
         $tabela->set_conteudo($valores);
@@ -1541,7 +1540,6 @@ class Aposentadoria {
                           AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                      ORDER BY 1 desc
                      LIMIT 1';
-
 
         $ano = $pessoal->select($select, false);
 

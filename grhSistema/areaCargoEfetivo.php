@@ -180,7 +180,8 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Cargo Efetivo');
-            $tabela->set_label(["Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver", "Mapa"]);
+            $tabela->set_label(["Cargo", "Área", "Função", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Mapa"]);
+            $tabela->set_colspanLabel(array(null, null, null, 2, null, 2));
             $tabela->set_align(["left", "left", "left"]);
             $tabela->set_conteudo($result);
             $tabela->set_classe([null, null, null, "Pessoal", null, "pessoal", null, "Grh"]);
@@ -245,7 +246,7 @@ if ($acesso) {
             $btnVoltar->set_title('Volta para a página anterior');
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar, "left");
-            
+
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -285,7 +286,7 @@ if ($acesso) {
             $btnVoltar->set_title('Volta para a página anterior');
             $btnVoltar->set_accessKey('V');
             $menu->add_link($btnVoltar, "left");
-            
+
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -296,7 +297,7 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             $menu->show();
-            
+
             # Lista de Servidores Inativos
             $lista = new ListaServidores('Servidores Inativos - Cargo: ' . $pessoal->get_nomeCargo($id));
             $lista->set_situacao(1);

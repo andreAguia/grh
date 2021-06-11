@@ -88,7 +88,7 @@ if ($acesso) {
         array('linha' => 1,
             'nome' => 'processoAuxilioFuneral',
             'label' => 'Processo',
-            'tipo' => 'seif',
+            'tipo' => 'sei',
             'autofocus' => true,
             'size' => 30,
             'col' => 4,

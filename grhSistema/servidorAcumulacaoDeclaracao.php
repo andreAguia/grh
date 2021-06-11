@@ -149,7 +149,7 @@ if ($acesso) {
             'linha' => 1,
             'nome' => 'processo',
             'label' => 'Processo:',
-            'tipo' => 'seif',
+            'tipo' => 'sei',
             'required' => true,
             'col' => 4,
             'size' => 50),

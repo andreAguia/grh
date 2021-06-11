@@ -141,7 +141,7 @@ if ($acesso) {
             'linha' => 2),
         array('nome' => 'numero',
             'label' => 'Número:',
-            'tipo' => 'seif',
+            'tipo' => 'sei',
             'size' => 50,
             'col' => 6,
             'required' => true,

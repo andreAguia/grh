@@ -134,7 +134,7 @@ if ($acesso) {
     $servAtivos->set_title("Exibe os servidores ativos");
 
     # Ver servidores inativos
-    $servInativos = new Link(null, '?fase=aguardeInativos&id=' . $id);
+    $servInativos = new Link(null, "?fase=aguardeInativos&id={$id}");
     $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
     $servInativos->set_title("Exibe os servidores inativos");
 

@@ -702,6 +702,38 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
+    function exibeRegrasIntegral() {
+
+        /**
+         * Exibe uma tabela com as regras da aposentadoria integral
+         */
+        # Conecta ao Banco de Dados
+        $intra = new Intra();
+
+        # Calculos
+        $diasAposentMasculino = $intra->get_variavel("aposentadoria.integral.tempo.masculino");
+        $diasAposentFeminino = $intra->get_variavel("aposentadoria.integral.tempo.feminino");
+        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
+        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
+
+        # Monta o array
+        $valores = array(
+            array("Feminino", $idadeAposentFeminino, dias_to_diasMesAno($diasAposentFeminino) . "<br/>($diasAposentFeminino dias)"),
+            array("Masculino", $idadeAposentMasculino, dias_to_diasMesAno($diasAposentMasculino) . "<br/>($diasAposentMasculino dias)")
+        );
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Regras para Aposentadoria Integral");
+        $tabela->set_label(array('Sexo', 'Idade', 'Tempo de Serviço'));
+        #$tabela->set_width(array(12,14,14,18,15,22));
+        $tabela->set_totalRegistro(false);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+    }
+
+##############################################################################################################################################
+
     function exibeSomatorio() {
 
         /**
@@ -730,23 +762,29 @@ class Aposentadoria {
         $total = $integralTotal + $proporcionalTotal + $compulsoriaTotal;
 
         # Monta o array
-        $valores = array(array("Feminino", $integralFerminino, null, $proporcionalFerminino, null, $compulsoriaFerminino, null, $totalFeminino),
-            array("Masculino", $integralMasculino, null, $proporcionalMasculino, null, $compulsoriaMasculino, null, $totalMasculino),
-            array("Total:", $integralTotal, null, $proporcionalTotal, null, $compulsoriaTotal, null, $total));
+        $valores = array(
+            array("Feminino", $integralFerminino, "Feminino", $proporcionalFerminino, null, $compulsoriaFerminino, null, $totalFeminino),
+            array("Masculino", $integralMasculino, "Masculino", $proporcionalMasculino, null, $compulsoriaMasculino, null, $totalMasculino));
 
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
         $tabela->set_titulo("Somatório de Servidores Ativos que Podem se Aposentar");
-        $tabela->set_label(array('Sexo', 'Integral', null, 'Proporcional', null, 'Compulsória', null, 'Total'));
-        $tabela->set_colspanLabel(array(null, 2, null, 2, null, 2));
-        $tabela->set_width(array(15, 10, 5, 10, 5, 10, 5, 10));
+        $tabela->set_label(['Sexo', 'Integral', null, 'Proporcional', null, 'Compulsória', null, 'Total']);
+        $tabela->set_colspanLabel([null, 2, null, 2, null, 2]);
+        $tabela->set_width([15, 10, 5, 10, 5, 10, 5, 10]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_align(array('left'));
+        $tabela->set_align(['left']);
         $tabela->set_conteudo($valores);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                'valor' => "Total:",
-                'operador' => '=',
-                'id' => 'totalTempo')));
+        $tabela->set_colunaSomatorio([1, 3, 5, 7]);
+
+        # aposentadoria integral
+        $servidoresIntegral = new Link(null, "?fase=aguardaIntegral&parametroSexo=");
+        $servidoresIntegral->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servidoresIntegral->set_title("Exibe os servidores com direito a aposentadoria integral");
+
+        # Coloca o objeto link na tabela			
+        $tabela->set_link([null, null, $servidoresIntegral]);
+
         $tabela->show();
     }
 
@@ -788,6 +826,70 @@ class Aposentadoria {
         }
 
         return $contador;
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método exibeServidoresAtivosPodemAposentarIntegral
+     * Exibe os servidores que podem aposentar integralmente
+     * 
+     * @param string $parametroSexo sexo do servidor
+     */
+    public function exibeServidoresAtivosPodemAposentarIntegral($parametroSexo) {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select
+        $select = 'SELECT idFuncional,
+                          nome,
+                          idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "' . $parametroSexo . '"
+                ORDER BY tbpessoa.nome';
+
+        $result = $pessoal->select($select);
+
+        # Percorre o banco para verificar se já pode aposentar
+        foreach ($result as $lista) {
+
+            # Pega a data de aposentadoria desse servidor
+            $data = $this->get_dataAposentadoriaIntegral($lista["idServidor"]);
+
+            # Verifica se a data colhida já passou
+            if (jaPassou($data)) {
+                $resultado[] = [
+                    $lista["idFuncional"],
+                    $lista["nome"],
+                    $lista["idServidor"],
+                    $lista["idServidor"],
+                    $data,
+                    $lista["idServidor"]
+                ];
+            }
+        }
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Servidores Ativos com Direito a Aposentadoria Integral - {$parametroSexo}");
+        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Data da Aposentadoria', 'Editar']);
+        $tabela->set_align(['center', 'left', 'left', 'left']);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
+
+        # Aposentadoria integral
+        $servidorBtn = new Link(null, "?fase=editaIntegral&id=");
+        $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
+        $servidorBtn->set_title("Exibe os servidores com direito a aposentadoria integral");
+
+        # Coloca os links na tabela			
+        $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+
+        $tabela->show();
     }
 
 ##############################################################################################################################################

@@ -48,8 +48,8 @@ if ($acesso) {
     $parametroMotivo = post('parametroMotivo', get_session('parametroMotivo', 3));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
     $parametroSexo = get('parametroSexo', get_session('parametroSexo', "Feminino"));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));    
-    
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroMotivo', $parametroMotivo);
@@ -60,63 +60,66 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    # Cria um menu
-    $menu = new MenuBar();
+    if ($fase <> "aguardaIntegral" AND $fase <> "listaIntegral" AND $fase <> "editaIntegral") {
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
+        # Cria um menu
+        $menu = new MenuBar();
 
-    if (($fase == "previsaoM") OR ($fase == "previsaoM1")) {
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar, "left");
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-        $botaoRel = new Button();
-        $botaoRel->set_title("Relatório");
-        $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
-        $botaoRel->set_target("_blank");
-        $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel, "right");
+        if (($fase == "previsaoM") OR ($fase == "previsaoM1")) {
 
-        set_session('parametroSexo', "Masculino");
-    } elseif (($fase == "previsaoF") OR ($fase == "previsaoF1")) {
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-        $botaoRel = new Button();
-        $botaoRel->set_title("Relatório");
-        $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
-        $botaoRel->set_target("_blank");
-        $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel, "right");
+            set_session('parametroSexo', "Masculino");
+        } elseif (($fase == "previsaoF") OR ($fase == "previsaoF1")) {
 
-        set_session('parametroSexo', "Feminino");
-    } elseif (($fase == "") OR ($fase == "porAno")) {
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("../grhRelatorios/aposentados.previsao.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-        $botaoRel = new Button();
-        $botaoRel->set_title("Relatório de Aposentados por Ano de Saída");
-        $botaoRel->set_url("../grhRelatorios/aposentados.porAno.php");
-        $botaoRel->set_target("_blank");
-        $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel, "right");
-    } elseif ($fase == "motivo") {
+            set_session('parametroSexo', "Feminino");
+        } elseif (($fase == "") OR ($fase == "porAno")) {
 
-        $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-        $botaoRel = new Button();
-        $botaoRel->set_title("Relatório de Aposentados por Tipo");
-        $botaoRel->set_url("../grhRelatorios/aposentados.porTipo.php");
-        $botaoRel->set_target("_blank");
-        $botaoRel->set_imagem($imagem2);
-        $menu->add_link($botaoRel, "right");
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório de Aposentados por Ano de Saída");
+            $botaoRel->set_url("../grhRelatorios/aposentados.porAno.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+        } elseif ($fase == "motivo") {
+
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório de Aposentados por Tipo");
+            $botaoRel->set_url("../grhRelatorios/aposentados.porTipo.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+        }
+
+        $menu->show();
+
+        # Título
+        titulo("Área de Aposentadoria");
+        br();
     }
-
-    $menu->show();
-
-    # Título
-    titulo("Área de Aposentadoria");
-    br();
 
     switch ($fase) {
 
@@ -147,7 +150,6 @@ if ($acesso) {
                         WHERE situacao = 2
                           AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                      ORDER BY 1 desc';
-
 
             $anos = $pessoal->select($select);
 
@@ -467,7 +469,6 @@ if ($acesso) {
             # Soma a coluna do count
             $total = array_sum(array_column($servidores, "jj"));
 
-
             $chart = new Chart("Pie", $servidores);
             $chart->set_idDiv("cargo");
             $chart->set_legend(false);
@@ -540,7 +541,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
 
 ####################################################################################################################
 
@@ -745,6 +745,85 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
+        ######################################################################################################################
+
+        case "aguardaIntegral" :
+            $grid2 = new Grid();
+            $grid2->abreColuna(12);
+
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            loadPage('?fase=listaIntegral');
+            break;
+
+        ################################################################
+
+        case "listaIntegral" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar", "areaAposentadoria.php?fase=somatorio");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar, "left");
+
+            $menu->show();
+
+            # Limita o tamanho da tela
+            $grid->fechaColuna();
+            $grid->abreColuna(8);
+            
+            tituloTable("Observação");
+            $painel = new Callout();
+            $painel->abre();
+
+            p("Os cálculos aqui apresentados deverão ser conferidos pelo servidor da GRH quando da abertura do processo de aposentadoria.");
+
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+            
+            # Exibe regras
+            $aposentadoria->exibeRegrasIntegral();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
+            
+            # Lista de Servidores Ativos
+            $aposentadoria->exibeServidoresAtivosPodemAposentarIntegral($parametroSexo);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editaIntegral" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardaIntegral');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
         ################################################################
     }
     $page->terminaPagina();

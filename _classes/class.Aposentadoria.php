@@ -734,6 +734,65 @@ class Aposentadoria {
 
 ##############################################################################################################################################
 
+    function exibeRegrasProporcional() {
+
+        /**
+         * Exibe uma tabela com as regras da aposentadoria integral
+         */
+        # Conecta ao Banco de Dados
+        $intra = new Intra();
+
+        # Cálculos
+        $diasAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.tempo.masculino");
+        $diasAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.tempo.feminino");
+        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.proporcional.idade.masculino");
+        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.proporcional.idade.feminino");
+
+        # Monta o array
+        $valores = array(
+            array("Feminino", $idadeAposentFeminino, dias_to_diasMesAno($diasAposentFeminino) . "<br/>($diasAposentFeminino dias)"),
+            array("Masculino", $idadeAposentMasculino, dias_to_diasMesAno($diasAposentMasculino) . "<br/>($diasAposentMasculino dias)")
+        );
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Aposentadoria Proporcional");
+        $tabela->set_label(array('Sexo', 'Idade', 'Tempo de Serviço Público'));
+        $tabela->set_totalRegistro(false);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+    }
+
+##############################################################################################################################################
+
+    function exibeRegrasCompulsoria() {
+
+        /**
+         * Exibe uma tabela com as regras da aposentadoria integral
+         */
+        # Conecta ao Banco de Dados
+        $intra = new Intra();
+
+        # Cálculos
+        $idadeAposentCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
+
+        # Monta o array
+        $valores = array(
+            array("Feminino", $idadeAposentCompulsoria),
+            array("Masculino", $idadeAposentCompulsoria)
+        );
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Aposentadoria Compulsória");
+        $tabela->set_label(array('Sexo', 'Idade'));
+        $tabela->set_totalRegistro(false);
+        $tabela->set_align(array('left'));
+        $tabela->set_conteudo($valores);
+        $tabela->show();
+    }
+
+##############################################################################################################################################
+
     function exibeSomatorio() {
 
         /**
@@ -763,8 +822,8 @@ class Aposentadoria {
 
         # Monta o array
         $valores = array(
-            array("Feminino", $integralFerminino, "Feminino", $proporcionalFerminino, null, $compulsoriaFerminino, null, $totalFeminino),
-            array("Masculino", $integralMasculino, "Masculino", $proporcionalMasculino, null, $compulsoriaMasculino, null, $totalMasculino));
+            array("Feminino", $integralFerminino, "Feminino", $proporcionalFerminino, "Feminino", $compulsoriaFerminino, "Feminino", $totalFeminino),
+            array("Masculino", $integralMasculino, "Masculino", $proporcionalMasculino, "Masculino", $compulsoriaMasculino, "Masculino", $totalMasculino));
 
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
@@ -782,8 +841,18 @@ class Aposentadoria {
         $servidoresIntegral->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $servidoresIntegral->set_title("Exibe os servidores com direito a aposentadoria integral");
 
+        # aposentadoria proporcional
+        $servidoresProporcional = new Link(null, "?fase=aguardaProporcional&parametroSexo=");
+        $servidoresProporcional->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servidoresProporcional->set_title("Exibe os servidores com direito a aposentadoria proporcional");
+
+        # aposentadoria compulsória
+        $servidoresCompulsoria = new Link(null, "?fase=aguardaCompulsoria&parametroSexo=");
+        $servidoresCompulsoria->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servidoresCompulsoria->set_title("Exibe os servidores com direito a aposentadoria compulsória");
+
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, $servidoresIntegral]);
+        $tabela->set_link([null, null, $servidoresIntegral, null, $servidoresProporcional, null, $servidoresCompulsoria]);
 
         $tabela->show();
     }
@@ -852,6 +921,7 @@ class Aposentadoria {
                 ORDER BY tbpessoa.nome';
 
         $result = $pessoal->select($select);
+        $resultado = [];
 
         # Percorre o banco para verificar se já pode aposentar
         foreach ($result as $lista) {
@@ -884,7 +954,137 @@ class Aposentadoria {
         # Aposentadoria integral
         $servidorBtn = new Link(null, "?fase=editaIntegral&id=");
         $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
-        $servidorBtn->set_title("Exibe os servidores com direito a aposentadoria integral");
+        $servidorBtn->set_title("Vai para o cadastro do servidor");
+
+        # Coloca os links na tabela			
+        $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+
+        $tabela->show();
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método exibeServidoresAtivosPodemAposentarIntegral
+     * Exibe os servidores que podem aposentar integralmente
+     * 
+     * @param string $parametroSexo sexo do servidor
+     */
+    public function exibeServidoresAtivosPodemAposentarProporcional($parametroSexo) {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select
+        $select = 'SELECT idFuncional,
+                          nome,
+                          idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "' . $parametroSexo . '"
+                ORDER BY tbpessoa.nome';
+
+        $result = $pessoal->select($select);
+        $resultado = [];
+
+        # Percorre o banco para verificar se já pode aposentar
+        foreach ($result as $lista) {
+
+            # Pega a data de aposentadoria desse servidor
+            $data = $this->get_dataAposentadoriaProporcional($lista["idServidor"]);
+
+            # Verifica se a data colhida já passou
+            if (jaPassou($data)) {
+                $resultado[] = [
+                    $lista["idFuncional"],
+                    $lista["nome"],
+                    $lista["idServidor"],
+                    $lista["idServidor"],
+                    $data,
+                    $lista["idServidor"]
+                ];
+            }
+        }
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Servidores Ativos com Direito a Aposentadoria Proporcional - {$parametroSexo}");
+        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Data da Aposentadoria', 'Editar']);
+        $tabela->set_align(['center', 'left', 'left', 'left']);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
+
+        # Aposentadoria integral
+        $servidorBtn = new Link(null, "?fase=editaProporcional&id=");
+        $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
+        $servidorBtn->set_title("Vai para o cadastro do servidor");
+
+        # Coloca os links na tabela			
+        $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+
+        $tabela->show();
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método exibeServidoresAtivosPodemAposentarIntegral
+     * Exibe os servidores que podem aposentar integralmente
+     * 
+     * @param string $parametroSexo sexo do servidor
+     */
+    public function exibeServidoresAtivosPodemAposentarCompulsoria($parametroSexo) {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select
+        $select = 'SELECT idFuncional,
+                          nome,
+                          idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                   WHERE tbservidor.situacao = 1
+                     AND idPerfil = 1
+                     AND tbpessoa.sexo = "' . $parametroSexo . '"
+                ORDER BY tbpessoa.nome';
+
+        $result = $pessoal->select($select);
+        $resultado = [];
+
+        # Percorre o banco para verificar se já pode aposentar
+        foreach ($result as $lista) {
+
+            # Pega a data de aposentadoria desse servidor
+            $data = $this->get_dataAposentadoriaCompulsoria($lista["idServidor"]);
+
+            # Verifica se a data colhida já passou
+            if (jaPassou($data)) {
+                $resultado[] = [
+                    $lista["idFuncional"],
+                    $lista["nome"],
+                    $lista["idServidor"],
+                    $lista["idServidor"],
+                    $data,
+                    $lista["idServidor"]
+                ];
+            }
+        }
+
+        # Tabela com os valores de aposentadoria
+        $tabela = new Tabela();
+        $tabela->set_titulo("Servidores Ativos que Devem Ser Aposentados Compulsóriamente - {$parametroSexo}");
+        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Data da Aposentadoria', 'Editar']);
+        $tabela->set_align(['center', 'left', 'left', 'left']);
+        $tabela->set_conteudo($resultado);
+        $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+        $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
+
+        # Aposentadoria integral
+        $servidorBtn = new Link(null, "?fase=editaCompulsoria&id=");
+        $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
+        $servidorBtn->set_title("Vai para o cadastro do servidor");
 
         # Coloca os links na tabela			
         $tabela->set_link([null, null, null, null, null, $servidorBtn]);
@@ -1614,10 +1814,10 @@ class Aposentadoria {
         $menu->add_item("link", "Estatística", "?fase=anoEstatistica", "Estatística dos Servidores Aposentados", null, null, $bold[3]);
 
         $menu->add_item("titulo", "Servidores Ativos");
-        $menu->add_item("link", "Previsão Masculino", "?fase=previsaoM", "Previsão de Aposentadoria de Servidores Ativos do Sexo Masculino", null, null, $bold[4]);
-        $menu->add_item("link", "Previsão Feminino", "?fase=previsaoF", "Previsão de Aposentadoria de Servidores Ativos do Sexo Feminino", null, null, $bold[5]);
-        $menu->add_item("link", "Previsão Compulsória", "?fase=compulsoria", "Previsão de Aposentadoria Compulsória", null, null, $bold[6]);
-        $menu->add_item("link", "Somatório", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", null, null, $bold[7]);
+        $menu->add_item("link", "Previsão Masculino Geral", "?fase=previsaoM", "Previsão de Aposentadoria de Servidores Ativos do Sexo Masculino", null, null, $bold[4]);
+        $menu->add_item("link", "Previsão Feminino Geral", "?fase=previsaoF", "Previsão de Aposentadoria de Servidores Ativos do Sexo Feminino", null, null, $bold[5]);
+        $menu->add_item("link", "Previsão Compulsória Por Ano", "?fase=compulsoria", "Previsão de Aposentadoria Compulsória", null, null, $bold[6]);
+        $menu->add_item("link", "Já Podem Aposentar", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", null, null, $bold[7]);
         $menu->add_item("link", "Regras", "?fase=regras", "Regras de Aposentadoria", null, null, $bold[8]);
 
         $menu->show();

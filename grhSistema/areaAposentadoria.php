@@ -60,7 +60,11 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    if ($fase <> "aguardaIntegral" AND $fase <> "listaIntegral" AND $fase <> "editaIntegral") {
+    if (
+            $fase <> "aguardaIntegral" AND $fase <> "listaIntegral" AND $fase <> "editaIntegral" AND
+            $fase <> "aguardaProporcional" AND $fase <> "listaProporcional" AND $fase <> "editaProporcional" AND
+            $fase <> "aguardaCompulsoria" AND $fase <> "listaCompulsoria" AND $fase <> "editaCompulsoria"
+            ) {
 
         # Cria um menu
         $menu = new MenuBar();
@@ -745,7 +749,8 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
-        ######################################################################################################################
+            
+######################################################################################################################
 
         case "aguardaIntegral" :
             $grid2 = new Grid();
@@ -819,6 +824,164 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem', 'areaAposentadoria.php?fase=aguardaIntegral');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+######################################################################################################################
+
+        case "aguardaProporcional" :
+            $grid2 = new Grid();
+            $grid2->abreColuna(12);
+
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            loadPage('?fase=listaProporcional');
+            break;
+
+        ################################################################
+
+        case "listaProporcional" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar", "areaAposentadoria.php?fase=somatorio");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar, "left");
+
+            $menu->show();
+
+            # Limita o tamanho da tela
+            $grid->fechaColuna();
+            $grid->abreColuna(8);
+            
+            tituloTable("Observação");
+            $painel = new Callout();
+            $painel->abre();
+
+            p("Os cálculos aqui apresentados deverão ser conferidos pelo servidor da GRH quando da abertura do processo de aposentadoria.");
+
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+            
+            # Exibe regras
+            $aposentadoria->exibeRegrasProporcional();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
+            
+            # Lista de Servidores Ativos
+            $aposentadoria->exibeServidoresAtivosPodemAposentarProporcional($parametroSexo);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editaProporcional" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardaProporcional');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+######################################################################################################################
+
+        case "aguardaCompulsoria" :
+            $grid2 = new Grid();
+            $grid2->abreColuna(12);
+
+            br(5);
+            aguarde("Calculando ...");
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            loadPage('?fase=listaCompulsoria');
+            break;
+
+        ################################################################
+
+        case "listaCompulsoria" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar", "areaAposentadoria.php?fase=somatorio");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar, "left");
+
+            $menu->show();
+
+            # Limita o tamanho da tela
+            $grid->fechaColuna();
+            $grid->abreColuna(8);
+            
+            tituloTable("Observação");
+            $painel = new Callout();
+            $painel->abre();
+
+            p("Os cálculos aqui apresentados deverão ser conferidos pelo servidor da GRH quando da abertura do processo de aposentadoria.");
+
+            $painel->fecha();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+            
+            # Exibe regras
+            $aposentadoria->exibeRegrasCompulsoria();
+            
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
+            
+            # Lista de Servidores Ativos
+            $aposentadoria->exibeServidoresAtivosPodemAposentarCompulsoria($parametroSexo);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editaCompulsoria" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardaCompulsoria');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');

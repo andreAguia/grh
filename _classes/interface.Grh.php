@@ -902,7 +902,7 @@ class Grh {
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
 
-        echo $pessoal->get_servidoresAtivosLotacao($idLotacao);
+        echo $pessoal->get_numServidoresAtivosLotacao($idLotacao);
 
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=aguardeAtivos&id=' . $idLotacao);

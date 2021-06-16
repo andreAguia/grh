@@ -197,29 +197,6 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
-
-    /**
-     * Método get_ramais
-     * Retorna um array com os setores e os ramais
-     */
-    public function get_ramais() {
-
-        $select = ' SELECT concat(UADM," - ",DIR," - ",GER) as lotacao,
-                      ramais
-                 FROM tblotacao
-                WHERE ativo = "Sim"
-                  AND GER <> "CEDIDO"
-                  AND ramais <> ""
-             ORDER BY lotacao asc';
-
-        # conecta com o banco
-        $result = parent::select($select);
-
-        return $result;
-    }
-
-    ###########################################################
-
     /**
      * Método get_salarioBase
      * informa o salario base de uma matrícula

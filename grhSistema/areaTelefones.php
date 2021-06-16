@@ -68,8 +68,7 @@ if ($acesso) {
     $objeto->set_selectLista("SELECT DIR,
                                       GER,
                                       nome,
-                                      ramais,
-                                      email,
+                                      contatos,
                                       idLotacao,
                                       idLotacao
                                  FROM tblotacao
@@ -77,12 +76,11 @@ if ($acesso) {
                                   AND (DIR LIKE '%$parametro%'
                                    OR GER LIKE '%$parametro%'
                                    OR nome LIKE '%$parametro%'
-                                   OR ramais LIKE '%$parametro%')
+                                   OR contatos LIKE '%$parametro%')
                              ORDER BY DIR asc, GER asc, nome asc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT ramais,
-                                     email
+    $objeto->set_selectEdita('SELECT contatos
                                 FROM tblotacao
                                WHERE idLotacao = ' . $id);
 
@@ -95,13 +93,22 @@ if ($acesso) {
     $objeto->set_botaoIncluir(false);
 
     # Parametros da tabela
-    $objeto->set_label(array("Diretoria", "Gerência", "Nome", "Telefones", "Email", "Servidores"));
-    $objeto->set_align(array("center", "center", "left", "left", "left", "center"));
+    $objeto->set_label(["Diretoria", "Gerência", "Nome", "Contatos", "Servidores", "Ver"]);
+    $objeto->set_colspanLabel([null, null, null, null, 2]);
+    $objeto->set_align(["center", "center", "left", "left"]);
     #$objeto->set_width(array(10,10,15,20,20,15));
-    $objeto->set_funcao(array(null, null, null, "nl2br"));
+    $objeto->set_funcao([null, null, null, "nl2br"]);
 
-    $objeto->set_classe(array(null, null, null, null, null, "Grh"));
-    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao"));
+    $objeto->set_classe([null, null, null, null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosLotacao"]);
+
+    # Ver servidores
+    $servAtivos = new Link(null, '?fase=listaServidoresAtivos&id=' . $id);
+    $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servAtivos->set_title("Exibe os servidores desta lotação");
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link([null, null, null, null, null, $servAtivos]);
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -120,22 +127,16 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('linha' => 1,
+            array(
+            'linha' => 1,
             'col' => 12,
-            'nome' => 'ramais',
-            'label' => 'Ramais:',
-            'title' => 'Número dos telefones/ramais/faxes da lotação',
+            'nome' => 'contatos',
+            'label' => 'Contatos:',
+            'title' => 'telefones/ramais/e-mails de contato',
             'tipo' => 'textarea',
             'tagHtml' => true,
             'autofocus' => true,
-            'size' => array(80, 4)),
-        array('linha' => 2,
-            'col' => 12,
-            'nome' => 'email',
-            'label' => 'Email:',
-            'title' => 'Email do Setor',
-            'tipo' => 'texto',
-            'size' => 50)));
+            'size' => array(80, 15))));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -189,12 +190,8 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            # Titulo
-            titulo('Servidores da Lotação: ' . $pessoal->get_nomeLotacao($id));
-            br();
-
             # Lista de Servidores Ativos
-            $lista = new ListaServidores('Servidores Ativos');
+            $lista = new ListaServidores('Servidores da Lotação: ' . $pessoal->get_nomeLotacao($id));
             $lista->set_situacao(1);
             $lista->set_lotacao($id);
             $lista->showTabela();
@@ -212,8 +209,6 @@ if ($acesso) {
             $lista->set_lotacao($id);
             $lista->showRelatorio();
             break;
-
-        ################################################################
     }
 
     ################################################################

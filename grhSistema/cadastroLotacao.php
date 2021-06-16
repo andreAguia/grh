@@ -91,7 +91,6 @@ if ($acesso) {
                                 AND (DIR LIKE "%' . $parametro . '%"
                                    OR GER LIKE "%' . $parametro . '%"
                                    OR nome LIKE "%' . $parametro . '%"
-                                   OR ramais LIKE "%' . $parametro . '%"
                                    OR campus LIKE "%' . $parametro . '%"    
                                    OR idLotacao LIKE "%' . $parametro . '%") 
                              ORDER BY ativo desc, UADM asc, DIR asc, campus, GER asc, nome asc');

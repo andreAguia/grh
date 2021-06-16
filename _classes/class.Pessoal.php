@@ -415,9 +415,9 @@ class Pessoal extends Bd {
                           DIR,
                           GER,
                           idLotacao 
-                      FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                     WHERE tbhistlot.idServidor = ' . $idServidor . '
-                     ORDER BY data DESC';
+                     FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
+                    WHERE tbhistlot.idServidor = ' . $idServidor . '
+                 ORDER BY data DESC';
 
         $row = parent::select($select, false);
         $count = parent::count($select);
@@ -1994,8 +1994,8 @@ class Pessoal extends Bd {
         } else {
             if (is_numeric($idServidor)) {
                 $select = 'SELECT tbpessoa.nome
-                         FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                        WHERE idServidor = ' . $idServidor;
+                            FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
+                           WHERE idServidor = ' . $idServidor;
 
                 if ($idServidor == 0) {
                     $nome[0] = "";

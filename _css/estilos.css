@@ -501,6 +501,14 @@ a#licencaPremio{
     font-weight:bold;
 }
 
+p#labelOcorrencias{
+    font-size: 9px;
+    text-align: left;
+    padding: 0px;
+    margin: -10px;
+    margin-bottom: 0;
+}
+
 /*******************************************
  * Método Pessoa->get_lotacao
  *******************************************/

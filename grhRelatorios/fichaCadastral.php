@@ -1127,7 +1127,7 @@ if ($acesso) {
     }
 
     /*
-     * Informações adicionais de Licença Especial (Prêmio)
+     * Observações adicionais de Licença Especial (Prêmio)
      */
 
     if ($postLicenca) {
@@ -1143,9 +1143,10 @@ if ($acesso) {
             $relatorio = new Relatorio('relatorioFichaCadastral');
             #$relatorio->set_titulo(null);
             #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array("Informações"));
+            $relatorio->set_label(array("Observações da Licença Prêmio"));
             #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
             $relatorio->set_align(array("left"));
+            $relatorio->set_funcao(array("nl2br"));
             $relatorio->set_conteudo($result);
             $relatorio->set_botaoVoltar(false);
             $relatorio->set_subTotal(false);

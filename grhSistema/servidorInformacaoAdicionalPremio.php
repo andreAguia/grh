@@ -38,13 +38,13 @@ if ($acesso) {
     
     # Exibe aviso 
     $objeto->set_rotinaExtraEditar("callout");
-    $objeto->set_rotinaExtraEditarParametro("Importante ressaltar que o que for escrito nas informações adicionais irão aparecer na ficha cadastral.");
+    $objeto->set_rotinaExtraEditarParametro("Importante ressaltar que o que for escrito nas Observações irá aparecer na ficha cadastral.");
 
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome("Informações Adicionais");
+    $objeto->set_nome("Observações");
 
     # select do edita
     $selectEdita = 'SELECT obsPremio
@@ -79,7 +79,7 @@ if ($acesso) {
     # Campos para o formulario
     $campos = array(array('linha' => 1,
             'nome' => 'obsPremio',
-            'label' => 'Informações adicionais:',
+            'label' => 'Observações:',
             'tipo' => 'textarea',
             'size' => array(80, 4),
             'autofocus' => true,

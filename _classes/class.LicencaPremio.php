@@ -445,7 +445,6 @@ class LicencaPremio {
          * Exibe o número do processo
          */
 
-
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(4);
@@ -541,18 +540,9 @@ class LicencaPremio {
 
         $grid->fechaColuna();
         $grid->abreColuna(8);
-
-        # Informa se o servidor tem publicações em aberto
-        $publicFaltantesTotal = $this->get_numPublicacoesFaltantesTotal($idServidor);
-        if ($publicFaltantesTotal > 0) {
-            if ($publicFaltantesTotal == 1) {
-                callout("Atenção, este servidor tem 1 publicação pendente!");
-            } else {
-                callout("Atenção, este servidor tem {$publicFaltantesTotal} publicações pendentes!");
-            }
-        } elseif ($publicFaltantesTotal < 0) {
-            callout("Atenção, Este servidor parece ter mais publicações a que tem direito!");
-        }
+        
+        # Exibe as notificações
+        $this->exibeOcorrencias($idServidor);
 
         if ($numVinculos > 1) {
 
@@ -637,9 +627,6 @@ class LicencaPremio {
             $tabela->set_totalRegistro(false);
             $tabela->show();
         }
-
-        # Exibe as informasções adicionais
-        $this->exibeInformacaoAdicional($idServidor);
 
         $grid->fechaColuna();
         $grid->fechaGrid();
@@ -886,47 +873,6 @@ class LicencaPremio {
 
 ###########################################################
 
-    public function exibeInformacaoAdicional($idServidor) {
-
-        /**
-         * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
-         */
-        # Pega a obs
-        $obs = $this->get_obsGeral($idServidor);
-
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(12);
-
-        # Cria um menu
-        $menu = new MenuBar();
-
-        # Edita as informações
-        $linkBotao3 = new Link("Editar ", "servidorInformacaoAdicionalPremio.php");
-        $linkBotao3->set_class('button');
-        $linkBotao3->set_title("Edita as informações adicionais");
-        $menu->add_link($linkBotao3, "right");
-        $menu->show();
-
-        $painel = new Callout();
-        $painel->abre();
-        tituloTable("Informações Adicionais");
-
-        if (!empty($obs)) {
-            br();
-            p($obs, "f12");
-        } else {
-            br();
-            p("Nenhuma informação cadastrada.", "f12");
-        }
-        $painel->fecha();
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
-    }
-
-###########################################################
-
     public function exibeLicencaPremio($idServidor) {
 
         /**
@@ -1040,7 +986,7 @@ class LicencaPremio {
         #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-        
+
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(2);
         $relatorio->set_botaoVoltar(false);
@@ -1223,6 +1169,79 @@ class LicencaPremio {
             return $retorno[0];
         } else {
             return $idServidor;
+        }
+    }
+
+    ###########################################################
+
+    function exibeOcorrencias($idServidor) {
+
+        /**
+         * Informe obs da licença prêmio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dados 
+        $diasPublicados = $this->get_numDiasPublicadosTotal($idServidor);
+        $diasFruidos = $this->get_numDiasFruidosTotal($idServidor);
+        $diasDisponiveis = $this->get_numDiasDisponiveisTotal($idServidor);
+        $numProcesso = $this->get_numProcesso($idServidor);
+
+        $nome = $pessoal->get_licencaNome(6);
+        $idSituacao = $pessoal->get_idSituacao($idServidor);
+
+        # inicia o array das rotinas extras
+        $rotinaExtra = array();
+        $rotinaExtraParametro = array();
+        $mensagem = null;
+
+        # Exibe alerta se $diasDisponíveis for negativo no geral
+        if ($diasDisponiveis < 0) {
+            $mensagem .= "Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
+        }
+
+        # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
+        if ($diasDisponiveis < 1) {
+            $mensagem .= "Servidor sem dias disponíveis. É necessário cadastrar uma publicação para incluir uma licença prêmio.<br/>";
+        }
+
+        # Servidor sem processo cadastrado
+        if (is_null($numProcesso)) {
+            $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
+        }
+
+        # Servidor com publicação pendente
+        if ($this->get_numPublicacoesFaltantes($idServidor) > 0) {
+            $mensagem .= "Existem publicações pendentes para este servidor.<br/>";
+        }
+
+        if (!is_null($mensagem)) {
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            p("Ocorrências:", "labelOcorrencias");
+            p($mensagem,"left","f14");
+
+            $painel->fecha();
+        }
+    }
+
+    ###########################################################
+
+    function exibeObsGeral($idServidor) {
+        
+        # Pega os Dados
+        $mensagem = $this->get_obsGeral($idServidor);
+
+        if (!is_null($mensagem)) {
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            p("observação Geral:", "labelOcorrencias");
+            p(nl2br($mensagem),"left","f14");
+
+            $painel->fecha();
         }
     }
 

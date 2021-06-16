@@ -111,6 +111,11 @@ if ($acesso) {
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
+    # Salta uma linha para afastar do menu
+    if ($fase == "listar") {
+        br();
+    }
+
     # Verifica se o Servidor tem direito a licença
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
@@ -289,7 +294,11 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorLicencaPremio.php");
         $botaoRel->set_target("_blank");
 
-        $objeto->set_botaoListarExtra(array($botaoRel, $botaoAfastPremio, $botaoAfast));
+        # Edita Obs
+        $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
+        $botaoObs->set_title("Insere / edita as observações gerais.");
+
+        $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast]);
 
         ################################################################
 
@@ -308,42 +317,30 @@ if ($acesso) {
                 $nome = $pessoal->get_licencaNome(6);
                 $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
 
-                # inicia o array das rotinas extras
-                $rotinaExtra = array();
-                $rotinaExtraParametro = array();
-                $mensagem = null;
-
                 # Exibe alerta se $diasDisponíveis for negativo no geral
                 if ($diasDisponiveis < 0) {
-                    $mensagem .= "Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
                     $objeto->set_botaoIncluir(false);
                 }
 
                 # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
                 if ($diasDisponiveis < 1) {
-                    $mensagem .= "Servidor sem dias disponíveis. É necessário cadastrar uma publicação antes de incluir uma $nome.<br/>";
                     $objeto->set_botaoIncluir(false);
                 }
 
                 # Servidor sem processo cadastrado
                 if (is_null($numProcesso)) {
-                    $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
                     $objeto->set_botaoIncluir(false);
                 }
 
-                # Servidor com publicação pendente
-                if ($licenca->get_numPublicacoesFaltantes($idServidorPesquisado) > 0) {
-                    $mensagem .= "Existem publicações pendentes para este servidor.<br/>";
+                # Função para acrescentar a rotina extra
+                function exibeObs($idServidor) {
+                    $licencPremio = new LicencaPremio();
+                    $licencPremio->exibeObsGeral($idServidor);
                 }
-
-                if (!is_null($mensagem)) {
-                    $rotinaExtra[] = "callout";
-                    $rotinaExtraParametro[] = $mensagem;
-                }
-
-                # Acrescenta as rotinas
-                $objeto->set_rotinaExtraListar($rotinaExtra);
-                $objeto->set_rotinaExtraListarParametro($rotinaExtraParametro);
+                
+                 # Acrescenta as rotinas
+                $objeto->set_rotinaExtraListar("exibeObs");
+                $objeto->set_rotinaExtraListarParametro($idServidorPesquisado);
 
                 $objeto->listar();
 

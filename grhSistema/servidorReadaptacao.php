@@ -386,9 +386,9 @@ if ($acesso) {
             'label' => 'Status:',
             'tipo' => 'combo',
             'array' => array(
-                array(1, "Em Aberto"), 
-                array(2, "Vigente"), 
-                array(3, "Arquivado"), 
+                array(1, "Em Aberto"),
+                array(2, "Vigente"),
+                array(3, "Arquivado"),
                 array(4, "Aguardando Publicação")),
             'size' => 2,
             'valor' => 0,
@@ -520,8 +520,7 @@ if ($acesso) {
 
     ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
         case "listar" :
             # Divide a página em 2 colunas
@@ -588,7 +587,6 @@ if ($acesso) {
             $menu->add_item("linkWindow", "Despacho ao Protocolo para Abertura de Processo", "servidorMenu.php?fase=despacho");
             $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "servidorMenu.php?fase=despachoChefia");
             $menu->add_item("linkWindow", "Despacho à Perícia para Arquivamento", "../grhRelatorios/despacho.Pericia.Arquivamento.php");
-
 
             $menu->add_item('linkWindow', 'Declaração de Atribuições', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
             $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
@@ -668,8 +666,7 @@ if ($acesso) {
             $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
             # Limita a tela
             $grid = new Grid("center");
-            $grid->abreColuna(10);
-            br(3);
+            $grid->abreColuna(12);
 
             # Título
             titulo("Ci de início");
@@ -694,7 +691,7 @@ if ($acesso) {
             $controle = new Input('dtCiInicio', 'data', 'Data da Ci:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_valor($dtCiInicio);
             #$controle->set_required(true);
             $controle->set_title('A data da CI de inicio.');
@@ -704,11 +701,34 @@ if ($acesso) {
             $controle = new Input('tipo', 'combo', 'Tipo:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_array(array(array(null, null),
                 array(1, "Inicial"),
                 array(2, "Renovação")));
             $controle->set_valor($tipo);
+            $controle->set_title('Se é Inicial ou Renovação.');
+            $form->add_item($controle);
+
+            # servidor da grh
+            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+
+            # Cria combo de servidores da GRH
+            $select = "SELECT idServidor, tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+
+            $servGrh = $pessoal->select($select);
+
+            $controle->set_array($servGrh);
+            $controle->set_valor($pessoal->get_gerente(66)); // Pega o idServidor do gerente da GRH (66)
             $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
 
@@ -785,12 +805,13 @@ if ($acesso) {
             $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
             $tipo = vazioPraNulo(post("tipo"));
 
+            $servidorGrh = post("servidorGrh");
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
             $textoCi = post("textoCi");
 
             # Prepara para enviar por get
-            $array = array($chefeDigitado, $cargoDigitado);
+            $array = array($chefeDigitado, $cargoDigitado, $servidorGrh);
             $array = serialize($array);
 
             # Verifica se houve alterações
@@ -896,10 +917,6 @@ if ($acesso) {
             $dtPublicacao = $dados["dtPublicacao"];
             $pgPublicacao = $dados["pgPublicacao"];
 
-            # Chefia imediata desse servidor
-            #$idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
-            #$nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
-            #$gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(10);
@@ -932,6 +949,29 @@ if ($acesso) {
             $controle->set_valor($dtCi90);
             #$controle->set_required(true);
             $controle->set_title('A data da CI de 90 dias.');
+            $form->add_item($controle);
+
+            # servidor da grh
+            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(5);
+
+            # Cria combo de servidores da GRH
+            $select = "SELECT idServidor, tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+
+            $servGrh = $pessoal->select($select);
+
+            $controle->set_array($servGrh);
+            $controle->set_valor($pessoal->get_gerente(66)); // Pega o idServidor do gerente da GRH (66)
+            $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
 
             # submit
@@ -968,6 +1008,7 @@ if ($acesso) {
             $botaoEscolhido = get_post_action("salvar", "imprimir");
             $numCi90Digitados = vazioPraNulo(post("numCi90"));
             $dtCi90Digitado = vazioPraNulo(post("dtCi90"));
+            $servidorGrh = post("servidorGrh");
 
             # Verifica se houve alterações
             $alteracoes = null;
@@ -1029,7 +1070,7 @@ if ($acesso) {
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if ($botaoEscolhido == "imprimir") {
                 if ($erro == 0) {
-                    loadPage('../grhRelatorios/readaptacaoCi90.php?id=' . $id, "_blank");
+                    loadPage("../grhRelatorios/readaptacaoCi90.php?id={$id}&servidorGrh={$servidorGrh}", "_blank");
                     loadPage("?");
                 } else {
                     alert($msgErro);
@@ -1084,7 +1125,7 @@ if ($acesso) {
             $controle = new Input('numCiTermino', 'texto', 'Ci n°:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_required(true);
             $controle->set_autofocus(true);
             $controle->set_valor($numCitermino);
@@ -1099,6 +1140,29 @@ if ($acesso) {
             $controle->set_valor($dtCitermino);
             $controle->set_required(true);
             $controle->set_title('A data da CI de término.');
+            $form->add_item($controle);
+            
+            # servidor da grh
+            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(5);
+
+            # Cria combo de servidores da GRH
+            $select = "SELECT idServidor, tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+
+            $servGrh = $pessoal->select($select);
+
+            $controle->set_array($servGrh);
+            $controle->set_valor($pessoal->get_gerente(66)); // Pega o idServidor do gerente da GRH (66)
+            $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
 
             # Chefia
@@ -1159,12 +1223,13 @@ if ($acesso) {
             $botaoEscolhido = get_post_action("salvar", "imprimir");
             $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
             $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
-
+            
+            $servidorGrh = post("servidorGrh");
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
 
             # Prepara para enviar por get
-            $array = array($chefeDigitado, $cargoDigitado);
+            $array = array($chefeDigitado, $cargoDigitado, $servidorGrh);
             $array = serialize($array);
 
             # Verifica se houve alterações
@@ -1320,7 +1385,6 @@ if ($acesso) {
                 back(1);
             }
             break;
-
 
         ################################################################################################################
     }

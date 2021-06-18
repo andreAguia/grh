@@ -413,43 +413,6 @@ class Readaptacao {
 
             # Ci Término    
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaotermino, '?fase=ciTerminoForm&id=' . $idReadaptacao);
-
-            /*
-
-              $tamanhoImage = 20;
-              if(($dias >= 0) AND($dias <= 90)){
-              $menu = new MenuGrafico(3);
-              }else{
-              $menu = new MenuGrafico(2);
-              }
-
-              # Ci Início
-              $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ciInicioForm&id='.$idReadaptacao);
-              $botao->set_label($nomeBotaoInicio);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de início');
-              $menu->add_item($botao);
-
-              # Ci 90 dias
-              if(($dias >= 0) AND($dias <= 90)){
-              $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ci90Form&id='.$idReadaptacao);
-              $botao->set_label($nomeBotao90);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de 90 Dias');
-              $menu->add_item($botao);
-              }
-
-              $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ciTerminoForm&id='.$idReadaptacao);
-              $botao->set_label($nomeBotaotermino);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de término');
-              $menu->add_item($botao);
-             * 
-             * 
-             */
         }
 
         $menu->show();

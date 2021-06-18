@@ -22,8 +22,9 @@ if ($acesso) {
     $pessoal = new Pessoal();
     $readaptacao = new Readaptacao();
 
-    # Pega o id
+    # Pega os dados
     $id = get('id');
+    $servidorGrh = get('servidorGrh');
 
     # Começa uma nova página
     $page = new Page();
@@ -71,18 +72,20 @@ if ($acesso) {
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao2($pessoal->get_idLotacao($idServidorPesquisado));
-    
-    # Servidor da GRH
-    $origemNome = "Christiane Assis";
-    $origemDescricao = "PNS - Apoio Acadêmico ";
-    $origemIdFuncional = "ID:4130147-1";    
 
     # Assunto
     $assunto = "Aviso de prazo para fim do benefício.";
 
     # Monta a CI
     $ci = new Ci($numCi90, $dtCi90, $assunto);
-    $ci->set_nomeAssinatura($origemNome, $origemDescricao,$origemIdFuncional);
+
+    # Verifica se alterou o servidor da GRH
+    if ($servidorGrh <> $pessoal->get_gerente(66)) {
+        $ci->set_nomeAssinatura(
+                $pessoal->get_nome($servidorGrh),
+                $pessoal->get_cargoSimples($servidorGrh),
+                $pessoal->get_idFuncional($servidorGrh));
+    }
     $ci->set_destinoNome($lotacao);
     $ci->set_destinoSetor("A/C " . $nomeServidor);
     $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão "

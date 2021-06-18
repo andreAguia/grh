@@ -182,4 +182,5 @@ if (!is_null($motivo)) {
 }
 
 # Retira os zeros à esquerda do idFuncional passando para inteiro
-$campoValor[0] = intval($campoValor[0]);
+//$campoValor[0] = intval($campoValor[0]); 
+// Retirado para poder cadastrar o dígito de forma direta e não calculado como era a matrícula

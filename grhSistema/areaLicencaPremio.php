@@ -53,7 +53,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio" AND $fase <> "relatorioPublicacao" AND $fase <> "relatorioDias") {
         AreaServidor::cabecalho();
     }
 
@@ -90,6 +90,21 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
+
+            # Relatório de Publicações
+            $botaoPub = new Link("Publicações", "?fase=relatorioPublicacao");
+            $botaoPub->set_class('button');
+            $botaoPub->set_target("_blank");
+            $botaoPub->set_title('Relatório informando somente as publicações');
+            $menu1->add_link($botaoPub, "right");
+            
+            # Relatório de Publicações
+            $botaoDias = new Link("Dias", "?fase=relatorioDias");
+            $botaoDias->set_class('button');
+            $botaoDias->set_target("_blank");
+            $botaoDias->set_title('Relatório informando somente os dias publicados fruidoe e pendentes');
+            $menu1->add_link($botaoDias, "right");
+
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -241,7 +256,7 @@ if ($acesso) {
             $tabela->set_conteudo($resumo);
             $tabela->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $tabela->set_align(["center", "left"]);
-            #$tabela->set_width(array(5,15,15,15,8,15,15,15));
+            $tabela->set_width(array(5, 25, 8, 13, 18, 18, 8));
             $tabela->set_funcao([null, null, "date_to_php", null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
             $tabela->set_classe(["pessoal", "pessoal"]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);
@@ -253,7 +268,7 @@ if ($acesso) {
 
             $tabela->set_editar('?fase=editaServidorPremio&id=');
             $tabela->set_nomeColunaEditar("Acessar");
-            $tabela->set_editarBotao("ver.png");
+            $tabela->set_editarBotao("bullet_edit.png");
             $tabela->set_idCampo('idServidor');
             $tabela->show();
 
@@ -315,13 +330,119 @@ if ($acesso) {
             if ($subtitulo <> null) {
                 $relatorio->set_subtitulo($subtitulo);
             }
-            
+
             $relatorio->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $relatorio->set_align(["center", "left"]);
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
             $relatorio->set_funcao([null, null, "date_to_php", null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
             $relatorio->set_classe(["pessoal", "pessoal"]);
             $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);
+
+            $relatorio->set_conteudo($result);
+            $relatorio->show();
+            break;
+
+################################################################
+        # Relatório
+        case "relatorioPublicacao" :
+            $result = $pessoal->select($selectRelatorio);
+
+            # Inicia a variável do subtítulo
+            $subtitulo = null;
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+            }
+
+            # Processo
+            switch ($parametroProcesso) {
+                case "Cadastrado":
+                    $subtitulo .= "Processos Cadastrados<br/>";
+                    break;
+
+                case "Em Branco":
+                    $subtitulo .= "Processos Em Branco<br/>";
+                    break;
+            }
+
+            # Situação
+            if (($parametroSituacao <> "*") AND ($parametroSituacao <> "")) {
+                $subtitulo .= "Servidores " . $pessoal->get_nomeSituacao($parametroSituacao) . "s<br/>";
+            }
+
+            # Nome, MAtricula e id
+            if (!is_null($parametroNomeMat)) {
+                $subtitulo .= "Pesquisa: " . $parametroNomeMat;
+            }
+
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo('Relatório de Licença Prêmio');
+
+            # Acrescenta o subtítulo de tiver filtro
+            if ($subtitulo <> null) {
+                $relatorio->set_subtitulo($subtitulo);
+            }
+
+            $relatorio->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
+            $relatorio->set_align(["center", "left"]);
+            #$tabela->set_width(array(5,15,15,15,8,15,15,15));
+            $relatorio->set_funcao([null, null, "date_to_php", null, "exibeNumPublicacoesLicencaPremio"]);
+            $relatorio->set_classe(["pessoal", "pessoal", null, null, null, "pessoal"]);
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, null, null, "get_situacao"]);
+
+            $relatorio->set_conteudo($result);
+            $relatorio->show();
+            break;
+
+################################################################
+        # Relatório
+        case "relatorioDias" :
+            $result = $pessoal->select($selectRelatorio);
+
+            # Inicia a variável do subtítulo
+            $subtitulo = null;
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+            }
+
+            # Processo
+            switch ($parametroProcesso) {
+                case "Cadastrado":
+                    $subtitulo .= "Processos Cadastrados<br/>";
+                    break;
+
+                case "Em Branco":
+                    $subtitulo .= "Processos Em Branco<br/>";
+                    break;
+            }
+
+            # Situação
+            if (($parametroSituacao <> "*") AND ($parametroSituacao <> "")) {
+                $subtitulo .= "Servidores " . $pessoal->get_nomeSituacao($parametroSituacao) . "s<br/>";
+            }
+
+            # Nome, MAtricula e id
+            if (!is_null($parametroNomeMat)) {
+                $subtitulo .= "Pesquisa: " . $parametroNomeMat;
+            }
+
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo('Relatório de Licença Prêmio');
+
+            # Acrescenta o subtítulo de tiver filtro
+            if ($subtitulo <> null) {
+                $relatorio->set_subtitulo($subtitulo);
+            }
+
+            $relatorio->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo",  "Número de Dias<br/>Publ./ Fruídos / Disp.", "Situação"]);
+            $relatorio->set_align(["center", "left"]);
+            #$tabela->set_width(array(5,15,15,15,8,15,15,15));
+            $relatorio->set_funcao([null, null, "date_to_php", null, "exibeDiasLicencaPremio"]);
+            $relatorio->set_classe(["pessoal", "pessoal", null, null, null, "pessoal"]);
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, null, null, "get_situacao"]);
 
             $relatorio->set_conteudo($result);
             $relatorio->show();

@@ -124,7 +124,7 @@ class LicencaPremio {
             return $row[0];
     }
 
-    ###########################################################
+    ########################################################### 
 
     function get_numDiasDisponiveis($idServidor) {
 
@@ -540,7 +540,7 @@ class LicencaPremio {
 
         $grid->fechaColuna();
         $grid->abreColuna(8);
-        
+
         # Exibe as notificações
         $this->exibeOcorrencias($idServidor);
 
@@ -1221,7 +1221,7 @@ class LicencaPremio {
             $painel->abre();
 
             p("Ocorrências:", "labelOcorrencias");
-            p($mensagem,"left","f14");
+            p($mensagem, "left", "f14");
 
             $painel->fecha();
         }
@@ -1230,7 +1230,7 @@ class LicencaPremio {
     ###########################################################
 
     function exibeObsGeral($idServidor) {
-        
+
         # Pega os Dados
         $mensagem = $this->get_obsGeral($idServidor);
 
@@ -1239,7 +1239,7 @@ class LicencaPremio {
             $painel->abre();
 
             p("observação Geral:", "labelOcorrencias");
-            p(nl2br($mensagem),"left","f14");
+            p(nl2br($mensagem), "left", "f14");
 
             $painel->fecha();
         }

@@ -145,7 +145,7 @@ if ($acesso) {
 
         # select da lista
         $objeto->set_selectLista('SELECT tbpublicacaopremio.dtPublicacao,
-                                         CONCAT(DATE_FORMAT(dtInicioPeriodo, "%d/%m/%Y")," - ",DATE_FORMAT(dtFimPeriodo, "%d/%m/%Y")),
+                                         IFNULL(CONCAT(DATE_FORMAT(dtInicioPeriodo, "%d/%m/%Y")," - ",DATE_FORMAT(dtFimPeriodo, "%d/%m/%Y")),"---"),
                                          dtInicial,
                                          tblicencapremio.numdias,
                                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -172,12 +172,12 @@ if ($acesso) {
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(array("Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"));
-        $objeto->set_width(array(17, 22, 17, 10, 17, 12));
+        $objeto->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"]);
+        $objeto->set_width([17, 22, 17, 10, 17, 12]);
         #$objeto->set_align(array("center","center","center","center","center","center","left"));
-        $objeto->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-        $objeto->set_classe(array(null, null, null, null, null, 'LicencaPremio'));
-        $objeto->set_metodo(array(null, null, null, null, null, 'exibeObs'));
+        $objeto->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
+        $objeto->set_classe([null, null, null, null, null, 'LicencaPremio']);
+        $objeto->set_metodo([null, null, null, null, null, 'exibeObs']);
 
         $objeto->set_exibeTempoPesquisa(false);
 
@@ -333,12 +333,13 @@ if ($acesso) {
                 }
 
                 # Função para acrescentar a rotina extra
+
                 function exibeObs($idServidor) {
                     $licencPremio = new LicencaPremio();
                     $licencPremio->exibeObsGeral($idServidor);
                 }
-                
-                 # Acrescenta as rotinas
+
+                # Acrescenta as rotinas
                 $objeto->set_rotinaExtraListar("exibeObs");
                 $objeto->set_rotinaExtraListarParametro($idServidorPesquisado);
 

@@ -44,7 +44,7 @@ if ($acesso) {
     tituloRelatorio('Licenças Fruídas');
 
     $select = 'SELECT tbpublicacaopremio.dtPublicacao,
-                      idLicencaPremio,
+                      IFNULL(CONCAT(DATE_FORMAT(dtInicioPeriodo, "%d/%m/%Y")," - ",DATE_FORMAT(dtFimPeriodo, "%d/%m/%Y")),"---"),
                       dtInicial,
                       tblicencapremio.numdias,
                       ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -68,8 +68,8 @@ if ($acesso) {
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-    $relatorio->set_classe(array(null, 'LicencaPremio'));
-    $relatorio->set_metodo(array(null, 'exibePeriodoAquisitivo'));
+//    $relatorio->set_classe(array(null, 'LicencaPremio'));
+//    $relatorio->set_metodo(array(null, 'exibePeriodoAquisitivo'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

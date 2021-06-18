@@ -664,6 +664,7 @@ if ($acesso) {
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
             $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
             $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+            
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
@@ -781,8 +782,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
-#########################################################
 
         case "ciInicioFormValida" :
 
@@ -1204,9 +1203,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
-#########################################################
-
+        
         case "ciTerminoFormValida" :
 
             # Pega os Dados

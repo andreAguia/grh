@@ -86,6 +86,7 @@ if ($acesso) {
                 $pessoal->get_cargoSimples($servidorGrh),
                 $pessoal->get_idFuncional($servidorGrh));
     }
+
     $ci->set_destinoNome($lotacao);
     $ci->set_destinoSetor("A/C " . $nomeServidor);
     $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão "

@@ -22,31 +22,32 @@ if ($acesso) {
     $pessoal = new Pessoal();
     $reducao = new ReducaoCargaHoraria();
 
-    # Pega o id
+    # Pega os dados
     $id = get('id');
+    $servidorGrh = get('servidorGrh');
 
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
     # pega os dados
-    $dados = $reducao->get_dadosCi90($id);
+    $dados = $reducao->get_dadosCi45($id);
 
     # Da Redução
-    $numCi90 = $dados[0];
-    $dtCi90 = date_to_php($dados[1]);
+    $numCi45 = $dados[0];
+    $dtCi45 = date_to_php($dados[1]);
     $dtPublicacao = date_to_php($dados[2]);
     $pgPublicacao = $dados[3];
     $dtTermino = date_to_php($dados[4]);
 
     # Verifica o número da Ci
-    if (vazio($numCi90)) {
-        $numCi90 = "????";
+    if (vazio($numCi45)) {
+        $numCi45 = "????";
     }
 
     # Verifica a data da CI
-    if (vazio($dtCi90)) {
-        $dtCi90 = "????";
+    if (vazio($dtCi45)) {
+        $dtCi45 = "????";
     }
 
     # Verifica a data da Publicação
@@ -54,7 +55,7 @@ if ($acesso) {
         $dtPublicacao = "????";
     }
 
-    # Verifica se estamos a 90 dias da data Termino
+    # Verifica se estamos a 45 dias da data Termino
     if (!vazio($dtTermino)) {
         $hoje = date("d/m/Y");
         $dias = dataDif($hoje, $dtTermino);
@@ -71,20 +72,23 @@ if ($acesso) {
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao2($pessoal->get_idLotacao($idServidorPesquisado));
-    
-    # Servidor da GRH
-    $origemNome = "Christiane Assis";
-    $origemDescricao = "PNS - Apoio Acadêmico ";
-    $origemIdFuncional = "ID:4130147-1";    
-
+   
     # Assunto
     $assunto = "Aviso de prazo para fim do benefício.";
 
     # Monta a CI
-    $ci = new Ci($numCi90, $dtCi90, $assunto);
+    $ci = new Ci($numCi45, $dtCi45, $assunto);
+
+    # Verifica se alterou o servidor da GRH
+    if ($servidorGrh <> $pessoal->get_gerente(66)) {
+        $ci->set_nomeAssinatura(
+                $pessoal->get_nome($servidorGrh),
+                $pessoal->get_cargoSimples($servidorGrh),
+                $pessoal->get_idFuncional($servidorGrh));
+    }
+
     $ci->set_destinoNome($lotacao);
     $ci->set_destinoSetor("A/C " . $nomeServidor);
-    $ci->set_nomeAssinatura($origemNome, $origemDescricao,$origemIdFuncional);
     $ci->set_texto("Vimos alertar que faltam $dias dias para encerrar a concessão"
             . " de sua Redução de Carga Horária, conforme publicação no DOERJ de $publicacao.<br/>");
     $ci->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos"

@@ -197,6 +197,7 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
     /**
      * Método get_salarioBase
      * informa o salario base de uma matrícula
@@ -2171,7 +2172,7 @@ class Pessoal extends Bd {
         return $sexo[0];
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método get_sexo
@@ -2272,7 +2273,6 @@ class Pessoal extends Bd {
                 # Coloca na variável retorno
                 $retorno .= '<span title="' . $descricao . '" id="orgaoCedido">[' . $tipoCargo . ']</span>';
                 #$retorno .= "<span id='orgaoCedido'>[{$descricao}]</span>";
-                
             }
 
             if ($contador < $num) {
@@ -3275,7 +3275,7 @@ class Pessoal extends Bd {
      */ {
         # pega a faixa da matrícula para esse perfil
         $faixa = $this->get_perfilMatricula($perfil);
-        
+
         if (is_null($faixa[0])) {
             return "-";
         } else {
@@ -3604,7 +3604,7 @@ class Pessoal extends Bd {
         return $count;
     }
 
-     ###########################################################
+    ###########################################################
 
     function get_numServidoresInativosPerfil($idPerfil = null) {
 
@@ -4571,7 +4571,6 @@ class Pessoal extends Bd {
         # Pega a data de nascimento do servidor
         $dataNascimento = $this->get_dataNascimento($idServidor);
 
-
         # Separa em dia, mês e ano
         list($dia, $mes, $ano) = explode('/', $dataNascimento);
 
@@ -4631,8 +4630,8 @@ class Pessoal extends Bd {
                      FROM tbservidor
                     WHERE idServidor = {$idServidor}";
 
-        $result = parent::select($select,false);
-        
+        $result = parent::select($select, false);
+
         # Verifica se a matrícula é manor que 10000 e é celetista ou estatutário
         if ($result["matricula"] < 10000 AND ($result["idPerfil"] == 1 OR $result["idPerfil"] == 4)) {
             return true;
@@ -4655,12 +4654,11 @@ class Pessoal extends Bd {
                      FROM tbservidor
                     WHERE idServidor = {$idServidor}";
 
-        $result = parent::select($select,false);
+        $result = parent::select($select, false);
         return $result["opcaoFenorteUenf"];
     }
 
     ###########################################################
-
 
     /**
      * Método podeNovoServidor
@@ -5193,12 +5191,12 @@ class Pessoal extends Bd {
         $idPessoa = $this->get_idPessoa($idServidor);
 
         # Monta o select
-        if($crescente){
-        $select = "SELECT idServidor
+        if ($crescente) {
+            $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
                      ORDER BY dtadmissao";
-        }else{
+        } else {
             $select = "SELECT idServidor
                          FROM tbservidor
                         WHERE idPessoa = $idPessoa
@@ -5371,6 +5369,11 @@ class Pessoal extends Bd {
         # Pega a lotação do servidor
         $idLotacao = $this->get_idLotacao($idServidor);
 
+        # Verifica se é o setor de cedidos (113)
+        if ($idLotacao == 113) {
+            return null;
+        }
+
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -5462,16 +5465,21 @@ class Pessoal extends Bd {
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediata($idServidor);
 
-        # Monta o select
-        $select = "SELECT tbdescricaocomissao.descricao
+        if (empty($idChefe)) {
+            return null;
+        } else {
+
+            # Monta o select
+            $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
                     WHERE (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
 
-        $row = parent::select($select, false);
+            $row = parent::select($select, false);
 
-        # Retorna
-        return $row[0];
+            # Retorna
+            return $row[0];
+        }
     }
 
     ##########################################################################################

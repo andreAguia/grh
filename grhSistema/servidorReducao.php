@@ -113,7 +113,6 @@ if ($acesso) {
                 
 ';
 
-
     # Começa uma nova página
     $page = new Page();
 
@@ -330,9 +329,9 @@ if ($acesso) {
             'label' => 'Status:',
             'tipo' => 'combo',
             'array' => array(
-                array(1, "Em Aberto"), 
-                array(2, "Vigente"), 
-                array(3, "Arquivado"), 
+                array(1, "Em Aberto"),
+                array(2, "Vigente"),
+                array(3, "Arquivado"),
                 array(4, "Aguardando Publicação")),
             'size' => 2,
             'valor' => 0,
@@ -601,8 +600,7 @@ if ($acesso) {
             $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
             # Limita a tela
             $grid = new Grid("center");
-            $grid->abreColuna(10);
-            br(3);
+            $grid->abreColuna(12);
 
             # Título
             tituloTable("Controle de Redução da Carga Horária<br/>Ci de início");
@@ -616,7 +614,7 @@ if ($acesso) {
             $controle = new Input('numCiInicio', 'texto', 'Ci n°:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             #$controle->set_required(true);
             $controle->set_autofocus(true);
             $controle->set_valor($numCiInicio);
@@ -637,11 +635,34 @@ if ($acesso) {
             $controle = new Input('tipo', 'combo', 'Tipo:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_array(array(array(null, null),
                 array(1, "Inicial"),
                 array(2, "Renovação")));
             $controle->set_valor($tipo);
+            $controle->set_title('Se é Inicial ou Renovação.');
+            $form->add_item($controle);
+
+            # servidor da grh
+            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+
+            # Cria combo de servidores da GRH
+            $select = "SELECT idServidor, tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+
+            $servGrh = $pessoal->select($select);
+
+            $controle->set_array($servGrh);
+            $controle->set_valor($pessoal->get_gerente(66)); // Pega o idServidor do gerente da GRH (66)
             $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
 
@@ -658,7 +679,7 @@ if ($acesso) {
             # Cargo
             $controle = new Input('cargo', 'texto', 'Cargo:', 1);
             $controle->set_size(200);
-            $controle->set_linha(3);
+            $controle->set_linha(2);
             $controle->set_col(12);
             $controle->set_valor($gerenciaImediataDescricao);
             #$controle->set_required(true);
@@ -706,11 +727,12 @@ if ($acesso) {
             $dtCiInicioDigitado = vazioPraNulo(post("dtCiInicio"));
             $tipo = vazioPraNulo(post("tipo"));
 
+            $servidorGrh = post("servidorGrh");
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
 
             # Prepara para enviar por get
-            $array = array($chefeDigitado, $cargoDigitado);
+            $array = array($chefeDigitado, $cargoDigitado, $servidorGrh);
             $array = serialize($array);
 
             # Verifica se houve alterações
@@ -795,8 +817,8 @@ if ($acesso) {
             break;
 
 ################################################################################################################
-        # Ci 90 Dias
-        case "ci90Form" :
+        # Ci 45 Dias
+        case "ci45Form" :
 
             # Voltar
             botaoVoltar("?");
@@ -805,11 +827,11 @@ if ($acesso) {
             get_DadosServidor($idServidorPesquisado);
 
             # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCi90($id);
+            $dados = $reducao->get_dadosCi45($id);
 
             # Da redução
-            $numCi90 = $dados[0];
-            $dtCi90 = $dados[1];
+            $numCi45 = $dados[0];
+            $dtCi45 = $dados[1];
             $dtPublicacao = $dados[2];
             $pgPublicacao = $dados[3];
 
@@ -819,32 +841,55 @@ if ($acesso) {
             br(3);
 
             # Título
-            tituloTable("Controle de Redução da Carga Horária<br/>Ci de 90 Dias (ou menos)");
+            tituloTable("Controle de Redução da Carga Horária<br/>Ci de 45 Dias (ou menos)");
             $painel = new Callout();
             $painel->abre();
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
-            $form = new Form('?fase=ci90FormValida&id=' . $id);
+            $form = new Form('?fase=ci45FormValida&id=' . $id);
 
             # numCiInicio
-            $controle = new Input('numCi90', 'texto', 'Ci n°:', 1);
+            $controle = new Input('numCi45', 'texto', 'Ci n°:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             #$controle->set_required(true);
             $controle->set_autofocus(true);
-            $controle->set_valor($numCi90);
-            $controle->set_title('Número da Ci informando que em 90 dias o benefício irá terminar.');
+            $controle->set_valor($numCi45);
+            $controle->set_title('Número da Ci informando que em 45 dias o benefício irá terminar.');
             $form->add_item($controle);
 
             # dtCiInicio
-            $controle = new Input('dtCi90', 'data', 'Data da Ci:', 1);
+            $controle = new Input('dtCi45', 'data', 'Data da Ci:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(3);
-            $controle->set_valor($dtCi90);
+            $controle->set_valor($dtCi45);
             #$controle->set_required(true);
-            $controle->set_title('A data da CI de 90 dias.');
+            $controle->set_title('A data da CI de 45 dias.');
+            $form->add_item($controle);
+
+            # servidor da grh
+            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(5);
+
+            # Cria combo de servidores da GRH
+            $select = "SELECT idServidor, tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+
+            $servGrh = $pessoal->select($select);
+
+            $controle->set_array($servGrh);
+            $controle->set_valor($pessoal->get_gerente(66)); // Pega o idServidor do gerente da GRH (66)
+            $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
 
             # submit
@@ -868,33 +913,34 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        case "ci90FormValida" :
+        case "ci45FormValida" :
 
             # Pega os Dados do Banco
-            $dados = $reducao->get_dadosCi90($id);
-            $numCi90 = $dados[0];
-            $dtCi90 = $dados[1];
+            $dados = $reducao->get_dadosCi45($id);
+            $numCi45 = $dados[0];
+            $dtCi45 = $dados[1];
             $dtPublicacao = $dados[2];
             $pgPublicacao = $dados[3];
 
             # Pega os dados Digitados
             $botaoEscolhido = get_post_action("salvar", "imprimir");
-            $numCi90Digitados = vazioPraNulo(post("numCi90"));
-            $dtCi90Digitado = vazioPraNulo(post("dtCi90"));
+            $numCi45Digitados = vazioPraNulo(post("numCi45"));
+            $dtCi45Digitado = vazioPraNulo(post("dtCi45"));
+            $servidorGrh = post("servidorGrh");
 
             # Verifica se houve alterações
             $alteracoes = null;
             $atividades = null;
 
             # Verifica as alterações para o log
-            if ($numCi90 <> $numCi90Digitados) {
-                $alteracoes .= '[numCi90] ' . $numCi90 . '->' . $numCi90Digitados . '; ';
+            if ($numCi45 <> $numCi45Digitados) {
+                $alteracoes .= '[numCi45] ' . $numCi45 . '->' . $numCi45Digitados . '; ';
             }
-            if ($dtCi90 <> $dtCi90Digitado) {
-                if (vazio($dtCi90Digitado)) {
-                    $alteracoes .= '[dtCi90] ' . date_to_php($dtCi90) . '->  ; ';
+            if ($dtCi45 <> $dtCi45Digitado) {
+                if (vazio($dtCi45Digitado)) {
+                    $alteracoes .= '[dtCi45] ' . date_to_php($dtCi45) . '->  ; ';
                 } else {
-                    $alteracoes .= '[dtCi90] ' . date_to_php($dtCi90) . '->' . date_to_php($dtCi90Digitado) . '; ';
+                    $alteracoes .= '[dtCi45] ' . date_to_php($dtCi45) . '->' . date_to_php($dtCi45Digitado) . '; ';
                 }
             }
 
@@ -906,14 +952,14 @@ if ($acesso) {
             if ($botaoEscolhido == "imprimir") {
 
                 # Verifica o número da Ci
-                if (vazio($numCi90Digitados)) {
-                    $msgErro .= 'Não tem número de Ci de 90 dias cadastrada!\n';
+                if (vazio($numCi45Digitados)) {
+                    $msgErro .= 'Não tem número de Ci de 45 dias cadastrada!\n';
                     $erro = 1;
                 }
 
                 # Verifica a data da CI
-                if (vazio($dtCi90Digitado)) {
-                    $msgErro .= 'Não tem data da Ci de 90 dias cadastrada!\n';
+                if (vazio($dtCi45Digitado)) {
+                    $msgErro .= 'Não tem data da Ci de 45 dias cadastrada!\n';
                     $erro = 1;
                 }
 
@@ -927,8 +973,8 @@ if ($acesso) {
             # Salva as alterações
             $pessoal->set_tabela("tbreducao");
             $pessoal->set_idCampo("idReducao");
-            $campoNome = array('numCi90', 'dtCi90');
-            $campoValor = array($numCi90Digitados, $dtCi90Digitado);
+            $campoNome = array('numCi45', 'dtCi45');
+            $campoValor = array($numCi45Digitados, $dtCi45Digitado);
             $pessoal->gravar($campoNome, $campoValor, $id);
             $data = date("Y-m-d H:i:s");
 
@@ -942,7 +988,7 @@ if ($acesso) {
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if ($botaoEscolhido == "imprimir") {
                 if ($erro == 0) {
-                    loadPage('../grhRelatorios/reducaoCi90.php?id=' . $id, "_blank");
+                    loadPage("../grhRelatorios/reducaoCi45.php?id={$id}&servidorGrh={$servidorGrh}", "_blank");
                     loadPage("?");
                 } else {
                     alert($msgErro);
@@ -991,18 +1037,18 @@ if ($acesso) {
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form('?fase=ciTerminoFormValida&id=' . $id);
 
-            # numCiInicio
+            # numCi
             $controle = new Input('numCiTermino', 'texto', 'Ci n°:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(2);
             #$controle->set_required(true);
             $controle->set_autofocus(true);
             $controle->set_valor($numCitermino);
             $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de Término do benefício.');
             $form->add_item($controle);
 
-            # dtCiInicio
+            # dtCi
             $controle = new Input('dtCiTermino', 'data', 'Data da Ci:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
@@ -1010,6 +1056,29 @@ if ($acesso) {
             $controle->set_valor($dtCitermino);
             #$controle->set_required(true);
             $controle->set_title('A data da CI de término.');
+            $form->add_item($controle);
+
+            # servidor da grh
+            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(5);
+
+            # Cria combo de servidores da GRH
+            $select = "SELECT idServidor, tbpessoa.nome 
+                 FROM tbpessoa JOIN tbservidor USING (idPessoa) 
+                               JOIN tbhistlot USING (idServidor)
+                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND tbhistlot.lotacao = 66
+                 ORDER BY tbpessoa.nome";
+
+            $servGrh = $pessoal->select($select);
+
+            $controle->set_array($servGrh);
+            $controle->set_valor($pessoal->get_gerente(66)); // Pega o idServidor do gerente da GRH (66)
+            $controle->set_title('Se é Inicial ou Renovação.');
             $form->add_item($controle);
 
             # Chefia
@@ -1057,8 +1126,8 @@ if ($acesso) {
             # Pega os Dados
             $dados = $reducao->get_dados($id);
 
-            $numCitermino = $dados["numCiTermino"];
-            $dtCitermino = $dados["dtCiTermino"];
+            $numCiTermino = $dados["numCiTermino"];
+            $dtCiTermino = $dados["dtCiTermino"];
             $dtPublicacao = $dados["dtPublicacao"];
             $pgPublicacao = $dados["pgPublicacao"];
             $periodo = $dados["periodo"];
@@ -1070,11 +1139,12 @@ if ($acesso) {
             $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
             $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
 
+            $servidorGrh = post("servidorGrh");
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");
 
             # Prepara para enviar por get
-            $array = array($chefeDigitado, $cargoDigitado);
+            $array = array($chefeDigitado, $cargoDigitado, $servidorGrh);
             $array = serialize($array);
 
             # Verifica se houve alterações
@@ -1208,7 +1278,7 @@ if ($acesso) {
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(3);
-            $controle->set_array(array(null, "Permanente", "Eventual","Duradoura"));
+            $controle->set_array(array(null, "Permanente", "Eventual", "Duradoura"));
             $controle->set_valor($necessidade);
             #$controle->set_required(true);
             $controle->set_title('Como a necessidade foi caracterizada.');
@@ -1393,7 +1463,6 @@ if ($acesso) {
                 back(1);
             }
             break;
-
 
 ################################################################################################################
     }

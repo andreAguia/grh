@@ -263,14 +263,14 @@ class ReducaoCargaHoraria {
 
     ###########################################################
 
-    function get_dadosCi90($idReducao) {
+    function get_dadosCi45($idReducao) {
 
         /**
-         * Informa os dados da ci de 90 dias
+         * Informa os dados da ci de 45 dias (antiga 90 dias)
          */
         # Pega os dados
-        $select = "SELECT numCi90,
-                        dtCi90,
+        $select = "SELECT numCi45,
+                        dtCi45,
                         dtPublicacao,
                         pgPublicacao,
                         DATE_SUB((ADDDATE(dtInicio, INTERVAL periodo MONTH)),INTERVAL 1 DAY)
@@ -503,7 +503,7 @@ class ReducaoCargaHoraria {
         $ciInicio = $dados["numCiInicio"];
         $ciTermino = $dados["numCiTermino"];
         $atoReitor = date_to_php($dados["dtAtoReitor"]);
-        $ci90 = $dados["numCi90"];
+        $ci45 = $dados["numCi45"];
         $dtTermino = date_to_php($dados["dtTermino"]);
         $tipo = $dados["tipo"];
 
@@ -522,9 +522,9 @@ class ReducaoCargaHoraria {
         }
 
         # Nome do botão de 45 Dias
-        $nomeBotao90 = "CI 45 Dias";
-        if (!is_null($ci90)) {
-            $nomeBotao90 = "CI 45 Dias n° " . $ci90;
+        $nomeBotao45 = "CI 45 Dias";
+        if (!is_null($ci45)) {
+            $nomeBotao45 = "CI 45 Dias n° " . $ci45;
         }
 
         # Nome do botão de Término
@@ -550,9 +550,9 @@ class ReducaoCargaHoraria {
             # Ci Início
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReducao);
 
-            # Ci 90 dias
-            if (($dias >= 0) AND($dias <= 90)) {
-                $menu->add_item('link', "\u{1F5A8} " . $nomeBotao90, '?fase=ci90Form&id=' . $idReducao);
+            # Ci 45 dias
+            if (($dias >= 0) AND($dias <= 45)) {
+                $menu->add_item('link', "\u{1F5A8} " . $nomeBotao45, '?fase=ci45Form&id=' . $idReducao);
             }
 
             # Ci Término    
@@ -563,7 +563,7 @@ class ReducaoCargaHoraria {
             /*
 
               $tamanhoImage = 20;
-              if(($dias >= 0) AND($dias <= 90)){
+              if(($dias >= 0) AND($dias <= 45)){
               $menu = new MenuGrafico(4);
               }else{
               $menu = new MenuGrafico(3);
@@ -577,13 +577,13 @@ class ReducaoCargaHoraria {
               $botao->set_title('Imprime a Ci de início');
               $menu->add_item($botao);
 
-              # Ci 90 dias
-              if(($dias >= 0) AND($dias <= 90)){
+              # Ci 45 dias
+              if(($dias >= 0) AND($dias <= 45)){
               $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ci90Form&id='.$idReducao);
-              $botao->set_label($nomeBotao90);
+              $botao->set_url('?fase=ci45Form&id='.$idReducao);
+              $botao->set_label($nomeBotao45);
               $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de 90 Dias');
+              $botao->set_title('Imprime a Ci de 45 Dias');
               $menu->add_item($botao);
               }
 

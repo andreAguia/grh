@@ -67,15 +67,8 @@ if ($acesso) {
     $selectEdita = 'SELECT idFuncional,
                            matricula,
                            idPerfil,
-                           situacao,';
-
-    # Somente se for estatutário ou Celetista
-    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
-        $selectEdita .= 'idConcurso,';
-    }
-
-    # os demais
-    $selectEdita .= 'idCargo,';
+                           situacao,
+                           idCargo,';
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         # Se houve transformação de regime
@@ -87,8 +80,6 @@ if ($acesso) {
     if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
         $selectEdita .= 'opcaoFenorteUenf,';
     }
-
-
 
     $selectEdita .= 'nomenclaturaOriginal,
                     dtAdmissao,
@@ -136,45 +127,6 @@ if ($acesso) {
                               ORDER BY nome');
 
     array_unshift($perfil, array(null, null));
-
-    # Pega o tipo do cargo (Adm & Tec ou Professor)
-    $tipoCargo = $pessoal->get_cargoTipo($idServidorPesquisado);
-
-    # Trata o tipo
-    if ($tipoCargo == "Adm/Tec") {
-        $select = "SELECT idconcurso,
-                          concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
-                     FROM tbconcurso
-               WHERE tipo = 1     
-            ORDER BY dtPublicacaoEdital desc";
-
-        # Pega os dados da combo concurso
-        $concurso = $pessoal->select($select);
-        $idConcurso = null;
-
-        array_unshift($concurso, array(null, null));
-    } else {
-        # Professor
-
-        $vaga = new Vaga();
-        # Preenche com o valor da tabela tbvagahistórico
-        # Que é onde fica cadastrado o concurso dos docentes
-        $idConcurso = $vaga->get_idConcursoProfessor($idServidorPesquisado);
-
-        if (!vazio($idConcurso)) {
-
-            $select = "SELECT idconcurso,
-                              concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
-                         FROM tbconcurso
-                   WHERE idConcurso = $idConcurso";
-
-            # Pega os dados da combo concurso
-            $concurso = $pessoal->select($select);
-        } else {
-            $concurso = null;
-            $idConcurso = null;
-        }
-    }
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
@@ -237,33 +189,15 @@ if ($acesso) {
             'array' => $situacao,
             'col' => 2,
             'title' => 'Situação',
-            'size' => 15)
-    );
-
-    # Somente se for estatutário ou celetista
-    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
-        array_push($campos,
-                array('linha' => 1,
-                    'nome' => 'idConcurso',
-                    'label' => 'Concurso:',
-                    'tipo' => 'combo',
-                    'array' => $concurso,
-                    'title' => 'Concurso',
-                    'padrao' => $idConcurso,
-                    'col' => 3,
-                    'size' => 15));
-    }
-
-    # Cargo
-    array_push($campos,
-            array('linha' => 2,
-                'nome' => 'idCargo',
-                'label' => 'Cargo / Área / Função:',
-                'tipo' => 'combo',
-                'array' => $cargo,
-                'title' => 'Cargo',
-                'col' => 12,
-                'size' => 15));
+            'size' => 15),
+        array('linha' => 2,
+            'nome' => 'idCargo',
+            'label' => 'Cargo / Área / Função:',
+            'tipo' => 'combo',
+            'array' => $cargo,
+            'title' => 'Cargo',
+            'col' => 12,
+            'size' => 15));
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         if ($regime == "CLT") {

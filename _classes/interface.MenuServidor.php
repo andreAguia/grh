@@ -178,7 +178,7 @@ class MenuServidor {
         }
 
         # Tempo de Serviço
-        if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
+        if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário ou clt
             $botao = new BotaoGrafico();
             $botao->set_label('Tempo de Serviço');
             $botao->set_url('servidorAverbacao.php?grh=1');
@@ -194,6 +194,13 @@ class MenuServidor {
                 $botao->set_title('Avalia a posentadoria do Servidor');
                 $menu->add_item($botao);
             }
+            
+            $botao = new BotaoGrafico();
+            $botao->set_label('Concurso');
+            $botao->set_url('servidorConcurso.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Dados do concurso');
+            $menu->add_item($botao);
         }
 
         # Cessão

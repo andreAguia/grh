@@ -25,6 +25,7 @@ if ($acesso) {
     # Pega os parâmetros dos relatórios
     $de = post('de', date('Y'));
     $para = post('para', date('Y'));
+    $motivo = post('motivo', '*');
 
     ###### Relatório 1
 
@@ -44,16 +45,22 @@ if ($acesso) {
                                  LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
                                  LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
                 WHERE YEAR(tbservidor.dtDemissao) >= "' . $de . '"
-                  AND YEAR(tbservidor.dtDemissao) <= "' . $para . '"
-             ORDER BY dtDemissao';
+                  AND YEAR(tbservidor.dtDemissao) <= "' . $para . '"';
+
+    if ($motivo <> "*") {
+        $select .= ' AND idMotivo =  ' . $motivo;
+        $motivotexto = $servidor->get_motivoAposentadoria($motivo);
+    }else{
+        $motivotexto = "Exonerados, Aposentados e Demitidos";
+    }
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     if ($de == $para) {
-        $relatorio->set_titulo('Relatório Anual de Servidores Exonerados, Aposentados e Demitidos em ' . $de);
+        $relatorio->set_titulo("Relatório Anual de Servidores<br/>{$motivotexto}<br/>{$de}");
     } else {
-        $relatorio->set_titulo("Relatório Anual de Servidores Exonerados, Aposentados e Demitidos de {$de} a {$para}");
+        $relatorio->set_titulo("Relatório Anual de Servidores<br/>{$motivotexto}<br/>{$de} a {$para}");
     }
     $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
 
@@ -65,7 +72,11 @@ if ($acesso) {
     $relatorio->set_metodo(array(null, null, null, null, "get_cargo", "get_lotacao"));
 
     $relatorio->set_conteudo($result);
-    
+
+    $listaMotivo = $servidor->select("SELECT idmotivo, motivo
+                                         FROM tbmotivo ORDER BY motivo");
+    array_unshift($listaMotivo, array('*', "-- Todos --"));
+
     $relatorio->set_formCampos(array(
         array('nome' => 'de',
             'label' => 'De:',
@@ -85,7 +96,16 @@ if ($acesso) {
             'padrao' => $para,
             'col' => 3,
             'linha' => 1),
-    ));
+        array('nome' => 'motivo',
+            'label' => 'Motivo:',
+            'tipo' => 'combo',
+            'array' => $listaMotivo,
+            'size' => 15,
+            'padrao' => $motivo,
+            'title' => 'Mês',
+            'col' => 6,
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1)));
 
     $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');

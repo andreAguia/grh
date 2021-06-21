@@ -17,7 +17,10 @@ $acesso = Verifica::acesso($idUsuario, 2);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
-
+    
+    # Título do Relatório
+    $titulo = "Relatório Anual de Servidores<br/>";
+    
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -26,6 +29,7 @@ if ($acesso) {
     $de = post('de', date('Y'));
     $para = post('para', date('Y'));
     $motivo = post('motivo', '*');
+    $perfil = post('perfil', '*');
 
     ###### Relatório 1
 
@@ -47,22 +51,31 @@ if ($acesso) {
                 WHERE YEAR(tbservidor.dtDemissao) >= "' . $de . '"
                   AND YEAR(tbservidor.dtDemissao) <= "' . $para . '"';
 
+    # Motivo
     if ($motivo <> "*") {
         $select .= ' AND idMotivo =  ' . $motivo;
-        $motivotexto = $servidor->get_motivoAposentadoria($motivo);
-    }else{
-        $motivotexto = "Exonerados, Aposentados e Demitidos";
+        $titulo .= $servidor->get_motivoAposentadoria($motivo);
+    } else {
+        $titulo .= "Exonerados, Aposentados e Demitidos";
     }
+    
+    # Perfil
+    if ($perfil <> "*") {
+        $select .= ' AND tbservidor.idPerfil =  ' . $perfil;
+        $titulo .= '<br/>'.$servidor->get_perfilNome($perfil);
+    }
+    
+    $select .= ' ORDER BY tbservidor.dtDemissao';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     if ($de == $para) {
-        $relatorio->set_titulo("Relatório Anual de Servidores<br/>{$motivotexto}<br/>{$de}");
+        $relatorio->set_titulo("{$titulo}<br/>{$de}");
     } else {
-        $relatorio->set_titulo("Relatório Anual de Servidores<br/>{$motivotexto}<br/>{$de} a {$para}");
+        $relatorio->set_titulo("{$titulo}<br/>{$de} a {$para}");
     }
-    $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
+    $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
     $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Publicação', 'Motivo'));
     $relatorio->set_align(array('center', 'left', 'center', 'center', 'left', 'left', 'center', 'center', 'center', 'center', 'left'));
@@ -77,24 +90,28 @@ if ($acesso) {
                                          FROM tbmotivo ORDER BY motivo");
     array_unshift($listaMotivo, array('*', "-- Todos --"));
 
+    $listaPerfil = $servidor->select("SELECT idPerfil, nome
+                                         FROM tbperfil ORDER BY nome");
+    array_unshift($listaPerfil, array('*', "-- Todos --"));
+
     $relatorio->set_formCampos(array(
         array('nome' => 'de',
             'label' => 'De:',
             'tipo' => 'texto',
             'size' => 4,
-            'title' => 'Ano',
+            'title' => 'de',
             'onChange' => 'formPadrao.submit();',
             'padrao' => $de,
-            'col' => 3,
+            'col' => 2,
             'linha' => 1),
         array('nome' => 'para',
             'label' => 'Para:',
             'tipo' => 'texto',
             'size' => 4,
-            'title' => 'Ano',
+            'title' => 'Para',
             'onChange' => 'formPadrao.submit();',
             'padrao' => $para,
-            'col' => 3,
+            'col' => 2,
             'linha' => 1),
         array('nome' => 'motivo',
             'label' => 'Motivo:',
@@ -102,8 +119,18 @@ if ($acesso) {
             'array' => $listaMotivo,
             'size' => 15,
             'padrao' => $motivo,
-            'title' => 'Mês',
-            'col' => 6,
+            'title' => 'Motivo da Saída',
+            'col' => 4,
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1),
+        array('nome' => 'perfil',
+            'label' => 'Perfil:',
+            'tipo' => 'combo',
+            'array' => $listaPerfil,
+            'size' => 15,
+            'padrao' => $perfil,
+            'title' => 'Perfil do servidor',
+            'col' => 4,
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 

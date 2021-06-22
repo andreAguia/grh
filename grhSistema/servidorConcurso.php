@@ -136,7 +136,7 @@ if ($acesso) {
         # Pega os dados da combo concurso
         $ocupanteAnterior = $pessoal->select($select);
 
-        array_unshift($ocupanteAnterior, array(null, null));
+        array_unshift($ocupanteAnterior, array(null, "-- Inicial --"));
     } else {
         # Professor
 

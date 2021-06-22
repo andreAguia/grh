@@ -136,7 +136,8 @@ if ($acesso) {
         # Pega os dados da combo concurso
         $ocupanteAnterior = $pessoal->select($select);
 
-        array_unshift($ocupanteAnterior, array(null, "-- Inicial --"));
+        array_unshift($ocupanteAnterior, array("0", "-- primeiro servidor a ocupar a vaga --"));
+        array_unshift($ocupanteAnterior, array(null, null));
     } else {
         # Professor
 
@@ -181,6 +182,7 @@ if ($acesso) {
                     'array' => $ocupanteAnterior,
                     'title' => 'Servidor que ocupava anteriormente esta vaga (quando houver)',
                     'optgroup' => true,
+                    'padrao' => null,
                     'col' => 7,
                     'size' => 15));
     }

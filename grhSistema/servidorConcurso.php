@@ -17,6 +17,16 @@ $acesso = Verifica::acesso($idUsuario, 2);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
+    
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh', false);
+    if ($grh) {
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Cadastro de concurso";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+    }
 
     # Verifica a fase do programa
     $fase = get('fase', 'ver');

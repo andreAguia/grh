@@ -123,7 +123,7 @@ if ($acesso) {
         $dtAdmPesquisado = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
 
         $select = "SELECT idServidor,
-                          tbpessoa.nome,
+                          CONCAT(date_format(dtAdmissao,'%d/%m/%Y'),' - ',date_format(dtDemissao,'%d/%m/%Y'),' - ',tbpessoa.nome),
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbcargo USING (idCargo)
@@ -132,6 +132,7 @@ if ($acesso) {
                  AND dtDemissao < '{$dtAdmPesquisado}'
                  AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})
                  AND (idPerfil = 1 OR idPerfil = 4)
+                 AND idConcurso IS NOT NULL
             ORDER BY tbcargo.nome, tbpessoa.nome";
 
         # Pega os dados da combo concurso

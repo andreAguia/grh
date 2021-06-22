@@ -39,8 +39,13 @@ if ($acesso) {
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Dados do Concurso');
 
+    # Pega o tipo do cargo (Adm & Tec ou Professor)
+    $tipoCargo = $pessoal->get_cargoTipo($idServidorPesquisado);
+
     # select do edita
-    $objeto->set_selectEdita("SELECT idConcurso,
+    if ($tipoCargo == "Adm/Tec") {
+        $objeto->set_selectEdita("SELECT idConcurso,
+                                     idServidorOcupanteAnterior,
                                      dtPublicResultadoExameMedico,
                                      pgPublicResultadoExameMedico,
                                      dtPublicAtoNomeacao,
@@ -52,6 +57,20 @@ if ($acesso) {
                                      obsConcurso
                                 FROM tbservidor
                                WHERE idServidor = {$idServidorPesquisado}");
+    } else {
+        $objeto->set_selectEdita("SELECT idConcurso,
+                                     dtPublicResultadoExameMedico,
+                                     pgPublicResultadoExameMedico,
+                                     dtPublicAtoNomeacao,
+                                     pgPublicAtoNomeacao,
+                                     dtPublicAtoInvestidura,
+                                     pgPublicAtoInvestidura,
+                                     dtPublicTermoPosse,
+                                     pgPublicTermoPosse,
+                                     obsConcurso
+                                FROM tbservidor
+                               WHERE idServidor = {$idServidorPesquisado}");
+    }
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
@@ -76,11 +95,11 @@ if ($acesso) {
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
 
-    # Pega o tipo do cargo (Adm & Tec ou Professor)
-    $tipoCargo = $pessoal->get_cargoTipo($idServidorPesquisado);
-
     # Trata o tipo
     if ($tipoCargo == "Adm/Tec") {
+        /*
+         *  Combo concurso
+         */
         $select = "SELECT idconcurso,
                           concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
                      FROM tbconcurso
@@ -92,6 +111,32 @@ if ($acesso) {
         $idConcurso = null;
 
         array_unshift($concurso, array(null, null));
+
+        /*
+         *  Combo ocupante anterior
+         */
+
+        # Pega o cargo do servidor pesquisado
+        $idCargoPesquisado = $pessoal->get_idTipoCargoServidor($idServidorPesquisado);
+
+        # Pega a data de admissão do servidor pesquisado
+        $dtAdmPesquisado = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
+
+        $select = "SELECT idServidor,
+                          tbpessoa.nome,
+                          tbcargo.nome
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbcargo USING (idCargo)
+               WHERE situacao <> 1
+                 AND idTipoCargo = {$idCargoPesquisado}
+                 AND dtDemissao < '{$dtAdmPesquisado}'
+                 AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})    
+            ORDER BY tbcargo.nome, tbpessoa.nome";
+
+        # Pega os dados da combo concurso
+        $ocupanteAnterior = $pessoal->select($select);
+
+        array_unshift($ocupanteAnterior, array(null, null));
     } else {
         # Professor
 
@@ -116,7 +161,7 @@ if ($acesso) {
     }
 
     # Campos para o formulario
-    $objeto->set_campos(array(
+    $campos = array(
         array('linha' => 1,
             'nome' => 'idConcurso',
             'label' => 'Concurso:',
@@ -124,73 +169,89 @@ if ($acesso) {
             'array' => $concurso,
             'title' => 'Concurso',
             'padrao' => $idConcurso,
-            'col' => 6,
-            'size' => 15),
-        array('linha' => 2,
-            'nome' => 'dtPublicResultadoExameMedico',
-            'label' => 'Resultado do Exame Médico:',
-            'tipo' => 'data',
-            'title' => 'Data da publicação do resultado do exame mádico',
-            'col' => 4,
-            'fieldset' => "Publicações",
-            'size' => 15),
-        array('linha' => 2,
-            'nome' => 'pgPublicResultadoExameMedico',
-            'label' => 'Página:',
-            'tipo' => 'texto',
-            'size' => 6,
-            'title' => 'Página da publicação',
-            'col' => 2),
-        array('linha' => 2,
-            'nome' => 'dtPublicAtoNomeacao',
-            'label' => 'Ato de Nomeação:',
-            'tipo' => 'data',
-            'title' => 'Data da publicação do ato de nomeação',
-            'col' => 4,
-            'size' => 15),
-        array('linha' => 2,
-            'nome' => 'pgPublicAtoNomeacao',
-            'label' => 'Página:',
-            'tipo' => 'texto',
-            'size' => 6,
-            'title' => 'Página da publicação',
-            'col' => 2),
-        array('linha' => 3,
-            'nome' => 'dtPublicAtoInvestidura',
-            'label' => 'Ato de Investidura:',
-            'tipo' => 'data',
-            'title' => 'Data da publicação do ato de investidura',
-            'col' => 4,
-            'size' => 15),
-        array('linha' => 3,
-            'nome' => 'pgPublicAtoInvestidura',
-            'label' => 'Página:',
-            'tipo' => 'texto',
-            'size' => 6,
-            'title' => 'Página da publicação',
-            'col' => 2),
-        array('linha' => 3,
-            'nome' => 'dtPublicTermoPosse',
-            'label' => 'Termo de Posse:',
-            'tipo' => 'data',
-            'title' => 'Data da publicação do termo de posse',
-            'col' => 4,
-            'size' => 15),
-        array('linha' => 3,
-            'nome' => 'pgPublicTermoPosse',
-            'label' => 'Página:',
-            'tipo' => 'texto',
-            'size' => 3,            
-            'title' => 'Página da publicação',
-            'col' => 2),
-        array('linha' => 4,
-            'col' => 12,
-            'fieldset' => "fecha",
-            'nome' => 'obsConcurso',
-            'label' => 'Observação:',
-            'tipo' => 'textarea',
-            'size' => array(80, 3)),
-    ));
+            'col' => 5,
+            'size' => 15));
+
+    if ($tipoCargo == "Adm/Tec") {
+        array_push($campos,
+                array('linha' => 1,
+                    'nome' => 'idServidorOcupanteAnterior',
+                    'label' => 'Ocupando a vaga de:',
+                    'tipo' => 'combo',
+                    'array' => $ocupanteAnterior,
+                    'title' => 'Servidor que ocupava anteriormente esta vaga (quando houver)',
+                    'optgroup' => true,
+                    'col' => 7,
+                    'size' => 15));
+    }
+
+    array_push($campos,
+            array('linha' => 2,
+                'nome' => 'dtPublicResultadoExameMedico',
+                'label' => 'Resultado do Exame Médico:',
+                'tipo' => 'data',
+                'title' => 'Data da publicação do resultado do exame mádico',
+                'col' => 4,
+                'fieldset' => "Publicações",
+                'size' => 15),
+            array('linha' => 2,
+                'nome' => 'pgPublicResultadoExameMedico',
+                'label' => 'Página:',
+                'tipo' => 'texto',
+                'size' => 6,
+                'title' => 'Página da publicação',
+                'col' => 2),
+            array('linha' => 2,
+                'nome' => 'dtPublicAtoNomeacao',
+                'label' => 'Ato de Nomeação:',
+                'tipo' => 'data',
+                'title' => 'Data da publicação do ato de nomeação',
+                'col' => 4,
+                'size' => 15),
+            array('linha' => 2,
+                'nome' => 'pgPublicAtoNomeacao',
+                'label' => 'Página:',
+                'tipo' => 'texto',
+                'size' => 6,
+                'title' => 'Página da publicação',
+                'col' => 2),
+            array('linha' => 3,
+                'nome' => 'dtPublicAtoInvestidura',
+                'label' => 'Ato de Investidura:',
+                'tipo' => 'data',
+                'title' => 'Data da publicação do ato de investidura',
+                'col' => 4,
+                'size' => 15),
+            array('linha' => 3,
+                'nome' => 'pgPublicAtoInvestidura',
+                'label' => 'Página:',
+                'tipo' => 'texto',
+                'size' => 6,
+                'title' => 'Página da publicação',
+                'col' => 2),
+            array('linha' => 3,
+                'nome' => 'dtPublicTermoPosse',
+                'label' => 'Termo de Posse:',
+                'tipo' => 'data',
+                'title' => 'Data da publicação do termo de posse',
+                'col' => 4,
+                'size' => 15),
+            array('linha' => 3,
+                'nome' => 'pgPublicTermoPosse',
+                'label' => 'Página:',
+                'tipo' => 'texto',
+                'size' => 3,
+                'title' => 'Página da publicação',
+                'col' => 2),
+            array('linha' => 4,
+                'col' => 12,
+                'fieldset' => "fecha",
+                'nome' => 'obsConcurso',
+                'label' => 'Observação:',
+                'tipo' => 'textarea',
+                'size' => array(80, 3)));
+
+    $objeto->set_campos($campos);
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -219,7 +280,7 @@ if ($acesso) {
 
         # Preenche com os cargos
         foreach ($conteudo as $item) {
-            $menu->add_item('linkWindow',date_to_php($item[1]) .' - '.$item[0], PASTA_CONCURSO . $item[3] . ".pdf",$item[4]);
+            $menu->add_item('linkWindow', date_to_php($item[1]) . ' - ' . $item[0], PASTA_CONCURSO . $item[3] . ".pdf", $item[4]);
         }
         $objeto->set_menuLateralEditar($menu);
     }

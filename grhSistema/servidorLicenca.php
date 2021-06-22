@@ -61,7 +61,7 @@ if ($acesso) {
     $script = '<script type="text/javascript" language="javascript">
             
             $(document).ready(function(){';
-    
+
     # Retira todos os controles
     $script .= '
                 $("#alta").hide();
@@ -127,7 +127,7 @@ if ($acesso) {
                 }
             }
         }
-    }else{
+    } else {
         # Se for inclusão a mudança se faz pelo que está na combo
         $script .= '
             // Guarda na variável id o valor alterado
@@ -223,7 +223,7 @@ if ($acesso) {
 
     $script .= '});
                      });</script>';
-    
+
     $script .= '<script type="text/javascript" language="javascript">
         
             $(document).ready(function(){
@@ -388,7 +388,6 @@ if ($acesso) {
                                    idServidor
                               FROM tblicenca WHERE idLicenca = ' . $id);
 
-
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
         #$objeto->set_linkExcluir('?fase=excluir');
@@ -441,100 +440,101 @@ if ($acesso) {
         array_unshift($result, array('Inicial', ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
         # Habilita ou não os controles de acordo com a licença
         # Campos para o formulario
-        $objeto->set_campos(array(array('nome'      => 'idTpLicenca',
-                'label'     => 'Tipo de Afastamento ou Licença:',
-                'tipo'      => 'combo',
-                'size'      => 50,
-                'array'     => $result,
-                'required'  => true,
+        $objeto->set_campos(array(
+            array('nome' => 'idTpLicenca',
+                'label' => 'Tipo de Afastamento ou Licença:',
+                'tipo' => 'combo',
+                'size' => 50,
+                'array' => $result,
+                'required' => true,
                 'autofocus' => true,
-                'title'     => 'Tipo do Adastamento/Licença.',
-                'col'       => 12,
-                'linha'     => 1),
-            array('nome'  => 'alta',
+                'title' => 'Tipo do Adastamento/Licença.',
+                'col' => 12,
+                'linha' => 1),
+            array('nome' => 'alta',
                 'label' => 'Alta: *',
-                'tipo'  => 'combo',
-                'size'  => 20,
+                'tipo' => 'combo',
+                'size' => 20,
                 'array' => array(array(null, null),
                     array(2, "Não"),
                     array(1, "Sim")),
-                'col'   => 2,
+                'col' => 2,
                 'linha' => 2),
-            array('nome'  => 'dtInicioPeriodo',
+            array('nome' => 'dtInicioPeriodo',
                 'label' => 'Período Aquisitivo Início:',
-                'tipo'  => 'data',
-                'size'  => 20,
+                'tipo' => 'data',
+                'size' => 20,
                 'title' => 'Data de início do período aquisitivo',
-                'col'   => 3,
+                'col' => 3,
                 'linha' => 3),
-            array('nome'  => 'dtFimPeriodo',
+            array('nome' => 'dtFimPeriodo',
                 'label' => 'Período Aquisitivo Término:',
-                'tipo'  => 'data',
-                'size'  => 20,
-                'col'   => 3,
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
                 'title' => 'Data de término do período aquisitivo',
                 'linha' => 3),
-            array('nome'     => 'dtInicial',
-                'label'    => 'Data Inicial:',
-                'tipo'     => 'data',
+            array('nome' => 'dtInicial',
+                'label' => 'Data Inicial:',
+                'tipo' => 'data',
                 'required' => true,
-                'size'     => 20,
-                'col'      => 3,
-                'title'    => 'Data do início.',
-                'linha'    => 4),
-            array('nome'  => 'numDias',
-                'label' => 'Dias:',
-                'tipo'  => 'numero',
-                'size'  => 5,
-                'title' => 'Número de dias.',
-                'col'   => 2,
+                'size' => 20,
+                'col' => 3,
+                'title' => 'Data do início.',
                 'linha' => 4),
-            array('nome'  => 'dtTermino',
+            array('nome' => 'numDias',
+                'label' => 'Dias:',
+                'tipo' => 'numero',
+                'size' => 5,
+                'title' => 'Número de dias.',
+                'col' => 2,
+                'linha' => 4),
+            array('nome' => 'dtTermino',
                 'label' => 'Data de Termino (opcional):',
-                'tipo'  => 'data',
-                'size'  => 20,
-                'col'   => 3,
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
                 'title' => 'Data de Termino.',
                 'linha' => 4),
-            array('nome'  => 'processo',
+            array('nome' => 'processo',
                 'label' => 'Processo:',
-                'tipo'  => 'processo',
-                'size'  => 30,
-                'col'   => 5,
+                'tipo' => 'processo',
+                'size' => 30,
+                'col' => 5,
                 'title' => 'Número do Processo',
                 'linha' => 5),
-            array('nome'  => 'dtPublicacao',
+            array('nome' => 'dtPublicacao',
                 'label' => 'Data da Pub. no DOERJ:',
-                'tipo'  => 'data',
-                'size'  => 20,
+                'tipo' => 'data',
+                'size' => 20,
                 'title' => 'Data da Publicação no DOERJ.',
-                'col'   => 3,
+                'col' => 3,
                 'linha' => 6),
-            array('nome'  => 'dtPericia',
+            array('nome' => 'dtPericia',
                 'label' => 'Data da Perícia:',
-                'tipo'  => 'data',
-                'size'  => 20,
+                'tipo' => 'data',
+                'size' => 20,
                 'title' => 'Data da Perícia.',
-                'col'   => 3,
+                'col' => 3,
                 'linha' => 7),
-            array('nome'  => 'num_Bim',
+            array('nome' => 'num_Bim',
                 'label' => 'Número da Bim:',
-                'tipo'  => 'texto',
-                'size'  => 30,
-                'col'   => 4,
+                'tipo' => 'texto',
+                'size' => 30,
+                'col' => 4,
                 'title' => 'Número da Bim',
                 'linha' => 7),
             array('linha' => 8,
-                'nome'  => 'obs',
+                'nome' => 'obs',
                 'label' => 'Observação:',
-                'tipo'  => 'textarea',
-                'size'  => array(80, 3)),
-            array('nome'   => 'idServidor',
-                'label'  => 'idServidor:',
-                'tipo'   => 'hidden',
+                'tipo' => 'textarea',
+                'size' => array(80, 3)),
+            array('nome' => 'idServidor',
+                'label' => 'idServidor:',
+                'tipo' => 'hidden',
                 'padrao' => $idServidorPesquisado,
-                'size'   => 5,
-                'linha'  => 9)));
+                'size' => 5,
+                'linha' => 9)));
 
         # Log
         $objeto->set_idUsuario($idUsuario);
@@ -554,7 +554,6 @@ if ($acesso) {
         $botaoRel->set_target("_blank");
 
         $objeto->set_botaoListarExtra(array($botaoRel));
-
 
         ################################################################
 

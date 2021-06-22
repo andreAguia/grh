@@ -1045,6 +1045,27 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_idTipoCargoServidor
+     * Informa o id do cargo do tipo de cargo de um servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function get_idTipoCargoServidor($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo
+                         FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                              JOIN tbtipocargo USING (idTipoCargo)
+                        WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+        $idcargo = $row[0];
+
+        return $idcargo;
+    }
+
+    ###########################################################
+
+    /**
      * Método get_matricula
      * Informa a matricula do servidor
      * 

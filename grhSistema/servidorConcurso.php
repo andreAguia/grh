@@ -176,7 +176,7 @@ if ($acesso) {
         array_push($campos,
                 array('linha' => 1,
                     'nome' => 'idServidorOcupanteAnterior',
-                    'label' => 'Ocupando a vaga de:',
+                    'label' => 'Anteriormente Ocupada por:',
                     'tipo' => 'combo',
                     'array' => $ocupanteAnterior,
                     'title' => 'Servidor que ocupava anteriormente esta vaga (quando houver)',

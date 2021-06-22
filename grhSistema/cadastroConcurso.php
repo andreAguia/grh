@@ -511,80 +511,10 @@ if ($acesso) {
 
             if ($tipo == 1) {
 
+                tituloTable("Vagas");
+                br();
+
                 $grid2 = new Grid();
-                $grid2->abreColuna(12);
-
-                # Exibe os problemas (se tiver)
-                $problemas = 0;
-
-                $vagaAdm = new VagaAdm();
-
-                # Verifica se tem servidores sem cargo cadastrado neste concurso
-                $semCargo = $vagaAdm->get_numSemCargo($id);
-                if ($semCargo > 0) {
-                    label("Problema Encontrado", "alert");
-                    callout("Existem {$semCargo} servidor(es) empossado(s) neste concurso sem cargo cadastrado!!", "warning");
-                    $problemas = 1;
-                }
-
-                # Verifica se o número total de empossados é menor ou igual ao número de vagas
-                $empossados = $vagaAdm->get_numServidoresConcurso($id);
-                $vagas = $vagaAdm->get_numVagas($id);
-                if ($empossados > $vagas) {
-                    label("Problema Encontrado", "alert");
-                    callout("Existem {$empossados} servidor(es) empossado(s) neste concurso, mas só existem {$vagas} vagas disponibilizadas!!<br/>Deve ter algum servidor cadastrado em concurso errado", "warning");
-                    $problemas = 1;
-                }
-
-                # Verifica se teva algum empossado nesse concurso
-                if ($empossados == 0) {
-                    label("Atenção", "warning");
-                    callout("Não existe nenhum servidor empossado por este concurso! Isto está certo?", "warning");
-                    $problemas = 1;
-                }
-
-
-                # Verifica se o número de empossados por cada cargo é menor ou igual ao número de vagas
-                # Pega os cargos disponibilizados pelo concurso
-                $cargos = $vagaAdm->get_CargosEVagas($id);
-                foreach ($cargos as $item) {
-                    if ($vagaAdm->get_numServidoresConcurso($id, $item[0]) > $item[1]) {
-                        label("Problema Encontrado", "alert");
-                        callout("Existem {$vagaAdm->get_numServidoresConcurso($id, $item[0])} servidor(es) empossado(s) neste concurso para o cargo de {$pessoal->get_nomeTipoCargo($item[0])}, mas só existem {$item[1]} vagas disponíveis para este cargo!!", "warning");
-                        $problemas = 1;
-                    }
-                }
-
-                # Verifica se tem servidor de cargo não disponibilizado
-                # Pega os cargos disponibilizados pelo concurso
-                $cargosEmpossados = $vagaAdm->get_CargosEmpossados($id);
-                $cargos = $vagaAdm->get_Cargos($id);
-
-                foreach ($cargosEmpossados as $semp) {
-                    $achei = false;
-                    foreach ($cargos as $cdisp) {
-                        if ($semp[0] == $cdisp[0]) {
-                            $achei = true;
-                            continue;
-                        }
-
-                        if (empty($semp[0])) {
-                            $achei = true;
-                            continue;
-                        }
-                    }
-                    if (!$achei) {
-                        label("Problema Encontrado", "alert");
-                        callout("Existem servidores empossados em cargo não disponibilizados!!", "warning");
-                        $problemas = 1;
-                    }
-                }
-
-                if ($problemas == 0) {
-                    callout("Nenhum Problema Encontrado!");
-                }
-                
-                $grid2->fechaColuna();
                 $grid2->abreColuna(6);
 
                 # Exibe as vagas 
@@ -621,20 +551,99 @@ if ($acesso) {
                     $tabela->set_idCampo('idConcursoVaga');
 
                     $tabela->show();
-
-                    $grid2->fechaColuna();
-                    $grid2->abreColuna(6);
-
-                    ###
-                    # Exibe os servidores deste concurso
-                    $concurso->exibeQuadroServidoresConcursoPorCargo($id);
-
-                    $grid2->fechaColuna();
-                    $grid2->fechaGrid();
                 } else {
                     tituloTable("Vagas de Servidores Administrativos e Técnicos");
                     callout("Nenhuma vaga cadastrada", "secondary");
                 }
+
+                $grid2->fechaColuna();
+                $grid2->abreColuna(6);
+
+                ###
+                # Exibe os servidores deste concurso
+                $concurso->exibeQuadroServidoresConcursoPorCargo($id);
+
+                $grid2->fechaColuna();
+                $grid2->abreColuna(12);
+
+                # Exibe os problemas (se tiver)
+                $problemas = [];
+
+                $vagaAdm = new VagaAdm();
+
+                # Verifica se tem servidores sem cargo cadastrado neste concurso
+                $semCargo = $vagaAdm->get_numSemCargo($id);
+                if ($semCargo > 0) {
+                    $problemas[] = "Existe(m) {$semCargo} servidor(es) empossado(s) neste concurso sem cargo cadastrado!!";
+                }
+
+                # Verifica se o número de servidores ativos é menor ou igual ao número de vagas
+                $empossadosAtivos = $vagaAdm->get_numServidoresAtivosConcurso($id);
+                $vagas = $vagaAdm->get_numVagas($id);
+                if ($empossadosAtivos > $vagas) {
+                    $problemas[] = "Existe(m) {$empossadosAtivos} servidor(es) ativo(s) deste concurso, mas só existem {$vagas} vagas disponibilizadas!!<br/>Deve ter algum servidor cadastrado em concurso errado";
+                }
+
+                # Verifica se teva algum empossado nesse concurso
+                $empossados = $vagaAdm->get_numServidoresConcurso($id);
+                if ($empossados == 0) {
+                    $problemas[] = "Não existe nenhum servidor empossado por este concurso! Isto está certo?";
+                }
+
+                # Verifica se o número de empossados por cada cargo é menor ou igual ao número de vagas
+                # Pega os cargos disponibilizados pelo concurso
+                $cargos = $vagaAdm->get_CargosEVagas($id);
+                foreach ($cargos as $item) {
+                    if ($vagaAdm->get_numServidoresAtivosConcurso($id, $item[0]) > $item[1]) {
+                        $problemas[] = "Existe(m) {$vagaAdm->get_numServidoresAtivosConcurso($id, $item[0])} servidor(es) ativos empossado(s) neste concurso para o cargo de {$pessoal->get_nomeTipoCargo($item[0])}, mas só existem {$item[1]} vagas disponíveis para este cargo!!";
+                    }
+                }
+
+                # Verifica se tem servidor de cargo não disponibilizado
+                # Pega os cargos disponibilizados pelo concurso
+                $cargosEmpossados = $vagaAdm->get_CargosEmpossados($id);
+                $cargos = $vagaAdm->get_Cargos($id);
+
+                foreach ($cargosEmpossados as $semp) {
+                    $achei = false;
+                    foreach ($cargos as $cdisp) {
+                        if ($semp[0] == $cdisp[0]) {
+                            $achei = true;
+                            continue;
+                        }
+
+                        if (empty($semp[0])) {
+                            $achei = true;
+                            continue;
+                        }
+                    }
+                    if (!$achei) {
+                        $problemas[] = "Existem servidores empossados em cargo não disponibilizado!";
+                    }
+                }
+                
+                if (count($problemas) > 0) {
+
+                    titulotable("Observações");
+                    $painel = new Callout();
+                    $painel->abre();
+
+                    # Marcador
+                    $flag = 0;
+
+                    foreach ($problemas as $item) {
+                        p($item, "pproblemas");
+                        $flag++;
+                        if ($flag <> count($problemas)) {
+                            hr("vagasAdm");
+                        }
+                    }
+
+                    $painel->fecha();
+                }
+
+                $grid2->fechaColuna();
+                $grid2->fechaGrid();
             } else {
                 # Exibe as vagas de Docente
                 $select = 'SELECT tblotacao.DIR,
@@ -848,7 +857,7 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             $menu->show();
-            
+
             $grid->fechaColuna();
 
             #######################################################3

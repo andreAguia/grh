@@ -688,6 +688,23 @@ tr#totalVagas{
 }
 
 /*******************************************
+ * Área de Vagas de administrativos e técnicos
+ ******************************************/
+
+p#pproblemas {
+    font-size: 14px;
+    margin: 0px;
+    padding-left: 15px;
+}
+
+hr#vagasAdm{
+    padding: 0px;
+    margin: 5px;
+    border: 1px solid #000;
+}
+
+
+/*******************************************
  * Manual de Procedimentos
  *******************************************/
 

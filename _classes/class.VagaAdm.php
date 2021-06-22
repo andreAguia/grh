@@ -167,6 +167,46 @@ class VagaAdm {
     ###########################################################
 
     /**
+     * Método get_servidoresConcurso
+     * 
+     * Exibe o número de servidores ativos e Inativos em um determinado concurso
+     */
+    public function get_numServidoresAtivosConcurso($idConcurso, $idTipoCargo = null) {
+
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $concurso = new Concurso();
+        $dados = $concurso->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+
+        $select = 'SELECT tbservidor.idServidor                             
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)';
+
+        # Se for concurso de professor
+        if ($tipo == 2) {
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
+        }
+
+        $select .= ' WHERE situacao = 1';
+
+        if (!empty($idTipoCargo)) {
+            $select .= " AND tbcargo.idTipoCargo = {$idTipoCargo}";
+        }
+
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
+        }
+
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
      * Método get_servidoresAtivosConcurso
      * 
      * Exibe o número de servidores ativos em um determinado vaga

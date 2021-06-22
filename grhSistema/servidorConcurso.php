@@ -130,7 +130,8 @@ if ($acesso) {
                WHERE situacao <> 1
                  AND idTipoCargo = {$idCargoPesquisado}
                  AND dtDemissao < '{$dtAdmPesquisado}'
-                 AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})    
+                 AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})
+                 AND (idPerfil = 1 OR idPerfil = 4)
             ORDER BY tbcargo.nome, tbpessoa.nome";
 
         # Pega os dados da combo concurso

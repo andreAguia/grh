@@ -1130,8 +1130,12 @@ class Pessoal extends Bd {
                         WHERE cpf = "' . $cpf . '"';
 
         $idPessoa = parent::select($select, false);
-
-        return $idPessoa[0];
+        
+        if (empty($idPessoa[0])) {
+            return null;
+        } else {
+            return $idPessoa[0];
+        }
     }
 
     ###########################################################

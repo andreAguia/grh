@@ -152,7 +152,9 @@ if ($acesso) {
             }
 
             # Verifica se o CPF já está cadastrado
-            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
+            if ($erro <> 1) {
+                $idPessoa = $pessoal->get_idPessoaCPF($cpf);
+            }
 
             # Verifia se houve erro 
             if ($erro == 1) {
@@ -229,11 +231,14 @@ if ($acesso) {
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
             # pega o nome e o pis da pessoa (caso ja esteja cadastrado)
-            if (!is_null($idPessoa)) {
+            if (!empty($idPessoa)) {
                 $nome = $pessoal->get_nomeidPessoa($idPessoa);
                 $pis = $pessoal->get_Pis($idPessoa);
                 $dtNasc = date_to_bd($pessoal->get_dataNascimentoIdPessoa($idPessoa));
                 $sexo = $pessoal->get_sexoidPessoa($idPessoa);
+            }else{
+                $sexo = null;
+                $dtNasc  = null;
             }
 
             # Botão voltar
@@ -329,7 +334,6 @@ if ($acesso) {
             $controle->set_onChange('exibeEscondeCampos();');
             $form->add_item($controle);
 
-
             #$p->show();
             #$form->add_item($p);
             # Lotação               
@@ -365,7 +369,7 @@ if ($acesso) {
                 $controle->set_size(20);
                 $controle->set_linha(3);
                 $controle->set_col(3);
-                $controle->set_required(true);
+                #$controle->set_required(true); // Retirado a pedido de Ana Terezinha em 23/06/2021
                 $controle->set_title('O PIS/Pasep do servidor.');
                 $form->add_item($controle);
             }
@@ -461,7 +465,7 @@ if ($acesso) {
                     $erro = 1;
                 }
             }
-echo "->>>>".$matricula;
+            echo "->>>>" . $matricula;
             # Verifica se a matrícula já existe
             if (!empty($matricula)) {
                 if ($pessoal->get_existeMatricula($matricula)) {
@@ -498,28 +502,28 @@ echo "->>>>".$matricula;
                 $erro = 1;
             }
 
-            # Verifica o Pis              
-            if (is_null($idPessoa)) { // Verifica se a pessoa está cadastrada
-                # Verifica se o Pis foi digitado 
-                if (vazio($pisPasep)) {
-                    $msgErro .= 'Você tem que informar o Pis/Pasep do Servidor!\n';
-                    $erro = 1;
-                }
-
-                # Verifica se o pis já existe
-                $idPessoaDuplicataPis = $pessoal->get_idPessoaPis($pisPasep);
-                if (!is_null($idPessoaDuplicataPis)) {
-                    $msgErro .= 'Esse Pis/Pasep já está cadastrado para o servidor: ' . $pessoal->get_nomeidPessoa($idPessoaDuplicataPis) . '!\n';
-                    $erro = 1;
-                }
-
-                # Verifica validade do pis (ainda não encontrei funçao que funcione)
-                #if ($valida->pis($pisPasep)) 
-                #{
-                #    $msgErro.='O número do Pis não é válido !!\n';
-                #    $erro = 1;
-                #}
-            }
+            # Verifica o Pis     // Retirado a pedido de Ana Terezinha em 23/06/2021         
+//            if (is_null($idPessoa)) { // Verifica se a pessoa está cadastrada
+//                # Verifica se o Pis foi digitado 
+//                if (vazio($pisPasep)) {
+//                    $msgErro .= 'Você tem que informar o Pis/Pasep do Servidor!\n';
+//                    $erro = 1;
+//                }
+//
+//                # Verifica se o pis já existe
+//                $idPessoaDuplicataPis = $pessoal->get_idPessoaPis($pisPasep);
+//                if (!is_null($idPessoaDuplicataPis)) {
+//                    $msgErro .= 'Esse Pis/Pasep já está cadastrado para o servidor: ' . $pessoal->get_nomeidPessoa($idPessoaDuplicataPis) . '!\n';
+//                    $erro = 1;
+//                }
+//
+//                # Verifica validade do pis (ainda não encontrei funçao que funcione)
+//                #if ($valida->pis($pisPasep)) 
+//                #{
+//                #    $msgErro.='O número do Pis não é válido !!\n';
+//                #    $erro = 1;
+//                #}
+//            }
 
             # Verifica se o Cargo foi digitado
             if (($perfil == 1) AND (empty($cargo))) {

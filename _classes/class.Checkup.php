@@ -216,6 +216,7 @@ class Checkup {
             $select .= ' 
          GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = ' . date('Y') . '
+             AND MAX(tbtrienio.percentual) < 60
          ORDER BY 6)
          UNION
          (SELECT DISTINCT tbservidor.idFuncional,  
@@ -312,6 +313,7 @@ class Checkup {
             $select .= '        
          GROUP BY tbservidor.idServidor
          HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) < ' . date('Y') . '
+             AND MAX(tbtrienio.percentual) < 60
          ORDER BY 6)
          UNION
          (SELECT DISTINCT tbservidor.idFuncional,  

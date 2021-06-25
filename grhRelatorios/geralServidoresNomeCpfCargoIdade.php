@@ -95,15 +95,6 @@ if ($acesso) {
             'padrao' => $lotacao,
             'title' => 'Lotação',
             'onChange' => 'formPadrao.submit();',
-            'linha' => 1),
-        array('nome' => 'idade',
-            'label' => 'Idade Máxima:',
-            'tipo' => 'numero',
-            'array' => $listaLotacao,
-            'size' => 30,
-            'padrao' => 47,
-            'title' => 'Idade',
-            'onChange' => 'formPadrao.submit();',
             'linha' => 1)
     ));
 

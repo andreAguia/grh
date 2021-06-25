@@ -1,7 +1,6 @@
 <?php
 
-class Cessao
-{
+class Cessao {
 
     /**
      * Abriga as várias rotina referentes a cessão de servidor da Uenf para outro órgão
@@ -10,8 +9,7 @@ class Cessao
      */
 ##############################################################
 
-    public function getDados($idHistCessao = null)
-    {
+    public function getDados($idHistCessao = null) {
         # Verifica se o id foi informado
         if (vazio($idHistCessao)) {
             alert("É necessário informar o id.");
@@ -30,8 +28,7 @@ class Cessao
 
 ######################################################################################################################
 
-    public function exibeDados($idHistCessao)
-    {
+    public function exibeDados($idHistCessao) {
 
         # Limita o tamanho da tela
         $grid = new Grid();
@@ -84,13 +81,12 @@ class Cessao
 
 ######################################################################################################################
 
-    public function getDataInicialFrequencia($idHistCessao)
-    {
+    public function getDataInicialFrequencia($idHistCessao) {
         /*
          * Exibe o primeiro dia do mês da frequencia de cessão que ainda não foi atestada
          * Para o sistema sugerir no formulário de cadastro de frequência
          */
-
+        
         # Reserva uma variavel para a data escolhida
         $dataEscolhida = null;
 
@@ -106,7 +102,7 @@ class Cessao
         # Pega os Dados das Frequencias cadastradas desta Cessao
         $select = "SELECT dtFinal, idServidor FROM tbfrequencia WHERE idHistCessao = {$idHistCessao} ORDER BY dtFinal DESC";
         $dadosFrequencia = $servidor->select($select, false);
-
+        
         # Verifica as frequencias
         if (empty($dadosFrequencia)) {
             # Nao tem nenhuma frequência pega a data inicial da cessao
@@ -115,9 +111,9 @@ class Cessao
             # Se tiver frequência pega a data posterior a última frequência cadastrada
             $dataEscolhida = addDias(date_to_php($dadosFrequencia[0]), 1, false);
         }
-
+        
         # Pega o ultimo dia do mês
-        $ultimoDia = ultimoDiaMes($dataEscolhida);
+        $ultimoDia = ultimoDiaMes($dataEscolhida);        
 
         # Quando tiver data final...
         if (!empty($dtFinal)) {
@@ -135,13 +131,13 @@ class Cessao
             }
         }
 
-        # Primeira Verificação       
         # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
         $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
         $verifica = $verificaDados->verifica();
 
         # Se tiver afastamento Temos que avaliar as datas deste afastamento
         if (!empty($verifica)) {
+            
             # Pega as datas do afastamento
             $dtInicialAfast = date_to_php($verifica["dtInicial"]);
             $dtFinalAfast = date_to_php($verifica["dtFinal"]);
@@ -184,8 +180,7 @@ class Cessao
 
 ######################################################################################################################
 
-    public function getDataFinalFrequencia($idHistCessao)
-    {
+    public function getDataFinalFrequencia($idHistCessao) {
         /*
          * Exibe o ultimo dia do mês da frequencia de cessão que ainda não foi atestada
          * Para o sistema sugerir no formulário de cadastro de frequência
@@ -233,8 +228,7 @@ class Cessao
 
 ######################################################################################################################
 
-    public function getStatus($idHistCessao)
-    {
+    public function getStatus($idHistCessao) {
         /*
          * Exibe Vigente   - quando a cessao ainda esta vigente e
          *       Terminada - quando a cessao ja terminou
@@ -259,8 +253,7 @@ class Cessao
 
 ######################################################################################################################
 
-    public function lotacaoCorreta($idServidor)
-    {
+    public function lotacaoCorreta($idServidor) {
         /*
          * Verifica se o Servidor cedido está na lotaçãop correta
          */
@@ -277,8 +270,7 @@ class Cessao
 
 ######################################################################################################################
 
-    public function getNumCessaoVigente($idServidor)
-    {
+    public function getNumCessaoVigente($idServidor) {
         /*
          * Retorna o número de cessões vigentes
          * Objetivo é encontrar problemas de servidor com mais de 1 cessão vigente
@@ -297,8 +289,7 @@ class Cessao
 
 ######################################################################################################################
 
-    public function getNumLancamentosFrequencia($idHistCessao)
-    {
+    public function getNumLancamentosFrequencia($idHistCessao) {
         /*
          * Retorna o número de lançamento de frequencia nesta cessão
          */

@@ -1,6 +1,11 @@
 <?php
 
 class VerificaDadosAfastamento{
+    
+    /*
+     * Classe que verifica se o servidor $idServidor teve algum afastamento 
+     * no período informado: $dtInicial e $dtFinal
+     */
 
     private $idServidor;
     private $dtInicial;
@@ -19,14 +24,14 @@ class VerificaDadosAfastamento{
         }
 
         if (empty($dtInicial)) {
-            alert("É necessário informar a data inicial.");
+            alert("É necessário informar a data inicialc. ({$idServidor} - {$dtInicial} - {$dtFinal})");
             return;
         } else {
             $this->dtInicial = date_to_bd($dtInicial);
         }
 
         if (empty($dtFinal)) {
-            alert("É necessário informar o data Finalr.");
+            alert("É necessário informar o data Final.");
             return;
         } else {
             $this->dtFinal = date_to_bd($dtFinal);
@@ -36,6 +41,10 @@ class VerificaDadosAfastamento{
     ###########################################################
 
     public function verifica() {
+        
+        /*
+         * Executa de fato a verificação e retorna
+         */
         
         /*
          *  Férias
@@ -92,7 +101,7 @@ class VerificaDadosAfastamento{
          *  Licenças sem vencimentos
          */
         $pessoal = new Pessoal();
-         $select = "SELECT dtInicial, ADDDATE(dtInicial,numDias-1) as drFinal
+         $select = "SELECT dtInicial, ADDDATE(dtInicial,numDias-1) as dtFinal
                  FROM tblicencasemvencimentos
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
@@ -101,6 +110,9 @@ class VerificaDadosAfastamento{
              ORDER BY 1";
 
         $afast = $pessoal->select($select,false);
+        
+        #var_dump($afast);
+        
         if (!empty($afast)) {
             return $afast;
         }
@@ -152,6 +164,7 @@ class VerificaDadosAfastamento{
              ORDER BY 1";
 
         $afast = $pessoal->select($select,false);
+        
         if (!empty($afast)) {
             return $afast;
         }

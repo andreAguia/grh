@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              // Servidor logado
-$idServidorPesquisado = null;   // Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -19,6 +20,16 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $cessao = new Cessao();
+    $intra = new Intra();
+
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh', false);
+    if ($grh) {
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Controle de frequência de servidor da Uebf cedido para outro órgão";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+    }
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -95,15 +106,15 @@ if ($acesso) {
                        ''
                   FROM tbferias
                  WHERE idServidor = {$idServidorPesquisado}";
-    
-    if(empty($dtTerminoCessao)){
+
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
     }
-    
+
     # Licenças
     $select .= ") UNION (
                 SELECT YEAR(tblicenca.dtInicial),
@@ -117,10 +128,10 @@ if ($acesso) {
                       FROM tblicenca JOIN tbservidor USING (idServidor)
                                      JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE tbservidor.idServidor = {$idServidorPesquisado}";
-    
-    if(empty($dtTerminoCessao)){
+
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
@@ -139,9 +150,9 @@ if ($acesso) {
                   FROM tblicencapremio JOIN tbservidor USING (idServidor)
                  WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if(empty($dtTerminoCessao)){
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
@@ -159,10 +170,10 @@ if ($acesso) {
                        ''
                      FROM tbatestado JOIN tbservidor USING (idServidor)
                     WHERE tbservidor.idServidor = {$idServidorPesquisado}";
-    
-    if(empty($dtTerminoCessao)){
+
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (dtInicio >= '{$dtInicialCessao}' OR ADDDATE(dtInicio,numDias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((dtInicio BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(dtInicio,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (dtInicio < '{$dtInicialCessao}' AND ADDDATE(dtInicio,numDias-1) > '{$dtTerminoCessao}'))";
@@ -182,9 +193,9 @@ if ($acesso) {
                                                JOIN tbtipolicenca USING (idTpLicenca)
                  WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if(empty($dtTerminoCessao)){
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (dtInicial >= '{$dtInicialCessao}' OR ADDDATE(dtInicial,numDias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((dtInicial BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (dtInicial < '{$dtInicialCessao}' AND ADDDATE(dtInicial,numDias-1) > '{$dtTerminoCessao}'))";
@@ -203,9 +214,9 @@ if ($acesso) {
                      FROM tbtrabalhotre JOIN tbservidor USING (idServidor)
                      WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if(empty($dtTerminoCessao)){
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (data >= '{$dtInicialCessao}' OR ADDDATE(data,dias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((data BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(data,dias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (data < '{$dtInicialCessao}' AND ADDDATE(data,dias-1) > '{$dtTerminoCessao}'))";
@@ -224,9 +235,9 @@ if ($acesso) {
                      FROM tbfolga JOIN tbservidor USING (idServidor)
                      WHERE tbservidor.idServidor = {$idServidorPesquisado}";
 
-    if(empty($dtTerminoCessao)){
+    if (empty($dtTerminoCessao)) {
         $select .= " AND (data >= '{$dtInicialCessao}' OR ADDDATE(data,dias-1) >= '{$dtInicialCessao}')";
-    }else{
+    } else {
         $select .= " AND ((data BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (ADDDATE(data,dias-1) BETWEEN '{$dtInicialCessao}' AND '{$dtTerminoCessao}') 
                       OR (data < '{$dtInicialCessao}' AND ADDDATE(data,dias-1) > '{$dtTerminoCessao}'))";
@@ -278,7 +289,7 @@ if ($acesso) {
     # Editar e excluir condicional
     $objeto->set_editarCondicional('?fase=editar', '<span class=\'label primary\'>Frequência</span>', 5, "=");
     $objeto->set_excluirCondicional('?fase=excluir', '<span class=\'label primary\'>Frequência</span>', 5, "=");
-    
+
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -353,7 +364,7 @@ if ($acesso) {
     $botao2->set_url('?afastamento=' . $afastamento);
     $botao2->set_class("{$botao} button");
 
-    $objeto->set_botaoListarExtra([$botao2,$botao1]);
+    $objeto->set_botaoListarExtra([$botao2, $botao1]);
 
     ################################################################
 
@@ -371,15 +382,15 @@ if ($acesso) {
         case "gravar" :
             $objeto->gravar($id, "servidorFrequenciaExtra.php");
             break;
-        
+
         case "exibeObs" :
             $grid = new Grid();
             $grid->abreColuna(12);
-            
+
             br();
             tituloTable("Observações");
             echo "<pre>{$pessoal->get_obs($idServidorPesquisado)}</pre>";
-            
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;

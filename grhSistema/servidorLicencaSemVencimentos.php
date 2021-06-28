@@ -152,6 +152,7 @@ if ($acesso) {
                                      crp,
                                      dtCrp,
                                      numCrp,
+                                     numSeiCrp,
                                      obs,
                                      idServidor
                                 FROM tblicencasemvencimentos
@@ -309,7 +310,14 @@ if ($acesso) {
             'title' => 'Data do início.',
             'linha' => 5),
         array('nome' => 'numCrp',
-            'label' => 'Número CRP no SEI:',
+            'label' => 'Número do CRP:',
+            'tipo' => 'texto',
+            'size' => 10,
+            'col' => 3,
+            'title' => 'Número CRP.',
+            'linha' => 5),
+        array('nome' => 'numSeiCrp',
+            'label' => 'Número do documento CRP no SEI:',
             'tipo' => 'texto',
             'size' => 10,
             'col' => 3,

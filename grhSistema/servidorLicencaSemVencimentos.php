@@ -303,7 +303,7 @@ if ($acesso) {
                 array(true, "Sim")),
             'size' => 10),
         array('nome' => 'dtCrp',
-            'label' => 'Data de emissão do CRP:',
+            'label' => 'Data de emissão da CRP:',
             'tipo' => 'data',
             'size' => 10,
             'col' => 3,

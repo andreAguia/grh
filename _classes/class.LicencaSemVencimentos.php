@@ -240,7 +240,7 @@ class LicencaSemVencimentos
         $dtRetorno = $dados["dtRetorno"];
         $dttermino = $dados["dtTermino"];
 
-        # Verifica p CRP
+        # Verifica o CRP
         if ($crp) {
             echo "Sim";
         } else {

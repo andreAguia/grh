@@ -420,9 +420,9 @@ if ($acesso) {
             #p("Detalhes das Atualizações","center","f16");
             br();
 
-            # Limita ainda mais a tela paara o painel
+            # Limita ainda mais a tela para o painel
             $grid = new Grid("center");
-            $grid->abreColuna(8);
+            $grid->abreColuna(10);
 
             # Pega os dados 
             $atualizacoes = $intra->get_atualizacoes();

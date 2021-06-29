@@ -66,6 +66,11 @@ if ($acesso) {
     # Seleciona o tipo de cargo
     $listaCargo = $servidor->select('SELECT distinct tipo,tipo from tbtipocargo');
 
+    # Cria um array com os anos possíveis
+    $anoInicial = 1993;
+    $anoAtual = date('Y');
+    $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
+
     $relatorio->set_formCampos(array(
         array('nome' => 'cargo',
             'label' => 'Tipo de Cargo:',
@@ -79,9 +84,10 @@ if ($acesso) {
             'linha' => 1),
         array('nome' => 'parametroAno',
             'label' => 'Ano:',
-            'tipo' => 'texto',
+            'tipo' => 'combo',
             'size' => 10,
             'padrao' => $parametroAno,
+            'array' => $anoExercicio,
             'title' => 'Ano',
             'onChange' => 'formPadrao.submit();',
             'col' => 3,

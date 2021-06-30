@@ -11,6 +11,7 @@ class ListaAfastamentos {
     private $ano = null;
     private $mes = null;
     private $lotacao = null;
+    private $cargo = null;
     private $linkEditar = null;
     private $idFuncional = true;
     private $nomeSimples = false;
@@ -73,6 +74,19 @@ class ListaAfastamentos {
          * @syntax $input->set_lotacao($lotacao);
          */
         $this->lotacao = $lotacao;
+    }
+
+    ###########################################################
+
+    public function set_cargo($cargo) {
+        /**
+         * Informa o cargo dos servidores com afastamento
+         *
+         * @param $lotacao string null A lotacao
+         *
+         * @syntax $input->set_lotacao($lotacao);
+         */
+        $this->cargo = $cargo;
     }
 
     ###########################################################
@@ -190,7 +204,7 @@ class ListaAfastamentos {
          */
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
-        
+
         # Constroi a data
         if (!empty($this->mes)) {
             $data = $this->ano . '-' . $this->mes . '-01';
@@ -211,7 +225,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                          tbservidor.idServidor,';
         }
 
@@ -227,6 +241,8 @@ class ListaAfastamentos {
                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                       LEFT JOIN tblicenca USING (idServidor)
                                       LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
@@ -272,7 +288,20 @@ class ListaAfastamentos {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
-        
+
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################  
         # Licença Prêmio
         $select .= ') UNION (
@@ -283,7 +312,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                           tbservidor.idServidor,';
         }
 
@@ -296,6 +325,8 @@ class ListaAfastamentos {
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                                   LEFT JOIN tblicencapremio USING (idServidor)
+                                                  LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                                  LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbtipolicenca.idTpLicenca = 6 
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
@@ -340,6 +371,19 @@ class ListaAfastamentos {
             }
         }
 
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################
         # Férias
         $select .= ') UNION (
@@ -350,7 +394,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                           tbservidor.idServidor,';
         }
 
@@ -363,6 +407,8 @@ class ListaAfastamentos {
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbferias USING (idServidor)
+                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                     LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
@@ -406,6 +452,19 @@ class ListaAfastamentos {
             }
         }
 
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################
         # Faltas abonadas
         $select .= ') UNION (
@@ -416,7 +475,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                           tbservidor.idServidor,';
         }
 
@@ -429,6 +488,8 @@ class ListaAfastamentos {
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbatestado USING (idServidor)
+                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                     LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
@@ -472,6 +533,19 @@ class ListaAfastamentos {
             }
         }
 
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################
         # Trabalhando TRE
         $select .= ') UNION (
@@ -482,7 +556,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                           tbservidor.idServidor,';
         }
 
@@ -495,6 +569,8 @@ class ListaAfastamentos {
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbtrabalhotre USING (idServidor)
+                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                     LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
@@ -538,6 +614,19 @@ class ListaAfastamentos {
             }
         }
 
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################
         # Folga TRE
         $select .= ') UNION (
@@ -548,7 +637,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                           tbservidor.idServidor,';
         }
 
@@ -561,6 +650,8 @@ class ListaAfastamentos {
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbfolga USING (idServidor)
+                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                     LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
@@ -604,6 +695,19 @@ class ListaAfastamentos {
             }
         }
 
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################
         # Licença sem vencimentos
         $select .= ') UNION (
@@ -614,7 +718,7 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' tbservidor.idServidor,
                           tbservidor.idServidor,';
         }
 
@@ -629,6 +733,8 @@ class ListaAfastamentos {
                                               LEFT JOIN tblicencasemvencimentos USING (idServidor)
                                               LEFT JOIN tbperfil USING (idPerfil)
                                                    JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
+                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                              LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                              WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)           
                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
@@ -673,7 +779,20 @@ class ListaAfastamentos {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
-        
+
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
         #######################  
         # Licença Médica Sem Alta
         $select .= ') UNION (
@@ -684,10 +803,10 @@ class ListaAfastamentos {
         }
 
         if (empty($this->idServidor)) {
-            $select .= ' tbpessoa.nome,
+            $select .= ' T2.idServidor,
                          T2.idServidor,';
         }
-        
+
         $select .= '       tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
@@ -699,11 +818,13 @@ class ListaAfastamentos {
                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                            LEFT JOIN tblicenca USING (idServidor)
                            LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                           LEFT JOIN tbcargo ON (T2.idCargo = tbcargo.idCargo)
+                           LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = T2.idServidor)
                       AND (idTpLicenca = 1 OR idTpLicenca = 30)
                       AND alta <> 1
                       AND idLicenca = (SELECT idLicenca FROM tblicenca AS T1 WHERE T1.idServidor = T2.idServidor ORDER BY dtInicial DESC LIMIT 1)';
-        
+
         # Tipo de afastamento
         if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
@@ -726,7 +847,7 @@ class ListaAfastamentos {
         }
 
         if (!empty($this->mes)) {
-            $select .= ' AND ("' . $data . '" > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))';            
+            $select .= ' AND ("' . $data . '" > ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1))';
         } elseif (!empty($this->ano)) {
             $select .= ' AND (YEAR(tblicenca.dtInicial) <= ' . $this->ano . ')';
         }
@@ -738,6 +859,19 @@ class ListaAfastamentos {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
             }
         }
 
@@ -793,11 +927,14 @@ class ListaAfastamentos {
 
                 $tabela->set_classe(array(null, null, "pessoal"));
                 $tabela->set_metodo(array(null, null, "get_lotacaoSimples"));
+                $tabela->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
 
                 if ($this->nomeSimples) {
-                    $tabela->set_funcao(array(null, "get_nomeSimples", null, "date_to_php", null, "date_to_php"));
+                    $tabela->set_classe(array(null, "pessoal", "pessoal"));
+                    $tabela->set_metodo(array(null, "get_nomeSimples", "get_lotacaoSimples"));
                 } else {
-                    $tabela->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
+                    $tabela->set_classe(array(null, "pessoal", "pessoal"));
+                    $tabela->set_metodo(array(null, "get_nomeECargo", "get_lotacaoSimples"));
                 }
 
                 $tabela->set_rowspan(1);
@@ -807,13 +944,14 @@ class ListaAfastamentos {
                 $tabela->set_label(array('Nome', null, 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
                 $tabela->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
 
-                $tabela->set_classe(array(null, "pessoal"));
-                $tabela->set_metodo(array(null, "get_lotacaoSimples"));
+                $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
 
                 if ($this->nomeSimples) {
-                    $tabela->set_funcao(array("get_nomeSimples", null, "date_to_php", null, "date_to_php"));
+                    $tabela->set_classe(array("pessoal", "pessoal"));
+                    $tabela->set_metodo(array("get_nomeSimples", "get_lotacaoSimples"));
                 } else {
-                    $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+                    $tabela->set_classe(array("pessoal", "pessoal"));
+                    $tabela->set_metodo(array("get_nomeECargo", "get_lotacaoSimples"));
                 }
 
                 $tabela->set_rowspan(0);
@@ -872,33 +1010,29 @@ class ListaAfastamentos {
             $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
 
-            $relatorio->set_classe(array(null, null, "pessoal"));
-            $relatorio->set_metodo(array(null, null, "get_lotacaoSimples"));
+            $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
 
             if ($this->nomeSimples) {
-                $relatorio->set_funcao(array(null, "get_nomeSimples", null, "date_to_php", null, "date_to_php"));
+                $relatorio->set_classe(array(null, "pessoal", "pessoal"));
+                $relatorio->set_metodo(array(null, "get_nomeSimples", "get_lotacaoSimples"));
             } else {
-                $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
+                $relatorio->set_classe(array(null, "pessoal", "pessoal"));
+                $relatorio->set_metodo(array(null, "get_nomeECargo", "get_lotacaoSimples"));
             }
-
-            #$relatorio->set_rowspan(1);
-            #$relatorio->set_grupoCorColuna(1);
         } else {
 
             $relatorio->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
-
-            $relatorio->set_classe(array(null, "pessoal"));
-            $relatorio->set_metodo(array(null, "get_lotacaoSimples"));
+            
+            $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
 
             if ($this->nomeSimples) {
-                $relatorio->set_funcao(array("get_nomeSimples", null, "date_to_php", null, "date_to_php"));
+                $relatorio->set_classe(array("pessoal", "pessoal"));
+                $relatorio->set_metodo(array("get_nomeSimples", "get_lotacaoSimples"));
             } else {
-                $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+                $relatorio->set_classe(array("pessoal", "pessoal"));
+                $relatorio->set_metodo(array("get_nomeECargo", "get_lotacaoSimples"));
             }
-
-            #$relatorio->set_rowspan(0);
-            #$relatorio->set_grupoCorColuna(0);
         }
 
         $result = $pessoal->select($select);

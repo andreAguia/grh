@@ -39,6 +39,7 @@ if ($acesso) {
     $parametroMes = post('parametroMes', get_session('parametroMes', date('m')));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
     $parametroTipo = post('parametroTipo', get_session('parametroTipo'));
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
 
     # atribui lotação padrão quanfo vem de grh.php
     if ($grh) {
@@ -50,6 +51,7 @@ if ($acesso) {
     set_session('parametroMes', $parametroMes);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroTipo', $parametroTipo);
+    set_session('parametroCargo', $parametroCargo);
 
     # Começa uma nova página
     $page = new Page();
@@ -154,7 +156,36 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(5);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            # Cargos
+            $result1 = $pessoal->select('SELECT tbcargo.idCargo, 
+                                                    concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) as cargo
+                                              FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                           LEFT JOIN tbarea USING (idArea)    
+                                      ORDER BY 2');
+
+            # cargos por nivel
+            $result2 = $pessoal->select('SELECT cargo,cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
+
+            # junta os dois
+            $result = array_merge($result2, $result1);
+
+            # acrescenta Professor
+            array_unshift($result, array('Professor', 'Professores'));
+
+            # acrescenta todos
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroCargo', 'combo', 'Cargo - Área - Função:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cargo');
+            $controle->set_array($result);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(7);
             $form->add_item($controle);
 
             # Tipo do afastamento
@@ -172,8 +203,8 @@ if ($acesso) {
             $controle->set_array($result);
             $controle->set_valor($parametroTipo);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_linha(2);
+            $controle->set_col(5);
             $form->add_item($controle);
 
             $form->show();
@@ -185,6 +216,9 @@ if ($acesso) {
             $afast->set_mes($parametroMes);
             $afast->set_tipo($parametroTipo);
             $afast->set_lotacao($parametroLotacao);
+            if ($parametroCargo <> "*") {
+                $afast->set_cargo($parametroCargo);
+            }
             $afast->set_linkEditar('?fase=editaServidor');
             $afast->exibeTabela();
 
@@ -216,6 +250,9 @@ if ($acesso) {
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
             $afast->set_lotacao($parametroLotacao);
+            if ($parametroCargo <> "*") {
+                $afast->set_cargo($parametroCargo);
+            }
             $afast->set_tipo($parametroTipo);
             $afast->set_linkEditar('?fase=editaServidor');
             $afast->exibeRelatorio();

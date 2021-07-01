@@ -2154,7 +2154,49 @@ class Pessoal extends Bd {
         }
     }
 
+     ###########################################################
+
+    /**
+     * Método get_nomeELotacao
+     * fornece o nome e lotação de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeELotacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_lotacao($idServidor)
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeELotacao
+     * fornece o nome e lotação de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeELotacaoEPerfilESituacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_lotacao($idServidor),
+                    $this->get_perfil($idServidor),
+                    $this->get_situacao($idServidor)
+            );
+        }
+    }
+
     ##########################################################
+
+
 
     /**
      * Método get_nomeSimples

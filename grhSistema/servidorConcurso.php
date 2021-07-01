@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -30,6 +31,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'ver');
+    $origem = get_session("origem");
 
     # Começa uma nova página
     $page = new Page();
@@ -86,12 +88,17 @@ if ($acesso) {
     }
 
     # Caminhos
-    $objeto->set_linkGravar('?fase=gravar');
-    #$objeto->set_linkListar('?');
-    $objeto->set_linkListar('servidorMenu.php');
+    $objeto->set_linkGravar('?fase=gravar');   
 
     # botão voltar
-    $objeto->set_voltarForm('servidorMenu.php');
+    if (is_null($origem)) {
+        $objeto->set_voltarForm('servidorMenu.php');
+        $objeto->set_linkListar('servidorMenu.php');
+    } else {
+        $objeto->set_voltarForm($origem);
+        $objeto->set_linkListar($origem);
+    }
+    
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);
@@ -230,7 +237,7 @@ if ($acesso) {
                 'label' => 'Resultado do Exame Médico:',
                 'tipo' => 'data',
                 'title' => 'Data da publicação do resultado do exame médico',
-                'col' => 4,                
+                'col' => 4,
                 'size' => 15),
             array('linha' => 3,
                 'nome' => 'pgPublicResultadoExameMedico',

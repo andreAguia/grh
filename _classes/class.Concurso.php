@@ -200,8 +200,7 @@ class Concurso {
             array("Inativos", $inativosS, $inativosC, $inativosS + $inativosC),
             array("Total", $totals, $totalc, $totals + $totalc));
 
-
-        # Exemplo de tabela simples
+        # tabela
         $tabela = new Tabela();
         $tabela->set_titulo("Professores");
         $tabela->set_conteudo($array);
@@ -438,12 +437,78 @@ class Concurso {
         #$tabela->set_width(array(30, 15, 15, 15, 15));
         $tabela->set_align(array("left"));
 
-        $tabela->set_colunaSomatorio([1,2,3]);
+        $tabela->set_colunaSomatorio([1, 2, 3]);
         $tabela->set_textoSomatorio("Total:");
         $tabela->set_totalRegistro(false);
 
         $tabela->show();
     }
 
-    #####################################################################################
+    ###########################################################
+
+    public function exibePublicacoesServidor($idServidor) {
+        
+        # Monta o select
+        $select = "SELECT dtPublicConcursoResultado,
+                          pgPublicConcursoResultado,
+                          dtPublicResultadoExameMedico,
+                          pgPublicResultadoExameMedico,
+                          dtPublicAtoNomeacao,
+                          pgPublicAtoNomeacao,
+                          dtPublicAtoInvestidura,
+                          pgPublicAtoInvestidura,
+                          dtPublicTermoPosse,
+                          pgPublicTermoPosse
+                     FROM tbservidor
+                     WHERE idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $conteudo = $pessoal->select($select, false);
+
+        if (!empty($conteudo[0])) {
+            p("Res. Concurso: " . date_to_php($conteudo[0]) . " - pag: " . trataNulo($conteudo[1]), "pLinha1");
+        }
+
+        if (!empty($conteudo[2])) {
+            p("Res. Exame Médico: " . date_to_php($conteudo[2]) . " - pag: " . trataNulo($conteudo[3]), "pLinha1");
+        }
+        
+        if (!empty($conteudo[4])) {
+            p("Ato Nomeação: " . date_to_php($conteudo[4]) . " - pag: " . trataNulo($conteudo[5]), "pLinha1");
+        }
+        
+        if (!empty($conteudo[6])) {
+            p("Ato Investidura: " . date_to_php($conteudo[6]) . " - pag: " . trataNulo($conteudo[7]), "pLinha1");
+        }
+        
+        if (!empty($conteudo[8])) {
+            p("Termo de Posse: " . date_to_php($conteudo[8]) . " - pag: " . trataNulo($conteudo[9]), "pLinha1");
+        }
+    }
+    
+     ###########################################################
+
+    public function exibeOcupanteAnterior($idServidor) {
+        
+        # Monta o select
+        $select = "SELECT idServidorOcupanteAnterior
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $conteudo = $pessoal->select($select, false);
+        
+        if(is_null($conteudo[0])){
+            return null;
+        }
+        
+        if($conteudo[0] == 0){
+            return "primeiro servidor a ocupar a vaga";
+        }
+        
+        if(is_numeric($conteudo[0])){
+            return $pessoal->get_nome($conteudo[0]);
+        }
+    }
+
 }

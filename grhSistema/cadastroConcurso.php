@@ -1199,7 +1199,7 @@ if ($acesso) {
             $tabela->set_classe([null, null, "pessoal", "Concurso", "Concurso"]);
             $tabela->set_metodo([null, null, "get_nomeELotacaoEPerfilESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
             #$tabela->set_funcao([null, null, null, null, "date_to_php"]);
-            $tabela->set_width(array(20, 6, 22, 20, 22, 5));
+            $tabela->set_width(array(15, 6, 22, 25, 22, 5));
             $tabela->set_align(array("left", "center", "left", "left"));
 
             # Botão de exibição dos servidores com permissão a essa regra

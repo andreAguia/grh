@@ -419,7 +419,7 @@ class ListaServidores {
 
         # Pega o time inicial
         $time_start = microtime(true);
-
+        
         # Executa rotina interna
         $this->prepara();
 

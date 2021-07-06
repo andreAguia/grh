@@ -28,9 +28,6 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # pega a origem (se tiver)
-    $origem = get('origem', get_session('origem'));
-
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -72,12 +69,7 @@ if ($acesso) {
             $menu = new MenuBar();
 
             # Voltar
-            if (empty($origem)) {
-                $botao = new Link("Voltar", "grh.php");
-            } else {
-                $botao = new Link("Voltar", "{$origem}.php");
-                set_session('origem', $origem);
-            }
+            $botao = new Link("Voltar", "areaConcursoProf.php");
 
             $botao->set_class('button');
             $botao->set_title('Voltar a página anterior');

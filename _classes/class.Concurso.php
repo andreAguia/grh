@@ -84,18 +84,18 @@ class Concurso {
         $painel = new Callout("primary");
         $painel->abre();
 
+        $anobase = $conteudo["anobase"];
+        $dtPublicacaoEdital = date_to_php($conteudo["dtPublicacaoEdital"]);
+        $regime = $conteudo["regime"];
+        $tipo = $conteudo["tipo"];
+
         if ($editar) {
-            $btnEditar = new Link("Editar", "?fase=editardeFato&id=" . $this->idConcurso);
+            $btnEditar = new Link("Editar", "cadastroConcurso.php?fase=editar&id={$idConcurso}");
             $btnEditar->set_class('button tiny secondary');
             $btnEditar->set_id('editarVaga');
             $btnEditar->set_title('Editar o Concurso');
             $btnEditar->show();
         }
-
-        $anobase = $conteudo["anobase"];
-        $dtPublicacaoEdital = date_to_php($conteudo["dtPublicacaoEdital"]);
-        $regime = $conteudo["regime"];
-        $tipo = $conteudo["tipo"];
 
         # trata o tipo
         if ($tipo == 1) {
@@ -208,7 +208,8 @@ class Concurso {
         #$tabela->set_width(array(80,20));
         $tabela->set_align(array("left", "center"));
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
                 'id' => 'totalVagas')));
@@ -348,6 +349,33 @@ class Concurso {
     #####################################################################################
 
     /**
+     * Método get_numVagasConcurso
+     * 
+     * Informa o numero de vagas por concurso
+     */
+    public function get_totalVagasConcurso($idConcursoVaga) {
+
+        # Verifica o parêmetro
+        if (empty($idConcursoVaga)) {
+            return null;
+        }
+        
+        # Monta o select
+        $select = "SELECT vagasNovas,
+                          vagasReposicao
+                      FROM tbconcursovaga
+                     WHERE idConcursoVaga = {$idConcursoVaga}";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        return $row[0] + $row[1];
+    }
+
+    #####################################################################################
+
+    /**
      * Método get_numPublicacaoConcurso
      * 
      * Informa o numero de publicação por concurso
@@ -447,7 +475,7 @@ class Concurso {
     ###########################################################
 
     public function exibePublicacoesServidor($idServidor) {
-        
+
         # Monta o select
         $select = "SELECT dtPublicConcursoResultado,
                           pgPublicConcursoResultado,
@@ -466,30 +494,30 @@ class Concurso {
         $conteudo = $pessoal->select($select, false);
 
         if (!empty($conteudo[0])) {
-            p("Res. Concurso: " . date_to_php($conteudo[0]) . " (p" . trataNulo($conteudo[1].")"), "pLinha1");
+            p("Res. Concurso: " . date_to_php($conteudo[0]) . " (p" . trataNulo($conteudo[1] . ")"), "pLinha1");
         }
 
         if (!empty($conteudo[2])) {
-            p("Res. Exame Médico: " . date_to_php($conteudo[2]) . " (p" . trataNulo($conteudo[3].")"), "pLinha1");
+            p("Res. Exame Médico: " . date_to_php($conteudo[2]) . " (p" . trataNulo($conteudo[3] . ")"), "pLinha1");
         }
-        
+
         if (!empty($conteudo[4])) {
-            p("Ato Nomeação: " . date_to_php($conteudo[4]) . " (p" . trataNulo($conteudo[5].")"), "pLinha1");
+            p("Ato Nomeação: " . date_to_php($conteudo[4]) . " (p" . trataNulo($conteudo[5] . ")"), "pLinha1");
         }
-        
+
         if (!empty($conteudo[6])) {
-            p("Ato Investidura: " . date_to_php($conteudo[6]) . " (p" . trataNulo($conteudo[7].")"), "pLinha1");
+            p("Ato Investidura: " . date_to_php($conteudo[6]) . " (p" . trataNulo($conteudo[7] . ")"), "pLinha1");
         }
-        
+
         if (!empty($conteudo[8])) {
-            p("Termo de Posse: " . date_to_php($conteudo[8]) . " (p" . trataNulo($conteudo[9].")"), "pLinha1");
+            p("Termo de Posse: " . date_to_php($conteudo[8]) . " (p" . trataNulo($conteudo[9] . ")"), "pLinha1");
         }
     }
-    
-     ###########################################################
+
+    ###########################################################
 
     public function exibeOcupanteAnterior($idServidor) {
-        
+
         # Monta o select
         $select = "SELECT idServidorOcupanteAnterior
                      FROM tbservidor
@@ -497,18 +525,108 @@ class Concurso {
 
         $pessoal = new Pessoal();
         $conteudo = $pessoal->select($select, false);
-        
-        if(is_null($conteudo[0])){
+
+        if (is_null($conteudo[0])) {
             return null;
         }
-        
-        if($conteudo[0] == 0){
+
+        if ($conteudo[0] == 0) {
             return "primeiro servidor a ocupar a vaga";
         }
-        
-        if(is_numeric($conteudo[0])){
+
+        if (is_numeric($conteudo[0])) {
             return $pessoal->get_nome($conteudo[0]);
         }
     }
 
+    ###########################################################
+
+    /**
+     * Método get_tipo
+     * 
+     * Informa o tipo do concurso
+     */
+    public function get_tipo($idconcurso) {
+
+        # Monta o select            
+        $select = "SELECT tipo 
+                     FROM tbconcurso
+                    WHERE idconcurso = {$idconcurso}";
+
+        if (empty($idconcurso)) {
+            return null;
+        } else {
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeMenu
+     * 
+     * Informa o tipo do concurso
+     */
+    public function exibeMenu($idConcurso, $ressaltado = null) {
+
+        # Classes
+        $concurso = new Concurso($idConcurso);
+        $pessoal = new Pessoal();
+
+        # Variáveis
+        $ativos = $pessoal->get_servidoresAtivosConcurso($idConcurso);
+        $inativos = $pessoal->get_servidoresInativosConcurso($idConcurso);
+        $vagas = $concurso->get_numVagasConcurso($idConcurso);
+        $publicacao = $concurso->get_numPublicacaoConcurso($idConcurso);
+        $tipo = $concurso->get_tipo($idConcurso);
+
+        # Monta o array
+        if ($tipo == 1) {
+            $itensMenu = [
+                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao"],
+                ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
+                ["Vagas", "cadastroConcursoVagaAdm.php", $vagas],
+                ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
+                ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
+            ];
+        } else {
+            $itensMenu = [
+                ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
+                ["Vagas", "cadastroConcursoVagaProf.php", $vagas],
+                ["Servidores Ativos", "cadastroConcursoProf.php?fase=aguardaListaServidoresAtivos", $ativos],
+                ["Servidores Inativos", "cadastroConcursoProf.php?fase=aguardaListaServidoresInativos", $inativos],
+            ];
+        }
+
+        $painel = new Callout();
+        $painel->abre();
+
+        # Inicia o Menu de Cargos                
+        $menu = new Menu("menuProcedimentos");
+        $menu->add_item('titulo', 'Menu');
+
+        foreach ($itensMenu as $item) {
+
+            # Verifica se tem ressaltado
+            if ($item[0] == $ressaltado) {
+                $item[0] = "<b>{$item[0]}</b>";
+            }
+
+            # Verifica se tem contagem
+            if (empty($item[2])) {
+                $menu->add_item('link', $item[0], $item[1]);
+            } else {
+                $menu->add_item('link', "{$item[0]} ({$item[2]})", $item[1]);
+            }
+        }
+
+        $menu->show();
+
+        $painel->fecha();
+    }
+
+    ###########################################################
 }

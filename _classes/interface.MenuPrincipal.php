@@ -26,6 +26,7 @@ class MenuPrincipal {
 
         # Módulos
         $this->moduloServidores();
+        $this->moduloAreaConcursos();
         $this->moduloTabelaAuxiliares();
         #$this->moduloSei();
         #$this->moduloSigrh();
@@ -43,6 +44,7 @@ class MenuPrincipal {
         #$this->moduloSispatri();
         $this->moduloSispatri();
         $this->moduloSistemas();
+        
         $this->moduloAreaEspecial();
         
         $this->moduloLinksExternos();
@@ -561,21 +563,6 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Concurso');
-        $botao->set_url('cadastroConcurso.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Cadastro de Concursos');
-        $botao->set_accesskey('o');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vagas de Docentes');
-        $botao->set_url('areaVagasDocentes.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vaga.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Área de controle de Vagas de Professores');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
         $botao->set_label('Cedidos da Uenf');
         $botao->set_url('areaCedidos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
@@ -885,6 +872,43 @@ class MenuPrincipal {
         $tabela->set_rodape("Para Transferir clica em OK e no ramal desejado");
         $tabela->set_totalRegistro(false);
         $tabela->show();
+    }
+
+    ######################################################################################################################
+
+    /**
+     * Método moduloAreaEspecial
+     * 
+     * Exibe o menu de Legislação
+     */
+    private function moduloAreaConcursos() {
+
+        $painel = new Callout();
+        $painel->abre();
+
+        titulo('Área de Concursos');
+        br();
+
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(2);
+        $menu->set_espacoEntreLink(true);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Admin & Técnicos');
+        $botao->set_url('areaConcursoAdm.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'admetec.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Concursos');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Docentes');
+        $botao->set_url('areaConcursoProf.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'profe.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Concursos');
+        $menu->add_item($botao);
+        
+        $menu->show();
+        $painel->fecha();
     }
 
     ######################################################################################################################

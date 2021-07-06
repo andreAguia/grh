@@ -21,27 +21,30 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    $idConcurso = get('idConcurso');
+    set_session('origem', basename( __FILE__ )."?fase={$fase}");
+    $idConcurso = get_session('idConcurso');
 
-    # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', false);
-    if ($grh) {
-        # Grava no log a atividade
-        $atividade = "Visualizou o cadastro de bancos";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
-    }
+    # Pega o tipo do concurso
+    $concurso = new Concurso($idConcurso);
+    $tipo = $concurso->get_tipo($idConcurso);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "uploadPublicacao") {
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
     AreaServidor::cabecalho();
-
+    
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
 
@@ -50,17 +53,22 @@ if ($acesso) {
     $objeto->set_nome('Publicações');
 
     # Botão de voltar da lista
-    $objeto->set_voltarForm('cadastroConcurso.php?fase=editar&id=' . $idConcurso);
+    if ($tipo == 1) {
+        $objeto->set_voltarLista('areaConcursoAdm.php');
+    } else {
+        $objeto->set_voltarLista('areaConcursoProf.php');
+    }
 
     # select da lista
-    $objeto->set_selectLista('SELECT idConcurso,
-                                      data,
-                                      pag,
-                                      descricao,
-                                      obs,
-                                      idConcursoPublicacao
-                                 FROM tbconcursopublicacao
-                             ORDER BY data');
+    $objeto->set_selectLista('SELECT idConcursoPublicacao,
+                                     data,
+                                     pag,
+                                     idConcursoPublicacao,
+                                     idConcursoPublicacao,
+                                     idConcursoPublicacao
+                                FROM tbconcursopublicacao
+                               WHERE idConcurso = ' . $idConcurso . ' 
+                            ORDER BY data desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT idConcurso,
@@ -72,15 +80,32 @@ if ($acesso) {
                                WHERE idConcursoPublicacao = ' . $id);
 
     # Caminhos
-    $objeto->set_linkEditar('?fase=editar&idConcurso=' . $idConcurso);
-    $objeto->set_linkExcluir('?fase=excluir&idConcurso=' . $idConcurso);
-    $objeto->set_linkGravar('?fase=gravar&idConcurso=' . $idConcurso);
-    $objeto->set_linkListar('cadastroConcurso.php?fase=editar&id=' . $idConcurso);
+    $objeto->set_linkEditar('?fase=editar');
+    $objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_linkGravar('?fase=gravar');
+    $objeto->set_linkListar('?fase=listar');
+
+    $objeto->set_numeroOrdem(true);
+    $objeto->set_numeroOrdemTipo('d');
+
+    $objeto->set_classe(array("ConcursoPublicacao", null, null, "ConcursoPublicacao"));
+    $objeto->set_metodo(array("exibeDescricao", null, null, "exibePublicacao"));
 
     # Parametros da tabela
-    $objeto->set_label(array("Data", "Pag", "Descrição", "Obs"));
-    #$objeto->set_width(array(5,40,45));
-    #$objeto->set_align(array("center","center","left"));
+    $objeto->set_label(["Descrição", "Data", "Pag", "Ver", "Upload"]);
+    $objeto->set_width([40, 15, 15, 15, 15]);
+    $objeto->set_align(["left"]);
+    $objeto->set_funcao([null, "date_to_php"]);
+
+    # Botão de Upload
+    $botao = new BotaoGrafico();
+    $botao->set_label('');
+    $botao->set_url("?fase=uploadPublicacao&id=");
+    $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
+
+    # Coloca o objeto link na tabela			
+    $objeto->set_link(array(null, null, null, null, $botao));
+
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -147,6 +172,26 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+            # Cria uma rotina extra
+
+            function rotinaLateral($idConcurso) {
+                $grid = new Grid();
+                $grid->abreColuna(3);
+
+                # Exibe os dados do Concurso
+                $concurso = new Concurso($idConcurso);
+                $concurso->exibeDadosConcurso($idConcurso, true);
+                
+                # menu
+                $concurso->exibeMenu($idConcurso, "Publicações");
+
+                $grid->fechaColuna();
+                $grid->abreColuna(9);
+            }
+
+            $objeto->set_rotinaExtraListar("rotinaLateral");
+            $objeto->set_rotinaExtraListarParametro($idConcurso);
+
             $objeto->listar();
             break;
 
@@ -155,6 +200,75 @@ if ($acesso) {
         case "gravar" :
             $objeto->$fase($id);
             break;
+
+        ################################################################
+
+        case "uploadPublicacao" :
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+
+            # Botão voltar
+            botaoVoltar('?');
+
+            tituloTable("Upload de Publicações");
+
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+
+            $pasta = PASTA_CONCURSO;
+
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
+
+            # Extensões possíveis
+            $extensoes = array("pdf");
+
+            # Pega os valores do php.ini
+            $postMax = limpa_numero(ini_get('post_max_size'));
+            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+            $limite = menorValor(array($postMax, $uploadMax));
+
+            $texto = "Extensões Permitidas:";
+            foreach ($extensoes as $pp) {
+                $texto .= " $pp";
+            }
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
+            br(2);
+            p($texto, "f14", "center");
+
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
+
+                # Salva e verifica se houve erro
+                if ($upload->salvar()) {
+
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Fez o upload de publicação de concurso";
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+
+                    # Volta para o menu
+                    loadPage("?fase=listar");
+                } else {
+                    loadPage("?fase=uploadPublicacao&id=$id");
+                }
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ##################################################################
     }
 
     $page->terminaPagina();

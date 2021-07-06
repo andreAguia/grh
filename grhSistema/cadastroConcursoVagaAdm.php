@@ -22,8 +22,12 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    $idConcurso = get('idConcurso', get_session('idConcurso'));
-    set_session('idConcurso', $idConcurso);
+    set_session('origem', basename( __FILE__ )."?fase={$fase}");
+    $idConcurso = get_session('idConcurso');
+
+    # Pega o tipo do concurso
+    $concurso = new Concurso($idConcurso);
+    $tipo = $concurso->get_tipo($idConcurso);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -40,12 +44,16 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Vagas do Concurso');
-    
+    $objeto->set_nome('Vagas');
+
+    # Botão de voltar da lista
+    $objeto->set_voltarLista('areaConcursoAdm.php');
+
     # select da lista
     $objeto->set_selectLista("SELECT cargo,
                                      vagasNovas,
                                      vagasReposicao,
+                                     idConcursoVaga,
                                      idConcursoVaga
                                  FROM tbconcursovaga JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE idConcurso = {$idConcurso}
@@ -64,13 +72,16 @@ if ($acesso) {
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('cadastroConcurso.php?fase=concursoVagas&id=' . $idConcurso);
-    $objeto->set_voltarForm('cadastroConcurso.php?fase=concursoVagas&id=' . $idConcurso);
+    $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo", "Vagas Novas", "Vagas de Reposição"));
-    $objeto->set_width(array(50, 20, 20));
+    $objeto->set_label(array("Cargo", "Vagas Novas", "Vagas de Reposição", "Total"));
+    $objeto->set_width(array(40, 15, 15, 15));
     $objeto->set_align(array("left"));
+    $objeto->set_classe(array(null, null, null, "Concurso"));
+    $objeto->set_metodo(array(null, null, null, "get_totalVagasConcurso"));
+    $objeto->set_colunaSomatorio([1, 2, 3]);
+    $objeto->set_totalRegistro(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -135,12 +146,32 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
 
     ################################################################
+
     switch ($fase) {
         case "" :
         case "listar" :
+            # Cria uma rotina extra
+
+            function rotinaLateral($idConcurso) {
+                $grid = new Grid();
+                $grid->abreColuna(3);
+
+                # Exibe os dados do Concurso
+                $concurso = new Concurso($idConcurso);
+                $concurso->exibeDadosConcurso($idConcurso, true);
+
+                # menu
+                $concurso->exibeMenu($idConcurso, "Vagas");
+
+                $grid->fechaColuna();
+                $grid->abreColuna(9);
+            }
+
+            $objeto->set_rotinaExtraListar("rotinaLateral");
+            $objeto->set_rotinaExtraListarParametro($idConcurso);
+
             $objeto->listar();
             break;
-
         case "editar" :
         case "excluir" :
         case "gravar" :

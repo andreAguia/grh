@@ -4673,5 +4673,83 @@ class Checkup {
         }
     }
 
+    ##############################################################
+
+    /**
+     * Método get_servidorNaoCeletistaNaoEstatutarioComConcurso
+     * 
+     * Servidor Não celetista e não estatutário com concurso cadastrado
+     */
+    public function get_servidorNaoCeletistaNaoEstatutarioComConcurso($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                              matricula,
+                              dtAdmissao,
+                              tbservidor.idServidor,
+                              tbperfil.nome,                          
+                              tbservidor.idServidor,
+                              tbsituacao.situacao,
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                         LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                         LEFT JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)
+                    WHERE (tbservidor.idConcurso IS NOT null AND tbservidor.idConcurso <> 0)
+                      AND (idPerfil <> 1 AND idPerfil <> 4)';
+            if (!empty($idServidor)) {
+                $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY dtAdmissao,tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Servidores Não celetistas e Não estatutários com concurso cadastrado';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Matrícula', 'Admissão', 'Nome', 'Perfil', 'Concurso', 'Situação']);
+            $tabela->set_align(['center', 'center', 'center', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, null, "Pessoal", null, "Pessoal"]);
+            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacao", null, "get_concurso"]);
+            $tabela->set_funcao([null, "dv", "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Servidores não Celetistas e Não estatutários não devem ter concurso cadastrado.");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
     ##########################################################
 }

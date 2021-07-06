@@ -74,6 +74,9 @@ if ($acesso) {
                                WHERE idServidor = {$idServidorPesquisado}");
     } else {
         $objeto->set_selectEdita("SELECT idConcurso,
+                                     dtPublicConcursoResultado,
+                                     pgPublicConcursoResultado,
+                                     classificacaoConcurso,
                                      dtPublicResultadoExameMedico,
                                      pgPublicResultadoExameMedico,
                                      dtPublicAtoNomeacao,
@@ -168,7 +171,7 @@ if ($acesso) {
         # Que é onde fica cadastrado o concurso dos docentes
         $idConcurso = $vaga->get_idConcursoProfessor($idServidorPesquisado);
 
-        if (!vazio($idConcurso)) {
+        if (!empty($idConcurso)) {
 
             $select = "SELECT idconcurso,
                               concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso

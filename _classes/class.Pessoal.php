@@ -1130,7 +1130,7 @@ class Pessoal extends Bd {
                         WHERE cpf = "' . $cpf . '"';
 
         $idPessoa = parent::select($select, false);
-        
+
         if (empty($idPessoa[0])) {
             return null;
         } else {
@@ -2154,7 +2154,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método get_nomeELotacao
@@ -2195,8 +2195,6 @@ class Pessoal extends Bd {
     }
 
     ##########################################################
-
-
 
     /**
      * Método get_nomeSimples
@@ -5792,6 +5790,48 @@ class Pessoal extends Bd {
         $row = parent::select($select, false);
 
         return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_concurso
+     * Informa o concurso do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function get_concurso($idServidor) {
+
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Pega o cargo do servidor
+            $select = 'SELECT anobase,
+                              regime,
+                              OrgExecutor,
+                              dtPublicacaoEdital,
+                              tipo
+                     FROM tbconcurso LEFT JOIN tbservidor USING (idConcurso)
+                    WHERE idServidor = ' . $idServidor;
+
+            $row = parent::select($select, false);
+            
+            if(empty($row[0])){
+                return null;
+            }
+            
+            if($row[4] == 1){
+                $tipo = "Adm & Tec";
+            }else{
+                $tipo = "Professor";
+            }
+
+            pLista(
+                    $row[0],
+                    $tipo." - ".$row[1],
+                    "Edital: ".date_to_php($row[3])   
+            );
+        }
     }
 
     ###########################################################

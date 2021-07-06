@@ -53,7 +53,7 @@ if ($acesso) {
             $menu = new MenuBar();
 
             # Voltar
-            $botao = new Link("Voltar", "cadastroConcurso.php");
+            $botao = new Link("Voltar", "areaConcursoAdm.php");
             $botao->set_class('button');
             $botao->set_title('Voltar a página anterior');
             $botao->set_accessKey('V');

@@ -65,7 +65,7 @@ if ($acesso) {
             
             $texto = "Observações Importantes:<br/>"
                     . " - Para essa análise serão consideradas somente as vagas novas(vagas reais) e descartadas as vagas de reposição.<br/>"
-                    . " - Antes de aceitar estes dados com corretos, deve-se verificar no menu de vagas de cada concurso se não há problemas detectados.";
+                    . " - Antes de aceitar estes dados como corretos, deve-se verificar no menu de vagas de cada concurso se não há problemas detectados.";
             callout($texto);
 
             $grid->fechaColuna();

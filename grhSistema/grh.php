@@ -35,9 +35,8 @@ if ($acesso) {
     AreaServidor::cabecalho();
 
     # Zera sessions
-    set_session('origem');                  // Informa a rotina de origem
-    set_session('origemId');                // Informa o id para a origem (se precisar)
-
+    set_session('origem');  
+    set_session('origemId');
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');
     set_session('parametroNomeMat');

@@ -901,7 +901,7 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Docentes');
+        $botao->set_label('Professores');
         $botao->set_url('areaConcursoProf.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'profe.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Concursos');

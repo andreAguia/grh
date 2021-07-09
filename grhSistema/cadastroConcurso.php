@@ -138,7 +138,7 @@ if ($acesso) {
 
     # Pega os dados da combo de Plano e Cargos
     $result = $pessoal->select('SELECT idPlano, 
-                                      numDecreto
+                                      CONCAT("(",DATE_FORMAT(dtVigencia, "%d/%m/%Y"),") ",numDecreto)	
                                   FROM tbplano
                               ORDER BY numDecreto DESC');
     

@@ -205,7 +205,41 @@ if ($acesso) {
             $controle->set_valor($parametroSituacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(4);
+            $form->add_item($controle);            
+
+            # Perfil
+            $result = $pessoal->select('SELECT idperfil, nome
+                                              FROM tbperfil                                
+                                          ORDER BY 1');
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Perfil');
+            $controle->set_array($result);
+            $controle->set_valor($parametroPerfil);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # concurso
+            $result = $pessoal->select("SELECT idconcurso,
+                                               concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
+                                          FROM tbconcurso
+                                         WHERE tipo = 1     
+                                      ORDER BY dtPublicacaoEdital desc");
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroConcurso', 'combo', 'Concurso:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Concurso');
+            $controle->set_array($result);
+            $controle->set_valor($parametroConcurso);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             # Cargos
@@ -232,7 +266,7 @@ if ($acesso) {
             $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(9);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             # Lotação
@@ -251,41 +285,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(5);
-            $form->add_item($controle);
-
-            # Perfil
-            $result = $pessoal->select('SELECT idperfil, nome
-                                              FROM tbperfil                                
-                                          ORDER BY 1');
-            array_unshift($result, array('*', '-- Todos --'));
-
-            $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Perfil');
-            $controle->set_array($result);
-            $controle->set_valor($parametroPerfil);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            # concurso
-            $result = $pessoal->select("SELECT idconcurso,
-                                               concat(anoBase,' - Edital: ',DATE_FORMAT(dtPublicacaoEdital,'%d/%m/%Y')) as concurso
-                                          FROM tbconcurso
-                                         WHERE tipo = 1     
-                                      ORDER BY dtPublicacaoEdital desc");
-            array_unshift($result, array('*', '-- Todos --'));
-
-            $controle = new Input('parametroConcurso', 'combo', 'Concurso:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Concurso');
-            $controle->set_array($result);
-            $controle->set_valor($parametroConcurso);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             $form->show();

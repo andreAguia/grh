@@ -141,6 +141,8 @@ if ($acesso) {
                                       numDecreto
                                   FROM tbplano
                               ORDER BY numDecreto');
+    
+    array_push($result, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(

@@ -140,7 +140,7 @@ if ($acesso) {
     $result = $pessoal->select('SELECT idPlano, 
                                       numDecreto
                                   FROM tbplano
-                              ORDER BY numDecreto');
+                              ORDER BY numDecreto DESC');
     
     array_push($result, array(null, null));
 
@@ -199,7 +199,7 @@ if ($acesso) {
             'label' => 'Plano de Cargos:',
             'tipo' => 'combo',
             'array' => $result,
-            'col' => 3,
+            'col' => 5,
             'size' => 30),
         array('linha' => 4,
             'col' => 12,

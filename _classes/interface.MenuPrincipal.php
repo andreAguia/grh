@@ -40,13 +40,12 @@ class MenuPrincipal {
         $grid->abreColuna(12, 8, 5);
 
         # Módulos      
-        
         #$this->moduloSispatri();
         $this->moduloSispatri();
         $this->moduloSistemas();
-        
+
         $this->moduloAreaEspecial();
-        
+
         $this->moduloLinksExternos();
 
         $grid->fechaColuna();
@@ -216,13 +215,13 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-     ######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloSispatri
      */
     private function moduloSispatri() {
-
+        
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("https://www.servidor.rj.gov.br/portal-web/portal/publico/Noticia/detalhar?hdnNoticia=1152");
@@ -553,7 +552,7 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'semVencimento.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
         $menu->add_item($botao);
-        
+
         # Prestador de Contas
         $botao = new BotaoGrafico();
         $botao->set_label('Responsáveis pela Prestação de Contas');
@@ -892,7 +891,7 @@ class MenuPrincipal {
         $tamanhoImage = 60;
         $menu = new MenuGrafico(2);
         $menu->set_espacoEntreLink(true);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Admin & Técnicos');
         $botao->set_url('areaConcursoAdm.php?grh=1');
@@ -906,7 +905,7 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'profe.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Concursos');
         $menu->add_item($botao);
-        
+
         $menu->show();
         $painel->fecha();
     }

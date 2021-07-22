@@ -913,12 +913,13 @@ class Aposentadoria {
         # Monta o select
         $select = 'SELECT idFuncional,
                           nome,
+                          TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
                           idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                    WHERE tbservidor.situacao = 1
                      AND idPerfil = 1
                      AND tbpessoa.sexo = "' . $parametroSexo . '"
-                ORDER BY tbpessoa.nome';
+                ORDER BY idade';
 
         $result = $pessoal->select($select);
         $resultado = [];
@@ -936,6 +937,7 @@ class Aposentadoria {
                     $lista["nome"],
                     $lista["idServidor"],
                     $lista["idServidor"],
+                    $lista["idade"],
                     $data,
                     $lista["idServidor"]
                 ];
@@ -945,7 +947,7 @@ class Aposentadoria {
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
         $tabela->set_titulo("Servidores Ativos com Direito a Aposentadoria Integral - {$parametroSexo}");
-        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Data da Aposentadoria', 'Editar']);
+        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade', 'Data da Aposentadoria', 'Editar']);
         $tabela->set_align(['center', 'left', 'left', 'left']);
         $tabela->set_conteudo($resultado);
         $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
@@ -957,7 +959,7 @@ class Aposentadoria {
         $servidorBtn->set_title("Vai para o cadastro do servidor");
 
         # Coloca os links na tabela			
-        $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+        $tabela->set_link([null, null, null, null, null, null, $servidorBtn]);
 
         $tabela->show();
     }
@@ -965,8 +967,8 @@ class Aposentadoria {
 ##############################################################################################################################################
 
     /**
-     * Método exibeServidoresAtivosPodemAposentarIntegral
-     * Exibe os servidores que podem aposentar integralmente
+     * Método exibeServidoresAtivosPodemAposentarProporcional
+     * Exibe os servidores que podem aposentar proporcional
      * 
      * @param string $parametroSexo sexo do servidor
      */
@@ -978,12 +980,13 @@ class Aposentadoria {
         # Monta o select
         $select = 'SELECT idFuncional,
                           nome,
+                          TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
                           idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                    WHERE tbservidor.situacao = 1
                      AND idPerfil = 1
                      AND tbpessoa.sexo = "' . $parametroSexo . '"
-                ORDER BY tbpessoa.nome';
+                ORDER BY idade';
 
         $result = $pessoal->select($select);
         $resultado = [];
@@ -1001,6 +1004,7 @@ class Aposentadoria {
                     $lista["nome"],
                     $lista["idServidor"],
                     $lista["idServidor"],
+                    $lista["idade"],
                     $data,
                     $lista["idServidor"]
                 ];
@@ -1010,7 +1014,7 @@ class Aposentadoria {
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
         $tabela->set_titulo("Servidores Ativos com Direito a Aposentadoria Proporcional - {$parametroSexo}");
-        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Data da Aposentadoria', 'Editar']);
+        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade', 'Data da Aposentadoria', 'Editar']);
         $tabela->set_align(['center', 'left', 'left', 'left']);
         $tabela->set_conteudo($resultado);
         $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
@@ -1022,7 +1026,7 @@ class Aposentadoria {
         $servidorBtn->set_title("Vai para o cadastro do servidor");
 
         # Coloca os links na tabela			
-        $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+        $tabela->set_link([null, null, null, null, null, null, $servidorBtn]);
 
         $tabela->show();
     }
@@ -1030,8 +1034,8 @@ class Aposentadoria {
 ##############################################################################################################################################
 
     /**
-     * Método exibeServidoresAtivosPodemAposentarIntegral
-     * Exibe os servidores que podem aposentar integralmente
+     * Método exibeServidoresAtivosPodemAposentarCompulsoria
+     * Exibe os servidores que podem aposentar compulsoriamente
      * 
      * @param string $parametroSexo sexo do servidor
      */
@@ -1043,12 +1047,13 @@ class Aposentadoria {
         # Monta o select
         $select = 'SELECT idFuncional,
                           nome,
+                          TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
                           idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                    WHERE tbservidor.situacao = 1
                      AND idPerfil = 1
                      AND tbpessoa.sexo = "' . $parametroSexo . '"
-                ORDER BY tbpessoa.nome';
+                ORDER BY idade';
 
         $result = $pessoal->select($select);
         $resultado = [];
@@ -1066,6 +1071,7 @@ class Aposentadoria {
                     $lista["nome"],
                     $lista["idServidor"],
                     $lista["idServidor"],
+                    $lista["idade"],
                     $data,
                     $lista["idServidor"]
                 ];
@@ -1075,7 +1081,7 @@ class Aposentadoria {
         # Tabela com os valores de aposentadoria
         $tabela = new Tabela();
         $tabela->set_titulo("Servidores Ativos que Devem Ser Aposentados Compulsóriamente - {$parametroSexo}");
-        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Data da Aposentadoria', 'Editar']);
+        $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade', 'Data da Aposentadoria', 'Editar']);
         $tabela->set_align(['center', 'left', 'left', 'left']);
         $tabela->set_conteudo($resultado);
         $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
@@ -1087,7 +1093,7 @@ class Aposentadoria {
         $servidorBtn->set_title("Vai para o cadastro do servidor");
 
         # Coloca os links na tabela			
-        $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+        $tabela->set_link([null, null, null, null, null, null, $servidorBtn]);
 
         $tabela->show();
     }
@@ -1802,7 +1808,7 @@ class Aposentadoria {
      */
     public function exibeMenu($itemBold = null) {
 
-        $bold = array(false, false, false, false, false, false, false, false, false);
+        $bold = array(false, false, false, false, false, false, false, false, false, false, false);
 
         $bold[$itemBold] = true;
 
@@ -1819,6 +1825,8 @@ class Aposentadoria {
         $menu->add_item("link", "Previsão Compulsória Por Ano", "?fase=compulsoria", "Previsão de Aposentadoria Compulsória", null, null, $bold[6]);
         $menu->add_item("link", "Já Podem Aposentar", "?fase=somatorio", "Somatório de Servidores Ativos que Podem se Aposentar", null, null, $bold[7]);
         $menu->add_item("link", "Regras", "?fase=regras", "Regras de Aposentadoria", null, null, $bold[8]);
+        $menu->add_item("link", "Masculino com 60 anos ou mais", "?fase=porIdadeMasculino", "Relação de servidores ativio por idade", null, null, $bold[9]);
+        $menu->add_item("link", "Feminino com 55 anos ou mais", "?fase=porIdadeFeminino", "Relação de servidores ativio por idade", null, null, $bold[10]);
 
         $menu->show();
     }

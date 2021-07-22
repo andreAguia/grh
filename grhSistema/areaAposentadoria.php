@@ -64,7 +64,7 @@ if ($acesso) {
             $fase <> "aguardaIntegral" AND $fase <> "listaIntegral" AND $fase <> "editaIntegral" AND
             $fase <> "aguardaProporcional" AND $fase <> "listaProporcional" AND $fase <> "editaProporcional" AND
             $fase <> "aguardaCompulsoria" AND $fase <> "listaCompulsoria" AND $fase <> "editaCompulsoria"
-            ) {
+    ) {
 
         # Cria um menu
         $menu = new MenuBar();
@@ -749,7 +749,7 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
-            
+
 ######################################################################################################################
 
         case "aguardaIntegral" :
@@ -788,7 +788,7 @@ if ($acesso) {
             # Limita o tamanho da tela
             $grid->fechaColuna();
             $grid->abreColuna(8);
-            
+
             tituloTable("Observação");
             $painel = new Callout();
             $painel->abre();
@@ -796,16 +796,16 @@ if ($acesso) {
             p("Os cálculos aqui apresentados deverão ser conferidos pelo servidor da GRH quando da abertura do processo de aposentadoria.");
 
             $painel->fecha();
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(4);
-            
+
             # Exibe regras
             $aposentadoria->exibeRegrasIntegral();
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(12);
-            
+
             # Lista de Servidores Ativos
             $aposentadoria->exibeServidoresAtivosPodemAposentarIntegral($parametroSexo);
 
@@ -867,7 +867,7 @@ if ($acesso) {
             # Limita o tamanho da tela
             $grid->fechaColuna();
             $grid->abreColuna(8);
-            
+
             tituloTable("Observação");
             $painel = new Callout();
             $painel->abre();
@@ -875,16 +875,16 @@ if ($acesso) {
             p("Os cálculos aqui apresentados deverão ser conferidos pelo servidor da GRH quando da abertura do processo de aposentadoria.");
 
             $painel->fecha();
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(4);
-            
+
             # Exibe regras
             $aposentadoria->exibeRegrasProporcional();
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(12);
-            
+
             # Lista de Servidores Ativos
             $aposentadoria->exibeServidoresAtivosPodemAposentarProporcional($parametroSexo);
 
@@ -946,7 +946,7 @@ if ($acesso) {
             # Limita o tamanho da tela
             $grid->fechaColuna();
             $grid->abreColuna(8);
-            
+
             tituloTable("Observação");
             $painel = new Callout();
             $painel->abre();
@@ -954,16 +954,16 @@ if ($acesso) {
             p("Os cálculos aqui apresentados deverão ser conferidos pelo servidor da GRH quando da abertura do processo de aposentadoria.");
 
             $painel->fecha();
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(4);
-            
+
             # Exibe regras
             $aposentadoria->exibeRegrasCompulsoria();
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(12);
-            
+
             # Lista de Servidores Ativos
             $aposentadoria->exibeServidoresAtivosPodemAposentarCompulsoria($parametroSexo);
 
@@ -988,6 +988,200 @@ if ($acesso) {
             break;
 
         ################################################################
+
+        case "porIdadeMasculino" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(9);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porIdadeMasculino');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("*", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Exibe a lista
+            $select = 'SELECT idFuncional,
+                              tbpessoa.nome,
+                              idServidor,
+                              idServidor,
+                              TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
+                              idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING(idPessoa)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbpessoa.sexo = "masculino"
+                          AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= 60';
+            
+            if (!is_null($parametroLotacao)) {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY idade";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = 'Servidores Estatutários do sexo Masculino com 60 anos ou Mais';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação','Idade']);
+            $tabela->set_align(['center', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null,"Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null,"get_cargo", "get_lotacao"]);
+            $tabela->set_idCampo('idServidor');
+
+            if ($count > 0) {
+                $tabela->show();
+            } else {
+                br();
+                tituloTable($titulo);
+                $callout = new Callout();
+                $callout->abre();
+                p('Nenhum item encontrado!!', 'center');
+                $callout->fecha();
+            }
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
+            
+        ################################################################
+
+        case "porIdadeFeminino" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(10);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+            
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porIdadeFeminino');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("*", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $form->show();
+
+
+            # Exibe a lista
+            $select = "SELECT idFuncional,
+                              tbpessoa.nome,
+                              idServidor,
+                              idServidor,
+                              TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
+                              idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING(idPessoa)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbpessoa.sexo = 'feminino'
+                          AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= 55";
+            
+            if (!is_null($parametroLotacao)) {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY idade";
+
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = 'Servidores Estatutários do sexo Feminino com 55 anos ou Mais';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação','Idade']);
+            $tabela->set_align(['center', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null,"Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null,"get_cargo", "get_lotacao"]);
+            $tabela->set_idCampo('idServidor');
+
+            if ($count > 0) {
+                $tabela->show();
+            } else {
+                br();
+                tituloTable($titulo);
+                $callout = new Callout();
+                $callout->abre();
+                p('Nenhum item encontrado!!', 'center   ');
+                $callout->fecha();
+            }
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;    
+
+######################################################################################################################
     }
     $page->terminaPagina();
 } else {

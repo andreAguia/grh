@@ -63,11 +63,11 @@ class MenuServidor {
         $this->moduloVinculos();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(12, 7, 6);
+        $grid->abreColuna(12, 7, 7);
         $this->moduloFuncionais();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(7, 5, 4);
+        $grid->abreColuna(7, 5, 3);
         $this->moduloPessoais();
         $grid->fechaColuna();
         # --

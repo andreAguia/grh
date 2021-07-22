@@ -1028,6 +1028,10 @@ if ($acesso) {
 
             $form->show();
 
+            if ($parametroLotacao == "*") {
+                $parametroLotacao = null;
+            }
+
             # Exibe a lista
             $select = 'SELECT idFuncional,
                               tbpessoa.nome,
@@ -1043,7 +1047,7 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbpessoa.sexo = "masculino"
                           AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= 60';
-            
+
             if (!is_null($parametroLotacao)) {  // senão verifica o da classe
                 if (is_numeric($parametroLotacao)) {
                     $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
@@ -1061,11 +1065,11 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação','Idade']);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade']);
             $tabela->set_align(['center', 'left', 'left', 'left']);
             $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, null,"Pessoal", "Pessoal"]);
-            $tabela->set_metodo([null, null,"get_cargo", "get_lotacao"]);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
             $tabela->set_idCampo('idServidor');
 
             if ($count > 0) {
@@ -1082,7 +1086,7 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
-            
+
         ################################################################
 
         case "porIdadeFeminino" :
@@ -1099,7 +1103,7 @@ if ($acesso) {
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
-            
+
             # Formulário de Pesquisa
             $form = new Form('?fase=porIdadeFeminino');
 
@@ -1124,6 +1128,9 @@ if ($acesso) {
 
             $form->show();
 
+            if ($parametroLotacao == "*") {
+                $parametroLotacao = null;
+            }
 
             # Exibe a lista
             $select = "SELECT idFuncional,
@@ -1140,7 +1147,7 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbpessoa.sexo = 'feminino'
                           AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= 55";
-            
+
             if (!is_null($parametroLotacao)) {  // senão verifica o da classe
                 if (is_numeric($parametroLotacao)) {
                     $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
@@ -1151,7 +1158,6 @@ if ($acesso) {
 
             $select .= " ORDER BY idade";
 
-
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
             $titulo = 'Servidores Estatutários do sexo Feminino com 55 anos ou Mais';
@@ -1159,11 +1165,11 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação','Idade']);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade']);
             $tabela->set_align(['center', 'left', 'left', 'left']);
             $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, null,"Pessoal", "Pessoal"]);
-            $tabela->set_metodo([null, null,"get_cargo", "get_lotacao"]);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
             $tabela->set_idCampo('idServidor');
 
             if ($count > 0) {
@@ -1179,7 +1185,7 @@ if ($acesso) {
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
-            break;    
+            break;
 
 ######################################################################################################################
     }

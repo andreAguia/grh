@@ -118,16 +118,16 @@ class Concurso {
      * Método get_nomeConcurso
      * 
      * Informa o nome de um idconcurso	 */
-    public function get_nomeConcurso($idconcurso) {
+    public function get_nomeConcurso($idConcurso) {
         
-        if(empty($idconcurso)){
+        if(empty($idConcurso)){
             return null;
         }
 
         # Monta o select            
         $select = 'SELECT CONCAT(tbconcurso.anoBase," - Edital: ",DATE_FORMAT(tbconcurso.dtPublicacaoEdital,"%d/%m/%Y")) as cc                
                          FROM tbconcurso
-                        WHERE idconcurso = ' . $idconcurso;
+                        WHERE idConcurso = ' . $idConcurso;
 
         # Pega os dados
         $pessoal = new Pessoal();

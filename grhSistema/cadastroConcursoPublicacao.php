@@ -21,7 +21,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    set_session('origem', basename( __FILE__ )."?fase={$fase}");
+    set_session('origem', basename(__FILE__) . "?fase={$fase}");
     $idConcurso = get_session('idConcurso');
 
     # Pega o tipo do concurso
@@ -39,12 +39,18 @@ if ($acesso) {
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
                                 });
                             });');
+    } else {
+
+        # Grava no log a atividade
+        $atividade = "Visualizou as publicações do concurso " . $concurso->get_nomeConcurso($idConcurso);
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
     AreaServidor::cabecalho();
-    
+
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
 
@@ -172,6 +178,7 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+
             # Cria uma rotina extra
 
             function rotinaLateral($idConcurso) {
@@ -181,7 +188,7 @@ if ($acesso) {
                 # Exibe os dados do Concurso
                 $concurso = new Concurso($idConcurso);
                 $concurso->exibeDadosConcurso($idConcurso, true);
-                
+
                 # menu
                 $concurso->exibeMenu($idConcurso, "Publicações");
 

@@ -31,7 +31,7 @@ if ($acesso) {
 
     # Pega a fase e coloca na session
     $fase = get('fase', 'aguardaClassificacao');
-    set_session('origem', basename( __FILE__ )."?fase={$fase}");
+    set_session('origem', basename(__FILE__) . "?fase={$fase}");
 
     # Pega as variáveis
     $idConcurso = get_session("idConcurso");
@@ -192,12 +192,15 @@ if ($acesso) {
                 if (is_numeric($parametroCargo)) {
                     $select .= ' AND (tbcargo.idcargo = "' . $parametroCargo . '")';
                     $titulo = $pessoal->get_nomeCompletoCargo($parametroCargo);
+                    $atividade = "Visualizou a classificação do cargo ".$titulo." concurso ".$concurso->get_nomeConcurso($idConcurso);
                 } else { # senão é nivel do cargo
                     $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
                     $titulo = $parametroCargo;
+                    $atividade = "Visualizou a classificação do cargo ".$parametroCargo." concurso ".$concurso->get_nomeConcurso($idConcurso);
                 }
             } else {
                 $titulo = "Classificação Geral";
+                $atividade = "Visualizou a classificação do concurso ".$concurso->get_nomeConcurso($idConcurso);
             }
 
             $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, classificacaoConcurso";
@@ -228,6 +231,10 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+
+            # Grava no log a atividade            
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
 
         ################################################################
@@ -388,8 +395,10 @@ if ($acesso) {
             if ($parametroCargo <> "*") {
                 $lista = new ListaServidores("{$parametroCargo} - Servidores Ativos");
                 $lista->set_cargo($parametroCargo);
+                 $atividade = "Visualizou os servidores ativos do cargo ".$parametroCargo." do concurso ".$concurso->get_nomeConcurso($idConcurso);
             } else {
                 $lista = new ListaServidores("Servidores Ativos");
+                $atividade = "Visualizou os servidores ativos do concurso ".$concurso->get_nomeConcurso($idConcurso);
             }
             $lista->set_situacao(1);
             $lista->set_concurso($idConcurso);
@@ -397,6 +406,10 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+            
+            # Grava no log a atividade
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
 
         ################################################################
@@ -542,8 +555,10 @@ if ($acesso) {
             if ($parametroCargo <> "*") {
                 $lista = new ListaServidores("{$parametroCargo} - Servidores Inativos");
                 $lista->set_cargo($parametroCargo);
+                $atividade = "Visualizou os servidores inativos do cargo ".$parametroCargo." do concurso ".$concurso->get_nomeConcurso($idConcurso);
             } else {
                 $lista = new ListaServidores("Servidores Inativos");
+                $atividade = "Visualizou os servidores inativos do concurso ".$concurso->get_nomeConcurso($idConcurso);
             }
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
@@ -552,6 +567,11 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+            
+            # Grava no log a atividade
+            
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
 
         ################################################################

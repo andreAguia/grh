@@ -35,6 +35,13 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
+    
+     if ($fase == "listar") {
+        # Grava no log a atividade
+        $atividade = "Visualizou as vagas do concurso " . $concurso->get_nomeConcurso($idConcurso);
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+    }
 
     # Cabeçalho da Página
     AreaServidor::cabecalho();
@@ -151,7 +158,6 @@ if ($acesso) {
         case "" :
         case "listar" :
             # Cria uma rotina extra
-
             function rotinaLateral($idConcurso) {
                 $grid = new Grid();
                 $grid->abreColuna(3);

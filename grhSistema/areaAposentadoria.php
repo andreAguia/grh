@@ -116,6 +116,24 @@ if ($acesso) {
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel, "right");
+        } elseif ($fase == "porIdadeMasculino") {
+
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("../grhRelatorios/estatutario.masculino.acima60.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+        } elseif ($fase == "porIdadeFeminino") {
+
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório");
+            $botaoRel->set_url("../grhRelatorios/estatutario.feminino.acima55.php");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
         }
 
         $menu->show();
@@ -1230,7 +1248,6 @@ if ($acesso) {
             break;
 
         ################################################################
-
     }
     $page->terminaPagina();
 } else {

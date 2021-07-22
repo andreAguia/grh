@@ -235,7 +235,7 @@ class ListaFerias
             if ($this->permiteEditar) {
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
                 $tabela->set_nomeColunaEditar("Acessar");
-                $tabela->set_editarBotao("ver.png");
+                $tabela->set_editarBotao("olho.png");
             }
 
             $tabela->set_conteudo($servset3);

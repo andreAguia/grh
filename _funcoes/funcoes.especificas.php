@@ -840,7 +840,7 @@ function linkExibeVaga($idConcurso) {
         if ($tipo == 2) {
             # Monta o link
             $link = new Link(null, "cadastroConcurso.php?fase=listaVagasConcurso&id=$idConcurso", "Exibe as vagas");
-            $link->set_imagem(PASTA_FIGURAS_GERAIS . "ver.png", 20, 20);
+            $link->set_imagem(PASTA_FIGURAS_GERAIS . "olho.png", 20, 20);
             $link->show();
         } else {
             echo "-";

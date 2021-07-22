@@ -885,7 +885,7 @@ class Grh {
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=vigente&id=' . $id);
         $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 
@@ -907,7 +907,7 @@ class Grh {
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=aguardeAtivos&id=' . $idLotacao);
         $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 
@@ -929,7 +929,7 @@ class Grh {
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=aguardeInativos&id=' . $idLotacao);
         $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 
@@ -951,7 +951,7 @@ class Grh {
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $idConcurso);
         $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 
@@ -973,7 +973,7 @@ class Grh {
         # Botão de exibição dos servidores
         $botao = new Link('', '?fase=listaServidoresInativos&id=' . $idConcurso);
         $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'ver.png', 20, 20);
+        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
 

@@ -469,7 +469,7 @@ if ($acesso) {
             $tabela->set_titulo("Controle de Servidores da GRH que atendem ao Balcão");
             $tabela->set_editar('?fase=editaServidor');
             #$tabela->set_nomeColunaEditar("Editar");
-            #$tabela->set_editarBotao("ver.png");
+            #$tabela->set_editarBotao("olho.png");
             $tabela->set_idCampo('idUsuario');
             $tabela->show();
             break;

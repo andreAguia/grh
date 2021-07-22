@@ -97,7 +97,7 @@ class VagaDocentes {
         $botao1->set_label('');
         $botao1->set_title('Editar o Concurso');
         $botao1->set_url("?fase=editarConcurso&id=");
-        $botao1->set_imagem(PASTA_FIGURAS . 'ver.png', 20, 20);
+        $botao1->set_imagem(PASTA_FIGURAS . 'olho.png', 20, 20);
 
         # Coloca o objeto link na tabela			
         $tabela->set_link(array(null, null, null, null, null, null, null, null, null, $botao1));

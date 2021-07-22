@@ -1065,12 +1065,17 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade']);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade', 'Editar']);
             $tabela->set_align(['center', 'left', 'left', 'left']);
             $tabela->set_titulo($titulo);
             $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
             $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
             $tabela->set_idCampo('idServidor');
+
+            # Botão de exibição dos servidores com permissão a essa regra
+            $botao = new Link(null, '?fase=editaIdadeMasculino&id=', 'Edita o Servidor');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+            $tabela->set_link([null, null, null, null, null, $botao]);
 
             if ($count > 0) {
                 $tabela->show();
@@ -1085,6 +1090,22 @@ if ($acesso) {
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editaIdadeMasculino" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=porIdadeMasculino');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
             break;
 
         ################################################################
@@ -1165,12 +1186,17 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade']);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Idade', 'Editar']);
             $tabela->set_align(['center', 'left', 'left', 'left']);
             $tabela->set_titulo($titulo);
             $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
             $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
             $tabela->set_idCampo('idServidor');
+
+            # Botão de exibição dos servidores com permissão a essa regra
+            $botao = new Link(null, '?fase=editaIdadeFeminino&id=', 'Edita o Servidor');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+            $tabela->set_link([null, null, null, null, null, $botao]);
 
             if ($count > 0) {
                 $tabela->show();
@@ -1187,7 +1213,24 @@ if ($acesso) {
             $grid2->fechaGrid();
             break;
 
-######################################################################################################################
+        ################################################################
+
+        case "editaIdadeFeminino" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=porIdadeFeminino');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
     }
     $page->terminaPagina();
 } else {

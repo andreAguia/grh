@@ -378,7 +378,7 @@ if ($acesso) {
 
             $tabela->set_editar('?fase=editaServidorFerias&id=');
             $tabela->set_nomeColunaEditar("Acessar");
-            $tabela->set_editarBotao("ver.png");
+            $tabela->set_editarBotao("olho.png");
             $tabela->set_idCampo('idServidor');
             $tabela->show();
 

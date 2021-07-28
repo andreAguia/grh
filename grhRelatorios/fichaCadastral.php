@@ -268,7 +268,15 @@ if ($acesso) {
 
         # Informa se o servidor entrou como CLT
         if ($regime == "CLT") {
-            $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+
+            /*
+             * Verifica se ele entrou antes da transformação em estatutário 09/09/2003 (Lei 4.152 de 08/09/2003)
+             * Na pratica TODOS os servidores que entraram depois de 01/01/2002 já entraram como estatutários.
+             */
+
+            if (strtotime(date_to_bd($dtadmissao)) < strtotime(date_to_bd("01/01/2002"))) {
+                $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+            }
 
             # Verifica se foi transformado
             if (!empty($dtTranfRegime)) {

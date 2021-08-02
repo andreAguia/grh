@@ -858,6 +858,21 @@ p#paliquota{
 }
 
 /*******************************************
+ * Abono Permanência
+ *******************************************/
+tr#deferido{
+    background-color: #a1dac3;
+}
+
+tr#indeferido{
+    background-color: #ffdcc3;
+}
+
+tr#ns{
+    background-color: #ccc;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

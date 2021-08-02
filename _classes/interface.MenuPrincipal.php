@@ -516,14 +516,14 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
-        $botao->set_label('Progressão & Enquadramento');
-        $botao->set_url('areaProgressao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'progressao.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Área das rotinas de Progressão e enquadramento do serviodor');
+        $botao->set_label('Abono Permanência');
+        $botao->set_url('areaAbonoPermanencia.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Área das rotinas de abono permanência do serviodor');
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');
         $botao->set_url('areaReadaptacao.php?grh=1');
@@ -575,10 +575,10 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('RPA');
-        $botao->set_url('cadastroRpa.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Emissão de RPA');
+        $botao->set_label('Progressão & Enquadramento');
+        $botao->set_url('areaProgressao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'progressao.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Área das rotinas de Progressão e enquadramento do serviodor');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -656,6 +656,13 @@ class MenuPrincipal {
             $botao->set_title('Recadastramento de Servidores');
             $menu->add_item($botao);
         }
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('RPA');
+        $botao->set_url('cadastroRpa.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Emissão de RPA');
+        $menu->add_item($botao);
 
         $menu->show();
         $painel->fecha();

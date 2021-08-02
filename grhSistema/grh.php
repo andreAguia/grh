@@ -65,6 +65,8 @@ if ($acesso) {
     set_session('idProcedimento');
     set_session('parametroAfastamento');
     set_session('categoria');
+    set_session('parametroProcesso');
+    set_session('parametroSexo');
 
     set_session('parametroCentro');
     set_session('parametroLab');

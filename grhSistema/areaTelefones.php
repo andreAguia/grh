@@ -68,7 +68,8 @@ if ($acesso) {
     $objeto->set_selectLista("SELECT DIR,
                                       GER,
                                       nome,
-                                      contatos,
+                                      ramais,
+                                      email,
                                       idLotacao,
                                       idLotacao
                                  FROM tblotacao
@@ -76,11 +77,12 @@ if ($acesso) {
                                   AND (DIR LIKE '%$parametro%'
                                    OR GER LIKE '%$parametro%'
                                    OR nome LIKE '%$parametro%'
-                                   OR contatos LIKE '%$parametro%')
+                                   OR ramais LIKE '%$parametro%')
                              ORDER BY DIR asc, GER asc, nome asc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT contatos
+    $objeto->set_selectEdita('SELECT ramais,
+                                     email
                                 FROM tblotacao
                                WHERE idLotacao = ' . $id);
 
@@ -93,14 +95,13 @@ if ($acesso) {
     $objeto->set_botaoIncluir(false);
 
     # Parametros da tabela
-    $objeto->set_label(["Diretoria", "Gerência", "Nome", "Contatos", "Servidores", "Ver"]);
-    $objeto->set_colspanLabel([null, null, null, null, 2]);
-    $objeto->set_align(["center", "center", "left", "left"]);
+    $objeto->set_label(array("Diretoria", "Gerência", "Nome", "Telefones", "Email", "Servidores"));
+    $objeto->set_align(array("center", "center", "left", "left", "left", "center"));
     #$objeto->set_width(array(10,10,15,20,20,15));
-    $objeto->set_funcao([null, null, null, "nl2br"]);
+    $objeto->set_funcao(array(null, null, null, "nl2br"));
 
-    $objeto->set_classe([null, null, null, null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosLotacao"]);
+//    $objeto->set_classe(array(null, null, null, null, null, "Grh"));
+//    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao"));
 
     # Ver servidores
     $servAtivos = new Link(null, '?fase=listaServidoresAtivos&id=' . $id);
@@ -127,16 +128,22 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-            array(
-            'linha' => 1,
+        array('linha' => 1,
             'col' => 12,
-            'nome' => 'contatos',
-            'label' => 'Contatos:',
-            'title' => 'telefones/ramais/e-mails de contato',
+            'nome' => 'ramais',
+            'label' => 'Ramais:',
+            'title' => 'Número dos telefones/ramais/faxes da lotação',
             'tipo' => 'textarea',
             'tagHtml' => true,
             'autofocus' => true,
-            'size' => array(80, 15))));
+            'size' => array(80, 8)),
+        array('linha' => 2,
+            'col' => 12,
+            'nome' => 'email',
+            'label' => 'Email:',
+            'title' => 'Email do Setor',
+            'tipo' => 'texto',
+            'size' => 50)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

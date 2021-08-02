@@ -1010,7 +1010,7 @@ class Aposentadoria {
             # Pega a data de aposentadoria desse servidor
             $data = $this->get_dataAposentadoriaProporcional($lista["idServidor"]);
 
-           # Verifica se a data colhida já passou
+            # Verifica se a data colhida já passou
             if (jaPassou($data)) {
                 $resultado[] = [
                     $lista["idFuncional"],
@@ -1033,7 +1033,7 @@ class Aposentadoria {
         $tabela->set_conteudo($resultado);
         $tabela->set_classe([null, "Pessoal", "Pessoal"]);
         $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao"]);
-        
+
         # Aposentadoria integral
         $servidorBtn = new Link(null, "?fase=editaProporcional&id=");
         $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
@@ -1793,6 +1793,15 @@ class Aposentadoria {
             p("Ainda faltam <b>$faltamProporcional</b> dias para o servidor alcançar os <b>$regraTempoProporcional</b> dias de serviço necessários para solicitar a aposentadoria proporcional. Somente em $dtAposentadoriaProporcionalTempo.", "f14");
         } else {
             p("O servidor já alcançou os <b>$regraTempoProporcional</b> dias de tempo serviço público para solicitar aposentadoria proporcional.", "f14");
+        }
+
+        hr("procedimento");
+
+        # Análise por Tempo no cargo
+        if ($tempoCargoAposentadoriaProporcional > dias_to_Ano($uenf)) {
+            p("O servidor ainda não possui os {$tempoCargoAposentadoriaProporcional} anos no mesmo cargo para solicitar a aposentadoria", "f14");
+        } else {
+            p("O servidor já alcançou os <b>{$tempoCargoAposentadoriaProporcional}</b> anos no mesmo cargo para solicitar a aposentadoria integral.", "f14");
         }
     }
 

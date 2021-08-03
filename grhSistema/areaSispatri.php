@@ -55,9 +55,7 @@ if ($acesso) {
     }
 
     if ($fase == "ci") {
-        $page->set_ready("CKEDITOR.replace('textoCi', {
-            
-        });");
+        $page->set_ready("CKEDITOR.replace('textoCi',{height: 360});");
     }
     $page->iniciaPagina();
 

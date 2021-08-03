@@ -38,6 +38,9 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "ci") {
+        $page->set_ready("CKEDITOR.replace('textoCi',{height: 360});");
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -65,17 +68,33 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    # Cria um menu
-    $menu = new MenuBar();
+    if ($fase <> "ci") {
+        # Cria um menu
+        $menu = new MenuBar();
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar, "left");
 
-    $menu->show();
+        if ($parametroProcesso == 3 AND $parametroLotacao <> "*") {
+            # ci
+            $botaoci = new Link("CI", "?fase=ci");
+            $botaoci->set_target("_blank");
+            $botaoci->set_class('button');
+            $botaoci->set_title('CI dos servidores que NÃO solicitaram abono');
+            $menu->add_link($botaoci, "right");
+        }
+
+        $menu->show();
+    } else {
+        # Titulo
+        br();
+        titulo("CI dos Servidores que NÃO Solicitaram Abono Permanência");
+        br();
+    }
 
     switch ($fase) {
 
@@ -336,6 +355,72 @@ if ($acesso) {
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
+        case "ci" :
+
+            $abono = new Abono();
+
+            # Pega o idServidor da Chefia
+            $idChefia = $pessoal->get_chefiaImediataIdLotacao($parametroLotacao);
+
+            # Verifica se temos o idChefia
+            if (empty($idChefia)) {
+                $nomeLotacao = $pessoal->get_nomeLotacao2($parametroLotacao);
+                $chefia = null;
+            } else {
+                $nomeLotacao = $pessoal->get_cargoComissaoDescricao($idChefia);
+                $chefia = $pessoal->get_nome($idChefia);
+
+                # Verifica se conseguiu  a descrição do cargo
+                if (empty($nomeLotacao)) {
+                    $nomeLotacao = $pessoal->get_nomeLotacao2($lotacao);
+                }
+            }
+
+            # Formuário da CI
+            $form = new Form("../grhRelatorios/ciAbono.php");
+
+            # usuário
+            $controle = new Input('ci', 'numero', 'N° CI:', 1);
+            $controle->set_size(5);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_required(true);
+            $controle->set_autofocus(true);
+            $controle->set_tabIndex(1);
+            $controle->set_title('O número da CI');
+            $form->add_item($controle);
+
+            # chefia
+            $controle = new Input('chefia', 'texto', 'Chefia Imediata:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(9);
+            $controle->set_tabIndex(2);
+            $controle->set_title('O Destinatário da CI');
+            $controle->set_valor($chefia);
+            $form->add_item($controle);
+
+            # texto
+            $controle = new Input('textoCi', 'editor', 'Texto da CI:', 1);
+            $controle->set_linha(2);
+            $controle->set_size([90, 95]);
+            $controle->set_title('Texto da CI');
+            $controle->set_valor($abono->get_textoCi());
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('submit', 'submit');
+            $controle->set_valor('Vizualizar');
+            $controle->set_linha(3);
+            $controle->set_tabIndex(3);
+            $controle->set_accessKey('E');
+            $form->add_item($controle);
+
+            $form->show();
             break;
 
         ################################################################

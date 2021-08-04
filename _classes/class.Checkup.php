@@ -4827,7 +4827,7 @@ class Checkup {
             } else {  # Vários servidores
                 if ($this->lista) {
                     if ($count > 0) {
-                        callout("Servidores com sibreposição de tempo averbado.");
+                        callout("Tempos sobrepostos não devem ser considerados.");
                         $tabela->show();
                         set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
                     } else {

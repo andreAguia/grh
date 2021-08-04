@@ -352,8 +352,13 @@ class Aposentadoria {
 
         # Tempo de Serviço
         $dataTempo = $this->get_dataAposentadoriaIntegralTempo($idServidor);
-
+        
         $novaData = dataMaior($dataIdade, $dataTempo);
+        
+        # Tempo no Cargo
+        $dataCargo = $this->get_dataAposentadoriaIntegralTempoCargo($idServidor);
+        
+        $novaData = dataMaior($novaData, $dataCargo);
 
         return $novaData;
     }
@@ -440,6 +445,42 @@ class Aposentadoria {
 ##############################################################################################################################################
 
     /**
+     * Método get_dataAposentadoriaIntegralTempo
+     * Informa a data em que o servidor atende os requisitos do tampo no mesmo cargo para aposentadoria integral
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_dataAposentadoriaIntegralTempoCargo($idServidor) {
+
+        # Conecta o banco de dados
+        $intra = new Intra();
+        $pessoal = new Pessoal();
+
+        # Pega o sexo do servidor
+        $sexo = $pessoal->get_sexo($idServidor);
+
+        # Define a idade que dá direito para cada gênero
+        switch ($sexo) {
+            case "Masculino" :
+                $anos = $intra->get_variavel("aposentadoria.integral.tempo.cargo.masculino");
+                break;
+            case "Feminino" :
+                $anos = $intra->get_variavel("aposentadoria.integral.tempo.cargo.feminino");
+                break;
+        }
+
+        # Pega a data de admissão
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+        
+        # Calcula a data
+        $novaData = addAnos($dtAdmissao, $anos);
+
+        return $novaData;
+    }
+
+##############################################################################################################################################
+
+    /**
      * Método get_dataAposentadoriaProporcional
      * Informa a data em que o servidor passa a ter direito a solicitar aposentadoria proporcional
      * 
@@ -447,14 +488,18 @@ class Aposentadoria {
      */
     public function get_dataAposentadoriaProporcional($idServidor) {
 
-        # Tempo Público
-        $dataPublico = $this->get_dataAposentadoriaProporcionalTempo($idServidor);
+        # Tempo
+        $dataTempo = $this->get_dataAposentadoriaProporcionalTempo($idServidor);
 
         # Idade
         $dataIdade = $this->get_dataAposentadoriaProporcionalIdade($idServidor);
-
-        # Calcula a data
-        $novaData = dataMaior($dataIdade, $dataPublico);
+        
+        $novaData = dataMaior($dataIdade, $dataTempo);
+        
+        # Tempo no Cargo
+        $dataCargo = $this->get_dataAposentadoriaProporcionalTempoCargo($idServidor);
+        
+        $novaData = dataMaior($novaData, $dataCargo);
 
         return $novaData;
     }
@@ -534,6 +579,43 @@ class Aposentadoria {
     }
 
 ##############################################################################################################################################
+
+    /**
+     * Método get_dataAposentadoriaProporcionalTempoCargo
+     * Informa a data em que o servidor atende os requisitos do tempo no mesmo cargo para aposentadoria Proporcional
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_dataAposentadoriaProporcionalTempoCargo($idServidor) {
+
+        # Conecta o banco de dados
+        $intra = new Intra();
+        $pessoal = new Pessoal();
+
+        # Pega o sexo do servidor
+        $sexo = $pessoal->get_sexo($idServidor);
+
+        # Define a idade que dá direito para cada gênero
+        switch ($sexo) {
+            case "Masculino" :
+                $anos = $intra->get_variavel("aposentadoria.Proporcional.tempo.cargo.masculino");
+                break;
+            case "Feminino" :
+                $anos = $intra->get_variavel("aposentadoria.Proporcional.tempo.cargo.feminino");
+                break;
+        }
+
+        # Pega a data de admissão
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+        
+        # Calcula a data
+        $novaData = addAnos($dtAdmissao, $anos);
+
+        return $novaData;
+    }
+
+##############################################################################################################################################
+
 
     /**
      * Método get_dataAposentadoriaCompulsoria

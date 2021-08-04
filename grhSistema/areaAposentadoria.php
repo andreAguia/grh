@@ -1074,9 +1074,9 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
-        
+
         ################################################################
-        
+
         /*
          * Compulsória
          */
@@ -1124,7 +1124,7 @@ if ($acesso) {
 
             # Formulário de Pesquisa
             $form = new Form('?fase=aguardaCompulsoria');
-            
+
             $grid3 = new Grid();
             $grid3->abreColuna(12, 7);
 
@@ -1199,7 +1199,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
-            
+
             $grid3->fechaColuna();
             $grid3->abreColuna(12, 12, 5);
 

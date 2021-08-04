@@ -4618,7 +4618,7 @@ class Checkup {
             $select .= ' ORDER BY tbpessoa.nome';
             $result = $servidor->select($select);
             $count = 0;
-            
+
             $result2 = null;
 
             # Percorre o array e retira os servidores com 0 publicações pendentes
@@ -4629,7 +4629,7 @@ class Checkup {
                     $count++;
                 }
             }
-            
+
             $titulo = 'Servidor(es) com Publicação(ões) de Licença Especial (Prêmio) Pendente(s)';
 
             # Exibe a tabela
@@ -4731,6 +4731,103 @@ class Checkup {
                 if ($this->lista) {
                     if ($count > 0) {
                         callout("Servidores não Celetistas e Não estatutários não devem ter concurso cadastrado.");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##############################################################
+
+    /**
+     * Método get_servidorTempoSobreposto
+     * 
+     * Servidor Com tempo averbado sobreposto
+     */
+    public function get_servidorTempoSobreposto($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $averbacao = new Averbacao();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idFuncional,
+                              tbpessoa.nome as servidor,
+                              tbsituacao.situacao as sit,
+                              idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                    WHERE idPerfil = 1';
+            if (!empty($idServidor)) {
+                $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $resultado = [];
+
+            # Percorre o banco para verificar se já pode aposentar
+            foreach ($result as $lista) {
+
+                # Verifica se a data colhida já passou
+                if ($averbacao->tempoSobreposto($lista["idServidor"])) {
+                    $resultado[] = [
+                        $lista["idFuncional"],
+                        $lista["servidor"],
+                        $lista["idServidor"],
+                        $lista["idServidor"],
+                        $lista["sit"],
+                        $lista["idServidor"]
+                    ];
+                }
+            }
+            $count = count($resultado);
+            $titulo = 'Servidores Estatutários com Tempo Averbado Sobrepostos';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resultado);
+            $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situaao', 'Editar']);
+            $tabela->set_align(['center', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            #$tabela->set_funcao([null, "dv", "date_to_php"]);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
+
+            # Aposentadoria integral
+            $servidorBtn = new Link(null, $this->linkEditar);
+            $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
+            $servidorBtn->set_title("Edita o servidor");
+
+            # Coloca os links na tabela			
+            $tabela->set_link([null, null, null, null, null, $servidorBtn]);
+
+//            $tabela->set_editar($this->linkEditar);
+//            $tabela->set_idCampo('idServidor');
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Servidores com sibreposição de tempo averbado.");
                         $tabela->show();
                         set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
                     } else {

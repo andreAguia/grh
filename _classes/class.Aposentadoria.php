@@ -1994,7 +1994,7 @@ class Aposentadoria {
         $menu->add_item("link", "Aposentadoria Integral", "areaAposentadoria.php?fase=configuracaoIntegral", "Configuração da aposentadoria integral");
         $menu->add_item("link", "Aposentadoria Proporcional", "areaAposentadoria.php?fase=configuracaoProporcional", "Configuração da aposentadoria proporcional");
         $menu->add_item("link", "Aposentadoria Compulsória", "areaAposentadoria.php?fase=configuracaoCompulsoria", "Configuração da aposentadoria compulsória");
-
+              
         $menu->show();
     }
 

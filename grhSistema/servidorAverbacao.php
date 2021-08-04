@@ -239,89 +239,51 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Rotina extra na listagem
-    $mensagem = "Atenção: Nem a data final nem o número de dias são calculados pelo sistema. Estão conforme foram digitados pelo usuário, para refletir ao que foi publicado.<br/>
-                 O problema consiste em que nem sempre o que se publica é fruto de um cálculo perfeito.<br/>
-                 Dessa forma, para verificar possíveis equívocos, a tabela abaixo informa, além dos dias digitados, o cálculo desses dias considerando a data Inicial e a data Final.";
-    $objeto->set_rotinaExtraListar("callout");
-    $objeto->set_rotinaExtraListarParametro($mensagem);
-
     ################################################################
 
     switch ($fase) {
         case "" :
         case "listar" :
-            $objeto->listar();
-
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
 
             # Verifica a data de saída
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
             $dtHoje = date("Y-m-d");                                      # Data de hoje
             $dtFinal = null;
+            $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
 
             # Analisa a data
             if (!vazio($dtSaida)) {           // Se tem saída é a saída
                 $dtFinal = date_to_bd($dtSaida);
-                $disabled = true;
-                $autofocus = false;
             } else {                          // Não tem saída então é hoje
                 $dtFinal = $dtHoje;
             }
 
-            ################################################################
-            # Verifica se tem Tempo averbado sobreposto
-            # Pega as averbações desse servidor
-            $selectSobreposicao = 'SELECT dtInicial, dtFinal, idAverbacao FROM tbaverbacao WHERE idServidor = ' . $idServidorPesquisado . ' ORDER BY dtInicial';
-            $resultSobreposicao = $pessoal->select($selectSobreposicao);
+            $mensagem1 = "Atenção: Nem a data final nem o número de dias são calculados pelo sistema. Estão conforme foram digitados pelo usuário, para refletir ao que foi publicado.<br/>
+                 O problema consiste em que nem sempre o que se publica é fruto de um cálculo perfeito.<br/>
+                 Dessa forma, para verificar possíveis equívocos, a tabela abaixo informa, além dos dias digitados, o cálculo desses dias considerando a data Inicial e a data Final.";
 
-            # Acrescenta o tempo de UENF
-            $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
-            $resultSobreposicao[] = array($dtAdmissao, $dtFinal, null);
+            # Verifica se tem sobreposição
+            $averbacao = new Averbacao();
+            if ($averbacao->tempoSobreposto($idServidorPesquisado)) {
+                $mensagem2 = "Atenção - Períodos com Sobreposição de Dias !!!<br/>
+                              Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao);
 
-            # Inicia a variável que informa se tem sobreposicao
-            $sobreposicao = false;
-
-            # Inicia o array que guarda os períodos problemáticos
-            $idsProblemáticos[] = null;
-
-            # Percorre os registros
-            foreach ($resultSobreposicao as $periodo) {
-                $dtInicial1 = date_to_php($periodo[0]);
-                $dtFinal1 = date_to_php($periodo[1]);
-                $idAverbado1 = $periodo[2];
-
-                # Percorre a mesma listagem novamente
-                foreach ($resultSobreposicao as $periodoVerificado) {
-
-                    $dtInicial2 = date_to_php($periodoVerificado[0]);
-                    $dtFinal2 = date_to_php($periodoVerificado[1]);
-                    $idAverbado2 = $periodoVerificado[2];
-
-                    # Evita que seja comparado com ele mesmo
-                    if ($idAverbado1 <> $idAverbado2) {
-                        if (verificaSobreposicao($dtInicial1, $dtFinal1, $dtInicial2, $dtFinal2)) {
-                            $sobreposicao = true;
-                            $idsProblemáticos[] = $idAverbado1;
-                            $idsProblemáticos[] = $idAverbado2;
-                        }
-                    }
-                }
+                $objeto->set_rotinaExtraListar(["calloutAlert", "callout"]);
+                $objeto->set_rotinaExtraListarParametro([$mensagem2, $mensagem1]);
+            } else {
+                $objeto->set_rotinaExtraListar("callout");
+                $objeto->set_rotinaExtraListarParametro($mensagem1);
             }
 
-            if ($sobreposicao) {
-
-                $painel = new Callout("alert", "center");
-                $painel->abre();
-                echo "Atenção - Períodos com Sobreposição de Dias !!!";
-                p("Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao), "center", "f11");
-                $painel->fecha();
-            }
+            $objeto->set_exibeTempoPesquisa(false);
+            $objeto->listar();
 
             #############################################################
             # Exibe o timeline
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Monta o select
             $select1 = "SELECT empresa,
                                dtInicial,
                                dtFinal

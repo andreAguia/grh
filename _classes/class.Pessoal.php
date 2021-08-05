@@ -5768,8 +5768,7 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         } else {
-            $nome = explode(" ", $this->get_nome($idServidor));
-            return $this->get_cargoSigla($idServidor) . " - " . $nome[0] . " " . $nome[1] . " - " . $this->get_lotacaoSimples($idServidor);
+            return $this->get_cargoSigla($idServidor) . " - " . $this->get_nome($idServidor) . " - " . $this->get_lotacaoSimples($idServidor);
         }
     }
 

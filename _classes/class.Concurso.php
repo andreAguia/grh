@@ -119,8 +119,8 @@ class Concurso {
      * 
      * Informa o nome de um idconcurso	 */
     public function get_nomeConcurso($idConcurso) {
-        
-        if(empty($idConcurso)){
+
+        if (empty($idConcurso)) {
             return null;
         }
 
@@ -363,7 +363,7 @@ class Concurso {
         if (empty($idConcursoVaga)) {
             return null;
         }
-        
+
         # Monta o select
         $select = "SELECT vagasNovas,
                           vagasReposicao
@@ -483,6 +483,8 @@ class Concurso {
         # Monta o select
         $select = "SELECT dtPublicConcursoResultado,
                           pgPublicConcursoResultado,
+                          dtPublicConvocacao,
+                          pgPublicConvocacao,
                           dtPublicResultadoExameMedico,
                           pgPublicResultadoExameMedico,
                           dtPublicAtoNomeacao,
@@ -497,24 +499,34 @@ class Concurso {
         $pessoal = new Pessoal();
         $conteudo = $pessoal->select($select, false);
 
+        # Resultado do Concurso
         if (!empty($conteudo[0])) {
             p("Res. Concurso: " . date_to_php($conteudo[0]) . " (p" . trataNulo($conteudo[1] . ")"), "pLinha1");
         }
-
+        
+        # Convocação
         if (!empty($conteudo[2])) {
-            p("Res. Exame Médico: " . date_to_php($conteudo[2]) . " (p" . trataNulo($conteudo[3] . ")"), "pLinha1");
+            p("Convocação: " . date_to_php($conteudo[2]) . " (p" . trataNulo($conteudo[3] . ")"), "pLinha1");
         }
-
+        
+        # Resultado do Exame Médico
         if (!empty($conteudo[4])) {
-            p("Ato Nomeação: " . date_to_php($conteudo[4]) . " (p" . trataNulo($conteudo[5] . ")"), "pLinha1");
+            p("Res. Exame Médico: " . date_to_php($conteudo[4]) . " (p" . trataNulo($conteudo[5] . ")"), "pLinha1");
         }
-
+        
+        # Nomeação
         if (!empty($conteudo[6])) {
-            p("Ato Investidura: " . date_to_php($conteudo[6]) . " (p" . trataNulo($conteudo[7] . ")"), "pLinha1");
+            p("Ato Nomeação: " . date_to_php($conteudo[6]) . " (p" . trataNulo($conteudo[7] . ")"), "pLinha1");
         }
 
+        # Ato de investidura
         if (!empty($conteudo[8])) {
-            p("Termo de Posse: " . date_to_php($conteudo[8]) . " (p" . trataNulo($conteudo[9] . ")"), "pLinha1");
+            p("Ato Investidura: " . date_to_php($conteudo[8]) . " (p" . trataNulo($conteudo[9] . ")"), "pLinha1");
+        }
+        
+        # Termo de Posse
+        if (!empty($conteudo[10])) {
+            p("Termo de Posse: " . date_to_php($conteudo[10]) . " (p" . trataNulo($conteudo[11] . ")"), "pLinha1");
         }
     }
 

@@ -657,26 +657,25 @@ class Concurso {
         $pessoal = new Pessoal();
         $conteudo = $pessoal->select($select, false);
 
-        # Resultado do Concurso
+        # Classificação
         if (!empty($conteudo[0])) {
             p($conteudo[0], "pLinha1");
+        }
 
-            if (!empty($conteudo[1])) {
+        # Instituição
+        if (!empty($conteudo[1])) {
 
-                if ($conteudo[1] == "Fenorte") {
-                    label($conteudo[1], "success");
-                }
-                if ($conteudo[1] == "Tecnorte") {
-                    label($conteudo[1], "warning");
-                }
-                if ($conteudo[1] == "Uenf") {
-                    label($conteudo[1], "primary");
-                }
-
-                # secondary | primary | success | warning | alert
+            if ($conteudo[1] == "Fenorte") {
+                label($conteudo[1], "success");
             }
-        } else {
-            echo "---";
+            if ($conteudo[1] == "Tecnorte") {
+                label($conteudo[1], "warning");
+            }
+            if ($conteudo[1] == "Uenf") {
+                label($conteudo[1], "primary");
+            }
+
+            # secondary | primary | success | warning | alert
         }
     }
 

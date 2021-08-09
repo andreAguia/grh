@@ -4697,7 +4697,8 @@ class Pessoal extends Bd {
 
         $result = parent::select($select, false);
 
-        # Verifica se a matrícula é manor que 10000 e é celetista ou estatutário
+        # Verifica se a matrícula é menor que 10000 e é celetista ou estatutário
+        # Segundo Rose todos os servidores com matrícula inferior a 10000 tiveram que optar
         if ($result["matricula"] < 10000 AND ($result["idPerfil"] == 1 OR $result["idPerfil"] == 4)) {
             return true;
         } else {

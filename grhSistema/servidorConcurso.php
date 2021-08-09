@@ -96,7 +96,7 @@ if ($acesso) {
     }
 
     # Caminhos
-    $objeto->set_linkGravar('?fase=gravar');   
+    $objeto->set_linkGravar('?fase=gravar');
 
     # botão voltar
     if (is_null($origem)) {
@@ -106,7 +106,7 @@ if ($acesso) {
         $objeto->set_voltarForm($origem);
         $objeto->set_linkListar($origem);
     }
-    
+
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);
@@ -150,17 +150,20 @@ if ($acesso) {
         # Pega a data de admissão do servidor pesquisado
         $dtAdmPesquisado = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
 
-        $select = "SELECT idServidor,
-                          CONCAT(date_format(dtAdmissao,'%d/%m/%Y'),' - ',date_format(dtDemissao,'%d/%m/%Y'),' - ',tbpessoa.nome),
+        $select = "SELECT tbservidor.idServidor,
+                          CONCAT(date_format(dtAdmissao,'%d/%m/%Y'),' - ',date_format(dtDemissao,'%d/%m/%Y'),' - ',UADM,' - ',tbpessoa.nome),
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                           
                WHERE situacao <> 1
                  AND idTipoCargo = {$idCargoPesquisado}
                  AND dtDemissao < '{$dtAdmPesquisado}'
-                 AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})
+                 AND tbservidor.idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND idConcurso IS NOT NULL
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
             ORDER BY tbcargo.nome, tbpessoa.nome";
 
         # Pega os dados da combo concurso
@@ -247,7 +250,7 @@ if ($acesso) {
                     'nome' => 'instituicaoConcurso',
                     'label' => 'Instituição (se houver):',
                     'tipo' => 'combo',
-                    'array' => [[null,null],["Fenorte","Fenorte"],["Tecnorte","Tecnorte"],["Uenf","Uenf"]],
+                    'array' => [[null, null], ["Fenorte", "Fenorte"], ["Tecnorte", "Tecnorte"], ["Uenf", "Uenf"]],
                     'title' => 'Instituição do Concurso (quando houver)',
                     'padrao' => null,
                     'col' => 3,
@@ -268,7 +271,7 @@ if ($acesso) {
                 'tipo' => 'texto',
                 'size' => 6,
                 'title' => 'Página da publicação',
-                'col' => 2),            
+                'col' => 2),
             array('linha' => 3,
                 'nome' => 'dtPublicResultadoExameMedico',
                 'label' => 'Resultado do Exame Médico:',

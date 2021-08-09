@@ -164,7 +164,7 @@ if ($acesso) {
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND idConcurso IS NOT NULL
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-            ORDER BY tbcargo.nome, tbpessoa.nome";
+            ORDER BY tbcargo.nome, dtDemissao";
 
         # Pega os dados da combo concurso
         $ocupanteAnterior = $pessoal->select($select);

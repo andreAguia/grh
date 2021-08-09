@@ -90,7 +90,7 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
-    $anos = arrayPreenche($anoAtual + 2, $anoInicial, "d");
+    $anos = arrayPreenche($anoInicial, $anoAtual+2, "d");
 
     $controle = new Input('parametroAno', 'combo', 'Ano de Fruição:', 1);
     $controle->set_size(8);

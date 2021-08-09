@@ -503,17 +503,17 @@ class Concurso {
         if (!empty($conteudo[0])) {
             p("Res. Concurso: " . date_to_php($conteudo[0]) . " (p" . trataNulo($conteudo[1] . ")"), "pLinha1");
         }
-        
+
         # Convocação
         if (!empty($conteudo[2])) {
             p("Convocação: " . date_to_php($conteudo[2]) . " (p" . trataNulo($conteudo[3] . ")"), "pLinha1");
         }
-        
+
         # Resultado do Exame Médico
         if (!empty($conteudo[4])) {
             p("Res. Exame Médico: " . date_to_php($conteudo[4]) . " (p" . trataNulo($conteudo[5] . ")"), "pLinha1");
         }
-        
+
         # Nomeação
         if (!empty($conteudo[6])) {
             p("Ato Nomeação: " . date_to_php($conteudo[6]) . " (p" . trataNulo($conteudo[7] . ")"), "pLinha1");
@@ -523,7 +523,7 @@ class Concurso {
         if (!empty($conteudo[8])) {
             p("Ato Investidura: " . date_to_php($conteudo[8]) . " (p" . trataNulo($conteudo[9] . ")"), "pLinha1");
         }
-        
+
         # Termo de Posse
         if (!empty($conteudo[10])) {
             p("Termo de Posse: " . date_to_php($conteudo[10]) . " (p" . trataNulo($conteudo[11] . ")"), "pLinha1");
@@ -642,6 +642,42 @@ class Concurso {
         $menu->show();
 
         $painel->fecha();
+    }
+
+    ###########################################################
+
+    public function exibeClassificacaoServidor($idServidor) {
+
+        # Monta o select
+        $select = "SELECT classificacaoConcurso,
+                          instituicaoConcurso
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $conteudo = $pessoal->select($select, false);
+
+        # Resultado do Concurso
+        if (!empty($conteudo[0])) {
+            p($conteudo[0], "pLinha1");
+
+            if (!empty($conteudo[1])) {
+
+                if ($conteudo[1] == "Fenorte") {
+                    label($conteudo[1], "success");
+                }
+                if ($conteudo[1] == "Tecnorte") {
+                    label($conteudo[1], "warning");
+                }
+                if ($conteudo[1] == "Uenf") {
+                    label($conteudo[1], "primary");
+                }
+
+                # secondary | primary | success | warning | alert
+            }
+        } else {
+            echo "---";
+        }
     }
 
     ###########################################################

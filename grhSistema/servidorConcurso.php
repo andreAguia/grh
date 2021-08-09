@@ -61,6 +61,7 @@ if ($acesso) {
                                      dtPublicConcursoResultado,
                                      pgPublicConcursoResultado,
                                      classificacaoConcurso,
+                                     instituicaoConcurso,
                                      dtPublicConvocacao,
                                      pgPublicConvocacao,
                                      dtPublicResultadoExameMedico,
@@ -238,7 +239,22 @@ if ($acesso) {
                 'tipo' => 'numero',
                 'size' => 6,
                 'title' => 'Classificação final do concurso',
-                'col' => 2),
+                'col' => 2));
+
+    if ($tipoCargo == "Adm/Tec") {
+        array_push($campos,
+                array('linha' => 2,
+                    'nome' => 'instituicaoConcurso',
+                    'label' => 'Instituição (se houver):',
+                    'tipo' => 'combo',
+                    'array' => [[null,null],["Fenorte","Fenorte"],["Tecnorte","Tecnorte"],["Uenf","Uenf"]],
+                    'title' => 'Instituição do Concurso (quando houver)',
+                    'padrao' => null,
+                    'col' => 3,
+                    'size' => 15));
+    }
+
+    array_push($campos,
             array('linha' => 3,
                 'nome' => 'dtPublicConvocacao',
                 'label' => 'Convocação:',

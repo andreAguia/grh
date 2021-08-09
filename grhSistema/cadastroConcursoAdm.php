@@ -176,7 +176,7 @@ if ($acesso) {
 
             # Monta o select
             $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
-                              classificacaoConcurso,                                                           
+                              idServidor,                                                 
                               idServidor,
                               idServidor,
                               idServidor,
@@ -203,7 +203,7 @@ if ($acesso) {
                 $atividade = "Visualizou a classificação do concurso ".$concurso->get_nomeConcurso($idConcurso);
             }
 
-            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, classificacaoConcurso";
+            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, classificacaoConcurso";
 
             # Pega os dados
             $row = $pessoal->select($select);
@@ -213,8 +213,8 @@ if ($acesso) {
             $tabela->set_titulo("Classificação - {$titulo}");
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Class.", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Editar"]);
-            $tabela->set_classe([null, null, "pessoal", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, null, "get_nomeELotacaoEPerfilESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
+            $tabela->set_classe([null, "Concurso", "pessoal", "Concurso", "Concurso"]);
+            $tabela->set_metodo([null, "exibeClassificacaoServidor", "get_nomeELotacaoEPerfilESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
             #$tabela->set_funcao([null, null, null, null, "date_to_php"]);
             $tabela->set_width(array(15, 6, 22, 25, 22, 5));
             $tabela->set_align(array("left", "center", "left", "left"));

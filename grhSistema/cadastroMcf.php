@@ -16,7 +16,7 @@ $acesso = Verifica::acesso($idUsuario, 2);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
-    $intra   = new Intra();
+    $intra = new Intra();
     $pessoal = new Pessoal();
 
     # Verifica a fase do programa
@@ -24,15 +24,15 @@ if ($acesso) {
 
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
-    $anoAtual   = date('Y');
-    $ano        = arrayPreenche($anoAtual, $anoInicial, "d");
+    $anoAtual = date('Y');
+    $ano = arrayPreenche($anoInicial, $anoAtual, "d");
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou o cadastro de MCF";
-        $data      = date("Y-m-d H:i:s");
+        $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
@@ -133,29 +133,29 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('linha'     => 1,
-            'nome'      => 'ano',
-            'label'     => 'Ano:',
-            'tipo'      => 'combo',
-            'array'     => $ano,
-            'required'  => true,
-            'autofocus' => true,
-            'col'       => 3,
-            'size'      => 30),
-        array('linha'    => 1,
-            'nome'     => 'mes',
-            'label'    => 'Mes:',
-            'tipo'     => 'combo',
-            'array'    => $mes,
-            'required' => true,
-            'col'      => 3,
-            'size'     => 30),
         array('linha' => 1,
-            'nome'  => 'obs',
+            'nome' => 'ano',
+            'label' => 'Ano:',
+            'tipo' => 'combo',
+            'array' => $ano,
+            'required' => true,
+            'autofocus' => true,
+            'col' => 3,
+            'size' => 30),
+        array('linha' => 1,
+            'nome' => 'mes',
+            'label' => 'Mes:',
+            'tipo' => 'combo',
+            'array' => $mes,
+            'required' => true,
+            'col' => 3,
+            'size' => 30),
+        array('linha' => 1,
+            'nome' => 'obs',
             'label' => 'Obs:',
-            'tipo'  => 'texto',
-            'col'   => 6,
-            'size'  => 80)));
+            'tipo' => 'texto',
+            'col' => 6,
+            'size' => 80)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -187,7 +187,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
-
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
@@ -205,9 +204,9 @@ if ($acesso) {
             $extensoes = array("pdf");
 
             # Pega os valores do php.ini
-            $postMax   = limpa_numero(ini_get('post_max_size'));
+            $postMax = limpa_numero(ini_get('post_max_size'));
             $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
-            $limite    = menorValor(array($postMax, $uploadMax));
+            $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
 
@@ -228,7 +227,7 @@ if ($acesso) {
 
                     # Registra log
                     $Objetolog = new Intra();
-                    $data      = date("Y-m-d H:i:s");
+                    $data = date("Y-m-d H:i:s");
                     $atividade = "Fez o upload do mcf";
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
 

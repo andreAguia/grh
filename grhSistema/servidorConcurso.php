@@ -40,6 +40,9 @@ if ($acesso) {
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
+    # Pega o idConcurso
+    $idConcursoServidor = $pessoal->get_idConcurso($idServidorPesquisado);
+
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
 
@@ -106,7 +109,6 @@ if ($acesso) {
         $objeto->set_voltarForm($origem);
         $objeto->set_linkListar($origem);
     }
-
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);
@@ -245,16 +247,30 @@ if ($acesso) {
                 'col' => 2));
 
     if ($tipoCargo == "Adm/Tec") {
-        array_push($campos,
-                array('linha' => 2,
-                    'nome' => 'instituicaoConcurso',
-                    'label' => 'Instituição (se houver):',
-                    'tipo' => 'combo',
-                    'array' => [[null, null], ["Fenorte", "Fenorte"], ["Tecnorte", "Tecnorte"], ["Uenf", "Uenf"]],
-                    'title' => 'Instituição do Concurso (quando houver)',
-                    'padrao' => null,
-                    'col' => 3,
-                    'size' => 15));
+
+        if ($idConcursoServidor == 2) {
+            array_push($campos,
+                    array('linha' => 2,
+                        'nome' => 'instituicaoConcurso',
+                        'label' => 'Instituição Escolhida:',
+                        'tipo' => 'combo',
+                        'array' => [[null, null], ["Fenorte", "Fenorte"], ["Tecnorte", "Tecnorte"], ["Uenf", "Uenf"]],
+                        'title' => 'Instituição do Concurso (quando houver)',
+                        'padrao' => null,
+                        'col' => 3,
+                        'size' => 15));
+        } else {
+            array_push($campos,
+                    array('linha' => 2,
+                        'nome' => 'instituicaoConcurso',
+                        'label' => 'Instituição Escolhida:',
+                        'tipo' => 'hidden',
+                        'array' => [[null, null], ["Fenorte", "Fenorte"], ["Tecnorte", "Tecnorte"], ["Uenf", "Uenf"]],
+                        'title' => 'Instituição do Concurso (quando houver)',
+                        'padrao' => null,
+                        'col' => 3,
+                        'size' => 15));
+        }
     }
 
     array_push($campos,
@@ -344,9 +360,6 @@ if ($acesso) {
 
     ###############################################################
     # Inicia o Menu de Cargos
-    # Pega o idConcurso
-    $idConcursoServidor = $pessoal->get_idConcurso($idServidorPesquisado);
-
     if (!empty($idConcursoServidor)) {
 
         $menu = new Menu("menuVertical");
@@ -378,7 +391,11 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->$fase($idServidorPesquisado);
+            if ($tipoCargo == "Adm/Tec") {
+                $objeto->$fase($idServidorPesquisado, 'servidorConcursoExtra.php');
+            } else {
+                $objeto->$fase($idServidorPesquisado);
+            }
             break;
     }
 

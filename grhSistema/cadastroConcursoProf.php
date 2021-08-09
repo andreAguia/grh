@@ -311,7 +311,7 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Informa a origem
-            set_session('origem', 'areaConcursoProf.php?fase=aguardaListaServidoresAtivos');
+            set_session('origem', 'cadastroConcursoProf.php?fase=listaServidoresAtivos');
 
             $vagaAdm = new VagaAdm();
 
@@ -465,7 +465,7 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Informa a origem
-            set_session('origem', 'areaConcursoProf.php?fase=aguardaListaServidoresInativos');
+            set_session('origem', 'cadastroConcursoProf.php?fase=listaServidoresInativos');
 
             $vagaAdm = new VagaAdm();
 

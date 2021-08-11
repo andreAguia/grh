@@ -76,13 +76,17 @@ class ExibeFoto {
         # Verifica se tem pasta desse servidor
         if (file_exists($arquivo)) {
             $botao = new BotaoGrafico("foto");
-            $botao->set_url($this->url);
+            if (!empty($this->url)) {
+                $botao->set_url($this->url);
+            }
             $botao->set_imagem($arquivo, $this->fotoLargura, $this->fotoAltura);
             $botao->set_title('Foto do Servidor');
             $menu->add_item($botao);
         } else {
             $botao = new BotaoGrafico("foto");
-            $botao->set_url($this->url);
+            if (!empty($this->url)) {
+                $botao->set_url($this->url);
+            }
             $botao->set_imagem(PASTA_FIGURAS . 'foto.png', $this->fotoLargura, $this->fotoAltura);
             $botao->set_title('Servidor sem foto cadastrada');
             $menu->add_item($botao);

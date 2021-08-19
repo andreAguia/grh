@@ -559,6 +559,13 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle dos responsáveis pela prestação de contas');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vacina');
+        $botao->set_url('areaVacina.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle da vacinação de servidores');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cedidos da Uenf');

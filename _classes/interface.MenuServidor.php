@@ -500,6 +500,13 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'dependente.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro dos Parentes do Servidor');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vacinas');
+        $botao->set_url('servidorVacina.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Controle de vacinação de servidores');
+        $menu->add_item($botao);
 
         $menu->show();
         br();

@@ -79,6 +79,9 @@ if ($acesso) {
     # RPA
     set_session('sessionidPrestador');
     set_session('sessionCpfPrestador');
+    
+    # Vacina
+    set_session('parametroVacinado');
 
     /*
      *  Menu

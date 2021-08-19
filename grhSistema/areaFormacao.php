@@ -113,7 +113,8 @@ if ($acesso) {
                                                escolaridade
                                           FROM tbescolaridade
                                       ORDER BY idEscolaridade');
-            array_unshift($result, array("Todos", "Todos")); # Adiciona o valor de nulo
+            array_unshift($result, array("Todos", "Todos"));
+            
             # Formulário de Pesquisa
             $form = new Form('?');
 

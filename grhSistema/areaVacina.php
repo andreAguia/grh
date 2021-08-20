@@ -35,8 +35,8 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros  
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
-    $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
+    $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Todos'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
@@ -95,7 +95,8 @@ if ($acesso) {
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/vacina.geral.php");
+            #$botaoRel->set_url("../grhRelatorios/vacina.geral.php");
+            $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
@@ -158,7 +159,7 @@ if ($acesso) {
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-            
+
             # Verifica se tem filtro por lotação
             if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
                 if (is_numeric($parametroLotacao)) {
@@ -167,12 +168,12 @@ if ($acesso) {
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
-            
+
             # Não Vacinados
             if ($parametroVacinado == "Não") {
                 $select .= " AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina) ";
             }
-            
+
             # Vacinados
             if ($parametroVacinado == "Sim") {
                 $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina) ";
@@ -223,6 +224,143 @@ if ($acesso) {
         ################################################################
         # Relatório
         case "relatorio" :
+
+            if ($parametroVacinado == "Sim") {
+
+                $select = "SELECT tbservidor.idfuncional,
+                      tbpessoa.nome,
+                      tbservidor.idServidor,
+                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
+                      tbservidor.idServidor
+                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                 JOIN tbhistlot USING (idServidor)
+                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+                # Verifica se tem filtro por lotação
+                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    }
+                }
+
+                $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina)
+                ORDER BY lotacao, tbpessoa.nome";
+
+                $result = $pessoal->select($select);
+
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo('Relatório de Servidores Vacinados');
+                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Vacinas"]);
+                $relatorio->set_width([10, 30, 30, 0, 30]);
+                $relatorio->set_align(["center", "left", "left", "left", "left"]);
+
+                $relatorio->set_classe([null, null, "pessoal", null, "Vacina"]);
+                $relatorio->set_metodo([null, null, "get_cargoSimples", null, "exibeVacinas"]);
+
+                $relatorio->set_conteudo($result);
+                $relatorio->set_numGrupo(3);
+                #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+                $relatorio->show();
+            }
+
+            ######
+
+            /*
+             * Não Vacinados
+             */
+
+            if ($parametroVacinado == "Não") {
+
+                $select = "SELECT tbservidor.idfuncional,
+                      tbpessoa.nome,
+                      tbservidor.idServidor,
+                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
+                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                 JOIN tbhistlot USING (idServidor)
+                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+                # Verifica se tem filtro por lotação
+                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    }
+                }
+
+                $select .= " AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina)
+                ORDER BY lotacao, tbpessoa.nome";
+
+                $result = $pessoal->select($select);
+
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo('Relatório de Servidores Não Vacinados');
+                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação"]);
+                $relatorio->set_width([10, 45, 45, 0]);
+                $relatorio->set_align(["center", "left", "left"]);
+
+                $relatorio->set_classe([null, null, "pessoal"]);
+                $relatorio->set_metodo([null, null, "get_cargoSimples"]);
+
+                $relatorio->set_conteudo($result);
+                $relatorio->set_numGrupo(3);
+                #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+                $relatorio->show();
+            }
+
+            ######
+
+            /*
+             * Todos
+             */
+
+            if ($parametroVacinado == "Todos") {
+
+                $select = "SELECT tbservidor.idfuncional,
+                      tbpessoa.nome,
+                      tbservidor.idServidor,
+                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
+                      tbservidor.idServidor
+                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                 JOIN tbhistlot USING (idServidor)
+                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                WHERE situacao = 1
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+                # Verifica se tem filtro por lotação
+                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    }
+                }
+
+                $select .= " ORDER BY lotacao, tbpessoa.nome";
+
+                $result = $pessoal->select($select);
+
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo('Relatório de Vacinação dos Servidores');
+                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Vacinas"]);
+                $relatorio->set_width([10, 30, 30, 0, 30]);
+                $relatorio->set_align(["center", "left", "left", "left", "left"]);
+
+                $relatorio->set_classe([null, null, "pessoal", null, "Vacina"]);
+                $relatorio->set_metodo([null, null, "get_cargoSimples", null, "exibeVacinas"]);
+
+                $relatorio->set_conteudo($result);
+                $relatorio->set_numGrupo(3);
+                #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+                $relatorio->show();
+            }
+
             break;
     }
 

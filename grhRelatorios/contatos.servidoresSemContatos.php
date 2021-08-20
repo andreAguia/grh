@@ -46,6 +46,7 @@ if ($acesso) {
                        (telCelular IS NULL) OR (telCelular = "") OR
                        (telRecados IS NULL) OR (telRecados = "") OR
                        (emailPessoal IS NULL) OR (emailPessoal = "") OR
+                       (emailOutro IS NULL) OR (emailOutro = "") OR
                        (emailUenf IS NULL) OR (emailUenf = ""))
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 

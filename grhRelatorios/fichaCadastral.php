@@ -664,7 +664,8 @@ if ($acesso) {
                           CONCAT("(",IFnull(telCelularDDD,"--"),") ",IFnull(telCelular,"---")),
                           CONCAT("(",IFnull(telRecadosDDD,"--"),") ",IFnull(telRecados,"---")),
                           emailUenf,
-                          emailPessoal          
+                          emailPessoal,          
+                          emailOutro          
                      FROM tbpessoa
                     WHERE idPessoa = ' . $idPessoa;
 
@@ -673,10 +674,10 @@ if ($acesso) {
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Tel Residencial', 'Tel Celular', 'Tel Recado', 'Email Uenf', 'Email Pessoal'));
+        $relatorio->set_label(array('Tel Residencial', 'Tel Celular', 'Tel Recado', 'Email Uenf', 'Email Pessoal', 'Outro E-mail'));
         #$relatorio->set_width(array(50,50));
         $relatorio->set_align(array('center'));
-        $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo"));
+        $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo"));
         $relatorio->set_conteudo($result);
         #$relatorio->set_numGrupo(0);
         $relatorio->set_botaoVoltar(false);

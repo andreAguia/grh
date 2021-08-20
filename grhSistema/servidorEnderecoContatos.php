@@ -64,7 +64,8 @@ if ($acesso) {
                                      telRecadosDDD,
                                      telRecados,
                                      emailUenf,
-                                     emailPessoal
+                                     emailPessoal,
+                                     emailOutro
                                 FROM tbpessoa
                                WHERE idPessoa = ' . $idPessoa);
 
@@ -191,6 +192,13 @@ if ($acesso) {
             'label' => 'E-mail Pessoal:',
             'tipo' => 'email',
             'title' => 'E-mail Pessoal',
+            'col' => 4,
+            'size' => 100),
+        array('linha' => 8,
+            'nome' => 'emailOutro',
+            'label' => 'E-mail Outro:',
+            'tipo' => 'email',
+            'title' => 'Outro e-mail',
             'col' => 4,
             'size' => 100),
     ));

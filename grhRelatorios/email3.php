@@ -39,14 +39,14 @@ if ($acesso) {
                       CONCAT(tbtipocargo.sigla," - ",tbcargo.nome),
                       concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
                       tbpessoa.emailUenf,
-                      tbpessoa.emailPessoal
+                      tbpessoa.emailPessoal,
+                      tbpessoa.emailOutro
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
                                  JOIN tbcargo USING (idCargo)
                                  JOIN tbtipocargo USING (idTipoCargo)
                                  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
                 WHERE tbservidor.situacao = 1
-                  AND tbservidor.idPerfil <> 10
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {
@@ -72,9 +72,9 @@ if ($acesso) {
 
     $relatorio->set_titulo('Relatório de Emails dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Cargo');
-    $relatorio->set_label(array('Servidor', 'Cargo', 'Lotação', 'Email UENF', 'Email Pessoal'));
+    $relatorio->set_label(array('Servidor', 'Cargo', 'Lotação', 'E-mail UENF', 'E-mail Pessoal', 'Outro E-mail'));
     #$relatorio->set_width(array(20,20,20,20,20));
-    $relatorio->set_align(array("left", "left", "left", "left", "left"));
+    $relatorio->set_align(array("left", "left", "left", "left", "left", "left"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_bordaInterna(true);
 

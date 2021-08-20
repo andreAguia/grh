@@ -4458,6 +4458,22 @@ class Pessoal extends Bd {
     #####################################################################################
 
     /**
+     * Método get_emailOutro(idServidor)
+     * 
+     * Informa se o outro email do servidor
+     */
+    public function get_emailOutro($idServidor) {
+        $select = 'SELECT emailOutro
+                         FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                        WHERE idservidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+        return $row[0];
+    }
+
+    #####################################################################################
+
+    /**
      * Método get_feriasSomaDias
      * 
      * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
@@ -4791,54 +4807,15 @@ class Pessoal extends Bd {
         # Parâmetro: id do servidor
 
         $select = 'SELECT emailPessoal,
-                          emailUenf  
+                          emailUenf,
+                          emailOutro
                     FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                    WHERE idservidor = ' . $idServidor;
 
         $conteudo = parent::select($select, false);
 
-        $retorno = "---";
-
-        # Verifica se tem somente um email
-        if ((empty($conteudo["emailPessoal"])) xor (empty($conteudo["emailUenf"]))) {
-            if (empty($conteudo["emailPessoal"])) {
-                if ($link) {
-                    $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
-                    $link->set_target("_blank");
-                    $link->set_id("aContatos");
-                    $link->show();
-                } else {
-                    echo $conteudo["emailUenf"];
-                }
-            } else {
-                if ($link) {
-                    $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
-                    $link->set_target("_blank");
-                    $link->set_id("aContatos");
-                    $link->show();
-                } else {
-                    echo $conteudo["emailPessoal"];
-                }
-            }
-        }
-
-        # Verifica se tem os dois
-        if ((!empty($conteudo["emailPessoal"])) and (!empty($conteudo["emailUenf"]))) {
-            if ($link) {
-                $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
-                $link->set_target("_blank");
-                $link->set_id("aContatos");
-                $link->show();
-            } else {
-                echo $conteudo["emailUenf"];
-            }
-
-            if ($br) {
-                br();
-            } else {
-                echo " | ";
-            }
-
+        # Email Pessoal
+        if (!empty($conteudo["emailPessoal"])) {
             if ($link) {
                 $link = new Link($conteudo["emailPessoal"], "mailto:{$conteudo["emailPessoal"]}");
                 $link->set_target("_blank");
@@ -4846,6 +4823,32 @@ class Pessoal extends Bd {
                 $link->show();
             } else {
                 echo $conteudo["emailPessoal"];
+            }
+            br();
+        }
+
+        # Email Uenf
+        if (!empty($conteudo["emailUenf"])) {
+            if ($link) {
+                $link = new Link($conteudo["emailUenf"], "mailto:{$conteudo["emailUenf"]}");
+                $link->set_target("_blank");
+                $link->set_id("aContatos");
+                $link->show();
+            } else {
+                echo $conteudo["emailUenf"];                
+            }
+            br();
+        }
+
+        # Email Outro
+        if (!empty($conteudo["emailOutro"])) {
+            if ($link) {
+                $link = new Link($conteudo["emailOutro"], "mailto:{$conteudo["emailOutro"]}");
+                $link->set_target("_blank");
+                $link->set_id("aContatos");
+                $link->show();
+            } else {
+                echo $conteudo["emailOutro"];                
             }
         }
     }
@@ -5815,21 +5818,21 @@ class Pessoal extends Bd {
                     WHERE idServidor = ' . $idServidor;
 
             $row = parent::select($select, false);
-            
-            if(empty($row[0])){
+
+            if (empty($row[0])) {
                 return null;
             }
-            
-            if($row[4] == 1){
+
+            if ($row[4] == 1) {
                 $tipo = "Adm & Tec";
-            }else{
+            } else {
                 $tipo = "Professor";
             }
 
             pLista(
                     $row[0],
-                    $tipo." - ".$row[1],
-                    "Edital: ".date_to_php($row[3])   
+                    $tipo . " - " . $row[1],
+                    "Edital: " . date_to_php($row[3])
             );
         }
     }

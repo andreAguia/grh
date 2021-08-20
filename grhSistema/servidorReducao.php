@@ -496,9 +496,14 @@ if ($acesso) {
             # Pega os Emails
             $emailPessoal = $pessoal->get_emailPessoal($idServidorPesquisado);
             $emailUenf = $pessoal->get_emailUenf($idServidorPesquisado);
+            $emailOutro = $pessoal->get_emailOutro($idServidorPesquisado);
             $emails = null;
 
             # junta os Emails
+            if (!vazio($emailOutro)) {
+                $emails .= "$emailOutro<br/>";
+            }
+            
             if (!vazio($emailPessoal)) {
                 $emails .= "$emailPessoal<br/>";
             }

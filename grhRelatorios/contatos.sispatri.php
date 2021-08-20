@@ -41,6 +41,7 @@ if ($acesso) {
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
+                      tbservidor.idServidor,
                       concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
                 JOIN tbhistlot USING (idServidor)
@@ -52,12 +53,12 @@ if ($acesso) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $relatorio->set_numGrupo(5);
+            $relatorio->set_numGrupo(6);
             $label = array('Servidor','Tel Residencial', 'Celular', 'Email Uenf', 'Email Pessoal','Lotação');
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
             $subTitulo .= "Lotação: " . $lotacao . "<br/>";
-            $relatorio->set_numGrupo(5);
+            $relatorio->set_numGrupo(6);
             $label = array('Servidor','Tel Residencial', 'Celular', 'Email Uenf', 'Email Pessoal','Lotação');
         }
     }
@@ -74,8 +75,8 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Contatos dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
     $relatorio->set_label($label);
-    $relatorio->set_classe(array("pessoal", "pessoal", "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_siglaNomeLotacao", "get_telefoneResidencial", "get_telefoneCelular", "get_emailUenf", "get_emailPessoal"));
+    $relatorio->set_classe(array("pessoal", "pessoal", "pessoal", "pessoal", "pessoal", "pessoal"));
+    $relatorio->set_metodo(array("get_siglaNomeLotacao", "get_telefoneResidencial", "get_telefoneCelular", "get_emailUenf", "get_emailPessoal", "get_emailOutro"));
     $relatorio->set_align(array("left", "left", "left", "left", "left"));
     $relatorio->set_conteudo($result);
 

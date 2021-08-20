@@ -38,6 +38,7 @@ if ($acesso) {
                      tbdocumentacao.cpf,
                      tbpessoa.emailUenf,
                      tbpessoa.emailPessoal,
+                     tbpessoa.emailOutro,
                      dtAdmissao,
                      dtDemissao
                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -46,7 +47,6 @@ if ($acesso) {
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE year(dtAdmissao) = "' . $parametroAno . '"
                  AND tbtipocargo.tipo = "' . $cargo . '"
-                 AND tbservidor.idPerfil <> 10    
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -55,10 +55,10 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Servidores com E-mail e CPF');
     $relatorio->set_subtitulo('Por Tipo de Cargo e Ordenados pelo Nome');
     $relatorio->set_tituloLinha2($cargo . " Admitidos em " . $parametroAno);
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'CPF', 'Email UENF', 'Email Pessoal', 'Admissão', 'Saída'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'CPF', 'E-mail UENF', 'E-mail Pessoal', 'Outro E-mail', 'Admissão', 'Saída'));
     #$relatorio->set_width(array(10,30,16,22,22));
-    $relatorio->set_align(array("center", "left", "left", "center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_align(array("center", "left", "left", "center", "left", "left", "left"));
+    $relatorio->set_funcao(array(null, null, null, null, null, null, null, "date_to_php", "date_to_php"));
 
     $relatorio->set_classe(array(null, null, "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_Lotacao"));

@@ -35,8 +35,8 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros  
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
-    $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Todos'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);

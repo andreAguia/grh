@@ -14,7 +14,7 @@ include ("_config.php");
 # Limpa as sessões
 set_session('idConcurso');
 set_session('parametroCargo');
-set_session('origem',basename( __FILE__ ));
+set_session('origem', basename(__FILE__));
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -40,6 +40,12 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # Pega os parâmetros
+    $parametroAno = post('parametroAno', get_session('parametroAno', "*"));
+
+    # Joga os parâmetros par as sessions
+    set_session('parametroAno', $parametroAno);
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -64,7 +70,7 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-            
+
             # Vagas
             $botaoVoltar = new Link("Vagas", "areaVagasDocentes.php");
             $botaoVoltar->set_class('button');
@@ -78,15 +84,37 @@ if ($acesso) {
 
             $menu1->show();
 
+            $form = new Form('?');
+
+            # Ano
+            $anoBase = $pessoal->select('SELECT DISTINCT anoBase, anoBase
+                                            FROM tbconcurso
+                                           WHERE tipo = 2
+                                          ORDER BY anoBase DESC');
+
+            array_unshift($anoBase, array("*", 'Todas'));
+
+            $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano');
+            $controle->set_array($anoBase);
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
             # Monta a tabala
-            $select = 'SELECT idConcurso,
+            $select = "SELECT idConcurso,
                       anobase,
                       dtPublicacaoEdital,
                       regime,
                       CASE tipo
-                        WHEN 1 THEN "Adm & Tec"
-                        WHEN 2 THEN "Professor"
-                        ELSE "--"
+                        WHEN 1 THEN 'Adm & Tec'
+                        WHEN 2 THEN 'Professor'
+                        ELSE '--'
                       END,
                       orgExecutor,                      
                       tbplano.numDecreto,
@@ -95,9 +123,14 @@ if ($acesso) {
                       idConcurso,
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
-                WHERE true
-                  AND tipo = 2 
-             ORDER BY anobase desc, dtPublicacaoEdital desc';
+                WHERE tipo = 2 ";
+
+            # Ano Base
+            if ($parametroAno <> "*") {
+                $select .= "AND anoBase = '{$parametroAno}'";
+            }
+
+            $select .= " ORDER BY anobase desc, dtPublicacaoEdital desc";
 
             $resumo = $pessoal->select($select);
 
@@ -107,7 +140,7 @@ if ($acesso) {
             $tabela->set_titulo("Concursos para Servidores Professores");
             $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Ativos", "Inativos", "Total", "Acessar"]);
             $tabela->set_align(["center"]);
-            $tabela->set_width([5,8,10,10,10,10,17,5,5,5,5,5]);
+            $tabela->set_width([5, 8, 10, 10, 10, 10, 17, 5, 5, 5, 5, 5]);
             $tabela->set_funcao([null, null, 'date_to_php']);
             $tabela->set_classe([null, null, null, null, null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
             $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 9, "==");
@@ -117,12 +150,11 @@ if ($acesso) {
 
             $botao = new Link(null, '?fase=acessaConcurso&idConcurso=', 'Acessa a página do concurso');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, null, null, null,$botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
             $tabela->show();
             break;
 
         ################################################################
-
         # Chama o menu do Servidor que se quer editar
         case "acessaConcurso" :
             set_session('idConcurso', $idConcurso);

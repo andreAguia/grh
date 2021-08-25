@@ -92,7 +92,7 @@ if ($acesso) {
                                            WHERE tipo = 2
                                           ORDER BY anoBase DESC');
 
-            array_unshift($anoBase, array("*", 'Todas'));
+            array_unshift($anoBase, array("*", 'Todos'));
 
             $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(8);

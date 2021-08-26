@@ -471,6 +471,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Email dos Servidores', '../grhRelatorios/email.php');
             $menu->add_item('linkWindow', 'Email dos Servidores 2', '../grhRelatorios/email2.php');
             $menu->add_item('linkWindow', 'Email dos Servidores 3', '../grhRelatorios/email3.php');
+            $menu->add_item('linkWindow', 'Email dos Servidores 4', '../grhRelatorios/email4.php');
 
             $menu->add_item('titulo1', 'Telefone');
             $menu->add_item('linkWindow', 'Telefones dos Servidores', '../grhRelatorios/telefone.php');

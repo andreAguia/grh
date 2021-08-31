@@ -316,10 +316,11 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo Averbado");
-            $tabela->set_label(array('Tipo', 'Total'));
+            $tabela->set_label(array('Tipo', 'Dias'));
             $tabela->set_totalRegistro(false);
             $tabela->set_align(array('left'));
             $tabela->set_conteudo($valores);
+            $tabela->set_colunaSomatorio(1);
             $tabela->show();
 
             $grid->fechaColuna();

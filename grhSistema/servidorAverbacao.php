@@ -18,7 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    $aposentadoria = new Aposentadoria();
+    $averbacao = new Averbacao();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -49,9 +49,11 @@ if ($acesso) {
     $objeto = new Modelo();
 
     ################################################################
-    # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    if ($fase <> "listar") {
+        # Exibe os dados do Servidor
+        $objeto->set_rotinaExtra("get_DadosServidor");
+        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    }
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Tempo de Serviço Averbado');
@@ -225,16 +227,6 @@ if ($acesso) {
             'title' => 'Matrícula',
             'linha' => 10)));
 
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Tempo de Serviço Averbado");
-    $botaoRel->set_url("../grhRelatorios/servidorAverbacao.php");
-    $botaoRel->set_target("_blank");
-
-    $objeto->set_botaoListarExtra(array($botaoRel));
-
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -244,6 +236,46 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+
+            # Retira os botoes da classe modelo
+            $objeto->set_botaoIncluir(false);
+            $objeto->set_botaoVoltarLista(false);
+            $objeto->set_comGridLista(false);
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar", 'servidorMenu.php');
+            $linkVoltar->set_class('button');
+            $menu1->add_link($linkVoltar, "left");
+
+            # Relatório
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Imprimir Relatório de Tempo de Serviço Averbado");
+            $botaoRel->set_url("../grhRelatorios/servidorAverbacao.php");
+            $botaoRel->set_target("_blank");
+            $menu1->add_link($botaoRel, "right");
+
+            # Incluir
+            $linkIncluir = new Link("Incluir", '?fase=editar');
+            $linkIncluir->set_class('button');
+            $linkIncluir->set_title('Incluir novas ferias');
+            $menu1->add_link($linkIncluir, "right");
+
+            $menu1->show();
+
+            # Exibe os dados do servidor pesquisado
+            get_DadosServidor($idServidorPesquisado);
+
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
 
             # Verifica a data de saída
             $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
@@ -268,21 +300,36 @@ if ($acesso) {
                 $mensagem2 = "Atenção - Períodos com Sobreposição de Dias !!!<br/>
                               Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao);
 
-                $objeto->set_rotinaExtraListar(["calloutAlert", "callout"]);
-                $objeto->set_rotinaExtraListarParametro([$mensagem2, $mensagem1]);
-            } else {
-                $objeto->set_rotinaExtraListar("callout");
-                $objeto->set_rotinaExtraListarParametro($mensagem1);
+                calloutAlert($mensagem2);
             }
+
+
+            callout($mensagem1);
+
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
+
+            $valores = [
+                ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)],
+                ["Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)],
+            ];
+
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Averbado");
+            $tabela->set_label(array('Tipo', 'Total'));
+            $tabela->set_totalRegistro(false);
+            $tabela->set_align(array('left'));
+            $tabela->set_conteudo($valores);
+            $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
 
             $objeto->set_exibeTempoPesquisa(false);
             $objeto->listar();
 
             #############################################################
             # Exibe o timeline
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
             # Monta o select
             $select1 = "SELECT empresa,
                                dtInicial,

@@ -88,4 +88,58 @@ class Averbacao {
         # Retorna a sobreposição FALSE ou TRUE
         return $sobreposicao;
     }
+    
+    ##############################################################################################################################################
+
+    /**
+     * Método get_tempoAverbadoPrivado
+     * informa o total de dias de tempo averbado em empresa privada
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoAverbadoPrivado($idServidor) {
+        $select = 'SELECT SUM(dias) as total
+                     FROM tbaverbacao
+                    WHERE empresaTipo = 2 AND idServidor = ' . $idServidor . '
+                         ORDER BY total';
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        $row = $pessoal->select($select, false);
+
+        if (is_null($row[0])) {
+            return 0;
+        } else {
+            return $row[0];
+        }
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método get_tempoAverbadoPublico
+     * informa o total de dias de tempo averbado em empresa Pública
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoAverbadoPublico($idServidor) {
+        $select = 'SELECT SUM(dias) as total
+                     FROM tbaverbacao
+                    WHERE empresaTipo = 1 AND idServidor = ' . $idServidor . '
+                         ORDER BY total';
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        $row = $pessoal->select($select, false);
+
+        if (is_null($row[0])) {
+            return 0;
+        } else {
+            return $row[0];
+        }
+    }
+
+##############################################################################################################################################
 }

@@ -878,9 +878,9 @@ class ListaAfastamentos {
         #######################    
 
         if ($this->idFuncional) {
-            $select .= ') ORDER BY 2, 3';
+            $select .= ') ORDER BY 4';
         } else {
-            $select .= ') ORDER BY 1, 2';
+            $select .= ') ORDER BY 3';
         }
         #echo $select;
         return $select;
@@ -937,11 +937,11 @@ class ListaAfastamentos {
                     $tabela->set_metodo(array(null, "get_nomeECargo", "get_lotacaoSimples"));
                 }
 
-                $tabela->set_rowspan(1);
-                $tabela->set_grupoCorColuna(1);
+//                $tabela->set_rowspan(1);
+//                $tabela->set_grupoCorColuna(1);
             } else {
 
-                $tabela->set_label(array('Nome', null, 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
+                $tabela->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
                 $tabela->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
 
                 $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
@@ -954,8 +954,8 @@ class ListaAfastamentos {
                     $tabela->set_metodo(array("get_nomeECargo", "get_lotacaoSimples"));
                 }
 
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
+//                $tabela->set_rowspan(0);
+//                $tabela->set_grupoCorColuna(0);
             }
         } else {
 
@@ -1131,150 +1131,6 @@ class ListaAfastamentos {
             titulotable('Servidores com Afastamentos');
             callout("Nenhum valor a ser exibido !", "secondary");
         }
-    }
-
-    ###########################################################
-
-    public function exibeTimeline() {
-
-        /**
-         * Exibe um relatório com a relação dos servidores com afastamento
-         *
-         * @syntax $afast->exibeRelatorio();
-         */
-        $grid = new Grid();
-        $grid->abreColuna(12);
-
-        #tituloTable("Afastamentos Anuais");
-        # Gráfico
-        $select1 = "(SELECT CONCAT('Férias',' - ',anoExercicio) as descricao,
-                              dtInicial,
-                              numDias,
-                              ADDDATE(dtInicial,numDias-1) as dtFinal
-                         FROM tbferias
-                        WHERE idServidor = $this->idServidor
-                          AND (((YEAR(tbferias.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) = $this->ano)) 
-                           OR ((YEAR(tbferias.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tbferias.dtInicial,tbferias.numDias-1)) > $this->ano)))  
-                     ORDER BY dtInicial) UNION 
-                       (SELECT CONCAT(tbtipolicenca.nome,' ',IFnull(tbtipolicenca.lei,'')) as descricao,
-                              dtInicial,
-                              numDias,
-                              ADDDATE(dtInicial,numDias-1) as dtFinal
-                         FROM tblicenca LEFT JOIN tbtipolicenca USING(idTpLicenca) 
-                        WHERE idServidor = $this->idServidor
-                           AND (((YEAR(tblicenca.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) = $this->ano)) 
-                           OR ((YEAR(tblicenca.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1)) > $this->ano)))   
-                     ORDER BY dtInicial) UNION 
-                       (SELECT 'Licença Prêmio' as descricao,
-                              dtInicial,
-                              numDias,
-                              ADDDATE(dtInicial,numDias-1) as dtFinal
-                         FROM tblicencapremio
-                        WHERE idServidor = $this->idServidor
-                          AND (((YEAR(tblicencapremio.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = $this->ano)) 
-                           OR ((YEAR(tblicencapremio.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > $this->ano)))  
-                     ORDER BY dtInicial) UNION 
-                       (SELECT 'Trabalho TRE' as descricao,
-                              data,
-                              dias,
-                              ADDDATE(data,dias-1) as dtFinal
-                         FROM tbtrabalhotre
-                        WHERE idServidor = $this->idServidor
-                          AND (((YEAR(tbtrabalhotre.data) = $this->ano) OR (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) = $this->ano)) 
-                           OR ((YEAR(tbtrabalhotre.data) < $this->ano) AND (YEAR(ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1)) > $this->ano)))   
-                     ORDER BY data) UNION 
-                       (SELECT 'Folga TRE' as descricao,
-                              data,
-                              dias,
-                              ADDDATE(data,dias-1) as dtFinal
-                         FROM tbfolga
-                        WHERE idServidor = $this->idServidor
-                          AND (((YEAR(tbfolga.data) = $this->ano) OR (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) = $this->ano)) 
-                           OR ((YEAR(tbfolga.data) < $this->ano) AND (YEAR(ADDDATE(tbfolga.data,tbfolga.dias-1)) > $this->ano)))      
-                     ORDER BY data) UNION 
-                       (SELECT 'Folga Abonadas' as descricao,
-                              dtInicio,
-                              numDias,
-                              ADDDATE(dtInicio,numDias-1) as dtFinal
-                         FROM tbatestado
-                        WHERE idServidor = $this->idServidor
-                          AND (((YEAR(tbatestado.dtInicio) = $this->ano) OR (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) = $this->ano)) 
-                           OR ((YEAR(tbatestado.dtInicio) < $this->ano) AND (YEAR(ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1)) > $this->ano)))    
-                     ORDER BY dtInicio)  UNION 
-                       (SELECT 'Licença Sem Vencimentos' as descricao,
-                              dtInicial,
-                              numDias,
-                              ADDDATE(dtInicial,numDias-1) as dtFinal
-                         FROM tblicencasemvencimentos
-                        WHERE idServidor = $this->idServidor
-                          AND (((YEAR(tblicencasemvencimentos.dtInicial) = $this->ano) OR (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = $this->ano)) 
-                           OR ((YEAR(tblicencasemvencimentos.dtInicial) < $this->ano) AND (YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) > $this->ano)))  
-                     ORDER BY dtInicial)
-                        order by 2";
-
-        # Acessa o banco
-        $pessoal = new Pessoal();
-        $atividades1 = $pessoal->select($select1);
-        $numAtividades = $pessoal->count($select1);
-        $contador = $numAtividades; // Contador pra saber quando tirar a virgula no último valor do for each linhas abaixo.
-        #tituloTable("Afastamentos de $parametroAno");
-
-        if ($numAtividades > 0) {
-
-            # Carrega a rotina do Google
-            echo '<script type="text/javascript" src="' . PASTA_FUNCOES_GERAIS . '/loader.js"></script>';
-
-            # Inicia o script
-            echo "<script type='text/javascript'>";
-            echo "google.charts.load('current', {'packages':['timeline'], 'language': 'pt-br'});
-                      google.charts.setOnLoadCallback(drawChart);
-                      function drawChart() {
-                            var container = document.getElementById('timeline');
-                            var chart = new google.visualization.Timeline(container);
-                            var dataTable = new google.visualization.DataTable();";
-
-            echo "dataTable.addColumn({ type: 'string' });
-                      dataTable.addColumn({ type: 'string', role: 'tooltip' });
-                      dataTable.addColumn({ type: 'date' });
-                      dataTable.addColumn({ type: 'date' });";
-
-            echo "dataTable.addRows([";
-
-            $separador = '-';
-
-            foreach ($atividades1 as $row) {
-
-                # Trata a data inicial
-                $dt1 = explode($separador, $row['dtInicial']);
-                $dt2 = explode($separador, $row['dtFinal']);
-
-                echo "['" . $row['descricao'] . "','Teste', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
-
-                $contador--;
-
-                if ($contador > 0) {
-                    echo ",";
-                }
-            }
-            echo "]);";
-
-            echo "chart.draw(dataTable);";
-            echo "}";
-            echo "</script>";
-
-            //[ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
-            //[ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
-            //[ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ]]);
-
-            $altura = ($numAtividades * 45) + 50;
-            echo '<div id="timeline" style="height: ' . $altura . 'px; width: 100%;"></div>';
-        } else {
-            br();
-            p("Não há dados para serem exibidos.", "f14", "center");
-        }
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
     }
 
     ###########################################################

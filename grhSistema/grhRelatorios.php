@@ -210,11 +210,11 @@ if ($acesso) {
         case "cedidos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Cedidos');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos', '../grhRelatorios/estatutariosCedidos.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Admin e Tecnicos Cedidos', '../grhRelatorios/estatutariosAdmiCedidos.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Professores Cedidos', '../grhRelatorios/estatutariosProfCedidos.php');
-            $menu->add_item('linkWindow', 'Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutariosCedidosHistorico.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutariosCedidosOrgao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos', '../grhRelatorios/estatutarios.cedidos.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Admin e Tecnicos Cedidos', '../grhRelatorios/estatutarios.cedidos.admin.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Professores Cedidos', '../grhRelatorios/estatutarios.cedidos.professores.php');
+            $menu->add_item('linkWindow', 'Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.historico.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.orgao.php');
             #$menu->add_item('linkWindow','Escala Anual de Férias - Servidores Técnicos Estatutários Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             $menu->add_item('linkWindow', 'Relatório de Cedidos de Outros Órgãos - Agrupados por Órgão', '../grhRelatorios/cedidosporOrgao.php');
 
@@ -599,7 +599,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Administrativo e Tecnicos', '../grhRelatorios/seguro.admTec.php');
             $menu->add_item('linkWindow', 'Relatório de Professores', '../grhRelatorios/seguro.professores.php');
             $menu->show();
-            p("Os relatórios desta seção se referentem ao contrato de seguro solicitado anualmente pela PROGRAD.");
+            callout("Os relatórios desta seção se referentem ao contrato de seguro solicitado anualmente pela PROGRAD.");
             break;
 
         ######################################

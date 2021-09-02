@@ -26,7 +26,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $lotacao = get('lotacao', post('lotacao'),$servidor->get_idLotacao($intra->get_idServidor($idUsuario)));
+    $lotacao = get('lotacao', post('lotacao'),66);
 
     ######
 

@@ -19,6 +19,7 @@ $acesso = Verifica::acesso($idUsuario, 2);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
+    $intra = new Intra();
 
     # Começa uma nova página
     $page = new Page();

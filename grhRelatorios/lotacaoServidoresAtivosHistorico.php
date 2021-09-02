@@ -54,7 +54,7 @@ if ($acesso) {
     }
 
     $select .= ' ORDER BY lotacao, tbpessoa.nome';
-echo $select;
+
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();

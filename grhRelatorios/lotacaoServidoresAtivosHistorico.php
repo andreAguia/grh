@@ -26,7 +26,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $lotacao = get('lotacao', post('lotacao'),66);
+    $lotacao = post('lotacao',66);
 
     ######
 
@@ -54,7 +54,7 @@ if ($acesso) {
     }
 
     $select .= ' ORDER BY lotacao, tbpessoa.nome';
-
+echo $select;
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
